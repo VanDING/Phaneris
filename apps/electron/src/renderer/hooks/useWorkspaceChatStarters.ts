@@ -15,6 +15,7 @@
 import * as React from 'react'
 import type { ChatStarter } from '@phaneris/shared/workspaces/chat-starters'
 import { WORKSPACE_SETTINGS_CHANGED_EVENT } from '@/lib/workspace-settings-events'
+import { readAfterReconnect } from '@/lib/read-after-reconnect'
 
 /** The subset of workspace settings this hook reports back to its owner. */
 export interface WorkspaceSettingsSnapshot {
@@ -27,7 +28,7 @@ export function useWorkspaceChatStarters(
   activeWorkspaceId: string | null,
   onSettingsLoaded?: (settings: WorkspaceSettingsSnapshot) => void,
 ): ChatStarter[] {
-  const [chatStarters, setChatStarters] = React.useState<ChatStarter[]>([])
+  const [snapshot, setSnapshot] = React.useState<{ workspaceId: string; starters: ChatStarter[] } | null>(null)
   // The callback is usually an inline arrow from the caller; keeping it in a ref
   // stops it from re-running the whole load on every render.
   const loadedRef = React.useRef(onSettingsLoaded)
@@ -36,13 +37,13 @@ export function useWorkspaceChatStarters(
   React.useEffect(() => {
     if (!activeWorkspaceId) {
       // No active workspace: never keep another workspace's chips on screen.
-      setChatStarters([])
+      setSnapshot(null)
       return
     }
     // Clear first: while this workspace's settings are still loading — or if the
     // read fails — the previous workspace's chips must not be offered to a
     // session that belongs to this one.
-    setChatStarters([])
+    setSnapshot(null)
     let cancelled = false
     // A settings write can land while a read is in flight; only the newest
     // request may apply its result, or an older response overwrites newer data.
@@ -50,18 +51,18 @@ export function useWorkspaceChatStarters(
     const load = () => {
       const requested = ++requestId
       const isCurrent = () => !cancelled && requested === requestId
-      window.electronAPI.getWorkspaceSettings(activeWorkspaceId).then((settings) => {
+      readAfterReconnect(() => window.electronAPI.getWorkspaceSettings(activeWorkspaceId)).then((settings) => {
         if (!isCurrent()) return
         if (settings) {
           loadedRef.current?.(settings as WorkspaceSettingsSnapshot)
-          setChatStarters((settings.chatStarters ?? []) as ChatStarter[])
+          setSnapshot({ workspaceId: activeWorkspaceId, starters: (settings.chatStarters ?? []) as ChatStarter[] })
         }
       }).catch((err) => {
         if (!isCurrent()) return
         console.error('[Chat] Failed to load workspace settings:', err)
         // A failed read shows no starters for this workspace rather than the
         // ones the previous workspace had.
-        setChatStarters([])
+        setSnapshot(null)
       })
     }
     load()
@@ -78,5 +79,5 @@ export function useWorkspaceChatStarters(
     }
   }, [activeWorkspaceId])
 
-  return chatStarters
+  return snapshot?.workspaceId === activeWorkspaceId ? snapshot.starters : []
 }

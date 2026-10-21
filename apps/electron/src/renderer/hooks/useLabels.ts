@@ -7,7 +7,8 @@
  * Auto-refreshes when workspace changes or label config changes.
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { readAfterReconnect } from '@/lib/read-after-reconnect'
 import type { LabelConfig } from '@phaneris/shared/labels'
 import { flattenLabels } from '@phaneris/shared/labels'
 
@@ -31,11 +32,13 @@ export function useLabels(workspaceId: string | null): UseLabelsResult {
   const [labels, setLabels] = useState<LabelConfig[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const generation = useRef(0)
 
   // Memoized flat version of the tree for lookups
   const flatLabels = useMemo(() => flattenLabels(labels), [labels])
 
   const refresh = useCallback(async () => {
+    const request = ++generation.current
     if (!workspaceId) {
       setLabels([])
       setIsLoading(false)
@@ -44,20 +47,23 @@ export function useLabels(workspaceId: string | null): UseLabelsResult {
 
     try {
       setIsLoading(true)
-      const configs = await window.electronAPI.listLabels(workspaceId)
+      const configs = await readAfterReconnect(() => window.electronAPI.listLabels(workspaceId))
+      if (request !== generation.current) return
       setLabels(configs)
       setError(null)
     } catch (err) {
+      if (request !== generation.current) return
       console.error('[useLabels] Failed to load labels:', err)
       setError(err instanceof Error ? err.message : 'Failed to load labels')
     } finally {
-      setIsLoading(false)
+      if (request === generation.current) setIsLoading(false)
     }
   }, [workspaceId])
 
   // Load labels when workspace changes
   useEffect(() => {
-    refresh()
+    void refresh()
+    return () => { generation.current = generation.current + 1 }
   }, [refresh])
 
   // Subscribe to live label changes (config file changes)

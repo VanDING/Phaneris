@@ -847,6 +847,20 @@ export function getContextPolicy(): import('../agent/context-policy').ContextPol
   return policy === 'handoff' || policy === 'manual' ? policy : 'compact'
 }
 
+export function getCompactionThreshold(): number | null {
+  const value = loadStoredConfig()?.compactionThresholdTokens;
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 4096 ? value : null;
+}
+
+export function setCompactionThreshold(value: number | null): void {
+  if (value !== null && (!Number.isSafeInteger(value) || value < 4096)) throw new Error('Invalid compaction threshold');
+  const config = loadStoredConfig();
+  if (!config) throw new Error('Configuration unavailable');
+  if (value === null) delete config.compactionThresholdTokens;
+  else config.compactionThresholdTokens = value;
+  saveConfig(config);
+}
+
 export function setContextPolicy(policy: import('../agent/context-policy').ContextPolicy): void {
   if (!['compact', 'handoff', 'manual'].includes(policy)) throw new Error('Invalid context policy')
   const config = loadStoredConfig()

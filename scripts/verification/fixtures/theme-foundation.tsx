@@ -8,12 +8,16 @@ import { DEFAULT_THEME_FILE, themeToCSS, type ThemeDepth } from '@config/theme'
 
 const params = new URLSearchParams(location.search)
 const host = params.get('host') ?? 'electron'
-const css = params.get('css')
-if (css) await import(/* @vite-ignore */ css)
-else if (host === 'ui') await import('../../../packages/ui/src/styles/index.css')
-else if (host === 'viewer') await import('../../../apps/viewer/src/index.css')
-else if (host === 'webui') await import('../../../apps/webui/src/index.css')
-else await import('../../../apps/electron/src/renderer/index.css')
+const sheets = {
+  ui: () => import('./theme-foundation-css/ui.css?inline'),
+  viewer: () => import('./theme-foundation-css/viewer.css?inline'),
+  webui: () => import('./theme-foundation-css/webui.css?inline'),
+  electron: () => import('./theme-foundation-css/electron.css?inline'),
+}
+const sheet = await (sheets[host as keyof typeof sheets] ?? sheets.electron)()
+const hostStyle = document.createElement('style')
+hostStyle.textContent = sheet.default
+document.head.appendChild(hostStyle)
 
 const themeStyle = document.createElement('style')
 document.head.appendChild(themeStyle)

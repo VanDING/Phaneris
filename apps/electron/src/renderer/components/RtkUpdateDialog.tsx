@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useRegisterModal } from '@/context/ModalContext'
+import { readAfterReconnect } from '@/lib/read-after-reconnect'
 
 export interface RtkStatusInfo {
   installed: boolean
@@ -29,7 +30,7 @@ export interface RtkStatusInfo {
 /** Keep the UI-only dismissal in Phaneris's native preferences file. */
 async function readPromptPreferences(): Promise<Record<string, unknown> | null> {
   try {
-    const result = await window.electronAPI.readPreferences()
+    const result = await readAfterReconnect(() => window.electronAPI.readPreferences())
     const preferences: unknown = result.content.trim() ? JSON.parse(result.content) : {}
     return preferences && typeof preferences === 'object' && !Array.isArray(preferences)
       ? preferences as Record<string, unknown> : null
@@ -135,12 +136,17 @@ export function RtkUpdatePrompt({ workspaceId }: { workspaceId?: string | null }
     let cancelled = false
     void (async () => {
       try {
-        const [enabled, current, preferences] = await Promise.all([window.electronAPI.getRtkEnabled(), window.electronAPI.getRtkStatus(), readPromptPreferences()])
+        const [enabled, current, preferences] = await Promise.all([
+          readAfterReconnect(() => window.electronAPI.getRtkEnabled()),
+          readAfterReconnect(() => window.electronAPI.getRtkStatus()),
+          readPromptPreferences(),
+        ])
         if (cancelled || !enabled || !current.outdated) return
         if (preferences?.rtkUpdateDismissedVersion === current.version) return
         setStatus(current)
         setOpen(true)
       } catch (error) {
+        if (cancelled) return
         console.error('[RtkUpdatePrompt] Failed to check rtk status:', error)
       }
     })()

@@ -75,15 +75,16 @@ import { streamSimple } from '@earendil-works/pi-ai/compat';
  */
 let piCacheRetention: CacheRetention = 'short';
 
-function withDurableAccounting(stream: StreamFn, purpose?: 'cache_warm'): StreamFn {
+function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (() => 'compaction' | undefined)): StreamFn {
   return wrapDurableModelStream(stream, async (model, context, requestObservation) => {
+    const purpose = typeof purposeInput === 'function' ? purposeInput() : purposeInput;
     const requestSeq = ++promptSnapshotSeq;
     const { canonicalRequestHash, contextSnapshot, systemPrompt } = prepareRequestDiagnostics(model, context);
     if (!purpose) rememberPromptSnapshot(requestSeq, systemPrompt, contextSnapshot);
     const providerRequestId = String(requestSeq);
     const durableRun = currentDurableModelRun();
     if (!initConfig || !durableRun) {
-      if (purpose) throw new Error('Cache warming requires durable accounting');
+      if (purpose === 'cache_warm') throw new Error('Cache warming requires durable accounting');
       return async message => { Object.assign(message, { durableRequestSeq: requestSeq }); };
     }
     const prepared = await requestDurableModelPrepare(
@@ -113,6 +114,7 @@ import { queryMiniModel } from './mini-model-query.ts';
 import {
   PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
   createPhanerisSettingsManager,
+  createMutablePhanerisSettingsManager,
 } from './session-settings.ts';
 import {
   EphemeralQueryCancelledError,
@@ -143,6 +145,9 @@ import type { LLMQueryRequest, LLMQueryResult } from '@phaneris/shared/agent/llm
 import { PI_TOOL_NAME_MAP, THINKING_TO_PI } from '@phaneris/shared/agent/backend/pi/constants';
 import { getDefaultSummarizationModel } from '@phaneris/shared/config/models';
 import { createWebFetchTool } from './tools/web-fetch.ts';
+import { modelMetering } from './model-metering.ts';
+import { CompactionThresholdController } from './compaction-threshold.ts';
+import { isCompactionThreshold } from '@phaneris/shared/agent/compaction-threshold';
 import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
 import { allowPhanerisMetadataProperties, stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
@@ -170,6 +175,7 @@ import {
 // ============================================================
 
 const sessionLifecycle = new SessionLifecycle<AgentSession>();
+const compactionControllers = new WeakMap<AgentSession, CompactionThresholdController>();
 let contextPolicy: ContextPolicy = 'compact';
 // Set by the host when a user retries a failed handoff: the next request
 // generates the document regardless of the measured budget.
@@ -690,7 +696,10 @@ async function createSession(): Promise<AgentSession> {
   // settingsManager: explicit in-memory settings (retry policy, compaction)
   // instead of the SDK default that merges `<cwd>/.pi/settings.json` from the
   // user's working directory and writes to `<agentDir>/settings.json`.
-  const mainSettings = createPhanerisSettingsManager('main');
+  const mutableSettings = createMutablePhanerisSettingsManager('main');
+  const mainSettings = mutableSettings.settings;
+  let ownedSession: AgentSession | undefined;
+  const compactionController = new CompactionThresholdController(mainSettings, () => sessionLifecycle.current === ownedSession ? ownedSession : undefined, mutableSettings.writeCompactionReserve);
   const sessionOptions: CreateAgentSessionOptions = {
     cwd,
     modelRuntime,
@@ -698,6 +707,7 @@ async function createSession(): Promise<AgentSession> {
     tools: [...catalog.allowlist],
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
     resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), settingsManager: mainSettings, observeLifecycle: observeSdkLifecycle,
+      installCompaction: pi => compactionController.install(pi),
       wrapOrchestrationTool: wrapSingleTool,
       gateToolCall: async (toolName, input, toolCallId) => { await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true); } }),
     settingsManager: mainSettings,
@@ -767,6 +777,9 @@ async function createSession(): Promise<AgentSession> {
 
   // Create the session — tools flow through customTools + allowlist (see comment above).
   const { session } = await createAgentSession(sessionOptions);
+  ownedSession = session;
+  compactionControllers.set(session, compactionController);
+  await compactionController.update(initConfig.compactionThresholdTokens ?? null, session.model);
   if (sessionOptions.model && (session.agent.state.model.provider !== sessionOptions.model.provider || session.agent.state.model.id !== sessionOptions.model.id)) {
     session.dispose();
     throw new Error('Pi resumed a different model or provider than the configured connection; reselect the model before continuing.');
@@ -781,7 +794,7 @@ async function createSession(): Promise<AgentSession> {
   contextPolicy = initConfig?.contextPolicy ?? 'compact';
   session.setAutoCompactionEnabled(contextPolicy === 'compact');
   session.agent.streamFunction = createContextPolicyStream(
-    withDurableAccounting(sessionStream),
+    withDurableAccounting(sessionStream, () => session.isCompacting ? 'compaction' : undefined),
     () => contextPolicy,
     signal => send({ type: 'context_handoff', signal }),
     () => { const forced = forcedContextHandoff; forcedContextHandoff = false; return forced },
@@ -937,7 +950,7 @@ async function requestDurableModelPrepare(
   provider: string,
   model: string,
   canonicalRequestHash: string,
-  purpose?: 'cache_warm',
+  purpose?: 'cache_warm' | 'compaction',
   durableRun = currentDurableModelRun(),
 ): Promise<PreparedDurableModel> {
   if (!initConfig || !durableRun) {
@@ -969,7 +982,7 @@ async function requestDurableModelPrepare(
 
 async function requestDurableModelOutcome(input: {
   prepared: PreparedDurableModel;
-  purpose?: 'cache_warm';
+  purpose?: 'cache_warm' | 'compaction';
   durableRun?: { runOperationId: string; turnId: string };
   providerRequestId: string;
   provider: string;
@@ -978,6 +991,8 @@ async function requestDurableModelOutcome(input: {
   message: AssistantMessage;
   requestObservation?: import('@phaneris/shared/durable-runtime/types').NativeRequestObservation;
 }): Promise<number> {
+  const metering = modelMetering(input.message, input.requestObservation);
+  const completeMetering = metering.inputKnown && metering.outputKnown;
   const durableRun = input.durableRun ?? currentDurableModelRun();
   if (!initConfig || !durableRun) {
     throw new Error('Durable model outcome boundary is unavailable');
@@ -1007,13 +1022,15 @@ async function requestDurableModelOutcome(input: {
       .map(part => part.text)
       .join(''),
     usage: {
-      inputTokens: input.message.usage.input,
-      outputTokens: input.message.usage.output,
-      costUsd: input.message.usage.cost.total,
+      inputTokens: metering.inputKnown ? input.message.usage.input : undefined,
+      outputTokens: metering.outputKnown ? input.message.usage.output : undefined,
+      costUsd: completeMetering ? input.message.usage.cost.total : undefined,
       payload: {
-        kind: input.purpose ?? 'model_attempt', requestSeq: Number(input.providerRequestId), usage: input.message.usage,
+        kind: input.purpose ?? 'model_attempt', requestSeq: Number(input.providerRequestId),
+        usage: metering.status === 'unavailable' ? undefined : input.message.usage,
+        metering,
         assistantMetrics: (input.message as AssistantMessage & { assistantMetrics?: import('@phaneris/core/types').AssistantMetrics }).assistantMetrics,
-        costSource: 'pi_sdk_estimate', responseModel: input.message.responseModel,
+        costSource: completeMetering ? 'pi_sdk_estimate' : 'unknown', responseModel: input.message.responseModel,
         providerThinkingLevel: input.message.providerThinkingLevel,
       },
     },
@@ -1390,7 +1407,7 @@ async function queryLlm(
     };
 
     const { session: ephemeralSession } = await createAgentSession(ephemeralOptions);
-    ephemeralSession.agent.streamFunction = withDurableAccounting(ephemeralSession.agent.streamFunction);
+    ephemeralSession.agent.streamFunction = withDurableAccounting(ephemeralSession.agent.streamFunction, () => ephemeralSession.isCompacting ? 'compaction' : undefined);
     const resource: EphemeralQueryResource = {
       abort: () => ephemeralSession.abort(),
       dispose: () => ephemeralSession.dispose(),
@@ -1524,6 +1541,11 @@ async function runMiniCompletion(prompt: string): Promise<string | null> {
 
 const handleSessionEvent = createSessionEventAdapter({
   currentSession: () => sessionLifecycle.current, send, debugLog, observeSdkLifecycle,
+  clearCompactionFailure: () => {
+    const controller = sessionLifecycle.current && compactionControllers.get(sessionLifecycle.current);
+    if (controller) controller.failure = undefined;
+  },
+  compactionFailure: () => sessionLifecycle.current ? compactionControllers.get(sessionLifecycle.current)?.failure : undefined,
   lengthContinuationTracker, accounting: durableToolAccounting,
   diagnostics: { capturePromptSnapshot, rememberPromptSnapshot, getPhanerisSystemPrompt, promptSnapshots },
   prefetch(content) {
@@ -1881,7 +1903,8 @@ async function handleCompact(msg: Extract<InboundMessage, { type: 'compact' }>):
       },
     });
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
+    const current = sessionLifecycle.current;
+    const errorMsg = (current && compactionControllers.get(current)?.failure) || (error instanceof Error ? error.message : String(error));
     debugLog(`[compact] Failed after ${Date.now() - startedAt}ms: ${errorMsg}`);
     send({
       type: 'compact_result',
@@ -1897,7 +1920,11 @@ async function handleSetAutoCompaction(msg: Extract<InboundMessage, { type: 'set
     const session = await ensureSession();
     const policy = msg.policy ?? (msg.enabled ? 'compact' : 'manual');
     if (!isContextPolicy(policy) || msg.enabled !== (policy === 'compact')) throw new Error('Invalid context policy');
+    if (!isCompactionThreshold(msg.compactionThresholdTokens ?? null)) throw new Error('Invalid compaction threshold');
     session.setAutoCompactionEnabled(msg.enabled);
+    await compactionControllers.get(session)?.update(msg.compactionThresholdTokens ?? null, session.model);
+    send({ type: 'event', event: { type: 'context_usage', ...readContextUsage(session) } });
+    if (initConfig) initConfig.compactionThresholdTokens = msg.compactionThresholdTokens ?? null;
     contextPolicy = policy;
     if (initConfig) initConfig.contextPolicy = policy;
     send({
@@ -1965,6 +1992,8 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
       }
 
       await sessionLifecycle.current.setModel(piModel);
+      await compactionControllers.get(sessionLifecycle.current)?.refreshModel(piModel);
+      send({ type: 'event', event: { type: 'context_usage', ...readContextUsage(sessionLifecycle.current) } });
       setInterceptorApiHints(piModel as { api?: string; provider?: string; baseUrl?: string });
       sendThinkingLevelState();
       debugLog(`[runtime_config] Updated runtime config and active model: ${piModel.provider}/${piModel.id}`);
@@ -2007,6 +2036,8 @@ async function handleSetModel(msg: Extract<InboundMessage, { type: 'set_model' }
   }
   try {
     await sessionLifecycle.current.setModel(piModel);
+    await compactionControllers.get(sessionLifecycle.current)?.refreshModel(piModel);
+    send({ type: 'event', event: { type: 'context_usage', ...readContextUsage(sessionLifecycle.current) } });
     setInterceptorApiHints(piModel as { api?: string; provider?: string; baseUrl?: string });
     const contextWindow = sessionLifecycle.current.agent.state.model?.contextWindow;
     send({ type: 'set_model_result', model: msg.model, contextWindow });

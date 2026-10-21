@@ -378,6 +378,8 @@ export const CHANNEL_MAP = {
   getExtendedPromptCache: invoke(RPC_CHANNELS.caching.GET_EXTENDED_PROMPT_CACHE),
   getContextPolicy: invoke(RPC_CHANNELS.caching.GET_CONTEXT_POLICY),
   setContextPolicy: invoke(RPC_CHANNELS.caching.SET_CONTEXT_POLICY),
+  getCompactionThreshold: invoke(RPC_CHANNELS.caching.GET_COMPACTION_THRESHOLD),
+  setCompactionThreshold: invoke(RPC_CHANNELS.caching.SET_COMPACTION_THRESHOLD),
   getPromptCacheWarming: invoke(RPC_CHANNELS.caching.GET_PROMPT_CACHE_WARMING),
   setExtendedPromptCache: invoke(RPC_CHANNELS.caching.SET_EXTENDED_PROMPT_CACHE),
   setPromptCacheWarming: invoke(RPC_CHANNELS.caching.SET_PROMPT_CACHE_WARMING),

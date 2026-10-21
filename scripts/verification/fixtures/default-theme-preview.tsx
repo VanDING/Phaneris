@@ -41,6 +41,7 @@ const handlers: Record<string, (...args: any[]) => any> = {
   checkGitBash: () => ({ platform: 'darwin', found: true }), getWorkspaces: () => workspaces,
   getWorkspaceSettings: () => ({}), getDefaultThinkingLevel: () => 'max', setDefaultThinkingLevel: () => ({ success: true }),
   getExtendedPromptCache: () => false, getPromptCacheWarming: () => false,
+  getCompactionThreshold: () => null, setCompactionThreshold: () => {},
   getContextPolicy: () => state.contextPolicy, setContextPolicy: value => { state.contextPolicy = value },
   getRtkEnabled: () => false, getRtkStatus: () => ({ available: false }), getCredentialHealth: () => ({ issues: [], healthy: true }),
   getDecisionLayerStatus: () => decision,

@@ -4,6 +4,8 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Features
 
+- **Compaction threshold** — Configure an optional context token threshold in AI settings. Keep the SDK default when blank, clamp to the active model, and preserve the original summary budgets, cancellation and durable usage accounting.
+
 - **Project memory and MCP content** — Add an append-only project memory tool and source resource/template/prompt tools. Resource-only MCP servers connect without requiring a tools capability, and binary content is saved with the session.
 - **Chat starters** — Workspaces can define up to three prompt chips shown on the new chat screen. A starter sends its prompt verbatim, enables the sources it mentions (waiting until they are enabled before the message goes out), and invokes the skills it mentions; unknown mentions are ignored. Invalid starters (too many, blank, over-long) are rejected when saved rather than rendered.
 - **HEIC/HEIF photos** — Photos and screenshots from iOS attach and preview correctly. HEIC/HEIF is transcoded to JPEG once, in a worker that is terminated if it exceeds its deadline, and the stored bytes, MIME type, extension and size always describe the same artifact. AVIF is detected explicitly and never converted.
@@ -19,6 +21,11 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
+- **Usage and failure diagnostics** — Keep missing provider usage distinct from reported zero and preserve partial usage on errors or cancellation. Show unknown costs separately from SDK estimates, retain canonical tool names in validation failure hooks, and suppress expected PDF repair warnings while keeping real errors.
+
+- **Attachment drafts** — Normalize HEIC files from file selection, drag and drop, and paste before sending. Keep the draft when conversion fails, preserve text typed while storage is pending, and use transferable worker memory for small images in Electron.
+- **Workspace editing** — Add rich mentions to chat starter settings, protect settings while their initial read is pending or has failed, and isolate delayed reads and writes when switching workspaces. Keep model catalogs tied to the selected provider while requests are loading or finish out of order.
+- **Document editing and PDF resources** — Allow pasted images after an artifact editor finishes its initial validation, and release PDFium documents and render bitmaps on success and failure.
 - **Pi interruption recovery** — Return cross-session delivery receipts after the message is durably accepted, without waiting for the receiving agent to finish. Preserve known tool results after cancellation, allow a new turn after a model-only interruption while retaining unknown billing, and save credential-redacted diagnostics for unexpected Pi exits.
 - **Model and workspace settings** — Saving a provider connection no longer reverts a model field you did not edit: the default model, the utility model and the stored model list are each kept or updated on their own, and switching provider never carries the previous provider's models along. Workspace chat starters are cleared the moment you switch workspaces, so a slow response for the workspace you left can no longer appear over the one you are in.
 - **Workspace and source lifecycle** — Keep Pages, projects and automations on the current workspace when older requests finish late. Share concurrent Page initialization and MCP connections, close connections that are still starting during disconnect, and reuse the first MCP tool catalog response during connection setup.

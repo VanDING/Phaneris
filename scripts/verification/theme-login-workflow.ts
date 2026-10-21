@@ -3,15 +3,14 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import { createServer } from 'vite'
+import { buildFixturePage } from './fixture-bundle'
 import { verificationWorkflow } from './verification-artifacts'
 import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
 await verificationWorkflow('theme-login', async run => {
   const root = resolve(import.meta.dir, '../..'), source = 'apps/webui/src/login.html'
   run.json('source-hashes.json', { [source]: createHash('sha256').update(readFileSync(join(root, source))).digest('hex') })
-  const launched = await launchWorkflowBrowser(), server = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
-    server: { host: '127.0.0.1', port: 0, open: false } })
-  await server.listen(); const base = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}`
+  const launched = await launchWorkflowBrowser(), server = await buildFixturePage({ runDirectory: run.directory, entry: source })
+  const base = server.url
   const context = await launched.browser.newContext({ viewport: { width: 390, height: 820 }, reducedMotion: 'reduce', hasTouch: true }), page = await context.newPage()
   const checks: { id: string; passed: boolean; error?: string }[] = [], samples: unknown[] = [], errors: string[] = [], requests: string[] = []
   page.on('pageerror', error => errors.push(error.message)); page.on('request', request => requests.push(request.url()))
@@ -22,7 +21,7 @@ await verificationWorkflow('theme-login', async run => {
   try {
     for (const mode of ['light', 'dark'] as const) {
       await page.emulateMedia({ colorScheme: mode })
-      await gotoWithRetry(page, `${base}/apps/webui/src/login.html`)
+      await gotoWithRetry(page, base)
       await check(`TC14-login-${mode}`, async () => {
         assert.equal(await page.evaluate(() => document.documentElement.dataset.themeHostPolicy), 'unauth-default-system')
         assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), mode === 'dark')

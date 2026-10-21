@@ -5,7 +5,8 @@
  * Auto-refreshes when workspace changes.
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { readAfterReconnect } from '@/lib/read-after-reconnect'
 import type { StatusConfig } from '@phaneris/shared/statuses'
 import { clearIconCache } from '@/config/session-status-config'
 
@@ -28,8 +29,10 @@ export function useStatuses(workspaceId: string | null): UseStatusesResult {
   const [statuses, setStatuses] = useState<StatusConfig[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const generation = useRef(0)
 
   const refresh = useCallback(async () => {
+    const request = ++generation.current
     if (!workspaceId) {
       setStatuses([])
       setIsLoading(false)
@@ -38,20 +41,23 @@ export function useStatuses(workspaceId: string | null): UseStatusesResult {
 
     try {
       setIsLoading(true)
-      const configs = await window.electronAPI.listStatuses(workspaceId)
+      const configs = await readAfterReconnect(() => window.electronAPI.listStatuses(workspaceId))
+      if (request !== generation.current) return
       setStatuses(configs)
       setError(null)
     } catch (err) {
+      if (request !== generation.current) return
       console.error('[useStatuses] Failed to load statuses:', err)
       setError(err instanceof Error ? err.message : 'Failed to load statuses')
     } finally {
-      setIsLoading(false)
+      if (request === generation.current) setIsLoading(false)
     }
   }, [workspaceId])
 
   // Load statuses when workspace changes
   useEffect(() => {
-    refresh()
+    void refresh()
+    return () => { generation.current = generation.current + 1 }
   }, [refresh])
 
   // Subscribe to live status changes (config or icon file changes)

@@ -32,3 +32,4 @@ export { getSessionDraft, setSessionDraft, deleteSessionDraft, getAllSessionDraf
 export { shouldMigratePiOpenAiProvider, shouldRepairPiApiKeyCodexProvider, inferModelSelectionMode, migrateLegacyLlmConnectionsConfig, migrateOrphanedDefaultConnections, migrateLegacyCredentials } from './migrations.ts';
 export { getLlmConnections, getLlmConnection, addLlmConnection, updateLlmConnection, deleteLlmConnection, getDefaultLlmConnection, setDefaultLlmConnection, getDefaultThinkingLevel, setDefaultThinkingLevel, touchLlmConnection } from './connections.ts';
 export { getToolIconsDir, ensureToolIcons } from './bundled-assets.ts';
+export { getCompactionThreshold, setCompactionThreshold } from './appearance.ts';

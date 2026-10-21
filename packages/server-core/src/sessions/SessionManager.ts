@@ -1,4 +1,4 @@
-import { getContextPolicy } from '@phaneris/shared/config/appearance';
+import { getContextPolicy, getCompactionThreshold } from '@phaneris/shared/config/appearance';
 import { assembleSessionAgent } from './agent-assembly'
 import { buildAgentSessionSnapshot } from './agent-product-context'
 import { createSessionAgentCallbacks } from './agent-product-callbacks'
@@ -3964,6 +3964,14 @@ export class SessionManager implements ISessionManager {
     }
   }
 
+  async refreshCompactionThreshold(): Promise<void> {
+    for (const managed of this.sessions.values()) {
+      if (managed.runtime.isProcessing) continue;
+      try { await managed.runtime.agent?.updateCompactionThreshold?.(getCompactionThreshold()); }
+      catch (error) { sessionLog.warn(`Session ${managed.id} kept its previous compaction threshold: ${error instanceof Error ? error.message : String(error)}`); }
+    }
+  }
+
   async setSessionContextPolicy(sessionId: string, policy: ContextPolicy | null): Promise<void> {
     if (policy !== null && !isContextPolicy(policy)) throw new Error('Invalid context policy')
     const managed = this.sessions.get(sessionId)
@@ -4367,6 +4375,7 @@ context: backendContext,
 hostRuntime: buildBackendHostRuntimeContext(),
 config: {
 contextPolicy: managed.contextPolicy ?? getContextPolicy(),
+compactionThresholdTokens: getCompactionThreshold(),
 workspace: managed.workspace,
 miniModel,
 thinkingLevel: managed.thinkingLevel,
@@ -7433,6 +7442,7 @@ initialSources: {
       // ensureFreshToken mirrors the disk write to source.config in-memory).
       const agent = await this.getOrCreateAgent(managed)
       await agent.updateContextPolicy?.(managed.contextPolicy ?? getContextPolicy())
+      await agent.updateCompactionThreshold?.(getCompactionThreshold())
       sendSpan.mark('agent.ready')
 
       // Always set all sources for context (even if none are enabled), including built-ins

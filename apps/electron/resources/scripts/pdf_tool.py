@@ -28,6 +28,7 @@ Validation note:
 
 import io
 import json
+import logging
 import math
 import sys
 import zlib
@@ -37,6 +38,10 @@ import click
 import pypdfium2 as pdfium
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import BooleanObject, NameObject, RectangleObject
+
+# The CLI reports caught PDF failures through its documented Error: channel.
+# Keep library errors visible while suppressing duplicate repair warnings.
+logging.getLogger("pypdf").setLevel(logging.ERROR)
 
 # Standard page sizes in points (width x height)
 PAGE_SIZES: dict[str, tuple[float, float]] = {
@@ -166,7 +171,11 @@ def _render_page_to_pil(page: pdfium.PdfPage, dpi: int = 150):
     """Render a pypdfium2 page to a PIL Image at the given DPI."""
     scale = dpi / 72
     bitmap = page.render(scale=scale)
-    return bitmap.to_pil()
+    try:
+        # PIL can alias the native bitmap; detach before closing its backing memory.
+        return bitmap.to_pil().copy()
+    finally:
+        bitmap.close()
 
 
 def _make_watermark_pdf(width: float, height: float, text: str, font_size: float,
@@ -436,6 +445,7 @@ def extract(file: str, pages: str | None, output: str | None) -> None:
 
     Extracts all text by default, or specific pages with --pages.
     """
+    pdf = None
     try:
         pdf = pdfium.PdfDocument(file)
         total = len(pdf)
@@ -452,6 +462,9 @@ def extract(file: str, pages: str | None, output: str | None) -> None:
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)
+    finally:
+        if pdf is not None:
+            pdf.close()
 
 
 @cli.command()
@@ -883,6 +896,7 @@ def flatten(file: str, output: str) -> None:
     identical PDF where forms and annotations are baked into the page content.
     """
     check_output_differs(file, output)
+    pdf = None
     try:
         pdf = pdfium.PdfDocument(file)
         writer = PdfWriter()
@@ -913,6 +927,9 @@ def flatten(file: str, output: str) -> None:
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)
+    finally:
+        if pdf is not None:
+            pdf.close()
 
 
 @cli.command("header-footer")
@@ -1032,6 +1049,7 @@ def redact(file: str, texts: tuple[str, ...], areas: tuple[str, ...], output: st
     if not texts and not areas:
         click.echo("Error: provide --text and/or --area to redact.", err=True)
         sys.exit(1)
+    pdf = None
     try:
         from PIL import ImageDraw
 
@@ -1131,6 +1149,9 @@ def redact(file: str, texts: tuple[str, ...], areas: tuple[str, ...], output: st
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)
+    finally:
+        if pdf is not None:
+            pdf.close()
 
 
 @cli.command()
@@ -1190,6 +1211,7 @@ def sanitize(file: str, output: str) -> None:
 @click.option("-o", "--output", type=click.Path(), required=True, help="Output directory.")
 def to_image(file: str, fmt: str, dpi: int, pages: str | None, output: str) -> None:
     """Convert PDF pages to images (PNG or JPG)."""
+    pdf = None
     try:
         pdf = pdfium.PdfDocument(file)
         total = len(pdf)
@@ -1212,6 +1234,9 @@ def to_image(file: str, fmt: str, dpi: int, pages: str | None, output: str) -> N
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)
+    finally:
+        if pdf is not None:
+            pdf.close()
 
 
 @cli.command("from-image")
@@ -1245,6 +1270,7 @@ def to_docx(file: str, pages: str | None, output: str) -> None:
     """Convert PDF to Word document (text extraction based)."""
     from docx import Document as DocxDocument
 
+    pdf = None
     try:
         pdf = pdfium.PdfDocument(file)
         total = len(pdf)
@@ -1266,6 +1292,9 @@ def to_docx(file: str, pages: str | None, output: str) -> None:
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)
+    finally:
+        if pdf is not None:
+            pdf.close()
 
 
 @cli.command("to-pptx")
@@ -1278,6 +1307,7 @@ def to_pptx(file: str, dpi: int, pages: str | None, output: str) -> None:
     from pptx import Presentation
     from pptx.util import Emu
 
+    pdf = None
     try:
         pdf = pdfium.PdfDocument(file)
         total = len(pdf)
@@ -1315,6 +1345,9 @@ def to_pptx(file: str, dpi: int, pages: str | None, output: str) -> None:
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)
+    finally:
+        if pdf is not None:
+            pdf.close()
 
 
 if __name__ == "__main__":

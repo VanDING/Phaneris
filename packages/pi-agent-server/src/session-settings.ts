@@ -119,3 +119,31 @@ export function createPhanerisSettingsManager(
 ): SettingsManager {
   return SettingsManager.inMemory(buildPhanerisPiSettings(purpose), { projectTrusted: false });
 }
+
+/** SDK-owned settings backed by an app-owned, session-local memory store. */
+export function createMutablePhanerisSettingsManager(purpose: PhanerisPiSessionPurpose = 'main') {
+  const memory: Record<'global' | 'project', string | undefined> = {
+    global: JSON.stringify(buildPhanerisPiSettings(purpose)), project: undefined,
+  };
+  const storage = {
+    withLock(scope: 'global' | 'project', update: (current: string | undefined) => string | undefined): void {
+      const next = update(memory[scope]);
+      if (next !== undefined) memory[scope] = next;
+    },
+  };
+  const settings = SettingsManager.fromStorage(storage, { projectTrusted: false });
+  return {
+    settings,
+    async writeCompactionReserve(modelKey: string, reserveTokens: number): Promise<void> {
+      await settings.flush();
+      storage.withLock('global', current => {
+        const value = JSON.parse(current ?? '{}') as PiSettings;
+        const compaction = value.compaction ??= {};
+        const overrides = compaction.modelOverrides ??= {};
+        overrides[modelKey] = { ...overrides[modelKey], reserveTokens };
+        return JSON.stringify(value);
+      });
+      await settings.reload();
+    },
+  };
+}

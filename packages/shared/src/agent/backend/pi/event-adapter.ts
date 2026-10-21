@@ -860,7 +860,11 @@ export class PiEventAdapter extends BaseEventAdapter {
       case 'tool_execution_end': {
         const durable = { ...this.durableAttachments(event), ...(event.parentToolCallId ? { parentToolUseId: event.parentToolCallId } : {}) };
         const toolCallId = event.toolCallId;
-        const resolvedToolName = this.toolNames.get(toolCallId) || 'tool';
+        // Validation may fail before durable prepare publishes a start. The
+        // SDK end still carries the real identity; do not invent an execution
+        // start just to recover that metadata for the result/failure hook.
+        const resolvedToolName = this.toolNames.get(toolCallId)
+          || (typeof event.toolName === 'string' && event.toolName ? this.resolveToolName(event.toolName) : 'tool');
         this.toolNames.delete(toolCallId);
 
         // Wall-clock duration from the tracked start stamp (server ts or local).
@@ -1270,7 +1274,7 @@ export class PiEventAdapter extends BaseEventAdapter {
    * Pi tools use lowercase names (read, write, edit, bash, grep, find, ls).
    */
   private resolveToolName(rawName: string): string {
-    return PI_TOOL_NAME_MAP[rawName] || rawName;
+    return Object.hasOwn(PI_TOOL_NAME_MAP, rawName) ? PI_TOOL_NAME_MAP[rawName]! : rawName;
   }
 
   /**

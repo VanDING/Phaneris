@@ -43,6 +43,7 @@ export interface InitMessage {
   cacheRetention?: CacheRetention;
   promptCacheWarming?: boolean;
   contextPolicy?: ContextPolicy;
+  compactionThresholdTokens?: number | null;
 }
 
 export interface RuntimeConfigUpdateMessage {
@@ -75,7 +76,7 @@ export type InboundMessage =
   | { type: 'set_model'; model: string }
   | { type: 'set_thinking_level'; level: string }
   | { type: 'compact'; id: string; customInstructions?: string; durableRunOperationId?: string; durableTurnId?: string }
-  | { type: 'set_auto_compaction'; id: string; enabled: boolean; policy?: ContextPolicy }
+  | { type: 'set_auto_compaction'; id: string; enabled: boolean; policy?: ContextPolicy; compactionThresholdTokens?: number | null }
   | { type: 'force_context_handoff' }
   | { type: 'set_browser_tool_enabled'; enabled: boolean }
   | { type: 'set_cache_retention'; cacheRetention: CacheRetention }
@@ -160,7 +161,7 @@ export interface OutboundDurableToolOutcomeReq {
 }
 
 export interface OutboundDurableModelPrepareReq {
-  purpose?: 'cache_warm';
+  purpose?: 'cache_warm' | 'compaction';
   type: 'durable_model_prepare_request';
   requestId: string;
   sessionId: string;
@@ -173,7 +174,7 @@ export interface OutboundDurableModelPrepareReq {
 }
 
 export interface OutboundDurableModelOutcomeReq {
-  purpose?: 'cache_warm';
+  purpose?: 'cache_warm' | 'compaction';
   type: 'durable_model_outcome_request';
   requestId: string;
   sessionId: string;

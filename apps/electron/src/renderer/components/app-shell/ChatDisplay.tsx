@@ -135,7 +135,7 @@ function getTurnKey(turn: Turn): string {
 
 interface ChatDisplayProps {
   session: Session | null
-  onSendMessage: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void
+  onSendMessage: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void | Promise<boolean | void>
   onOpenFile: (path: string) => void
   onOpenUrl: (url: string) => void
   // Model selection
@@ -1226,7 +1226,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
   // Handle message submission from InputContainer
   // Backend handles interruption and queueing if currently processing
-  const handleSubmit = (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => {
+  const handleSubmit = async (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => {
     const hasBaseMessage = message.trim().length > 0
     const followUpSection = formatFollowUpSection(pendingFollowUpAnnotations, {
       includeTopSeparator: hasBaseMessage,
@@ -1238,7 +1238,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
     // Force stick-to-bottom when user sends a message
     isStickToBottomRef.current = true
-    onSendMessage(normalizedMessage, attachments, skillSlugs)
+    if (await onSendMessage(normalizedMessage, attachments, skillSlugs) === false) return false
 
     // Persist sent marker on follow-up annotations so TurnCard can distinguish
     // sent vs pending follow-ups. If user edits a follow-up later, TurnCard
@@ -1275,6 +1275,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     requestAnimationFrame(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: scrollBehavior('follow') })
     })
+    return true
   }
 
   const handleSaveAndSendFollowUp = useCallback((_target: {
@@ -1303,6 +1304,11 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   // Handle stop request from InputContainer
   // silent=true when redirecting (sending new message), silent=false when user clicks Stop button
   const handleStop = (silent = false) => {
+    if (starterRunRef.current) {
+      starterRunRef.current.cancelled = true
+      starterRunRef.current = null
+      return
+    }
     if (!session?.isProcessing) return
 
     // Explicit Stop (not a redirect/new-message send): put the in-flight prompt
@@ -1566,9 +1572,23 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   const liveSendableRef = React.useRef(false)
   liveSendableRef.current = !(isInputDisabled || disableSend || connectionUnavailable)
   const mountedRef = React.useRef(true)
-  React.useEffect(() => () => { mountedRef.current = false }, [])
+  React.useEffect(() => {
+    mountedRef.current = true
+    return () => { mountedRef.current = false }
+  }, [])
   /** One enable-then-send at a time: a double click must not send twice. */
-  const starterRunRef = React.useRef<string | null>(null)
+  const starterRunRef = React.useRef<{ sessionId: string; cancelled: boolean } | null>(null)
+  React.useEffect(() => {
+    const cancelPendingStarter = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.isComposing || event.defaultPrevented) return
+      if (!starterRunRef.current || !zoneRef.current?.contains(event.target as Node)) return
+      starterRunRef.current.cancelled = true
+      starterRunRef.current = null
+      event.preventDefault()
+    }
+    window.addEventListener('keydown', cancelPendingStarter)
+    return () => window.removeEventListener('keydown', cancelPendingStarter)
+  }, [zoneRef])
 
   const handleRunChatStarter = async (starter: { label: string; prompt: string }) => {
     if (!session) return
@@ -1587,7 +1607,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
       availableSkills: (skills ?? []).map(skill => skill.slug),
       enabledSources: session.enabledSourceSlugs ?? [],
     })
-    starterRunRef.current = runSessionId
+    const run = { sessionId: runSessionId, cancelled: false }
+    starterRunRef.current = run
     try {
       if (action.enableSources.length > 0 && onSourcesChange) {
         // Wait for the server to apply the selection: a starter enables its source
@@ -1607,14 +1628,16 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
         }
         // The click is only still valid for the session, workspace and sendable
         // state it started with.
-        if (!mountedRef.current) return
+        if (run.cancelled || !mountedRef.current) return
         if (liveSessionRef.current?.id !== runSessionId) return
         if ((liveWorkspaceRef.current ?? liveSessionRef.current?.workspaceId) !== runWorkspaceId) return
         if (!liveSendableRef.current) return
       }
-      handleSubmit(action.prompt, undefined, action.skillSlugs.length > 0 ? action.skillSlugs : undefined)
+      await handleSubmit(action.prompt, undefined, action.skillSlugs.length > 0 ? action.skillSlugs : undefined)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error))
     } finally {
-      starterRunRef.current = null
+      if (starterRunRef.current === run) starterRunRef.current = null
     }
   }
 

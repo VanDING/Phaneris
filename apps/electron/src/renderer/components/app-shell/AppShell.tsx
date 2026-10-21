@@ -44,6 +44,7 @@ import { TopBar } from "./TopBar"
 import { SquarePenRounded } from "../icons/SquarePenRounded"
 import { McpIcon } from "../icons/McpIcon"
 import { cn } from "@/lib/utils"
+import { readAfterReconnect } from "@/lib/read-after-reconnect"
 import { isMac, isWindows, isWebUI } from "@/lib/platform"
 import { Button } from "@/components/ui/button"
 import { HeaderIconButton } from "@/components/ui/HeaderIconButton"
@@ -1123,11 +1124,15 @@ function AppShellContent({
   // Load sources from backend on mount
   React.useEffect(() => {
     if (!activeWorkspaceId) return
-    window.electronAPI.getSources(activeWorkspaceId).then((loaded) => {
+    let cancelled = false
+    readAfterReconnect(() => window.electronAPI.getSources(activeWorkspaceId)).then((loaded) => {
+      if (cancelled) return
       setSources(loaded || [])
     }).catch(err => {
+      if (cancelled) return
       console.error('[Chat] Failed to load sources:', err)
     })
+    return () => { cancelled = true }
   }, [activeWorkspaceId])
 
   // Subscribe to live source updates (when sources are added/removed dynamically)
@@ -1580,11 +1585,15 @@ function AppShellContent({
     : undefined
   React.useEffect(() => {
     if (!activeWorkspaceId) return
-    window.electronAPI.getSkills(activeWorkspaceId, activeSessionWorkingDirectory).then((loaded) => {
+    let cancelled = false
+    readAfterReconnect(() => window.electronAPI.getSkills(activeWorkspaceId, activeSessionWorkingDirectory)).then((loaded) => {
+      if (cancelled) return
       setSkills(loaded || [])
     }).catch(err => {
+      if (cancelled) return
       console.error('[Chat] Failed to load skills:', err)
     })
+    return () => { cancelled = true }
   }, [activeWorkspaceId, activeSessionWorkingDirectory])
 
   // Filter session metadata by active workspace
@@ -1605,9 +1614,12 @@ function AppShellContent({
     return workspaceSessionMetas.filter(s => !s.isArchived)
   }, [workspaceSessionMetas])
 
+  const unreadRefreshGeneration = useRef(0)
   const refreshWorkspaceUnreadMap = useCallback(async () => {
+    const request = ++unreadRefreshGeneration.current
     try {
-      const summary = await window.electronAPI.getUnreadSummary()
+      const summary = await readAfterReconnect(() => window.electronAPI.getUnreadSummary())
+      if (request !== unreadRefreshGeneration.current) return
       const next: Record<string, boolean> = {}
 
       for (const workspace of workspaces) {
@@ -1616,6 +1628,7 @@ function AppShellContent({
 
       setWorkspaceUnreadMap(next)
     } catch (error) {
+      if (request !== unreadRefreshGeneration.current) return
       console.error('[AppShell] Failed to refresh workspace unread indicators:', error)
     }
   }, [workspaces])
@@ -1623,6 +1636,7 @@ function AppShellContent({
   // Initial + workspace-list refresh
   useEffect(() => {
     void refreshWorkspaceUnreadMap()
+    return () => { unreadRefreshGeneration.current = unreadRefreshGeneration.current + 1 }
   }, [refreshWorkspaceUnreadMap])
 
   // Keep active workspace unread indicator in sync with live metadata updates

@@ -314,7 +314,9 @@ const convert = typeof loaded === 'function' ? loaded : loaded.default
 Promise.resolve()
   .then(() => convert({ buffer: Buffer.from(workerData.buffer), format: 'JPEG', quality: workerData.quality }))
   .then((output) => {
-    const bytes = Buffer.from(output)
+    // Small Buffer.from results can use Node's untransferable pooled backing
+    // store. An owned Uint8Array is transferable in Electron as well as Bun.
+    const bytes = Uint8Array.from(output)
     parentPort.postMessage({ ok: true, bytes }, [bytes.buffer])
   })
   .catch((error) => {
@@ -441,6 +443,7 @@ async function transcodeInWorker(buffer: Buffer, quality: number, timeoutMs: num
     resourceLimits: { maxOldGenerationSizeMb: 2048 },
   });
   let settled = false;
+  let timedOut = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     return await new Promise<Buffer>((resolve, reject) => {
@@ -450,6 +453,7 @@ async function transcodeInWorker(buffer: Buffer, quality: number, timeoutMs: num
         if (error) reject(error); else resolve(bytes as Buffer);
       };
       timer = setTimeout(() => {
+        timedOut = true;
         heicTranscodeStats.terminated++;
         // Terminating the worker is what actually stops the synchronous libheif
         // decode and jpeg-js encode; rejecting the promise alone would not.
@@ -459,6 +463,7 @@ async function transcodeInWorker(buffer: Buffer, quality: number, timeoutMs: num
         );
       }, timeoutMs);
       worker.on('message', (message: { ok: boolean; bytes?: Buffer; error?: string }) => {
+        if (timedOut || settled) return;
         if (message.ok && message.bytes) {
           heicTranscodeStats.completed++;
           finish(null, Buffer.from(message.bytes));
@@ -471,12 +476,12 @@ async function transcodeInWorker(buffer: Buffer, quality: number, timeoutMs: num
         // After the result has settled the finally block terminates the worker;
         // a late error or a non-zero exit from that termination is cleanup, not a
         // failed transcode, and counting it inflated the diagnostics.
-        if (settled) return;
+        if (settled || timedOut) return;
         heicTranscodeStats.failed++;
         finish(error instanceof Error ? error : new Error(String(error)));
       });
       worker.on('exit', (code) => {
-        if (settled) return;
+        if (settled || timedOut) return;
         if (code !== 0) {
           heicTranscodeStats.failed++;
           finish(new Error(`HEIC/HEIF decoder exited with code ${code}`));

@@ -2,7 +2,7 @@ import { mkdirSync } from 'node:fs';
 import { DefaultResourceLoader, createCodemodeExtension, createToolSearchExtension, type ToolDefinition } from '@earendil-works/pi-coding-agent';
 import { registerNativeLifecycle, type ObserveLifecycle } from './native-lifecycle-observation.ts';
 import { createPhanerisSettingsManager } from './session-settings.ts';
-import type { SettingsManager } from '@earendil-works/pi-coding-agent';
+import type { SettingsManager, ExtensionAPI } from '@earendil-works/pi-coding-agent';
 
 /**
  * Current Phaneris system prompt for the active session.
@@ -50,6 +50,7 @@ export async function createPhanerisResourceLoader(options: {
   /** Prompt source for this loader; defaults to the module-level current Phaneris prompt. */
   getPrompt?: () => string;
   observeLifecycle?: ObserveLifecycle;
+  installCompaction?: (pi: ExtensionAPI) => void;
   /** Main sessions only. Ephemeral utility queries never get orchestration tools. */
   wrapOrchestrationTool?: (tool: ToolDefinition<any, any>) => ToolDefinition<any, any>;
   gateToolCall?: (toolName: string, input: Record<string, unknown>, toolCallId: string) => Promise<void>;
@@ -79,6 +80,7 @@ export async function createPhanerisResourceLoader(options: {
       {
         name: 'phaneris-system-prompt',
         factory: (pi) => {
+          options.installCompaction?.(pi);
           if (options.observeLifecycle) registerNativeLifecycle(pi, options.observeLifecycle);
           if (options.gateToolCall) pi.on('tool_call', async event => {
             try { await options.gateToolCall!(event.toolName, event.input, event.toolCallId); }

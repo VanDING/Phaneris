@@ -46,6 +46,7 @@ export interface StoredConfig {
   allowRemoteEvaluate?: boolean;  // Allow remote agents to call `browser_tool evaluate` on local browser (default: true).
   // Prompt caching & context
   contextPolicy?: import('../agent/context-policy').ContextPolicy;
+  compactionThresholdTokens?: number;
   promptCacheWarming?: boolean; // Cost-aware warming during active tool runs (default: false)
   extendedPromptCache?: boolean;  // Use long-lived prompt cache retention where supported (default: false)
   // Token optimization

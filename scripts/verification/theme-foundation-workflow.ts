@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
 import type { Page } from 'playwright'
-import { createServer } from 'vite'
+import { buildFixturePage } from './fixture-bundle'
 import { verificationWorkflow } from './verification-artifacts'
 import { gotoWithRetry, launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
 import { startProcess, testSecret, type RunningProcess } from './fixtures/governance-process-support'
@@ -64,15 +64,16 @@ await verificationWorkflow('theme-foundation', async run => {
     // timeline is stalled, and an unbounded settle is indistinguishable from a
     // hung page. Waiting a fixed handful of frames afterwards is enough for the
     // paint the assertions look at.
-    await Promise.race([
+    let timer: ReturnType<typeof setTimeout> | undefined
+    try { await Promise.race([
       target.evaluate(async () => {
         await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
         await Promise.all(document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity)
           .map(animation => animation.finished.catch(() => {})))
         await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
       }).catch(() => {}),
-      Bun.sleep(5_000).then(() => { stage('settle:deadline', { note: 'animations did not all finish within 5s' }) }),
-    ])
+      new Promise<void>(resolve => { timer = setTimeout(() => { stage('settle:deadline', { note: 'animations did not all finish within 5s' }); resolve() }, 5_000) }),
+    ]) } finally { clearTimeout(timer) }
   }
   async function focus(page: Page, selector: string) {
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
@@ -81,13 +82,23 @@ await verificationWorkflow('theme-foundation', async run => {
       return { focused: document.activeElement === element, visible: element.matches(':focus-visible'), outline: css.outlineStyle,
         width: parseFloat(css.outlineWidth), offset: parseFloat(css.outlineOffset), color: css.outlineColor,
         zoom: Number(getComputedStyle(document.documentElement).zoom) || 1,
-        x: rect.x, y: rect.y, w: rect.width, h: rect.height, shadow: css.boxShadow }
+        x: rect.x, y: rect.y, w: rect.width, h: rect.height, shadow: css.boxShadow,
+        craft: element.matches('.craft-control, .craft-focus, [data-craft-focus], .craft-icon-button'),
+        forcedColors: matchMedia('(forced-colors: active)').matches }
     })
   }
   function visibleFocus(sample: Awaited<ReturnType<typeof focus>>) {
     assert(sample.focused && sample.visible, 'Keyboard target must match focus-visible')
-    assert.notEqual(sample.outline, 'none', 'Keyboard outline must be visible')
-    assert(sample.width * sample.zoom >= 2 - 0.01, `Keyboard outline must render at least 2px: ${JSON.stringify(sample)}`)
+    if (sample.outline !== 'none') {
+      assert(sample.width * sample.zoom >= 2 - 0.01, `Keyboard outline must render at least 2px: ${JSON.stringify(sample)}`)
+      return
+    }
+    // Shared controls have used an accent ring since 23850cade (before this
+    // upgrade). Native controls and forced-colors still require their outline.
+    assert(sample.craft && !sample.forcedColors, 'Native/high-contrast keyboard outline must be visible')
+    const layers = paintedShadow(sample.shadow).split(/, (?=(?:rgba?|color|okl(?:ab|ch))\()/)
+    assert(layers.some(layer => !layer.includes('inset') && /0px 0px 0px 1\.5px\b/.test(layer)
+      && !/rgba\([^)]*,\s*0(?:\.0+)?\)/.test(layer)), `Shared keyboard accent ring must be visible: ${JSON.stringify(sample)}`)
   }
   // Tailwind composes harmless transparent ring/inset slots before the shadow.
   // Compare painted layers while retaining all raw computed styles in evidence.
@@ -95,17 +106,9 @@ await verificationWorkflow('theme-foundation', async run => {
     return value.split(/, (?=(?:rgba?|color|okl(?:ab|ch))\()/)
       .filter(layer => layer !== 'rgba(0, 0, 0, 0) 0px 0px 0px 0px').join(', ')
   }
-  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/theme-foundation.tsx"></script></body></html>')
-  for (const [host, source] of Object.entries({ electron: 'apps/electron/src/renderer/index.css', ui: 'packages/ui/src/styles/index.css',
-    viewer: 'apps/viewer/src/index.css', webui: 'apps/webui/src/index.css' }))
-    writeFileSync(join(run.directory, `${host}.css`), `@import "${relative(run.directory, join(root, source)).replaceAll('\\', '/')}";\n@source "${join(root, 'scripts/verification/fixtures/theme-foundation.tsx').replaceAll('\\', '/')}";\n`)
   const launched = await launchWorkflowBrowser()
-  const server = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
-    optimizeDeps: { entries: [join(root, 'scripts/verification/fixtures/theme-foundation.tsx')],
-      include: ['react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'] },
-    server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**', `${run.directory}/**`] } } })
-  await server.listen()
-  const base = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}/${relative(root, run.directory).replaceAll('\\', '/')}/index.html`
+  const server = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/theme-foundation.tsx' })
+  const base = server.url
   const context = await launched.browser.newContext({ viewport: { width: 1280, height: 820 }, reducedMotion: 'reduce' })
   const page = await context.newPage()
   page.on('pageerror', error => pageErrors.push(error.message))
@@ -113,12 +116,11 @@ await verificationWorkflow('theme-foundation', async run => {
   let child: RunningProcess | undefined
   try {
     for (const host of ['electron', 'ui', 'viewer', 'webui']) {
-      const css = `/${relative(root, run.directory).replaceAll('\\', '/')}/${host}.css`
       // `domcontentloaded` + the fixture's own ready marker, not `networkidle`:
       // the dev server's dependency optimizer keeps a connection open while it
       // re-bundles, and `networkidle` then never settles even though the page is
       // up. The marker below is the page's real readiness signal.
-      await gotoWithRetry(page, `${base}?host=${host}&css=${encodeURIComponent(css)}`, { waitUntil: 'domcontentloaded' })
+      await gotoWithRetry(page, `${base}?host=${host}`, { waitUntil: 'domcontentloaded' })
       await page.locator('[data-foundation-ready]').waitFor({ timeout: 60_000 })
       await page.evaluate(() => document.fonts.ready)
       for (const mode of ['light', 'dark'] as const) {
@@ -142,7 +144,16 @@ await verificationWorkflow('theme-foundation', async run => {
         })
         await check(`TF11-${host}-${mode}`, async () => {
           await page.getByTestId('select').focus(); await page.keyboard.press('Tab')
-          const row = await focus(page, '[data-testid="row"]'); visibleFocus(row); assert(row.offset + row.width <= 0.01, JSON.stringify(row))
+          const row = await focus(page, '[data-testid="row"]'); visibleFocus(row)
+          // outline-width remains a computed value even with outline:none.
+          // Inset outline geometry is the forced-colors contract; the ordinary
+          // shared ring is checked above by its actual painted shadow layer.
+          await page.emulateMedia({ forcedColors: 'active' })
+          try {
+            const highContrast = await focus(page, '[data-testid="row"]'); visibleFocus(highContrast)
+            assert(highContrast.offset + highContrast.width <= 0.01, JSON.stringify(highContrast))
+            samples.push({ host, mode, highContrast })
+          } finally { await page.emulateMedia({ forcedColors: 'none' }) }
           const clip = await page.getByTestId('clip').boundingBox(); assert(clip)
           samples.push({ host, mode, row, clip })
           assert(row.x >= clip.x - 1 && row.y >= clip.y - 1 && row.x + row.w <= clip.x + clip.width + 1, 'Inset focus row stays inside the clipping container')
@@ -156,7 +167,12 @@ await verificationWorkflow('theme-foundation', async run => {
             await settle(page)
             const after = await page.getByRole('listbox').evaluate(element => getComputedStyle(element).color)
             assert.notEqual(before, after, 'Open portal follows the mode')
-            await page.keyboard.press('ArrowDown'); await page.keyboard.press('Enter')
+            await page.keyboard.press('ArrowDown')
+            // Radix schedules arrow-key focus with setTimeout. Enter must follow
+            // that real focus move, otherwise it can select the previous item.
+            await waitForBrowserCondition(page, () => document.activeElement?.getAttribute('role') === 'option'
+              && document.activeElement.textContent === '第二项')
+            await page.keyboard.press('Enter')
             await page.getByRole('listbox').waitFor({ state: 'detached' })
             assert.equal(await page.getByTestId('select').innerText(), '第二项')
             // Portal unmount precedes FocusScope's asynchronous focus restore.
@@ -260,7 +276,17 @@ await verificationWorkflow('theme-foundation', async run => {
       activeWorkspaceId: 'theme-fixture', setupDeferred: true, themeMode: 'light', colorTheme: 'geek', themeFont: 'inter' }))
     stage('production-build:start', { command: 'webui:build' })
     const build = Bun.spawn([process.execPath, 'run', 'webui:build'], { cwd: root, stdout: 'pipe', stderr: 'pipe' })
-    const [out, err, code] = await Promise.all([new Response(build.stdout).text(), new Response(build.stderr).text(), build.exited])
+    const [out, err, code] = await bounded('production-build', 600_000,
+      Promise.all([new Response(build.stdout).text(), new Response(build.stderr).text(), build.exited])).catch(async error => {
+      if (build.exitCode === null) {
+        if (process.platform === 'win32') {
+          const kill = Bun.spawn(['taskkill', '/PID', String(build.pid), '/T', '/F'], { stdout: 'ignore', stderr: 'ignore' })
+          await bounded('production-build-kill', 15_000, kill.exited).catch(() => {})
+        } else build.kill('SIGKILL')
+      }
+      await bounded('production-build-reap', 15_000, build.exited).catch(() => {})
+      throw error
+    })
     writeFileSync(join(run.directory, 'production-web-build.log'), out + err); assert.equal(code, 0, err.slice(-2000))
     stage('production-build:done', { exitCode: code, bytes: out.length + err.length })
     const dist = join(root, 'apps/webui/dist')

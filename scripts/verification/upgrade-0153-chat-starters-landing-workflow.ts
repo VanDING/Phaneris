@@ -244,6 +244,24 @@ await verificationWorkflow('upgrade-0153-chat-starters-landing', async run => {
       await page.evaluate(() => window.chatStartersLanding.setSourceDelay(0))
     })
 
+    await check('CSL-12-escape-cancels-await-and-next-click-works', async () => {
+      await waitForIdleStarter()
+      await reset()
+      await page.evaluate(() => {
+        window.chatStartersLanding.setDisabled(false)
+        window.chatStartersLanding.setSourceDelay(400)
+        window.chatStartersLanding.setEnabledSources([])
+      })
+      await page.waitForFunction(() => window.chatStartersLanding.enabledSources().length === 0)
+      await chips.first().click()
+      await page.keyboard.press('Escape')
+      await page.waitForTimeout(1000)
+      assert.equal((await state()).sends.length, 0, 'Escape invalidates the pending enable-then-send')
+      await page.evaluate(() => window.chatStartersLanding.setSourceDelay(0))
+      await chips.first().click()
+      await page.waitForFunction(() => window.chatStartersLanding.sends.length === 1)
+    })
+
     const finalState = await state()
     run.json('chat-starters-landing.json', {
       base, checks, consoleLog, ipc: finalState.ipc, sends: finalState.sends,

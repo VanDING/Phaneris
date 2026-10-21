@@ -255,11 +255,11 @@ export function TiptapMarkdownEditor({
       }),
       FileHandler.configure({
         onPaste: async (editor, files) => {
-          if (!editable || files.length === 0) return
+          if (!editor.isEditable || files.length === 0) return
           await handleDroppedOrPastedFiles(editor as NonNullable<ReturnType<typeof useEditor>>, files)
         },
         onDrop: async (editor, files, pos) => {
-          if (!editable || files.length === 0) return
+          if (!editor.isEditable || files.length === 0) return
           await handleDroppedOrPastedFiles(editor as NonNullable<ReturnType<typeof useEditor>>, files, pos)
         },
       }),

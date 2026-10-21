@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { NativeRequestObservation } from '@phaneris/shared/durable-runtime/types';
+import { observeProviderMetering } from './model-metering.ts';
 
 /** SDK callback observations, not a count of network attempts or wire bytes. */
 export function observeNativeRequest(options: SimpleStreamOptions = {}, onDispatch?: () => void): {
@@ -31,6 +32,11 @@ export function observeNativeRequest(options: SimpleStreamOptions = {}, onDispat
     observation,
     options: {
       ...options,
+      onProviderStreamEvent: async (data, model) => {
+        await options.onProviderStreamEvent?.(data, model);
+        try { observeProviderMetering(data, observation); }
+        catch { observation.observationErrors++; }
+      },
       onPayload: async (payload, model) => {
         // Observe AFTER existing SDK extensions have replaced/mutated the payload.
         const replacement = await options.onPayload?.(payload, model);

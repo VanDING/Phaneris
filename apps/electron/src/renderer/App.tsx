@@ -764,15 +764,21 @@ export default function App() {
   }, [])
 
   // Refresh LLM connections from config (called on workspace change and after connection updates)
+  const connectionRefreshSequence = useRef(0)
+  const connectionRefreshWorkspace = useRef(windowWorkspaceId)
+  connectionRefreshWorkspace.current = windowWorkspaceId
   const refreshLlmConnections = useCallback(async () => {
-    const connections = await window.electronAPI.listLlmConnectionsWithStatus()
+    const request = ++connectionRefreshSequence.current
+    const [connections, settings] = await Promise.all([
+      window.electronAPI.listLlmConnectionsWithStatus(),
+      windowWorkspaceId ? window.electronAPI.getWorkspaceSettings(windowWorkspaceId) : Promise.resolve(null),
+    ])
+    if (request !== connectionRefreshSequence.current || windowWorkspaceId !== connectionRefreshWorkspace.current) return
+    // Commit one complete snapshot; a failed or superseded read retains the
+    // previous values instead of mixing connections with another workspace.
     setLlmConnections(connections)
     setDefaultLlmConnectionSlug(resolveDefaultConnectionSlug(connections))
-    // Also refresh workspace default
-    if (windowWorkspaceId) {
-      const settings = await window.electronAPI.getWorkspaceSettings(windowWorkspaceId)
-      setWorkspaceDefaultLlmConnection(settings?.defaultLlmConnection)
-    }
+    setWorkspaceDefaultLlmConnection(settings?.defaultLlmConnection)
   }, [resolveDefaultConnectionSlug, windowWorkspaceId])
 
   // Handle onboarding completion
@@ -906,20 +912,32 @@ export default function App() {
     }).catch(error => console.warn('Draft loading failed; retaining pending drafts:', error))
   }, [appState, loadSessionsFromServer, resolveDefaultConnectionSlug])
 
-  // Subscribe to LLM connections change events (live updates when models are fetched)
-  useEffect(() => {
-    const cleanup = window.electronAPI.onLlmConnectionsChanged(() => {
-      refreshLlmConnections()
+  // Background reads can be interrupted by reconnects. Keep their rejection
+  // handled here; callers that explicitly await a refresh still receive errors.
+  const refreshLlmConnectionsInBackground = useCallback(() => {
+    void refreshLlmConnections().catch(error => {
+      console.warn('Connection refresh failed; retaining current connections and workspace default:', error)
     })
-    return () => { cleanup() }
   }, [refreshLlmConnections])
+
+  // Refresh again after reconnect even when event replay is current: a pending
+  // settings RPC may have failed before the old socket closed.
+  useEffect(() => {
+    const cleanup = window.electronAPI.onLlmConnectionsChanged(refreshLlmConnectionsInBackground)
+    const reconnectCleanup = window.electronAPI.onReconnected(refreshLlmConnectionsInBackground)
+    return () => {
+      connectionRefreshSequence.current = connectionRefreshSequence.current + 1
+      cleanup()
+      reconnectCleanup()
+    }
+  }, [refreshLlmConnectionsInBackground])
 
   // Refresh LLM connections and workspace default when workspace changes
   useEffect(() => {
     if (windowWorkspaceId) {
-      refreshLlmConnections()
+      refreshLlmConnectionsInBackground()
     }
-  }, [windowWorkspaceId, refreshLlmConnections])
+  }, [windowWorkspaceId, refreshLlmConnectionsInBackground])
 
   // Listen for session events - uses centralized event processor for consistent state transitions
   //
@@ -1449,42 +1467,23 @@ export default function App() {
       let processedAttachments: FileAttachment[] | undefined
 
       if (attachments?.length) {
-        // Store each attachment to disk (generates thumbnails, converts Office→markdown)
-        // Use allSettled so one failure doesn't kill all attachments
+        // Finish every store before acknowledging dispatch or retaining the draft.
         const storeResults = await Promise.allSettled(
           attachments.map(a => window.electronAPI.storeAttachment(sessionId, a))
         )
 
-        // Filter successful stores, warn about failures
-        storedAttachments = []
-        const successfulAttachments: FileAttachment[] = []
-        storeResults.forEach((result, i) => {
-          if (result.status === 'fulfilled') {
-            storedAttachments!.push(result.value)
-            successfulAttachments.push(attachments[i])
-          } else {
-            console.warn(`Failed to store attachment "${attachments[i].name}":`, result.reason)
-          }
-        })
-
-        // Notify user about failed attachments
-        const failedCount = storeResults.filter(r => r.status === 'rejected').length
-        if (failedCount > 0) {
-          console.warn(`${failedCount} attachment(s) failed to store`)
-          // Add warning message to session so user knows some attachments weren't included
-          const failedNames = attachments
-            .filter((_, i) => storeResults[i].status === 'rejected')
-            .map(a => a.name)
-            .join(', ')
-          updateSessionById(sessionId, (s) => ({
-            messages: [...s.messages, {
-              id: generateMessageId(),
-              role: 'warning' as const,
-              content: `⚠️ ${failedCount} attachment(s) could not be stored and will not be sent: ${failedNames}`,
-              timestamp: Date.now()
-            }]
-          }))
+        // A failed attachment must not silently turn an illustrated request into
+        // a text-only send. The composer keeps its draft until this acknowledges
+        // dispatch, so reject the whole submission before creating a user turn.
+        const failedStore = storeResults.find(result => result.status === 'rejected')
+        if (failedStore?.status === 'rejected') {
+          throw failedStore.reason instanceof Error ? failedStore.reason : new Error(String(failedStore.reason))
         }
+
+        storedAttachments = storeResults.map(result => {
+          if (result.status === 'rejected') throw result.reason
+          return result.value
+        })
 
         // Step 2: Create processed attachments for Claude
         // - Office files: Convert to text with markdown content
@@ -1492,7 +1491,7 @@ export default function App() {
         // - All: Include storedPath so agent knows where files are stored
         // - Resized images: Use resizedBase64 instead of original large base64
         processedAttachments = await Promise.all(
-          successfulAttachments.map(async (att, i) => {
+          attachments.map(async (att, i) => {
             const stored = storedAttachments?.[i]
             if (!stored) {
               console.error(`Missing stored attachment at index ${i}`)
@@ -1505,6 +1504,8 @@ export default function App() {
             // is authoritative for what the model is sent.
             return {
               ...att,
+              type: stored.type,
+              name: stored.name,
               storedPath: stored.storedPath,
               markdownPath: stored.markdownPath,
               // Reflect the server's final format so the model receives a supported
@@ -1603,6 +1604,7 @@ export default function App() {
         badges: badges.length > 0 ? badges : undefined,
         optimisticMessageId: userMessage.id,
       })
+      return true
     } catch (error) {
       console.error('Failed to send message:', error)
       updateSessionById(sessionId, (s) => ({
@@ -1617,6 +1619,7 @@ export default function App() {
           }
         ]
       }))
+      return false
     }
   }, [updateSessionById, skills, sources, windowWorkspaceSlug, store])
 

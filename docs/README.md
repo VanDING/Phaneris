@@ -30,6 +30,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 升级续审：[2026-10-19 第二轮复核](verification/upgrade-2026-10-19-review-2.md) — 尚未验收通过；复现 HEIC 打包解析与 Chat Starters 失败路径，要求修正模型保存、验收计数并定位 critical 挂起。
 
+升级收口：[2026-10-20 实施清单](dependencies/upgrade-closeout-2026-10-20.md) — Codex 直接实施剩余产品修复和验收；按用户要求在独立工作树验收，不包含并行的前端设计与字体迁移。
+
 | Document | Status | Purpose |
 | --- | --- | --- |
 | [Project README](../README.md) / [中文](../README.zh-CN.md) | Current | Product introduction, capabilities, screenshots, setup, and positioning. |

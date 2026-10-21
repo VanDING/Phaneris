@@ -768,6 +768,7 @@ export class PiAgent extends BaseAgent {
       cacheRetention: extendedPromptCache ? 'long' : 'short',
       promptCacheWarming: getPromptCacheWarming(),
       contextPolicy: this.config.contextPolicy ?? 'compact',
+      compactionThresholdTokens: this.config.compactionThresholdTokens ?? null,
     });
 
     // Wait for subprocess to report ready
@@ -1478,6 +1479,7 @@ export class PiAgent extends BaseAgent {
     if (eventType === 'tool_execution_end') {
       const toolCallId = event.toolCallId as string | undefined;
       if (toolCallId) {
+        this.bufferedDurableToolStarts.delete(toolCallId);
         this.preToolMetadataByCallId.delete(toolCallId);
       }
     }
@@ -2418,13 +2420,13 @@ export class PiAgent extends BaseAgent {
   /**
    * Ask subprocess to compact the active session context.
    */
-  private async requestCompact(customInstructions?: string): Promise<PiCompactResult> {
+  private async requestCompact(customInstructions?: string, execution?: { runOperationId: string; turnId?: string }): Promise<PiCompactResult> {
     const epoch = this.compactionEpoch;
     await this.ensureSubprocess();
     if (epoch !== this.compactionEpoch) throw new Error('Compaction aborted');
 
     const id = `compact-${++this.rpcIdCounter}`;
-    const durableRun = this.config.beginDurableUtilityRun?.({
+    const durableRun = execution ? undefined : this.config.beginDurableUtilityRun?.({
       requestId: id,
       prompt: customInstructions ?? 'Compact the active model context',
       kind: 'compaction',
@@ -2460,8 +2462,8 @@ export class PiAgent extends BaseAgent {
         type: 'compact',
         id,
         customInstructions,
-        durableRunOperationId: durableRun?.runOperationId,
-        durableTurnId: durableRun?.turnId,
+        durableRunOperationId: execution?.runOperationId ?? durableRun?.runOperationId,
+        durableTurnId: execution?.turnId ?? durableRun?.turnId,
       });
     });
     try {
@@ -2507,7 +2509,7 @@ export class PiAgent extends BaseAgent {
         },
       });
 
-      this.send({ type: 'set_auto_compaction', id, enabled, policy: this.config.contextPolicy ?? 'compact' });
+      this.send({ type: 'set_auto_compaction', id, enabled, policy: this.config.contextPolicy ?? 'compact', compactionThresholdTokens: this.config.compactionThresholdTokens ?? null });
     });
   }
 
@@ -2646,7 +2648,9 @@ export class PiAgent extends BaseAgent {
       if (compactMatch) {
         if (compactEpoch !== this.compactionEpoch) throw new Error('Compaction aborted');
         const customInstructions = compactMatch[1]?.trim() || undefined;
-        const compactResult = await this.requestCompact(customInstructions);
+        const compactResult = await this.requestCompact(customInstructions, options?.durableRunOperationId ? {
+          runOperationId: options.durableRunOperationId, turnId: options.durableTurnId ?? options.inputId,
+        } : undefined);
         if (compactEpoch !== this.compactionEpoch) throw new Error('Compaction aborted');
         // The queue never saw this compaction (it is RPC-driven), so the
         // prerequisite reset the queue path would have triggered happens here.
@@ -3008,6 +3012,16 @@ export class PiAgent extends BaseAgent {
       this.config.contextPolicy = previous;
       throw error;
     }
+  }
+
+  async updateCompactionThreshold(value: number | null): Promise<void> {
+    if (value !== null && (!Number.isSafeInteger(value) || value < 4096)) throw new Error('Invalid compaction threshold');
+    const previous = this.config.compactionThresholdTokens ?? null;
+    if (previous === value) return;
+    this.config.compactionThresholdTokens = value;
+    if (!this.subprocess) return;
+    try { await this.requestSetAutoCompaction((this.config.contextPolicy ?? 'compact') === 'compact'); }
+    catch (error) { this.config.compactionThresholdTokens = previous; throw error; }
   }
 
   /** Arms the next request to generate a handoff document regardless of budget. */

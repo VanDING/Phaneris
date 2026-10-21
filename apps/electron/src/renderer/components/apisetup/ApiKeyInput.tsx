@@ -253,7 +253,9 @@ export function ApiKeyInput({
   const hydratedTierProviderRef = useRef<string | null>(null)
   // What the form was hydrated with, and which provider it belongs to: a submit
   // may only keep the stored catalog when the user is still on that provider.
-  const hydratedRef = useRef<{ provider: string | null; defaultModel: string }>({ provider: null, defaultModel: '' })
+  const catalogRequestRef = useRef(0)
+  const activeProviderRef = useRef(activePreset)
+  activeProviderRef.current = activePreset
   // Per-field edit intent. One "default model unchanged" boolean used to decide
   // the fate of every field, so editing only the utility model silently reverted
   // it and switching providers could resubmit the previous provider's list.
@@ -279,13 +281,25 @@ export function ApiKeyInput({
   // Fetch Pi SDK models when a provider is selected in pi_api_key flow.
   // Returns all models sorted by cost (expensive-first) for the searchable tier dropdowns.
   const loadPiModels = useCallback(async (provider: string) => {
+    const request = ++catalogRequestRef.current
+    const isCurrent = () => request === catalogRequestRef.current && provider === activeProviderRef.current
     if (!isPiApiKeyFlow || !provider || provider === 'custom' || DEFAULT_ENDPOINT_PROVIDERS.has(provider) || OPENAI_COMPAT_CUSTOM_URL_PRESETS.has(provider)) {
       setPiModels([])
+      setPiModelsLoading(false)
+      hydratedTierProviderRef.current = null
       return
     }
+    if (hydratedTierProviderRef.current !== provider) {
+      setPiModels([])
+      setSelectedDefaultModel('')
+      setSelectedUtilityModel('')
+      hydratedTierProviderRef.current = null
+    }
+    setModelError(null)
     setPiModelsLoading(true)
     try {
       const result = await window.electronAPI.getPiProviderModels(provider)
+      if (!isCurrent()) return
       setPiModels(result.models)
 
       if (hydratedTierProviderRef.current !== provider) {
@@ -296,16 +310,17 @@ export function ApiKeyInput({
         setSelectedDefaultModel(hydratedDefault)
         const savedUtility = provider === initialPreset ? initialValues?.utilityModel : undefined
         setSelectedUtilityModel(savedUtility && result.models.some(model => model.id === savedUtility) ? savedUtility : '')
-        hydratedRef.current = { provider, defaultModel: hydratedDefault }
         defaultEditedRef.current = false
         utilityEditedRef.current = false
         hydratedTierProviderRef.current = provider
       }
     } catch (err) {
+      if (!isCurrent()) return
       console.error('[ApiKeyInput] Failed to load models for', provider, err)
       setPiModels([])
+      setModelError(err instanceof Error ? err.message : String(err))
     } finally {
-      setPiModelsLoading(false)
+      if (isCurrent()) setPiModelsLoading(false)
     }
   }, [isPiApiKeyFlow])
 
@@ -315,7 +330,8 @@ export function ApiKeyInput({
 
   // Whether to show the provider-backed default-model picker instead of the
   // manual model input used for arbitrary compatible endpoints.
-  const hasPiModels = isPiApiKeyFlow && piModels.length > 0 && !isDefaultProviderPreset && activePreset !== 'custom' && !isBedrock
+  const usesNativeCatalog = isPiApiKeyFlow && !isDefaultProviderPreset && activePreset !== 'custom' && !isBedrock && !OPENAI_COMPAT_CUSTOM_URL_PRESETS.has(activePreset)
+  const hasPiModels = usesNativeCatalog && piModels.length > 0 && !piModelsLoading && hydratedTierProviderRef.current === activePreset
 
   const handlePresetSelect = (preset: Preset) => {
     setActivePreset(preset.key)
@@ -361,6 +377,10 @@ export function ApiKeyInput({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (usesNativeCatalog && !hasPiModels) {
+      if (!modelError) setModelError(t('common.loading'))
+      return
+    }
 
     const effectivePiAuthProvider = isPiApiKeyFlow
       ? resolvePiAuthProviderForSubmit(activePreset, lastNonCustomPreset)
@@ -380,11 +400,11 @@ export function ApiKeyInput({
       // invalidates the stored values entirely — they belong to the provider the
       // form was hydrated FROM (`initialPreset`), not to whichever provider's
       // catalog happened to load last (hydration moves that pointer).
-      const storedProvider = initialValues?.activePreset
+      const storedProvider = initialValues?.activePreset ?? initialPreset
       const sameProvider = Boolean(initialValues) && activePreset === storedProvider
       const keepDefault = sameProvider && !defaultEditedRef.current
       const keepUtility = sameProvider && !utilityEditedRef.current
-      const keepModels = sameProvider && !defaultEditedRef.current && Boolean(initialValues?.models?.length)
+      const keepModels = sameProvider && Boolean(initialValues?.models?.length)
       onSubmit({
         apiKey: apiKey.trim(),
         baseUrl: baseUrl.trim() || undefined,
@@ -710,7 +730,7 @@ export function ApiKeyInput({
       )}
 
       {/* Model Selection — provider catalog for Pi, manual input for custom/compat */}
-      {hasPiModels ? (
+      {usesNativeCatalog ? (
         <div className="space-y-3">
           {piModelsLoading ? (
             <div className="flex items-center gap-2 py-3 text-muted-foreground">

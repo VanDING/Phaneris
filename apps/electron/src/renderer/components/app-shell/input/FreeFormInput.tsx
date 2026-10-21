@@ -142,7 +142,7 @@ export interface FreeFormInputProps {
   /** Whether the session is currently processing */
   isProcessing?: boolean
   /** Callback when message is submitted (skillSlugs from @mentions) */
-  onSubmit: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void
+  onSubmit: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void | Promise<boolean | void>
   /** Callback to stop processing. Pass silent=true to skip "Response interrupted" message */
   onStop?: (silent?: boolean) => void
   /** External ref for the input */
@@ -499,6 +499,9 @@ export function FreeFormInput({
   // Sync TO parent on blur/submit (debounced persistence)
   const { input, setInput, inputRef, prevInputValueRef, syncTimeoutRef, syncToParent, clearInputDraft, consumeInputDraftSnapshot } = useInputDraft(inputValue, onInputChange)
   const [attachments, setAttachments] = React.useState<FileAttachment[]>(attachmentsValue ?? [])
+  const submissionRef = React.useRef(false)
+  const draftSessionRef = React.useRef(sessionId)
+  draftSessionRef.current = sessionId
 
   // Ref to track current attachments for use in event handlers (avoids stale closure issues)
   const attachmentsRef = React.useRef<FileAttachment[]>([])
@@ -1096,7 +1099,7 @@ export function FreeFormInput({
 
         let type: FileAttachment['type'] = 'unknown'
         const fileName = overrideName || file.name
-        if (file.type.startsWith('image/')) type = 'image'
+        if (file.type.startsWith('image/') || /\.(heic|heif)$/i.test(fileName)) type = 'image'
         else if (file.type === 'application/pdf') type = 'pdf'
         else if (file.type.includes('text') || fileName.match(/\.(txt|md|json|js|ts|tsx|py|css|html)$/i)) type = 'text'
         else if (file.type.includes('officedocument') || fileName.match(/\.(docx?|xlsx?|pptx?)$/i)) type = 'office'
@@ -1241,9 +1244,9 @@ export function FreeFormInput({
   }
 
   // Submit message - backend handles queueing and interruption
-  const submitMessage = React.useCallback(() => {
+  const submitMessage = React.useCallback(async () => {
     const hasContent = input.trim() || attachments.length > 0 || followUpItems.length > 0
-    if (!hasContent || disabled) return false
+    if (!hasContent || disabled || submissionRef.current) return false
 
     // Tutorial may disable sending to guide user through specific steps
     if (disableSend) return false
@@ -1267,18 +1270,27 @@ export function FreeFormInput({
 
     const attachmentSnapshot = attachments
 
-    onSubmit(
-      input.trim(),
-      attachmentSnapshot.length > 0 ? attachmentSnapshot : undefined,
-      mentions.skills.length > 0 ? mentions.skills : undefined
-    )
-    setInput('')
-    setAttachments([])
-    // Clear draft immediately (cancel any pending debounced sync)
-    if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current)
-    onInputChange?.('')
-    onAttachmentsChange?.([])
-    prevInputValueRef.current = ''
+    const submittedSession = sessionId
+    submissionRef.current = true
+    try {
+      const accepted = await onSubmit(
+        input.trim(),
+        attachmentSnapshot.length > 0 ? attachmentSnapshot : undefined,
+        mentions.skills.length > 0 ? mentions.skills : undefined
+      )
+      if (accepted === false || draftSessionRef.current !== submittedSession) return false
+      // Acknowledgement can arrive after further typing or a workspace switch.
+      // Consume only the submitted snapshot, preserving later edits/attachments.
+      if (inputRef.current === input) clearInputDraft()
+      const remaining = attachmentsRef.current.filter(item => !attachmentSnapshot.includes(item))
+      setAttachments(remaining)
+      onAttachmentsChange?.(remaining)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error))
+      return false
+    } finally {
+      submissionRef.current = false
+    }
 
     // Restore focus after state updates
     requestAnimationFrame(() => {
@@ -1286,7 +1298,7 @@ export function FreeFormInput({
     })
 
     return true
-  }, [input, attachments, followUpItems, disabled, disableSend, showAttachmentSizeProblem, onInputChange, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, richInputRef, setInput, prevInputValueRef, syncTimeoutRef])
+  }, [input, attachments, followUpItems, disabled, disableSend, showAttachmentSizeProblem, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, richInputRef, inputRef, clearInputDraft, sessionId])
 
   // Listen for craft:submit-input events (simulate pressing the Send button)
   React.useEffect(() => {

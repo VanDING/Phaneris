@@ -1,6 +1,7 @@
 import type { AssistantMetrics } from '@phaneris/core/types';
 import type { AssistantMessage, AssistantMessageEvent } from '@earendil-works/pi-ai';
 import type { NativeRequestObservation } from '@phaneris/shared/durable-runtime/types';
+import type { ModelMeteringEvidence } from './model-metering.ts';
 
 /** Measured before durable commits and before compacting the host transport. */
 export function createAssistantTiming() {
@@ -21,6 +22,7 @@ export function createAssistantTiming() {
       if (event.type === 'text_delta' && text === null) { text = now; textEpoch = epoch; }
     },
     completed(message: AssistantMessage, observation: NativeRequestObservation): AssistantMetrics {
+      const metering = (message as AssistantMessage & { modelMetering?: ModelMeteringEvidence }).modelMetering;
       const end = performance.now(), endEpoch = Date.now();
       const total = start === null ? null : end - start;
       const first = start === null || output === null ? null : output - start;
@@ -37,8 +39,8 @@ export function createAssistantTiming() {
         firstTokenTime: textEpoch, firstTextTime: textEpoch, firstOutputTime: outputEpoch, completedTime: endEpoch,
         requestDurationMs: total, firstOutputLatencyMs: first,
         firstTextLatencyMs: start === null || text === null ? null : text - start,
-        generationDurationMs: generation, usageProvided: message.usage !== undefined,
-        outputTokens: typeof message.usage?.output === 'number' ? message.usage.output : null,
+        generationDurationMs: generation, usageProvided: metering ? metering.status !== 'unavailable' : message.usage !== undefined,
+        outputTokens: metering?.outputKnown === false ? null : typeof message.usage?.output === 'number' ? message.usage.output : null,
       };
     },
   };

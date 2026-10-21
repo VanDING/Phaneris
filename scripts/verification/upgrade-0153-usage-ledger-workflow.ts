@@ -12,9 +12,8 @@
  *       attempt that actually succeeded, and the unbilled request leaves no row
  *   L3  replaying the committed outcome through the production commit path does not
  *       double count
- *   F1  what the SDK *agent-level* auto-retry records for an unbilled failed attempt:
- *       this pins shipping behaviour and is reported as a defect (see `defect` in
- *       summary.json) — it is recorded evidence, not an accepted property.
+ *   F1  a fully rejected SDK attempt retains unknown metering, distinct from a
+ *       provider-reported zero; partial/error/abort/recovery semantics follow.
  *
  * Facts this file builds on (verified by reading the sources):
  *   - ledger table/PK `packages/server-core/src/durable-runtime/store.ts:793-806`, row
@@ -88,6 +87,9 @@ try {
   const workspace = join(fixture, 'workspace')
   mkdirSync(configRoot, { recursive: true })
   mkdirSync(workspace, { recursive: true })
+  writeFileSync(join(configRoot, 'config.json'), JSON.stringify({
+    workspaces: [{ id: 'usage-ledger', name: 'Usage ledger', rootPath: workspace }], activeWorkspaceId: 'usage-ledger',
+  }))
 
   // --- the production retry policy this workflow exercises -------------------
   const { PHANERIS_PI_RETRY_SETTINGS } = await import(join(root, 'packages/pi-agent-server/src/session-settings.ts')) as
@@ -98,7 +100,7 @@ try {
   const providerAttempts = 1 + PHANERIS_PI_RETRY_SETTINGS.provider.maxRetries
 
   // --- loopback provider fixture --------------------------------------------
-  type PlanStep = { label: string; outcome: 'fail' | 'ok'; prompt?: number; completion?: number; text?: string }
+  type PlanStep = { label: string; outcome: 'fail' | 'ok'; prompt?: number; completion?: number; text?: string; omitUsage?: boolean; partialUsage?: boolean; errorAfterUsage?: boolean; abortDuringStream?: boolean; tool?: { name: string; args: Record<string, unknown> } }
   const PLAN: PlanStep[] = [
     { label: 'L1', outcome: 'ok', prompt: 1234, completion: 57, text: 'L1_LEDGER_ACCEPTED' },
     { label: 'L2', outcome: 'fail' },
@@ -111,24 +113,43 @@ try {
     { label: 'L4', outcome: 'ok', prompt: 2000, completion: 30, text: 'L4_FIRST' },
     { label: 'L4', outcome: 'ok', prompt: 2100, completion: 31, text: 'L4_SECOND' },
     { label: 'L4', outcome: 'ok', prompt: 2200, completion: 32, text: 'L4_THIRD' },
+    { label: 'L5', outcome: 'ok', prompt: 31000, completion: 45, tool: { name: process.platform === 'win32' ? 'powershell' : 'bash', args: { command: process.platform === 'win32' ? 'Start-Sleep -Milliseconds 2500' : 'sleep 2.5' } } },
+    { label: 'L5', outcome: 'ok', prompt: 32000, completion: 46, text: 'L5_TOOL_LOOP_DONE' },
+    { label: 'L6', outcome: 'ok', prompt: 3300, completion: 47, tool: { name: 'read', args: { path: join(workspace, 'resume-proof.txt') } } },
+    { label: 'L6', outcome: 'ok', prompt: 3400, completion: 48, text: 'L6_RESUMED_TOOL_DONE' },
+    { label: 'L7', outcome: 'ok', prompt: 3500, completion: 49, text: 'L7_BRANCH_DONE' },
+    { label: 'X0', outcome: 'ok', prompt: 0, completion: 0, text: 'EXPLICIT_ZERO' },
+    { label: 'XM', outcome: 'ok', prompt: 0, completion: 0, text: 'USAGE_NOT_REPORTED', omitUsage: true },
+    { label: 'XE', outcome: 'ok', prompt: 321, completion: 17, text: 'PARTIAL_TEXT_BEFORE_FAILURE', errorAfterUsage: true },
+    { label: 'XP', outcome: 'ok', prompt: 234, completion: 0, text: 'INPUT_ONLY_REPORTED', partialUsage: true },
   ]
+  PLAN.push({ label: 'XB', outcome: 'ok', prompt: 0, completion: 0, text: 'PARTIAL_BEFORE_ABORT', omitUsage: true, abortDuringStream: true },
+    { label: 'XC', outcome: 'ok', prompt: 1000, completion: 10, text: 'COMPACTION_SEED' },
+    { label: 'XC', outcome: 'ok', prompt: 1000, completion: 10, text: 'COMPACTION_BULK' },
+    { label: 'XC', outcome: 'ok', prompt: 2000, completion: 25, text: 'DURABLY_METERED_SUMMARY' },
+    { label: 'XC', outcome: 'ok', prompt: 1200, completion: 15, text: 'AFTER_METERED_SUMMARY' })
+  const stalledStreams: (() => void)[] = []
   const seen: FixtureRequest[] = []
   let served = 0, unscripted = 0
   const server = Bun.serve({
-    hostname: '127.0.0.1', port: 0,
+    hostname: '127.0.0.1', port: 0, idleTimeout: 30,
     async fetch(request) {
       const body = await request.json() as Record<string, unknown>
       const raw = JSON.stringify(body)
-      const step = PLAN[served]
+      const warming = body.max_tokens === 1 || body.max_completion_tokens === 1
+      const step: PlanStep | undefined = warming
+        ? { label: 'WARM', outcome: 'ok', prompt: 5000, completion: 1, text: 'WARM_RESPONSE_NOT_FOR_TRANSCRIPT' }
+        : PLAN[served]
       if (!step) {
         unscripted++
         return new Response(JSON.stringify({ error: { message: 'unscripted fixture request', type: 'fixture_error' } }),
           { status: 500, headers: { 'Content-Type': 'application/json', 'x-should-retry': 'false' } })
       }
-      const record: FixtureRequest = { seq: ++served, label: step.label, status: step.outcome === 'ok' ? 200 : 503,
+      if (!warming) served++
+      const record: FixtureRequest = { seq: seen.length + 1, label: step.label, status: step.outcome === 'ok' ? 200 : 503,
         method: request.method, path: new URL(request.url).pathname, requestBody: body,
         requestBodyBytes: Buffer.byteLength(raw), requestBodySha256: sha256(raw),
-        responseUsage: step.outcome === 'ok'
+        responseUsage: step.outcome === 'ok' && !step.omitUsage
           ? { prompt_tokens: step.prompt!, completion_tokens: step.completion!, total_tokens: step.prompt! + step.completion! }
           : null,
         responseText: step.outcome === 'ok' ? step.text! : null }
@@ -143,12 +164,24 @@ try {
       const chunk = (delta: unknown, finish_reason: string | null = null) => `data: ${JSON.stringify({
         id: `fixture-${record.seq}`, object: 'chat.completion.chunk', created: 1, model: body.model ?? 'fixture',
         choices: [{ index: 0, delta, finish_reason }],
-        ...(finish_reason ? { usage: record.responseUsage } : {}),
+        ...(finish_reason && !step.omitUsage ? { usage: step.partialUsage ? { prompt_tokens: step.prompt } : record.responseUsage } : {}),
       })}\n\n`
       const stream = new ReadableStream<Uint8Array>({ start(controller) {
         controller.enqueue(encoder.encode(chunk({ role: 'assistant' })))
-        controller.enqueue(encoder.encode(chunk({ content: step.text })))
-        controller.enqueue(encoder.encode(chunk({}, 'stop')))
+        if (step.tool) {
+          const tools = body.tools as { function: { name: string } }[]
+          const toolName = tools.find(tool => tool.function.name.toLowerCase() === step.tool!.name)?.function.name
+          assert(toolName, `The resumed/runtime session must expose ${step.tool.name}`)
+          controller.enqueue(encoder.encode(chunk({ tool_calls: [{ index: 0, id: `call-${record.seq}`, type: 'function', function: { name: toolName, arguments: JSON.stringify(step.tool.args) } }] })))
+        } else controller.enqueue(encoder.encode(chunk({ content: step.text })))
+        if (step.abortDuringStream) {
+          let closed = false
+          const close = () => { if (!closed) { closed = true; try { controller.close() } catch {} } }
+          stalledStreams.push(close); request.signal.addEventListener('abort', close, { once: true })
+          return
+        }
+        controller.enqueue(encoder.encode(chunk({}, step.tool ? 'tool_calls' : 'stop')))
+        if (step.errorAfterUsage) controller.enqueue(encoder.encode('data: {"error":{"message":"fixture terminal rejection 400","type":"invalid_request_error","code":"400"}}\n\n'))
         controller.enqueue(encoder.encode('data: [DONE]\n\n'))
         controller.close()
       } })
@@ -190,17 +223,17 @@ try {
     for (const kind of ['duplicate', 'missing', 'mismatch', 'unexpected', 'pending_outcome', 'reconciled_without_usage'])
       assert(!shape.issues.some(issue => issue.kind === kind), `${what}: unexpected ${kind} issue`)
   }
-  function assemble(sessionId: string) {
+  function assemble(sessionId: string, sdkSessionId?: string, branchFromSessionPath?: string, compactionThresholdTokens?: number) {
     const agent = assembleSessionAgent({
       context: { provider: 'pi', authType: 'api_key', resolvedModel: 'pi/fixture', capabilities: { needsHttpPoolServer: true },
         connection: { slug: 'usage-fixture', name: 'Usage fixture', providerType: 'pi_compat', authType: 'api_key', createdAt: 1,
           baseUrl: server.url.href, customEndpoint: { api: 'openai-completions' },
           models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Loopback usage fixture',
-            provider: 'pi', contextWindow: 128000, maxTokens: 4096, cost: { ...COST_RATES } }] } },
+            provider: 'pi', contextWindow: 128000, maxTokens: 4096, cost: { ...COST_RATES }, promptCache: { short: 10.5 } }] } },
       hostRuntime: { appRootPath: root, isPackaged: false, nodeRuntimePath: process.execPath },
-      config: { model: 'pi/fixture', miniModel: 'pi/fixture',
+      config: { model: 'pi/fixture', miniModel: 'pi/fixture', contextPolicy: 'manual', compactionThresholdTokens,
         workspace: { id: 'usage-ledger', slug: 'usage-ledger', createdAt: 1, name: 'Usage ledger acceptance', rootPath: workspace },
-        session: { id: sessionId, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1 }, isHeadless: true,
+        session: { id: sessionId, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1, sdkSessionId, branchFromSessionPath }, isHeadless: true,
         envOverrides: { PHANERIS_CONFIG_DIR: configRoot, HOME: fixture, USERPROFILE: fixture, NODE_ENV: 'test' } },
       callbacks: {}, resources: bindPiRuntime(durable, { sessionId, workspaceRootPath: workspace }),
     }) as any
@@ -208,6 +241,18 @@ try {
     wire.set(sessionId, captured)
     const original = agent.handleLine.bind(agent)
     agent.handleLine = (line: string) => { try { captured.push(JSON.parse(line)) } catch { /* transport noise */ } return original(line) }
+    const send = agent.send.bind(agent)
+    agent.send = (message: any) => {
+      if (message.type === 'init') evidence.json(`${sessionId}-init-flags.json`, {
+        promptCacheWarming: message.promptCacheWarming, customModels: message.customModels, cacheRetention: message.cacheRetention,
+      })
+      if (sessionId === 'metering-XA' && message.type === 'durable_model_prepare_response' && message.ok) {
+        // Actual child receives abort before its T1 acknowledgement; no provider
+        // invocation is permitted. The real prepare/commit paths still execute.
+        send({ type: 'abort' })
+      }
+      return send(message)
+    }
     return agent
   }
   const audits = new Map<string, { observationId: string; seq: number; audit: unknown }>()
@@ -240,6 +285,9 @@ try {
     durable.execution.accept(handle, { operationId, userMessageId: `${operationId}-user`, userMessage: prompt })
     const result = await durable.execution.drive(handle, driver, { message: prompt, options: { inputId: `${operationId}-user` } })
     unsubscribe()
+    if (result.kind !== 'terminal') evidence.json(`${operationId}-nonterminal.json`, {
+      result, wire: rows(sessionId), events: facts(operationId), operations: durable.queries.operations(workspace), usage: sessionRows(sessionId),
+    })
     assert.equal(result.kind, 'terminal', `Run ${operationId} did not settle as terminal: ${JSON.stringify(result)}`)
     return result
   }
@@ -435,8 +483,8 @@ try {
   }
 
   // ==========================================================================
-  // F1 — what the SDK agent-level auto-retry records for an unbilled attempt
-  //      (pins shipping behaviour; reported as a defect, not accepted)
+  // F1 — agent-level retry retains unknown metering for a rejected attempt
+  //      (retain the attempt, but never infer metered zero from missing usage)
   // ==========================================================================
   const F1 = { sessionId: 'f1-agent-retry', operationId: 'f1-run', prompt: 'F1 acceptance call' }
   agents.set(F1.sessionId, assemble(F1.sessionId))
@@ -465,11 +513,15 @@ try {
     assert.equal(operation.length, 2, 'F1: the failed attempt has its own ledger row')
     const zero = operation[0]!, real = operation[1]!
     assert.equal(zero.usageId, `model:${F1.operationId}:1`)
-    assert.equal(zero.inputTokens, 0)
-    assert.equal(zero.outputTokens, 0)
-    assert.equal(zero.costUsd, 0)
-    assert.equal((zero.payload as { costSource?: string }).costSource, 'pi_sdk_estimate')
-    assert.equal((zero.payload as { assistantMetrics?: { usageProvided?: boolean } }).assistantMetrics?.usageProvided, true)
+    assert.equal(zero.inputTokens, undefined, 'missing metering is not an observed zero')
+    assert.equal(zero.outputTokens, undefined)
+    assert.equal(zero.costUsd, undefined)
+    assert.equal((zero.payload as { costSource?: string }).costSource, 'unknown')
+    assert.equal((zero.payload as any).metering.status, 'unavailable')
+    assert.equal((zero.payload as { assistantMetrics?: { usageProvided?: boolean } }).assistantMetrics?.usageProvided, false)
+    const projected = projectDurableUsage(operation)
+    assert.equal(projected.unknownCostRequests, 1)
+    near(projected.costUsd, derived(5150, 64), 'the subtotal includes known amounts only')
     assert.equal(real.usageId, `model:${F1.operationId}:2`)
     assert.equal(real.inputTokens, 5150)
     assert.equal(real.outputTokens, 64)
@@ -482,7 +534,7 @@ try {
     assertCleanAudit(directAudit(F1.operationId), 2, 'F1 direct audit')
     assert.equal(operation.length, billed.length + 1, 'F1: one ledger row has no billed provider request behind it')
     evidence.json('usage-agent-retry-deviation.json', { scene: 'F1', sessionId: F1.sessionId, operationId: F1.operationId,
-      status: 'deviation-recorded-not-accepted', providerRequests: requests, providerAttemptsPerSdkAttempt: providerAttempts,
+      status: 'fixed-unavailable-metering-preserved', providerRequests: requests, providerAttemptsPerSdkAttempt: providerAttempts,
       retryPolicy: { agentLevelMaxRetries: PHANERIS_PI_RETRY_SETTINGS.maxRetries,
         agentLevelBaseDelayMs: PHANERIS_PI_RETRY_SETTINGS.baseDelayMs,
         providerMaxRetries: PHANERIS_PI_RETRY_SETTINGS.provider.maxRetries },
@@ -491,23 +543,11 @@ try {
         stopReason: outcomes[index]?.stopReason ?? null, usageId: operation[index]?.usageId ?? null,
         billedProviderRequests: index === 0 ? 0 : 1, recorded: Boolean(operation[index]) })),
       billedProviderRequests: billed.length, ledgerRows: operation,
-      defect: {
-        summary: 'An attempt whose every provider request was rejected before any response (503, never billed) is persisted as a metered zero-usage ledger row.',
-        sites: ['packages/pi-agent-server/src/durable-model-stream.ts:49-54',
-          'packages/pi-agent-server/src/index.ts:1009-1019',
-          'packages/server-core/src/durable-runtime/coordinator.ts:849-860'],
-        evidence: { ledgerRow: zero, commitRequestSeenByTheHost: outcomes[0] },
-        whyTheAuditMissesIt: 'model-usage-audit.ts compares ledger rows with committed outcomes; the fabricated row matches its own outcome, so issueCount stayed 0.',
-      },
+      metering: { unavailable: zero, known: real, projected },
       audit: { attached: audits.get(F1.operationId), direct: directAudit(F1.operationId) },
       assertions: ['agent-level retry ran with the pinned policy', 'two attempt identities, two rows',
-        'the leading zero row has no billed provider request behind it (deviation)'] })
-    knownIssues.push({
-      id: 'F1-agent-retry-unbilled-attempt-zero-row-recorded',
-      status: 'approved-deferred',
-      summary: 'An attempt whose every provider request was rejected before any response is still persisted as a metered zero-usage ledger row (durable-model-stream.ts:49-54 -> index.ts:1009-1019 -> coordinator.ts:849-860).',
-      evidence: 'usage-agent-retry-deviation.json',
-    })
+        'the failed attempt is retained with unavailable metering, not a fabricated zero'] })
+    scenes.push('F1-agent-retry-retains-unavailable-metering-separately')
   }
 
   // ==========================================================================
@@ -550,6 +590,194 @@ try {
     scenes.push('L4-multi-call-session-rows-and-summary-reconcile')
   }
 
+  // A real tool loop, unlike L4's three independent turns. Warming is accelerated
+  // with the SDK's supported per-model TTL, while the real shell tool is pending.
+  const { setPromptCacheWarming } = await import('../../packages/shared/src/config/storage')
+  const { CONFIG_DIR } = await import('../../packages/shared/src/config/paths')
+  assert.equal(CONFIG_DIR, configRoot, 'all configuration writes must remain in the disposable profile')
+  const { setPowerShellValidatorRoot } = await import('../../packages/shared/src/agent/powershell-validator')
+  setPowerShellValidatorRoot(join(root, 'apps/electron/resources'))
+  setPromptCacheWarming(true)
+  const L5 = { sessionId: 'l5-tool-loop', operationId: 'l5-run' }
+  const loopAgent = assemble(L5.sessionId)
+  agents.set(L5.sessionId, loopAgent)
+  loopAgent.setPermissionMode('allow-all')
+  await turn(L5.sessionId, L5.operationId, 'Run the short shell command, then finish.')
+  const l5Rows = operationRows(L5.operationId)
+  const ordinary = l5Rows.filter(row => (row.payload as { kind?: string }).kind !== 'cache_warm')
+  const warmRows = sessionRows(L5.sessionId).filter(row => (row.payload as { kind?: string }).kind === 'cache_warm')
+  assert.equal(ordinary.length, 2, 'both requests of one tool loop must be billed exactly once')
+  assert.equal(ordinary.reduce((n, row) => n + (row.inputTokens ?? 0), 0), 63000)
+  assert.equal(ordinary.reduce((n, row) => n + (row.outputTokens ?? 0), 0), 91)
+  assert(warmRows.length > 0, 'the real SDK must warm while the tool runs')
+  assert.equal(warmRows.length, seen.filter(request => request.label === 'WARM').length, 'each warm request has exactly one independent row')
+  assert(warmRows.every(row => row.inputTokens === 5000 && row.outputTokens === 1))
+  assert(!JSON.stringify(facts(L5.operationId)).includes('WARM_RESPONSE_NOT_FOR_TRANSCRIPT'))
+  evidence.json('usage-tool-loop-warming.json', { ordinary, warmRows, requests: seen.filter(request => ['L5', 'WARM'].includes(request.label)), projection: projectDurableUsage(sessionRows(L5.sessionId) as never) })
+  scenes.push('L5-one-turn-tool-loop-and-independent-warming')
+
+  // Restart the real Pi subprocess against its existing SDK journal, then make
+  // another actual tool call. Parent rows remain immutable across recovery.
+  setPromptCacheWarming(false)
+  const sdkSessionId = loopAgent.piSessionId as string
+  assert(sdkSessionId, 'the subprocess must report the persisted SDK session identity')
+  const beforeRecovery = JSON.stringify(sessionRows(L5.sessionId))
+  await durable.execution.disposeDriver(L5.sessionId)
+  agents.set(L5.sessionId, assemble(L5.sessionId, sdkSessionId))
+  writeFileSync(join(workspace, 'resume-proof.txt'), 'RESUMED_READ_PROOF')
+  await turn(L5.sessionId, 'l6-resume-run', 'Read resume-proof.txt, then finish.')
+  assert.equal(operationRows('l6-resume-run').length, 2)
+  assert.equal(JSON.stringify(operationRows(L5.operationId)), JSON.stringify(l5Rows), 'recovery must not rebill the parent turn')
+  const resumedRequest = seen.find(request => request.label === 'L6')!.requestBody as { messages: unknown[] }
+  assert(JSON.stringify(resumedRequest.messages).includes('L5_TOOL_LOOP_DONE'), 'the new process must resume prior context')
+  evidence.json('usage-resume.json', { sdkSessionId, beforeRecovery, rows: sessionRows(L5.sessionId), resumedRequest })
+  scenes.push('L6-resumed-process-tools-and-ledger-attribution')
+
+  const parentRows = JSON.stringify(sessionRows(L5.sessionId))
+  const childSession = 'l7-branch'
+  agents.set(childSession, assemble(childSession, undefined, join(workspace, 'sessions', L5.sessionId)))
+  await turn(childSession, 'l7-branch-run', 'Continue from the parent session in this branch.')
+  const branchRequest = seen.find(request => request.label === 'L7')!.requestBody
+  assert(JSON.stringify(branchRequest).includes('L6_RESUMED_TOOL_DONE'), 'the actual SDK fork must inherit parent context')
+  assert.equal(sessionRows(childSession).length, 1, 'the child ledger contains only its own billed request')
+  assert.equal(operationRows('l7-branch-run')[0]!.sessionId, childSession)
+  assert.equal(operationRows('l7-branch-run')[0]!.inputTokens, 3500)
+  assert.equal(JSON.stringify(sessionRows(L5.sessionId)), parentRows, 'forking cannot mutate or duplicate the parent bill')
+  evidence.json('usage-branch.json', { parent: sessionRows(L5.sessionId), child: sessionRows(childSession), branchRequest })
+  scenes.push('L7-real-sdk-fork-inherits-context-with-independent-billing')
+
+  // Reported zeros, absent usage, a metered error and partial fields traverse
+  // the same real provider/SDK/subprocess/SQLite path as successful calls.
+  for (const id of ['X0', 'XM', 'XE', 'XP']) {
+    const sessionId = `metering-${id}`, operationId = `${sessionId}-run`
+    agents.set(sessionId, assemble(sessionId))
+    await turn(sessionId, operationId, `${id} metering acceptance`)
+    const rows = operationRows(operationId)
+    assert.equal(rows.length, 1, `${id}: retain the attempt once`)
+    const row = rows[0]!, payload = row.payload as any
+    const projected = projectDurableUsage(rows)
+    assert.equal(payload.metering.version, 1)
+    if (id === 'X0') {
+      assert.equal(payload.metering.status, 'reported')
+      assert.equal(row.inputTokens, 0); assert.equal(row.outputTokens, 0); assert.equal(row.costUsd, 0)
+      assert.equal(projected.unknownCostRequests, 0, 'explicit provider zero is known')
+    } else if (id === 'XM') {
+      assert.equal(payload.metering.status, 'unavailable')
+      assert.equal(row.inputTokens, undefined); assert.equal(row.outputTokens, undefined); assert.equal(row.costUsd, undefined)
+      assert.equal(projected.unknownCostRequests, 1)
+    } else if (id === 'XE') {
+      assert.equal(payload.metering.status, 'reported')
+      assert.equal(row.inputTokens, 321); assert.equal(row.outputTokens, 17)
+      near(row.costUsd!, derived(321, 17), 'nonzero usage survives the terminal error')
+      assert.equal(ofType(sessionId, 'durable_model_outcome_request')[0].stopReason, 'error')
+    } else {
+      assert.equal(payload.metering.status, 'partial')
+      assert.equal(row.inputTokens, 234); assert.equal(row.outputTokens, undefined); assert.equal(row.costUsd, undefined)
+      assert.equal(projected.inputTokens, 234)
+      assert.equal(projected.unknownCostRequests, 1, 'a missing output count leaves the full cost unknown')
+    }
+    assertCleanAudit(directAudit(operationId), 1, `${id}: outcome/ledger parity`)
+    evidence.json(`usage-${id.toLowerCase()}.json`, { request: seen.filter(item => item.label === id), rows, outcomes: ofType(sessionId, 'durable_model_outcome_request'), projected })
+    scenes.push(`${id}-explicit-metering-semantics`)
+  }
+
+  // Cancellation before dispatch is known-zero; cancellation after an actual
+  // request without provider usage remains unknown. Neither is inferred from
+  // empty output, an error stop reason, or the SDK's initialized zero counters.
+  const beforeAbort = seen.length
+  agents.set('metering-XA', assemble('metering-XA'))
+  await turn('metering-XA', 'metering-XA-run', 'Abort while the real T1 waits for acknowledgement')
+  const preAbortRows = operationRows('metering-XA-run')
+  assert.equal(seen.length, beforeAbort, 'pre-dispatch abort must never reach the provider')
+  assert.equal(preAbortRows.length, 1)
+  assert.equal((preAbortRows[0]!.payload as any).metering.status, 'not_dispatched')
+  assert.equal(preAbortRows[0]!.costUsd, 0)
+  assert.equal(projectDurableUsage(preAbortRows).unknownCostRequests, 0)
+  assertCleanAudit(directAudit('metering-XA-run'), 1, 'pre-dispatch cancellation')
+  evidence.json('usage-pre-dispatch-abort.json', { requestsBefore: beforeAbort, requestsAfter: seen.length, rows: preAbortRows, outcomes: ofType('metering-XA', 'durable_model_outcome_request') })
+  scenes.push('XA-pre-dispatch-cancellation-is-proven-zero')
+
+  agents.set('metering-XB', assemble('metering-XB'))
+  const abortTurn = turn('metering-XB', 'metering-XB-run', 'Abort a real stream before usage arrives')
+  const abortDeadline = Date.now() + 20_000
+  while (!rows('metering-XB').some(row => JSON.stringify(row).includes('PARTIAL_BEFORE_ABORT'))) {
+    if (Date.now() > abortDeadline) { evidence.json('usage-stream-abort-probe.json', { rows: rows('metering-XB'), seen }); throw Error('The real provider stream did not deliver the partial answer') }
+    await Bun.sleep(25)
+  }
+  agents.get('metering-XB').send({ type: 'abort' })
+  await abortTurn
+  for (const close of stalledStreams) close()
+  const streamAbortRows = operationRows('metering-XB-run')
+  assert.equal(streamAbortRows.length, 1)
+  assert.equal((streamAbortRows[0]!.payload as any).metering.status, 'unavailable')
+  assert.equal(streamAbortRows[0]!.costUsd, undefined)
+  assert.equal(projectDurableUsage(streamAbortRows).unknownCostRequests, 1)
+  assert.equal(seen.filter(request => request.label === 'XB').length, 1, 'a user stop never retries the stream')
+  assertCleanAudit(directAudit('metering-XB-run'), 1, 'in-stream cancellation')
+  evidence.json('usage-stream-abort.json', { rows: streamAbortRows, requests: seen.filter(request => request.label === 'XB'), outcomes: ofType('metering-XB', 'durable_model_outcome_request') })
+  scenes.push('XB-in-stream-cancellation-retains-unknown-metering')
+
+  agents.set('metering-XC', assemble('metering-XC', undefined, undefined, 64_000))
+  await turn('metering-XC', 'metering-XC-seed', 'First history turn')
+  await turn('metering-XC', 'metering-XC-bulk', 'Large history ' + 'x'.repeat(132_000))
+  const priorConversation = JSON.stringify(['metering-XC-seed', 'metering-XC-bulk'].flatMap(id => factsOf(id, 'assistant_message_committed')))
+  await turn('metering-XC', 'metering-XC-compact', '/compact Retain the original summary budget')
+  const compactRows = operationRows('metering-XC-compact')
+  assert.equal(compactRows.length, 1, 'summary generation uses the same durable stream/ledger')
+  assert.equal((compactRows[0]!.payload as any).kind, 'compaction', 'summary is an auxiliary request, not a conversational response')
+  assert.equal(factsOf('metering-XC-compact', 'assistant_message_committed').length, 0)
+  assert.equal(projectDurableUsage(compactRows).contextTokens, 0, 'summary billing never becomes conversational occupancy')
+  assert.equal(compactRows[0]!.inputTokens, 2000); assert.equal(compactRows[0]!.outputTokens, 25)
+  near(compactRows[0]!.costUsd!, derived(2000, 25), 'summary cost')
+  const compactRequest = seen.filter(request => request.label === 'XC').at(-1)!.requestBody as any
+  assert.equal(compactRequest.max_completion_tokens ?? compactRequest.max_tokens, 4096, 'small model output limit binds')
+  assertCleanAudit(directAudit('metering-XC-compact'), 1, 'independent-budget summary')
+  evidence.json('usage-compaction.json', { rows: compactRows, request: compactRequest, outcomes: ofType('metering-XC', 'durable_model_outcome_request') })
+  await turn('metering-XC', 'metering-XC-after', 'Continue after the SDK summary')
+  const afterCompactRequest = seen.filter(request => request.label === 'XC').at(-1)!
+  assert(JSON.stringify(afterCompactRequest.requestBody).includes('DURABLY_METERED_SUMMARY'), 'subsequent context retains the native SDK summary')
+  assert.equal(JSON.stringify(['metering-XC-seed', 'metering-XC-bulk'].flatMap(id => factsOf(id, 'assistant_message_committed'))), priorConversation)
+  evidence.json('usage-compaction-context.json', { priorConversation: JSON.parse(priorConversation), request: afterCompactRequest, compactRows, projectedSummary: projectDurableUsage(compactRows), conversationFacts: factsOf('metering-XC-compact', 'assistant_message_committed') })
+  scenes.push('XC-independent-budget-compaction-is-durably-metered')
+
+  // A real SQLite restart with a T1-only attempt retains unknown effects; only
+  // an explicit reconciliation verdict can classify them, never a zero row.
+  const recoveryWorkspace = join(fixture, 'recovery')
+  mkdirSync(recoveryWorkspace, { recursive: true })
+  let recovering = createDurableRuntime()
+  const pending = []
+  for (const decision of ['provider_not_billed', 'billed_response_unavailable', 'interrupted_response_unavailable'] as const) {
+    const operationId = 'recovery-' + decision, sessionId = operationId
+    recovering.commands.acceptRun({ workspaceRootPath: recoveryWorkspace, sessionId, turnId: operationId + '-turn', operationId,
+      userMessageId: operationId + '-user', userMessage: 'Recovery acceptance', acceptedAt: 1 })
+    const prepared = await recovering.effects.prepareModel(recoveryWorkspace, { sessionId, turnId: operationId + '-turn', runOperationId: operationId,
+      providerRequestId: '1', provider: 'fixture', model: 'fixture', canonicalRequestHash: operationId })
+    pending.push({ operationId, sessionId, modelOperationId: prepared.operationId, decision })
+  }
+  await recovering.close()
+  recovering = createDurableRuntime()
+  try {
+    const report = recovering.admin.recoverWorkspace(recoveryWorkspace, 50)
+    const snapshots = pending.map(item => {
+      const parked = recovering.queries.operations(recoveryWorkspace, item.sessionId).find(row => row.operationId === item.operationId)!
+      assert.equal(parked.phase, 'recovery_parked')
+      const before = auditModelUsage(recovering.queries.events(recoveryWorkspace, { operationId: item.operationId }), [])
+      assert(before.issues.some(issue => issue.kind === 'pending_outcome'))
+      recovering.evidence.reconcileModel(recoveryWorkspace, { sessionId: item.sessionId, modelOperationId: item.modelOperationId, decision: item.decision,
+        reason: 'Controlled recovery fixture verdict; no live billing assertion', actor: { type: 'administrator', id: 'acceptance' },
+        evidence: [{ source: 'other', summary: 'Reproducible T1-only SQLite restart', observedAt: 51 }] }, 52)
+      const events = recovering.queries.events(recoveryWorkspace, { operationId: item.operationId })
+      const rows = recovering.queries.usage(recoveryWorkspace, { operationId: item.operationId })
+      assert.equal(rows.length, 0, 'reconciliation must never synthesize a metered zero')
+      const after = auditModelUsage(events, rows)
+      assert.equal(after.issueCount, item.decision === 'provider_not_billed' ? 0 : 1)
+      if (item.decision !== 'provider_not_billed') assert.equal(after.issues[0]!.kind, 'reconciled_without_usage')
+      return { ...item, before, after, rows, events }
+    })
+    evidence.json('usage-recovery.json', { report, snapshots })
+    scenes.push('XR-sqlite-restart-and-explicit-reconciliation-preserve-unknown-effects')
+  } finally { await recovering.close() }
+
   // --- database-level evidence and summary -----------------------------------
   assert.equal(served, PLAN.length, 'the fixture served exactly the scripted plan')
   assert.equal(unscripted, 0, 'no provider request escaped the scripted plan')
@@ -582,31 +810,19 @@ try {
     providerRequests: seen.map(request => ({ seq: request.seq, label: request.label, status: request.status, path: request.path,
       requestBodyBytes: request.requestBodyBytes, requestBodySha256: request.requestBodySha256, responseUsage: request.responseUsage })),
     ledgers: { [L1.sessionId]: sessionRows(L1.sessionId), [L2.sessionId]: sessionRows(L2.sessionId),
-      [L3.sessionId]: sessionRows(L3.sessionId), [F1.sessionId]: sessionRows(F1.sessionId) },
+      [L3.sessionId]: sessionRows(L3.sessionId), [F1.sessionId]: sessionRows(F1.sessionId),
+      [L4.sessionId]: sessionRows(L4.sessionId), [L5.sessionId]: sessionRows(L5.sessionId), [childSession]: sessionRows(childSession) },
     audits: Object.fromEntries(audits),
     database: { path: databasePath, sha256: databaseSha256, schema, primaryKey, duplicateIdentities,
       rowsPerSession: { [L1.sessionId]: 1, [L2.sessionId]: 1, [L3.sessionId]: 1, [F1.sessionId]: 2 } },
-    sceneResults: scenes.map(scene => ({ scene, status: scene.startsWith('F1-')
-      ? 'records a known deviation (see summary.defect); NOT an accepted property' : 'verified' })),
-    defect: {
-      id: 'usage-ledger-unmetered-failure-recorded-as-zero',
-      status: 'reported-not-fixed',
-      summary: 'A model attempt whose provider requests were all rejected before any response (503, never billed) is written to usage_ledger as a metered zero row (0 input, 0 output, $0, costSource pi_sdk_estimate) with no reconciliation verdict, so the ledger cannot distinguish "not billed" from "billed zero".',
-      sites: ['packages/pi-agent-server/src/durable-model-stream.ts:49-54',
-        'packages/pi-agent-server/src/index.ts:1009-1019',
-        'packages/server-core/src/durable-runtime/coordinator.ts:849-860'],
-      evidence: 'usage-agent-retry-deviation.json (scene F1: 3 x 503 then success -> row model:f1-run:1 = 0/0/$0 alongside model:f1-run:2 = 5150/64)',
-      whyTheAuditMissesIt: 'model-usage-audit.ts:5-63 compares ledger rows with committed outcomes and never asks whether a failed outcome carried metered usage; expected/actual stayed 2/2 with issueCount 0.',
-      proposedMinimalFix: 'In packages/pi-agent-server/src/index.ts:1009-1019 omit `usage` when the committed message proves nothing was metered (stopReason === "error" && message.usage.totalTokens === 0 && message.content.length === 0). commitModelOutcome already handles an absent usage by committing the outcome fact with no ledger row (coordinator.ts:849-860), which keeps dispatch/outcome parity (no pending_outcome) while removing the fabricated charge. Alternative site: the same condition gated in durable-model-stream.ts:49-54.',
-      affectedProperty: 'docs/verification/upgrade-2026-10-19-review.md:72 — a failed retry must be accounted from actual usage, not uniformly zero-cost.',
-    },
+    sceneResults: scenes.map(scene => ({ scene, status: 'verified' })),
+    resolvedIssue: { id: 'usage-ledger-unmetered-failure-recorded-as-zero', status: 'fixed',
+      evidence: ['usage-agent-retry-deviation.json', 'usage-x0.json', 'usage-xm.json', 'usage-xe.json', 'usage-xp.json', 'usage-pre-dispatch-abort.json', 'usage-stream-abort.json', 'usage-compaction.json', 'usage-recovery.json'],
+      statement: 'Attempts and outcomes are retained; unknown fields stay nullable, explicit provider zero stays known, partial/error usage survives, and history is not rewritten.' },
     limitations: ['the agent_settled observation used for the audit attachment is issued by the workflow at run completion; the subprocess does not emit one for a main session in this harness configuration',
       'the conflicting-content branch of appendUsage (store.ts:1000-1002) is unreachable while the outcome event exists'],
   })
 
-  // The parity audit probe above is the correctness surface; the divergence it
-  // exposes stays a recorded known issue. It is deliberately NOT part of the
-  // passed scene set: a reproducible defect must never be counted as a pass.
   evidence.json('known-issues.json', { knownIssues })
   evidence.complete(scenes, [
     'live provider APIs and real provider billing statements (loopback fixture only)',
@@ -614,12 +830,8 @@ try {
     'signed installer/release',
     'provider-reported cost objects (the OpenAI-completions adapter prices locally from configured rates)',
     'cache-read/cache-write and cost-tier pricing paths (the fixture reports no cache tokens; the rates have no tiers)',
-    'abort-before-dispatch known-zero accounting and thrown-stream pending semantics (durable-model-stream.ts:32-45, :57-67)',
-    'recovery_parked reconciliation verdicts (provider_not_billed / billed_response_unavailable / manual_abandon)',
+    'non-terminal thrown-stream transport exceptions (pending effects remain subject to recovery)',
     'the conflicting-content branch of appendUsage (store.ts:1000-1002)',
-    'within-turn tool-loop accounting (multiple provider requests inside ONE run): this workflow prices one request per run; the multi-request turn is exercised by upgrade-0153-pi-runtime (PC-01/PC-04/PC-05) and durable-runtime-boundary',
-    'session branching attribution: covered by the registered session-branch and durable-runtime-boundary runs, not re-derived here',
-    'cache warming as a separate ledger fact: the fixture reports no cache tokens, so warming is not asserted here',
     ...knownIssues.map(issue => `${issue.id}: ${issue.status} — ${issue.summary}`),
   ])
 } catch (error) {

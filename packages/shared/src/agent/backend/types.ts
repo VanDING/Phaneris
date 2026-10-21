@@ -171,6 +171,7 @@ export interface BackendHostRuntimeContext {
  */
 export interface CoreBackendConfig {
   contextPolicy?: import('../context-policy').ContextPolicy;
+  compactionThresholdTokens?: number | null;
   /** Workspace configuration */
   workspace: Workspace;
 
@@ -508,6 +509,7 @@ export interface AgentBackend {
    */
   updateExtendedPromptCache?(enabled: boolean): void;
   updateContextPolicy?(policy: import('../context-policy').ContextPolicy): Promise<void>;
+  updateCompactionThreshold?(value: number | null): Promise<void>;
   /** Make the next model request produce a handoff document instead of an answer. */
   forceContextHandoff?(): Promise<void>;
   updatePromptCacheWarming?(enabled: boolean): void;

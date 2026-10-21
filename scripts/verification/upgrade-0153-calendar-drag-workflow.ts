@@ -358,13 +358,10 @@ await verificationWorkflow('upgrade-0153-calendar-drag', async run => {
         const raw = localStorage.getItem('craft-calendar-view-state:ws-fixture')
         return raw ? (JSON.parse(raw) as { cursor?: string }).cursor ?? null : null
       })
-      const expectedCursor = cursorBefore
-        ? await page.evaluate(before => {
-          const [year, month, day] = before.split('-').map(Number)
-          const next = new Date(year!, month! - 1, day! + 7)
-          return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}-${String(next.getDate()).padStart(2, '0')}`
-        }, cursorBefore)
-        : null
+      // FullCalendar advances to the next week's start, which need not have the
+      // old cursor's weekday (the original +7 oracle passed only on Mondays).
+      const expectedCursor = await page.evaluate(() => window.calendarFixture.fullCalendarCursor())
+      assert(expectedCursor && expectedCursor !== cursorBefore, 'the library cursor must advance')
       const titleAndCursor = {
         domTitleAfterLanguageSwitch: after.title,
         libraryTitleAfterLanguageSwitch: after.libraryTitle,
@@ -405,6 +402,25 @@ await verificationWorkflow('upgrade-0153-calendar-drag', async run => {
       !dragAttempts[0]?.changed ? 'CAL-01 pointer drag' : null,
       !dragAttempts[1]?.changed ? 'CAL-02 pointer resize' : null,
     ].filter(Boolean) as string[]
+    await check('CAL-05-timezones-and-DST-preserve-local-dates', async () => {
+      const observations = []
+      for (const timezoneId of ['America/New_York', 'Asia/Shanghai']) {
+        const zoned = await launched.browser.newContext({ timezoneId, viewport: { width: 1440, height: 900 } })
+        try {
+          const calendar = await zoned.newPage()
+          await calendar.goto(`${fixture.url}?date=2026-03-08`, { waitUntil: 'domcontentloaded' })
+          await calendar.waitForFunction(() => window.calendarFixture?.ready)
+          assert.equal(await calendar.evaluate(() => window.calendarFixture.anchorDate), '2026-03-08')
+          for (const date of ['2026-03-08', '2026-11-01']) {
+            assert(await calendar.evaluate(date => window.calendarFixture.componentDrop('ev-1', { date, endDate: date, time: '01:30', endTime: '03:30' }), date))
+            await calendar.waitForFunction(date => window.calendarFixture.writes.some(write => write.patch.startAt === `${date}T01:30` && write.patch.dueAt === `${date}T03:30`), date)
+          }
+          observations.push({ timezoneId, writes: await calendar.evaluate(() => window.calendarFixture.writes) })
+        } finally { await zoned.close() }
+      }
+      run.json('cal-05-timezones.json', { observations, path: 'production eventDrop callback and persistence mapping; no claim of physical pointer gesture across DST' })
+    })
+
     run.json('calendar-drag.json', {
       checks, url: fixture.url, bootMs, buildMs, launchMs, totalMs: Date.now() - launchStarted,
       anchorDate: boot.anchorDate, targetDate, resizeRecorded, dragAttempts, writes: finalWrites, items: finalItems,

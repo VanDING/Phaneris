@@ -398,6 +398,8 @@ export const RPC_CHANNELS = {
     GET_EXTENDED_PROMPT_CACHE: 'caching:getExtendedPromptCache',
     GET_CONTEXT_POLICY: 'caching:getContextPolicy',
     SET_CONTEXT_POLICY: 'caching:setContextPolicy',
+    GET_COMPACTION_THRESHOLD: 'caching:getCompactionThreshold',
+    SET_COMPACTION_THRESHOLD: 'caching:setCompactionThreshold',
     GET_PROMPT_CACHE_WARMING: 'caching:getPromptCacheWarming',
     SET_EXTENDED_PROMPT_CACHE: 'caching:setExtendedPromptCache',
     SET_PROMPT_CACHE_WARMING: 'caching:setPromptCacheWarming',

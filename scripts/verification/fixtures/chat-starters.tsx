@@ -38,6 +38,10 @@ const now = () => Math.round(performance.now() * 100) / 100
 let failNextWrite: string | null = null
 let storedStarters: ChatStarter[] = []
 let renders = 0
+let holdNextRead = false
+let pendingRead: { resolve: () => void; reject: () => void } | null = null
+let holdNextWrite = false
+let pendingWrite: (() => void) | null = null
 
 const explicit: Record<string, unknown> = {
   // Theme + preferences: the renderer host normally answers these before the
@@ -46,9 +50,21 @@ const explicit: Record<string, unknown> = {
   setThemePreferences: async (preferences: unknown) => preferences,
   loadPresetTheme: async () => ({ id: 'default', path: 'builtin:default', theme: DEFAULT_THEME_FILE }),
   getSystemTheme: async () => false,
-  getWorkspaceSettings: async () => ({ chatStarters: storedStarters }),
+  getWorkspaceSettings: async (workspaceId: string) => {
+    if (holdNextRead) {
+      holdNextRead = false
+      await new Promise<void>((resolve, reject) => {
+        pendingRead = { resolve, reject: () => reject(new Error('Settings read rejected')) }
+      })
+      pendingRead = null
+    }
+    return { chatStarters: workspaceId === 'ws-other' ? [{ label: 'Other workspace', prompt: 'Other prompt' }] : storedStarters }
+  },
+  getSources: async () => [{ config: { slug: 'github', name: 'GitHub', type: 'mcp', enabled: true } }],
+  getSkills: async () => [{ slug: 'review-prs', metadata: { name: 'Review PRs', description: 'Review pull requests' } }],
   updateWorkspaceSetting: async (_workspaceId: string, key: string, value: unknown) => {
     ipc.push({ method: 'updateWorkspaceSetting', args: [key, value], at: now() })
+    if (holdNextWrite) { holdNextWrite = false; await new Promise<void>(resolve => { pendingWrite = resolve }); pendingWrite = null }
     if (failNextWrite) {
       const message = failNextWrite
       failNextWrite = null
@@ -90,6 +106,8 @@ function Fixture() {
   renders += 1
   const [starters, setStarters] = React.useState<ChatStarter[]>(allStarters.slice(0, 3))
   const [disabled, setDisabled] = React.useState(false)
+  const [settingsEpoch, setSettingsEpoch] = React.useState(0)
+  const [workspaceId, setWorkspaceId] = React.useState('ws-fixture')
 
   const onSelectChip = React.useCallback((starter: ChatStarter) => { selections.push(starter) }, [])
 
@@ -102,6 +120,14 @@ function Fixture() {
       setDisabled: next => setDisabled(next),
       setLanguage: async language => { await i18n.changeLanguage(language) },
       i18nLanguage: () => i18n.resolvedLanguage ?? 'en',
+      holdSettingsRead: () => { holdNextRead = true; setSettingsEpoch(value => value + 1) },
+      readIsPending: () => pendingRead !== null,
+      resolveSettingsRead: () => pendingRead?.resolve(),
+      rejectSettingsRead: () => pendingRead?.reject(),
+      setWorkspaceId,
+      holdSettingsWrite: () => { holdNextWrite = true },
+      writeIsPending: () => pendingWrite !== null,
+      resolveSettingsWrite: () => pendingWrite?.(),
     }
   }, [theme.themeLoadStatus])
 
@@ -111,7 +137,7 @@ function Fixture() {
         <ChatStarters starters={starters} disabled={disabled} onSelect={onSelectChip} />
       </section>
       <section id="settings" className="border-b border-border p-4">
-        <ChatStartersSection workspaceId="ws-fixture" />
+        <ChatStartersSection key={settingsEpoch} workspaceId={workspaceId} />
       </section>
       <Toaster />
     </div>
@@ -132,6 +158,14 @@ declare global {
       setDisabled: (disabled: boolean) => void
       setLanguage: (language: string) => Promise<void>
       i18nLanguage: () => string
+      holdSettingsRead: () => void
+      readIsPending: () => boolean
+      resolveSettingsRead: () => void
+      rejectSettingsRead: () => void
+      setWorkspaceId: (workspaceId: string) => void
+      holdSettingsWrite: () => void
+      writeIsPending: () => boolean
+      resolveSettingsWrite: () => void
     }
   }
 }

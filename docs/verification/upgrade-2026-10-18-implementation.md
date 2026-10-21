@@ -1,6 +1,8 @@
 # 上游 0.15.3 与依赖升级实施记录（2026-10-18，2026-10-19 修订）
 
-执行者：DSH。规划者：Codex。分支：`codex/upstream-0153-dependencies-20261018`（自 `82714e2ae3b76643ae16ef1d3a6abfe66e8bf574` 创建，**未提交、未推送**）。
+当前状态（2026-10-20）：升级主体已提交为 `d0fb6be7b`，另有 Pi 中断恢复提交 `ac85d33b0`；本轮 Codex 直接实施的收口修改保持未提交、未推送。当前清单与验收结论见[升级收口](../dependencies/upgrade-closeout-2026-10-20.md)和[机器结果](results/upgrade-2026-10-18.json)。下文各批次为当时记录，不作为当前 HEAD 或整棵工作树已经验收的证明。
+
+此前批次执行者：DSH；规划者：Codex。分支为 `codex/upstream-0153-dependencies-20261018`，最初自 `82714e2ae3b76643ae16ef1d3a6abfe66e8bf574` 创建。
 
 - 失败判定见 [upgrade-2026-10-18-failure-matrix.md](upgrade-2026-10-18-failure-matrix.md)（含实施期间追加的 7.1–7.6 与复核后追加的 8.1–8.6）。
 - 首轮复核见 [upgrade-2026-10-19-review.md](upgrade-2026-10-19-review.md)（changes-requested）；本版按该记录第 5 节重做，改动集中在 §8。
@@ -425,3 +427,14 @@ Tiptap 13 个直接控制包整族 3.32.0（`packages/ui` 的 peer 同步，`@ti
 - 证据：220 个验证运行、213 个绑定当前 lockfile；冻结目标 38 命中 + 1 批准例外。
 - 结果文件两处机械修正（不改门禁状态）：同一 `known-issue` id 的重复条目去重（10 → 7），`notVerified` 改为与实际一致（打包 unpacked 已完成仓库外验证；`sharp` 归为无头产物环境受限；`portable` 目标不存在）。
 - **并发写入提醒**：采集期间工作树中存在另一任务的未跟踪/已修改文件（`scripts/verification/pi-interruption-recovery-workflow.ts`、`docs/verification/pi-interruption-recovery-failure-matrix.md`、`packages/server-core/src/runtime-adapters/message-delivery-reconciliation.ts`，以及 `session-tools-core`/`shared`/`durable-runtime` 下的相关改动）。因此本次采集是 19:20 前后的树快照；`tsc -p tsconfig.tooling.json` 在该未跟踪文件上（`pi-interruption-recovery-workflow.ts:170`）当前报错，属并发任务的新增文件，不在本升级的可跟踪改动集内，也未由本任务修改。
+
+
+## 12. 经批准推进延期项（2026-10-20）
+
+本节取代前文 P-01、U-01、D-01 与独立压缩阈值的延期结论；历史失败和此前门禁保持原样。Codex 在同一隔离工作树完成实施，未交 DSH、未合入字体迁移。
+
+[实施与验收记录](../dependencies/upgrade-followup-2026-10-20.md)包含失败先行矩阵、SDK 公开扩展与会话独占设置存储、当前运行摘要归属、计量分类/未知显示、PDF 日志治理和范围边界。定向 Pi 13、真实账本 16、浏览器/RPC 12、PDF 6 项已取得绿色证据。critical 新增浏览器工作流，最低场景数与必需产物同时提高，原有断言和预算不放宽。
+
+最终 33 项门禁以自动机器结果的源码指纹和验收状态为准；此前 31 pass / 1 environment-limited 不作为本轮新源码验收。FullCalendar 与缓存加固仍为批准例外，非待办；无本机执行条件的平台/容器/签名/真实账单仍不计通过。
+
+补充 FU-C5：摘要入账原先标为 model_attempt，已先写红项，再通过 SDK 公开 isCompacting 在请求边界标记 compaction 辅助用途；不生成普通助手事实、不作为会话占用来源，真实后续请求仍带 SDK 摘要，旧对话事实不改写。账本 16 项重新通过，新增 usage-compaction-context.json 为 critical 必需产物。

@@ -16,7 +16,15 @@ import { App as ViewerApp } from '../../../apps/viewer/src/App'
 import { FrontendP2Surface } from './frontend-p2'
 
 const params = new URLSearchParams(location.search)
-const style = document.createElement('link'); style.rel = 'stylesheet'; style.href = params.get('css')!; document.head.append(style)
+const host = params.get('css')?.split('/').at(-1)?.replace('.css', '') ?? 'electron'
+const sheets = {
+  electron: () => import('./theme-contract-css/electron.css?inline'),
+  ui: () => import('./theme-contract-css/ui.css?inline'),
+  viewer: () => import('./theme-contract-css/viewer.css?inline'),
+  webui: () => import('./theme-contract-css/webui.css?inline'),
+}
+const sheet = await (sheets[host as keyof typeof sheets] ?? sheets.electron)()
+const style = document.createElement('style'); style.textContent = sheet.default; document.head.append(style)
 const i18n = createInstance()
 await i18n.init({ lng: 'en', resources: { en: { translation: {} } }, fallbackLng: false, interpolation: { escapeValue: false } })
 const listeners = new Set<(value: ThemePreferences) => void>()

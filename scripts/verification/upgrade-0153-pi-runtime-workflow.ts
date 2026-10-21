@@ -111,7 +111,7 @@ try {
     model: record.model ?? 'fixture',
     choices: [{ index: 0, delta, finish_reason: finishReason }],
     ...(finishReason
-      ? { usage: { prompt_tokens: PROMPT_TOKENS, completion_tokens: COMPLETION_TOKENS, total_tokens: PROMPT_TOKENS + COMPLETION_TOKENS } }
+      ? { usage: { prompt_tokens: record.kind === 'chat' && ['pc-06-auto', 'pc-06-control'].includes(record.scene) ? 80_000 : PROMPT_TOKENS, completion_tokens: COMPLETION_TOKENS, total_tokens: (record.kind === 'chat' && ['pc-06-auto', 'pc-06-control'].includes(record.scene) ? 80_000 : PROMPT_TOKENS) + COMPLETION_TOKENS } }
       : {}),
   })
   /** A finished stream: deltas, then a terminal `finish_reason` chunk with usage. */
@@ -196,7 +196,28 @@ try {
       if (toolMessages.length > 0) record.toolMessages = toolMessages
       requests.push(record)
 
+      if (record.kind === 'chat' && scene === 'pc-06-overflow' && sceneAttempt === 1) {
+        record.status = 400
+        return new Response(JSON.stringify({ error: { message: "This model's maximum context length is 200000 tokens. However, your messages resulted in 210000 tokens.", type: 'invalid_request_error', code: 'context_length_exceeded' } }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+      }
+      if (record.kind === 'compaction' && scene === 'pc-06-fail') {
+        record.status = 400
+        return new Response(JSON.stringify({ error: { message: 'FU_COMPACTION_REFUSED_400', type: 'invalid_request_error' } }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+      }
+      if (record.kind === 'compaction' && scene === 'pc-06-cancel') {
+        record.stalled = true
+        return new Response(new ReadableStream<Uint8Array>({ start(controller) {
+          controller.enqueue(new TextEncoder().encode(sse(chunkFor(record, { role: 'assistant' }))))
+          let closed = false
+          const close = () => { if (!closed) { closed = true; try { controller.close() } catch {} } }
+          request.signal.addEventListener('abort', close, { once: true })
+          stalls.push({ close })
+        } }), { headers: { 'Content-Type': 'text/event-stream' } })
+      }
+
       switch (scene) {
+        case 'pc-01':
+          return sseResponse(record, [{ role: 'assistant' }, ...(sceneAttempt === 1 ? [{ reasoning_content: 'PC01_PRIVATE_MODEL_A_THINKING' }] : []), { content: REPLY['pc-01'] }], 'stop')
         // PC-02: the first provider request answers with a tool call whose
         // `arguments` is not valid JSON; the follow-up request is a normal reply.
         case 'pc-02': {
@@ -333,13 +354,14 @@ try {
       workspace: { id: 'pi-runtime', name: 'Pi runtime fixture', rootPath: workspace },
       session: { id, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1 },
       isHeadless: true,
+      ...(id === 'pc-01-session' ? { thinkingLevel: 'medium' } : {}),
       // Auto-compaction off: PC-05 exercises the manual path deliberately.
       contextPolicy: 'manual',
       runtime: {
         paths: { piServer: join(root, 'packages/pi-agent-server/dist/index.js'), node: process.execPath },
         baseUrl: providerUrl,
         customEndpoint: CUSTOM_ENDPOINT,
-        customModels: CUSTOM_MODELS,
+        customModels: id === 'pc-01-session' ? [{ ...MODEL_A, supportsThinking: true }, { ...MODEL_B, supportsThinking: false }] : CUSTOM_MODELS,
       },
       envOverrides: {
         HOME: fixture,
@@ -348,6 +370,13 @@ try {
         NODE_ENV: 'test',
       },
     } as any) as any
+
+    agent.automationInputs = [] as any[]
+    const emitAutomation = agent.emitAutomationEvent.bind(agent)
+    agent.emitAutomationEvent = async (event: string, input: unknown, signal?: AbortSignal) => {
+      agent.automationInputs.push({ event, input: structuredClone(input) })
+      return emitAutomation(event, input, signal)
+    }
 
     // Raw JSONL from the subprocess: every row is kept, unmodified.
     agent.wire = [] as any[]
@@ -364,6 +393,7 @@ try {
         type: message?.type,
         id: message?.id,
         model: message?.model,
+        compactionThresholdTokens: message?.compactionThresholdTokens,
         keys: Object.keys(message ?? {}).sort(),
         messageBytes: typeof message?.message === 'string' ? Buffer.byteLength(message.message) : undefined,
       })
@@ -456,10 +486,10 @@ try {
    * have been recycled: the ChildProcess exit event plus a signal-0 probe and
    * tasklist immediately after `disposeForRestart()`/`destroy()`.
    */
-  async function teardown(agent: any) {
+  async function teardown(agent: any, destroy = true) {
     const pid = childPid(agent)
     await agent.disposeForRestart()
-    agent.destroy()
+    if (destroy) agent.destroy()
     const state = await waitForExit(pid)
     assert.ok(state.exit, `child ${pid} must report its own exit (code/signal)`)
     assert.equal(state.killProbe, 'ESRCH', `child ${pid} must not answer a signal-0 probe: ${JSON.stringify(state)}`)
@@ -478,7 +508,7 @@ try {
   {
     scene = 'pc-01'
     sceneAttempt = 0
-    probes = ['PC_01_REPLY', 'PC01_TURN_ONE']
+    probes = ['PC_01_REPLY', 'PC01_TURN_ONE', 'PC01_PRIVATE_MODEL_A_THINKING']
     const agent = createAgent('pc-01-session', `pi/${MODEL_A.id}`)
     await agent.ensureSubprocess()
     const pid = trackChild(agent, 'pc-01')
@@ -489,6 +519,7 @@ try {
       assert.equal(requestA?.model, MODEL_A.id, 'the first provider request must carry model A')
       assert.equal(requestA?.maxTokens, MODEL_A.maxTokens, 'model A must cap output at its own maxTokens')
       assert.equal(firstSettled.event.aborted, false)
+      assert(wireRows(agent).some(row => JSON.stringify(row).includes('PC01_PRIVATE_MODEL_A_THINKING')), 'the first model must actually emit thinking before switching')
 
       // The production runtime-config switch (the exact host→subprocess message
       // `update_runtime_config` used by SessionManager.tryRefreshAgentRuntime).
@@ -523,6 +554,7 @@ try {
       assert.equal(requestsAfterSwitch.length, 2, 'exactly one provider request per turn')
       assert.equal(requestsAfterSwitch[1]!.model, MODEL_B.id, 'the second provider request must carry model B')
       assert.equal(requestsAfterSwitch[1]!.maxTokens, MODEL_B.maxTokens, 'the cap must follow the switched model')
+      assert.equal(requestsAfterSwitch[1]!.contains.PC01_PRIVATE_MODEL_A_THINKING, false, 'model A thinking must not leak into the switched model B request')
       // The subprocess also re-reports occupancy at every boundary; after the
       // switch that snapshot is taken through the new model (session-event-adapter.ts:203-210).
       assert.equal(secondSettled.event.contextUsage?.contextWindow, MODEL_B.contextWindow,
@@ -623,17 +655,18 @@ try {
       assert.equal(adapted[0]!.isError, true)
       assert.equal(adapted[0]!.result, bounded, 'the host must see the same bounded text')
 
-      // Observation recorded for the report: the SDK does announce the call
-      // (tool_execution_start on the wire) but the host buffers every tool start
-      // until a durable prepare flushes it (pi-agent.ts:1132-1135 → 1791-1799).
-      // A call that fails validation never reaches that path, so the host
-      // publishes the result with the fallback name and no matching start.
+      // Validation fails before durable execution; the matching tool identity
+      // must still survive without publishing a speculative execution start.
       const startRows = eventRows(agent, turn.started, 'tool_execution_start')
       const publishedStarts = turn.events.filter(event => event.type === 'tool_start')
       assert.equal(startRows.length, 1, 'the SDK must announce the tool call to the host')
       assert.equal(publishedStarts.length, 0, 'the unflushed start is not published as a host tool_start')
-      assert.equal(adapted[0]!.toolName, 'tool',
-        'without a flushed start the host falls back to the generic tool name (event-adapter.ts:863)')
+      assert.equal(toolName, 'read', 'the fixture must exercise the actual read tool')
+      assert.equal(adapted[0]!.toolName, 'Read', 'a validation failure retains the canonical tool identity without a synthetic start')
+      const failureHooks = agent.automationInputs.filter((item: any) => item.event === 'PostToolUseFailure')
+      assert.equal(failureHooks.length, 1, 'exactly one failure hook is dispatched')
+      assert.equal(failureHooks[0].input.tool_name, 'Read')
+      assert.equal(agent.bufferedDurableToolStarts.size, 0, 'a rejected call must not retain speculative starts')
 
       // What the model itself saw, in the very next provider request.
       const seen = followUp.toolMessages?.[0]
@@ -667,8 +700,9 @@ try {
           sdkAnnouncedOnWire: startRows.map(row => row.event),
           publishedAsHostToolStart: publishedStarts.length,
           hostToolResultName: adapted[0]!.toolName,
-          note: 'Minor, pre-existing fidelity gap (NOT fixed by this workflow): a tool call that never reaches execute() has no durable prepare, so its buffered tool_execution_start is dropped (pi-agent.ts:1132-1135 buffers; only pi-agent.ts:1791-1799 flushes) and the host emits the error tool_result with the fallback name "tool" (event-adapter.ts:863). The PostToolUseFailure hook payload (pi-agent.ts:1471-1484) therefore also reports tool_name "tool".',
-          proposedMinimalFix: 'In the tool_execution_end branch of PiAgent.handleSubprocessEvent (pi-agent.ts:1445-1450), flush and clear any entry still held in bufferedDurableToolStarts for that toolCallId before adapting the end event.',
+          failureHooks,
+          remainingSpeculativeStarts: agent.bufferedDurableToolStarts.size,
+          note: 'Validation failure retains the SDK end-event tool identity and dispatches one matching failure hook, without publishing a speculative execution start.',
         },
         subprocess: {
           pidBefore: pid,
@@ -1088,6 +1122,124 @@ try {
   // report EPERM), so the late probe is only a failure when the pid is owned by
   // another bun.exe — i.e. plausibly still our child.
   // ==========================================================================
+  // PC-06: real public-extension threshold path; default, budgets, switching,
+  // auto-trigger, failure fallback, cancellation and child restart are distinct.
+  {
+    scene = 'pc-06'; sceneAttempt = 0; probes = ['PC06_BULK']
+    const agent = createAgent('pc-06-session', `pi/${MODEL_A.id}`)
+    await agent.ensureSubprocess(); trackChild(agent, scene)
+    const snapshots: Record<string, unknown> = {}
+    const latestReserve = () => eventRows(agent).filter(row => row.event?.type === 'context_usage').at(-1)?.event?.compactionSettings?.reserveTokens
+    const seedHistory = async (tag: string) => {
+      await settleTurn(agent, startTurn(agent, `${tag} first turn`), `${tag} first`)
+      await settleTurn(agent, startTurn(agent, `PC06_BULK ${tag} ${'x'.repeat(BULK_CHARS)}`), `${tag} bulk`)
+    }
+    try {
+      for (const invalid of [0, 4095, 4096.5, NaN, Infinity]) await assert.rejects(() => agent.updateCompactionThreshold(invalid), /Invalid compaction threshold/)
+      await agent.updateCompactionThreshold(64_000)
+      evidence.json('pi-compaction-threshold-initial.json', { reserve: latestReserve(), sent: outbound(agent, 'set_auto_compaction'), context: eventRows(agent).filter(row => row.event?.type === 'context_usage').slice(-2) })
+      assert.equal(latestReserve(), 136_000, 'the context payload exposes the earlier trigger reserve')
+      const thinkingRows = agent.wire.length
+      agent.setThinkingLevel('medium')
+      const thinkingAck = await waitFor(() => wireRows(agent, thinkingRows).find(row => row.type === 'thinking_level_state'), 20_000, 'SDK thinking setter acknowledgement')
+      assert(thinkingAck.availableLevels.includes(thinkingAck.effectiveLevel), 'the SDK may clamp the requested thinking level to model support')
+      snapshots.thinking = thinkingAck
+      await agent.updateContextPolicy('compact'); await agent.updateContextPolicy('manual')
+      assert.equal(latestReserve(), 136_000, 'SDK ordinary setters preserve the stored reserve')
+      await seedHistory('threshold-A')
+      const before = requests.length
+      snapshots.a = await agent.requestCompact('PC06 manual with independent budget')
+      const summaryA = requests.slice(before).filter(row => row.kind === 'compaction')
+      assert.equal(summaryA.length, 1)
+      assert.equal(summaryA[0]!.maxTokens, 13_107, 'earlier trigger must not inflate the original SDK summary budget')
+      const endA = eventRows(agent).filter(row => row.event?.type === 'compaction_end' && row.event.result).at(-1)?.event
+      assert(endA?.result.firstKeptEntryId)
+      assert(endA?.result.details && Array.isArray(endA.result.details.readFiles), 'SDK file tracking survives the custom extension')
+      scenes.push('pc-06-independent-summary-budget-and-sdk-metadata')
+
+      await agent.updateRuntimeConfig({ model: `pi/${MODEL_B.id}`, providerType: 'pi_compat', authType: 'api_key', runtime: { baseUrl: providerUrl, customEndpoint: CUSTOM_ENDPOINT, customModels: CUSTOM_MODELS } })
+      assert.equal(latestReserve(), MODEL_B.contextWindow - 64_000)
+      await seedHistory('threshold-B')
+      const beforeB = requests.length
+      snapshots.b = await agent.requestCompact('PC06 model B keeps its smaller output limit')
+      assert.equal(requests.slice(beforeB).filter(row => row.kind === 'compaction')[0]!.maxTokens, MODEL_B.maxTokens)
+      await agent.updateCompactionThreshold(null)
+      assert.equal(latestReserve(), 16_384, 'clear restores the SDK default reserve')
+      await agent.updateRuntimeConfig({ model: `pi/${MODEL_A.id}`, providerType: 'pi_compat', authType: 'api_key', runtime: { baseUrl: providerUrl, customEndpoint: CUSTOM_ENDPOINT, customModels: CUSTOM_MODELS } })
+      assert.equal(latestReserve(), 16_384, 'a previously modified model must not retain its old reserve')
+      scenes.push('pc-06-model-switch-and-default-restoration')
+
+      // Identical provider-reported 80k contexts: SDK default does not compact,
+      // while a 64k trigger does. The fixture reports 900 for other scenes.
+      await agent.updateCompactionThreshold(900_000)
+      assert.equal(latestReserve(), 16_384, 'an oversized setting is clamped to the model-safe SDK limit')
+      await agent.updateCompactionThreshold(null)
+      await agent.updateContextPolicy('compact')
+      scene = 'pc-06-control'; sceneAttempt = 0
+      const beforeControl = requests.length
+      await settleTurn(agent, startTurn(agent, `PC06_CONTROL ${'a'.repeat(280_000)}`), 'pc-06 SDK default control', 120_000)
+      assert.equal(requests.slice(beforeControl).filter(row => row.kind === 'compaction').length, 0)
+      snapshots.defaultControl = requests.slice(beforeControl).map(requestView)
+      await agent.updateCompactionThreshold(64_000)
+      scene = 'pc-06-auto'; sceneAttempt = 0
+      const beforeAuto = requests.length, beforeEvents = agent.wire.length
+      await settleTurn(agent, startTurn(agent, `PC06_AUTO ${'a'.repeat(280_000)}`), 'pc-06 automatic threshold', 120_000)
+      const auto = requests.slice(beforeAuto).filter(row => row.kind === 'compaction')
+      evidence.json('pi-compaction-auto-probe.json', { auto: auto.map(requestView), requests: requests.slice(beforeAuto).map(requestView), events: eventRows(agent, beforeEvents) })
+      assert(auto.length >= 1 && auto.length <= 2, 'earlier threshold compacts without an unbounded loop')
+      assert(auto.every(row => [8192, 13_107].includes(row.maxTokens!)), 'original SDK history (80%) and split-turn prefix (50%) budgets remain bounded')
+      assert(auto.some(row => row.maxTokens === 13_107), 'history summary still uses the original SDK reserve')
+      assert(eventRows(agent, beforeEvents, 'compaction_start').some(row => row.event.reason === 'threshold'))
+      snapshots.auto = auto.map(requestView)
+      scenes.push('pc-06-real-automatic-threshold')
+
+      scene = 'pc-06'; sceneAttempt = 0
+      await agent.updateContextPolicy('manual'); await seedHistory('overflow')
+      await agent.updateContextPolicy('compact')
+      scene = 'pc-06-overflow'; sceneAttempt = 0
+      const beforeOverflow = requests.length, overflowEvents = agent.wire.length
+      const overflowTurn = startTurn(agent, 'PC06 overflow recovery')
+      await settleTurn(agent, overflowTurn, 'pc-06 provider context overflow', 120_000)
+      const overflowRequests = requests.slice(beforeOverflow)
+      assert.equal(overflowRequests[0]!.status, 400)
+      assert(overflowRequests.some(row => row.kind === 'compaction'))
+      assert(overflowRequests.filter(row => row.kind === 'compaction').every(row => [8192, 13_107].includes(row.maxTokens!)))
+      assert(overflowRequests.some(row => row.kind === 'chat' && row.status === 200), 'overflow recovery retries the conversation')
+      assert(eventRows(agent, overflowEvents, 'compaction_start').some(row => row.event.reason === 'overflow'))
+      assert.equal(finalTexts(overflowTurn.events).length, 1)
+      snapshots.overflow = overflowRequests.map(requestView)
+      scenes.push('pc-06-real-overflow-compacts-with-original-budget-and-retries')
+
+      await agent.updateContextPolicy('manual')
+      scene = 'pc-06-fail'; sceneAttempt = 0
+      await seedHistory('failure')
+      const beforeFailure = requests.length
+      await assert.rejects(() => withDeadline(agent.requestCompact('PC06 controlled failure'), 30_000, 'failed compaction'), /FU_COMPACTION_REFUSED_400/)
+      const failedSummaries = requests.slice(beforeFailure).filter(row => row.kind === 'compaction')
+      assert.equal(failedSummaries.length, 1, 'a failed extension must not fall back to the enlarged SDK budget')
+      assert.equal(failedSummaries[0]!.maxTokens, 13_107)
+      snapshots.failed = wireRows(agent).filter(row => row.type === 'compact_result').at(-1)
+      scenes.push('pc-06-failure-does-not-fall-back-to-enlarged-budget')
+
+      scene = 'pc-06-cancel'; sceneAttempt = 0
+      const cancelled = agent.requestCompact('PC06 cancel pending summary').then(() => ({ success: true }), (error: unknown) => ({ success: false, error: String(error) }))
+      await waitFor(() => sceneRequests('pc-06-cancel').some(row => row.kind === 'compaction'), 20_000, 'pending compaction request')
+      agent.forceAbort(AbortReason.UserStop)
+      snapshots.cancelled = await withDeadline(cancelled, 15_000, 'cancelled compaction')
+      assert.equal((snapshots.cancelled as { success: boolean }).success, false)
+      await teardown(agent, false)
+      await agent.ensureSubprocess(); trackChild(agent, 'pc-06-restart')
+      assert.equal(outbound(agent, 'init').at(-1)?.compactionThresholdTokens, 64_000, 'the threshold survives a new subprocess')
+      assert.equal(latestReserve(), 136_000)
+      snapshots.restart = { reserve: latestReserve(), init: outbound(agent, 'init').at(-1) }
+      scenes.push('pc-06-cancel-and-restart-retain-policy')
+      await teardown(agent)
+      evidence.json('pi-compaction-threshold.json', { snapshots, requests: requests.filter(row => row.scene.startsWith('pc-06')).map(requestView), pids: pidEvidence() })
+    } finally {
+      if (agent.subprocess) await agent.disposeForRestart().catch(() => {})
+      agent.destroy()
+    }
+  }
   const finalProcesses = spawned.map(entry => {
     const now = entry.pid === null ? null : processState(entry.pid)
     const atTeardown = entry.pid === null ? null : teardowns.get(entry.pid) ?? null
@@ -1119,7 +1271,6 @@ try {
     'macOS/Linux execution (this run is Windows only)',
     'OAuth token refresh and credential rotation against a real provider',
     'provider-directed retry-after honouring (the fixture sends no retry-after header)',
-    'auto-compaction-on-overflow (the manual /compact path is what PC-05 exercises)',
     'signed installers/release artifacts',
   ]
 

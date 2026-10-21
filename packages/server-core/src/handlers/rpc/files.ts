@@ -317,6 +317,7 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
       // and MIME follow the artifact that is actually written.
       let finalMimeType = attachment.mimeType
       let finalName = attachment.name
+      let finalType = attachment.type
 
       // 1. Save the file (with image validation and resizing)
       if (attachment.base64) {
@@ -327,8 +328,12 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
           throw new Error(`Attachment corrupted: size mismatch (expected ${attachment.size}, got ${decoded.length})`)
         }
 
-        // For images: validate and resize if needed for Claude API compatibility
-        if (attachment.type === 'image') {
+        // Browser File.type may be empty for HEIC, yielding an unknown attachment.
+        // Inspect bytes before trusting that classification; AVIF is excluded by
+        // the detector. The returned type must describe the converted artifact.
+        const transcodeHeic = needsHeicTranscode(decoded, attachment.mimeType)
+        if (transcodeHeic) finalType = 'image'
+        if (finalType === 'image') {
           // `decoded`, `finalMimeType` and the stored extension describe one and
           // the same artifact and are updated together by every encoder below.
           // Tracking only the HEIC transcode is what let a transcoded JPEG be
@@ -339,7 +344,7 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
           // the model APIs, or the thumbnailer — transcode to JPEG up front so
           // every downstream step (inspect, validate, resize, thumbnail, upload)
           // sees plain JPEG. AVIF is excluded by the detector and left as-is.
-          if (needsHeicTranscode(decoded, attachment.mimeType)) {
+          if (transcodeHeic) {
             decoded = await decodeHeicToJpeg(decoded)
             finalMimeType = 'image/jpeg'
             finalSize = decoded.length
@@ -517,7 +522,7 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
       // Include resizedBase64 so renderer uses resized image for Claude API
       return {
         id,
-        type: attachment.type,
+        type: finalType,
         // Reports the artifact that was stored when the server re-encoded it
         // (HEIC/HEIF -> JPEG, or a resize that changed the format); `mimeType`,
         // `size`, `storedPath` and `resizedBase64` all describe those bytes.

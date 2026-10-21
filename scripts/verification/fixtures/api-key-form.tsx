@@ -40,6 +40,7 @@ const CATALOGS: Record<string, { id: string; name: string }[]> = {
   ],
 }
 const catalogCalls: { provider: string; at: number }[] = []
+const catalogDelays: Record<string, number> = {}
 
 const explicit: Record<string, unknown> = {
   getThemePreferences: async () => ({ mode: 'light', colorTheme: 'default', font: 'theme' }),
@@ -48,6 +49,7 @@ const explicit: Record<string, unknown> = {
   getSystemTheme: async () => false,
   getPiProviderModels: async (provider: string) => {
     catalogCalls.push({ provider, at: Date.now() })
+    if (catalogDelays[provider]) await new Promise(resolve => setTimeout(resolve, catalogDelays[provider]))
     return { models: CATALOGS[provider] ?? [] }
   },
 }
@@ -76,7 +78,7 @@ function Fixture() {
     activePreset: 'kimi-coding',
     connectionDefaultModel: 'kimi-k2',
     utilityModel: 'kimi-k2-mini',
-    models: ['kimi-k2', 'kimi-k2-mini', 'kimi-legacy'],
+    models: ['kimi-k2', 'kimi-k2-mini', 'my-own-model'],
   }), [])
 
   React.useEffect(() => {
@@ -87,6 +89,7 @@ function Fixture() {
       clear: () => { submissions.length = 0 },
       last: () => submissions[submissions.length - 1] ?? null,
       renders: () => renderCount.value,
+      setCatalogDelay: (provider, ms) => { catalogDelays[provider] = ms },
     }
   })
 
@@ -112,6 +115,7 @@ declare global {
       clear: () => void
       last: () => Submission | null
       renders: () => number
+      setCatalogDelay: (provider: string, ms: number) => void
     }
   }
 }

@@ -4,6 +4,7 @@ import { createAssistantMessageEventStream } from '@earendil-works/pi-ai';
 import { observeNativeRequest } from './native-request-observation.ts';
 import type { NativeRequestObservation } from '@phaneris/shared/durable-runtime/types';
 import { createAssistantTiming } from './assistant-timing.ts';
+import { attachModelMetering } from './model-metering.ts';
 
 /** Wrap the session's actual stream, preserving SDK authentication and retry options. */
 export function wrapDurableModelStream(
@@ -38,6 +39,7 @@ export function wrapDurableModelStream(
               cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } },
             stopReason: 'aborted', timestamp: Date.now(),
           };
+          attachModelMetering(aborted, observed.observation, true);
           Object.assign(aborted, { assistantMetrics: timing.completed(aborted, observed.observation) });
           await commit(aborted);
           target.push({ type: 'error', reason: 'aborted', error: aborted });
@@ -49,6 +51,7 @@ export function wrapDurableModelStream(
           if (event.type === 'done' || event.type === 'error') {
             // Commit metered partial/error responses as well as successful ones.
             const message = event.type === 'done' ? event.message : event.error;
+            attachModelMetering(message, observed.observation);
             Object.assign(message, { assistantMetrics: timing.completed(message, observed.observation) });
             await commit(message);
           }

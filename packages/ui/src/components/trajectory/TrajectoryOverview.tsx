@@ -43,7 +43,8 @@ export function TrajectoryOverview({
   const { t, i18n } = useTranslation()
   const locale = i18n.resolvedLanguage ?? i18n.language ?? 'en'
   const cost = formatCost(contextSummary?.costUsd ?? snapshot.totalUsage?.cost.total)
-  const costLabel = contextSummary?.unknownCostRequests ? `${cost} + ${t('common.unknown')}`
+  const costLabel = contextSummary?.unknownCostRequests
+    ? contextSummary.costUsd && contextSummary.costUsd > 0 ? `${contextSummary.estimatedCostRequests ? '≈' : ''}${cost} + ${t('common.unknown')}` : t('common.unknown')
     : contextSummary?.estimatedCostRequests ? `≈${cost}` : cost
   const contentRecords = records.filter(record => record.collapsedSummary === undefined)
   const errorRecords = contentRecords.filter(record => record.cell.isError)

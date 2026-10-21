@@ -147,6 +147,7 @@ export interface ISessionManager {
   /** Push the extended-prompt-cache setting to live sessions when supported. */
   refreshExtendedPromptCache?(enabled: boolean): void
   refreshContextPolicy?(): Promise<void>
+  refreshCompactionThreshold?(): Promise<void>
   setSessionContextPolicy(sessionId: string, policy: import('@phaneris/shared/agent/context-policy').ContextPolicy | null): Promise<void>
   retryContextHandoff(sessionId: string): Promise<void>
   recoverImageContext(sessionId: string): Promise<{ sessionId: string }>

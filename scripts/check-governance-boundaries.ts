@@ -16,7 +16,8 @@ const runtime = new Map<string, Set<string>>()
 const external = new Map<string, Set<string>>()
 const references: { from: string; to?: string; specifier: string; typeOnly: boolean }[] = []
 const typedBoundaries = /^(?:apps\/cli\/src\/(?:client|index)\.ts|apps\/electron\/src\/(?:preload\/bootstrap\.ts|transport\/)|packages\/server-core\/src\/transport\/)/
-const piValuePorts = new Set(['agent/context-policy', 'config/pi-provider-compat', 'utils/large-response', 'sessions/paths',
+// Compaction thresholds share only dependency-free validation/token arithmetic.
+const piValuePorts = new Set(['agent/context-policy', 'agent/compaction-threshold', 'config/pi-provider-compat', 'utils/large-response', 'sessions/paths',
   'agent/llm-tool', 'agent/backend/pi/constants', 'config/models', 'config/llm-connections', 'decisions/types',
   // Dependency-free sanitizer shared by the SDK journal and immutable host facts.
   'utils/browser-input-privacy'])

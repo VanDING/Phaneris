@@ -237,8 +237,8 @@ export interface DurableToolBoundary {
 }
 
 export interface DurableModelPrepareRequest {
-  /** Background refresh: independently metered, never model-visible. */
-  purpose?: 'cache_warm' | 'decision' | 'image_generation'
+  /** Auxiliary requests are independently metered and never model-visible. */
+  purpose?: 'cache_warm' | 'decision' | 'image_generation' | 'compaction'
   sessionId: string
   turnId?: string
   runOperationId: string
@@ -266,13 +266,15 @@ export interface NativeRequestObservation {
   responseCallbackCount: number
   droppedObservations: number
   observationErrors: number
+  /** Presence of provider-native count fields, including explicit zeros. No bodies. */
+  providerUsage?: { input: boolean; output: boolean }
   payloads: Array<{ ordinal: number; capturedAt: number; hash: string; bytes: number }>
   responses: Array<{ ordinal: number; capturedAt: number; status: number; headers: Record<string, string> }>
 }
 
 export interface DurableModelOutcomeRequest {
   /** Background refresh: independently metered, never model-visible. */
-  purpose?: 'cache_warm' | 'decision' | 'image_generation'
+  purpose?: 'cache_warm' | 'decision' | 'image_generation' | 'compaction'
   sessionId: string
   turnId?: string
   runOperationId: string

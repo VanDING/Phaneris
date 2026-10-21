@@ -1,4 +1,5 @@
 import type { DecisionLayerFeature } from '@phaneris/shared/decisions/settings'
+import { CompactionThresholdSetting } from '@/components/settings/CompactionThresholdSetting'
 import { DECISION_SETTINGS_CHANGED_EVENT, guardedModeAvailableAtom } from "@/atoms/permission-modes"
 /**
  * AiSettingsPage
@@ -1151,6 +1152,7 @@ export default function AiSettingsPage() {
                     disabled={savingContextPolicy}
                     onValueChange={value => void handleContextPolicyChange(value as ContextPolicy)}
                   />
+                  <CompactionThresholdSetting disabled={contextPolicy !== 'compact'} />
 
                 </SettingsCard>
                 {activeWorkspace && <div data-workspace-conversation-link><SettingsCard>

@@ -34,6 +34,7 @@ const handlers: Record<string, (...args: any[]) => any> = {
   updateWorkspaceSetting: (_id, key, value) => { Object.assign(state.workspace, { [key]: value }); if (key === 'defaultLlmConnection') Object.assign(state.workspace, { model: undefined }) },
   getDefaultThinkingLevel: () => 'medium', setDefaultThinkingLevel: () => ({ success: true }),
   getExtendedPromptCache: () => false, getPromptCacheWarming: () => false,
+  getCompactionThreshold: () => null, setCompactionThreshold: () => {},
   getContextPolicy: () => state.contextPolicy, setContextPolicy: policy => { if (state.failContext) throw Error('Fixture save failed'); state.contextPolicy = policy },
   getRtkEnabled: () => false, getRtkStatus: () => ({ available: false }),
   getCredentialHealth: () => ({ issues: [], healthy: true }),

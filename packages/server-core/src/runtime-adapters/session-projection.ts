@@ -154,7 +154,7 @@ export function projectDurableUsage(rows: RuntimeUsageRow[]): DurableUsageProjec
   const full = sumTokenUsage(usages)
   // Auxiliary usage contributes to totals, never to conversational context.
   const lastConversationIndex = ordered.findLastIndex(row =>
-    !['cache_warm', 'decision', 'image_generation'].includes((row.payload as { kind?: string } | undefined)?.kind ?? ''))
+    !['cache_warm', 'decision', 'image_generation', 'compaction'].includes((row.payload as { kind?: string } | undefined)?.kind ?? ''))
   const lastFullUsage = lastConversationIndex >= 0 ? usages[lastConversationIndex] : undefined
   return {
     attempts: ordered.length,
@@ -163,8 +163,12 @@ export function projectDurableUsage(rows: RuntimeUsageRow[]): DurableUsageProjec
     totalTokens: full.totalTokens,
     contextTokens: lastFullUsage?.totalTokens ?? 0,
     costUsd: full.cost.total,
-    unknownCostRequests: ordered.filter(row => row.costUsd === undefined && (row.payload as { usage?: PiUsage } | undefined)?.usage?.cost?.total === undefined).length,
-    estimatedCostRequests: ordered.filter(row => (row.payload as { costSource?: string } | undefined)?.costSource === 'estimated').length,
+    unknownCostRequests: ordered.filter(row => {
+      const payload = row.payload as { metering?: { status: string }; usage?: PiUsage } | undefined
+      return ['partial', 'unavailable'].includes(payload?.metering?.status ?? '')
+        || (row.costUsd === undefined && payload?.usage?.cost?.total === undefined)
+    }).length,
+    estimatedCostRequests: ordered.filter(row => ['estimated', 'pi_sdk_estimate'].includes((row.payload as { costSource?: string } | undefined)?.costSource ?? '')).length,
     cacheReadTokens: full.cacheRead,
     cacheCreationTokens: full.cacheWrite,
     full,

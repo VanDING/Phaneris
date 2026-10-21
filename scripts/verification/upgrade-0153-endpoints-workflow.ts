@@ -118,6 +118,16 @@ try {
   assert.equal(isRetiredNativeEndpoint('kimi-coding', 'https://api.kimi.com/coding/v1'), false)
   assert.equal(isRetiredNativeEndpoint('opencode', 'https://opencode.ai/zen/v1'), true)
   assert.equal(isRetiredNativeEndpoint('opencode', 'https://opencode.ai/inference/v1'), false)
+  for (const provider of ['opencode', 'opencode-go']) {
+    const moved = normalizeRetiredNativeEndpoint({ providerType: 'pi_compat', piAuthProvider: provider,
+      baseUrl: 'https://opencode.ai/zen/go/v1', customEndpoint: { api: 'openai-completions' as const }, models: ['my-own-model'] })
+    const expected = provider === 'opencode-go' ? 'https://opencode.ai/inference/go/v1' : 'https://opencode.ai/inference/v1'
+    assert.equal(moved.baseUrl, expected)
+    assert.deepEqual(moved.models, ['my-own-model'])
+    for (const url of ['https://opencode.ai/zen/go/v1/custom', 'https://opencode.ai:8443/zen/go/v1', 'https://gateway.example/zen/go/v1']) {
+      assert.equal(normalizeRetiredNativeEndpoint({ piAuthProvider: provider, baseUrl: url }).baseUrl, url)
+    }
+  }
   const unknownProtocol = normalizeRetiredNativeEndpoint({
     providerType: 'pi_compat', piAuthProvider: 'kimi-coding', baseUrl: 'https://api.kimi.com/coding',
     customEndpoint: { api: 'anthropic-messages' },
@@ -208,6 +218,34 @@ try {
     subprocess: { requests, modelRegistered: true },
   })
   scenes.push('pi-subprocess-runs-off-catalog-model')
+
+  const headerRequests: unknown[] = []
+  const routing = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
+    await request.text()
+    headerRequests.push({ session: request.headers.get('x-opencode-session'), custom: request.headers.get('x-acceptance') })
+    const chunk = (delta: unknown, finish: string | null = null) => `data: ${JSON.stringify({ id: 'headers', object: 'chat.completion.chunk', created: 1, model: 'fixture', choices: [{ index: 0, delta, finish_reason: finish }] })}\n\n`
+    return new Response(chunk({ role: 'assistant', content: 'ROUTING_DONE' }) + chunk({}, 'stop') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
+  } })
+  try {
+    const { normalizeContext } = await import('@earendil-works/pi-ai')
+    const { opencodeProvider } = await import('@earendil-works/pi-ai/providers/opencode')
+    const { opencodeGoProvider } = await import('@earendil-works/pi-ai/providers/opencode-go')
+    for (const provider of [opencodeProvider(), opencodeGoProvider()]) {
+      const native = provider.getModels().find(model => model.api === 'openai-completions')
+      assert(native, `${provider.id} must expose its native Chat Completions route`)
+      for (let call = 0; call < 3; call++) {
+        const message = await provider.streamSimple({ ...native, baseUrl: routing.url.href }, normalizeContext({ messages: [{ role: 'user', content: 'route', timestamp: Date.now() }] }), {
+          apiKey: 'loopback-only', sessionId: `${provider.id}-stable`, maxTokens: 16, headers: { 'x-acceptance': 'kept', ...(call === 2 ? { 'X-OpenCode-Session': 'explicit-user-session' } : {}) },
+        }).result()
+        assert.equal(message.stopReason, 'stop', JSON.stringify(message))
+      }
+    }
+    assert.deepEqual(headerRequests, ['opencode', 'opencode-go'].flatMap(provider => [
+      { session: `${provider}-stable`, custom: 'kept' }, { session: `${provider}-stable`, custom: 'kept' }, { session: 'explicit-user-session', custom: 'kept' },
+    ]))
+    evidence.json('opencode-session-headers.json', { headerRequests, boundary: 'native SDK provider streams with only baseUrl redirected to loopback; exact retired Go URLs and custom URL exclusions checked above' })
+    scenes.push('native-opencode-and-go-stable-session-and-custom-headers')
+  } finally { routing.stop(true) }
 
   evidence.complete(scenes, [
     'live Kimi/OpenCode accounts (no credentials used; loopback only)',

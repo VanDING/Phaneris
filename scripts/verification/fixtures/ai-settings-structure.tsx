@@ -58,6 +58,7 @@ const handlers: Record<string, (...args: any[]) => any> = {
   getDefaultThinkingLevel: () => state.thinking, setDefaultThinkingLevel: value => { state.thinking = value; return { success: true } },
   getExtendedPromptCache: () => state.extendedCache, setExtendedPromptCache: value => { if (state.failCache) throw Error('Fixture cache save failed'); state.extendedCache = value },
   getPromptCacheWarming: () => state.warming, setPromptCacheWarming: value => { if (state.failCache) throw Error('Fixture cache save failed'); state.warming = value },
+  getCompactionThreshold: () => null, setCompactionThreshold: () => {},
   getContextPolicy: () => state.contextPolicy, setContextPolicy: policy => { if (state.failContext) throw Error('Fixture save failed'); state.contextPolicy = policy },
   getRtkEnabled: () => state.rtk, setRtkEnabled: value => { if (state.failCache) throw Error('Fixture RTK save failed'); state.rtk = value },
   getRtkStatus: () => ({ installed: true, path: '/fixture/rtk', version: '0.31.0', outdated: false }), getRtkGain: () => null, getCredentialHealth: () => ({ issues: [], healthy: true }),

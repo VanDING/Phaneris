@@ -5,7 +5,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { load as loadYaml } from 'js-yaml'
 import { UV_VERSION } from './build/common'
-import { criticalWorkflows, criticalTestGroups } from './critical-scenarios'
+import { criticalWorkflows, criticalTestGroups, nativeWorkflows } from './critical-scenarios'
 
 const root = resolve(import.meta.dir, '..')
 function input(flag: string, fallback: string) {
@@ -82,6 +82,7 @@ const registry = registryPath ? JSON.parse(readFileSync(registryPath, 'utf8')) :
 const policy = JSON.parse(readFileSync(join(root, 'scripts/critical-scenario-policy.json'), 'utf8'))
 assert.deepEqual(registry.workflows, policy.workflows, 'Every required workflow, minimum and artifact must remain wired')
 assert.deepEqual(registry.groups, policy.groups, 'Every required package test group must remain wired')
+assert.deepEqual(nativeWorkflows, policy.nativeWorkflows, 'Native host workflows must remain registered separately from browser CI')
 assert.equal(metadata.scripts['lint:workspace'], 'bun run scripts/lint-workspace.ts', 'CI lint must use the reviewed baseline without initialization flags')
 assert.equal(metadata.scripts['test:doc-tools'], 'bun run scripts/test-doc-tools.ts', 'Document tests must use the product Python pin')
 const coverage = JSON.parse(readFileSync(input('coverage', 'scripts/quality-coverage.json'), 'utf8')) as {

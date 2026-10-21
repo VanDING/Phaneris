@@ -45,10 +45,14 @@ export function auditModelUsage(events: RuntimeEvent[], rows: RuntimeUsageRow[])
     const persisted = (row.payload as { usage?: Record<string, unknown> } | undefined)?.usage
     const originalCost = original?.cost as Record<string, unknown> | undefined
     const persistedCost = persisted?.cost as Record<string, unknown> | undefined
+    const originalMetadata = source.payload as { metering?: Record<string, unknown>; costSource?: string } | undefined
+    const persistedMetadata = row.payload as typeof originalMetadata
     if (row.sessionId !== outcome.sessionId || row.operationId !== outcome.runOperationId
       || row.provider !== outcome.provider || row.model !== outcome.model
       || row.inputTokens !== source.inputTokens || row.outputTokens !== source.outputTokens
       || row.costUsd !== source.costUsd
+      || originalMetadata?.costSource !== persistedMetadata?.costSource
+      || ['version', 'status', 'source', 'inputKnown', 'outputKnown'].some(key => originalMetadata?.metering?.[key] !== persistedMetadata?.metering?.[key])
       || nativeFields.some(key => original?.[key] !== persisted?.[key])
       || costFields.some(key => originalCost?.[key] !== persistedCost?.[key])) {
       issues.push({ identity: row.usageId, kind: 'mismatch' })
