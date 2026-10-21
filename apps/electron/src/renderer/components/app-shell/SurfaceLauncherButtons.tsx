@@ -41,16 +41,16 @@ import {
 
 export type SurfaceLauncherState = 'closed' | 'open' | 'focused' | 'background'
 
-/** Top-bar button order (left → right): New Session, surface/tool launchers,
- * and the browser (focus-or-create; Shift/Alt = new window). All entries are
- * always rendered tiled — no width truncation. */
-const TOP_BAR_BUTTON_ORDER = [
-  'newSession',
-  ...PRIMARY_SURFACE_LAUNCHER_KINDS,
-  'separator',
-  ...CONTEXT_WORKBENCH_LAUNCHER_KINDS,
-  'browser',
-] as const
+/** Top-bar button order (left → right): New Session, then two labelled groups —
+ *  the views that take over the main surface, and the tools that dock beside it
+ *  (browser last, focus-or-create; Shift/Alt = new window). All entries are
+ *  always rendered tiled — no width truncation.
+ *
+ *  The groups are real `role="group"` containers with accessible names, not a
+ *  hairline between nine identical 22px icons: "which of these nine replaces my
+ *  work" and "which one opens beside it" is the question the row has to answer
+ *  before it can be scanned. */
+const TOOL_TOP_BAR_ORDER = [...CONTEXT_WORKBENCH_LAUNCHER_KINDS, 'browser'] as const
 
 interface SurfaceLauncherButtonsProps {
   /** Navigate a Primary launcher or activate/create a Workbench item. */
@@ -122,17 +122,8 @@ export function SurfaceLauncherButtons({
     onOpenLauncher(kind)
   }, [onOpenBrowser, onOpenLauncher])
 
-  // All buttons render tiled (no width truncation — every entry stays
-  // directly clickable).
-  const allButtons = TOP_BAR_BUTTON_ORDER
-
-  return (
-    <div className="inline-flex items-center gap-0.5">
-      {allButtons.map((kind) => {
-        if (kind === 'separator') {
-          return <span key="separator" aria-hidden="true" className="mx-1 h-3.5 w-px shrink-0 bg-foreground/10" />
-        }
-
+  // Every entry stays directly clickable; the layout groups them by role.
+  const renderButton = (kind: SurfaceLauncherKind | 'newSession' | 'browser') => {
         if (kind === 'newSession') {
           return (
             <Tooltip key="newSession">
@@ -208,7 +199,19 @@ export function SurfaceLauncherButtons({
             <TooltipContent side="bottom">{label}</TooltipContent>
           </Tooltip>
         )
-      })}
+  }
+
+  return (
+    <div className="inline-flex items-center gap-0.5">
+      {renderButton('newSession')}
+      <span aria-hidden="true" className="mx-1 h-4 w-px shrink-0 bg-border" />
+      <div role="group" aria-label={t('topBar.mainViews')} className="inline-flex items-center gap-0.5">
+        {PRIMARY_SURFACE_LAUNCHER_KINDS.map(kind => renderButton(kind))}
+      </div>
+      <span aria-hidden="true" className="mx-1 h-4 w-px shrink-0 bg-border" />
+      <div role="group" aria-label={t('topBar.tools')} className="inline-flex items-center gap-0.5">
+        {TOOL_TOP_BAR_ORDER.map(kind => renderButton(kind))}
+      </div>
     </div>
   )
 }

@@ -2241,6 +2241,8 @@
   "toast.webhookReplayCompleted": "Webhook-Wiedergabe abgeschlossen",
   "toast.workspaceReconnected": "Workspace wiederverbunden",
   "toolbar.escapeToInterrupt": "Drücken Sie <kbd>Esc</kbd> erneut, um zu unterbrechen",
+  "topBar.mainViews": "Hauptansichten",
+  "topBar.tools": "Werkzeuge",
   "trajectory.context.captured": "Captured",
   "trajectory.context.capturedNote": "Composition is based on the request-time model context manifest. Category token values are estimates; the displayed total uses provider usage when available.",
   "trajectory.context.category.assistant": "Assistant history",

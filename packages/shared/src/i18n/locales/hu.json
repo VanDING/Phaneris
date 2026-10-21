@@ -2241,6 +2241,8 @@
   "toast.webhookReplayCompleted": "Webhook visszajátszás befejezve",
   "toast.workspaceReconnected": "Munkaterület újracsatlakoztatva",
   "toolbar.escapeToInterrupt": "Nyomd meg az <kbd>Esc</kbd> gombot ismét a megszakításhoz",
+  "topBar.mainViews": "Fő nézetek",
+  "topBar.tools": "Eszközök",
   "trajectory.context.captured": "Captured",
   "trajectory.context.capturedNote": "Composition is based on the request-time model context manifest. Category token values are estimates; the displayed total uses provider usage when available.",
   "trajectory.context.category.assistant": "Assistant history",

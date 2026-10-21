@@ -2241,6 +2241,8 @@
   "toast.webhookReplayCompleted": "Webhook 回放完成",
   "toast.workspaceReconnected": "Workspace 已重新连接",
   "toolbar.escapeToInterrupt": "再次按 <kbd>Esc</kbd> 以中断",
+  "topBar.mainViews": "主视图",
+  "topBar.tools": "工具",
   "trajectory.context.captured": "已捕获",
   "trajectory.context.capturedNote": "上下文构成基于请求发出时捕获的模型上下文清单；各分类 Token 数为估算，总量在可用时采用供应商实际用量。",
   "trajectory.context.category.assistant": "助手历史",

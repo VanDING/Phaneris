@@ -84,3 +84,7 @@ openclaw-*/
 
 # Local verification artifacts (scripts/verify-*.ts)
 .verify/
+
+# Playwright debug artifacts are evidence the reviewer runs locally, not history.
+docs/verification/results/**/trace.zip
+docs/verification/results/**/*.webm
