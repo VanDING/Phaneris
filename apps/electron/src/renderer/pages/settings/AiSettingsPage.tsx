@@ -62,6 +62,7 @@ import { RtkUpdateDialog } from '@/components/RtkUpdateDialog'
 import { useRtkSettings } from './useRtkSettings'
 import { useDecisionLayerSettings } from './useDecisionLayerSettings'
 import { usePerformanceSettings } from './usePerformanceSettings'
+import { useImageSettings } from './useImageSettings'
 import { OnboardingWizard, type ApiSetupMethod } from '@/components/onboarding'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { useAppShellContext } from '@/context/AppShellContext'
@@ -315,10 +316,16 @@ export default function AiSettingsPage() {
   const { t, i18n } = useTranslation()
   const { llmConnections, refreshLlmConnections, activeWorkspaceId, workspaces } = useAppShellContext()
 
-  const [imageStatus, setImageStatus] = useState<ImageGenerationStatus | null>(null)
-  const [imageConfigurationOpen, setImageConfigurationOpen] = useState(false)
-  const [savingImages, setSavingImages] = useState(false)
-  const [imageSettingsError, setImageSettingsError] = useState<string | null>(null)
+
+  const {
+    imageStatus,
+    imageConfigurationOpen,
+    setImageConfigurationOpen,
+    savingImages,
+    imageSettingsError,
+    setImageRetry,
+    saveImageSettings,
+  } = useImageSettings(llmConnections)
 
   // API Setup overlay state
   const [showApiSetup, setShowApiSetup] = useState(false)
@@ -746,22 +753,6 @@ export default function AiSettingsPage() {
   }, [defaultThinking])
 
 
-  const [imageRetry, setImageRetry] = useState(0)
-  useEffect(() => {
-    let cancelled = false
-    if (typeof window.electronAPI.getImageGenerationSettings !== 'function') return
-    window.electronAPI.getImageGenerationSettings().then(status => {
-      if (!cancelled) { setImageStatus(status); setImageSettingsError(null) }
-    }).catch(error => { if (!cancelled) setImageSettingsError(String(error)) })
-    return () => { cancelled = true }
-  }, [llmConnections, imageRetry])
-
-  const saveImageSettings = useCallback(async (settings: ImageGenerationSettings) => {
-    setSavingImages(true)
-    try { setImageStatus(await window.electronAPI.setImageGenerationSettings(settings)); setImageSettingsError(null) }
-    catch (error) { setImageSettingsError(error instanceof Error ? error.message : String(error)) }
-    finally { setSavingImages(false) }
-  }, [])
 
 
 
