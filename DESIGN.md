@@ -291,14 +291,20 @@ Rules:
 
 ## Layout
 
-- Shell topology: `[LeftSidebar 20%] [NavigatorPanel 32%] [MainContent 48%]`,
-  driven by `defaultLayout = [20, 32, 48]` in `App.tsx`.
+- Shell topology is content-driven, not percentage-driven: the navigator panel is
+  resizable, the primary surface takes the remaining width, and the workbench
+  companion is capped at **50% of the row** (`max-width: 50%`) with a 360px
+  floor; the primary keeps `min(600px, 55%)`. There is no `defaultLayout` array —
+  the old `[20, 32, 48]` prop was passed and never read.
 - Chat reading column is `--reading-width: 840px` with `--reading-gutter`.
 - Panel-relative responsiveness uses container queries, not viewport queries:
   `@panel-compact` (448px), `@panel-medium` (640px), `@mobile` (768px).
 - Spacing follows a 4px rhythm (`spacing.1–6`).
 - Control heights are contract tiers `18/22/26/30/34/38px`. Heights above the
   control band describe layout space, not hit targets, and are not tiered.
+- One `h1` per screen: the primary surface title. Navigator, workbench and
+  artifact sub-panel headers are `h2` (`PanelHeader headingLevel={2}`), and the
+  panel title is `text-title` (16px), not body size.
 
 ### One scaling model
 

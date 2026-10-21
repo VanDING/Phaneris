@@ -1,0 +1,111 @@
+[
+  {
+    "antipattern": "broken-image",
+    "name": "Broken or placeholder image",
+    "description": "<img> tags with empty src, missing src, or placeholder values ship as broken-image boxes. Use real images, generated assets, or remove the tag.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\AttachmentPreview.tsx",
+    "line": 65,
+    "snippet": "<img>",
+    "importedBy": [
+      "FreeFormInput.tsx"
+    ]
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\ChatDisplay.tsx",
+    "line": 622,
+    "snippet": "Undocumented color rgb(253 224 71 / 0.3) is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "rgb(253 224 71 / 0.3)",
+    "importedBy": [
+      "AppShell.tsx"
+    ]
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\ChatDisplay.tsx",
+    "line": 623,
+    "snippet": "Undocumented color rgb(253 224 71) is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "rgb(253 224 71)",
+    "importedBy": [
+      "AppShell.tsx"
+    ]
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\ChatDisplay.tsx",
+    "line": 623,
+    "snippet": "Undocumented color rgb(0 0 0 / 0.9) is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "rgb(0 0 0 / 0.9)",
+    "importedBy": [
+      "AppShell.tsx"
+    ]
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\SidebarProfile.tsx",
+    "line": 90,
+    "snippet": "Undocumented color rgba(0,0,0,0.95) is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "rgba(0,0,0,0.95)",
+    "importedBy": [
+      "AppShell.tsx"
+    ]
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\kanban\\calendar-overrides.css",
+    "line": 607,
+    "snippet": "Undocumented color rgb(0 0 0 / 0.16) is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "rgb(0 0 0 / 0.16)"
+  },
+  {
+    "antipattern": "design-system-radius",
+    "name": "Radius outside DESIGN.md",
+    "description": "A border-radius value is outside the DESIGN.md rounded scale. Use a documented radius token or update the design system if the new shape is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\kanban\\gantt-overrides.css",
+    "line": 476,
+    "snippet": "border-radius: 8px), is outside the DESIGN.md rounded scale",
+    "advisory": true,
+    "ignoreValue": "8px),"
+  },
+  {
+    "antipattern": "design-system-radius",
+    "name": "Radius outside DESIGN.md",
+    "description": "A border-radius value is outside the DESIGN.md rounded scale. Use a documented radius token or update the design system if the new shape is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "E:\\Phaneris\\apps\\electron\\src\\renderer\\components\\app-shell\\kanban\\gantt-overrides.css",
+    "line": 534,
+    "snippet": "border-radius: 8px), is outside the DESIGN.md rounded scale",
+    "advisory": true,
+    "ignoreValue": "8px),"
+  }
+]

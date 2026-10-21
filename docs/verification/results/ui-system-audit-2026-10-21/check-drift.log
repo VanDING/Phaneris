@@ -1,0 +1,2 @@
+$ bun run scripts/check-design-drift.ts
+Design drift OK: 6 counters at or below baseline; 2 motion utilities all consumed.

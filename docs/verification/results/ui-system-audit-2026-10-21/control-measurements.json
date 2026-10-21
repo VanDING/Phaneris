@@ -1,0 +1,62 @@
+{
+  "buttons": [
+    {
+      "font": "11px",
+      "height": 34,
+      "minHeight": "34px",
+      "size": "xs"
+    },
+    {
+      "font": "12px",
+      "height": 34,
+      "minHeight": "34px",
+      "size": "compact"
+    },
+    {
+      "font": "11px",
+      "height": 30,
+      "minHeight": "30px",
+      "size": "sm"
+    },
+    {
+      "font": "15px",
+      "height": 34,
+      "minHeight": "34px",
+      "size": "default"
+    },
+    {
+      "font": "15px",
+      "height": 38,
+      "minHeight": "38px",
+      "size": "lg"
+    }
+  ],
+  "metadata": [
+    {
+      "color": "color(srgb 0.12549 0.137255 0.172549)",
+      "font": "15px",
+      "opacity": "1",
+      "text": "Priority"
+    },
+    {
+      "color": "color(srgb 0.12549 0.137255 0.172549)",
+      "font": "15px",
+      "opacity": "0.3",
+      "text": "·"
+    },
+    {
+      "color": "color(srgb 0.12549 0.137255 0.172549)",
+      "font": "15px",
+      "opacity": "0.6",
+      "text": "2"
+    },
+    {
+      "color": "color(srgb 0.12549 0.137255 0.172549)",
+      "font": "15px",
+      "opacity": "1",
+      "text": "Needs review"
+    }
+  ],
+  "rootFont": "15px",
+  "uiScale": "1"
+}

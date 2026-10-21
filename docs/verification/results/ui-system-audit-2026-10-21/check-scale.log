@@ -1,0 +1,2 @@
+$ bun run scripts/check-scale-contract.ts
+Scale contract OK: fontSize 7 tiers, radius 5 tiers, controlHeight 6 tiers; DESIGN.md, tokens, allowlist and tree agree.

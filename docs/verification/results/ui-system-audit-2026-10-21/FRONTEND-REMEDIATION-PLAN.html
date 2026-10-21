@@ -1,0 +1,1658 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>Phaneris 前端整改演示 · R0–R2</title>
+<style>
+  :root {
+    --canvas: #f3f4f7;
+    --paper: #ffffff;
+    --sunken: #eef0f4;
+    --ink: #20232c;
+    --dim: #606775;
+    --faint: #6b7280;
+    --line: #e2e4e9;
+    --line-strong: #cdd1d9;
+    --accent: #5b21b6;
+    --accent-2: #7c3aed;
+    --accent-soft: #f1ebfb;
+    --danger: #b63e4c;
+    --danger-soft: #fbeeef;
+    --warn: #8a5a18;
+    --warn-soft: #fbf3e5;
+    --success: #267454;
+    --success-soft: #eaf5ef;
+    --info: #2f5f8f;
+    --info-soft: #ecf3fa;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 2px rgba(32, 35, 44, .035), 0 12px 32px rgba(32, 35, 44, .045);
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  h1, h2, h3, h4, p, dl, dd, dt, figure { margin: 0; }
+  h1, h2, h3, h4 { font-weight: 650; letter-spacing: -.025em; line-height: 1.2; }
+  ul { margin: 0; padding: 0; list-style: none; }
+  code, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  code { font-size: .92em; }
+  .wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+  .skip {
+    position: fixed; left: 12px; top: -60px; z-index: 100;
+    background: var(--ink); color: #fff; padding: 8px 12px; border-radius: 6px;
+    transition: top .15s ease;
+  }
+  .skip:focus { top: 12px; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .progress {
+    position: fixed; inset: 0 auto auto 0; height: 2px; width: 0;
+    background: var(--accent); z-index: 80; pointer-events: none;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--canvas);
+    background: color-mix(in srgb, var(--canvas) 86%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; font-weight: 650; letter-spacing: -.02em; }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center;
+    background: var(--ink); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: -.04em;
+    flex: none;
+  }
+  .brand-sub { color: var(--faint); font-weight: 500; letter-spacing: 0; }
+  .nav { display: flex; align-items: center; gap: 2px; }
+  .nav a {
+    font-size: 12px; color: var(--dim); padding: 7px 9px; border-radius: 6px;
+    transition: background-color .15s ease, color .15s ease;
+  }
+  .nav a:hover { background: var(--sunken); color: var(--ink); }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .status {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .08em;
+    color: var(--dim); padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--paper);
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+  .print-btn {
+    border: 1px solid var(--line); background: var(--paper); border-radius: 7px;
+    padding: 6px 10px; font-size: 12px; color: var(--dim); cursor: pointer;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .print-btn:hover { border-color: var(--line-strong); color: var(--ink); background: #fff; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(320px, .7fr);
+    gap: clamp(28px, 5vw, 64px); align-items: end;
+    padding: 76px 0 60px;
+  }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .eyebrow::before { content: ""; width: 18px; height: 1px; background: var(--accent); }
+  .hero h1 {
+    margin-top: 16px;
+    font-size: clamp(38px, 5.4vw, 64px);
+    line-height: 1.04;
+    letter-spacing: -.045em;
+    max-width: 12ch;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero .lede {
+    margin-top: 20px; max-width: 57ch; color: var(--dim); font-size: 16px; line-height: 1.7;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line-strong);
+    background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 550;
+    cursor: pointer; transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .btn:hover { background: #fff; border-color: var(--faint); }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .btn.primary:hover { background: #2a2e3a; border-color: #2a2e3a; }
+  .btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.accent:hover { background: #4c1d95; border-color: #4c1d95; }
+  .hero-note {
+    margin-top: 18px; display: flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .06em; color: var(--faint);
+  }
+  .hero-note::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+  .hero-panel {
+    position: relative; background: var(--paper); border: 1px solid var(--line);
+    border-radius: 14px; padding: 22px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .hero-panel::before {
+    content: ""; position: absolute; inset: 0 auto auto 0; width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2) 55%, transparent);
+  }
+  .score { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .score-num { font-size: 42px; font-weight: 650; letter-spacing: -.05em; line-height: 1; }
+  .score-den { font-size: 13px; color: var(--faint); margin-left: 2px; }
+  .score-label { display: block; margin-top: 6px; font-size: 11px; color: var(--dim); letter-spacing: .04em; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 16px 0 0; }
+  .facts dt { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: .08em; }
+  .facts dd { margin: 2px 0 0; font-size: 18px; font-weight: 650; letter-spacing: -.03em; }
+  .facts .unit { font-size: 10px; color: var(--faint); font-weight: 500; letter-spacing: 0; margin-left: 1px; }
+  .hero-quote {
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-size: 12px; line-height: 1.6; color: var(--dim);
+  }
+  .hero-quote b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- sections ---------- */
+  .section { padding: 66px 0; border-top: 1px solid var(--line); }
+  .section-head {
+    display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 26px;
+    align-items: start; margin-bottom: 30px;
+  }
+  .section-kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); padding-top: 6px;
+  }
+  .section-head h2 { font-size: clamp(27px, 3.2vw, 36px); letter-spacing: -.035em; }
+  .section-lede { margin-top: 10px; max-width: 68ch; color: var(--dim); font-size: 14px; line-height: 1.7; }
+
+  /* ---------- self review ---------- */
+  .review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .review-card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .review-card .tag {
+    align-self: flex-start; font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+    color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: 3px 6px;
+  }
+  .review-card h3 { font-size: 15px; }
+  .review-card p { color: var(--dim); font-size: 13px; line-height: 1.65; }
+  .review-card p b { color: var(--ink); font-weight: 600; }
+  .callout {
+    margin-top: 14px; display: flex; gap: 18px; align-items: flex-start;
+    background: var(--ink); color: #fff; border-radius: var(--radius); padding: 20px 22px;
+  }
+  .callout .callout-mark {
+    flex: none; width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center;
+    background: rgba(255,255,255,.12); font-family: var(--mono); font-size: 12px;
+  }
+  .callout p { font-size: 13px; line-height: 1.7; color: #d9dce3; }
+  .callout b { color: #fff; }
+  .callout .violet { color: #c4b5fd; }
+
+  /* ---------- failure chain ---------- */
+  .chain { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr; align-items: stretch; gap: 0; }
+  .chain-step {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; min-height: 118px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .chain-step .chain-num { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: .08em; }
+  .chain-step b { font-size: 14px; line-height: 1.35; }
+  .chain-step span { font-size: 12px; color: var(--dim); line-height: 1.55; }
+  .chain-step code { font-size: 11px; background: var(--sunken); padding: 1px 4px; border-radius: 3px; }
+  .chain-step.good { background: var(--success-soft); border-color: #cde6d9; }
+  .chain-step.good .chain-num { color: var(--success); }
+  .chain-step.bad { background: var(--danger-soft); border-color: #f0ccd1; }
+  .chain-step.bad .chain-num { color: var(--danger); }
+  .chain-step.warn { background: var(--warn-soft); border-color: #eddcc1; }
+  .chain-step.warn .chain-num { color: var(--warn); }
+  .chain-arrow { display: grid; place-items: center; color: var(--faint); font-size: 18px; }
+
+  /* ---------- demo ---------- */
+  .demo-layout { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 16px; margin-top: 18px; align-items: stretch; }
+  .demo-brief { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .demo-brief h3 { font-size: 16px; margin-bottom: 8px; }
+  .demo-brief p { font-size: 13px; color: var(--dim); line-height: 1.7; }
+  .demo-brief ul { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .demo-brief li { display: flex; gap: 8px; font-size: 12px; color: var(--dim); line-height: 1.55; }
+  .demo-brief li::before { content: "—"; color: var(--faint); flex: none; }
+  .demo-brief code { font-size: 11px; background: var(--sunken); padding: 1px 4px; border-radius: 3px; }
+  .demo-panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; }
+  .demo-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .seg { display: inline-flex; padding: 2px; background: var(--sunken); border-radius: 8px; border: 1px solid var(--line); }
+  .seg-btn {
+    border: 0; background: transparent; border-radius: 6px; padding: 6px 10px;
+    font-size: 12px; color: var(--dim); cursor: pointer; line-height: 1;
+  }
+  .seg-btn[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(32,35,44,.08); }
+  .demo-caption { font-size: 11px; color: var(--faint); max-width: 52ch; line-height: 1.5; }
+  .demo-stage {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+    align-items: end; min-height: 152px; padding: 18px; background: var(--sunken);
+    border-radius: 10px; border: 1px solid var(--line);
+  }
+  .specimen { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .specimen-label {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--faint); white-space: nowrap;
+  }
+  .specimen-note { font-size: 10px; color: var(--danger); min-height: 14px; }
+  .specimen-note.after-only { display: none; color: var(--success); }
+  .demo[data-state="after"] .specimen-note { color: var(--success); }
+  .demo[data-state="after"] .specimen-note.after-only { display: block; }
+  .demo-btn {
+    border: 0; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 12px; font-weight: 550; white-space: nowrap; font-family: inherit;
+    background: var(--ink); color: #fff; transition: font-size .2s ease, min-height .2s ease;
+  }
+  .demo-badge {
+    display: inline-flex; align-items: center; border-radius: 999px;
+    padding: 2px 8px; font-weight: 600; background: var(--accent-soft); color: var(--accent);
+    border: 1px solid #ddd0f6; transition: font-size .2s ease;
+  }
+  .demo-tab {
+    display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 6px;
+    color: var(--ink); background: var(--paper); border: 1px solid var(--line);
+    font-weight: 550; transition: font-size .2s ease;
+  }
+  .demo[data-state="before"] .demo-btn { font-size: 15px; min-height: 34px; color: var(--ink); outline: 1px dashed rgba(182,62,76,.55); outline-offset: 3px; }
+  .demo[data-state="before"] .demo-badge { font-size: 15px; padding: 3px 9px; }
+  .demo[data-state="before"] .demo-tab { font-size: 15px; }
+  .demo[data-state="before"] .specimen-note.before-only { color: var(--danger); }
+  .demo[data-state="after"] .demo-btn { font-size: 11px; min-height: 30px; color: #fff; }
+  .demo[data-state="after"] .demo-badge { font-size: 11px; padding: 2px 8px; }
+  .demo[data-state="after"] .demo-tab { font-size: 11px; }
+  .demo[data-state="after"] .specimen-note.before-only { display: none; }
+  .demo-size {
+    font-family: var(--mono); font-size: 10px; color: var(--faint);
+    border: 1px solid var(--line); background: var(--paper); border-radius: 4px; padding: 2px 5px;
+  }
+  .demo-caption strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- kpi ---------- */
+  .kpi-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .kpi {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; display: flex; flex-direction: column; gap: 3px;
+  }
+  .kpi-label { font-size: 11px; color: var(--dim); letter-spacing: .02em; }
+  .kpi b { font-size: 30px; line-height: 1.1; letter-spacing: -.045em; font-weight: 650; }
+  .kpi b small { font-size: 12px; color: var(--faint); font-weight: 500; letter-spacing: 0; margin-left: 2px; }
+  .kpi-foot { font-size: 10px; color: var(--faint); line-height: 1.45; }
+  .kpi-foot.bad { color: var(--danger); }
+  .kpi-foot.good { color: var(--success); }
+
+  /* ---------- charts ---------- */
+  .charts { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 14px; margin-top: 14px; }
+  .chart-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .chart-head h3 { font-size: 14px; }
+  .chart-head p { margin-top: 4px; font-size: 11px; color: var(--faint); }
+  .chart-note { font-family: var(--mono); font-size: 10px; color: var(--faint); white-space: nowrap; }
+  .c-row { display: grid; grid-template-columns: 88px minmax(0, 1fr) 38px; align-items: center; gap: 10px; margin: 11px 0; }
+  .c-label { font-size: 12px; color: var(--dim); }
+  .c-track { position: relative; height: 8px; background: var(--sunken); border-radius: 999px; }
+  .c-fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; }
+  .c-fill.fail { background: var(--danger); }
+  .c-fill.pass { background: var(--success); }
+  .c-threshold { position: absolute; top: -4px; bottom: -4px; width: 1px; background: var(--ink); opacity: .55; }
+  .c-value { font-family: var(--mono); font-size: 12px; text-align: right; font-weight: 600; }
+  .c-value.fail { color: var(--danger); }
+  .c-value.pass { color: var(--success); }
+  .c-axis { display: flex; justify-content: space-between; margin: 8px 48px 0 98px; font-family: var(--mono); font-size: 9px; color: var(--faint); }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; font-size: 10px; color: var(--faint); }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .legend i { width: 7px; height: 7px; border-radius: 2px; display: inline-block; }
+  .legend .fail { background: var(--danger); }
+  .legend .pass { background: var(--success); }
+  .legend .threshold { width: 1px; height: 10px; background: var(--ink); opacity: .55; border-radius: 0; }
+
+  .split { display: flex; gap: 2px; height: 38px; border-radius: 8px; overflow: hidden; margin-top: 6px; }
+  .split > div { display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ink); white-space: nowrap; overflow: hidden; }
+  .split .rail { background: #eceef2; width: 2.86%; }
+  .split .nav { background: #dfe3ea; width: 15.5%; }
+  .split .chat { background: #d8cdf3; width: 31.25%; }
+  .split .work { background: #f0e5d5; width: 50.05%; }
+  .split-legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+  .split-legend div { font-size: 10px; color: var(--faint); line-height: 1.45; }
+  .split-legend b { display: block; font-size: 11px; color: var(--ink); font-weight: 600; }
+  .split-legend .num { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+  .type-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .type-col { border: 1px solid var(--line); border-radius: 10px; padding: 14px; background: #fcfcfd; }
+  .type-col h4 { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
+  .type-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .type-row:last-child { border-bottom: 0; }
+  .type-row .sample { color: var(--ink); line-height: 1.25; }
+  .type-row .px { font-family: var(--mono); font-size: 10px; color: var(--faint); background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 2px 5px; }
+  .type-col.after .type-row .px { color: var(--accent); border-color: #ddd0f6; background: var(--accent-soft); }
+  .type-col.before .type-row .sample { color: #3a3f4b; }
+
+  /* ---------- findings ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .filter-btn {
+    border: 1px solid var(--line); background: var(--paper); border-radius: 999px;
+    padding: 5px 10px; font-size: 11px; color: var(--dim); cursor: pointer; line-height: 1.2;
+  }
+  .filter-btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .finding {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px; margin-bottom: 10px;
+  }
+  .finding[hidden] { display: none; }
+  .finding-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .finding h3 { font-size: 15px; flex: 1; min-width: 220px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px; border-radius: 5px;
+    font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .04em;
+    padding: 3px 6px; border: 1px solid transparent; white-space: nowrap;
+  }
+  .chip.p0 { color: var(--danger); background: var(--danger-soft); border-color: #f0ccd1; }
+  .chip.p1 { color: var(--warn); background: var(--warn-soft); border-color: #eddcc1; }
+  .chip.p2 { color: var(--info); background: var(--info-soft); border-color: #d3e3f2; }
+  .chip.p3 { color: var(--dim); background: var(--sunken); border-color: var(--line); }
+  .finding .metric-row { display: flex; flex-wrap: wrap; gap: 5px; margin-left: auto; }
+  .metric {
+    font-family: var(--mono); font-size: 10px; color: var(--dim);
+    background: var(--sunken); border-radius: 4px; padding: 3px 6px; white-space: nowrap;
+  }
+  .finding .summary { font-size: 13px; color: var(--dim); line-height: 1.65; max-width: 88ch; }
+  .finding-grid {
+    display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 16px;
+    border-top: 1px solid var(--line); margin-top: 14px; padding-top: 12px;
+  }
+  .finding-grid h4 {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 4px;
+  }
+  .finding-grid p, .finding-grid li { font-size: 12px; color: var(--ink); line-height: 1.6; }
+  .finding-grid ul { display: flex; flex-direction: column; gap: 3px; }
+  .finding-grid li { display: flex; gap: 6px; }
+  .finding-grid li::before { content: "·"; color: var(--faint); }
+  .finding code { font-size: 11px; background: var(--sunken); padding: 1px 4px; border-radius: 3px; }
+  .finding .fix { color: var(--accent); font-weight: 550; }
+
+  details.more { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
+  details.more summary {
+    cursor: pointer; font-size: 12px; color: var(--dim); list-style: none;
+    display: flex; align-items: center; gap: 8px; user-select: none;
+  }
+  details.more summary::-webkit-details-marker { display: none; }
+  details.more summary::before {
+    content: "+"; font-family: var(--mono); color: var(--accent);
+    width: 16px; height: 16px; display: grid; place-items: center;
+    border: 1px solid var(--line); border-radius: 4px; font-size: 12px;
+  }
+  details.more[open] summary::before { content: "−"; }
+  .table-wrap { margin-top: 12px; overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; background: var(--paper); }
+  th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); background: var(--sunken); white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  td b { font-weight: 600; }
+
+  /* ---------- roadmap ---------- */
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 22px; }
+  .flow-step {
+    display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line);
+    background: var(--paper); border-radius: 999px; padding: 6px 10px; font-size: 11px; color: var(--dim);
+  }
+  .flow-step b { color: var(--ink); font-weight: 600; }
+  .flow-step.key { border-color: #ddd0f6; background: var(--accent-soft); }
+  .flow-step.key b { color: var(--accent); }
+  .flow-arrow { color: var(--faint); font-size: 12px; }
+  .timeline { position: relative; margin: 0; padding: 0 0 0 24px; border-left: 1px solid var(--line); }
+  .milestone { position: relative; padding: 0 0 30px 0; }
+  .milestone:last-child { padding-bottom: 0; }
+  .milestone::before {
+    content: ""; position: absolute; left: -29px; top: 5px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--canvas);
+  }
+  .milestone-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .milestone-meta { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; color: var(--accent); }
+  .milestone h3 { font-size: 18px; letter-spacing: -.02em; }
+  .milestone .effort { font-family: var(--mono); font-size: 10px; color: var(--faint); border: 1px solid var(--line); border-radius: 4px; padding: 2px 5px; }
+  .milestone p { font-size: 13px; color: var(--dim); max-width: 78ch; line-height: 1.7; }
+  .milestone-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; margin-top: 12px; }
+  .ticks { display: flex; flex-direction: column; gap: 5px; }
+  .ticks li { font-size: 12px; color: var(--ink); display: flex; gap: 7px; line-height: 1.55; }
+  .ticks li::before { content: "✓"; color: var(--success); font-weight: 700; flex: none; }
+  .exit {
+    background: var(--sunken); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+    font-size: 11px; color: var(--dim); line-height: 1.6;
+  }
+  .exit b { display: block; color: var(--ink); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 3px; }
+
+  /* ---------- metrics ---------- */
+  .metric-table { width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .metric-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+  .metric-wrap .metric-table { border: 0; border-radius: 0; min-width: 620px; }
+  .metric-table th, .metric-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 12px; text-align: left; }
+  .metric-table th { background: var(--sunken); }
+  .metric-table td:nth-child(2), .metric-table td:nth-child(3) { font-family: var(--mono); white-space: nowrap; }
+  .metric-table td:nth-child(3) b { color: var(--accent); }
+  .metric-table td:last-child { color: var(--dim); font-size: 11px; }
+  .metric-table tr:last-child td { border-bottom: 0; }
+
+  /* ---------- guardrails ---------- */
+  .guard-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .guard { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .guard h3 { font-size: 14px; margin-bottom: 6px; }
+  .guard p { font-size: 12px; color: var(--dim); line-height: 1.65; }
+  .guard .mono { display: block; margin-top: 8px; font-size: 10px; color: var(--accent); }
+  .verify {
+    margin-top: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px;
+  }
+  .verify h3 { font-size: 14px; margin-bottom: 10px; }
+  .matrix { width: 100%; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .matrix table { width: 100%; border-collapse: collapse; }
+  .matrix th, .matrix td { background: var(--paper); padding: 8px 9px; font-size: 11px; text-align: left; border-bottom: 1px solid var(--line); }
+  .matrix th { background: var(--sunken); color: var(--faint); font-family: var(--mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; font-weight: 500; }
+  .matrix tr:last-child td { border-bottom: 0; }
+  .matrix .check { color: var(--success); font-weight: 700; }
+  pre {
+    margin: 14px 0 0; background: #1d2028; color: #e7e9ef; border-radius: 10px;
+    padding: 16px; overflow-x: auto; font-size: 11px; line-height: 1.7;
+  }
+  pre code { font-family: var(--mono); }
+  .not-doing { margin-top: 14px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .not-doing div { border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 9px 11px; font-size: 11px; color: var(--dim); display: flex; gap: 7px; }
+  .not-doing div::before { content: "×"; color: var(--danger); font-weight: 700; }
+
+  /* ---------- footer ---------- */
+  footer { border-top: 1px solid var(--line); padding: 30px 0 46px; }
+  .footer-inner { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 18px; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .footer-links a { font-size: 12px; color: var(--dim); border-bottom: 1px solid var(--line-strong); padding-bottom: 1px; }
+  .footer-links a:hover { color: var(--accent); border-color: var(--accent); }
+  .footer-note { font-family: var(--mono); font-size: 10px; color: var(--faint); line-height: 1.7; max-width: 52ch; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 52px; }
+    .hero h1 { max-width: 14ch; }
+    .section-head { grid-template-columns: 1fr; gap: 8px; }
+    .chain { grid-template-columns: 1fr; gap: 6px; }
+    .chain-arrow { transform: rotate(90deg); padding: 2px 0; }
+    .demo-layout { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .charts { grid-template-columns: 1fr; }
+    .guard-grid { grid-template-columns: 1fr; }
+    .milestone-grid { grid-template-columns: 1fr; }
+    .finding-grid { grid-template-columns: 1fr; gap: 10px; }
+    .nav { display: none; }
+  }
+  @media (max-width: 640px) {
+    .wrap { width: calc(100% - 32px); }
+    .hero { padding: 40px 0 38px; }
+    .hero-panel { padding: 18px; }
+    .score-num { font-size: 34px; }
+    .facts { grid-template-columns: repeat(2, 1fr); }
+    .section { padding: 46px 0; }
+    .review-grid, .demo-stage, .type-compare, .not-doing { grid-template-columns: 1fr; }
+    .finding-grid { grid-template-columns: 1fr; gap: 10px; }
+    .finding .metric-row { margin-left: 0; }
+    .c-row { grid-template-columns: 78px 1fr 34px; gap: 7px; }
+    .c-axis { margin-left: 85px; margin-right: 41px; }
+    .matrix { grid-template-columns: 80px repeat(3, 1fr); }
+    .top-actions .status { display: none; }
+    .hero h1 { font-size: 38px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
+  }
+  @media print {
+    body { background: #fff; font-size: 11px; }
+    .topbar, .progress, .print-btn, .hero-actions, .filters { display: none !important; }
+    .section { break-inside: auto; padding: 24px 0; }
+    .finding, .review-card, .chart-card, .guard, .kpi, .verify, .milestone { break-inside: avoid; }
+    .hero { padding: 20px 0; }
+    a { text-decoration: underline; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#top" aria-label="回到顶部">
+      <span class="brand-mark" aria-hidden="true">P</span>
+      <span>Phaneris <span class="brand-sub">/ UI plan</span></span>
+    </a>
+    <nav class="nav" aria-label="章节导航">
+      <a href="#review">自审</a>
+      <a href="#problem">问题</a>
+      <a href="#evidence">证据</a>
+      <a href="#findings">发现</a>
+      <a href="#roadmap">路线</a>
+      <a href="#metrics">指标</a>
+    </nav>
+    <div class="top-actions">
+      <span class="status"><span class="status-dot" aria-hidden="true"></span>READ-ONLY AUDIT</span>
+      <button class="print-btn" id="printBtn" type="button">打印 / PDF</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="wrap hero" id="top">
+    <div>
+      <div class="eyebrow">Frontend system audit · 2026-10-21</div>
+      <h1>先把合同<br><em>修回渲染层</em></h1>
+      <p class="lede">
+        这不是一次视觉重做。问题在于 DESIGN.md 里已经写好的字号、控件高度和颜色语义，
+        在 <code class="mono">cn()</code> 合并、控件变体和组合层里被逐层拆掉。
+        这份演示把审查结论收敛成一条可执行的 R0–R2 路线。
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#roadmap">看整改路线</a>
+        <a class="btn" href="./FRONTEND-SYSTEM-AUDIT.md">打开完整报告</a>
+      </div>
+      <div class="hero-note">本轮只读 · 未改界面 · 方案按你的选择收敛为 R0–R2</div>
+    </div>
+
+    <aside class="hero-panel" aria-label="审计关键数字">
+      <div class="score">
+        <div>
+          <span class="score-num">9</span><span class="score-den">/20</span>
+          <span class="score-label">技术审计 · Poor</span>
+        </div>
+        <div>
+          <span class="score-num">23</span><span class="score-den">/40</span>
+          <span class="score-label">设计健康度 · Acceptable</span>
+        </div>
+      </div>
+      <dl class="facts">
+        <div><dt>P0</dt><dd>2</dd></div>
+        <div><dt>P1</dt><dd>8</dd></div>
+        <div><dt>DEBT</dt><dd>507</dd></div>
+        <div><dt>CHROME</dt><dd>112.5<span class="unit">px</span></dd></div>
+      </dl>
+      <div class="hero-quote">
+        <b>判断：</b>不是审美退步，是设计合同在合并层、控件层、组合层三处同时失守；
+        门禁只查字面量，不查渲染结果。
+      </div>
+    </aside>
+  </section>
+
+  <!-- SELF REVIEW -->
+  <section class="wrap section" id="review">
+    <div class="section-head">
+      <div class="section-kicker">00 / Self-review</div>
+      <div>
+        <h2>我自己先修正了五个判断，并重排了顺序</h2>
+        <p class="section-lede">
+          计划最怕“看起来都对，顺序是错的”。重新审视后，有五个地方必须先说清楚，
+          否则 R0–R2 会在执行中变形。
+        </p>
+      </div>
+    </div>
+
+    <div class="review-grid">
+      <article class="review-card">
+        <span class="tag">CORRECTION 01</span>
+        <h3>34px 冲突是真的，但不是截图的主因</h3>
+        <p>
+          你指出的 min-height 冲突成立：<b>xs/compact 被钉在 34px，22/26px 是死档位</b>。
+          但当前生产 <b>0 个</b> xs/compact 调用，所以它不是“界面变糙”的直接原因；
+          它是契约级缺陷，会阻塞任何新紧凑控件。
+        </p>
+      </article>
+      <article class="review-card">
+        <span class="tag">CORRECTION 02</span>
+        <h3>82 个丢层点不等于 82 个同等严重</h3>
+        <p>
+          可见影响集中在 <b>Button、Badge、MetadataBadge、Tab、Artifact 状态章、Task 标题</b>
+          六个原语。计划先修这六个，而不是逐页打补丁；其余点跟着原语一起消失。
+        </p>
+      </article>
+      <article class="review-card">
+        <span class="tag">CORRECTION 03</span>
+        <h3>R3 不能放到最后</h3>
+        <p>
+          没有计算样式和对比度门禁，R0–R2 会在下一次 UI 迁移中回退。
+          <b>R3 的最小集必须和 R0 同一个 PR</b>；完整债务 burn-down 可以后置。
+        </p>
+      </article>
+      <article class="review-card">
+        <span class="tag">CORRECTION 04</span>
+        <h3>50% 封顶会伤害宽 diff</h3>
+        <p>
+          封顶只作用于“伴随模式”：<b>默认折叠空工作台，保留手动拖宽和全宽展开</b>。
+          不是把工作台锁死，而是不让一个空面板占掉半屏。
+        </p>
+      </article>
+      <article class="review-card">
+        <span class="tag">CORRECTION 05</span>
+        <h3>中性看板不是去色</h3>
+        <p>
+          列身份保留 <b>2px 色条/圆点</b>，语义交给状态章；去掉的是整列 tint 和实心大色块。
+          看板仍然有颜色，只是颜色不再互相打架。
+        </p>
+      </article>
+      <article class="review-card">
+        <span class="tag">ORDER</span>
+        <h3>顺序按依赖，不按严重度</h3>
+        <p>
+          先 merge、再控件高度、再 chrome、再布局/看板，最后门禁。
+          如果先改看板颜色，下一次 UI 迁移会把修复重新冲掉。
+        </p>
+      </article>
+    </div>
+
+    <div class="callout">
+      <div class="callout-mark" aria-hidden="true">!</div>
+      <p>
+        <b>结论：</b>计划成立，但要先承认两件事——<span class="violet">最响的视觉问题（字号/文字色）来自合并层，不是看板；最容易被忽略的（34px）是契约问题，不是当前主因。</span>
+        所以 R0 必须先落地，R2 才有意义。
+      </p>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="wrap section" id="problem">
+    <div class="section-head">
+      <div class="section-kicker">01 / Mechanism</div>
+      <div>
+        <h2>一条类名，在四个层里被改写了四次</h2>
+        <p class="section-lede">
+          Token 层是对的：micro 10 / meta 11 / label 12 / body 13。
+          问题从合并层开始：tailwind-merge 不认识这些自定义字号，把它们当成颜色。
+        </p>
+      </div>
+    </div>
+
+    <div class="chain" aria-label="从 token 到组合层的失效链">
+      <div class="chain-step good">
+        <span class="chain-num">01 / TOKEN</span>
+        <b>合同有定义</b>
+        <span>10 / 11 / 12 / 13px 都在 <code>role-tokens.css</code> 里。</span>
+      </div>
+      <div class="chain-arrow" aria-hidden="true">→</div>
+      <div class="chain-step bad">
+        <span class="chain-num">02 / MERGE</span>
+        <b>合并层失明</b>
+        <span><code>twMerge</code> 把 <code>text-meta</code> 归进 text-color；和 <code>text-foreground</code> 二选一。</span>
+      </div>
+      <div class="chain-arrow" aria-hidden="true">→</div>
+      <div class="chain-step warn">
+        <span class="chain-num">03 / RENDER</span>
+        <b>渲染结果随机</b>
+        <span>字号回落到 root 15px；填充小按钮丢文字色；层级倒置。</span>
+      </div>
+      <div class="chain-arrow" aria-hidden="true">→</div>
+      <div class="chain-step bad">
+        <span class="chain-num">04 / COMPOSE</span>
+        <b>组合层继续叠加</b>
+        <span>3 条 tab 横条、50% 空工作台、四套色相；门禁仍然全绿。</span>
+      </div>
+    </div>
+
+    <div class="demo-layout">
+      <div class="demo-brief">
+        <h3>同一套类名，两种结果</h3>
+        <p>
+          切换“当前 / R0 之后”，看三个最常见的原语如何变化。
+          这不是新设计，只是把合同恢复成它本来的值。
+        </p>
+        <ul>
+          <li><span>填充型小按钮：当前文字与背景同色；R0 后 11px + 白字。</span></li>
+          <li><span>Artifact 状态章：当前 15px；R0 后 10px，回到“章”而不是“标题”。</span></li>
+          <li><span>工作台 tab：当前 15px；R0 后 11px，低于面板标题而不是压过它。</span></li>
+        </ul>
+      </div>
+
+      <div class="demo-panel">
+        <div class="demo-toolbar">
+          <div class="seg" role="group" aria-label="演示状态">
+            <button class="seg-btn" type="button" data-demo="before" aria-pressed="true">当前</button>
+            <button class="seg-btn" type="button" data-demo="after" aria-pressed="false">R0 之后</button>
+          </div>
+          <span class="demo-caption" id="demo-caption" aria-live="polite">
+            当前：小按钮文字与背景同色；Badge 和 tab 都是 15px。
+          </span>
+        </div>
+
+        <div class="demo" data-state="before">
+          <div class="demo-stage">
+            <div class="specimen">
+              <span class="specimen-label">Button / sm</span>
+              <button class="demo-btn" type="button" aria-label="Accept 示例">Accept</button>
+              <span class="specimen-note before-only">文字 ≈ 不可见</span>
+              <span class="specimen-note after-only">11px · 白字可读</span>
+              <span class="demo-size" data-size>15px · 34px 高</span>
+            </div>
+            <div class="specimen">
+              <span class="specimen-label">Artifact status</span>
+              <span class="demo-badge">Ready</span>
+              <span class="specimen-note before-only">比文件名更大</span>
+              <span class="specimen-note after-only">10px · 回到章</span>
+              <span class="demo-size" data-size>15px</span>
+            </div>
+            <div class="specimen">
+              <span class="specimen-label">Workbench tab</span>
+              <span class="demo-tab">Files</span>
+              <span class="specimen-note before-only">压过面板标题</span>
+              <span class="specimen-note after-only">11px · 低于标题</span>
+              <span class="demo-size" data-size>15px</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts" style="margin-top:14px">
+      <figure class="chart-card">
+        <div class="chart-head">
+          <div>
+            <h3>类型层级：当前 vs R0 之后</h3>
+            <p>同一组元素，合同字号 vs 运行时字号。</p>
+          </div>
+          <span class="chart-note">px @ root 15</span>
+        </div>
+        <div class="type-compare">
+          <div class="type-col before">
+            <h4>当前 / BEFORE</h4>
+            <div class="type-row"><span class="sample" style="font-size:15px">Task title</span><span class="px">15</span></div>
+            <div class="type-row"><span class="sample" style="font-size:15px">Artifact status</span><span class="px">15</span></div>
+            <div class="type-row"><span class="sample" style="font-size:15px">Workbench tab</span><span class="px">15</span></div>
+            <div class="type-row"><span class="sample" style="font-size:12px">Files view tab</span><span class="px">12</span></div>
+          </div>
+          <div class="type-col after">
+            <h4>R0 / AFTER</h4>
+            <div class="type-row"><span class="sample" style="font-size:13px">Task title</span><span class="px">13</span></div>
+            <div class="type-row"><span class="sample" style="font-size:10px">Artifact status</span><span class="px">10</span></div>
+            <div class="type-row"><span class="sample" style="font-size:11px">Workbench tab</span><span class="px">11</span></div>
+            <div class="type-row"><span class="sample" style="font-size:12px">Files view tab</span><span class="px">12</span></div>
+          </div>
+        </div>
+      </figure>
+
+      <figure class="chart-card">
+        <div class="chart-head">
+          <div>
+            <h3>为什么“看起来糙”</h3>
+            <p>不是整体变大，是层级被随机改写。</p>
+          </div>
+        </div>
+        <div class="type-row"><span class="sample" style="font-size:13px">上级：Files 视图 tab</span><span class="px">12</span></div>
+        <div class="type-row"><span class="sample" style="font-size:15px">下级：Artifacts 筛选</span><span class="px">15</span></div>
+        <div class="type-row"><span class="sample" style="font-size:15px">同级：Workbench tab</span><span class="px">15</span></div>
+        <div class="type-row"><span class="sample" style="font-size:15px">内容：Task title</span><span class="px">15</span></div>
+        <p style="margin-top:12px;font-size:12px;color:var(--dim);line-height:1.65">
+          结果：下属元素比上级大，内容比导航大，用户的视线找不到入口。
+          这不是“字号选错了”，而是字号在运行时被删掉了。
+        </p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- EVIDENCE -->
+  <section class="wrap section" id="evidence">
+    <div class="section-head">
+      <div class="section-kicker">02 / Evidence</div>
+      <div>
+        <h2>六个数字，足够定位问题</h2>
+        <p class="section-lede">
+          这些数字来自生产源码扫描、上一轮 Playwright 计算样式和 1920px 截图测量。
+          它们不是“感觉”，是后续验收的基线。
+        </p>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <span class="kpi-label">cn() 丢层点</span>
+        <b>82</b>
+        <span class="kpi-foot bad">生产代码；含 playground 为 84</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">填充型小按钮</span>
+        <b>35</b>
+        <span class="kpi-foot bad">文字色被覆盖；含 Submit / Accept</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Files 面板 chrome</span>
+        <b>112.5<small>px</small></b>
+        <span class="kpi-foot">3 条 37.5px 横条</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">工作台宽度 / 1920</span>
+        <b>50.05<small>%</small></b>
+        <span class="kpi-foot bad">聊天仅 31.25%；隐藏导航可达 68.1%</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">最差列头对比度</span>
+        <b>2.15<small>:1</small></b>
+        <span class="kpi-foot bad">WCAG AA 需要 4.5:1</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">冻结的视觉债务</span>
+        <b>507</b>
+        <span class="kpi-foot">177 个文件；446 条 role</span>
+      </div>
+    </div>
+
+    <div class="charts">
+      <figure class="chart-card">
+        <div class="chart-head">
+          <div>
+            <h3>看板列头：白字对比度</h3>
+            <p>11px semibold uppercase，按普通文本要求 4.5:1。</p>
+          </div>
+          <span class="chart-note">WCAG 2.x</span>
+        </div>
+        <div class="c-row">
+          <span class="c-label">Backlog</span>
+          <div class="c-track"><span class="c-fill pass" style="width:95.2%"></span><span class="c-threshold" style="left:90%"></span></div>
+          <span class="c-value pass">4.76</span>
+        </div>
+        <div class="c-row">
+          <span class="c-label">To Do</span>
+          <div class="c-track"><span class="c-fill fail" style="width:89.4%"></span><span class="c-threshold" style="left:90%"></span></div>
+          <span class="c-value fail">4.47</span>
+        </div>
+        <div class="c-row">
+          <span class="c-label">In Progress</span>
+          <div class="c-track"><span class="c-fill fail" style="width:43%"></span><span class="c-threshold" style="left:90%"></span></div>
+          <span class="c-value fail">2.15</span>
+        </div>
+        <div class="c-row">
+          <span class="c-label">Done</span>
+          <div class="c-track"><span class="c-fill fail" style="width:50.8%"></span><span class="c-threshold" style="left:90%"></span></div>
+          <span class="c-value fail">2.54</span>
+        </div>
+        <div class="c-axis"><span>0</span><span>5.0</span></div>
+        <div class="legend">
+          <span><i class="fail"></i>不达标</span>
+          <span><i class="pass"></i>达标</span>
+          <span><i class="threshold"></i>AA 4.5:1</span>
+        </div>
+      </figure>
+
+      <figure class="chart-card">
+        <div class="chart-head">
+          <div>
+            <h3>三栏宽度：空面板吃掉一半</h3>
+            <p>1920px，导航栏可见；rail 48px 未计入。</p>
+          </div>
+          <span class="chart-note">截图实测</span>
+        </div>
+        <div class="split" role="img" aria-label="三栏宽度：Rail 2.86%，Navigator 15.5%，Chat 31.25%，Workbench 50.05%">
+          <div class="rail" aria-hidden="true"></div>
+          <div class="nav">Nav</div>
+          <div class="chat">Chat</div>
+          <div class="work">Workbench</div>
+        </div>
+        <div class="split-legend">
+          <div><b>Navigator</b><span class="num">15.5% · 298px</span></div>
+          <div><b>Chat</b><span class="num">31.25% · 606px</span></div>
+          <div><b>Workbench</b><span class="num">50.05% · 961px</span></div>
+        </div>
+      <p style="margin-top:12px;font-size:12px;color:var(--dim);line-height:1.65">
+          工作台是“剩余空间”，不是按内容分配。隐藏导航时，空工作台可达 <b style="color:var(--danger)">68.1%</b>。
+          DESIGN.md 写的 <code class="mono">[20,32,48]</code> 是 dead prop，从未被读取。
+          <span style="color:var(--faint)">栏宽含 2.86% rail/缝隙，未单独标注。</span>
+        </p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- FINDINGS -->
+  <section class="wrap section" id="findings">
+    <div class="section-head">
+      <div class="section-kicker">03 / Findings</div>
+      <div>
+        <h2>两个 P0，八个 P1，按依赖修</h2>
+        <p class="section-lede">
+          P0 是“不修就会继续继承错误”的原语；P1 是发布前应修的全局观感与可用性。
+          P2/P3 放在折叠区，避免噪声。
+        </p>
+      </div>
+    </div>
+
+    <div class="filters" role="group" aria-label="按严重度筛选">
+      <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">全部</button>
+      <button class="filter-btn" type="button" data-filter="p0" aria-pressed="false">P0 · 2</button>
+      <button class="filter-btn" type="button" data-filter="p1" aria-pressed="false">P1 · 8</button>
+    </div>
+
+    <article class="finding" data-sev="p0">
+      <div class="finding-top">
+        <span class="chip p0">P0-1</span>
+        <h3>字号在 cn() 里被吞掉，填充型小按钮文字直接消失</h3>
+        <div class="metric-row">
+          <span class="metric">82 sites</span>
+          <span class="metric">15px ≠ 13px</span>
+          <span class="metric">35 buttons</span>
+        </div>
+      </div>
+      <p class="summary">
+        <code>text-meta / text-body</code> 被 tailwind-merge 当成 text-color，和
+        <code>text-foreground</code> / <code>text-background</code> 二选一。Badge、筛选、tab 变 15px；
+        小填充按钮丢 <code>text-background</code>，浅色主题下文字继承前景色，直接不可读。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>utils.ts:4-6</code> · <code>button.tsx:7,54</code> · <code>badge.tsx:33</code>；真实 merge 输出已复现。</p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>层级随机：15 / 12 / 11 混排</li>
+            <li>下属元素比上级大</li>
+            <li>小按钮文字不可见</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">扩展 twMerge，把 7 个 tier 注册进 font-size；加计算样式契约。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p0">
+      <div class="finding-top">
+        <span class="chip p0">P0-2</span>
+        <h3>xs / compact 的 22 / 26px 是死档位，被 34px min-height 覆盖</h3>
+        <div class="metric-row">
+          <span class="metric">0 production calls</span>
+          <span class="metric">34 / 34</span>
+          <span class="metric">contract 22 / 26</span>
+        </div>
+      </div>
+      <p class="summary">
+        CSS 只映射了 sm/lg；xs/compact 落回 34px。计算样式实测 xs=34、compact=34。
+        当前生产没有调用，所以它是契约级缺陷，不是截图粗糙的直接原因；但任何人下次使用都会踩坑。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>roles.css:79-82</code>；<code>button.tsx:24-26</code>；<code>control-measurements.json</code>。</p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>两个 size tier 名义存在、实际不可用</li>
+            <li>控件高度契约不可信</li>
+            <li>新紧凑控件一用就错</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">补齐 data-control-size 映射；height = min-height；加高度契约。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-1</span>
+        <h3>Files 工作台：三条 37.5px 横条，四种选择语法</h3>
+        <div class="metric-row">
+          <span class="metric">112.5px</span>
+          <span class="metric">3 bars</span>
+          <span class="metric">4 idioms</span>
+        </div>
+      </div>
+      <p class="summary">
+        工作台 tab（填充 pill）、Files 视图（下划线）、Artifacts 筛选（h-6 胶囊）、
+        Changed 工具条（分段控件）叠在一起。视图 tab 12px，筛选却 15px，层级倒置。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>ContextWorkbenchTabs.tsx:93</code> · <code>FilesPanel.tsx:90</code> · <code>ArtifactsPanel.tsx:195</code> · <code>ChangedFilesView.tsx:216</code></p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>1/6 面板高度是 chrome</li>
+            <li>四套控件要分别学</li>
+            <li>空状态下尤其明显</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">一条视图 tab + 一条工具条；筛选进菜单；单 tab 时隐藏工作台条。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-2</span>
+        <h3>空工作台占 50%，聊天被固定 600px 挤到 31%</h3>
+        <div class="metric-row">
+          <span class="metric">50.05%</span>
+          <span class="metric">chat 606px</span>
+          <span class="metric">68.1% hidden nav</span>
+        </div>
+      </div>
+      <p class="summary">
+        聊天 <code>flexBasis</code> 固定 600、<code>MAX=600</code>；工作台拿剩余空间且无上限。
+        1920px 下，空 Artifacts 面板 961px，聊天 606px；隐藏导航时工作台可达 68.1%。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>SurfaceSlot.tsx:86-92</code> · <code>atoms/workbench.ts:21-24</code> · 截图实测 298 / 606 / 961。</p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>阅读宽度用不上</li>
+            <li>1280–1512px 横向溢出</li>
+            <li>空面板抢走注意力</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">封顶 50%；空态自动折叠；保留拖宽/全宽；主聊天 ≥600。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-3</span>
+        <h3>看板颜色：四套色相，列色与状态色互相打架</h3>
+        <div class="metric-row">
+          <span class="metric">2.15:1</span>
+          <span class="metric">count 1.21–1.38</span>
+          <span class="metric">7/8 project colors fail</span>
+        </div>
+      </div>
+      <p class="summary">
+        列头是原始 Tailwind hex + 固定白字；In Progress 琥珀 2.15、Done 翠绿 2.54。
+        状态默认色却是 in-progress=绿、done=紫，截图里 DONE 绿列配紫色 Done 章。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>kanban-colors.ts:11-16</code> · <code>useKanbanColumnColors.ts:35</code> · <code>colors/defaults.ts:21-28</code></p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>颜色无法映射状态</li>
+            <li>白字不可读；计数章更差</li>
+            <li>整列 tint 像四块补丁</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">中性列 + 2px 色条；状态章仅差异时显示；onAccent 按亮度。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-4</span>
+        <h3>表面语言爆炸：12 种背景 alpha、9 种边框 alpha、15 种圆角、19 种阴影</h3>
+        <div class="metric-row">
+          <span class="metric">12 alphas</span>
+          <span class="metric">22 border+shadow</span>
+          <span class="metric">537 vs 670</span>
+        </div>
+      </div>
+      <p class="summary">
+        每处只差 1–2%，叠在一起就是“说不出哪里不对”。<code>shadow-minimal</code> 自带 1px ring，
+        又叠 <code>border</code> 形成双层边；二级文本同时存在 <code>muted-foreground</code> 与
+        <code>text-secondary</code>。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p>生产扫描：12 / 9 / 15 / 19；<code>shadow-minimal</code> 213 次；border+shadow 22 处。</p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>白色有十几种</li>
+            <li>边、角、阴影没有节奏</li>
+            <li>卡片像俄罗斯套盒</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">surface 4 role、border 2 档、圆角 4 档、阴影 4 步；禁 border+shadow。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-5</span>
+        <h3>会话列表：一行四种颜色通道，匹配数比标题还大</h3>
+        <div class="metric-row">
+          <span class="metric">4 color channels</span>
+          <span class="metric">match 15px</span>
+          <span class="metric">7/8 project text fail</span>
+        </div>
+      </div>
+      <p class="summary">
+        项目竖条 + 状态圆点 + 未读/plan 图标 + 匹配数章 + 平台 pill 同时出现。
+        红项目条看起来像错误；匹配数因 <code>text-micro</code> 被颜色覆盖而变 15px。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>SessionItem.tsx:245-269,314-324</code> · <code>SessionProjectColorWrapper.tsx:36-40</code></p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>扫描时无法判断颜色含义</li>
+            <li>匹配数压过标题</li>
+            <li>项目名 hover 7/8 不可读</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">一行一个状态通道；项目细条只做身份；匹配数 10px。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-6</span>
+        <h3>看板卡片：两条分隔线、三层元数据、永久 CTA、空列无出口</h3>
+        <div class="metric-row">
+          <span class="metric">134 done</span>
+          <span class="metric">7 rows / card</span>
+          <span class="metric">0 empty state</span>
+        </div>
+      </div>
+      <p class="summary">
+        卡片同时有标题、状态章、进度、模型、时间、消息数、Add subtask；
+        两条 border-t 把卡片切成三段。134 张 Done 全量渲染；空 TODO 列只有一个 tint。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>TaskTile.tsx:239,294-324</code>；<code>KanbanBoard.tsx:157,179</code>。</p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>卡片像小面板，扫视慢</li>
+            <li>Done 列拖性能</li>
+            <li>空列没有下一步</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">单卡 ≤3 行；Add subtask 进菜单；Done 折叠/虚拟化；空列 CTA。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-7</span>
+        <h3>看板只能拖，卡片是“按钮套按钮”，可访问性债务被冻结</h3>
+        <div class="metric-row">
+          <span class="metric">507 debt</span>
+          <span class="metric">41 titles</span>
+          <span class="metric">16 / 22.5px targets</span>
+        </div>
+      </div>
+      <p class="summary">
+        看板只有 <code>SmartPointerSensor</code>，没有键盘移动；卡片 <code>role=button</code> 内套 4–5 个真实按钮；
+        134 张约 500 个 tab stop。关闭按钮 16px、Artifact 行操作 22.5px，低于 24px。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>KanbanBoard.tsx:125</code> · <code>TaskTile.tsx:134-143</code>；visual-debt 507 条。</p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>键盘/读屏无法移动任务</li>
+            <li>语义树混乱</li>
+            <li>hover-only 不可发现</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">article + 主链接；Move to 菜单 + KeyboardSensor；共享 Tooltip；一套 focus。</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="finding" data-sev="p1">
+      <div class="finding-top">
+        <span class="chip p1">P1-8</span>
+        <h3>标题层级塌陷：面板标题 13px，看板没有标题，右栏 tab 反而 15px</h3>
+        <div class="metric-row">
+          <span class="metric">13px title</span>
+          <span class="metric">no h1 on board</span>
+          <span class="metric">36 / 37.5 / 42</span>
+        </div>
+      </div>
+      <p class="summary">
+        PanelHeader 用 <code>text-body</code> 13px 做标题，DESIGN 的 <code>text-title</code> 16px 才是面板标题。
+        看板顶部没有 h1/项目名；右栏 tab 因 P0-1 变 15px。三栏 header 高度也不一致。
+      </p>
+      <div class="finding-grid">
+        <div>
+          <h4>证据</h4>
+          <p><code>PanelHeader.tsx:168-171</code> · <code>KanbanBoardContainer.tsx:551-596</code> · <code>ContextWorkbenchTabs.tsx:93</code></p>
+        </div>
+        <div>
+          <h4>影响</h4>
+          <ul>
+            <li>第一眼不知道“我在哪”</li>
+            <li>标题和正文一样大</li>
+            <li>列头比标题显眼</li>
+          </ul>
+        </div>
+        <div>
+          <h4>修复</h4>
+          <p class="fix">标题 16px；每屏一个 h1；看板加项目名/面包屑；header 统一 40。</p>
+        </div>
+      </div>
+    </article>
+
+    <details class="more">
+      <summary>P2 / P3 · 12 条次级问题（点开）</summary>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>问题</th><th>证据</th><th>修复</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>P2-1</td><td>设置页保留第二套字号 <code>craft-text-*</code>（13/12）</td><td><code>SettingsUIConstants.ts:9-15</code></td><td>迁移到合同 tier</td></tr>
+            <tr><td>P2-2</td><td>Execute（权限）与 Todo（状态）长成同一对胶囊</td><td><code>ActiveOptionBadges.tsx:179</code></td><td>拆分领域；权限进菜单</td></tr>
+            <tr><td>P2-3</td><td>空状态没有出口（No artifacts yet）</td><td><code>PanelEmptyState.tsx:24-35</code></td><td>加 Browse / Show changes</td></tr>
+            <tr><td>P2-4</td><td>Artifact 行标题与 basename 重复</td><td><code>ArtifactsPanel.tsx:84-91</code></td><td>只在不同时显示</td></tr>
+            <tr><td>P2-5</td><td>768–1512px 溢出；WebUI <code>zoom:1.2</code></td><td>固定 600/300/360；<code>webui/index.css:47-52</code></td><td>工作台 overlay；删 zoom</td></tr>
+            <tr><td>P2-6</td><td>Board / List / Calendar / Gantt 四套 42px 工具条</td><td><code>KanbanBoardContainer.tsx:552</code> 等</td><td>抽 ProjectToolbar</td></tr>
+            <tr><td>P2-7</td><td>进度只靠颜色；<code>-0</code> 删除数；相对时间无绝对日期</td><td><code>SubtaskProgress.tsx:44-52</code> 等</td><td>加文字；抑制 0；tooltip</td></tr>
+            <tr><td>P2-8</td><td>顶栏 9 个 22px 启动器，Primary 与 Workbench 仅 1px 分隔</td><td><code>SurfaceLauncherButtons.tsx:47-53</code></td><td>分组；选中填充</td></tr>
+            <tr><td>P3-1</td><td>bounce easing、width/padding 动画、<code>strokeWidth</code> 2/2.25</td><td><code>motion.css:20-21</code> 等</td><td>标准 ease；只动 transform</td></tr>
+            <tr><td>P3-2</td><td>DESIGN 拓扑过期；<code>defaultLayout</code> dead</td><td><code>DESIGN.md:287-290</code></td><td>删除；改写为实际模型</td></tr>
+            <tr><td>P3-3</td><td><code>text-wrap: pretty/balance</code> 几乎未用</td><td>0 / 1 处</td><td>补到正文/标题</td></tr>
+            <tr><td>P3-4</td><td>术语 “Deliverables / Drafts / Opened files” 不统一</td><td><code>en.json</code></td><td>统一 Artifact 词汇</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="wrap section" id="roadmap">
+    <div class="section-head">
+      <div class="section-kicker">04 / Roadmap</div>
+      <div>
+        <h2>R0–R2：先把地基修平，再谈重组</h2>
+        <p class="section-lede">
+          按你的选择：范围 R0–R2；看板中性列 + 色条；工作台封顶 50% + 空态折叠。
+          R3 的最小集并入 R0，否则修完会回退。
+        </p>
+      </div>
+    </div>
+
+    <div class="flow" aria-label="依赖顺序">
+      <span class="flow-step key"><b>R0</b> 合并层 + 控件 + 门禁</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step"><b>R1</b> chrome / tab / surface</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step"><b>R2</b> 布局 / 看板 / 列表</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step"><b>QA</b> 截图 / 文档</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step"><b>R3</b> 完整 burn-down</span>
+    </div>
+
+    <ol class="timeline">
+      <li class="milestone">
+        <div class="milestone-head">
+          <span class="milestone-meta">M1 · 第 1–2 天 · R0</span>
+          <h3>先让合同在渲染层生效</h3>
+          <span class="effort">1–2 人日</span>
+        </div>
+        <p>修两个原语：合并层和控件高度。不要先动页面。</p>
+        <div class="milestone-grid">
+          <ul class="ticks">
+            <li>扩展 twMerge，注册 7 个字号 tier + 2 个 glyph</li>
+            <li>补齐 data-control-size 映射，height = min-height</li>
+            <li>修填充小按钮文字色；Button/Badge/MetadataBadge 对齐合同</li>
+            <li>新增计算样式契约（3 尺寸 × 2 主题）</li>
+            <li>把 scan.ts 变成 CI：lost-tier 必须为 0</li>
+          </ul>
+          <div class="exit">
+            <b>Exit</b>
+            82 → 0；xs/compact 22/26；default 13px；小按钮文字可读；E2E 绿。
+          </div>
+        </div>
+      </li>
+
+      <li class="milestone">
+        <div class="milestone-head">
+          <span class="milestone-meta">M2 · 第 3–5 天 · R1</span>
+          <h3>统一 chrome 语言</h3>
+          <span class="effort">2–3 人日</span>
+        </div>
+        <p>一个 tab 原语，一条面板头；surface / radius / shadow 收敛。</p>
+        <div class="milestone-grid">
+          <ul class="ticks">
+            <li>Tabs / SegmentedControl / Toolbar 共享键盘语义</li>
+            <li>Files 三层压成两层；Artifacts 范围进筛选菜单</li>
+            <li>面板标题 16px；每屏一个 h1；header 统一 40</li>
+            <li>surface 12→4、border 9→2、圆角 15→6、阴影 19→5</li>
+            <li>启动器分组；Primary 与 Workbench 不再只靠 1px 线</li>
+          </ul>
+          <div class="exit">
+            <b>Exit</b>
+            Files chrome ≤75px；一个 tablist；标题 16px；无 border+shadow。
+          </div>
+        </div>
+      </li>
+
+      <li class="milestone">
+        <div class="milestone-head">
+          <span class="milestone-meta">M3 · 第 6–9 天 · R2</span>
+          <h3>重组表面：工作台、看板、列表</h3>
+          <span class="effort">4–5 人日</span>
+        </div>
+        <p>布局与颜色语义一起改；这是唯一会“看起来明显变化”的一波。</p>
+        <div class="milestone-grid">
+          <ul class="ticks">
+            <li>工作台封顶 50% + 空态自动折叠；聊天 ≥600</li>
+            <li>看板中性列 + 2px 色条；状态章仅差异时显示</li>
+            <li>卡片 ≤3 行；Done 折叠/虚拟化；空列 CTA</li>
+            <li>会话列表减为一个状态通道；匹配数 10px</li>
+            <li>Composer 拆权限/状态；四套工具条合并</li>
+          </ul>
+          <div class="exit">
+            <b>Exit</b>
+            1920/隐藏导航均 ≤50%；1280 无横向滚动；列头 ≥4.5；卡片 ≤3 行。
+          </div>
+        </div>
+      </li>
+
+      <li class="milestone">
+        <div class="milestone-head">
+          <span class="milestone-meta">M4 · 第 10 天 · QA</span>
+          <h3>用截图和门禁把它锁住</h3>
+          <span class="effort">1 人日</span>
+        </div>
+        <p>3 尺寸 × 2 主题 × 6 个关键 surface；文档与实现对齐。</p>
+        <div class="milestone-grid">
+          <ul class="ticks">
+            <li>1280 / 1536 / 1920 × light / dark 截图矩阵</li>
+            <li>对比度扩展到看板/项目/内联色</li>
+            <li>visual debt 只减不增；新代码 0 新增</li>
+            <li>更新 DESIGN.md：布局、颜色权威、tab 层级、surface 角色</li>
+          </ul>
+          <div class="exit">
+            <b>Exit</b>
+            6 个 surface 全绿；DEBT 507 不增长；文档与代码一致。
+          </div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- METRICS -->
+  <section class="wrap section" id="metrics">
+    <div class="section-head">
+      <div class="section-kicker">05 / Metrics</div>
+      <div>
+        <h2>验收：用数字，不用“感觉好多了”</h2>
+        <p class="section-lede">
+          每一波都有可测的出口；不达标就不进入下一波。以下指标会写进 PR 和 CI。
+        </p>
+      </div>
+    </div>
+
+    <div class="metric-wrap">
+    <table class="metric-table">
+      <thead>
+        <tr><th>指标</th><th>当前</th><th>目标</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>cn() 丢层点</td><td>82</td><td><b>0</b></td><td>生产代码；全量 84</td></tr>
+        <tr><td>xs / compact 高度</td><td>34 / 34</td><td><b>22 / 26</b></td><td>契约档；当前 0 调用</td></tr>
+        <tr><td>default 按钮字号</td><td>15</td><td><b>13</b></td><td>body tier</td></tr>
+        <tr><td>Badge / Metadata 字号</td><td>15</td><td><b>11</b></td><td>meta tier</td></tr>
+        <tr><td>Artifact 状态章</td><td>15</td><td><b>10</b></td><td>micro tier</td></tr>
+        <tr><td>Files 面板 chrome</td><td>112.5px / 3 条</td><td><b>≤75px / 2 条</b></td><td>工作台 + 视图 + 工具</td></tr>
+        <tr><td>工作台宽度 / 1920</td><td>50.05%</td><td><b>≤50%</b></td><td>空态折叠；聊天 ≥600</td></tr>
+        <tr><td>最差列头对比度</td><td>2.15:1</td><td><b>≥4.5:1</b></td><td>含计数章/项目名</td></tr>
+        <tr><td>border + shadow 叠用</td><td>22</td><td><b>0</b></td><td>shadow-minimal 自带 ring</td></tr>
+        <tr><td>背景 alpha 种类</td><td>12</td><td><b>4</b></td><td>canvas/sunken/raised/floating</td></tr>
+        <tr><td>圆角类</td><td>15</td><td><b>6</b></td><td>4 档 + 角色形状</td></tr>
+        <tr><td>阴影类</td><td>19</td><td><b>5</b></td><td>4 步 + focus</td></tr>
+        <tr><td>视觉债务</td><td>507</td><td><b>0 新增</b></td><td>季度 -20%；先止增</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- GUARDRAILS -->
+  <section class="wrap section" id="guardrails">
+    <div class="section-head">
+      <div class="section-kicker">06 / Guardrails</div>
+      <div>
+        <h2>没有门禁的修复，下一次 UI 迁移会还回去</h2>
+        <p class="section-lede">
+          R3 的最小集不是“以后再说”，它决定 R0–R2 是否可持续。把它和 R0 放在同一个 PR。
+        </p>
+      </div>
+    </div>
+
+    <div class="guard-grid">
+      <article class="guard">
+        <h3>计算样式契约</h3>
+        <p>不看类名，看渲染结果：Button/Badge/MetadataBadge/Tab 的真实字号、高度、颜色。</p>
+        <span class="mono">3 sizes × 2 themes</span>
+      </article>
+      <article class="guard">
+        <h3>对比度扩展到内联色</h3>
+        <p>看板列、项目色、状态章都从计算色检查；固定白字不再能绕过 4.5:1。</p>
+        <span class="mono">computed colors, not tokens</span>
+      </article>
+      <article class="guard">
+        <h3>债务只减不增</h3>
+        <p>507 条不再增长；新代码 0 新增 title/role 债。每季度定一个 -20% 目标。</p>
+        <span class="mono">no new debt, then burn down</span>
+      </article>
+    </div>
+
+    <div class="verify">
+      <h3>人工验收矩阵</h3>
+      <div class="matrix">
+        <table aria-label="验收矩阵：3 个宽度 × 2 个主题">
+          <thead>
+            <tr><th scope="col">Surface</th><th scope="col">1280</th><th scope="col">1536</th><th scope="col">1920</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Shell</th><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><th scope="row">Files ×3</th><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><th scope="row">Kanban</th><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><th scope="row">Composer</th><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><th scope="row">Settings</th><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:10px;font-size:11px;color:var(--faint)">每个格子还需 light / dark 各一张；共 5 × 3 × 2 = 30 张关键截图。</p>
+      <pre><code>bun run check:scale-contract
+bun run check:design-drift
+bun run check:contrast-floor
+bun run check:visual-contracts
+bun run test:ui:primitives     # 新增：计算字号/高度/颜色
+bun run audit:ui-merge         # 新增：lost-tier 必须为 0</code></pre>
+    </div>
+
+    <div class="not-doing">
+      <div>只给 xs/compact 补 min-height：文字色仍然是错的</div>
+      <div>继续加 token：问题是词汇太多，不是太少</div>
+      <div>重做整个视觉：外壳和聊天区的方向是对的</div>
+      <div>为了“有颜色”保留四套色相：列身份用一条色条就够</div>
+    </div>
+  </section>
+
+  <!-- DECISION -->
+  <section class="wrap section" id="decision">
+    <div class="section-head">
+      <div class="section-kicker">07 / Decision</div>
+      <div>
+        <h2>这版方案和你选的三件事</h2>
+        <p class="section-lede">
+          本轮仍然只读；以下是把选择写进计划后的结果，不是已经开始改代码。
+        </p>
+      </div>
+    </div>
+
+    <div class="review-grid">
+      <article class="review-card">
+        <span class="tag">SCOPE</span>
+        <h3>R0–R2 · 约 8–10 人日</h3>
+        <p>R3 的最小集并入 R0；完整债务 burn-down 放到 R2 之后。M1→M4 顺序执行，不并行改布局。</p>
+      </article>
+      <article class="review-card">
+        <span class="tag">KANBAN</span>
+        <h3>中性列 + 2px 色条 + 状态章</h3>
+        <p>去掉整列 tint 和实心大色块；列身份靠色条/圆点，状态靠 <code>*-text</code> 章；onAccent 按亮度。</p>
+      </article>
+      <article class="review-card">
+        <span class="tag">WORKBENCH</span>
+        <h3>封顶 50% + 空态折叠</h3>
+        <p>聊天保底 600px；1920/隐藏导航都不超过 50%；保留手动拖宽和全宽展开。</p>
+      </article>
+      <article class="review-card">
+        <span class="tag">THIS PASS</span>
+        <h3>不动代码</h3>
+        <p>这份 HTML 是演示与决策材料；下一步从 R0 开始，单独 PR，附 before/after 截图。</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>
+      <div class="brand" style="font-size:13px">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>Phaneris <span class="brand-sub">/ UI plan</span></span>
+      </div>
+      <p class="footer-note" style="margin-top:10px">
+        Read-only audit · 2026-10-21 · 未修改产品源码。<br>
+        证据来自生产源码扫描、上一轮 Playwright 计算样式与 1920px 截图。
+      </p>
+    </div>
+    <div class="footer-links">
+      <a href="./FRONTEND-SYSTEM-AUDIT.md">完整报告</a>
+      <a href="./evidence.json">证据 JSON</a>
+      <a href="#top">回到顶部</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Progress bar
+    var progress = document.getElementById('progress');
+    function updateProgress() {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - window.innerHeight;
+      var value = max > 0 ? (window.scrollY / max) * 100 : 0;
+      progress.style.width = Math.min(100, Math.max(0, value)) + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+    // Before / after demo
+    var demo = document.querySelector('.demo');
+    var caption = document.getElementById('demo-caption');
+    var demoButtons = document.querySelectorAll('[data-demo]');
+    var sizeLabels = document.querySelectorAll('.demo-size');
+    var afterSizes = ['11px · 30px 高', '11px', '11px'];
+    var beforeSizes = ['15px · 34px 高', '15px', '15px'];
+
+    function setDemo(state) {
+      if (demo) demo.dataset.state = state;
+      demoButtons.forEach(function (btn) {
+        btn.setAttribute('aria-pressed', String(btn.dataset.demo === state));
+      });
+      sizeLabels.forEach(function (label, index) {
+        label.textContent = state === 'after' ? afterSizes[index] : beforeSizes[index];
+      });
+      if (caption) {
+        caption.innerHTML = state === 'after'
+          ? '<strong>R0 之后：</strong>小按钮 11px + 白字可读；Badge 11px；tab 11px。'
+          : '<strong>当前：</strong>小按钮文字与背景同色；Badge 和 tab 都是 15px。';
+      }
+    }
+    demoButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setDemo(btn.dataset.demo);
+      });
+    });
+    setDemo('before');
+
+    // Finding filters
+    var filterButtons = document.querySelectorAll('[data-filter]');
+    var findings = document.querySelectorAll('.finding[data-sev]');
+    filterButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var filter = btn.dataset.filter;
+        filterButtons.forEach(function (b) {
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+        findings.forEach(function (item) {
+          item.hidden = filter !== 'all' && item.dataset.sev !== filter;
+        });
+      });
+    });
+
+    // Print
+    var printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+      printBtn.addEventListener('click', function () { window.print(); });
+    }
+
+    // Keep the demo caption readable if the user prints while on "after"
+    if (reduceMotion) {
+      document.documentElement.style.scrollBehavior = 'auto';
+    }
+  })();
+</script>
+</body>
+</html>

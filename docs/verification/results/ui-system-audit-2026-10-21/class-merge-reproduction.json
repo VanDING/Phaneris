@@ -1,0 +1,30 @@
+[
+  {
+    "input": "text-meta text-foreground",
+    "output": "text-foreground"
+  },
+  {
+    "input": "text-label text-accent",
+    "output": "text-accent"
+  },
+  {
+    "input": "text-body text-background",
+    "output": "text-background"
+  },
+  {
+    "input": "text-reading text-text-secondary",
+    "output": "text-text-secondary"
+  },
+  {
+    "input": "text-title text-foreground",
+    "output": "text-foreground"
+  },
+  {
+    "input": "text-xs text-foreground",
+    "output": "text-xs text-foreground"
+  },
+  {
+    "input": "text-body text-foreground text-meta",
+    "output": "text-meta"
+  }
+]

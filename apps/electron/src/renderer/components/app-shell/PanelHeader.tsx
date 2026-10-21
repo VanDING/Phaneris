@@ -98,6 +98,15 @@ export interface PanelHeaderProps {
   isRegeneratingTitle?: boolean
   /** Center the title against the full panel width rather than the remaining flex space. */
   centerTitleInPanel?: boolean
+  /**
+   * Heading level for the panel title.
+   *
+   * One screen has one `h1`: the primary surface. Navigator, workbench and
+   * sub-panels are `h2`. Before this prop every PanelHeader emitted `h1`, so a
+   * two-panel screen announced two document titles (and the workbench header,
+   * which has the highest type, announced none).
+   */
+  headingLevel?: 1 | 2
 }
 
 /**
@@ -118,7 +127,9 @@ export function PanelHeader({
   className,
   isRegeneratingTitle,
   centerTitleInPanel = false,
+  headingLevel = 1,
 }: PanelHeaderProps) {
+  const TitleHeading = (headingLevel === 1 ? 'h1' : 'h2') as 'h1' | 'h2'
   const reduceMotion = useReducedMotionConfig()
   // Fall back to AppShellContext.leadingAction so per-panel back buttons (set by
   // SurfaceSlot in compact mode) propagate to every page's PanelHeader without each
@@ -165,10 +176,10 @@ export function PanelHeader({
       )}
     >
       <div className="flex min-w-0 max-w-full items-center justify-center gap-1">
-        <h1 className={cn(
-          "truncate font-sans text-body font-semibold leading-tight",
+        <TitleHeading className={cn(
+          "truncate font-sans text-title font-semibold leading-tight",
           isRegeneratingTitle && "animate-shimmer-text"
-        )}>{title}</h1>
+        )}>{title}</TitleHeading>
         {badge}
       </div>
       {subtitle && (

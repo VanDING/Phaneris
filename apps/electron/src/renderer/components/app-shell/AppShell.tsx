@@ -196,7 +196,6 @@ interface AppShellProps {
   /** All data and callbacks - passed directly to AppShellProvider */
   contextValue: AppShellContextType
   /** UI-specific props */
-  defaultLayout?: number[]
   defaultCollapsed?: boolean
   menuNewChatTrigger?: number
   /** Focused mode - hides sidebars, shows only the chat content */
@@ -531,7 +530,6 @@ export function AppShell(props: AppShellProps) {
  */
 function AppShellContent({
   contextValue,
-  defaultLayout = [20, 32, 48],
   defaultCollapsed = false,
   menuNewChatTrigger,
   isFocusedMode = false,
@@ -3014,6 +3012,7 @@ function AppShellContent({
             >
             <PanelHeader
               title={listTitle}
+              headingLevel={2}
               compensateForStoplight={effectiveSidebarWidth === 0}
               badge={automationFilter?.automationType === 'scheduled' ? (
                 <Tooltip>

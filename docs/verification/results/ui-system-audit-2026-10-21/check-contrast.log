@@ -1,0 +1,8 @@
+$ bun run scripts/check-contrast-floor.ts
+84 colour pairs across 4 built-in themes.
+  tightest: default dark focus ring / muted = 4.00:1 (floor 3)
+  tightest: default dark focus ring / background = 4.52:1 (floor 3)
+  tightest: ink dark text-secondary / secondary = 4.53:1 (floor 4.5)
+  tightest: cyberpunk-2077 dark focus ring / muted = 4.53:1 (floor 3)
+  tightest: geek dark text-secondary / secondary = 4.60:1 (floor 4.5)
+Contrast floor OK: no built-in pair below its WCAG threshold.

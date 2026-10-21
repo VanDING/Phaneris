@@ -81,14 +81,26 @@ function panelShareStyle({
     return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: '0px' }
   }
   if (isWorkbench) {
-    return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: `${MIN_WORKBENCH_WIDTH}px` }
+    // The workbench may take at most half the row. It used to `flexGrow: 1`
+    // against a fixed 600px primary, so an empty panel could reach 961px on a
+    // 1920 screen while the transcript stayed at 606px (below the 840px reading
+    // column). 50% caps that; the primary grows into the rest.
+    return {
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: '0px',
+      minWidth: `${MIN_WORKBENCH_WIDTH}px`,
+      maxWidth: '50%',
+    }
   }
   if (isWorkbenchCompanion) {
+    // Companion primary: grow with the row instead of staying pinned at its
+    // basis, but never below the reading column when the row can afford it.
     return {
-      flexGrow: 0,
-      flexShrink: 0,
+      flexGrow: 1,
+      flexShrink: 1,
       flexBasis: `${companionPrimaryWidth}px`,
-      minWidth: `${companionPrimaryWidth}px`,
+      minWidth: `min(${companionPrimaryWidth}px, 55%)`,
     }
   }
   return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: `${PANEL_MIN_WIDTH}px` }

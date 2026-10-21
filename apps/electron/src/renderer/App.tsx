@@ -2339,7 +2339,6 @@ export default function App() {
               ) : (
                 <AppShell
                   contextValue={appShellContextValue}
-                  defaultLayout={[20, 32, 48]}
                   menuNewChatTrigger={menuNewChatTrigger}
                   isFocusedMode={isFocusedMode}
                 />

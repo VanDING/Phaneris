@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-21T11:30:00+08:00",
+  "scope": {
+    "hosts": [
+      "apps/electron/src/renderer (desktop; WebUI mounts the same App component)",
+      "packages/ui/src (shared primitives)",
+      "apps/webui/src (shell, login)",
+      "apps/viewer/src (shared UI + its own header)"
+    ],
+    "excluded": "playground/, __tests__/, node_modules/, dist/, release/"
+  },
+  "method": {
+    "static": "docs/verification/results/ui-system-audit-2026-10-21/scan.ts (tailwind-merge reproduction + class/token census)",
+    "computed": "docs/verification/results/ui-system-audit-2026-10-21/control-measurements.json and files-measurements.json (Playwright, root 15px, uiScale 1)",
+    "visual": "three supplied 1920x1048 production captures; prior playground captures in the same folder",
+    "contract": "DESIGN.md + .impeccable/design.json + scripts/design-drift-baseline.json + scripts/visual-debt-ledger.json",
+    "history": "git show 23850cade, 4d3f014e7; git blame button.tsx / roles.css"
+  },
+  "measurements": {
+    "viewport": { "width": 1920, "height": 1048 },
+    "panels": {
+      "boundariesPx": [48, 346, 952, 1913],
+      "widthsPx": [298, 606, 961],
+      "percent": [15.5, 31.25, 50.05],
+      "withNavigatorHiddenWorkbenchPercent": 68.1,
+      "note": "left = rail + navigator; primary = fixed 600 companion width (+6px gap); right = leftover flex space"
+    },
+    "headerHeightsCssPx": {
+      "panelHeader": 36,
+      "contextWorkbenchTabs": 37.5,
+      "filesViewTabs": 37.5,
+      "artifactsFilters": 37.5,
+      "changedToolbar": 37.5,
+      "kanbanBoardHeader": 42,
+      "stackedFilesChrome": 112.5
+    },
+    "buttons": [
+      { "size": "xs", "fontPx": 11, "heightPx": 34, "minHeightPx": 34, "contractHeightPx": 22, "labelColor": "inherited foreground (text-background dropped)" },
+      { "size": "compact", "fontPx": 12, "heightPx": 34, "minHeightPx": 34, "contractHeightPx": 26, "labelColor": "inherited foreground" },
+      { "size": "sm", "fontPx": 11, "heightPx": 30, "minHeightPx": 30, "contractHeightPx": 30, "labelColor": "inherited foreground" },
+      { "size": "default", "fontPx": 15, "heightPx": 34, "minHeightPx": 34, "contractHeightPx": 34, "labelColor": "background (visible)" },
+      { "size": "lg", "fontPx": 15, "heightPx": 38, "minHeightPx": 38, "contractHeightPx": 38, "labelColor": "background (visible)" }
+    ],
+    "filesTabs": {
+      "filesViewTabs": { "fontPx": 12, "heightPx": 37.5 },
+      "artifactsFilterPills": { "fontPx": 15, "heightPx": 22.5 },
+      "diffStyleToggle": { "fontPx": 15, "heightPx": 26.25 }
+    },
+    "typography": {
+      "rootPx": 15,
+      "contractPx": { "micro": 10, "meta": 11, "label": 12, "body": 13, "reading": 14, "title": 16, "display": 20 }
+    }
+  },
+  "contrast": {
+    "kanbanHeaderText": [
+      { "column": "backlog", "bg": "#64748b", "fg": "#ffffff", "ratio": 4.76, "pass": true },
+      { "column": "todo", "bg": "#6366f1", "fg": "#ffffff", "ratio": 4.47, "pass": false },
+      { "column": "in-progress", "bg": "#f59e0b", "fg": "#ffffff", "ratio": 2.15, "pass": false },
+      { "column": "done", "bg": "#10b981", "fg": "#ffffff", "ratio": 2.54, "pass": false }
+    ],
+    "projectPaletteAsTextOnWhite": [
+      { "color": "#6366f1", "ratio": 4.47, "pass": false },
+      { "color": "#10b981", "ratio": 2.54, "pass": false },
+      { "color": "#f59e0b", "ratio": 2.15, "pass": false },
+      { "color": "#ef4444", "ratio": 3.76, "pass": false },
+      { "color": "#ec4899", "ratio": 3.53, "pass": false },
+      { "color": "#14b8a6", "ratio": 2.49, "pass": false },
+      { "color": "#a855f7", "ratio": 3.96, "pass": false },
+      { "color": "#64748b", "ratio": 4.76, "pass": true }
+    ]
+  },
+  "scan": {
+    "cnCalls": 768,
+    "lostTierSites": 82,
+    "lostTierByTier": { "micro": 9, "meta": 31, "label": 9, "body": 30, "reading": 1, "title": 1, "display": 1 },
+    "lostTierByHost": { "apps/electron/src/renderer": 69, "packages/ui/src": 13 },
+    "cvaDefinitionsWithCollision": 3,
+    "cvaVariantCollisions": 12,
+    "buttonElements": 174,
+    "buttonElementsIncludingPlayground": 202,
+    "smallButtons": { "sm": 121, "filledDefaultSm": 31, "filledSmallTotal": 35, "outlineSm": 43, "ghostSm": 39, "secondarySm": 8, "xsCallSites": 0, "compactCallSites": 0 },
+    "nonTierHeights": 298,
+    "contractHeights": 73,
+    "titleOnButton": 41,
+    "interactiveTitleBaseline": 91,
+    "rawPaletteClasses": 15,
+    "inlineHexOccurrences": 157,
+    "roundedXlOr2xl": 28,
+    "alphaBackgroundValues": 12,
+    "alphaBorderValues": 9,
+    "radiusUtilities": 15,
+    "shadowUtilities": 19,
+    "shadowMinimalUsages": 213,
+    "borderPlusShadowMinimalLines": 22,
+    "legacyMutedForeground": 537,
+    "contractTextSecondary": 670,
+    "visualDebtEntries": 507,
+    "visualDebtFiles": 177,
+    "visualDebtRoleEntries": 446,
+    "countChipContrast": [1.38, 1.38, 1.21, 1.26],
+    "hitTargets": {
+      "workbenchTabClosePx": 16,
+      "artifactRowActionPx": 22.5,
+      "wcag258MinimumPx": 24
+    },
+    "defaultLayoutUsed": false
+  },
+  "mergeReproduction": [
+    { "input": "text-meta text-foreground", "output": "text-foreground", "lost": "meta" },
+    { "input": "text-body text-background", "output": "text-background", "lost": "body" },
+    { "input": "text-meta text-info-text", "output": "text-info-text", "lost": "meta" },
+    { "input": "text-label text-muted-foreground", "output": "text-muted-foreground", "lost": "label" },
+    { "input": "text-micro text-text-secondary", "output": "text-text-secondary", "lost": "micro" },
+    { "input": "text-body font-medium text-foreground", "output": "font-medium text-foreground", "lost": "body" }
+  ],
+  "findings": [
+    { "id": "P0-1", "severity": "P0", "title": "Custom type tiers collapse inside cn(); filled small button labels lose their color" },
+    { "id": "P0-2", "severity": "P0", "title": "Button xs/compact cannot reach 22/26px because craft-control min-height stays at the 34px fallback" },
+    { "id": "P1-1", "severity": "P1", "title": "Files workbench stacks three 37.5px bars and uses the same visual language for three IA levels" },
+    { "id": "P1-2", "severity": "P1", "title": "Workbench takes the leftover width (about 50%) while the chat is fixed at 600px; an empty panel dominates" },
+    { "id": "P1-3", "severity": "P1", "title": "Kanban identity colors use raw palette hex, fill large surfaces, and fail text contrast" },
+    { "id": "P1-4", "severity": "P1", "title": "Surface vocabulary explosion: 12 background alphas, 9 border alphas, 15 radii, 19 shadows" },
+    { "id": "P1-5", "severity": "P1", "title": "Session list spends four color channels on one row and the match badge is larger than the title" },
+    { "id": "P1-6", "severity": "P1", "title": "Kanban card anatomy is noisy; empty columns are dead ends; 134 cards render unvirtualized" },
+    { "id": "P1-7", "severity": "P1", "title": "Accessibility and interaction debt is frozen by the ledger instead of prevented" },
+    { "id": "P2-1", "severity": "P2", "title": "Panel headers do not share a height or a pattern (36 / 37.5 / 42)" },
+    { "id": "P2-2", "severity": "P2", "title": "A second type scale (craft-text-*) survives in settings" },
+    { "id": "P2-3", "severity": "P2", "title": "Composer mode/state chips are oversized, disconnected, and duplicate session state" },
+    { "id": "P2-4", "severity": "P2", "title": "Empty states are visually calm but functionally dead ends" },
+    { "id": "P2-5", "severity": "P2", "title": "Top-bar icon cluster has no grouping and sits next to window controls" },
+    { "id": "P2-6", "severity": "P2", "title": "The shell horizontally overflows between 768 and about 1512px with the workbench open" },
+    { "id": "P2-7", "severity": "P2", "title": "Color-only progress and raw status hex (#ef4444) bypass the theme" },
+    { "id": "P2-8", "severity": "P2", "title": "Board/List/Calendar implement three separate 42px toolbars" },
+    { "id": "P3-1", "severity": "P3", "title": "Motion and icon micro-drift (bounce easing, layout transitions, numeric strokeWidth)" },
+    { "id": "P3-2", "severity": "P3", "title": "DESIGN.md topology is stale and defaultLayout is dead code" },
+    { "id": "P3-3", "severity": "P3", "title": "Typography detail rules (pretty/balance, tabular-nums) are mostly unapplied" }
+  ]
+}
