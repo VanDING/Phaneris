@@ -695,6 +695,7 @@
   "kanban.describeSubtask": "Opisz podzadanie…",
   "kanban.editTask": "Edytuj zadanie",
   "kanban.hideDone": "Ukryj ukończone",
+  "kanban.moveToColumn": "Przenieś do kolumny",
   "kanban.newTask": "Nowe zadanie",
   "kanban.newTaskTitle": "Tytuł zadania…",
   "kanban.projectsSelected_one": "{{count}} projekt",

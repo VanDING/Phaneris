@@ -185,6 +185,8 @@ export function KanbanBoard({
             onSetColor={onUpdateColumn ? color => onUpdateColumn(column.id, { color }) : undefined}
             // Guard against removing the last column — the board must always keep one.
             onRemove={onRemoveColumn && columns.length > 1 ? () => onRemoveColumn(column.id) : undefined}
+            columns={columns}
+            onMoveTask={onMoveTask}
           />
         ))}
         {onAddColumn && (

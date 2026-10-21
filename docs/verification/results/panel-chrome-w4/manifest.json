@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "workflow": "panel-chrome",
+  "startedAt": "2026-10-21T05:53:41.175Z",
+  "finishedAt": "2026-10-21T05:54:37.714Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
+    "--output-dir=docs/verification/results/panel-chrome-w4d"
+  ],
+  "source": {
+    "headSha": "f764c93494c4688981cafa856f21b3f07a520697",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M scripts/verification/fixtures/panel-chrome.tsx",
+      " M scripts/verification/panel-chrome-workflow.ts",
+      "?? docs/verification/results/panel-chrome-w4/failure.json",
+      "?? docs/verification/results/panel-chrome-w4/host.css",
+      "?? docs/verification/results/panel-chrome-w4/index.html",
+      "?? docs/verification/results/panel-chrome-w4/manifest.json",
+      "?? docs/verification/results/panel-chrome-w4/panel-chrome.json",
+      "?? docs/verification/results/panel-chrome-w4b/failure.json",
+      "?? docs/verification/results/panel-chrome-w4b/host.css",
+      "?? docs/verification/results/panel-chrome-w4b/index.html",
+      "?? docs/verification/results/panel-chrome-w4b/manifest.json",
+      "?? docs/verification/results/panel-chrome-w4b/panel-chrome.json",
+      "?? docs/verification/results/panel-chrome-w4c/files-panel-chrome-dark.png",
+      "?? docs/verification/results/panel-chrome-w4c/files-panel-chrome-light.png",
+      "?? docs/verification/results/panel-chrome-w4c/host.css",
+      "?? docs/verification/results/panel-chrome-w4c/index.html",
+      "?? docs/verification/results/panel-chrome-w4c/manifest.json",
+      "?? docs/verification/results/panel-chrome-w4c/panel-chrome.json"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx",
+        "sha256": "86b7f995c0755e9adf2d6ad77f758969b188aa2477c730501a200e6d21fe6007"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+        "sha256": "a68637858df8d2eb8b0db855e4d315ece851c0832a5c442b6b9c2f92b81e06cb"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+        "sha256": "e9d530a599b5a37d99a1a78866f8b6842d8d6d4ab1459a06da90ba05d58e296d"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/failure.json",
+        "sha256": "43c4637ba571535e188d823350d5dae7534c78064b6c15cbf90595fee8e739e7"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/host.css",
+        "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/index.html",
+        "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/manifest.json",
+        "sha256": "caf891ed023a204fbc8305bea46647305774a708e61af797ef8054e2a07749f4"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/panel-chrome.json",
+        "sha256": "66effbc1bfc1c4f51afa44942dd88905150c5088f7957f7f65abf4af63e68361"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4b/failure.json",
+        "sha256": "40ced5945b858c674f063ff0c48dbcec19de7fbc2eb2e12ca0df3a7e871556a4"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4b/host.css",
+        "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4b/index.html",
+        "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4b/manifest.json",
+        "sha256": "5d001f29f6bb4f9ed62ad5a70d117ee7298bde1665791c5c4d2857e6b352cbc2"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4b/panel-chrome.json",
+        "sha256": "5042ca2f98a36533ccd84b521fb0c8847117e6ad38bec78d5ec74091663fb164"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4c/files-panel-chrome-dark.png",
+        "sha256": "f61f30bac6679b8a9f97b874e6b7580c030ad9d497f7dace28bc4f87fc5955f3"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4c/files-panel-chrome-light.png",
+        "sha256": "1a0ea6ed10140cab39081c206db31ef57f5cd44cf9c087c6e95503e2b1b9c050"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4c/host.css",
+        "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4c/index.html",
+        "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4c/manifest.json",
+        "sha256": "090ea52f1c6e44a96d12a0d3bad6e21c179531f5e1796050362a8cb15aa09965"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4c/panel-chrome.json",
+        "sha256": "b68e48089fe45637f4054a2cae762a0dded4844313ac9dd27c8cd851312b84d4"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "3a873463a53a89990a5aade25d255c4e6aede9c297708648c5dc0e855bc88ffe"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "8f13fa6d6c9615b9d62f51f02faa67752360898dca611627ca8bee1ce4d1be96"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "91172aafe8658b28680c6ab75e5d07696a339c245c9c71d1167a653a1015d71a"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "411e8b0c504287b734c372e084b9e1f11a19b586ba83a48ccbd269cc9322d86f"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "039300c9599206ec19ff20486e77eb10b18155514ba2f44a93915f456d897e04"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "2adf405cd7a04f27abbf834f0e3c065e601c02ed6fd452eb292a6baf455371ed"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "180ae250f81c70a9c6280a660e1aca10c99c4203fc06ce4b91d4dd0b21a02567"
+      },
+      {
+        "path": "scripts/verification/fixtures/panel-chrome.tsx",
+        "sha256": "0dcb2886c7f999621b56de69c93f9350743fea4e43175a2dc48d3ba01664afb4"
+      },
+      {
+        "path": "scripts/verification/panel-chrome-workflow.ts",
+        "sha256": "4bac211206e8753ed04f4f76d2ce86e33d9e5f5e01e3ce3e4653ae5712ddd49a"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "pc1-single-chrome-row",
+    "pc2-row-height",
+    "pc3-tabs-and-filter-share-the-row",
+    "pc4-content-follows-the-row",
+    "pc5-total-chrome-budget",
+    "pc6-tabs-are-keyboard-navigable",
+    "pc7-done-column-starts-collapsed",
+    "pc8-empty-column-offers-an-exit",
+    "pc9-task-moves-by-keyboard"
+  ],
+  "passed": 9,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "files-panel-chrome-dark.png",
+      "sha256": "f61f30bac6679b8a9f97b874e6b7580c030ad9d497f7dace28bc4f87fc5955f3",
+      "bytes": 28561
+    },
+    {
+      "path": "files-panel-chrome-light.png",
+      "sha256": "aaefadecac8fa88339cdb29b3909ba0a8846c2422f9eccb0b16cf014182bcc0f",
+      "bytes": 28085
+    },
+    {
+      "path": "host.css",
+      "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2",
+      "bytes": 130
+    },
+    {
+      "path": "index.html",
+      "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9",
+      "bytes": 280
+    },
+    {
+      "path": "panel-chrome.json",
+      "sha256": "a5a5ef00082c3154c89df64ddb262981142a78ed0554a4f204da278f16ba092a",
+      "bytes": 341
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

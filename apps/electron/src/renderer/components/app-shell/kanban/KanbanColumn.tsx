@@ -54,6 +54,10 @@ interface KanbanColumnProps {
   onSetColor?: (color: string) => void
   /** Remove this (custom) column. Absent for the last remaining column (the board keeps one). */
   onRemove?: () => void
+  /** All board columns, so a tile can offer "Move to column" without dragging. */
+  columns?: ReadonlyArray<KanbanColumnMeta>
+  /** Move a task to another column (the same action a drop performs). */
+  onMoveTask?: (taskId: string, columnId: string) => void
 }
 
 export function KanbanColumn({
@@ -80,8 +84,22 @@ export function KanbanColumn({
   onRename,
   onSetColor,
   onRemove,
+  columns,
+  onMoveTask,
 }: KanbanColumnProps) {
   const { t } = useTranslation()
+  // Menu labels for "Move to column": built-ins resolve through their i18n key,
+  // custom columns carry a verbatim name, and the column a task already sits in
+  // is excluded.
+  const moveTargets = React.useMemo(() => {
+    if (!columns || !onMoveTask) return undefined
+    return columns
+      .filter(candidate => candidate.id !== column.id)
+      .map(candidate => ({
+        id: candidate.id,
+        label: candidate.labelKey ? t(candidate.labelKey) : candidate.name ?? candidate.id,
+      }))
+  }, [columns, column.id, onMoveTask, t])
   // Built-in columns carry an i18n key; custom (per-project) columns a verbatim name.
   const label = column.labelKey ? t(column.labelKey) : (column.name ?? '')
   const editable = !!onRename || !!onSetColor || !!onRemove
@@ -165,6 +183,8 @@ export function KanbanColumn({
               onRunSubtasks={onRunSubtasks ? () => onRunSubtasks(task.id) : undefined}
               subtaskModelGroups={subtaskModelGroups}
               defaultSubtaskModel={defaultSubtaskModel}
+              moveTargets={moveTargets}
+              onMoveToColumn={onMoveTask ? columnId => onMoveTask(task.id, columnId) : undefined}
             />
           </DraggableTile>
         ))}

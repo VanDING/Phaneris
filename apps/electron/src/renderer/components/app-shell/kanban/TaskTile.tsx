@@ -25,6 +25,10 @@ import {
   ContextMenuTrigger,
   StyledContextMenuContent,
   StyledContextMenuItem,
+  StyledContextMenuSeparator,
+  StyledContextMenuSub,
+  StyledContextMenuSubContent,
+  StyledContextMenuSubTrigger,
 } from '@/components/ui/styled-context-menu'
 import { SessionStatusMenu } from '@/components/ui/session-status-menu'
 import { StatusBadge } from './StatusBadge'
@@ -73,6 +77,16 @@ interface TaskTileProps {
   subtaskModelGroups?: KanbanModelProviderGroup[]
   /** Model id pre-selected in the composer (defaults to the first catalog model). */
   defaultSubtaskModel?: string
+  /**
+   * Other columns this task can move to, labelled for the context menu.
+   *
+   * Dragging was the only way to move a task, which made a core board action
+   * pointer-only. The same move is now a menu item, reachable by keyboard
+   * (Menu key / Shift+F10, then Right arrow into the submenu).
+   */
+  moveTargets?: ReadonlyArray<{ id: string; label: string }>
+  /** Move this task to another column. */
+  onMoveToColumn?: (columnId: string) => void
 }
 
 /**
@@ -99,6 +113,8 @@ export function TaskTile({
   onRunSubtasks,
   subtaskModelGroups,
   defaultSubtaskModel,
+  moveTargets,
+  onMoveToColumn,
 }: TaskTileProps) {
   const { t } = useTranslation()
   const livePulseEnabled = useAtomValue(kanbanLivePulseAtom)
@@ -328,16 +344,32 @@ export function TaskTile({
     </div>
   )
 
-  if (!onEdit) return card
+  const canMove = Boolean(moveTargets?.length && onMoveToColumn)
+  if (!onEdit && !canMove) return card
 
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>{card}</ContextMenuTrigger>
       <StyledContextMenuContent>
-        <StyledContextMenuItem onSelect={onEdit}>
-          <Pencil className="h-4 w-4" />
-          {t('kanban.editTask')}
-        </StyledContextMenuItem>
+        {onEdit && (
+          <StyledContextMenuItem onSelect={onEdit}>
+            <Pencil className="h-4 w-4" />
+            {t('kanban.editTask')}
+          </StyledContextMenuItem>
+        )}
+        {onEdit && canMove && <StyledContextMenuSeparator />}
+        {canMove && (
+          <StyledContextMenuSub>
+            <StyledContextMenuSubTrigger>{t('kanban.moveToColumn')}</StyledContextMenuSubTrigger>
+            <StyledContextMenuSubContent>
+              {moveTargets!.map(target => (
+                <StyledContextMenuItem key={target.id} onSelect={() => onMoveToColumn!(target.id)}>
+                  {target.label}
+                </StyledContextMenuItem>
+              ))}
+            </StyledContextMenuSubContent>
+          </StyledContextMenuSub>
+        )}
       </StyledContextMenuContent>
     </ContextMenu>
   )

@@ -695,6 +695,7 @@
   "kanban.describeSubtask": "Írj le egy részfeladatot…",
   "kanban.editTask": "Feladat szerkesztése",
   "kanban.hideDone": "Kész feladatok elrejtése",
+  "kanban.moveToColumn": "Áthelyezés oszlopba",
   "kanban.newTask": "Új feladat",
   "kanban.newTaskTitle": "Feladat címe…",
   "kanban.projectsSelected_one": "{{count}} projekt",

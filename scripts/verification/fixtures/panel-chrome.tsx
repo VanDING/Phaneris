@@ -26,8 +26,12 @@ import { loadedSessionsAtom, sessionAtomFamily, sessionMetaMapAtom } from '@/ato
 import { filesPanelViewAtom } from '@/atoms/content-panel-ui'
 
 declare global {
-  interface Window { __panelChrome?: { ready: boolean } }
+  interface Window {
+    __panelChrome?: { ready: boolean }
+    __boardMoves?: Array<{ taskId: string; to: string }>
+  }
 }
+window.__boardMoves = []
 
 const stylesheet = new URLSearchParams(location.search).get('css')
 if (!stylesheet) throw new Error('panel-chrome fixture requires ?css=<host stylesheet>')
@@ -107,6 +111,10 @@ const successColor: KanbanColumnColor = { solid: 'var(--success)', tint: 'transp
 const neutralColor: KanbanColumnColor = { solid: 'var(--foreground-dimmed)', tint: 'transparent', onAccent: 'var(--foreground)' }
 
 function BoardFixture() {
+const recordMove = (taskId: string, columnId: string) => {
+  window.__boardMoves?.push({ taskId, to: columnId })
+  document.body.dataset.lastMove = `${taskId}->${columnId}`
+}
   return (
     <DndContext>
       <div data-board-fixture className="flex gap-3 p-3" style={{ width: 720, height: 520 }}>
@@ -120,6 +128,8 @@ function BoardFixture() {
           treatment="stripe"
           expandedTaskIds={new Set()}
           onCreateTask={() => {}}
+          columns={KANBAN_COLUMNS}
+          onMoveTask={recordMove}
         />
         <KanbanColumn
           column={todoColumn}

@@ -695,6 +695,7 @@
   "kanban.describeSubtask": "Unteraufgabe beschreiben…",
   "kanban.editTask": "Aufgabe bearbeiten",
   "kanban.hideDone": "Erledigte ausblenden",
+  "kanban.moveToColumn": "In Spalte verschieben",
   "kanban.newTask": "Neue Aufgabe",
   "kanban.newTaskTitle": "Aufgabentitel…",
   "kanban.projectsSelected_one": "{{count}} Projekt",

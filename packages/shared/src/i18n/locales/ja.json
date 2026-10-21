@@ -695,6 +695,7 @@
   "kanban.describeSubtask": "サブタスクを記述…",
   "kanban.editTask": "タスクを編集",
   "kanban.hideDone": "完了を隠す",
+  "kanban.moveToColumn": "列へ移動",
   "kanban.newTask": "新規タスク",
   "kanban.newTaskTitle": "タスクのタイトル…",
   "kanban.projectsSelected_one": "{{count}} 件のプロジェクト",

@@ -182,6 +182,32 @@ await verificationWorkflow('panel-chrome', async run => {
         'an empty column must offer the new-task affordance')
     })
 
+    await check('pc9-task-moves-by-keyboard', async () => {
+      // Moving a task was pointer-only (drag). The context menu offers the same
+      // move, and Shift+F10 opens that menu from the focused tile.
+      const board = page.locator('[data-board-fixture]')
+      const tile = board.locator('[data-task-tile]').first()
+      await tile.focus()
+      await page.keyboard.press('Shift+F10')
+      const moveItem = page.getByRole('menuitem', { name: 'Move to column' })
+      await moveItem.waitFor({ state: 'visible', timeout: 5_000 })
+      await moveItem.hover()
+      const target = page.getByRole('menuitem', { name: 'Backlog' })
+      await target.waitFor({ state: 'visible', timeout: 5_000 })
+      // Keyboard activation, not a mouse click: this is the path the target
+      // exists to prove (menu → submenu → item, all reachable without a pointer).
+      await target.focus()
+      await page.keyboard.press('Enter')
+      const observed = await page.evaluate(() => ({
+        moves: window.__boardMoves ?? [],
+        last: document.body.dataset.lastMove ?? null,
+      }))
+      assert.equal(observed.moves.length, 1,
+        `expected one recorded move, got ${JSON.stringify(observed)}`)
+      assert.equal(observed.moves[0]!.to, 'backlog')
+      assert.equal(observed.moves[0]!.taskId, 'done-0')
+    })
+
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))
