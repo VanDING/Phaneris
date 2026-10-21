@@ -1,31 +1,27 @@
 {
   "schemaVersion": 1,
   "workflow": "panel-chrome",
-  "startedAt": "2026-10-21T05:41:41.239Z",
-  "finishedAt": "2026-10-21T05:42:38.184Z",
+  "startedAt": "2026-10-21T05:45:06.232Z",
+  "finishedAt": "2026-10-21T05:46:03.243Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
-    "--output-dir=docs/verification/results/panel-chrome-w2-kbd"
+    "--output-dir=docs/verification/results/panel-chrome-w3"
   ],
   "source": {
-    "headSha": "4783a88c7ab26f1f297966e30595d2bc36955af6",
+    "headSha": "c8002c1c40ca4371d9e0d89008dbc8b51f2d05a5",
     "dirtyPaths": [
-      "M apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
+      "M apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
       " M docs/verification/results/packaged-client-smoke-win.json",
       " M docs/verification/results/packaged-client-verification-win.json",
-      " M scripts/verification/panel-chrome-workflow.ts",
-      "?? apps/electron/src/renderer/components/ui/segmented-tabs.tsx"
+      " M scripts/verification/fixtures/panel-chrome.tsx",
+      " M scripts/verification/panel-chrome-workflow.ts"
     ],
     "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
     "changedFiles": [
       {
-        "path": "apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
-        "sha256": "c2f742cbba15254a32929eee595bebedcd218159fdca7c35bb322ee9f488833b"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/ui/segmented-tabs.tsx",
-        "sha256": "3c90cb597410b40d645bbbc4dab12948bac4d48286679462128f76c307869f8f"
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+        "sha256": "239f7e9da6789c8cd2292e5e4dc85f51ec1326ebb541a0306166d247eab48159"
       },
       {
         "path": "docs/verification/results/packaged-client-smoke-win.json",
@@ -36,8 +32,12 @@
         "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
       },
       {
+        "path": "scripts/verification/fixtures/panel-chrome.tsx",
+        "sha256": "06fa403cd178e21b4db6eaf30f621bb63c95d5d222bd1bf09135772a1c652117"
+      },
+      {
         "path": "scripts/verification/panel-chrome-workflow.ts",
-        "sha256": "50e08c36426efa9cd3748a000d1f3c9da3db6852019e0137842884d6192757f5"
+        "sha256": "94e34af1286fc6f183ba45fb895c52500710cfbac40e032263b471db477f9981"
       }
     ],
     "dirty": true
@@ -57,20 +57,22 @@
     "pc3-tabs-and-filter-share-the-row",
     "pc4-content-follows-the-row",
     "pc5-total-chrome-budget",
-    "pc6-tabs-are-keyboard-navigable"
+    "pc6-tabs-are-keyboard-navigable",
+    "pc7-done-column-starts-collapsed",
+    "pc8-empty-column-offers-an-exit"
   ],
-  "passed": 6,
+  "passed": 8,
   "exitCode": 0,
   "artifacts": [
     {
       "path": "files-panel-chrome-dark.png",
-      "sha256": "df40c25a05b3ddc35906cfa9e10a299dccedeae93a02af1f8f9ee0199e706a23",
-      "bytes": 14869
+      "sha256": "10bd192f9b87e229f5a7c25001e22b9bbf53bbb08e6ec18e447610ab5ed291c7",
+      "bytes": 27587
     },
     {
       "path": "files-panel-chrome-light.png",
-      "sha256": "5fee30209358eee8e1c6e8b29788e1475804261361c029489d7d8e8358da00bd",
-      "bytes": 14845
+      "sha256": "0757d55724b87cdb5d74d3286f871a03bcb97e709d338cc6cd5cbab58f310b1c",
+      "bytes": 28020
     },
     {
       "path": "host.css",
@@ -84,7 +86,7 @@
     },
     {
       "path": "panel-chrome.json",
-      "sha256": "f73d7a0ce3af0187370bdb9a79ff406ef2c56cab9d7b769f09aab55cf1957eeb",
+      "sha256": "565729a1c6ae852fe0bed6f0a02fd8d3029585e85bb1104e6de9dea30e02b125",
       "bytes": 341
     }
   ],

@@ -160,6 +160,28 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.equal(home, 'true', 'Home must return to the first tab and select it')
     })
 
+    await check('pc7-done-column-starts-collapsed', async () => {
+      // A finished column is an archive: 30 cards must not render until asked.
+      const board = page.locator('[data-board-fixture]')
+      assert.equal(await board.locator('[data-task-column="done"]').count(), 0,
+        'a finished column above the collapse threshold rendered its cards immediately')
+      const toggle = board.getByRole('button', { name: 'Show done' })
+      assert.equal(await toggle.count(), 1, 'the collapsed column must offer an explicit toggle')
+      assert.equal(await toggle.getAttribute('aria-expanded'), 'false')
+      await toggle.click()
+      assert(await board.locator('[data-task-column="done"]').count() > 0,
+        'the toggle did not reveal the finished cards')
+      assert.equal(await board.getByRole('button', { name: 'Hide done' }).count(), 1)
+    })
+
+    await check('pc8-empty-column-offers-an-exit', async () => {
+      const board = page.locator('[data-board-fixture]')
+      assert.equal(await board.getByText('No tasks match the current filters.').count(), 1,
+        'an empty column must state that it is empty where the gap is')
+      assert.equal(await board.getByText('New Task', { exact: true }).count() > 0, true,
+        'an empty column must offer the new-task affordance')
+    })
+
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))

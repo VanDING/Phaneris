@@ -16,6 +16,11 @@ import en from '../../../packages/shared/src/i18n/locales/en.json'
 import { DEFAULT_THEME_FILE } from '../../../packages/shared/src/config/theme'
 import { createClientPlatform, initializeClient } from '@/platform/client'
 import { FilesPanel } from '@/components/content-panels/FilesPanel'
+import { DndContext } from '@dnd-kit/core'
+import { KanbanColumn } from '@/components/app-shell/kanban/KanbanColumn'
+import { KANBAN_COLUMNS } from '@/components/app-shell/kanban/status-column'
+import type { KanbanColumnColor } from '@/hooks/useKanbanColumnColors'
+import type { KanbanTask } from '@/components/app-shell/kanban/types'
 import { AppShellProvider, type AppShellContextType } from '@/context/AppShellContext'
 import { loadedSessionsAtom, sessionAtomFamily, sessionMetaMapAtom } from '@/atoms/sessions'
 import { filesPanelViewAtom } from '@/atoms/content-panel-ui'
@@ -86,6 +91,52 @@ const contextValue = {
   workspaces: [],
 } as unknown as AppShellContextType
 
+// ── Board columns ──────────────────────────────────────────────────────────
+// Two real columns exercise the anatomy rules: a finished column above the
+// collapse threshold, and an empty column that must offer an exit.
+const doneColumn = KANBAN_COLUMNS.find(column => column.id === 'done')!
+const todoColumn = KANBAN_COLUMNS.find(column => column.id === 'todo')!
+const doneTasks = Array.from({ length: 30 }, (_, index) => ({
+  id: `done-${index}`,
+  title: `Finished task ${index}`,
+  column: 'done',
+  statusId: 'done',
+  subtasks: [],
+})) as unknown as KanbanTask[]
+const successColor: KanbanColumnColor = { solid: 'var(--success)', tint: 'transparent', onAccent: 'var(--foreground)' }
+const neutralColor: KanbanColumnColor = { solid: 'var(--foreground-dimmed)', tint: 'transparent', onAccent: 'var(--foreground)' }
+
+function BoardFixture() {
+  return (
+    <DndContext>
+      <div data-board-fixture className="flex gap-3 p-3" style={{ width: 720, height: 520 }}>
+        <KanbanColumn
+          column={doneColumn}
+          color={successColor}
+          tasks={doneTasks}
+          projectsById={new Map()}
+          statusesById={new Map()}
+          statuses={[]}
+          treatment="stripe"
+          expandedTaskIds={new Set()}
+          onCreateTask={() => {}}
+        />
+        <KanbanColumn
+          column={todoColumn}
+          color={neutralColor}
+          tasks={[]}
+          projectsById={new Map()}
+          statusesById={new Map()}
+          statuses={[]}
+          treatment="stripe"
+          expandedTaskIds={new Set()}
+          onCreateTask={() => {}}
+        />
+      </div>
+    </DndContext>
+  )
+}
+
 function Fixture() {
   return (
     <I18nextProvider i18n={i18n}>
@@ -95,6 +146,7 @@ function Fixture() {
             <div style={{ width: 420, height: 620 }} className="flex flex-col">
               <FilesPanel sessionId={SESSION_ID} />
             </div>
+            <BoardFixture />
           </div>
         </AppShellProvider>
       </Provider>

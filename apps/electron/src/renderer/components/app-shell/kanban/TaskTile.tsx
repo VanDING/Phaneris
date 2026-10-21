@@ -134,6 +134,8 @@ export function TaskTile({
     <div
       role="button"
       tabIndex={0}
+      data-task-tile={task.id}
+      data-task-column={task.column}
       onClick={onClick}
       onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
