@@ -311,6 +311,32 @@ bun run bundle:report              # W1 前后对比
 
 下一步建议顺序：W2-1/2（共享 Tabs + Files 面板 ≤75px）→ W3-2（看板中性列）→ W3-3/4 → W4-3（AiSettingsPage 44 useState 收敛，风险最低的巨档首刀）→ W5-1/3。
 
+### 8.6 交付概览（截至本轮，可交接）
+
+**已完成的四波**
+
+| 波次 | 关键指标（都可复跑验证） |
+| --- | --- |
+| W0 原语正确性 | 字号丢层 **82 → 0**（`audit:ui-merge` 752–2397 文件）；`data-control-size` 6 档全映射；`test:ui:primitives` 6 场景断言字号/高度/对比度；Badge/Button 文字色改角色令牌 |
+| W1 渲染与包体 | append **p50 83→16.7ms / p95 200→33.4ms**（上限 60/120，已进 CI）；初始 JS 图 **0.80MB**（棘轮 4.8→1.2MB）；json-view 懒加载；blur 预算进 `check:design-drift` |
+| W2 chrome 语言 | 面板 chrome **112.5→68px**（≤75 预算，渲染实测）；`SegmentedTabs` 原语（roving focus、单一 tab stop）；标题层级每屏一个 h1；表面收敛 `border-border/*` 9→2、`bg-foreground/[0.0x]` 11→3；启动器按角色分组；Artifacts 过滤改菜单 |
+| W3 表面重组 | 工作台封顶（`max-width:50%` / 主表面 `min(600px,55%)`）；看板中性列 + 亮度算 `onAccent`；卡片 **7 行→3 行 / 75.19px**；会话列表减色；四套 42px 工具条收成一个几何来源（42px 从契约退休）；触控 **44×44** 断言；长列 **60+开关** |
+
+**已推进的两波**
+
+| 波次 | 成果 |
+| --- | --- |
+| W4 架构减债 | `contexts/ → context/` 合并；`AiSettingsPage` **44→12 useState / 1,499→1,284 行**（五刀）；`TurnCard` **3,476→3,044**；`AppShell` **4,238→3,942**；`ChatDisplay` **2,522→1,998**（五刀）；`FreeFormInput` **2,527→2,454**（首刀） |
+| W5 门禁升级 | 警告债 **72→24**（基线 46→12 条）；视觉债务 **507→501**；`PROJECT_COLOR_PALETTE` 对比度门禁（8 色 ≥4.5:1）；`test:long-session-budget` + primitives + chrome 进 CI；`lint:workspace --prune` 可退休债务；DESIGN.md 门禁表 +6 行 |
+
+**当前门禁状态**（本轮实跑）：`typecheck:all` ✅ · `lint` ✅ 0 error / 24 注册警告 · `bun run test` ✅ 全通过 · `test:ui:chrome` ✅ 15 场景 · `test:ui:primitives` ✅ 6 场景 · `check:docs` ✅ 187 文档/1351 链接 · `check:visual-contracts` ✅ 501 条无新增 · `check:scale-contract` ✅ 794 文件 · `check:themes` ✅ 39 字段
+
+**剩余三项及阻塞原因**
+
+1. **FreeFormInput 的 composer controller**——需要先 stub shell 的路径/平台上下文才能挂载（已排除 `workingDirectory` 与 `getMatchScore` 两条假设）。
+2. **AppShell 3,942 行**——剩余大块是侧栏导航树与过滤器下拉（各 250–650 行，与大量状态交织），需要像搜索那样先建观测点。
+3. **2 处 hooks 债**——`useAction` 的 spread 依赖是其 API 契约；`useSessionDecisions` 的 cleanup 需读 ref 计数以丢弃过期响应。
+
 ---
 
 ## 9. 明确不做的事
