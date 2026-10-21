@@ -159,7 +159,6 @@ const PLATFORM_LABEL_KEYS: Record<Platform, string> = {
 // visual hierarchy without the column edge shifting.
 const ROW_ICON_SIZE = 22
 const SUB_ROW_ICON_SIZE = 16
-const SUB_ROW_ICON_STROKE = 1.5
 
 /** 22px-wide invisible spacer that lets a row inherit the icon column's
  *  geometry without rendering an icon (used for topic rows that align to
@@ -173,20 +172,18 @@ function IconSpacer() {
 function SubRowIcon({
   icon: Icon,
   size = SUB_ROW_ICON_SIZE,
-  strokeWidth = SUB_ROW_ICON_STROKE,
 }: {
   icon: typeof MessageSquare
   size?: number
-  strokeWidth?: number
 }) {
   return (
     <div
       className="shrink-0 flex items-center justify-center"
       style={{ width: ROW_ICON_SIZE, height: ROW_ICON_SIZE }}
     >
+      {/* Stroke comes from `.lucide { stroke-width: var(--icon-stroke-width) }`. */}
       <Icon
         className="text-text-secondary"
-        strokeWidth={strokeWidth}
         style={{ width: size, height: size }}
       />
     </div>

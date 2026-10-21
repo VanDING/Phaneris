@@ -26,7 +26,6 @@ import type { PendingSender, PlatformAccessMode, PlatformOwner } from './types'
 
 const ROW_ICON_SIZE = 22
 const SUB_ROW_ICON_SIZE = 16
-const SUB_ROW_ICON_STROKE = 1.5
 
 /**
  * Two pending entries reference the same row when they share platform,
@@ -269,20 +268,19 @@ function AllowedUsersCollapsible({
 function SubRowIcon({
   icon: Icon,
   size = SUB_ROW_ICON_SIZE,
-  strokeWidth = SUB_ROW_ICON_STROKE,
 }: {
   icon: typeof MessageSquare
   size?: number
-  strokeWidth?: number
 }) {
   return (
     <div
       className="shrink-0 flex items-center justify-center"
       style={{ width: ROW_ICON_SIZE, height: ROW_ICON_SIZE }}
     >
+      {/* Stroke comes from `.lucide { stroke-width: var(--icon-stroke-width) }`.
+          A local 1.5 was a second stroke vocabulary that themes could not tune. */}
       <Icon
         className="text-text-secondary"
-        strokeWidth={strokeWidth}
         style={{ width: size, height: size }}
       />
     </div>

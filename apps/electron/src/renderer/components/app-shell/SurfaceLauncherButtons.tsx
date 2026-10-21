@@ -198,7 +198,7 @@ export function SurfaceLauncherButtons({
                 )}
               >
                 <span className="relative flex items-center justify-center">
-                  <Icon className="h-3.5 w-3.5" strokeWidth={state === 'focused' ? 2.25 : 2} />
+                  <Icon className="h-3.5 w-3.5" />
                   {state === 'background' && (
                     <span className="absolute -bottom-[7px] left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-foreground/60" />
                   )}

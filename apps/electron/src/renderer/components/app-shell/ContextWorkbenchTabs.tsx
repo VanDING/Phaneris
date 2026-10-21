@@ -128,7 +128,7 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
                 onKeyDown={(event) => handleTabKeyDown(event, index)}
                 className="craft-focus relative z-component-overlay flex min-w-0 flex-1 items-center gap-1.5 rounded-l-lg py-1 pl-2 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
-                <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={active ? 2.2 : 1.8} />
+                <Icon className="h-3.5 w-3.5 shrink-0" />
                 <span className="truncate">{label}</span>
               </button>
               <button

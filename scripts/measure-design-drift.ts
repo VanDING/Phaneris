@@ -79,8 +79,13 @@ const DEFAULT_FONT_SIZE = /(?<![\w-])text-(?:xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6x
 /** Alpha text on any semantic colour. Opaque role tokens are the contract. */
 const TRANSLUCENT_TEXT = /(?<![\w-])text-(?:foreground|muted-foreground|accent|info|success|destructive|text-primary|text-secondary|text-tertiary)\/(?:\d{1,3})\b/g
 /** A numeric stroke width under 4 is an optical weight; 4+ is authored in
- *  viewBox units (a brand glyph) and is not a pixel decision. */
-const STROKE_WIDTH = /\bstrokeWidth=(?:"([0-3](?:\.\d+)?)"|\{([0-3](?:\.\d+)?)\})/g
+ *  viewBox units (a brand glyph) and is not a pixel decision.
+ *
+ *  The expression arm exists because the literal-only rule was blind to
+ *  `strokeWidth={active ? 2.2 : 1.8}` — a second stroke vocabulary hidden in a
+ *  ternary, immune to the gate and to every theme. A pass-through identifier
+ *  (`strokeWidth={strokeWidth}`) carries no number and stays legal. */
+const STROKE_WIDTH = /\bstrokeWidth=(?:"([0-3](?:\.\d+)?)"|\{([^}]*?\b[0-3](?:\.\d+)?\b[^}]*?)\})/g
 const TITLE_ATTR = /(?<![\w-])title=(?:"[^"]*"|\{'[^']*'\}|\{[^}]*\})/g
 const TAG_START = /<([A-Za-z][\w.$-]*)/g
 const INTERACTIVE_TAG = /button|Button/i

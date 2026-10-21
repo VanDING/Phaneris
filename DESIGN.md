@@ -262,8 +262,11 @@ Rules:
   Lucide icon it was already dead — a CSS declaration beats the presentation
   attribute, so `strokeWidth={2}` on a 1.65 theme painted 1.65. On a hand-written
   glyph it was live and wrong. All 113 were removed; `check:design-drift` holds
-  the count at zero. A value ≥4 is a brand glyph authored in viewBox units (the
-  MCP mark is 12 in a 150×170 box) and is left alone.
+  the count at zero, and it also counts a number hidden in an expression
+  (`strokeWidth={active ? 2.2 : 1.8}`) — a ternary is not an exemption, it is the
+  same second vocabulary with worse visibility. A value ≥4 is a brand glyph
+  authored in viewBox units (the MCP mark is 12 in a 150×170 box) and is left
+  alone.
 - Exceptions, all deliberate: the loading spinner ring (1.75–2),
   `EmptyMedia variant="icon"` (1.5) and the composer's `thinking-blocks`. These
   are *loading* and *illustration* semantics, not icon semantics.
