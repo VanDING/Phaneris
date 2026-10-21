@@ -40,6 +40,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { KanbanProjectFilter } from './KanbanProjectFilter'
 import { SettingsSegmentedControl } from '@/components/settings/SettingsSegmentedControl'
 import type { WorkItem } from '@phaneris/shared/work-items/browser'
+import { projectToolbarGridProps } from '../project-toolbar'
 
 /**
  * The bar accent for one planning row.
@@ -976,12 +977,7 @@ export function GanttView() {
         segments, New Task and the surface controls — the calendar keeps its view
         segments on the right too.
       */}
-      <div
-        className="grid h-[42px] flex-none grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-b border-border/50 bg-background @max-[760px]/panel:grid-cols-[auto_minmax(0,1fr)]"
-        style={{
-          paddingLeft: compensateForStoplight ? 84 : 16,
-          paddingRight: compensateForStoplight ? 48 : 16,
-        }}
+      <div {...projectToolbarGridProps(compensateForStoplight, 'border-b border-border/50 bg-background @max-[760px]/panel:grid-cols-[auto_minmax(0,1fr)]')}
       >
         <div className="flex min-w-0 items-center gap-2 overflow-hidden @max-[760px]/panel:hidden">
           {projectOptionsForState.length > 0 && (

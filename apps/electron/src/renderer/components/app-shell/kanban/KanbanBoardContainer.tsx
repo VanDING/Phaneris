@@ -32,6 +32,7 @@ import type {
   KanbanTask,
   SubtaskRunState,
 } from './types'
+import { projectToolbarProps } from '../project-toolbar'
 
 /**
  * Subtask run-state from the child session. A closed status wins (done), then an
@@ -548,12 +549,7 @@ export function KanbanBoardContainer() {
       {/* Header paddings adapt when rendered at the window edge (focused mode /
           fullscreen overlay): left reserves the macOS traffic lights, right
           reserves the floating restore button of the expanded overlay. */}
-      <div
-        className="flex h-[42px] flex-none items-center justify-between gap-2 border-b border-border/70"
-        style={{
-          paddingLeft: compensateForStoplight ? 84 : 16,
-          paddingRight: compensateForStoplight ? 48 : 16,
-        }}
+      <div {...projectToolbarProps(compensateForStoplight, 'border-b border-border/70')}
       >
         <div className="flex min-w-0 flex-1 items-center gap-2.5 overflow-hidden">
           {projectOptions.length > 0 && (

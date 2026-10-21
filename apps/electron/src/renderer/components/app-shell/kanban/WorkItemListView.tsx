@@ -14,6 +14,7 @@ import { queryWorkItems, type WorkItemSortField } from '@phaneris/shared/work-it
 import { KanbanProjectFilter, type KanbanProjectFilterOption } from './KanbanProjectFilter'
 import { WorkItemFilterControls } from '../../projects/WorkItemFilterControls'
 import { ProjectSelectMenu } from '../../projects/ProjectSelectMenu'
+import { projectToolbarProps } from '../project-toolbar'
 
 export function WorkItemListView() {
   const { activeWorkspaceId, sessionStatuses, trailingAction, expandButton } = useAppShellContext()
@@ -73,12 +74,7 @@ export function WorkItemListView() {
 
   return (
     <div className="flex h-full flex-col bg-background">
-      <div
-        className="flex h-[42px] flex-none items-center justify-between gap-2 border-b border-border/70"
-        style={{
-          paddingLeft: compensateForStoplight ? 84 : 16,
-          paddingRight: compensateForStoplight ? 48 : 16,
-        }}
+      <div {...projectToolbarProps(compensateForStoplight, 'border-b border-border/70')}
       >
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
           {projectOptions.length > 0 && (

@@ -70,6 +70,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { CalendarUntimedRail, UntimedEntryList, type UntimedDropTarget } from './CalendarUntimedRail'
 import { kanbanEditorTargetAtom } from '@/atoms/kanban'
 import type { TaskPlanValue } from './TaskPlanPanel'
+import { projectToolbarGridProps } from '../project-toolbar'
 
 type ViewMode = 'day' | 'week' | 'month'
 
@@ -521,12 +522,7 @@ export function CalendarView() {
       {/* Header paddings adapt at the window edge (focused mode / fullscreen
           overlay): left reserves macOS traffic lights, right reserves the
           floating restore button of the expanded overlay. */}
-      <div
-        className="grid h-[42px] flex-none grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-b border-border/50 bg-background px-4 @max-[760px]/panel:grid-cols-[auto_minmax(0,1fr)]"
-        style={{
-          paddingLeft: compensateForStoplight ? 84 : 16,
-          paddingRight: compensateForStoplight ? 48 : 16,
-        }}
+      <div {...projectToolbarGridProps(compensateForStoplight, 'border-b border-border/50 bg-background px-4 @max-[760px]/panel:grid-cols-[auto_minmax(0,1fr)]')}
       >
         <div className="flex min-w-0 items-center gap-2 overflow-hidden @max-[760px]/panel:hidden">
           {projectOptions.length > 0 && (
