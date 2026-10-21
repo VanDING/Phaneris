@@ -100,7 +100,12 @@ export default [
     },
     rules: {
       ...commonRules,
-      // React Hooks rules
+      // React Hooks rules. `exhaustive-deps` stays a warning for now: 49 call
+      // sites still omit the stable `t` from `useTranslation()` (and one lists it
+      // unnecessarily), and flipping the rule to `error` in one step turns the
+      // whole gate red. The debt is frozen instead — `lint:electron` runs with
+      // `--max-warnings 69`, so the count cannot grow; the cleanup that makes
+      // this an error is tracked as W5-3 follow-up.
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 

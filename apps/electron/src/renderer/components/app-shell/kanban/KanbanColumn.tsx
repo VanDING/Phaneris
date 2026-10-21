@@ -111,9 +111,8 @@ export function KanbanColumn({
 
       <div
         ref={setNodeRef}
-        className="flex flex-1 flex-col gap-2 overflow-y-auto rounded-lg p-2 transition-shadow"
+        className="flex flex-1 flex-col gap-2 overflow-y-auto rounded-lg bg-muted/30 p-2 transition-shadow"
         style={{
-          backgroundColor: color?.tint,
           outline: isOver && color ? `2px solid ${color.solid}` : undefined,
         }}
       >
@@ -182,9 +181,19 @@ function ColumnHeader({
   const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [open, setOpen] = React.useState(false)
 
-  const pillStyle = color ? { backgroundColor: color.solid, color: color.onAccent } : undefined
+  // Neutral header surface: the column's identity is a coloured dot plus the
+  // label, not a saturated pill. A solid pill forced text onto the raw accent
+  // (white on amber measured 2.15:1) and made four column hues compete with the
+  // status colours on the cards.
   const inner = (
     <>
+      {color && (
+        <span
+          aria-hidden
+          className="size-2 shrink-0 rounded-full"
+          style={{ backgroundColor: color.solid }}
+        />
+      )}
       {dropStatus && (
         <span className="shrink-0 flex items-center" style={getStatusIconStyle(dropStatus)}>
           {dropStatus.icon}
@@ -192,8 +201,7 @@ function ColumnHeader({
       )}
       {label}
       <span
-        className="inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full px-1 text-micro font-semibold tabular-nums"
-        style={{ backgroundColor: 'rgba(255, 255, 255, 0.25)' }}
+        className="inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-foreground/5 px-1 text-micro font-semibold tabular-nums text-text-secondary"
       >
         {count}
       </span>
@@ -203,10 +211,7 @@ function ColumnHeader({
   // Plain pill: nothing to configure.
   if (!onSelectDropStatus && !editable) {
     return (
-      <span
-        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-meta font-semibold uppercase tracking-wider"
-        style={pillStyle}
-      >
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-meta font-semibold uppercase tracking-wider text-text-secondary">
         {inner}
       </span>
     )
@@ -219,8 +224,7 @@ function ColumnHeader({
         data-no-dnd="true"
         onPointerDown={e => e.stopPropagation()}
         title={editable ? t('kanban.column.edit') : t('kanban.column.setDropStatus')}
-        className="craft-control craft-focus inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-meta font-semibold uppercase tracking-wider transition-shadow hover:ring-2 hover:ring-foreground/15 focus-visible:ring-2 focus-visible:ring-ring/50 data-[state=open]:ring-2 data-[state=open]:ring-foreground/20"
-        style={pillStyle}
+        className="craft-control craft-focus inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-meta font-semibold uppercase tracking-wider text-text-secondary transition-shadow hover:ring-2 hover:ring-foreground/15 focus-visible:ring-2 focus-visible:ring-ring/50 data-[state=open]:ring-2 data-[state=open]:ring-foreground/20"
       >
         {inner}
         <ChevronDown className="h-3 w-3 opacity-70" />

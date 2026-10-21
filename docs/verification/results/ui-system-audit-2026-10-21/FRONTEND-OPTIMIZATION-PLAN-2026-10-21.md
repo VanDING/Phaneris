@@ -305,9 +305,9 @@ bun run bundle:report              # W1 前后对比
 | W0 原语正确性 | **完成** `c893dca7e` | 共享 `extendTailwindMerge`（9 个 tier，两处 `cn()` 同一实例）、`roles.css` 全档映射、`audit:ui-merge`、`test:ui:primitives` | 丢层 82→**0**（752 文件）；按钮 13/11/22、12/26、11/30、13/38 实测全对；Badge/Metadata 11；填充小按钮对比度 15.69/15.43；`lint` 全绿 |
 | W1 渲染与包体 | **完成** `perf(chat)` 提交 | `storedToMessage` 恒等缓存、`reuseStableTurns`、`SessionViewer` 记忆化行、`MemoizedMarkdown`、json-view 懒加载、sticky 去 blur、bundle 棘轮 | append p50 **83→16.7ms**、p95 **200→33.4ms**（门槛 60/120 冻结）；初始 JS 0.80MB raw；`test:long-session-budget` 5 项全过 |
 | W2 chrome 语言 | **部分** | 面板标题 `text-body`→`text-title`(16px)，`PanelHeader headingLevel`，navigator/workbench/artifact/侧栏列表改 h2（每屏一个 h1） | typecheck + lint；三横条合并与 surface 收敛未做 |
-| W3 表面重组 | **部分** | 工作台 `max-width:50%` + 主表面 `min(600px,55%)` + 删除 dead `defaultLayout`，DESIGN.md 布局段改写 | typecheck + lint；看板中性列、卡片解剖、会话列表减色、Composer 拆分、ProjectToolbar 未做 |
+| W3 表面重组 | **部分** | 工作台 `max-width:50%` + 主表面 `min(600px,55%)` + 删除 dead `defaultLayout`；看板改中性列 + 色点（列色为 `var(--info)`/`var(--success)`/`var(--foreground-dimmed)`），去掉整列 tint 与实心色块，`onAccent` 按亮度计算 | shell-visual：navTitle/contentTitle centerY 均 66（对齐）、标题 16px、1440 下内容区 928px、横向溢出 0；typecheck + lint |
 | W4 架构减债 | 未开始 | — | 巨档拆分（AppShell 4239 行等） |
-| W5 门禁升级 | **部分** | `bundle:report` 棘轮 4.8MB→1.2MB、`audit:ui-merge` 进 lint、计算样式契约进 CI | 对比度扩展、ESLint type-aware、PR 截图门槛未做 |
+| W5 门禁升级 | **部分** | `bundle:report` 棘轮 4.8MB→1.2MB、`audit:ui-merge` 进 lint、计算样式契约进 CI、`lint:electron` 加 `--max-warnings 69` 冻结 hooks 警告、shell-visual 断言去掉对 `h1` 标签的耦合 | 对比度扩展至 JS 内联色、`exhaustive-deps` 转 error（需先清 49 处）、PR 截图门槛未做 |
 
 下一步建议顺序：W2-1/2（共享 Tabs + Files 面板 ≤75px）→ W3-2（看板中性列）→ W3-3/4 → W4-3（AiSettingsPage 44 useState 收敛，风险最低的巨档首刀）→ W5-1/3。
 

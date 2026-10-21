@@ -1,0 +1,487 @@
+{
+  "schemaVersion": 1,
+  "workflow": "shell-visual",
+  "startedAt": "2026-10-21T05:05:20.781Z",
+  "finishedAt": "2026-10-21T05:06:12.262Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\shell-visual-workflow.ts",
+    "--output-dir=docs/verification/results/shell-visual-w2c"
+  ],
+  "source": {
+    "headSha": "b66481b8c16c6e54937105ed3a13706f461d93bd",
+    "dirtyPaths": [
+      "M apps/electron/eslint.config.mjs",
+      " M apps/electron/package.json",
+      " M apps/electron/resources/release-notes/next.md",
+      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/kanban-colors.ts",
+      " M apps/electron/src/renderer/hooks/useKanbanColumnColors.ts",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-OPTIMIZATION-PLAN-2026-10-21.md",
+      " M scripts/verification/fixtures/shell-visual.cjs",
+      "?? docs/verification/results/shell-visual-w2-before/build-hashes.json",
+      "?? docs/verification/results/shell-visual-w2-before/default-light-expanded.png",
+      "?? docs/verification/results/shell-visual-w2-before/failure.json",
+      "?? docs/verification/results/shell-visual-w2-before/fixture.json",
+      "?? docs/verification/results/shell-visual-w2-before/manifest.json",
+      "?? docs/verification/results/shell-visual-w2-before/process.log",
+      "?? docs/verification/results/shell-visual-w2-before/shell-recording.webm",
+      "?? docs/verification/results/shell-visual-w2-before/shell-visual.json",
+      "?? docs/verification/results/shell-visual-w2-before/trace.zip",
+      "?? docs/verification/results/shell-visual-w2/build-hashes.json",
+      "?? docs/verification/results/shell-visual-w2/collapse-after-expanded-hover-focus-frames.json",
+      "?? docs/verification/results/shell-visual-w2/collapse-frames.json",
+      "?? docs/verification/results/shell-visual-w2/default-light-collapsed.png",
+      "?? docs/verification/results/shell-visual-w2/default-light-expanded.png",
+      "?? docs/verification/results/shell-visual-w2/expand-after-rail-tooltip-frames.json",
+      "?? docs/verification/results/shell-visual-w2/expand-frames.json",
+      "?? docs/verification/results/shell-visual-w2/failure.json",
+      "?? docs/verification/results/shell-visual-w2/fixture.json",
+      "?? docs/verification/results/shell-visual-w2/manifest.json",
+      "?? docs/verification/results/shell-visual-w2/process.log",
+      "?? docs/verification/results/shell-visual-w2/reverse-frames.json",
+      "?? docs/verification/results/shell-visual-w2/shell-recording.webm",
+      "?? docs/verification/results/shell-visual-w2/shell-visual.json",
+      "?? docs/verification/results/shell-visual-w2/trace.zip",
+      "?? docs/verification/results/shell-visual-w2b/build-hashes.json",
+      "?? docs/verification/results/shell-visual-w2b/collapse-after-expanded-hover-focus-frames.json",
+      "?? docs/verification/results/shell-visual-w2b/collapse-frames.json",
+      "?? docs/verification/results/shell-visual-w2b/default-light-collapsed.png",
+      "?? docs/verification/results/shell-visual-w2b/default-light-expanded.png",
+      "?? docs/verification/results/shell-visual-w2b/expand-after-rail-tooltip-frames.json",
+      "?? docs/verification/results/shell-visual-w2b/expand-frames.json",
+      "?? docs/verification/results/shell-visual-w2b/failure.json",
+      "?? docs/verification/results/shell-visual-w2b/fixture.json",
+      "?? docs/verification/results/shell-visual-w2b/manifest.json",
+      "?? docs/verification/results/shell-visual-w2b/process.log",
+      "?? docs/verification/results/shell-visual-w2b/reverse-frames.json",
+      "?? docs/verification/results/shell-visual-w2b/shell-recording.webm",
+      "?? docs/verification/results/shell-visual-w2b/shell-visual.json",
+      "?? docs/verification/results/shell-visual-w2b/trace.zip"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "apps/electron/eslint.config.mjs",
+        "sha256": "0f163d421d7b27b8b0879d13eaf5f464587f5a64d630980fccc7b49fb7efb174"
+      },
+      {
+        "path": "apps/electron/package.json",
+        "sha256": "b7d851b5ee80dce5cb6752876655720eb19ad6bdcaeed6a2c5c978efed50736d"
+      },
+      {
+        "path": "apps/electron/resources/release-notes/next.md",
+        "sha256": "002429da97fcde2c97ab029bf968e413a45ac0126e93609b748024950e32976c"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+        "sha256": "0e62c6a6360f207c8a868de41568abcf28ec7b7a7dff6e2a62095c16ac6c6506"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/kanban-colors.ts",
+        "sha256": "dae5a468f3ea0b9cc4d979b483cbf8a998472d9ff3922db9acc096ccabd079e6"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/useKanbanColumnColors.ts",
+        "sha256": "810995fbd503232e5b554dae2e9f94e50742163898f92b14fad5d33ad093affe"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/build-hashes.json",
+        "sha256": "f614c898cf3cb269bd73340e18ae4e911eaf1121db01e17380aa5f8f6cbe1e3b"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/default-light-expanded.png",
+        "sha256": "9a281be5455905ebcca666ff042d9d704a2838f01bd1045fb778e20ea3a09b1d"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/failure.json",
+        "sha256": "38594fe79eccb01ba04993fff13d7dec02c08ad5b3cc097f4825312903aa0b42"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/fixture.json",
+        "sha256": "5a575d315961e1e16a6304371e7b0906dc8afa26500e9c3aec8b21ada27cc84b"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/manifest.json",
+        "sha256": "804781a7f25fb7d547f3409d8bacc454c98c87820f52649e48ce7827e1f5cf6f"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/process.log",
+        "sha256": "e2fe51b71a3965d4216380430f70c3dba66078277c97ba9b75442f87aa190254"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/shell-recording.webm",
+        "sha256": "9320039c5379742c2ceec0e848791fea6ea05af2ef0fb012131cd536c9442335"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/shell-visual.json",
+        "sha256": "afa49a76b48ae0cb8b4f02f270ce39a6ce123a1f13b4dfd68794b79ff454f803"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2-before/trace.zip",
+        "sha256": "e306e621b4475692ebeb5483fbfeca256e29345860490947a1a7db78918b15d9"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/build-hashes.json",
+        "sha256": "f614c898cf3cb269bd73340e18ae4e911eaf1121db01e17380aa5f8f6cbe1e3b"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/collapse-after-expanded-hover-focus-frames.json",
+        "sha256": "7ebdfcceb3450db667cb5d00a65a94ad264bea6b56fb6e8bc87244707e1842b8"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/collapse-frames.json",
+        "sha256": "75cc994bd9fb5bd5b81300f1c76a58ac4d73eca84747916fa2d14b7c9e8bfc7b"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/default-light-collapsed.png",
+        "sha256": "f9971d8b9925351f32be4fc8cd8a137ff672284b954a325c23a4f291e21caa6d"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/default-light-expanded.png",
+        "sha256": "9a281be5455905ebcca666ff042d9d704a2838f01bd1045fb778e20ea3a09b1d"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/expand-after-rail-tooltip-frames.json",
+        "sha256": "80413ed2d42aaa7e2799ff3d9dfce4fdbdfdf1e7db43e7a8bf62b741be312096"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/expand-frames.json",
+        "sha256": "13ed740382955b04ceb90affa7ca71806af851da3274fd3bc101dcb0f9fbaec2"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/failure.json",
+        "sha256": "51a9eddc21f884dcb85d42bea32e5136924f67f0ef7f37ad9570b91bed1bc7ac"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/fixture.json",
+        "sha256": "d8625c780783f68db418d80c4fbfde7dbbf4593d683a24f90ec192671933511e"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/manifest.json",
+        "sha256": "1223f703229bca7cfd914752b08a0cb480e2ba38e4798b6ceef24cfbcfd7021c"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/process.log",
+        "sha256": "431b47f0fb739a309478fa176e1e63681893e45899eb9d158b0c3ef28849a163"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/reverse-frames.json",
+        "sha256": "4433af55f9def04dab78cb9eae2b245c1a3fa6fbe97452a679ce827eb286f853"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/shell-recording.webm",
+        "sha256": "e92d3041a335cd859042aabb273e5b7db2f35d31836455173a1a8309ebf655d1"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/shell-visual.json",
+        "sha256": "bbd4468b62142e9a860fc3868a021717d98edb2858900e7d57d619ac9b9df0a9"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2/trace.zip",
+        "sha256": "57ebfaccfb5a5197f391d47a674e76fa9c9554ed2a44fc64d08ff1731e465c1c"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/build-hashes.json",
+        "sha256": "f614c898cf3cb269bd73340e18ae4e911eaf1121db01e17380aa5f8f6cbe1e3b"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/collapse-after-expanded-hover-focus-frames.json",
+        "sha256": "1593130f099a1f5f8282e2b6e0d0031cff2c5d5aa6f1140df40bb0143ccd736f"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/collapse-frames.json",
+        "sha256": "3d8061f4728c58011a8c02df5575f0d690635c21366611fd02aea97f71427e8b"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/default-light-collapsed.png",
+        "sha256": "cd8defe826268c33aff916ce27e7ca1144ea94b0a8dbdb94cbcd455d4bdf8412"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/default-light-expanded.png",
+        "sha256": "d5d24c519869187d4758c4b425109643f9fe440d98ede64bd963e5ee7cf1edf8"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/expand-after-rail-tooltip-frames.json",
+        "sha256": "c992ee703e7c48978b9ec8141d302a23e2af53596a839ebee94d25465b06f768"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/expand-frames.json",
+        "sha256": "b5fb1fe4127be6cd25cd02badb77c4cc5b9d662bcec3f0e9f9b6dc386cf12f95"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/failure.json",
+        "sha256": "48060cef6ce322a7e0b0e7f2d6e7917b997a23ed5c5cc9426255dda516ac007d"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/fixture.json",
+        "sha256": "da09c8e56a12a82f11527c8d66212b8712bbf0db040aeeef26abb88327d98eda"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/manifest.json",
+        "sha256": "0f5391a8faa76bd25aa719e91dd9273bf6833be4d5c23cef031c86bd7cd658cf"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/process.log",
+        "sha256": "adce63ea334d554460786e3962e103107fa01fbfb02e947d97f82d23dfdbde59"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/reverse-frames.json",
+        "sha256": "015afa12f443c36563d01dfc5d6ae30d9d231414ee8bd1966c8c4a0a5374a9fb"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/shell-recording.webm",
+        "sha256": "bd567c6b38a38963c2d9befe173cc0fe68b6c886985604c4bbcb94c518524424"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/shell-visual.json",
+        "sha256": "ef16b1d8f5a602de347d78bc6fd56edf5dce7d474a5605e95a1df566eeccb562"
+      },
+      {
+        "path": "docs/verification/results/shell-visual-w2b/trace.zip",
+        "sha256": "cdf6e602326781938ef06732007926cac2356cc87787b757ae11c5dc88af157e"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-OPTIMIZATION-PLAN-2026-10-21.md",
+        "sha256": "312511ff7d8a5c58f54314467afce105ea38eb48659e23e01e6800b4663ba57a"
+      },
+      {
+        "path": "scripts/verification/fixtures/shell-visual.cjs",
+        "sha256": "1089ca8ee6521057de8341259b8813bec78034c118fb1ae04073cf832a8d2e70"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "verified panel title centers align",
+    "verified new-session top aligns with panel top",
+    "verified new-session matches ordinary row height",
+    "verified new-session has breathing room before navigation",
+    "verified expanded default width 200",
+    "verified sidebar has no extra navigator seam",
+    "verified navigation rows 28",
+    "verified navigation icons 16",
+    "verified new session symmetric insets",
+    "verified navigation and first-row insets match",
+    "verified expanded footer retains bottom anchor",
+    "verified default light neutral border",
+    "verified default light visible soft panel shadow",
+    "verified native default panel radius",
+    "verified native default edge radius",
+    "verified sidebar drag follows pointer delta without seam jump",
+    "verified navigator drag follows pointer delta without seam jump",
+    "verified collapsed new-session keeps the panel top line",
+    "verified collapsed width 48 with breathing room",
+    "verified icons centered in the visible rail including its boundary",
+    "verified collapsed controls are 28px squares",
+    "verified state-specific icon alignment",
+    "verified both states share compact 2px navigation gaps",
+    "verified both states share one icon column",
+    "verified first navigation center stays at same height",
+    "verified collapse keeps original button nodes",
+    "verified collapse interpolates control width",
+    "verified collapse fades text",
+    "verified collapse keeps icon column steady",
+    "verified footer icons centered",
+    "verified collapsed footer retains bottom anchor",
+    "verified collapsed navigator drag uses same geometry",
+    "verified collapsed tooltip remains usable",
+    "verified expand keeps original button nodes",
+    "verified expand fades text",
+    "verified expanded navigation suppresses tooltip",
+    "verified keyboard collapse after expanded hover and focus leaves no tooltip",
+    "verified collapsed rail shows exactly the hovered tooltip",
+    "verified leaving the rail removes the tooltip",
+    "verified expanding after a rail tooltip leaves no residue",
+    "verified expanded context menu remains usable",
+    "verified rapid reverse occurs before closing finishes",
+    "verified rapid reverse finishes at latest expanded state",
+    "verified keyboard switch preserves focused navigation node",
+    "verified collapsed keyboard focus visible",
+    "collapsed profile opens",
+    "default dark retains own material",
+    "verified ink authored panel radius preserved",
+    "verified geek authored panel radius preserved",
+    "verified cyberpunk-2077 authored panel radius preserved",
+    "verified sidebar width slider keyboard adjusts and persists",
+    "verified width slider keyboard focus visible",
+    "verified sidebar width slider keyboard lower bound",
+    "verified sidebar width slider keyboard upper bound",
+    "verified navigator width slider keyboard adjusts and persists",
+    "verified navigator width slider keyboard lower bound",
+    "verified navigator width slider keyboard upper bound",
+    "verified saved width survives refresh",
+    "verified 200 percent native zoom reflows",
+    "verified large text rows expand together",
+    "verified large root text retains square rail",
+    "verified scrolling navigation retains symmetric insets",
+    "verified last navigation item reachable",
+    "verified touch rail and controls remain usable",
+    "verified reduced motion reaches final geometry immediately",
+    "verified startup reveals only the final persisted size",
+    "verified Windows default radius stays 6",
+    "no native renderer errors"
+  ],
+  "passed": 68,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "f614c898cf3cb269bd73340e18ae4e911eaf1121db01e17380aa5f8f6cbe1e3b",
+      "bytes": 330
+    },
+    {
+      "path": "collapse-after-expanded-hover-focus-frames.json",
+      "sha256": "5fcbbce2c965468d4990b2c2431ea13b797e8ae84b82fc1ecfc9b2346ceeddb4",
+      "bytes": 35178
+    },
+    {
+      "path": "collapse-frames.json",
+      "sha256": "ede5b4bd453a8d3506668dc78038f8c71ad42d10a2c384504bebeb45ab64f32e",
+      "bytes": 34216
+    },
+    {
+      "path": "cyberpunk-2077-expanded.png",
+      "sha256": "83deb5e4350c7d18acfaaa1ac194d65f2b124529d5e9976403d1845304770d80",
+      "bytes": 88571
+    },
+    {
+      "path": "default-dark-expanded.png",
+      "sha256": "63fa05889858a674a0a2301a66161d2e649144365c02cda9158cae46c4ecfcd0",
+      "bytes": 81585
+    },
+    {
+      "path": "default-light-collapsed.png",
+      "sha256": "8b8227a1d53787f887e734040b95b036a39b77d2440cae100de63c165d366956",
+      "bytes": 69459
+    },
+    {
+      "path": "default-light-expanded.png",
+      "sha256": "0e3763f14eae33678c4742c4b6ab6e53d2e0c11bdd930a9957c15e3396100ab3",
+      "bytes": 95404
+    },
+    {
+      "path": "expand-after-rail-tooltip-frames.json",
+      "sha256": "2660fa5e87e1474665248260ff05fc76cea8f905f45c1aa9a5f2aa8c335f5bfa",
+      "bytes": 36356
+    },
+    {
+      "path": "expand-frames.json",
+      "sha256": "c65196f6f04d1b057482de9d0003e6b5f9fd155fff06e20ac83bb2119a20eff4",
+      "bytes": 34255
+    },
+    {
+      "path": "fixture.json",
+      "sha256": "0b8f27079d007c929880ba231534e8ae57435be3a7e973a93db294b7bd9de483",
+      "bytes": 228
+    },
+    {
+      "path": "geek-expanded.png",
+      "sha256": "c7251d3f720a0869a3fb0316a7477502e3d2c74f3acfb03ffb2e1882338a976f",
+      "bytes": 88254
+    },
+    {
+      "path": "ink-expanded.png",
+      "sha256": "6aae1faec55e879d26cab630ed63823993bacef794f5044882aa094c11d1c476",
+      "bytes": 100799
+    },
+    {
+      "path": "large-text-collapsed.png",
+      "sha256": "b4b1633024f6ed10219542d3eb9525883103b26397b25c07e210b94f3c2b7850",
+      "bytes": 135090
+    },
+    {
+      "path": "large-text.png",
+      "sha256": "0a991b050a1e91b0711ace303eac965541f63dc625f066f77c9227ce800cdc2b",
+      "bytes": 178091
+    },
+    {
+      "path": "native-zoom-200.png",
+      "sha256": "22542e4bdd78a67c7678fb07bd475f5c5f71cf693b7f129a74a9aace5df86095",
+      "bytes": 99549
+    },
+    {
+      "path": "process.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reduced-motion-collapsed.png",
+      "sha256": "d7f97614d652cc9b6f7524c00c70efc06aaf73380d22b5fc8b6553a27d5071be",
+      "bytes": 69315
+    },
+    {
+      "path": "reduced-motion-frames.json",
+      "sha256": "141ea75f67b8c76fb64464dbfa26fb0342a17289c027218ea43717631a37a138",
+      "bytes": 18859
+    },
+    {
+      "path": "reverse-frames.json",
+      "sha256": "fc4290f855d64c739f217c98c0acd3950bec26dd0e100d4bcd9f9e4e8ffedd05",
+      "bytes": 44789
+    },
+    {
+      "path": "shell-recording.webm",
+      "sha256": "6f6742acaef7d4d37b1e525d597dac17b66e1884054977066309d5c3fd5939de",
+      "bytes": 7671117
+    },
+    {
+      "path": "shell-visual.json",
+      "sha256": "2766b0e2a9c9b1edd5bf6c62876604acb1e897f46a243ea0a32e7a892d04747f",
+      "bytes": 898518
+    },
+    {
+      "path": "short-window.png",
+      "sha256": "51f2f3ef6097ef96ceea7576d946e5ef5f4548498ebdfd42a7fc253f76ed9882",
+      "bytes": 78894
+    },
+    {
+      "path": "startup-frames.json",
+      "sha256": "633da94e866bc856448a8baf190768c95b1c95a8cf9625da692d949e44111784",
+      "bytes": 17891
+    },
+    {
+      "path": "startup-settled.png",
+      "sha256": "9b97c9f0641558c710227c963b2ed328f4d7b9382d5f3b048ce4dcac812b8a8e",
+      "bytes": 86710
+    },
+    {
+      "path": "touch-collapsed.png",
+      "sha256": "72803d8e20f270c710d6d0da97c416032892c9c86a46019a2d51aa4900000dc5",
+      "bytes": 70786
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "5eb51ea1540f03c22e8101dcf16f00fd2d52eafa5821f2e6c80e0a0704a9402a",
+      "bytes": 49678085
+    },
+    {
+      "path": "windows-policy.png",
+      "sha256": "993832698bc5b28f01f7f864597c4c9766ab1fc9f40bbfa5138b587fb674b3e4",
+      "bytes": 96363
+    }
+  ],
+  "untested": [
+    "Windows native compositor: platform policy simulated in the macOS renderer",
+    "Signed installer, native Linux, physical touch hardware"
+  ]
+}

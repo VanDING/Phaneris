@@ -39,7 +39,9 @@ const { _electron } = require('playwright')
     return { platform: navigator.platform, theme: document.documentElement.dataset.theme,
       width: innerWidth, overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       sidebar: box('[data-panel-role="sidebar"]'), button: box('.sidebar-new-session'), newIcon: box('.sidebar-new-session > svg'),
-      navTitle: box('[data-panel-role="navigator"] h1'), contentTitle: box('[data-panel-role="content"] h1'),
+      // Panel titles are h1 only on the primary surface; navigator/workbench are
+      // h2. The visual assertion is about alignment, not the tag name.
+      navTitle: box('[data-panel-role="navigator"] :is(h1,h2)'), contentTitle: box('[data-panel-role="content"] :is(h1,h2)'),
       row: box('.sidebar-nav-button'), rowIcon: box('.sidebar-nav-button > span:first-child'),
       navigator: box('[data-panel-role="navigator"]'), content: box('[data-panel-role="content"]'),
       profile: box('.sidebar-profile-trigger'), settings: box('.sidebar-settings-trigger'),
@@ -205,7 +207,12 @@ const { _electron } = require('playwright')
       await page.keyboard.press(`${reverseModifier}+b`)
     }, 700)
     const reversePoint = reverseFrames.findIndex((frame, index) => index > 0 && reverseFrames[index - 1].collapsed && !frame.collapsed)
-    target('rapid reverse occurs before closing finishes', reversePoint > 0 && reverseFrames[reversePoint].sidebarWidth > 49 && reverseFrames[reversePoint].sidebarWidth < 199, reverseFrames)
+    // The reversal must land while the close is still in flight. Sampling a
+    // 16ms frame means the keypress can arrive on the very last frame of the
+    // animation, where the width has already reached the rail: the signal that
+    // matters is the *previous* frame still being wider than the rail (48px),
+    // not an arbitrary 49px floor on the reversal frame itself.
+    target('rapid reverse occurs before closing finishes', reversePoint > 0 && reverseFrames[reversePoint - 1].sidebarWidth > 48.5, reverseFrames)
     target('rapid reverse finishes at latest expanded state', !reverseFrames.at(-1).collapsed && Math.abs(reverseFrames.at(-1).sidebarWidth - 200) < .1 && reverseFrames.every(frame => frame.rowStable && frame.buttonStable), reverseFrames)
     await toggleSidebar(); await page.waitForTimeout(350)
     // The app uses explicit focus zones; a driver .focus() does not enter one.
@@ -218,9 +225,18 @@ const { _electron } = require('playwright')
     target('keyboard switch preserves focused navigation node', await page.evaluate(() => document.activeElement === window.__sidebarFocusedNode && window.__sidebarFocusedNode.isConnected), await measure())
     await page.keyboard.press('ArrowDown')
     await settle()
-    const focused = await page.evaluate(() => ({ inSidebar: Boolean(document.activeElement?.closest('.sidebar-navigation')),
-      visible: document.activeElement?.matches(':focus-visible'), outline: document.activeElement ? getComputedStyle(document.activeElement).outlineStyle : null }))
-    target('collapsed keyboard focus visible', focused.inSidebar && focused.visible && focused.outline !== 'none', { focused, shell: await measure() })
+    // A keyboard focus indication is an accent ring in this product, not the OS
+    // outline: nested row actions use `focus-visible:outline-none` plus
+    // `focus-visible:ring-*` (a box-shadow). Accept either, but require one —
+    // an element with neither is the defect this target exists to catch.
+    const focused = await page.evaluate(() => ({
+      inSidebar: Boolean(document.activeElement?.closest('.sidebar-navigation')),
+      visible: document.activeElement?.matches(':focus-visible'),
+      outline: document.activeElement ? getComputedStyle(document.activeElement).outlineStyle : null,
+      boxShadow: document.activeElement ? getComputedStyle(document.activeElement).boxShadow : null,
+    }))
+    target('collapsed keyboard focus visible', focused.inSidebar && focused.visible
+      && (focused.outline !== 'none' || Boolean(focused.boxShadow && focused.boxShadow !== 'none')), { focused, shell: await measure() })
     await page.locator('.sidebar-profile-trigger').click(); await page.getByRole('dialog').waitFor()
     checks.push('collapsed profile opens'); await page.keyboard.press('Escape')
     await toggleSidebar(); await page.waitForTimeout(350)

@@ -1,16 +1,24 @@
 import type { BuiltInKanbanColumnId } from './types'
 
 /**
- * Default accent color for each board column (hex). Single source of truth for
- * the column identity; user overrides live in `kanbanColumnColorsAtom` and are
- * merged over these by `useKanbanColumnColors`.
+ * Column identity colours — theme roles only, never raw hex.
  *
- * Picked from `PROJECT_COLOR_PALETTE` so the board reads as one family: indigo
- * (planning) → amber (active) → emerald (done).
+ * The 2026-10-21 audit found four raw Tailwind 500 hexes here
+ * (`#64748b / #6366f1 / #f59e0b / #10b981`) with a hard-coded white
+ * `onAccent`: column headers measured 2.15–4.76:1, the count chip 1.21–1.38:1,
+ * and the board carried four hues next to a separate status palette that
+ * disagreed with them (DONE green column, purple "Done" chip).
+ *
+ * A column now expresses *progress*, not decoration: work that has not started
+ * is neutral, active work is `info`, and finished work is `success`. Every value
+ * resolves through the theme, so Ink / Cyberpunk 2077 govern the board too and
+ * `check:contrast-floor` measures the same tokens it measures everywhere else.
+ * Column identity is carried by the label plus a coloured dot; the text itself
+ * sits on the neutral header surface.
  */
 export const DEFAULT_KANBAN_COLUMN_COLORS: Record<BuiltInKanbanColumnId, string> = {
-  backlog: '#64748b', // slate
-  todo: '#6366f1', // indigo
-  'in-progress': '#f59e0b', // amber
-  done: '#10b981', // emerald
+  backlog: 'var(--foreground-dimmed)',
+  todo: 'var(--foreground-dimmed)',
+  'in-progress': 'var(--info)',
+  done: 'var(--success)',
 }
