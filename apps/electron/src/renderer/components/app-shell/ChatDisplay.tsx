@@ -804,6 +804,18 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     return () => cancelAnimationFrame(rafId)
   }, [searchQuery, isSearchActive, matchingTurnIds, session?.id, visibleTurnCount])
 
+  // CSS.highlights is document-global: a transcript that unmounts while a search
+  // is active would otherwise leave its ranges painted over whatever renders
+  // next. This runs on unmount only — clearing inside effect 1's cleanup would
+  // blank the highlights for a frame on every re-run.
+  useEffect(() => () => {
+    const cssHighlights = getCSSHighlights()
+    try {
+      cssHighlights?.delete('search-passive')
+      cssHighlights?.delete('search-active')
+    } catch { /* API unavailable — no-op */ }
+  }, [])
+
   // Effect 2: Update active/passive highlight split when navigation index changes
   // Lightweight — just reshuffles existing Range objects between two Highlight instances
   useEffect(() => {
