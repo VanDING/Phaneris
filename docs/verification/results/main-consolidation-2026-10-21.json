@@ -461,13 +461,22 @@
   "archive": {
     "originalRoot": "C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris",
     "archiveRoot": "C:/Users/dotty/.codex/verification-archives/Phaneris-upgrade-20261021",
-    "strategy": "same-volume directory rename preserving the original directory and all evidence files",
-    "status": "planned-after-checkpoint",
-    "originalDirectoryIdentity": {
-      "dev": "1794930378",
-      "ino": "5910974511136736"
+    "status": "preserved-original-directory",
+    "method": "same-volume directory rename; original directory and contents retained",
+    "directoryIdentity": {
+      "before": {
+        "dev": "1794930378",
+        "ino": "5910974511136736"
+      },
+      "after": {
+        "dev": "1794930378",
+        "ino": "5910974511136736"
+      }
     },
-    "receipt": "E:/Phaneris/.cache/merge-main-20261021/original-cache-archive-receipt.json",
+    "receipt": {
+      "path": "E:/Phaneris/.cache/merge-main-20261021/original-cache-archive-receipt.json",
+      "sha256": "eee2ec6d3c9a73b3e1a1d368e106e572946b755cee38ce23368e38619a8014c3"
+    },
     "secondaryCopy": {
       "path": "E:/Phaneris/.cache/merge-main-20261021/archives/isolated-upgrade/.cache",
       "completeCopy": true,

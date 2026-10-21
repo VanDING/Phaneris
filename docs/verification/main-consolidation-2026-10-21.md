@@ -54,6 +54,6 @@
 - 三份stash还含3份独立未跟踪文件：Pi1.1计划已归档并更新实施状态；assessment JSON与现行版本相同；tsconfig.base现行版本新增Node/Bun types。原件、原提交及其父提交均保留。
 - 合并内容核对：371个主题侧独有文件、41个升级侧独有文件、89个双方修改文件；独有文件的例外仅为两份安全依赖清单、本文、pressable.ts末尾空行。原文档及补丁见主工作区 `.cache/merge-main-20261021/`。
 - origin经SSH读取仅有main；所有4个本地非main分支头和3份stash均已成为main祖先。清理范围为这4个分支、已合入的stash引用和独立工作树；不清理upstream只读引用或Phaneris发布标签。
-- 原隔离工作树的整个 `.cache/` 将在同一卷中整体移动到 `C:/Users/dotty/.codex/verification-archives/Phaneris-upgrade-20261021/.cache/`。清理前后核对dev/ino标识，保留原目录和所有文件本体；原manifest不改字节，绝对路径按此映射查找。原验收工作流的manifest/日志/锁文件指纹独立核验。可再生node_modules和dist不作为独立用户内容归档。
+- 原隔离工作树的整个 `.cache/` 已在同一卷中整体移动到 `C:/Users/dotty/.codex/verification-archives/Phaneris-upgrade-20261021/.cache/`。迁移前后dev/ino均为1794930378 / 5910974511136736，保留原目录和所有文件本体；原manifest不改字节，绝对路径按此映射查找。原验收工作流的manifest/日志/锁文件指纹独立核验。可再生node_modules和dist不作为独立用户内容归档。
 - E盘 `E:/Phaneris/.cache/merge-main-20261021/archives/isolated-upgrade/` 保留完整复制副本；10.1万文件的副本全量SHA核验因I/O成本中止，原日志保留，不将该副本标为已验收。恢复以同盘保留的原始.cache为准；实际迁移身份记录在本机归档回执中。
 - 原分支/工作树清单、两份二进制补丁、原文件副本、stash补丁/原件、通过校验的Git bundle与归档核对保存在上述主工作区缓存。实际Git收尾状态单独写入 `.cache/merge-main-20261021/cleanup-receipt.json`；最终同步正常执行pre-push的validate:ci，不跳过钩子、不强推。
