@@ -12,7 +12,9 @@
     "exiftool-vendored": "^38.3.0",
     "@azure/identity": "^4.2.1",
     "uuid": "^11.1.1",
-    "@shikijs/transformers": "4.5.0"
+    "@shikijs/transformers": "4.5.0",
+    "follow-redirects": "1.16.1",
+    "markdown-it": "14.3.3"
   },
   "trustedDependencies": [
     "@sentry/cli",

@@ -1,5 +1,7 @@
 # Phaneris (RE) documentation
 
+当前 main 整合与验收：[2026-10-21 合并记录](verification/main-consolidation-2026-10-21.md)。升级、主题、字体与前端治理在本轮组合验收；下文保留各自实施历史。
+
 This index is the only entry point to `docs/`. Everything here is reachable from this page; `bun run check:docs` enforces that, along with link validity and the status rules below.
 
 Documents are filed by **kind and lifecycle**. The [implementation value register](process/implementation-value-register-2026-10-13.md) is the sole current record of implementation decisions and status: R01–R07 and the approved G01–G08 project governance are implemented and locally verified, with explicit verification limits, five evidence-triggered conditions and fifteen public-release gates retained. L01/L02 have local Windows evidence; other release targets remain unverified. `process/` also holds current ownership/implementation references; `archive/` preserves completed, closed, and superseded plans plus dated research. Historical OPEN labels do not create current tasks.

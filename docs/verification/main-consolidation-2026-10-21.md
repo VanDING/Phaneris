@@ -24,3 +24,10 @@
 - SSH 直连被关闭；本次命令使用已存在的本地代理转发 SSH，未修改仓库远端或全局 SSH 配置。刷新后 origin/main 仍为 `82714e2ae`。
 
 本轮最终验收待执行；此前隔离树和主题树各自的绿色结果属于原快照，不代替本次组合验收。
+
+## 组合验收首轮发现与先行修复边界
+
+- validate:ci 的类型、lint、共享测试与文档工具已通过，最终 check:docs 因本文未进入索引而失败；补链接，不放宽可达性要求。
+- 官方 npm 审计新增四条 high，分别影响 follow-redirects 1.16.0（两条凭据泄露）和 markdown-it 14.3.1（两条二次复杂度拒绝服务）。已核对 [GHSA-q3jh-wrc6-jgq8](https://github.com/advisories/GHSA-q3jh-wrc6-jgq8)、[GHSA-8r9p-f939-6h3c](https://github.com/advisories/GHSA-8r9p-f939-6h3c)、[GHSA-gfr2-rv44-r23c](https://github.com/advisories/GHSA-gfr2-rv44-r23c)、[GHSA-r7fv-28h4-cvq7](https://github.com/advisories/GHSA-r7fv-28h4-cvq7)。只精确 pin 修复版本 follow-redirects 1.16.1、markdown-it 14.3.3；不得增加安全豁免或改原39项目标，重新冻结安装、审计和所有消费链 E2E。既有 OCR critical 有本地补丁与实际安全流程，不扩大旧基线。其余新报 low/moderate 保留原文，不伪称零漏洞。
+- 首轮设计 W1/W2、axe 与六格视觉基线通过；长会话仅 LS1 初次200轮稳定画面为22154ms，超出20000ms预算。原红项保留，最终独立复跑；不得放宽门槛。
+- 已中止首轮后续 critical 及剩余门禁，原日志、已生成 manifest 与源码身份保留，不标为通过。修复后完整重跑。
