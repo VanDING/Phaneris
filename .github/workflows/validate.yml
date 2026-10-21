@@ -79,6 +79,12 @@ jobs:
       - name: Critical path tests
         run: xvfb-run --auto-servernum bun run test:critical
 
+      # Computed-style contract for the control primitives: the audit's root
+      # cause was class strings that looked right while the browser painted a
+      # different size/colour, which no static gate can see.
+      - name: UI primitives computed-style contract
+        run: xvfb-run --auto-servernum bun run test:ui:primitives
+
       - name: Production bundle and server distribution smoke
         if: github.event_name == 'pull_request'
         run: bun run build:smoke

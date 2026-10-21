@@ -76,9 +76,17 @@
   .size-control-md { width: calc(var(--control-height-md) * var(--ui-scale)); height: calc(var(--control-height-md) * var(--ui-scale)); }
   .size-control-lg { width: calc(var(--control-height-lg) * var(--ui-scale)); height: calc(var(--control-height-lg) * var(--ui-scale)); }
   .size-control-xl { width: calc(var(--control-height-xl) * var(--ui-scale)); height: calc(var(--control-height-xl) * var(--ui-scale)); }
+  /* Every `data-control-size` the Button declares maps to a contract tier.
+     A missing entry falls back to the 34px default, which silently turns `xs`
+     and `compact` into 34px pills (the 2026-10-21 audit's P0-2). Keep this table
+     complete: product name → contract tier is a deliberate, documented shift. */
   .craft-control[data-slot="button"] { min-height: calc(var(--craft-control-height, var(--control-height-lg)) * var(--ui-scale)); }
+  .craft-control[data-control-size="xs"] { --craft-control-height: var(--control-height-xs); }
+  .craft-control[data-control-size="compact"] { --craft-control-height: var(--control-height-sm); }
   .craft-control[data-control-size="sm"] { --craft-control-height: var(--control-height-md); }
+  .craft-control[data-control-size="default"] { --craft-control-height: var(--control-height-lg); }
   .craft-control[data-control-size="lg"] { --craft-control-height: var(--control-height-xl); }
+  .craft-control[data-control-size="icon"] { --craft-control-height: var(--control-height-lg); }
   .craft-icon-button[data-slot="button"] { min-width: calc(var(--craft-control-height, var(--control-height-lg)) * var(--ui-scale)); }
   .craft-chat-column { max-width: var(--reading-width); width: 100%; }
   .craft-chat-gutter { padding-inline: var(--reading-gutter); }

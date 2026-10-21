@@ -18,6 +18,7 @@
     "./motion": "./src/lib/motion.ts",
   "./roving-focus": "./src/lib/roving-focus.ts",
   "./scale-contract": "./src/lib/scale-contract.ts",
+    "./utils": "./src/lib/utils.ts",
     "./presence": "./src/lib/presence.ts",
     "./scroll-intent": "./src/lib/scroll-intent.ts",
     "./ui/drawer": "./src/components/ui/drawer.tsx",

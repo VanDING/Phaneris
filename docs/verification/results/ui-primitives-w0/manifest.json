@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "workflow": "ui-primitives",
+  "startedAt": "2026-10-21T04:44:50.287Z",
+  "finishedAt": "2026-10-21T04:45:26.276Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\ui-primitives-workflow.ts",
+    "--output-dir=docs/verification/results/ui-primitives-w0"
+  ],
+  "source": {
+    "headSha": "41eec2fe1eb4ed2e9e0908bfebc1e10b86067bdf",
+    "dirtyPaths": [
+      "M .github/workflows/validate.yml",
+      " M .impeccable/design.json",
+      " M DESIGN.md",
+      " M apps/electron/resources/docs/themes.md",
+      " M apps/electron/resources/release-notes/next.md",
+      " M apps/electron/resources/themes/default.json",
+      " M apps/electron/src/renderer/lib/utils.ts",
+      " M docs/design/default-redesign/README.md",
+      " M docs/design/default-redesign/default-preview.json",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M package.json",
+      " M packages/shared/src/auth/callback-page.ts",
+      " M packages/shared/src/config/__tests__/theme.test.ts",
+      " M packages/shared/src/config/theme.ts",
+      " M packages/ui/package.json",
+      " M packages/ui/src/lib/utils.ts",
+      " M packages/ui/src/styles/roles.css",
+      " M packages/ui/src/styles/theme-tokens.css",
+      " M scripts/verification/default-theme-preview-workflow.ts",
+      " M scripts/verification/packaged-refinement-workflow.ts",
+      " M scripts/verification/theme-architecture-gate-mutations.ts",
+      "?? docs/verification/results/ui-primitives-w0d/host.css",
+      "?? docs/verification/results/ui-primitives-w0d/index.html",
+      "?? docs/verification/results/ui-primitives-w0d/manifest.json",
+      "?? docs/verification/results/ui-primitives-w0d/ui-primitives-dark.png",
+      "?? docs/verification/results/ui-primitives-w0d/ui-primitives-light.png",
+      "?? docs/verification/results/ui-primitives-w0d/ui-primitives.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-OPTIMIZATION-PLAN-2026-10-21.md",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-REMEDIATION-PLAN.html",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-SYSTEM-AUDIT.md",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/_write-test.txt",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/automation-dark.png",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/check-contrast.log",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/check-drift.log",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/check-scale.log",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/class-merge-reproduction.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/control-measurements.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/detector-shell.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/detector-ui.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/evidence.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/files-artifacts-light.png",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/files-measurements.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/gate-results.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/inspect.css",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/inspect.html",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/inspect.tsx",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/kanban-dark.png",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/playground-errors.json",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/playground-input-error.png",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/production-controls-light.png",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/scan.ts",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/settings-controls-dark.png",
+      "?? docs/verification/results/ui-system-audit-2026-10-21/settings-controls-light.png",
+      "?? scripts/audit-ui-merge.ts",
+      "?? scripts/verification/fixtures/ui-primitives.tsx",
+      "?? scripts/verification/ui-primitives-workflow.ts"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": ".github/workflows/validate.yml",
+        "sha256": "5fa0a4e093e3b27bf2eb2ca4c1a2c2dbdaa62fc41136173de6eb2b203b8b335e"
+      },
+      {
+        "path": ".impeccable/design.json",
+        "sha256": "44dc68e21f57a7538c202d63e0dc383a3f5836462241abb3f08b5fe83186b3fc"
+      },
+      {
+        "path": "DESIGN.md",
+        "sha256": "304eb47ad79096303a75d164612d761e2676bbd220e2274120083bda3feac67b"
+      },
+      {
+        "path": "apps/electron/resources/docs/themes.md",
+        "sha256": "44e9919133b79856ac484ccf2f8aa3a2dfa3cd46b1cbaab1fde81b78c839e0c9"
+      },
+      {
+        "path": "apps/electron/resources/release-notes/next.md",
+        "sha256": "501902cc9d58dc9da69a7970c7a3d11de70de84e8db8a991fa1584701b8adf1d"
+      },
+      {
+        "path": "apps/electron/resources/themes/default.json",
+        "sha256": "734ebe251f86382af59139ab4c4896b080d933b5cac564f3606560ff165335fb"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/utils.ts",
+        "sha256": "383402b32d5e9c5f1831ecd612047e9781bfc5d417ad11f069a1edffa2363746"
+      },
+      {
+        "path": "docs/design/default-redesign/README.md",
+        "sha256": "c81ed0b0f751ddc483c0968a2d38aeee8098263390caab6b7e633445340ced12"
+      },
+      {
+        "path": "docs/design/default-redesign/default-preview.json",
+        "sha256": "d2688b25a787d8c46e8c0146f2e9c2114b1d12e5e77f35b69f3fad8a04478e52"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      },
+      {
+        "path": "docs/verification/results/ui-primitives-w0d/host.css",
+        "sha256": "5a05551e9cfc0d605e08462cb55074f127df8875f3b16193590100cc3ddd9f73"
+      },
+      {
+        "path": "docs/verification/results/ui-primitives-w0d/index.html",
+        "sha256": "2dabaddb9436756e8052cfdd137e0e9c41efe837e7b1adf0d4c9881ac1500ca0"
+      },
+      {
+        "path": "docs/verification/results/ui-primitives-w0d/manifest.json",
+        "sha256": "d871117bab10cf9cc3af562587f410e2e9b87b0b5a29528ff7ac2a3c321dd3d3"
+      },
+      {
+        "path": "docs/verification/results/ui-primitives-w0d/ui-primitives-dark.png",
+        "sha256": "6fd849c6b0ee96dbb7fa3b0df6ceeb7a6630853f67fd99ecbb066fce6ea1a227"
+      },
+      {
+        "path": "docs/verification/results/ui-primitives-w0d/ui-primitives-light.png",
+        "sha256": "960be59bc65ab92c30d74931e4040b9f777b2d1ef92ba19cca7f8f7dcc932363"
+      },
+      {
+        "path": "docs/verification/results/ui-primitives-w0d/ui-primitives.json",
+        "sha256": "8e542b3924de3ee826388f2524c05b6174b8aba85361e068f6a1f0b2f9ada879"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-OPTIMIZATION-PLAN-2026-10-21.md",
+        "sha256": "7475fb84d573596310ac565e6361ff89ab4aa74c8d76902ed8f0403bc3622857"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-REMEDIATION-PLAN.html",
+        "sha256": "4781f4e95a6abff08abb2257792725f0996cbb0b39240a03c86c7e1ca674a747"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/FRONTEND-SYSTEM-AUDIT.md",
+        "sha256": "f5eed149b74e3c0f46ebf94edcab90bb348a3515356fe5cb3502929400a30d8f"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/_write-test.txt",
+        "sha256": "dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/automation-dark.png",
+        "sha256": "f8232ced422c4371ff915f03cf59acee20ab53b5cd87add46a3a145d6bc67edf"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/check-contrast.log",
+        "sha256": "20780c12906fd732935f5720d670dd07713a770ed378bf0e66ccacb5c311cf9d"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/check-drift.log",
+        "sha256": "c7a998a4b79131bddd0ce32062e399efb4f5f3ff817901ae62536ea1fcaf469d"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/check-scale.log",
+        "sha256": "e0a6161bbb4aa21a066e3a38b0b42682b3014b420591729095e3b3390a2724fd"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/class-merge-reproduction.json",
+        "sha256": "ba6f52408665c415a84d51f9a119bda248e6d6574c87a55f744fbae55f13981f"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/control-measurements.json",
+        "sha256": "fd0e48ab123dac6e67742adad8cc845a5a5839d8624a87790d4a50e17a25099d"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/detector-shell.json",
+        "sha256": "2324b44fdae9b82521a075be712084a5d26ef9523a92e50d9f0cc59624857541"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/detector-ui.json",
+        "sha256": "e2a3259d5367bcc40f45c2cda3eecc5eb6ceca3704253b8e8dd62336924bf01a"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/evidence.json",
+        "sha256": "d126abaabae2ce5a876664c04f6530b15641e354270497acae40480ba583b5e7"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/files-artifacts-light.png",
+        "sha256": "9581ddbcfe0b7a63410b77696eb49bbc976fca45f8ce4d9bbe673408b312b36c"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/files-measurements.json",
+        "sha256": "82b2a175b8e24ff230876155fc11e8bea80321337724b795db214bb62bb28d9e"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/gate-results.json",
+        "sha256": "4f87e284346d9771e81a44f132d0290bb7b2fa548e8491b236ac5cd7183d43c1"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/inspect.css",
+        "sha256": "7aa95a497b7b06bda812f6d60834e49822c88b9706ed7a6cba979ac809b6323c"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/inspect.html",
+        "sha256": "71649db3f22294cf209246c5ddb26a7bff2d6709d950872ba910169c2cb02f6c"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/inspect.tsx",
+        "sha256": "19faef03bdc3fca34cda7024a9c0b42595f1e7e851e7687ba3f241c2782c701d"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/kanban-dark.png",
+        "sha256": "7e5eab8331ed929edc87f42f5550811815609cf478d115300600e0ae730f67bd"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/playground-errors.json",
+        "sha256": "c9e8ea742bc68c0e7d4f3e1a11f454caf7261cb42f4861b746ce1615ebc4c2a3"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/playground-input-error.png",
+        "sha256": "5f1302ba9225bad255484430773178178a5edb1c62cde465a77df2e83be98aa0"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/production-controls-light.png",
+        "sha256": "3de1b8e1fc4ae97e809706c716ca1edfbea265e2ef310a1f0d4d011f6f3fa00a"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/scan.ts",
+        "sha256": "a8f749bb3f3722fadbdaaefef331223946ae5096b27786d73e3c734ecaf2798e"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/settings-controls-dark.png",
+        "sha256": "bd15760b6dfc21750219aa924644daf445741f345550a668c3e2f354733c19f5"
+      },
+      {
+        "path": "docs/verification/results/ui-system-audit-2026-10-21/settings-controls-light.png",
+        "sha256": "daac1d16dd77651e6eb712cdff2f00027e2e3779351f02d7785b98e8c8ae6855"
+      },
+      {
+        "path": "package.json",
+        "sha256": "b3b5c872fa61dfbee77f0c454cd7b407aa857762afde26920cc32d028d35d7b7"
+      },
+      {
+        "path": "packages/shared/src/auth/callback-page.ts",
+        "sha256": "166fe74ac0c5391f65f0cbe5d314070d092793f1bbca206edec2b4df61cc0ca5"
+      },
+      {
+        "path": "packages/shared/src/config/__tests__/theme.test.ts",
+        "sha256": "69ecb60dfadf748f517b57ee18e9a0ef7fcf9eb5cc2f91e15b565e1bcaeb567b"
+      },
+      {
+        "path": "packages/shared/src/config/theme.ts",
+        "sha256": "28e93b443c8e604748c6fa27ec5ebfcfa27c2942f14e9fe9c2904f2508dffbaf"
+      },
+      {
+        "path": "packages/ui/package.json",
+        "sha256": "caea6f818cf2302fa96ec93ddafac742e3d485e0a8895724300e17f93a2f396a"
+      },
+      {
+        "path": "packages/ui/src/lib/utils.ts",
+        "sha256": "e22b7d5cc0a2ba4989c403ec168f6612a9e99b9f63989d650b2635c6fd134af3"
+      },
+      {
+        "path": "packages/ui/src/styles/roles.css",
+        "sha256": "155496877c900eeec0c258e9b33a6c773f26e07774c179245f7306c03a5ca480"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-tokens.css",
+        "sha256": "a41bdd6f03fb1a883c32c5719567af7034527d26e7ab44631a05eefe7f3a8af5"
+      },
+      {
+        "path": "scripts/audit-ui-merge.ts",
+        "sha256": "9c215c1d8669dcf61b59aeb066ded08a6d8201fa2dfe2dff6cb2c15ff26cac33"
+      },
+      {
+        "path": "scripts/verification/default-theme-preview-workflow.ts",
+        "sha256": "25de6411284fdaea5f3ef9724375a62e5520c8f7b94d3c335253d8d7e0ee63df"
+      },
+      {
+        "path": "scripts/verification/fixtures/ui-primitives.tsx",
+        "sha256": "a2fd29ef614b98a401400dcd3db2f472a43a46abfeefb856f3f147be6cf2f2b5"
+      },
+      {
+        "path": "scripts/verification/packaged-refinement-workflow.ts",
+        "sha256": "f1be89f67e0fde33ba69c2a776a1057f41924ce4205fc81bd6ee64a209f3862d"
+      },
+      {
+        "path": "scripts/verification/theme-architecture-gate-mutations.ts",
+        "sha256": "48d997d618f86684e40003e611667a101c415286dca73ab35cca6010ef21192b"
+      },
+      {
+        "path": "scripts/verification/ui-primitives-workflow.ts",
+        "sha256": "78fed93f66f16803ac5d162d183775783e554d0577628d995e3d65c0339fe354"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "ui-primitives-light-1280",
+    "ui-primitives-light-1536",
+    "ui-primitives-light-1920",
+    "ui-primitives-dark-1280",
+    "ui-primitives-dark-1536",
+    "ui-primitives-dark-1920"
+  ],
+  "passed": 6,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "host.css",
+      "sha256": "5a05551e9cfc0d605e08462cb55074f127df8875f3b16193590100cc3ddd9f73",
+      "bytes": 131
+    },
+    {
+      "path": "index.html",
+      "sha256": "2dabaddb9436756e8052cfdd137e0e9c41efe837e7b1adf0d4c9881ac1500ca0",
+      "bytes": 281
+    },
+    {
+      "path": "ui-primitives-dark.png",
+      "sha256": "6fd849c6b0ee96dbb7fa3b0df6ceeb7a6630853f67fd99ecbb066fce6ea1a227",
+      "bytes": 24786
+    },
+    {
+      "path": "ui-primitives-light.png",
+      "sha256": "960be59bc65ab92c30d74931e4040b9f777b2d1ef92ba19cca7f8f7dcc932363",
+      "bytes": 25012
+    },
+    {
+      "path": "ui-primitives.json",
+      "sha256": "af7339b38282a6c0693453a2f0995f051ebbe8df3e19516b37145a1979c6501b",
+      "bytes": 37773
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}
