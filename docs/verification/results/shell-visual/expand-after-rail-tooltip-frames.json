@@ -59,7 +59,7 @@
     }
   },
   {
-    "time": 0.5,
+    "time": 0.7000000476837158,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -118,7 +118,7 @@
     }
   },
   {
-    "time": 2.799999952316284,
+    "time": 3.899999976158142,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -177,7 +177,7 @@
     }
   },
   {
-    "time": 30,
+    "time": 31.899999976158142,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -236,28 +236,146 @@
     }
   },
   {
-    "time": 55.799999952316284,
+    "time": 37.60000002384186,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 50.015625,
+    "sidebarWidth": 50.484375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 60.300000071525574,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 54.890625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.90625,
+      "y": 35.75,
+      "width": 28.453125,
+      "height": 28,
+      "centerX": 24.1328125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.90625,
+      "y": 0,
+      "width": 28.453125,
+      "height": 28,
+      "centerX": 24.1328125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0.681895,
+    "profile": {
+      "x": 9.90625,
+      "y": 889.265625,
+      "width": 27.109375,
+      "height": 28,
+      "centerX": 23.4609375,
+      "centerY": 903.265625
+    },
+    "settings": {
+      "x": 10.375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 72.80000007152557,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 95.3125,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 9.53125,
       "y": 35.75,
-      "width": 29.390625,
+      "width": 39.90625,
       "height": 28,
-      "centerX": 24.2265625,
+      "centerX": 29.484375,
       "centerY": 49.75
     },
     "button": {
       "x": 9.53125,
       "y": 0,
-      "width": 29.390625,
+      "width": 39.90625,
       "height": 28,
-      "centerX": 24.2265625,
+      "centerX": 29.484375,
       "centerY": 14
     },
     "rowIcon": {
@@ -276,47 +394,47 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 0.902765,
+    "labelOpacity": 0.903211,
     "profile": {
       "x": 9.53125,
-      "y": 894.953125,
-      "width": 21.984375,
+      "y": 894.96875,
+      "width": 32.484375,
       "height": 28,
-      "centerX": 20.5234375,
-      "centerY": 908.953125
+      "centerX": 25.7734375,
+      "centerY": 908.96875
     },
     "settings": {
-      "x": 10.9375,
+      "x": 21.46875,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 24.9375,
+      "centerX": 35.46875,
       "centerY": 932
     }
   },
   {
-    "time": 70.20000004768372,
+    "time": 90.60000002384186,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 86.796875,
+    "sidebarWidth": 118.265625,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 9.109375,
       "y": 35.75,
-      "width": 46.9375,
+      "width": 60.671875,
       "height": 28,
-      "centerX": 32.578125,
+      "centerX": 39.4453125,
       "centerY": 49.75
     },
     "button": {
       "x": 9.109375,
       "y": 0,
-      "width": 46.9375,
+      "width": 60.671875,
       "height": 28,
-      "centerX": 32.578125,
+      "centerX": 39.4453125,
       "centerY": 14
     },
     "rowIcon": {
@@ -335,47 +453,47 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 0.97182,
+    "labelOpacity": 0.971288,
     "profile": {
       "x": 9.109375,
-      "y": 901.28125,
-      "width": 32.765625,
+      "y": 901.203125,
+      "width": 46.59375,
       "height": 28,
-      "centerX": 25.4921875,
-      "centerY": 915.28125
+      "centerX": 32.40625,
+      "centerY": 915.203125
     },
     "settings": {
-      "x": 28.0625,
+      "x": 41.8125,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 42.0625,
+      "centerX": 55.8125,
       "centerY": 932
     }
   },
   {
-    "time": 87,
+    "time": 117.80000007152557,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 115.265625,
+    "sidebarWidth": 140.296875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.828125,
       "y": 35.75,
-      "width": 69.671875,
+      "width": 84.15625,
       "height": 28,
-      "centerX": 43.6640625,
+      "centerX": 50.90625,
       "centerY": 49.75
     },
     "button": {
       "x": 8.828125,
       "y": 0,
-      "width": 69.671875,
+      "width": 84.15625,
       "height": 28,
-      "centerX": 43.6640625,
+      "centerX": 50.90625,
       "centerY": 14
     },
     "rowIcon": {
@@ -394,47 +512,47 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 0.993791,
+    "labelOpacity": 0.993635,
     "profile": {
       "x": 8.828125,
-      "y": 905.5625,
-      "width": 50.953125,
+      "y": 905.5,
+      "width": 65.5,
       "height": 28,
-      "centerX": 34.3046875,
-      "centerY": 919.5625
+      "centerX": 41.578125,
+      "centerY": 919.5
     },
     "settings": {
-      "x": 50.515625,
+      "x": 65,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 64.515625,
+      "centerX": 79,
       "centerY": 932
     }
   },
   {
-    "time": 104,
+    "time": 129.60000002384186,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 137.234375,
+    "sidebarWidth": 161.59375,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.625,
       "y": 35.75,
-      "width": 91.8125,
+      "width": 108.359375,
       "height": 28,
-      "centerX": 54.53125,
+      "centerX": 62.8046875,
       "centerY": 49.75
     },
     "button": {
       "x": 8.625,
       "y": 0,
-      "width": 91.8125,
+      "width": 108.359375,
       "height": 28,
-      "centerX": 54.53125,
+      "centerX": 62.8046875,
       "centerY": 14
     },
     "rowIcon": {
@@ -453,47 +571,47 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 0.999385,
+    "labelOpacity": 0.999356,
     "profile": {
       "x": 8.625,
-      "y": 908.546875,
-      "width": 69.90625,
+      "y": 908.515625,
+      "width": 86.484375,
       "height": 28,
-      "centerX": 43.578125,
-      "centerY": 922.546875
+      "centerX": 51.8671875,
+      "centerY": 922.515625
     },
     "settings": {
-      "x": 72.46875,
+      "x": 89,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 86.46875,
+      "centerX": 103,
       "centerY": 932
     }
   },
   {
-    "time": 120.20000004768372,
+    "time": 143.5,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 152.578125,
+    "sidebarWidth": 168.453125,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.46875,
       "y": 35.75,
-      "width": 110.453125,
+      "width": 122.4375,
       "height": 28,
-      "centerX": 63.6953125,
+      "centerX": 69.6875,
       "centerY": 49.75
     },
     "button": {
       "x": 8.46875,
       "y": 0,
-      "width": 110.453125,
+      "width": 122.4375,
       "height": 28,
-      "centerX": 63.6953125,
+      "centerX": 69.6875,
       "centerY": 14
     },
     "rowIcon": {
@@ -515,44 +633,44 @@
     "labelOpacity": 1,
     "profile": {
       "x": 8.46875,
-      "y": 910.796875,
-      "width": 86.140625,
+      "y": 910.78125,
+      "width": 98.15625,
       "height": 28,
-      "centerX": 51.5390625,
-      "centerY": 924.796875
+      "centerX": 57.546875,
+      "centerY": 924.78125
     },
     "settings": {
-      "x": 90.953125,
+      "x": 102.9375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 104.953125,
+      "centerX": 116.9375,
       "centerY": 932
     }
   },
   {
-    "time": 137.39999997615814,
+    "time": 158.89999997615814,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 163.4375,
+    "sidebarWidth": 175.015625,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.359375,
       "y": 35.75,
-      "width": 125.59375,
+      "width": 135,
       "height": 28,
-      "centerX": 71.15625,
+      "centerX": 75.859375,
       "centerY": 49.75
     },
     "button": {
       "x": 8.359375,
       "y": 0,
-      "width": 125.59375,
+      "width": 135,
       "height": 28,
-      "centerX": 71.15625,
+      "centerX": 75.859375,
       "centerY": 14
     },
     "rowIcon": {
@@ -574,44 +692,44 @@
     "labelOpacity": 1,
     "profile": {
       "x": 8.359375,
-      "y": 912.53125,
-      "width": 99.453125,
+      "y": 912.515625,
+      "width": 108.859375,
       "height": 28,
-      "centerX": 58.0859375,
-      "centerY": 926.53125
+      "centerX": 62.7890625,
+      "centerY": 926.515625
     },
     "settings": {
-      "x": 105.984375,
+      "x": 115.390625,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 119.984375,
+      "centerX": 129.390625,
       "centerY": 932
     }
   },
   {
-    "time": 153.29999995231628,
+    "time": 173.39999997615814,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 172.328125,
+    "sidebarWidth": 180.78125,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.265625,
       "y": 35.75,
-      "width": 138.6875,
+      "width": 145.90625,
       "height": 28,
-      "centerX": 77.609375,
+      "centerX": 81.21875,
       "centerY": 49.75
     },
     "button": {
       "x": 8.265625,
       "y": 0,
-      "width": 138.6875,
+      "width": 145.90625,
       "height": 28,
-      "centerX": 77.609375,
+      "centerX": 81.21875,
       "centerY": 14
     },
     "rowIcon": {
@@ -633,44 +751,44 @@
     "labelOpacity": 1,
     "profile": {
       "x": 8.265625,
-      "y": 913.890625,
-      "width": 111.09375,
+      "y": 913.875,
+      "width": 118.3125,
       "height": 28,
-      "centerX": 63.8125,
-      "centerY": 927.890625
+      "centerX": 67.421875,
+      "centerY": 927.875
     },
     "settings": {
-      "x": 118.984375,
+      "x": 126.203125,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 132.984375,
+      "centerX": 140.203125,
       "centerY": 932
     }
   },
   {
-    "time": 170.29999995231628,
+    "time": 189.10000002384186,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 178.984375,
+    "sidebarWidth": 185.390625,
     "rowStable": true,
     "buttonStable": true,
     "row": {
-      "x": 8.1875,
+      "x": 8.203125,
       "y": 35.75,
-      "width": 149.28125,
+      "width": 154.96875,
       "height": 28,
-      "centerX": 82.828125,
+      "centerX": 85.6875,
       "centerY": 49.75
     },
     "button": {
-      "x": 8.1875,
+      "x": 8.203125,
       "y": 0,
-      "width": 149.28125,
+      "width": 154.96875,
       "height": 28,
-      "centerX": 82.828125,
+      "centerX": 85.6875,
       "centerY": 14
     },
     "rowIcon": {
@@ -691,45 +809,45 @@
     },
     "labelOpacity": 1,
     "profile": {
-      "x": 8.1875,
-      "y": 914.96875,
-      "width": 120.515625,
+      "x": 8.203125,
+      "y": 914.953125,
+      "width": 126.234375,
       "height": 28,
-      "centerX": 68.4453125,
-      "centerY": 928.96875
+      "centerX": 71.3203125,
+      "centerY": 928.953125
     },
     "settings": {
-      "x": 129.5,
+      "x": 135.1875,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 143.5,
+      "centerX": 149.1875,
       "centerY": 932
     }
   },
   {
-    "time": 186.60000002384186,
+    "time": 207.10000002384186,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 184.546875,
+    "sidebarWidth": 189.21875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.140625,
       "y": 35.75,
-      "width": 158.296875,
+      "width": 162.578125,
       "height": 28,
-      "centerX": 87.2890625,
+      "centerX": 89.4296875,
       "centerY": 49.75
     },
     "button": {
       "x": 8.140625,
       "y": 0,
-      "width": 158.296875,
+      "width": 162.578125,
       "height": 28,
-      "centerX": 87.2890625,
+      "centerX": 89.4296875,
       "centerY": 14
     },
     "rowIcon": {
@@ -751,44 +869,44 @@
     "labelOpacity": 1,
     "profile": {
       "x": 8.140625,
-      "y": 915.828125,
-      "width": 128.625,
+      "y": 915.8125,
+      "width": 132.921875,
       "height": 28,
-      "centerX": 72.453125,
-      "centerY": 929.828125
+      "centerX": 74.6015625,
+      "centerY": 929.8125
     },
     "settings": {
-      "x": 138.453125,
+      "x": 142.734375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 152.453125,
+      "centerX": 156.734375,
       "centerY": 932
     }
   },
   {
-    "time": 204.39999997615814,
+    "time": 223.80000007152557,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 188.71875,
+    "sidebarWidth": 192.78125,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.09375,
       "y": 35.75,
-      "width": 165.421875,
+      "width": 169.234375,
       "height": 28,
-      "centerX": 90.8046875,
+      "centerX": 92.7109375,
       "centerY": 49.75
     },
     "button": {
       "x": 8.09375,
       "y": 0,
-      "width": 165.421875,
+      "width": 169.234375,
       "height": 28,
-      "centerX": 90.8046875,
+      "centerX": 92.7109375,
       "centerY": 14
     },
     "rowIcon": {
@@ -810,44 +928,44 @@
     "labelOpacity": 1,
     "profile": {
       "x": 8.09375,
-      "y": 916.5,
-      "width": 135.03125,
+      "y": 916.484375,
+      "width": 138.859375,
       "height": 28,
-      "centerX": 75.609375,
-      "centerY": 930.5
+      "centerX": 77.5234375,
+      "centerY": 930.484375
     },
     "settings": {
-      "x": 145.53125,
+      "x": 149.34375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 159.53125,
+      "centerX": 163.34375,
       "centerY": 932
     }
   },
   {
-    "time": 220.79999995231628,
+    "time": 241,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 192.421875,
+    "sidebarWidth": 195.375,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.0625,
       "y": 35.75,
-      "width": 171.53125,
+      "width": 174.359375,
       "height": 28,
-      "centerX": 93.828125,
+      "centerX": 95.2421875,
       "centerY": 49.75
     },
     "button": {
       "x": 8.0625,
       "y": 0,
-      "width": 171.53125,
+      "width": 174.359375,
       "height": 28,
-      "centerX": 93.828125,
+      "centerX": 95.2421875,
       "centerY": 14
     },
     "rowIcon": {
@@ -870,43 +988,43 @@
     "profile": {
       "x": 8.0625,
       "y": 917.015625,
-      "width": 140.578125,
+      "width": 143.421875,
       "height": 28,
-      "centerX": 78.3515625,
+      "centerX": 79.7734375,
       "centerY": 931.015625
     },
     "settings": {
-      "x": 151.609375,
+      "x": 154.4375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 165.609375,
+      "centerX": 168.4375,
       "centerY": 932
     }
   },
   {
-    "time": 236.89999997615814,
+    "time": 259.39999997615814,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 195,
+    "sidebarWidth": 197.34375,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.03125,
       "y": 35.75,
-      "width": 176.015625,
+      "width": 178.28125,
       "height": 28,
-      "centerX": 96.0390625,
+      "centerX": 97.171875,
       "centerY": 49.75
     },
     "button": {
       "x": 8.03125,
       "y": 0,
-      "width": 176.015625,
+      "width": 178.28125,
       "height": 28,
-      "centerX": 96.0390625,
+      "centerX": 97.171875,
       "centerY": 14
     },
     "rowIcon": {
@@ -928,44 +1046,44 @@
     "labelOpacity": 1,
     "profile": {
       "x": 8.03125,
-      "y": 917.421875,
-      "width": 144.65625,
+      "y": 917.40625,
+      "width": 146.921875,
       "height": 28,
-      "centerX": 80.359375,
-      "centerY": 931.421875
+      "centerX": 81.4921875,
+      "centerY": 931.40625
     },
     "settings": {
-      "x": 156.078125,
+      "x": 158.34375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 170.078125,
+      "centerX": 172.34375,
       "centerY": 932
     }
   },
   {
-    "time": 254.70000004768372,
+    "time": 274.8000000715256,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 197.046875,
+    "sidebarWidth": 198.796875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.015625,
       "y": 35.75,
-      "width": 179.46875,
+      "width": 181.1875,
       "height": 28,
-      "centerX": 97.75,
+      "centerX": 98.609375,
       "centerY": 49.75
     },
     "button": {
       "x": 8.015625,
       "y": 0,
-      "width": 179.46875,
+      "width": 181.1875,
       "height": 28,
-      "centerX": 97.75,
+      "centerX": 98.609375,
       "centerY": 14
     },
     "rowIcon": {
@@ -988,43 +1106,43 @@
     "profile": {
       "x": 8.015625,
       "y": 917.703125,
-      "width": 147.796875,
+      "width": 149.515625,
       "height": 28,
-      "centerX": 81.9140625,
+      "centerX": 82.7734375,
       "centerY": 931.703125
     },
     "settings": {
-      "x": 159.515625,
+      "x": 161.21875,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 173.515625,
+      "centerX": 175.21875,
       "centerY": 932
     }
   },
   {
-    "time": 270,
+    "time": 291,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 198.46875,
+    "sidebarWidth": 199.53125,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8,
       "y": 35.75,
-      "width": 181.828125,
+      "width": 182.875,
       "height": 28,
-      "centerX": 98.9140625,
+      "centerX": 99.4375,
       "centerY": 49.75
     },
     "button": {
       "x": 8,
       "y": 0,
-      "width": 181.828125,
+      "width": 182.875,
       "height": 28,
-      "centerX": 98.9140625,
+      "centerX": 99.4375,
       "centerY": 14
     },
     "rowIcon": {
@@ -1047,43 +1165,43 @@
     "profile": {
       "x": 8,
       "y": 917.890625,
-      "width": 149.96875,
+      "width": 151.015625,
       "height": 28,
-      "centerX": 82.984375,
+      "centerX": 83.5078125,
       "centerY": 931.890625
     },
     "settings": {
-      "x": 161.859375,
+      "x": 162.90625,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 175.859375,
+      "centerX": 176.90625,
       "centerY": 932
     }
   },
   {
-    "time": 287,
+    "time": 308.8000000715256,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "插件",
-    "sidebarWidth": 199.375,
+    "sidebarWidth": 199.921875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8,
       "y": 35.75,
-      "width": 183.25,
+      "width": 183.78125,
       "height": 28,
-      "centerX": 99.625,
+      "centerX": 99.890625,
       "centerY": 49.75
     },
     "button": {
       "x": 8,
       "y": 0,
-      "width": 183.25,
+      "width": 183.78125,
       "height": 28,
-      "centerX": 99.625,
+      "centerX": 99.890625,
       "centerY": 14
     },
     "rowIcon": {
@@ -1106,81 +1224,22 @@
     "profile": {
       "x": 8,
       "y": 917.984375,
-      "width": 151.265625,
+      "width": 151.8125,
       "height": 28,
-      "centerX": 83.6328125,
+      "centerX": 83.90625,
       "centerY": 931.984375
     },
     "settings": {
-      "x": 163.265625,
+      "x": 163.8125,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 177.265625,
+      "centerX": 177.8125,
       "centerY": 932
     }
   },
   {
-    "time": 306.89999997615814,
-    "collapsed": false,
-    "tooltips": 0,
-    "tooltipTexts": [],
-    "focusLabel": "插件",
-    "sidebarWidth": 199.875,
-    "rowStable": true,
-    "buttonStable": true,
-    "row": {
-      "x": 8,
-      "y": 35.75,
-      "width": 183.875,
-      "height": 28,
-      "centerX": 99.9375,
-      "centerY": 49.75
-    },
-    "button": {
-      "x": 8,
-      "y": 0,
-      "width": 183.875,
-      "height": 28,
-      "centerX": 99.9375,
-      "centerY": 14
-    },
-    "rowIcon": {
-      "x": 16,
-      "y": 41.75,
-      "width": 16,
-      "height": 16,
-      "centerX": 24,
-      "centerY": 49.75
-    },
-    "newIcon": {
-      "x": 16,
-      "y": 6,
-      "width": 16,
-      "height": 16,
-      "centerX": 24,
-      "centerY": 14
-    },
-    "labelOpacity": 1,
-    "profile": {
-      "x": 8,
-      "y": 918,
-      "width": 151.875,
-      "height": 28,
-      "centerX": 83.9375,
-      "centerY": 932
-    },
-    "settings": {
-      "x": 163.875,
-      "y": 918,
-      "width": 28,
-      "height": 28,
-      "centerX": 177.875,
-      "centerY": 932
-    }
-  },
-  {
-    "time": 319,
+    "time": 328.89999997615814,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1239,7 +1298,7 @@
     }
   },
   {
-    "time": 336.5,
+    "time": 343.10000002384186,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1298,7 +1357,7 @@
     }
   },
   {
-    "time": 352.2000000476837,
+    "time": 357,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1357,7 +1416,7 @@
     }
   },
   {
-    "time": 368.7999999523163,
+    "time": 370.89999997615814,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1416,7 +1475,7 @@
     }
   },
   {
-    "time": 385.2999999523163,
+    "time": 387.39999997615814,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1475,7 +1534,7 @@
     }
   },
   {
-    "time": 402.10000002384186,
+    "time": 404,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1534,7 +1593,7 @@
     }
   },
   {
-    "time": 419,
+    "time": 420.7000000476837,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1593,7 +1652,7 @@
     }
   },
   {
-    "time": 435.5,
+    "time": 437.2000000476837,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1652,7 +1711,7 @@
     }
   },
   {
-    "time": 452.2000000476837,
+    "time": 453.89999997615814,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1711,7 +1770,7 @@
     }
   },
   {
-    "time": 468.5,
+    "time": 471,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1770,7 +1829,7 @@
     }
   },
   {
-    "time": 485.7000000476837,
+    "time": 487.5,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1829,7 +1888,7 @@
     }
   },
   {
-    "time": 502.2999999523163,
+    "time": 504.2000000476837,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
