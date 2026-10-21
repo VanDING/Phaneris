@@ -218,8 +218,10 @@ describe('user theme storage', () => {
       reloaded: { mode: string; colorTheme: string; font: string };
     };
 
-    expect(result.initial).toEqual({ mode: 'system', colorTheme: 'default', font: 'theme' });
-    expect(result.persisted).toEqual({ mode: 'dark', colorTheme: 'default', font: 'system' });
+    // `uiScale` is part of the theme preference shape (normalized to 1 when a
+    // config predates it), so the authoritative-store read must report it.
+    expect(result.initial).toEqual({ mode: 'system', colorTheme: 'default', font: 'theme', uiScale: 1 });
+    expect(result.persisted).toEqual({ mode: 'dark', colorTheme: 'default', font: 'system', uiScale: 1 });
     expect(result.reloaded).toEqual(result.persisted);
     const rawConfig = JSON.parse(readFileSync(join(configDir, 'config.json'), 'utf-8'));
     expect(rawConfig.themeMode).toBe('dark');

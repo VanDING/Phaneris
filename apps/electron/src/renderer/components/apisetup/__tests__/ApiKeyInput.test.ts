@@ -16,12 +16,19 @@ describe('ApiKeyInput catalog default hydration', () => {
     expect(resolveDefaultCatalogModel(MODELS, 'pi/zai-fast')).toBe('pi/zai-fast')
   })
 
-  it('falls back to the first provider model when the saved model disappeared', () => {
-    expect(resolveDefaultCatalogModel(MODELS, 'pi/not-real')).toBe('pi/zai-best')
+  it('returns a saved model verbatim even when the catalog no longer lists it', () => {
+    // The catalog is a snapshot of what the provider offers today, not an
+    // authority over an existing connection's choice: substituting the first
+    // entry would silently change which model the connection runs on.
+    expect(resolveDefaultCatalogModel(MODELS, 'pi/not-real')).toBe('pi/not-real')
   })
 
-  it('returns an empty default for an empty catalog', () => {
-    expect(resolveDefaultCatalogModel([], 'pi/zai-best')).toBe('')
+  it('falls back to the first catalog model when nothing was saved', () => {
+    expect(resolveDefaultCatalogModel(MODELS, undefined)).toBe('pi/zai-best')
+  })
+
+  it('returns an empty default for an empty catalog with nothing saved', () => {
+    expect(resolveDefaultCatalogModel([], undefined)).toBe('')
   })
 })
 
