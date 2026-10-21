@@ -59,7 +59,7 @@ export function TaskChatPreview({
         <div className="mx-auto flex max-w-2xl flex-col gap-4">
           {/* User message */}
           <div className="flex justify-end">
-            <div className="max-w-[80%] rounded-2xl bg-foreground/[0.06] px-3.5 py-2 text-body text-foreground">
+            <div className="craft-bubble rounded-2xl bg-foreground/[0.06] px-3.5 py-2 text-body text-foreground">
               {userMessage}
             </div>
           </div>

@@ -88,7 +88,7 @@
       "rule": "theme-contracts/roles",
       "message": "literal",
       "fingerprint": "a03cdf257960b0cf168927da20738247e4dad1dbf31360547ffe986037ac66a4",
-      "count": 2,
+      "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
@@ -3838,26 +3838,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "9a496a2a5e1c2d2bb48e2c18ab6a2db4ae238635dea1043aaaf97e4e74dbc292",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "c663b4fed6d7e7981a27a4b0428af215f46b53c48f0f9780fbda483ed0c1ddd6",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "fc523954f3e9f3dc7390ed63ebdc8675be04ce9b5940ccb05b690a8e5cb1e281",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",

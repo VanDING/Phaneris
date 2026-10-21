@@ -74,6 +74,10 @@
     outline-offset: 2px;
     border-radius: var(--shape-sm);
   }
+  /* Chat bubble width: one percentage for every bubble surface (user message,
+     error card, task-chat preview). It was three copies of `max-w-[80%]`, which
+     the roles contract reads as an unowned size literal. */
+  .craft-bubble { max-width: var(--bubble-max); }
   /* Object-scale glyphs (monogram watermark, avatar initials). Not type tiers:
      the object they sit in decides the size, and neither follows --ui-scale. */
   .glyph-watermark { font-size: var(--glyph-watermark-size); line-height: 1; }

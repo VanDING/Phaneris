@@ -38,6 +38,7 @@ export const VISUAL_ROLE_TOKENS = {
   '--sidebar-rail-control-size': '28px', '--sidebar-rail-item-inset': '6px',
   '--sidebar-rail-gap': '2px', '--sidebar-rail-inline-offset': '2px',
   '--touch-target': '44px',
+  '--bubble-max': '80%',
   '--z-component-behind': '-1', '--z-component-content': '0', '--z-component-overlay': '1',
   '--z-component-header': '2', '--z-component-controls': '3',
   '--z-component-background': '-2', '--z-component-recess': '-10', '--z-component-floating': '4', '--z-component-sticky': '5',
