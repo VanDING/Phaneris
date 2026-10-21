@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "workflow": "panel-chrome",
+  "startedAt": "2026-10-21T08:46:54.600Z",
+  "finishedAt": "2026-10-21T08:47:49.525Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
+    "--output-dir=docs/verification/results/panel-chrome"
+  ],
+  "source": {
+    "headSha": "cb49cbff67c0c4694750d58e5ae0dcb4e69f761a",
+    "dirtyPaths": [
+      "M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " D docs/verification/results/panel-chrome-w4/files-panel-chrome-dark.png",
+      " D docs/verification/results/panel-chrome-w4/files-panel-chrome-light.png",
+      " D docs/verification/results/panel-chrome-w4/host.css",
+      " D docs/verification/results/panel-chrome-w4/index.html",
+      " D docs/verification/results/panel-chrome-w4/manifest.json",
+      " D docs/verification/results/panel-chrome-w4/panel-chrome.json"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/files-panel-chrome-dark.png",
+        "sha256": null
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/files-panel-chrome-light.png",
+        "sha256": null
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/host.css",
+        "sha256": null
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/index.html",
+        "sha256": null
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/manifest.json",
+        "sha256": null
+      },
+      {
+        "path": "docs/verification/results/panel-chrome-w4/panel-chrome.json",
+        "sha256": null
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "pc1-single-chrome-row",
+    "pc2-row-height",
+    "pc3-tabs-and-filter-share-the-row",
+    "pc4-content-follows-the-row",
+    "pc5-total-chrome-budget",
+    "pc6-tabs-are-keyboard-navigable",
+    "pc7-done-column-starts-collapsed",
+    "pc8-empty-column-offers-an-exit",
+    "pc9-task-moves-by-keyboard",
+    "pc10-card-is-three-rows",
+    "pc11-artifacts-view-adds-no-second-row",
+    "pc12-touch-targets-on-a-coarse-pointer",
+    "pc13-project-colours-stay-readable",
+    "pc14-transcript-highlights-match-across-elements",
+    "pc15-a-long-column-renders-a-slice"
+  ],
+  "passed": 15,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "card-density.json",
+      "sha256": "64c6e82aef23733fda472d42e32abcc6dd1c2e3246aee0ffbfc292b36fa9f65c",
+      "bytes": 146
+    },
+    {
+      "path": "files-panel-chrome-dark.png",
+      "sha256": "18d3315ef01f01d435dc0bf025fb0ed9c85f42c89ddfbd095bf3a42f0b07489f",
+      "bytes": 26585
+    },
+    {
+      "path": "files-panel-chrome-light.png",
+      "sha256": "32585cf1c21f2d7b222767b04a746dae4c9ea70b56b40f6f42792239620eda2a",
+      "bytes": 30461
+    },
+    {
+      "path": "host.css",
+      "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2",
+      "bytes": 130
+    },
+    {
+      "path": "index.html",
+      "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9",
+      "bytes": 280
+    },
+    {
+      "path": "panel-chrome.json",
+      "sha256": "78c716ece8b80e49bdda3ebb3af1a308c2a8f08039e2f284efaaac0e14b04cd5",
+      "bytes": 341
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

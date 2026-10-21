@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-10-21T08:47:45.821Z",
+  "budgets": {
+    "chromeRowMaxPx": 36,
+    "chromeBudgetPx": 75
+  },
+  "measured": {
+    "rows": [
+      {
+        "role": "files",
+        "top": 0,
+        "height": 34,
+        "tabs": 3,
+        "hasFilter": true
+      }
+    ],
+    "contentTop": 34,
+    "tablistRole": "File views"
+  }
+}
