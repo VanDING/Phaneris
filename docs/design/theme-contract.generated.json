@@ -238,6 +238,7 @@
     "--sidebar-rail-gap": "2px",
     "--sidebar-rail-inline-offset": "2px",
     "--touch-target": "44px",
+    "--bubble-max": "80%",
     "--z-component-behind": "-1",
     "--z-component-content": "0",
     "--z-component-overlay": "1",
