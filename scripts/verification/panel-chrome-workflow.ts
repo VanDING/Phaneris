@@ -253,6 +253,38 @@ await verificationWorkflow('panel-chrome', async run => {
       await page.waitForFunction(() => Boolean(document.querySelector('[data-chrome-row="files"] input')), undefined, { timeout: 5_000 })
     })
 
+    await check('pc12-touch-targets-on-a-coarse-pointer', async () => {
+      // Under `pointer: coarse` every control must be reachable at 44×44 — the
+      // board's hover pencil and the tag toggles were 24px hit areas. A coarse
+      // context is the only way to see the `@media (pointer: coarse)` rules; a
+      // desktop viewport never evaluates them.
+      const touch = await launched.browser.newContext({ viewport: { width: 1280, height: 900 }, hasTouch: true })
+      try {
+        const touchPage = await touch.newPage()
+        await gotoWithRetry(touchPage, url)
+        await touchPage.waitForFunction(() => window.__panelChrome?.ready === true, undefined, { timeout: 60_000 })
+        await touchPage.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+        const sized = await touchPage.evaluate(() => {
+          const selector = '[data-board-fixture] button, [data-board-fixture] [role="button"], [data-board-fixture] a, [data-board-fixture] input'
+          return [...document.querySelectorAll<HTMLElement>(selector)].map(element => {
+            const box = element.getBoundingClientRect()
+            return {
+              label: (element.getAttribute('aria-label') ?? element.textContent ?? '').trim().slice(0, 40),
+              width: Math.round(box.width * 10) / 10,
+              height: Math.round(box.height * 10) / 10,
+              visible: box.width > 0 && box.height > 0,
+            }
+          }).filter(entry => entry.visible)
+        })
+        assert(sized.length > 0, 'the board fixture rendered no interactive elements')
+        const undersized = sized.filter(entry => entry.width < 44 || entry.height < 44)
+        assert.equal(undersized.length, 0,
+          `controls below the 44px coarse-pointer target: ${JSON.stringify(undersized.slice(0, 6))}`)
+      } finally {
+        await touch.close()
+      }
+    })
+
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))

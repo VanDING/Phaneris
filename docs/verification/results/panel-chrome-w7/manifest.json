@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "workflow": "panel-chrome",
+  "startedAt": "2026-10-21T07:02:10.482Z",
+  "finishedAt": "2026-10-21T07:02:56.353Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
+    "--output-dir=docs/verification/results/panel-chrome-w7"
+  ],
+  "source": {
+    "headSha": "8be6744c695cca7e4fc3d9d2a0b6b3093795cca0",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M scripts/verification/panel-chrome-workflow.ts"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+        "sha256": "a79429bb0e1f3e2df95140ec9c906e70707638352ce33814d616f89467c8aa69"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      },
+      {
+        "path": "scripts/verification/panel-chrome-workflow.ts",
+        "sha256": "68484fb95db39b59b61af8d9bc20e585c3795145bac610622c9e3b40594cc03d"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "pc1-single-chrome-row",
+    "pc2-row-height",
+    "pc3-tabs-and-filter-share-the-row",
+    "pc4-content-follows-the-row",
+    "pc5-total-chrome-budget",
+    "pc6-tabs-are-keyboard-navigable",
+    "pc7-done-column-starts-collapsed",
+    "pc8-empty-column-offers-an-exit",
+    "pc9-task-moves-by-keyboard",
+    "pc10-card-is-three-rows",
+    "pc11-artifacts-view-adds-no-second-row",
+    "pc12-touch-targets-on-a-coarse-pointer"
+  ],
+  "passed": 12,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "card-density.json",
+      "sha256": "f760ebee4ff004ca2dc04d628e5b199ac017f1f2efe1bb55b39bf1be097bb266",
+      "bytes": 146
+    },
+    {
+      "path": "files-panel-chrome-dark.png",
+      "sha256": "931cdfee5c69b675aa9749e0975f8c855afa494cc1f4586ed45fabe3eebf6de9",
+      "bytes": 28331
+    },
+    {
+      "path": "files-panel-chrome-light.png",
+      "sha256": "fa1072aa24a296c9f8cb522e201b6366ea98173ab8caa6ff41fb9b975c3f3331",
+      "bytes": 27978
+    },
+    {
+      "path": "host.css",
+      "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2",
+      "bytes": 130
+    },
+    {
+      "path": "index.html",
+      "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9",
+      "bytes": 280
+    },
+    {
+      "path": "panel-chrome.json",
+      "sha256": "6027949b99f9000b536ef1780662a81f8ec2cf77c9c849ba2e55ba0fbabee516",
+      "bytes": 341
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

@@ -137,7 +137,7 @@ export function KanbanColumn({
           <button
             type="button"
             onClick={() => setCollapsed(value => !value)}
-            className="craft-segment craft-focus shrink-0 px-1 text-meta text-text-secondary hover:text-foreground"
+            className="craft-segment craft-touch-target craft-focus shrink-0 px-1 text-meta text-text-secondary hover:text-foreground"
             aria-expanded={!collapsed}
           >
             {collapsed ? t('kanban.showDone') : t('kanban.hideDone')}
