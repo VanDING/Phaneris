@@ -85,6 +85,12 @@ jobs:
       - name: UI primitives computed-style contract
         run: xvfb-run --auto-servernum bun run test:ui:primitives
 
+      # Panel chrome budget: one row per panel, ≤75px between the panel top and
+      # its content. The audit measured three stacked 37.5px bars (112.5px) over
+      # an empty Files panel; only a rendered measurement can hold that line.
+      - name: Panel chrome budget
+        run: xvfb-run --auto-servernum bun run test:ui:chrome
+
       - name: Production bundle and server distribution smoke
         if: github.event_name == 'pull_request'
         run: bun run build:smoke

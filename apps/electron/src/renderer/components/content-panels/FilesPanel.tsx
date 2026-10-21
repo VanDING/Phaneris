@@ -87,19 +87,44 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col @container/files">
-      <div className="flex h-10 shrink-0 items-end gap-5 overflow-x-auto border-b border-border/50 bg-background/80 px-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist" aria-label={t('contentPanel.files.views')}>
-        {FILE_VIEWS.map(item => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={view === item.id}
-            onClick={() => setView(item.id)}
-            className={`relative h-10 shrink-0 px-0.5 text-label font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${view === item.id ? 'text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t after:bg-accent' : 'text-muted-foreground hover:text-foreground'}`}
-          >
-            {t(item.key)}
-          </button>
-        ))}
+      {/* One chrome row, not two. The filter used to be its own 42px band under
+          the view tabs (plus the 40px workbench strip above them = 112.5px of
+          chrome over an empty panel). Tabs and filter now share a single
+          `h-control-lg` row: 34px, so the panel spends ≤68px on chrome. */}
+      <div
+        data-chrome-row="files"
+        className="flex h-control-lg shrink-0 items-stretch gap-2 border-b border-border/50 bg-background px-3"
+      >
+        <div
+          role="tablist"
+          aria-label={t('contentPanel.files.views')}
+          className="flex min-w-0 items-stretch gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {FILE_VIEWS.map(item => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={view === item.id}
+              onClick={() => setView(item.id)}
+              className={`relative h-control-lg shrink-0 px-0.5 text-label font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${view === item.id ? 'text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t after:bg-accent' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              {t(item.key)}
+            </button>
+          ))}
+        </div>
+        {view === 'browse' && (
+          <div className="relative ml-auto flex w-40 shrink-0 items-center @max-[420px]/files:w-24">
+            <Search aria-hidden className="pointer-events-none absolute left-2 h-3.5 w-3.5 text-text-secondary" />
+            <Input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={t('contentPanel.files.filterPlaceholder')}
+              className="h-control-sm rounded-md border-border/60 bg-foreground/[0.02] pl-7 text-body shadow-none focus-visible:bg-background"
+              aria-label={t('contentPanel.files.filterPlaceholder')}
+            />
+          </div>
+        )}
       </div>
 
       <div className="min-h-0 flex-1">
@@ -112,18 +137,6 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
 
         {view === 'browse' && (
           <div className="flex h-full min-h-0 flex-col">
-            <div className="shrink-0 border-b border-border/50 bg-background/60 px-2.5 pb-2.5 pt-1.5">
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
-                <Input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder={t('contentPanel.files.filterPlaceholder')}
-                  className="h-8 rounded-lg border-border/60 bg-foreground/[0.02] pl-8 text-body shadow-none focus-visible:bg-background"
-                  aria-label={t('contentPanel.files.filterPlaceholder')}
-                />
-              </div>
-            </div>
             <div className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.012] pt-1">
               <BrowseTree
                 sessionId={activeSessionId}

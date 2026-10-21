@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "workflow": "panel-chrome",
+  "startedAt": "2026-10-21T05:23:26.579Z",
+  "finishedAt": "2026-10-21T05:24:07.515Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
+    "--output-dir=docs/verification/results/panel-chrome-w2"
+  ],
+  "source": {
+    "headSha": "71307625a6f16cbf55bb0267dad4ef977febd257",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/ContextWorkbenchTabs.tsx",
+      " M apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M package.json",
+      "?? scripts/verification/fixtures/panel-chrome.tsx",
+      "?? scripts/verification/panel-chrome-workflow.ts"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ContextWorkbenchTabs.tsx",
+        "sha256": "b889a474cc663abdf268c143f2552edcc55aba20d27f01d91cc74b9dbf9877f9"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
+        "sha256": "be2f79b03b459a484c201c87cf13d00bc6328c937a665671baa956da3970be9b"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      },
+      {
+        "path": "package.json",
+        "sha256": "2b6b424e63b9e9e289733d3fe6ce519ff3b4244832edcada6194a5c2b1bded41"
+      },
+      {
+        "path": "scripts/verification/fixtures/panel-chrome.tsx",
+        "sha256": "99664915bed572cb712eddc6144761f30495c1cf92b2451c9fc554eeb72be48d"
+      },
+      {
+        "path": "scripts/verification/panel-chrome-workflow.ts",
+        "sha256": "5be68ddc7395c0de2a29fba6b7f0ed91922a0c00c6fc0490b479084bddf9989e"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "pc1-single-chrome-row",
+    "pc2-row-height",
+    "pc3-tabs-and-filter-share-the-row",
+    "pc4-content-follows-the-row",
+    "pc5-total-chrome-budget"
+  ],
+  "passed": 5,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "files-panel-chrome-dark.png",
+      "sha256": "c088aaf5f5a5a717802a6268ae9169bd4b7ae911427d7af69e0de08af03b4291",
+      "bytes": 14753
+    },
+    {
+      "path": "files-panel-chrome-light.png",
+      "sha256": "3d9d9528c3446315888224831a8c5d9cb1ed0dc77a7ceb246d85efa97694f646",
+      "bytes": 14713
+    },
+    {
+      "path": "host.css",
+      "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2",
+      "bytes": 130
+    },
+    {
+      "path": "index.html",
+      "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9",
+      "bytes": 280
+    },
+    {
+      "path": "panel-chrome.json",
+      "sha256": "36fc33befa42683586b189425caf18d4b888ac0133b7bc434f877260a28478b5",
+      "bytes": 341
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

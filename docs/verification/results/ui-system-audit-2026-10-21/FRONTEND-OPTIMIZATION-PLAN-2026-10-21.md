@@ -304,8 +304,8 @@ bun run bundle:report              # W1 前后对比
 | --- | --- | --- | --- |
 | W0 原语正确性 | **完成** `c893dca7e` | 共享 `extendTailwindMerge`（9 个 tier，两处 `cn()` 同一实例）、`roles.css` 全档映射、`audit:ui-merge`、`test:ui:primitives` | 丢层 82→**0**（752 文件）；按钮 13/11/22、12/26、11/30、13/38 实测全对；Badge/Metadata 11；填充小按钮对比度 15.69/15.43；`lint` 全绿 |
 | W1 渲染与包体 | **完成** `perf(chat)` 提交 | `storedToMessage` 恒等缓存、`reuseStableTurns`、`SessionViewer` 记忆化行、`MemoizedMarkdown`、json-view 懒加载、sticky 去 blur、bundle 棘轮 | append p50 **83→16.7ms**、p95 **200→33.4ms**（门槛 60/120 冻结）；初始 JS 0.80MB raw；`test:long-session-budget` 5 项全过 |
-| W2 chrome 语言 | **部分** | 面板标题 `text-body`→`text-title`(16px)，`PanelHeader headingLevel`，navigator/workbench/artifact/侧栏列表改 h2（每屏一个 h1） | typecheck + lint；三横条合并与 surface 收敛未做 |
-| W3 表面重组 | **部分** | 工作台 `max-width:50%` + 主表面 `min(600px,55%)` + 删除 dead `defaultLayout`；看板改中性列 + 色点（列色为 `var(--info)`/`var(--success)`/`var(--foreground-dimmed)`），去掉整列 tint 与实心色块，`onAccent` 按亮度计算 | shell-visual：navTitle/contentTitle centerY 均 66（对齐）、标题 16px、1440 下内容区 928px、横向溢出 0；typecheck + lint |
+| W2 chrome 语言 | **部分** | 面板标题 `text-body`→`text-title`(16px)，`PanelHeader headingLevel`，navigator/workbench/artifact/侧栏列表改 h2（每屏一个 h1）；**Files 面板三条横条合为一条**：视图 tab 与筛选框同处 `h-control-lg`(34px) 行，删除独立 42px 搜索带；工作台 tab 条同降为 34px；新增 `test:ui:chrome` 渲染度量 | **实测**：chrome 行 1 条、高 34px、含 3 个 tab + 筛选框、内容起始于 34px；工作台条 34 + 面板行 34 = **68px ≤ 75**；typecheck + lint + 截图 |
+| W3 表面重组 | **部分** | 工作台 `max-width:50%` + 主表面 `min(600px,55%)` + 删除 dead `defaultLayout`；看板改中性列 + 色点（列色为 `var(--info)`/`var(--success)`/`var(--foreground-dimmed)`），去掉整列 tint 与实心色块，`onAccent` 按亮度计算 | shell-visual 68 场景：navTitle/contentTitle centerY 均 66（对齐）、标题 16px、1440 下内容区 928px、横向溢出 0；typecheck + lint |
 | W4 架构减债 | 未开始 | — | 巨档拆分（AppShell 4239 行等） |
 | W5 门禁升级 | **部分** | `bundle:report` 棘轮 4.8MB→1.2MB、`audit:ui-merge` 进 lint、计算样式契约进 CI、`lint:electron` 加 `--max-warnings 69` 冻结 hooks 警告、shell-visual 断言去掉对 `h1` 标签的耦合 | 对比度扩展至 JS 内联色、`exhaustive-deps` 转 error（需先清 49 处）、PR 截图门槛未做 |
 

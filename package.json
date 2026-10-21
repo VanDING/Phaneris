@@ -148,6 +148,7 @@
     "typecheck:build": "bun run tsc --noEmit -p tsconfig.build.json",
     "test:ui:table": "bun test ./apps/electron/src/renderer/components/ui/data-table-features.test.ts",
     "test:ui:primitives": "bun run scripts/verification/ui-primitives-workflow.ts",
+    "test:ui:chrome": "bun run scripts/verification/panel-chrome-workflow.ts",
     "audit:ui-merge": "bun run scripts/audit-ui-merge.ts",
     "benchmark:session-io": "bun run scripts/benchmark-session-io.ts",
     "typecheck:scripts": "bun run tsc --noEmit -p tsconfig.tooling.json && bun run tsc --noEmit -p scripts/performance/tsconfig.runner.json && bun run tsc --noEmit -p scripts/performance/tsconfig.server.json",
