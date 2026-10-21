@@ -619,7 +619,6 @@ export function TaskEditor({
       })
     },
     // fallbackModel is stable for the life of an open editor (same reasoning as the prefill effect).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [store, editSessionId],
   )
 
@@ -804,7 +803,7 @@ export function TaskEditor({
       // the visible signal. A top-right toast would also overlap the editor's top-right
       // Cancel/Create/Create & Run buttons and swallow their clicks.
     },
-    [t, fallbackModel, discardDraft],
+    [t, discardDraft, goal, permissionMode, title],
   )
 
   // Subscribe once for async generate results; ignore events for other generations/sessions.

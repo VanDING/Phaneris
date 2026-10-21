@@ -28,41 +28,9 @@
       "owner": "apps/electron"
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook React.useCallback has missing dependencies: 'goal', 'permissionMode', and 'title'. Either include them or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx",
-      "rule": "unused-eslint-disable",
-      "message": "Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps').",
-      "count": 1,
-      "reason": "Existing unused suppression; remove when maintaining this file (G1).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
       "rule": "react-hooks/exhaustive-deps",
       "message": "React Hook useEffect has a missing dependency: 'targetWorkspaces'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
       "count": 1,
       "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
       "owner": "apps/electron"

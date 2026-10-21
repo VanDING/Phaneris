@@ -84,6 +84,10 @@ export function SendToWorkspaceDialog({
   const remoteTargets = targetWorkspaces.filter(w => w.remoteServer)
 
   // Check connectivity for remote targets when dialog opens (locals are always reachable)
+  // One stable value for the dependency array: the effect re-runs when
+  // the set of target workspaces changes, not on every render.
+  const remoteTargetIds = remoteTargets.map(w => w.id).join(',')
+
   useEffect(() => {
     if (!open) {
       healthCheckAbort.current?.abort()
@@ -123,7 +127,7 @@ export function SendToWorkspaceDialog({
     }
 
     return () => abort.abort()
-  }, [open, remoteTargets.map(w => w.id).join(',')])
+  }, [open, remoteTargetIds])
 
   const handleTransfer = useCallback(async () => {
     if (!selectedWorkspaceId || sessionIds.length === 0) return

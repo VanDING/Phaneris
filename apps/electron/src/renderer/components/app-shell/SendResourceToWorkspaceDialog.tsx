@@ -78,6 +78,10 @@ export function SendResourceToWorkspaceDialog({
   const targetWorkspaces = workspaces.filter(w => w.id !== activeWorkspaceId)
 
   // Health-check remote workspaces when dialog opens
+  // One stable value for the dependency array: the effect re-runs when
+  // the set of target workspaces changes, not on every render.
+  const targetWorkspaceIds = targetWorkspaces.map(w => w.id).join(',')
+
   useEffect(() => {
     if (!open) {
       healthCheckAbort.current?.abort()
@@ -117,7 +121,7 @@ export function SendResourceToWorkspaceDialog({
     }
 
     return () => abort.abort()
-  }, [open, targetWorkspaces.map(w => w.id).join(',')])
+  }, [open, targetWorkspaceIds])
 
   const handleSend = useCallback(async () => {
     if (!selectedWorkspaceId || !activeWorkspaceId || resourceIds.length === 0) return
