@@ -68,10 +68,10 @@ export function GitBashWarning({
       <div className="space-y-4">
         {/* Primary action: Download Git */}
         <div className="rounded-lg border border-border bg-foreground-2 p-4">
-          <h3 className="text-sm font-medium text-foreground">
+          <h3 className="text-body font-medium text-foreground">
             {t("onboarding.gitBash.installTitle")}
           </h3>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 text-meta text-muted-foreground">
             {t("onboarding.gitBash.installDesc")}
           </p>
           <Button
@@ -86,10 +86,10 @@ export function GitBashWarning({
 
         {/* Secondary: Already have Git? */}
         <div className="rounded-lg border border-border bg-foreground-2 p-4">
-          <h3 className="text-sm font-medium text-foreground">
+          <h3 className="text-body font-medium text-foreground">
             {t("onboarding.gitBash.alreadyInstalled")}
           </h3>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 text-meta text-muted-foreground">
             {t("onboarding.gitBash.customPath")}
           </p>
 
@@ -102,7 +102,7 @@ export function GitBashWarning({
                   onClearError?.()
                 }}
                 placeholder={t("onboarding.gitBash.pathPlaceholder")}
-                className="text-xs"
+                className="text-meta"
               />
               <Button
                 onClick={handleUsePath}
@@ -113,7 +113,7 @@ export function GitBashWarning({
                 {t("onboarding.gitBash.useThisPath")}
               </Button>
               {errorMessage && (
-                <p className="text-xs text-red-500">{errorMessage}</p>
+                <p className="text-meta text-destructive-text">{errorMessage}</p>
               )}
             </div>
           ) : (

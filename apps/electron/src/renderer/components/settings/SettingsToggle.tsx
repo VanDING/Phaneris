@@ -75,7 +75,7 @@ export function SettingsToggle({
         <div className={cn(settingsUI.label, tooltip && 'flex items-center gap-1.5')}>
           {label}
           {tooltip && <Tooltip><TooltipTrigger asChild>
-            <button type="button" aria-label={t('common.info')} className="craft-control inline-flex rounded-sm text-text-secondary hover:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            <button type="button" aria-label={t('common.info')} className="craft-control inline-flex rounded-sm text-text-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               onClick={event => event.preventDefault()}><Info className="size-3.5" aria-hidden /></button>
           </TooltipTrigger><TooltipContent className="max-w-xs">{tooltip}</TooltipContent></Tooltip>}
         </div>

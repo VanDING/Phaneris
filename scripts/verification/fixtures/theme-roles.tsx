@@ -27,7 +27,14 @@ import type { StoredSession } from '@phaneris/core'
 import { ThemeDomainsContent } from './theme-domains-content'
 
 const params = new URLSearchParams(location.search)
-const style = document.createElement('link'); style.rel = 'stylesheet'; style.href = params.get('css')!; document.head.append(style)
+const host = params.get('css')?.split('/').at(-1)?.replace('.css', '') ?? 'electron'
+const sheets = {
+  electron: () => import('./theme-roles-css/electron.css?inline'),
+  viewer: () => import('./theme-roles-css/viewer.css?inline'),
+  webui: () => import('./theme-roles-css/webui.css?inline'),
+}
+const sheet = await (sheets[host as keyof typeof sheets] ?? sheets.electron)()
+const style = document.createElement('style'); style.textContent = sheet.default; document.head.append(style)
 const i18n = createInstance(); await i18n.init({ lng: 'zh-Hans', keySeparator: false, resources: { 'zh-Hans': { translation: zh } } })
 let preferences: ThemePreferences = { mode: 'light', colorTheme: 'default', font: 'inter' }
 const listeners = new Set<(value: ThemePreferences) => void>(), definitions: Record<string, ThemeFile> = { ...BUILTIN_THEMES }
@@ -91,7 +98,7 @@ function Roles() {
       <div data-testid="transcript" className="h-80"><SessionViewer session={session} mode="readonly" defaultExpanded /></div>
       <div data-testid="transcript-column" className={`${CHAT_LAYOUT.maxWidth} ${CHAT_LAYOUT.containerPaddingX} mx-auto`}><p>转录内容边</p></div>
       <div data-testid="composer"><ChatInputZone sessionId="roles" showOptionBadges={false} compactMode={params.get('compact') === 'true'}
-        inputProps={{ inputValue: draft, onInputChange: setDraft, onSubmit: value => harness.submissions.push(value), currentModel: 'gpt-4.1', onModelChange: () => {} }} /></div>
+        inputProps={{ inputValue: draft, onInputChange: setDraft, onSubmit: value => { harness.submissions.push(value) }, currentModel: 'gpt-4.1', onModelChange: () => {} }} /></div>
       <div data-testid="code"><CodeBlock code="const answer = 42" language="typescript" /></div>
       {params.get('domains') === 'true' && <ThemeDomainsContent />}
     </div>

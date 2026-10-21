@@ -10,6 +10,7 @@ import { AddWorkspace_RadioOption } from "./AddWorkspace_RadioOption"
 import { useDirectoryPicker } from "@/hooks/useDirectoryPicker"
 import { ServerDirectoryBrowser } from "@/components/ServerDirectoryBrowser"
 import { DATA_DIR_NAME } from "@phaneris/shared/identity.generated"
+import { useInitialFocus } from '@phaneris/ui'
 
 type LocationOption = 'default' | 'custom'
 
@@ -32,6 +33,7 @@ export function AddWorkspaceStep_CreateNew({
   isCreating
 }: AddWorkspaceStep_CreateNewProps) {
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [name, setName] = useState('')
   const [locationOption, setLocationOption] = useState<LocationOption>('default')
   const [customPath, setCustomPath] = useState<string | null>(null)
@@ -106,7 +108,7 @@ export function AddWorkspaceStep_CreateNew({
         onClick={onBack}
         disabled={isCreating}
         className={cn(
-          "self-start flex items-center gap-1 text-sm text-muted-foreground",
+          "self-start flex items-center gap-1 text-body text-muted-foreground",
           "hover:text-foreground transition-colors mb-4",
           isCreating && "opacity-50 cursor-not-allowed"
         )}
@@ -123,7 +125,7 @@ export function AddWorkspaceStep_CreateNew({
       <div className="mt-6 w-full space-y-6">
         {/* Workspace name */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-foreground mb-2.5">
+          <label className="block text-body font-medium text-foreground mb-2.5">
             {t("workspace.nameLabel")}
           </label>
           <div className="bg-background shadow-minimal rounded-lg">
@@ -132,18 +134,18 @@ export function AddWorkspaceStep_CreateNew({
               onChange={(e) => setName(e.target.value)}
               placeholder={t("workspace.myWorkspace")}
               disabled={isCreating}
-              autoFocus
+              ref={initialFocusRef}
               className="border-0 bg-transparent shadow-none"
             />
           </div>
           {error && (
-            <p className="text-xs text-destructive">{error}</p>
+            <p className="text-meta text-destructive">{error}</p>
           )}
         </div>
 
         {/* Location selection */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium text-foreground mb-2.5">
+          <label className="block text-body font-medium text-foreground mb-2.5">
             {t("workspace.locationLabel")}
           </label>
 

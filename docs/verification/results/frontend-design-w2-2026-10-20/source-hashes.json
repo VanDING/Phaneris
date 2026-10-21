@@ -1,0 +1,10 @@
+{
+  "packages/ui/src/styles/theme-adapter.css": "42c0cfadeedae9894b2800be243f1df55165b5f5b5d7e399a1b024b2c3912b0a",
+  "packages/ui/src/styles/roles.css": "14536d471391e6015a7a66cdfea95bdd89d748a272d8bd4bbd441f5071a2a69a",
+  "packages/ui/src/styles/theme-tokens.css": "99fe0b82e131db52584addf8ed52ea70d251896140262418cfd8e1d75ba2a73e",
+  "apps/electron/src/renderer/components/ui/button.tsx": "6e7b720db50c68ae5b4112d3067fbabd2c90eb9639dd074744fbd6bcc885b2d6",
+  "apps/electron/src/renderer/components/ui/input.tsx": "e245605c58b5eebae43581ef4c47e1027862169883287f3c68e169b229ebd415",
+  "packages/ui/src/components/icons/FileKindIcon.tsx": "7bd6f307e6220835a26dde399f1f18e894a29c6f898f38693e65a42de0d56ec1",
+  "scripts/verification/fixtures/design-w2.tsx": "89d2add3c18c291ad7c37a2cec7eaa2d7dc4114c8ede08e66e718e67f8162bbb",
+  "scripts/verification/design-w2-workflow.ts": "4a77cf3ca33c101f83491627328182417dfdbf018a38585fb005812999913427"
+}

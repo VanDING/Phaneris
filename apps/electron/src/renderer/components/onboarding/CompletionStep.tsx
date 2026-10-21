@@ -29,7 +29,7 @@ export function CompletionStep({
     <StepFormLayout
       iconElement={isSaving ? (
         <div className="flex size-16 items-center justify-center">
-          <Spinner className="text-2xl text-foreground" />
+          <Spinner className="text-display text-foreground" />
         </div>
       ) : (
         <div className="flex size-16 items-center justify-center">

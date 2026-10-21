@@ -90,7 +90,7 @@ function ActionShortcutRow({ actionId }: { actionId: ActionId }) {
 
   return (
     <div className="flex items-center justify-between py-1">
-      <span className="text-sm">{label}</span>
+      <span className="text-body">{label}</span>
       <div className="flex items-center gap-1">
         {keys.map((key, keyIndex) => (
           <Kbd key={keyIndex}>{key}</Kbd>
@@ -106,7 +106,7 @@ function ActionShortcutRow({ actionId }: { actionId: ActionId }) {
 function RegistrySection({ category, actionIds }: { category: string; actionIds: ActionId[] }) {
   return (
     <div>
-      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+      <h3 className="text-meta font-semibold text-muted-foreground uppercase tracking-wide mb-2">
         {category}
       </h3>
       <div className="space-y-1.5">
@@ -124,13 +124,13 @@ function RegistrySection({ category, actionIds }: { category: string; actionIds:
 function StaticSection({ section }: { section: ShortcutSection }) {
   return (
     <div>
-      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+      <h3 className="text-meta font-semibold text-muted-foreground uppercase tracking-wide mb-2">
         {section.title}
       </h3>
       <div className="space-y-1.5">
         {section.shortcuts.map((shortcut, index) => (
           <div key={index} className="flex items-center justify-between py-1">
-            <span className="text-sm">{shortcut.description}</span>
+            <span className="text-body">{shortcut.description}</span>
             <div className="flex items-center gap-1">
               {shortcut.keys.map((key, keyIndex) => (
                 <Kbd key={keyIndex}>{key}</Kbd>

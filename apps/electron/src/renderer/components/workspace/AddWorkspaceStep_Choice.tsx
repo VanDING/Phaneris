@@ -35,7 +35,7 @@ function ChoiceCard({ icon, title, description, onClick, variant = 'secondary' }
         "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
         variant === 'primary'
           ? "bg-accent/10 text-accent"
-          : "bg-foreground/5 text-foreground/70"
+          : "bg-foreground/5 text-text-secondary"
       )}>
         {icon}
       </div>

@@ -284,7 +284,7 @@ export function EntityRow({
         tabIndex={0}
         {...(buttonProps as React.HTMLAttributes<HTMLDivElement>)}
         className={cn(
-          "craft-focus craft-row-focus entity-row-btn flex w-full items-start gap-2 pl-2 pr-4 py-[var(--theme-row-padding-y)] text-left text-sm rounded-lg",
+          "craft-focus craft-row-focus entity-row-btn flex w-full items-start gap-2 pl-2 pr-4 py-[var(--theme-row-padding-y)] text-left text-body rounded-lg",
           "motion-interactive transition-[background-color]",
           beforeMenu && "pr-[96px]",
           (isSelected || isInMultiSelect)
@@ -366,7 +366,7 @@ export function EntityRow({
 
           {/* Badges / metadata row */}
           {(badges || trailing) && (
-            <div className="flex items-center gap-[10px] text-xs text-text-secondary w-full -mb-[2px] min-w-0">
+            <div className="flex items-center gap-[10px] text-meta text-text-secondary w-full -mb-[2px] min-w-0">
               {/* Invisible spacer matching icon container width */}
               {icon && (
                 <div className="shrink-0 flex items-center gap-[10px] [&>*]:w-3 [&>*]:h-3 invisible" aria-hidden="true">
@@ -402,14 +402,19 @@ export function EntityRow({
 
       <div className="absolute right-2 top-2 z-component-chrome flex items-center gap-1">
         {beforeMenu && (
-          <div className="w-14 shrink-0" onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
+          /* Presentation wrapper: it only shields the row's click from the
+             control inside. */
+          <div role="presentation" className="w-14 shrink-0" onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
             {beforeMenu}
           </div>
         )}
 
         {/* More menu button — visible on hover, keyboard focus, or while the menu is open */}
         {(menuContent || useCompactMenu) && !hideMoreButton && (
+          /* Presentation wrapper: it stops the row's mousedown from starting a
+             drag; the menu buttons inside carry the semantics. */
           <div
+            role="presentation"
             data-touch-reveal="true"
             className={cn(
               "craft-row-actions shrink-0",

@@ -18,12 +18,12 @@ function RunStateIcon({ runState }: { runState: SubtaskRunState }) {
         />
       )
     case 'running':
-      return <Spinner className="text-sm text-[color:var(--info)] shrink-0" />
+      return <Spinner className="text-body text-[color:var(--info)] shrink-0" />
     case 'failed':
       return (
         <XCircle
-          className="h-3.5 w-3.5 shrink-0 text-red-500"
-          strokeWidth={2}
+          className="h-3.5 w-3.5 shrink-0 text-destructive-text"
+
           aria-label={t('common.failed')}
         />
       )
@@ -31,8 +31,8 @@ function RunStateIcon({ runState }: { runState: SubtaskRunState }) {
     default:
       return (
         <Circle
-          className="h-3.5 w-3.5 shrink-0 text-foreground/30"
-          strokeWidth={1.5}
+          className="h-3.5 w-3.5 shrink-0 text-text-secondary"
+
           aria-label={t('common.pending')}
         />
       )
@@ -81,7 +81,7 @@ export function SubtaskRow({ subtask, className, onClick }: SubtaskRowProps) {
       )}
     >
       <RunStateIcon runState={subtask.runState} />
-      <span className={cn('flex-1 truncate text-xs', isDone ? 'text-text-secondary line-through' : 'text-text-secondary')}>
+      <span className={cn('flex-1 truncate text-meta', isDone ? 'text-text-secondary line-through' : 'text-text-secondary')}>
         {subtask.title}
       </span>
       <ModelChip model={subtask.model} short className="w-20 shrink-0" />

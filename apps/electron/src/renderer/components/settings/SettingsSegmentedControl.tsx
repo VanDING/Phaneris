@@ -78,7 +78,7 @@ export function SettingsSegmentedControl<T extends string = string>({
             onClick={() => onValueChange(option.value)}
             className={cn(
               'craft-control motion-content flex items-center gap-1.5 rounded-lg transition-[color,background-color,box-shadow,opacity,transform]',
-              size === 'sm' ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm',
+              size === 'sm' ? 'px-2 py-1 text-meta' : 'px-3 py-1.5 text-body',
               isSelected
                 ? 'bg-secondary text-secondary-foreground shadow-minimal'
                 : 'bg-transparent hover:bg-foreground/5'
@@ -186,7 +186,7 @@ export function SettingsSegmentedControlCard<T extends string = string>({
             </div>
 
             {/* Label */}
-            <span className="text-sm">{option.label}</span>
+            <span className="text-body">{option.label}</span>
 
             {/* Icon on right */}
             {option.icon && (

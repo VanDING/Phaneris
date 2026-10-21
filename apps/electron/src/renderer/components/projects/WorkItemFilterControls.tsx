@@ -40,7 +40,7 @@ export function WorkItemFilterControls({
             type="button"
             aria-label={t('kanban.viewFilters')}
             className={cn(
-              'relative grid h-8 w-8 place-items-center rounded-lg border border-border bg-background text-foreground/55 hover:text-foreground',
+              'relative grid h-8 w-8 place-items-center rounded-lg border border-border bg-background text-text-secondary hover:text-foreground',
               (statusIds.length > 0 || scheduled !== 'all') && 'border-primary/40 text-primary',
             )}
           >
@@ -48,10 +48,10 @@ export function WorkItemFilterControls({
           </button>
         </PopoverTrigger>
         <PopoverContent align="start" className="w-64 p-3">
-          <div className="mb-2 text-xs font-semibold">{t('kanban.workItemStatus')}</div>
+          <div className="mb-2 text-meta font-semibold">{t('kanban.workItemStatus')}</div>
           <div className="max-h-40 space-y-1 overflow-auto">
             {statuses.map((status) => (
-              <label key={status.id} className="flex items-center gap-2 rounded-md px-1 py-1 text-xs hover:bg-foreground/[0.04]">
+              <label key={status.id} className="flex items-center gap-2 rounded-md px-1 py-1 text-meta hover:bg-foreground/[0.04]">
                 <input
                   type="checkbox"
                   checked={statusIds.includes(status.id)}
@@ -63,7 +63,7 @@ export function WorkItemFilterControls({
               </label>
             ))}
           </div>
-          <div className="mb-1 mt-3 text-xs font-semibold">{t('kanban.scheduleFilter')}</div>
+          <div className="mb-1 mt-3 text-meta font-semibold">{t('kanban.scheduleFilter')}</div>
           <ProjectSelectMenu
             value={scheduled}
             options={scheduleOptions}
@@ -71,7 +71,7 @@ export function WorkItemFilterControls({
             ariaLabel={t('kanban.scheduleFilter')}
             className="w-full"
           />
-          <button type="button" onClick={() => { setStatusIds([]); setScheduled('all') }} className="mt-3 text-xs font-semibold text-foreground/55 hover:text-foreground">
+          <button type="button" onClick={() => { setStatusIds([]); setScheduled('all') }} className="mt-3 text-meta font-semibold text-text-secondary hover:text-foreground">
             {t('common.clear')}
           </button>
         </PopoverContent>

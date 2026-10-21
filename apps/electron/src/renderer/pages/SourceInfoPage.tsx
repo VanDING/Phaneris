@@ -414,7 +414,7 @@ export default function SourceInfoPage({ sourceSlug, workspaceId, onDelete }: So
             <Info_Table
               footer={source.config.connectionError && (
                 <div className="px-4 py-2 border-t border-border/30 bg-destructive/5">
-                  <div className="flex items-start gap-2 text-sm text-destructive">
+                  <div className="flex items-start gap-2 text-body text-destructive">
                     <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                     <span>{source.config.connectionError}</span>
                   </div>

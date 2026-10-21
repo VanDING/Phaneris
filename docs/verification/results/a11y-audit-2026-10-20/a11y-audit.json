@@ -1,0 +1,114 @@
+{
+  "checks": [
+    {
+      "id": "A11Y1-base-surface",
+      "passed": true
+    },
+    {
+      "id": "A11Y2-open-dialog",
+      "passed": true
+    },
+    {
+      "id": "A11Y3-open-menu",
+      "passed": true
+    },
+    {
+      "id": "A11Y4-narrow-reflow",
+      "passed": true
+    },
+    {
+      "id": "A11Y5-touch-targets",
+      "passed": true
+    },
+    {
+      "id": "A11Y6-no-page-errors",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "id": "axe",
+      "state": "base",
+      "violations": []
+    },
+    {
+      "id": "axe",
+      "state": "dialog",
+      "violations": []
+    },
+    {
+      "id": "axe",
+      "state": "menu",
+      "violations": [
+        {
+          "id": "aria-hidden-focus",
+          "impact": "serious",
+          "help": "ARIA hidden element must not be focusable or contain focusable elements",
+          "nodes": [
+            {
+              "target": [
+                "#root"
+              ],
+              "summary": "Fix all of the following:\n  Focusable content should be disabled or be removed from the DOM"
+            }
+          ]
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "help": "Document should have one main landmark",
+          "nodes": [
+            {
+              "target": [
+                "html"
+              ],
+              "summary": "Fix all of the following:\n  Document does not have a main landmark"
+            }
+          ]
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "help": "Page should contain a level-one heading",
+          "nodes": [
+            {
+              "target": [
+                "html"
+              ],
+              "summary": "Fix all of the following:\n  Page must have a level-one heading"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "help": "All page content should be contained by landmarks",
+          "nodes": [
+            {
+              "target": [
+                "div[data-radix-popper-content-wrapper=\"\"]"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "menu-focus-trap",
+      "trapped": true
+    },
+    {
+      "id": "axe",
+      "state": "narrow",
+      "violations": []
+    },
+    {
+      "id": "touch-targets",
+      "belowMinimum": []
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.8078.4",
+  "scope": "axe-core (wcag2a/2aa/21a/21aa/best-practice) over one real surface: base page, open dialog, open menu, 390px reflow, plus a 44px touch-target sweep under hasTouch. Desktop Chromium; the product surfaces that need full-app data are out of scope (see untested)."
+}

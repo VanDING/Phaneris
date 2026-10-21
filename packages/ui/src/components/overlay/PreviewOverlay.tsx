@@ -189,6 +189,7 @@ export function PreviewOverlay({
   // Modal mode - uses its own portal with backdrop click to close
   return ReactDOM.createPortal(
     <div
+      role="presentation"
       className={`fixed inset-0 z-modal flex items-center justify-center ${OVERLAY_LAYOUT.modalBackdropClass}`}
       style={{ zIndex: layer }}
       onClick={(e) => {

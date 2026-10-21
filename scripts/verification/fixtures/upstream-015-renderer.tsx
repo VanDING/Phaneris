@@ -41,7 +41,7 @@ void i18n.use(initReactI18next).init({ lng:'en', fallbackLng:'en', resources:{ e
         onRespondToCredential={(_session,_id,response) => responses.push(response)} /></section>
       <section id="composer"><FreeFormInput currentModel="pi/fixture" onModelChange={() => {}} inputValue={draft} onInputChange={setDraft}
         attachmentsValue={attachments} onAttachmentsChange={setAttachments}
-        onSubmit={(text,files) => submitted.push({text,files})} /></section>
+        onSubmit={(text,files) => { submitted.push({text,files}) }} /></section>
     </EscapeInterruptProvider></TooltipProvider></AppShellProvider></Provider>
   }
   createRoot(document.getElementById('root')!).render(<Fixture />)

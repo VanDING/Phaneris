@@ -129,7 +129,7 @@ export function MarkdownDocBlock({ code, className, onUrlClick, onFileClick }: M
     <MarkdownDocBlockErrorBoundary fallback={fallback}>
       <div className={cn('relative group rounded-shape-lg overflow-hidden border bg-muted/10', className)}>
         <div className="px-3 py-2 bg-muted/50 border-b flex items-center gap-2">
-          <FileText className="w-3.5 h-3.5 text-muted-foreground/50" />
+          <FileText className="w-3.5 h-3.5 text-text-secondary" />
           <span className="text-label text-muted-foreground font-medium flex-1">{headerTitle}</span>
           <div className="flex items-center gap-1">
             <ItemNavigator items={items} activeIndex={activeIndex} onSelect={setActiveIndex} />
@@ -138,7 +138,7 @@ export function MarkdownDocBlock({ code, className, onUrlClick, onFileClick }: M
               className={`craft-row-actions ${cn(
                 "motion-interactive p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] select-none",
                 "bg-background shadow-minimal",
-                "text-muted-foreground/50 hover:text-foreground",
+                "text-text-secondary hover:text-foreground",
                 "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100",
                 hasMultiple ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               )}`}
@@ -171,7 +171,7 @@ export function MarkdownDocBlock({ code, className, onUrlClick, onFileClick }: M
           )}
 
           {activeContent === undefined && !loading && error && (
-            <div className="py-6 text-center text-destructive/70 text-body">{error}</div>
+            <div className="py-6 text-center text-destructive-text text-body">{error}</div>
           )}
 
           {!isFullscreen && activeContent !== undefined && (

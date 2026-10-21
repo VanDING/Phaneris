@@ -110,7 +110,7 @@ function AutomationItem({
       title={automation.name}
       badges={
         <>
-          <MicroBadge colorClass="bg-foreground/8 text-foreground/60">
+          <MicroBadge colorClass="bg-foreground/8 text-text-secondary">
             {getEventDisplayName(automation.event)}
           </MicroBadge>
           {automation.actions.some(a => a.type === 'prompt') && (
@@ -119,7 +119,7 @@ function AutomationItem({
             </MicroBadge>
           )}
           {automation.actions.some(a => a.type === 'webhook') && (
-            <MicroBadge colorClass="bg-orange-500/10 text-orange-600 dark:text-orange-400">
+            <MicroBadge colorClass="bg-info/10 text-info-text">
               {t('automations.badgeWebhook')}
             </MicroBadge>
           )}
@@ -129,7 +129,7 @@ function AutomationItem({
         automation.lastExecutedAt ? (
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="shrink-0 text-meta text-foreground/40 whitespace-nowrap cursor-default">
+              <span className="shrink-0 text-meta text-text-secondary whitespace-nowrap cursor-default">
                 {formatShortRelativeTime(automation.lastExecutedAt)}
               </span>
             </TooltipTrigger>
@@ -265,7 +265,7 @@ export function AutomationsListPanel({
             <EditPopover
               align="center"
               trigger={
-                <button className="inline-flex items-center h-7 px-3 text-xs font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors">
+                <button className="inline-flex items-center h-7 px-3 text-meta font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors">
                   {t('automations.addAutomation')}
                 </button>
               }
@@ -296,13 +296,13 @@ export function AutomationsListPanel({
       {/* Filtered empty state */}
       {filteredAutomations.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-1">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-body text-muted-foreground">
             {isSearchMode ? t('automations.noAutomationsFound') : t('automations.noAutomationsConfigured')}
           </p>
           {isSearchMode && (
             <button
               onClick={() => setSearchQuery('')}
-              className="text-xs text-foreground hover:underline"
+              className="text-meta text-foreground hover:underline"
             >
               {t('automations.clearSearch')}
             </button>

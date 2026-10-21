@@ -202,7 +202,7 @@ export function MarkdownMermaidBlock({ code, className, showExpandButton = true,
               "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-2 right-2 p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
               "opacity-0 group-hover:opacity-100",
               "bg-background shadow-minimal",
-              "text-muted-foreground/50 hover:text-foreground",
+              "text-text-secondary hover:text-foreground",
               "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100"
             )}
             title={t('common.viewFullscreen')}

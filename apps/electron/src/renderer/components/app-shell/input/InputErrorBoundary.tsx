@@ -85,8 +85,8 @@ function InputErrorFallback({
           <AlertCircle className="h-4 w-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-foreground">{t('chat.inputFailedTitle')}</p>
-          <p className="mt-1 text-xs text-foreground/60">
+          <p className="text-body font-medium text-foreground">{t('chat.inputFailedTitle')}</p>
+          <p className="mt-1 text-meta text-text-secondary">
             {t('chat.inputFailedDescription')}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">

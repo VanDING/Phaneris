@@ -2,8 +2,8 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
-import { join, relative, resolve } from 'node:path'
-import { createServer } from 'vite'
+import { join, resolve } from 'node:path'
+import { buildFixturePage } from './fixture-bundle'
 import { BUILTIN_THEMES } from '../../packages/shared/src/config/theme'
 import { verificationWorkflow } from './verification-artifacts'
 import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
@@ -11,18 +11,14 @@ import { warmThemePage } from './fixtures/warm-theme-page'
 await verificationWorkflow('theme-design', async run => {
   const root = resolve(import.meta.dir, '../..'), fixture = join(root, 'scripts/verification/fixtures/theme-roles.tsx')
   run.json('source-hashes.json', { fixture: createHash('sha256').update(readFileSync(fixture)).digest('hex') })
-  const prefix = `/${relative(root, run.directory).replaceAll('\\', '/')}`
-  writeFileSync(join(run.directory, 'fixture.html'), '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><div id="root"></div><script type="module" src="/scripts/verification/fixtures/theme-roles.tsx"></script>')
-  writeFileSync(join(run.directory, 'host.css'), `@import "${relative(run.directory, join(root, 'apps/electron/src/renderer/index.css')).replaceAll('\\', '/')}";\n@source "${fixture.replaceAll('\\', '/')}";`)
-  const launched = await launchWorkflowBrowser(), server = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
-    optimizeDeps: { entries: [fixture], include: ['react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'], exclude: ['pdfjs-dist/build/pdf.worker.min.mjs?url'] }, server: { host: '127.0.0.1', port: 0, open: false } })
-  await server.listen(); const base = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}`
+  const launched = await launchWorkflowBrowser(), server = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/theme-roles.tsx' })
+  const base = server.url
   const context = await launched.browser.newContext({ viewport: { width: 1280, height: 1000 }, reducedMotion: 'reduce' }), page = await context.newPage()
   const checks: string[] = [], samples: { id: string; file: string; group: string; geometry: unknown }[] = [], errors: string[] = []
   page.on('pageerror', error => errors.push(error.message)); await context.tracing.start({ screenshots: true, snapshots: true })
   const scenes = [{ theme: 'default', mode: 'light' as const }, { theme: 'default', mode: 'dark' as const }, { theme: 'ink', mode: 'light' as const }]
   const open = async (compact = false, collapsed = false) => {
-    await gotoWithRetry(page, `${base}${prefix}/fixture.html?css=${encodeURIComponent(`${prefix}/host.css`)}&compact=${compact}&collapsed=${collapsed}`)
+    await gotoWithRetry(page, `${base}?css=electron.css&compact=${compact}&collapsed=${collapsed}`)
     await page.locator('[data-roles-ready]').waitFor()
   }
   async function scene(id: string, group: string, theme: string, mode: 'light' | 'dark', row = 28, width = 840, material = 'current', fontSize = '15px') {
@@ -44,7 +40,7 @@ await verificationWorkflow('theme-design', async run => {
     samples.push({ id, file, group, geometry }); checks.push(id)
   }
   try {
-    run.json('preparation.json', await warmThemePage(context, `${base}${prefix}/fixture.html?css=${encodeURIComponent(`${prefix}/host.css`)}`, '[data-roles-ready]'))
+    run.json('preparation.json', await warmThemePage(context, `${base}?css=electron.css`, '[data-roles-ready]'))
     for (const { theme, mode } of scenes) {
       for (const collapsed of [false, true]) { await open(false, collapsed); for (const row of [40, 34, 32, 28]) await scene(`rows-${theme}-${mode}-${row}-${collapsed ? 'collapsed' : 'expanded'}`, '导航密度', theme, mode, row) }
       await open(); for (const width of [840, 768]) await scene(`width-${theme}-${mode}-${width}`, '阅读列', theme, mode, 28, width)

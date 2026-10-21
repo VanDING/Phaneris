@@ -66,11 +66,11 @@ export function AddWorkspaceStepHeader({
 }: AddWorkspaceStepHeaderProps) {
   return (
     <div className={cn("text-center", className)}>
-      <h1 className="text-lg font-semibold tracking-tight">
+      <h1 className="text-title font-semibold tracking-tight">
         {title}
       </h1>
       {description && (
-        <p className="mt-1 text-sm max-w-sm text-muted-foreground mx-auto">
+        <p className="mt-1 text-body max-w-sm text-muted-foreground mx-auto">
           {description}
         </p>
       )}

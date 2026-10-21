@@ -1,31 +1,28 @@
 /** TC09 / TC14: real standalone toolbar and empty-state entries. */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
-import { join, relative, resolve } from 'node:path'
-import { createServer } from 'vite'
+import { readFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+import { buildFixturePage } from './fixture-bundle'
 import { verificationWorkflow } from './verification-artifacts'
 import { launchWorkflowBrowser } from './workflow-browser'
 import { warmThemePage } from './fixtures/warm-theme-page'
 await verificationWorkflow('theme-browser-host', async run => {
-  const root = resolve(import.meta.dir, '../..'), fixture = join(root, 'scripts/verification/fixtures/theme-browser-host.ts')
+  const root = resolve(import.meta.dir, '../..')
   const sources = ['apps/electron/src/renderer/browser-toolbar.tsx', 'apps/electron/src/renderer/browser-empty-state.tsx',
     'apps/electron/src/preload/browser-toolbar.ts', 'apps/electron/src/main/browser-pane-manager.ts']
   run.json('source-hashes.json', Object.fromEntries(sources.map(path => [path, createHash('sha256').update(readFileSync(join(root, path))).digest('hex')])))
-  const prefix = `/${relative(root, run.directory).replaceAll('\\', '/')}`
-  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><div id="root"></div><script type="module" src="/scripts/verification/fixtures/theme-browser-host.ts"></script>')
-  const launched = await launchWorkflowBrowser(), server = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
-    optimizeDeps: { entries: [fixture, ...['browser-toolbar.tsx', 'browser-empty-state.tsx'].map(file => join(root, 'apps/electron/src/renderer', file))], include: ['react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'], exclude: ['pdfjs-dist/build/pdf.worker.min.mjs?url'] }, server: { host: '127.0.0.1', port: 0, open: false } })
-  await server.listen(); const base = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}`
+  const launched = await launchWorkflowBrowser(), server = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/theme-browser-host.ts' })
+  const base = server.url
   const context = await launched.browser.newContext({ viewport: { width: 1280, height: 820 }, reducedMotion: 'reduce' }), page = await context.newPage()
   const checks: { id: string; passed: boolean; error?: string }[] = [], samples: unknown[] = [], errors: string[] = []
   page.on('pageerror', error => errors.push(error.message)); page.on('console', message => { if (message.type() === 'error') errors.push(message.text()) })
   await context.tracing.start({ screenshots: true, snapshots: true })
   async function check(id: string, fn: () => Promise<void>) { try { await fn(); checks.push({ id, passed: true }) } catch (error) { checks.push({ id, passed: false, error: String(error) }) } }
   try {
-    run.json('preparation.json', await warmThemePage(context, `${base}${prefix}/index.html?host=toolbar`, '#root > *'))
+    run.json('preparation.json', await warmThemePage(context, `${base}?host=toolbar`, '#root > *'))
     for (const host of ['toolbar', 'empty']) {
-      await page.goto(`${base}${prefix}/index.html?host=${host}`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
+      await page.goto(`${base}?host=${host}`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
       await page.locator('#root > *').first().waitFor({ timeout: 120_000 })
       for (const id of ['default', 'ink', 'geek', 'cyberpunk-2077']) for (const mode of ['light', 'dark'] as const) await check(`TC14-${host}-${id}-${mode}`, async () => {
         await page.evaluate(({ id, mode }) => window.themeBrowserHost.choose(id, mode), { id, mode })

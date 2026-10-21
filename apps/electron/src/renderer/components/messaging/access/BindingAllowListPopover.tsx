@@ -57,7 +57,7 @@ export function BindingAllowListPopover({ access, workspaceOwners, onChange }: P
         <Button
           variant="ghost"
           size="sm"
-          className="gap-1.5 text-xs text-foreground/60 hover:text-foreground"
+          className="gap-1.5 text-meta text-text-secondary hover:text-foreground"
         >
           {triggerLabel}
           <ChevronDown className="h-3 w-3" />
@@ -65,7 +65,7 @@ export function BindingAllowListPopover({ access, workspaceOwners, onChange }: P
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
         <div className="px-3 py-2.5">
-          <div className="text-xs font-medium">
+          <div className="text-meta font-medium">
             {t('settings.messaging.telegram.access.bindingPopover.title')}
           </div>
         </div>
@@ -94,12 +94,12 @@ export function BindingAllowListPopover({ access, workspaceOwners, onChange }: P
 
         {access.mode === 'allow-list' && (
           <div className="border-t border-border/50 px-3 py-2.5">
-            <div className="text-xs font-medium">
+            <div className="text-meta font-medium">
               {t('settings.messaging.telegram.access.allowedUsersTitle')}
             </div>
             <div className="mt-2 flex flex-col gap-1">
               {workspaceOwners.length === 0 ? (
-                <div className="text-xs text-foreground/50">
+                <div className="text-meta text-text-secondary">
                   {t('settings.messaging.telegram.access.bindingPopover.noKnownUsers')}
                 </div>
               ) : (
@@ -121,9 +121,9 @@ export function BindingAllowListPopover({ access, workspaceOwners, onChange }: P
                       <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-border/70">
                         {checked && <Check className="h-3 w-3" />}
                       </div>
-                      <div className="min-w-0 flex-1 truncate text-xs">{primary}</div>
+                      <div className="min-w-0 flex-1 truncate text-meta">{primary}</div>
                       {owner.username && (
-                        <div className="shrink-0 text-xs text-foreground/40">
+                        <div className="shrink-0 text-meta text-text-secondary">
                           @{owner.username}
                         </div>
                       )}
@@ -157,15 +157,15 @@ function ModeRow({
       className="flex w-full items-start gap-3 px-3 py-2 text-left transition-colors hover:bg-foreground/[0.05]"
     >
       <Icon
-        className="mt-0.5 h-4 w-4 shrink-0 text-foreground/60"
-        strokeWidth={1.5}
+        className="mt-0.5 h-4 w-4 shrink-0 text-text-secondary"
+
       />
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2 text-xs font-medium">
+        <div className="flex items-center gap-2 text-meta font-medium">
           {t(MODE_LABEL_KEYS[mode])}
-          {selected && <Check className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />}
+          {selected && <Check className="h-3 w-3 text-success-text" />}
         </div>
-        <div className="mt-0.5 text-xs text-foreground/50">
+        <div className="mt-0.5 text-meta text-text-secondary">
           {t(MODE_DESCRIPTION_KEYS[mode])}
         </div>
       </div>

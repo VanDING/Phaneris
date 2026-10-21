@@ -129,8 +129,8 @@ export function PagesHome() {
       {/* Sticky header: title + count, project filter, primary action */}
       <div className="flex items-center justify-between gap-2 border-b border-border/50 px-4 py-2.5">
         <div className="flex min-w-0 items-center gap-2.5">
-          <span className="text-sm font-medium">{t('sidebar.pages')}</span>
-          <span className="text-xs text-foreground/40">{pages.length}</span>
+          <span className="text-body font-medium">{t('sidebar.pages')}</span>
+          <span className="text-meta text-text-secondary">{pages.length}</span>
           {(projectOptions.length > 0 || projectFilter.length > 0) && (
             <ProjectMultiSelectFilter
               projects={projectOptions}
@@ -146,7 +146,7 @@ export function PagesHome() {
           disabled={!activeWorkspaceId}
           className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
         >
-          <Plus className="h-3.5 w-3.5" strokeWidth={2.5} /> {t('pages.newPage')}
+          <Plus className="h-3.5 w-3.5" /> {t('pages.newPage')}
         </button>
       </div>
 
@@ -159,19 +159,19 @@ export function PagesHome() {
           >
             <button
               onClick={handleAskAgent}
-              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-xs font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
+              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
             >
               <Sparkles className="h-3.5 w-3.5" /> {t('pages.askAgent')}
             </button>
             <button
               onClick={handleCreatePage}
-              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-xs font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
+              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
             >
               <Plus className="h-3.5 w-3.5" /> {t('pages.createBlank')}
             </button>
           </EntityListEmptyScreen>
         ) : visiblePages.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-sm text-foreground/50">
+          <div className="flex h-full items-center justify-center text-body text-text-secondary">
             {t('pages.noMatches')}
           </div>
         ) : (

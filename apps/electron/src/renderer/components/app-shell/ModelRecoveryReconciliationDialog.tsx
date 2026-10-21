@@ -62,7 +62,7 @@ export function ModelRecoveryReconciliationDialog({
           <DialogDescription>{t('recovery.model.description')}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4">
-          <div className="break-all rounded-md border p-2 font-mono text-xs">{modelOperationId}</div>
+          <div className="break-all rounded-md border p-2 font-mono text-meta">{modelOperationId}</div>
           <div className="grid gap-1.5">
             <Label>{t('recovery.dialog.decision')}</Label>
             <Select value={decision} onValueChange={value => setDecision(value as ModelReconciliationDecision)} disabled={submitting}>

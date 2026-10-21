@@ -163,7 +163,10 @@ export function ImagePreviewOverlay({
       error={error ? { label: 'Load Failed', message: error } : undefined}
       headerActions={headerActions}
     >
+      {/* Pan surface: a pointer-only gesture container. The image inside carries
+          the content and its alt text; the container adds no semantics. */}
       <div
+        role="presentation"
         ref={containerRef}
         className="min-h-full flex items-center justify-center p-4 select-none"
         onMouseDown={onMouseDown}
@@ -174,7 +177,7 @@ export function ImagePreviewOverlay({
         }}
       >
         {!activeDataUrl && isLoading && (
-          <div className="text-muted-foreground text-sm">{t('preview.loadingImage')}</div>
+          <div className="text-muted-foreground text-body">{t('preview.loadingImage')}</div>
         )}
         {activeDataUrl && (
           <img

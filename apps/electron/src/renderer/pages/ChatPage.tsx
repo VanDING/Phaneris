@@ -739,7 +739,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
         <PanelHeader title={t('chat.session')} leadingAction={leadingAction} trailingAction={trailingAction} />
         <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground">
           <AlertCircle className="h-10 w-10" />
-          <p className="text-sm">{t('chat.sessionNoLongerExists')}</p>
+          <p className="text-body">{t('chat.sessionNoLongerExists')}</p>
         </div>
       </div>
     )
@@ -755,7 +755,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
             session={session}
             onSendMessage={(message, attachments, skillSlugs) => {
               if (session) {
-                onSendMessage(session.id, message, attachments, skillSlugs)
+                return onSendMessage(session.id, message, attachments, skillSlugs)
               }
             }}
             onOpenFile={handleOpenFile}

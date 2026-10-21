@@ -75,19 +75,19 @@ export function ProjectMultiSelectFilter({
             className
           )}
         >
-          <FolderKanban className="h-3.5 w-3.5 shrink-0 text-foreground/50" strokeWidth={2} />
+          <FolderKanban className="h-3.5 w-3.5 shrink-0 text-text-secondary" />
           <span className="truncate">{label}</span>
-          <ChevronDown className="h-3 w-3 shrink-0 text-foreground/40" strokeWidth={2} />
+          <ChevronDown className="h-3 w-3 shrink-0 text-text-secondary" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="max-w-[260px]">
-        <DropdownMenuItem className="text-xs" disabled={value.length === 0} onSelect={() => onChange([])}>
+        <DropdownMenuItem className="text-meta" disabled={value.length === 0} onSelect={() => onChange([])}>
           {t('kanban.allProjects')}
         </DropdownMenuItem>
         {(projects.length > 0 || unassignedId) && <DropdownMenuSeparator />}
         {unassignedId && (
           <DropdownMenuCheckboxItem
-            className="text-xs"
+            className="text-meta"
             checked={selected.has(unassignedId)}
             onCheckedChange={() => toggle(unassignedId)}
             onSelect={e => e.preventDefault()}
@@ -101,7 +101,7 @@ export function ProjectMultiSelectFilter({
         {projects.map(project => (
           <DropdownMenuCheckboxItem
             key={project.id}
-            className="text-xs"
+            className="text-meta"
             checked={selected.has(project.id)}
             onCheckedChange={() => toggle(project.id)}
             onSelect={e => e.preventDefault()}

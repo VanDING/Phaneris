@@ -259,7 +259,7 @@ export function CompactSessionMenu({
             >
               <h1
                 className={cn(
-                  'text-sm font-semibold truncate font-sans leading-tight',
+                  'text-body font-semibold truncate font-sans leading-tight',
                   isRegeneratingTitle && 'animate-shimmer-text',
                 )}
               >
@@ -268,7 +268,7 @@ export function CompactSessionMenu({
               {badge}
             </motion.div>
             <span className="shrink-0 flex items-center justify-center">
-              <ChevronDown className="h-3.5 w-3.5 text-foreground/50 translate-y-[1px]" />
+              <ChevronDown className="h-3.5 w-3.5 text-text-secondary translate-y-[1px]" />
             </span>
           </button>
         </DrawerTrigger>
@@ -284,7 +284,7 @@ export function CompactSessionMenu({
             <button
               type="button"
               onClick={() => setView('root')}
-              className="-ml-1 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-foreground/50"
+              className="-ml-1 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-text-secondary"
               aria-label={t('common.back')}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -650,7 +650,7 @@ function LabelsPane({
             icon={<LabelIcon label={item.config} size="lg" />}
             label={item.parentPath ? (
               <>
-                <span className="text-foreground/50">{item.parentPath}</span>
+                <span className="text-text-secondary">{item.parentPath}</span>
                 {item.label}
               </>
             ) : item.label}
@@ -735,10 +735,10 @@ function Row({
       <span className="shrink-0 inline-flex items-center justify-center h-5 w-5">
         {icon}
       </span>
-      <span className="flex-1 min-w-0 text-sm truncate">{label}</span>
+      <span className="flex-1 min-w-0 text-body truncate">{label}</span>
       {trailing}
-      {radioSelected && <Check className="h-4 w-4 shrink-0 text-foreground/70" />}
-      {chevron && <ChevronRight className="h-4 w-4 shrink-0 text-foreground/50" />}
+      {radioSelected && <Check className="h-4 w-4 shrink-0 text-text-secondary" />}
+      {chevron && <ChevronRight className="h-4 w-4 shrink-0 text-text-secondary" />}
     </button>
   )
 }
@@ -749,7 +749,7 @@ function Separator() {
 
 function CountBadge({ count }: { count: number }) {
   return (
-    <span className="text-meta tabular-nums text-foreground/50">
+    <span className="text-meta tabular-nums text-text-secondary">
       {count}
     </span>
   )

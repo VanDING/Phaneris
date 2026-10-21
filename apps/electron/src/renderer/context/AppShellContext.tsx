@@ -93,7 +93,7 @@ export interface AppShellContextType {
 
   // Session callbacks
   onCreateSession: (workspaceId: string, options?: import('../../shared/types').CreateSessionOptions) => Promise<Session>
-  onSendMessage: (sessionId: string, message: string, attachments?: FileAttachment[], skillSlugs?: string[], badges?: import('@phaneris/core').ContentBadge[]) => void
+  onSendMessage: (sessionId: string, message: string, attachments?: FileAttachment[], skillSlugs?: string[], badges?: import('@phaneris/core').ContentBadge[]) => void | Promise<boolean | void>
   onRenameSession: (sessionId: string, name: string) => void
   onFlagSession: (sessionId: string) => void
   onUnflagSession: (sessionId: string) => void
@@ -153,7 +153,7 @@ export interface AppShellContextType {
   onAttachmentsChange: (sessionId: string, attachments: FileAttachment[]) => void
 
   // Source selection callback (per-session) - provided by AppShell component
-  onSessionSourcesChange?: (sessionId: string, sourceSlugs: string[]) => void
+  onSessionSourcesChange?: (sessionId: string, sourceSlugs: string[]) => void | Promise<void>
 
   // Open a new chat with optional agent, name, and pre-filled input
   openNewChat?: (params?: NewChatActionParams) => Promise<void>

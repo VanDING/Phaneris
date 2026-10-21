@@ -43,7 +43,7 @@ function IconSpacer() {
 export function OwnersListEditor({ owners, enforced, onRemove, currentUserId }: Props) {
   if (owners.length === 0) {
     return (
-      <div className="flex items-start gap-3 px-4 py-3 text-xs text-foreground/50">
+      <div className="flex items-start gap-3 px-4 py-3 text-meta text-text-secondary">
         <IconSpacer />
         <span>
           <Trans
@@ -97,25 +97,25 @@ function OwnerRow({
       <IconSpacer />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <span className="truncate text-sm">{primary}</span>
+          <span className="truncate text-body">{primary}</span>
           {isCurrentUser && (
-            <span className="shrink-0 rounded bg-emerald-500/15 px-1.5 py-0.5 text-micro font-medium text-emerald-700 dark:text-emerald-400">
+            <span className="shrink-0 rounded bg-success/15 px-1.5 py-0.5 text-micro font-medium text-success-text">
               {t('settings.messaging.telegram.access.owners.youBadge')}
             </span>
           )}
           {!enforced && (
-            <span className="shrink-0 text-micro uppercase tracking-wide text-foreground/40">
+            <span className="shrink-0 text-micro uppercase tracking-wide text-text-secondary">
               {t('settings.messaging.telegram.access.owners.notEnforced')}
             </span>
           )}
         </div>
-        <div className="mt-0.5 truncate text-xs text-foreground/50">{secondary}</div>
+        <div className="mt-0.5 truncate text-meta text-text-secondary">{secondary}</div>
       </div>
       <Button
         variant="ghost"
         size="sm"
         onClick={onRemove}
-        className="text-foreground/60 hover:text-destructive"
+        className="text-text-secondary hover:text-destructive"
         aria-label={t('settings.messaging.telegram.access.owners.removeAria', { name: primary })}
       >
         <X className="h-3.5 w-3.5" />

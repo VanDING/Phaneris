@@ -48,7 +48,7 @@ export function TurnCardActionsMenu({
             "p-1 rounded-shape-md transition-opacity shrink-0",
             "opacity-0 group-hover:opacity-100",
             "bg-background shadow-minimal",
-            "text-muted-foreground/50 hover:text-foreground",
+            "text-text-secondary hover:text-foreground",
             "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100",
             isOpen && "opacity-100 text-foreground",
             className

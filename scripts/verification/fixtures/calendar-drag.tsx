@@ -43,7 +43,7 @@ interface IpcRecord { method: string; args: unknown[]; at: number }
 interface WriteRecord { id: string; patch: Record<string, unknown>; at: number }
 
 const WORKSPACE_ID = 'ws-fixture'
-const ANCHOR = planDayKeyFromDate(new Date())
+const ANCHOR = new URLSearchParams(location.search).get('date') ?? planDayKeyFromDate(new Date())
 
 // The component remembers its projection per workspace. Pre-selecting the week
 // view through that same persisted state is what a returning user has.
@@ -278,6 +278,11 @@ function Fixture() {
           return (controller?.view?.title as string | undefined) ?? null
         } catch { return null }
       },
+      fullCalendarCursor: () => {
+        // Independent library state, not the persisted renderer cursor.
+        const controller = (findCalendarProps() as { controller?: { getDate: () => Date } } | null)?.controller
+        return controller ? planDayKeyFromDate(controller.getDate()) : null
+      },
     }
   }, [ready])
   return (
@@ -308,6 +313,7 @@ declare global {
       handlerFound: () => boolean
       reverted: () => number
       fullCalendarTitle: () => string | null
+      fullCalendarCursor: () => string | null
     }
   }
 }

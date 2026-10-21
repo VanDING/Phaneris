@@ -42,10 +42,10 @@ export function FileViewer({ path }: FileViewerProps) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8 text-center">
         <div className="size-16 bg-muted rounded-2xl flex items-center justify-center mb-4">
-          <FileText className="size-8 text-muted-foreground/50" />
+          <FileText className="size-8 text-text-secondary" />
         </div>
         <p className="font-medium text-foreground">{t("fileViewer.noFileSelected")}</p>
-        <p className="text-sm mt-1">{t("fileViewer.clickToView")}</p>
+        <p className="text-body mt-1">{t("fileViewer.clickToView")}</p>
       </div>
     )
   }
@@ -55,7 +55,7 @@ export function FileViewer({ path }: FileViewerProps) {
       {/* File path header */}
       <div className="px-4 py-3 bg-muted/50 border-b flex items-center gap-2 shrink-0">
         <FileText className="size-4 text-muted-foreground shrink-0" />
-        <p className="text-xs font-mono text-muted-foreground truncate select-all" title={path}>
+        <p className="text-meta font-mono text-muted-foreground truncate select-all" title={path}>
           {path}
         </p>
       </div>
@@ -65,16 +65,16 @@ export function FileViewer({ path }: FileViewerProps) {
         <div className="p-4">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-32 text-muted-foreground gap-3">
-              <Spinner className="text-lg" />
-              <span className="text-sm font-medium">{t("fileViewer.loadingContent")}</span>
+              <Spinner className="text-title" />
+              <span className="text-body font-medium">{t("fileViewer.loadingContent")}</span>
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center h-32 text-destructive gap-2">
-              <p className="text-sm font-medium">{t("fileViewer.errorLoading")}</p>
-              <p className="text-xs">{error}</p>
+              <p className="text-body font-medium">{t("fileViewer.errorLoading")}</p>
+              <p className="text-meta">{error}</p>
             </div>
           ) : (
-            <pre className="text-sm whitespace-pre-wrap font-mono leading-relaxed selection:bg-foreground/20">
+            <pre className="text-body whitespace-pre-wrap font-mono leading-relaxed selection:bg-foreground/20">
               {content}
             </pre>
           )}

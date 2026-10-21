@@ -785,7 +785,10 @@ export function Island({
   return (
     <IslandAnimationContext.Provider value={cfg}>
       {shouldBlockOutside && typeof document !== 'undefined' && ReactDOM.createPortal(
+        /* Outside-pointer blocker: it only dismisses the island on a pointer
+           press, and Escape does the same from the keyboard. */
         <div
+          role="presentation"
           data-ca-island-blocker="true"
           className="fixed inset-0"
           style={overlayZIndex != null ? { zIndex: overlayZIndex } : undefined}

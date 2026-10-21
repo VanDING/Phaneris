@@ -39,6 +39,15 @@ const runtimeBin = join(root, '.cache/upgrade-20261018/runtime')
 const exe = (name: string) => process.platform === 'win32' ? `${name}.exe` : name
 const pathEntries = [join(runtimeBin, 'bun-1.4.3'), join(runtimeBin, 'node-24.22.0')].filter(existsSync)
 const env = { ...process.env, PATH: [...pathEntries, process.env.PATH ?? ''].join(process.platform === 'win32' ? ';' : ':') }
+const gitPaths = () => [...new Set([
+  ...execFileSync('git', ['diff', '--name-only', '-z', 'HEAD'], { cwd: root }).toString().split('\0'),
+  ...execFileSync('git', ['ls-files', '--others', '--exclude-standard', '-z'], { cwd: root }).toString().split('\0'),
+].filter(Boolean))].sort()
+const codeFingerprint = () => createHash('sha256').update(JSON.stringify({
+  head: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
+  changes: gitPaths().filter(file => /^(?:apps\/|packages\/|scripts\/|\.github\/|package\.json$|bun\.lock$|Dockerfile)/.test(file))
+    .map(file => [file, existsSync(join(root, file)) ? sha256(join(root, file)) : null]),
+})).digest('hex')
 
 interface Gate {
   name: string
@@ -82,6 +91,10 @@ const GATES: Gate[] = [
   { name: 'verification-editor', command: 'bun', args: ['run', 'scripts/verification/upgrade-0153-editor-workflow.ts'], timeoutMs: 2_700_000 },
   { name: 'verification-workspace-isolation', command: 'bun', args: ['run', 'scripts/verification/upgrade-0153-workspace-isolation-workflow.ts'], timeoutMs: 1_800_000 },
   { name: 'verification-model-form', command: 'bun', args: ['run', 'scripts/verification/upgrade-0153-model-form-workflow.ts'], timeoutMs: 1_800_000 },
+  { name: 'verification-undici', command: 'bun', args: ['run', 'scripts/verification/upgrade-0153-undici-workflow.ts'] },
+  { name: 'verification-document-tools', command: 'bun', args: ['run', 'scripts/verification/upgrade-0153-document-tools-workflow.ts'], timeoutMs: 900_000 },
+  { name: 'verification-native-attachments', command: 'bun', args: ['run', 'scripts/verification/upgrade-0153-native-attachments-workflow.ts'], timeoutMs: 600_000 },
+  { name: 'verification-packaged', command: 'bun', args: ['run', 'scripts/verification/upgrade-0153-packaged-workflow.ts'], timeoutMs: 1_800_000 },
 ]
 
 const targets = readJson('docs/dependencies/upgrade-2026-10-18/targets.json') as {
@@ -112,28 +125,39 @@ const partial = process.argv.includes('--skip-gates') || Boolean(arg('only'))
 const only = arg('only')?.split(',').map(value => value.trim())
 
 const gateResults: Record<string, unknown>[] = []
+const gateLogDirectory = join(root, '.cache/upgrade-20261018', `gate-logs-${Date.now()}`)
+mkdirSync(gateLogDirectory, { recursive: true })
 for (const gate of GATES) {
   if (process.argv.includes('--skip-gates') || (only && !only.includes(gate.name))) {
     gateResults.push({ name: gate.name, command: [gate.command, ...gate.args], status: 'not-run' })
     continue
   }
   const started = Date.now()
+  const startedWithCode = codeFingerprint()
   const run = spawnSync(gate.command, gate.args, {
     cwd: root, env, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, timeout: gate.timeoutMs ?? 300_000,
   })
   const output = `${run.stdout ?? ''}\n${run.stderr ?? ''}`.trim().split('\n')
   const timedOut = run.error !== undefined && (run.error as NodeJS.ErrnoException).code === 'ETIMEDOUT'
-  const status = timedOut ? 'failed'
+  const unsupportedHost = Boolean(gate.environmentLimited) && process.platform === 'win32'
+    && run.status === 1 && !run.error && output.some(line => line.trim() === 'Unsupported platform: win32. Use darwin or linux.')
+  const endedWithCode = codeFingerprint()
+  const sourceChanged = startedWithCode !== endedWithCode
+  const status = timedOut || sourceChanged ? 'failed'
     : run.status === 0 ? 'pass'
-      : gate.environmentLimited ? 'environment-limited' : 'failed'
+      : unsupportedHost ? 'environment-limited' : 'failed'
+  const logPath = join(gateLogDirectory, `${gate.name}.log`)
+  writeFileSync(logPath, `${run.stdout ?? ''}\n${run.stderr ?? ''}`)
   gateResults.push({
     name: gate.name,
     command: [gate.command, ...gate.args],
     status,
     exitCode: run.status,
+    source: { startedWithCode, endedWithCode, changedDuringGate: sourceChanged },
     ...(timedOut ? { timedOut } : {}),
-    ...(gate.environmentLimited ? { environmentLimited: gate.environmentLimited } : {}),
+    ...(unsupportedHost ? { environmentLimited: gate.environmentLimited } : {}),
     durationMs: Date.now() - started,
+    log: { path: relative(root, logPath).replaceAll('\\', '/'), sha256: sha256(logPath) },
     outputTail: output.slice(-12),
   })
   console.log(`${gate.name}: ${status} (exit=${run.status}${timedOut ? ' timed out' : ''}, ${((Date.now() - started) / 1000).toFixed(1)}s)`)
@@ -214,7 +238,24 @@ const statusCounts = Object.values(targetsState).reduce<Record<string, number>>(
   return counts
 }, {})
 
-const snapshotFiles = [
+const finalCodeFingerprint = codeFingerprint()
+for (const gate of gateResults) {
+  const source = gate.source as { startedWithCode: string } | undefined
+  if (gate.status === 'pass' && source?.startedWithCode !== finalCodeFingerprint) {
+    gate.status = 'failed'
+    gate.sourceChangedAfterExecution = true
+  }
+}
+if (!partial) {
+  const summary = gateResults.reduce<Record<string, number>>((counts, gate) => { const status = String(gate.status); counts[status] = (counts[status] ?? 0) + 1; return counts }, {})
+  const file = join(root, 'docs/dependencies/upgrade-closeout-2026-10-20.md')
+  const marker = '<!-- upgrade-closeout-results:start -->'
+  const current = readFileSync(file, 'utf8').split(marker)[0]!.trimEnd()
+  writeFileSync(file, `${current}\n\n${marker}\n## 自动采集的最终门禁\n\n采集时间：${new Date().toISOString()}。通过 ${summary.pass ?? 0}，失败 ${summary.failed ?? 0}，环境受限 ${summary['environment-limited'] ?? 0}。${summary.failed ? '尚未验收通过；红项见机器结果。' : '适用门禁已通过；环境限制与批准延期不计为通过。'}\n\n每个门禁记录执行前后源码指纹、完整日志及哈希。当前 Git、锁文件全图 churn、改动文件哈希和各次历史失败都由脚本读取；以[机器结果](../verification/results/upgrade-2026-10-18.json)为当前验收结论。\n<!-- upgrade-closeout-results:end -->\n`)
+}
+const changedPaths = gitPaths()
+const generatedResults = ['docs/verification/results/upgrade-2026-10-18.json', 'docs/verification/results/upgrade-2026-10-18.partial.json']
+const snapshotFiles = [...new Set([
   'package.json', 'bun.lock', 'apps/electron/electron-builder.yml', 'scripts/build/common.ts',
   'Dockerfile.server', '.github/workflows/validate.yml', '.github/workflows/validate-server.yml',
   'packages/shared/src/unified-network-interceptor.ts', 'packages/shared/src/config/connections.ts',
@@ -231,7 +272,17 @@ const snapshotFiles = [
   'apps/electron/resources/scripts/pdf_tool.py', 'apps/electron/resources/scripts/img_tool.py',
   'patches/http-cache-semantics@4.3.0.patch',
   'apps/electron/resources/bin/win32-x64/uv.exe.version',
-]
+  ...changedPaths.filter(file => !generatedResults.includes(file)),
+])]
+
+const baseCommit = targets as typeof targets & { baseCommit: string }
+const previousLock = Bun.JSONC.parse(execFileSync('git', ['show', `${baseCommit.baseCommit}:bun.lock`], { cwd: root, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 })) as { packages: Record<string, unknown[]> }
+const currentLock = Bun.JSONC.parse(readFileSync(join(root, 'bun.lock'), 'utf8')) as { packages: Record<string, unknown[]> }
+const churn = [...new Set([...Object.keys(previousLock.packages), ...Object.keys(currentLock.packages)])].sort().flatMap(name => {
+  const before = previousLock.packages[name], after = currentLock.packages[name]
+  if (JSON.stringify(before) === JSON.stringify(after)) return []
+  return [{ name, status: !before ? 'added' : !after ? 'removed' : before[0] !== after[0] ? 'version-or-source-changed' : 'resolution-metadata-changed', before: before?.[0] ?? null, after: after?.[0] ?? null }]
+})
 
 const gateStatusCounts = gateResults.reduce<Record<string, number>>((counts, gate) => {
   const status = (gate as { status: string }).status
@@ -247,6 +298,7 @@ const gateStatusCounts = gateResults.reduce<Record<string, number>>((counts, gat
  * neither can be read as "the upgrade passed".
  */
 const failedGateNames = gateResults.filter(gate => gate.status === 'failed').map(gate => String(gate.name))
+const notRunGateNames = gateResults.filter(gate => gate.status === 'not-run').map(gate => String(gate.name))
 const environmentLimitedGateNames = gateResults.filter(gate => gate.status === 'environment-limited').map(gate => String(gate.name))
 const runDirectories = existsSync(verificationRoot)
   ? readdirSync(verificationRoot, { withFileTypes: true })
@@ -256,6 +308,7 @@ const runDirectories = existsSync(verificationRoot)
 const knownIssues = runDirectories
   .map(directory => join(directory, 'known-issues.json'))
   .filter(file => existsSync(file))
+  .sort((a, b) => statSync(a).mtimeMs - statSync(b).mtimeMs)
   .flatMap(file => {
     const parsed = JSON.parse(readFileSync(file, 'utf8')) as { knownIssues?: { id: string; status: string; summary: string }[] }
     return (parsed.knownIssues ?? []).map(issue => ({ ...issue, source: relative(root, file).replaceAll('\\', '/') }))
@@ -277,11 +330,12 @@ const approvedDeferred = [
   ...knownIssueEntries.values(),
 ]
 const acceptanceStatus = {
-  commandSuccess: failedGateNames.length === 0,
-  functionalStatus: failedGateNames.length > 0
+  commandSuccess: failedGateNames.length === 0 && notRunGateNames.length === 0,
+  functionalStatus: notRunGateNames.length > 0 ? 'not-evaluated' : failedGateNames.length > 0
     ? 'not-accepted'
     : (environmentLimitedGateNames.length > 0 ? 'accepted-with-environment-limits' : 'accepted'),
   failedGates: failedGateNames,
+  notRunGates: notRunGateNames,
   environmentLimitedGates: environmentLimitedGateNames,
   approvedDeferred,
   statement: 'complete:true means the collection ran in full (no --only/--skip-gates). It is NOT the acceptance verdict: this block is. Environment-limited gates and approved-deferred or known issues never count as functional passes.',
@@ -297,12 +351,16 @@ const document = {
   ...(partial ? { partialReason: 'invoked with --only/--skip-gates; gates marked not-run were NOT executed in this run' } : {}),
   baseCommit: (readJson('docs/dependencies/upgrade-2026-10-18/targets.json') as { baseCommit: string }).baseCommit,
   head: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
+  codeFingerprint: finalCodeFingerprint,
   branch: execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
   workingTree: {
     dirty: execFileSync('git', ['status', '--porcelain', '--untracked-files=all'], { cwd: root, encoding: 'utf8' }).trim().length > 0,
-    note: 'Diff intentionally left uncommitted for review; HEAD is still the freeze commit.',
+    note: 'Upgrade implementation is committed in d0fb6be7b and ac85d33b0; this Codex closeout remains uncommitted for review. HEAD is read from Git, not inferred from the original freeze.',
+    headTree: execFileSync('git', ['rev-parse', 'HEAD^{tree}'], { cwd: root, encoding: 'utf8' }).trim(),
+    changes: changedPaths.filter(file => !generatedResults.includes(file)).map(file => ({ path: file, sha256: existsSync(join(root, file)) ? sha256(join(root, file)) : null })),
+    generatedResultExclusions: generatedResults,
   },
-  lockfile: { path: 'bun.lock', sha256: lockfileSha256 },
+  lockfile: { path: 'bun.lock', sha256: lockfileSha256, churnFromFreeze: { baseCommit: baseCommit.baseCommit, counts: churn.reduce<Record<string, number>>((counts, row) => { counts[row.status] = (counts[row.status] ?? 0) + 1; return counts }, {}), entries: churn, note: 'Whole lock graph diff, including required transitive/internal changes; these counts are not the direct target count or additional accepted upgrades.' } },
   environment: {
     bun: execFileSync(join(runtimeBin, 'bun-1.4.3', exe('bun')), ['--version'], { encoding: 'utf8' }).trim(),
     node: execFileSync(join(runtimeBin, 'node-24.22.0', process.platform === 'win32' ? 'node.exe' : 'bin/node'), ['--version'], { encoding: 'utf8' }).trim(),

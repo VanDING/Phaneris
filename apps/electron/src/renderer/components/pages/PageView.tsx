@@ -7,7 +7,7 @@ import { useAppShellContext } from '@/context/AppShellContext'
 import { useNavigation } from '@/contexts/NavigationContext'
 import { routes } from '@/lib/navigate'
 import { pagesAtom } from '@/atoms/pages'
-import { LoadingIndicator } from '@phaneris/ui'
+import { LoadingIndicator, useInitialFocus } from '@phaneris/ui'
 import { Info_Alert } from '@/components/info'
 import {
   DropdownMenu,
@@ -51,6 +51,7 @@ interface LeaseState {
 export function PageView({ pageSlug }: PageViewProps) {
   const { activeWorkspaceId, onOpenFile, enabledSources } = useAppShellContext()
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const { navigate } = useNavigation()
   const pages = useAtomValue(pagesAtom)
 
@@ -236,11 +237,11 @@ export function PageView({ pageSlug }: PageViewProps) {
     return (
       <div className="flex h-full items-center justify-center">
         {fallbackResolved ? (
-          <div className="flex flex-col items-center gap-3 text-sm text-foreground/50">
+          <div className="flex flex-col items-center gap-3 text-body text-text-secondary">
             <span>{t('pages.notFound')}</span>
             <button
               onClick={handleBack}
-              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-xs font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
+              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
             >
               <ArrowLeft className="h-3.5 w-3.5" /> {t('pages.backToPages')}
             </button>
@@ -263,13 +264,13 @@ export function PageView({ pageSlug }: PageViewProps) {
           type="button"
           onClick={handleBack}
           aria-label={t('pages.backToPages')}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
         {nameDraft !== null ? (
           <input
-            autoFocus
+            ref={initialFocusRef}
             value={nameDraft}
             onChange={e => setNameDraft(e.target.value)}
             onBlur={() => void commitRename()}
@@ -278,11 +279,11 @@ export function PageView({ pageSlug }: PageViewProps) {
               else if (e.key === 'Escape') setNameDraft(null)
             }}
             aria-label={t('pages.renamePage')}
-            className="h-7 min-w-0 flex-1 rounded-md border border-border bg-background px-2 text-sm font-medium outline-none focus:border-ring"
+            className="h-7 min-w-0 flex-1 rounded-md border border-border bg-background px-2 text-body font-medium outline-none focus:border-ring"
           />
         ) : (
           <span
-            className="min-w-0 truncate text-sm font-medium"
+            className="min-w-0 truncate text-body font-medium"
             title={t('pages.renamePage')}
             onDoubleClick={() => setNameDraft(config.name)}
           >
@@ -298,11 +299,11 @@ export function PageView({ pageSlug }: PageViewProps) {
               onClick={() => setShareOpen(true)}
               aria-label={t('pages.share.title')}
               title={config.share ? t('pages.shared') : t('pages.share.title')}
-              className="flex h-7 items-center gap-1.5 rounded-md px-2 text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground"
+              className="flex h-7 items-center gap-1.5 rounded-md px-2 text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
-              <Globe2 className={config.share ? 'h-4 w-4 text-sky-600 dark:text-sky-400' : 'h-4 w-4'} />
+              <Globe2 className={config.share ? 'h-4 w-4 text-accent-text' : 'h-4 w-4'} />
               {config.share && (
-                <span className="hidden text-xs @[28rem]/panel:inline">{t('pages.shared')}</span>
+                <span className="hidden text-meta @[28rem]/panel:inline">{t('pages.shared')}</span>
               )}
             </button>
           )}
@@ -311,7 +312,7 @@ export function PageView({ pageSlug }: PageViewProps) {
               <button
                 type="button"
                 aria-label={t('common.more')}
-                className="flex h-7 w-7 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground data-[state=open]:bg-foreground/5"
+                className="flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground data-[state=open]:bg-foreground/5"
               >
                 <MoreHorizontal className="h-4 w-4" />
               </button>
@@ -401,13 +402,13 @@ export function PageView({ pageSlug }: PageViewProps) {
       <div className="relative min-h-0 flex-1 p-3">
         {!hasContent ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-            <span className="text-sm font-medium text-foreground/70">{t('pages.noContentTitle')}</span>
-            <span className="max-w-md text-xs text-foreground/50">{t('pages.noContentDescription')}</span>
+            <span className="text-body font-medium text-text-secondary">{t('pages.noContentTitle')}</span>
+            <span className="max-w-md text-meta text-text-secondary">{t('pages.noContentDescription')}</span>
             <div className="mt-2 flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleDesignWithAgent}
-                className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-primary px-3 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-primary px-3 text-meta font-medium text-primary-foreground transition-opacity hover:opacity-90"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 {t('pages.designWithAgent')}
@@ -415,7 +416,7 @@ export function PageView({ pageSlug }: PageViewProps) {
               <button
                 type="button"
                 onClick={handleOpenFolder}
-                className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-xs font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
+                className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
               >
                 <FolderOpen className="h-3.5 w-3.5" />
                 {t('pages.openFolder')}
@@ -430,7 +431,7 @@ export function PageView({ pageSlug }: PageViewProps) {
             </Info_Alert>
             <button
               onClick={() => setLeaseRetry(n => n + 1)}
-              className="mt-3 inline-flex h-7 items-center rounded-shape-lg bg-foreground/[0.02] px-3 text-xs font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
+              className="mt-3 inline-flex h-7 items-center rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
             >
               {t('common.retry')}
             </button>

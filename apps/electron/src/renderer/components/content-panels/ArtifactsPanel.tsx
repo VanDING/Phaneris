@@ -27,8 +27,8 @@ import { artifactsStatusFilterAtom, type ArtifactStatusFilter } from '@/atoms/co
 import { getPathBasename } from '@/lib/platform'
 
 const STATUS_BADGE: Record<ArtifactDescriptor['status'], string> = {
-  ready: 'bg-amber-500/12 text-amber-700 dark:text-amber-300',
-  accepted: 'bg-emerald-500/12 text-emerald-700 dark:text-emerald-300',
+  ready: 'bg-info/12 text-info-text',
+  accepted: 'bg-success/12 text-success-text',
   conflict: 'bg-destructive/10 text-destructive',
   draft: 'bg-primary/10 text-primary',
   current: 'bg-foreground/8 text-muted-foreground',

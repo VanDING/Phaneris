@@ -43,13 +43,13 @@ const colorConfig: Record<
   },
   default: {
     bg: 'bg-foreground/10',
-    text: 'text-foreground/70',
+    text: 'text-text-secondary',
     shadow: 'shadow-tinted',
     shadowColor: 'var(--foreground)',
   },
   muted: {
     bg: 'bg-background',
-    text: 'text-foreground/70',
+    text: 'text-text-secondary',
     shadow: 'shadow-minimal',
   },
 }
@@ -67,7 +67,7 @@ export function Info_Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-shape-sm pl-2.5 pr-3 py-1 text-xs font-medium',
+        'inline-flex items-center gap-1.5 rounded-shape-sm pl-2.5 pr-3 py-1 text-meta font-medium',
         config.bg,
         config.text,
         config.shadow,

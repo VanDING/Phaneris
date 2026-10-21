@@ -138,7 +138,7 @@ export function PDFPreviewOverlay({
     >
       <div className="h-full flex flex-col items-center overflow-auto">
         {isLoading && (
-          <div className="text-muted-foreground text-sm">{t('preview.loadingPdf')}</div>
+          <div className="text-muted-foreground text-body">{t('preview.loadingPdf')}</div>
         )}
         {fileObj && (
           <Document
@@ -148,7 +148,7 @@ export function PDFPreviewOverlay({
             suspense={false}
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
-            loading={<div className="text-muted-foreground text-sm">{t('common.rendering')}</div>}
+            loading={<div className="text-muted-foreground text-body">{t('common.rendering')}</div>}
           >
             {Array.from({ length: numPages }, (_, i) => (
               <Page

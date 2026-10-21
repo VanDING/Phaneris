@@ -70,21 +70,21 @@ export function ResetConfirmationDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 pl-2">
+        <ul className="list-disc list-inside text-body text-muted-foreground space-y-1 pl-2">
           <li>{t("dialog.reset.workspaces")}</li>
           <li>{t("dialog.reset.credentials")}</li>
           <li>{t("dialog.reset.preferences")}</li>
         </ul>
 
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-md p-3 text-sm">
-          <strong className="text-amber-600 dark:text-amber-400">{t("dialog.reset.backupWarning")}</strong>
+        <div className="bg-info/10 border border-info/30 rounded-md p-3 text-body">
+          <strong className="text-info-text">{t("dialog.reset.backupWarning")}</strong>
           <p className="text-muted-foreground mt-1">
             {t("dialog.reset.cannotUndo")}
           </p>
         </div>
 
         <div className="space-y-2 pt-2">
-          <label className="text-sm font-medium">
+          <label className="text-body font-medium">
             {t("dialog.reset.confirmSolve", { a: problem.a, b: problem.b })}
           </label>
           <Input

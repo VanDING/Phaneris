@@ -140,9 +140,9 @@ export function SurfaceLauncherButtons({
                 <TopBarButton
                   aria-label={t('session.newSessionInPanel')}
                   onClick={onNewSession}
-                  className="h-control-xs w-[22px] rounded-md text-foreground/35"
+                  className="h-control-xs w-[22px] rounded-md text-text-secondary"
                 >
-                  <SquarePenRounded className="h-3.5 w-3.5" strokeWidth={2} />
+                  <SquarePenRounded className="h-3.5 w-3.5" />
                 </TopBarButton>
               </TooltipTrigger>
               <TooltipContent side="bottom">{t('session.newSessionInPanel')}</TooltipContent>
@@ -169,10 +169,10 @@ export function SurfaceLauncherButtons({
                   }}
                   className={cn(
                     'h-control-xs w-[22px] rounded-md',
-                    browserPresent ? 'text-foreground/60' : 'text-foreground/35',
+                    browserPresent ? 'text-foreground' : 'text-text-secondary',
                   )}
                 >
-                  <Globe className="h-3.5 w-3.5" strokeWidth={2} />
+                  <Globe className="h-3.5 w-3.5" />
                 </TopBarButton>
               </TooltipTrigger>
               <TooltipContent side="bottom">{t('contentPanel.button.browser')}</TooltipContent>
@@ -193,8 +193,8 @@ export function SurfaceLauncherButtons({
                 className={cn(
                   'h-control-xs w-[22px] rounded-md',
                   state === 'focused' && 'text-foreground',
-                  state === 'open' && 'text-foreground/60',
-                  (state === 'closed' || state === 'background') && 'text-foreground/35',
+                  state === 'open' && 'text-text-secondary',
+                  (state === 'closed' || state === 'background') && 'text-text-secondary',
                 )}
               >
                 <span className="relative flex items-center justify-center">

@@ -62,19 +62,19 @@ export function WeComConnectDialog({ open, onOpenChange, reconfigure = false }: 
         </DialogHeader>
         <div className="space-y-3 py-2">
           <div>
-            <div className="mb-1.5 text-xs text-muted-foreground">{t('settings.messaging.wecom.botIdLabel')}</div>
+            <div className="mb-1.5 text-meta text-muted-foreground">{t('settings.messaging.wecom.botIdLabel')}</div>
             <SettingsSecretInput value={botId} onChange={setBotId} placeholder={t('settings.messaging.wecom.botIdPlaceholder')} disabled={saving} />
           </div>
           <div>
-            <div className="mb-1.5 text-xs text-muted-foreground">{t('settings.messaging.wecom.secretLabel')}</div>
+            <div className="mb-1.5 text-meta text-muted-foreground">{t('settings.messaging.wecom.secretLabel')}</div>
             <SettingsSecretInput value={secret} onChange={setSecret} placeholder={t('settings.messaging.wecom.secretPlaceholder')} disabled={saving} />
           </div>
           <div>
-            <div className="mb-1.5 text-xs text-muted-foreground">{t('settings.messaging.wecom.wsUrlLabel')}</div>
+            <div className="mb-1.5 text-meta text-muted-foreground">{t('settings.messaging.wecom.wsUrlLabel')}</div>
             <SettingsSecretInput value={wsUrl} onChange={setWsUrl} placeholder="wss://openws.work.weixin.qq.com" disabled={saving} />
           </div>
-          <p className="text-xs text-amber-600 dark:text-amber-400">{t('settings.messaging.wecom.singleConnectionWarning')}</p>
-          <p className="text-xs text-muted-foreground">{t('settings.messaging.wecom.mcpNotice')}</p>
+          <p className="text-meta text-info-text">{t('settings.messaging.wecom.singleConnectionWarning')}</p>
+          <p className="text-meta text-muted-foreground">{t('settings.messaging.wecom.mcpNotice')}</p>
         </div>
         <DialogFooter>
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={saving}>

@@ -85,13 +85,13 @@ export function WorkItemListView() {
             <KanbanProjectFilter projects={projectOptions} value={projectIds} onChange={setProjectIds} />
           )}
           <label className="relative min-w-36 flex-1 sm:max-w-64">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/35" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t('kanban.workItemSearch')}
-              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-xs outline-none focus:border-ring/60"
+              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-meta outline-none focus:border-ring/60"
             />
           </label>
           <ProjectSelectMenu
@@ -118,7 +118,7 @@ export function WorkItemListView() {
       </div>
 
       {selectedIds.length > 0 && (
-        <div className="flex flex-none items-center justify-between border-b border-border/50 bg-accent/5 px-4 py-2 text-xs">
+        <div className="flex flex-none items-center justify-between border-b border-border/50 bg-accent/5 px-4 py-2 text-meta">
           <span>{t('kanban.workItemSelected', { count: selectedIds.length })}</span>
           <button
             type="button"
@@ -171,7 +171,7 @@ export function WorkItemListView() {
                   event.preventDefault()
                   openDetail(item.id)
                 }}
-                className="grid w-full grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/45 px-3 py-2.5 text-left text-xs hover:bg-foreground/[0.025]"
+                className="grid w-full grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/45 px-3 py-2.5 text-left text-meta hover:bg-foreground/[0.025]"
               >
                 <button
                   type="button"
@@ -185,7 +185,7 @@ export function WorkItemListView() {
                   }}
                   className="craft-control craft-focus justify-self-start"
                 >
-                  {selected ? <CheckSquare className="h-4 w-4 text-primary" /> : <Square className="h-4 w-4 text-foreground/35" />}
+                  {selected ? <CheckSquare className="h-4 w-4 text-primary" /> : <Square className="h-4 w-4 text-text-secondary" />}
                 </button>
                 <span className="min-w-0 pr-3">
                   <span className="block truncate font-medium text-foreground">{item.title}</span>
@@ -205,7 +205,7 @@ export function WorkItemListView() {
             )
           })}
           {visibleItems.length === 0 && (
-            <div className="px-4 py-16 text-center text-sm text-text-secondary">{t('kanban.workItemEmpty')}</div>
+            <div className="px-4 py-16 text-center text-body text-text-secondary">{t('kanban.workItemEmpty')}</div>
           )}
         </div>
       </div>

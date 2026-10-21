@@ -31,7 +31,7 @@ export function SessionStatusIcon({ item }: SessionStatusIconProps) {
           className={cn(
             "!h-5 !w-5 flex items-center justify-center rounded-full transition-colors cursor-pointer",
             "hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-            "[&>svg]:w-full [&>svg]:h-full [&>img]:w-full [&>img]:h-full [&>span]:text-base",
+            "[&>svg]:w-full [&>svg]:h-full [&>img]:w-full [&>img]:h-full [&>span]:text-reading",
           )}
           style={getStateIconStyle(status, ctx.sessionStatuses)}
           aria-haspopup="menu"

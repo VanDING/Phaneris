@@ -5,7 +5,7 @@ export function KeyboardShortcuts() {
     <div className="space-y-6">
       {Object.entries(actionsByCategory).map(([category, actions]) => (
         <section key={category}>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+          <h3 className="text-body font-medium text-muted-foreground mb-2">
             {category}
           </h3>
           <div className="space-y-1">
@@ -25,13 +25,13 @@ function ShortcutRow({ actionId }: { actionId: ActionId }) {
   return (
     <div className="flex items-center justify-between py-1.5">
       <div>
-        <div className="text-sm">{label}</div>
+        <div className="text-body">{label}</div>
         {description && (
-          <div className="text-xs text-muted-foreground">{description}</div>
+          <div className="text-meta text-muted-foreground">{description}</div>
         )}
       </div>
       {hotkey && (
-        <kbd className="px-2 py-1 text-xs bg-muted rounded">{hotkey}</kbd>
+        <kbd className="px-2 py-1 text-meta bg-muted rounded">{hotkey}</kbd>
       )}
     </div>
   )

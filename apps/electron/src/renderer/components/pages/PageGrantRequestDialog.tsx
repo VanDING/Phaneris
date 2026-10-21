@@ -38,7 +38,7 @@ export function PageGrantRequestDialog({ pageName, requests, busy, onApprove, on
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <KeyRound className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+            <KeyRound className="h-4 w-4 text-info-text" />
             {t('pages.grants.title')}
           </DialogTitle>
           <DialogDescription>{t('pages.grants.description', { name: pageName })}</DialogDescription>
@@ -53,26 +53,26 @@ export function PageGrantRequestDialog({ pageName, requests, busy, onApprove, on
                 key={entry.key}
                 className={
                   isScript
-                    ? 'flex items-start gap-2.5 rounded-lg border border-red-500/40 bg-red-500/[0.06] px-3 py-2.5'
+                    ? 'flex items-start gap-2.5 rounded-lg border border-destructive/40 bg-destructive/[0.06] px-3 py-2.5'
                     : 'flex items-start gap-2.5 rounded-lg border border-border/60 bg-foreground/[0.02] px-3 py-2.5'
                 }
               >
                 <Icon
                   className={
                     isScript
-                      ? 'mt-0.5 h-4 w-4 shrink-0 text-red-600 dark:text-red-500'
-                      : 'mt-0.5 h-4 w-4 shrink-0 text-foreground/50'
+                      ? 'mt-0.5 h-4 w-4 shrink-0 text-destructive-text'
+                      : 'mt-0.5 h-4 w-4 shrink-0 text-text-secondary'
                   }
                 />
-                <div className="min-w-0 text-sm">
+                <div className="min-w-0 text-body">
                   <div className="break-words font-medium">{describeGrantAction(entry.action, t)}</div>
                   {isScript && (
-                    <div className="mt-0.5 break-words text-xs font-medium text-red-600 dark:text-red-500">
+                    <div className="mt-0.5 break-words text-meta font-medium text-destructive-text">
                       {t('pages.grants.scriptWarning')}
                     </div>
                   )}
                   {entry.description && (
-                    <div className="mt-0.5 break-words text-xs text-foreground/60">{entry.description}</div>
+                    <div className="mt-0.5 break-words text-meta text-text-secondary">{entry.description}</div>
                   )}
                 </div>
               </li>
@@ -80,7 +80,7 @@ export function PageGrantRequestDialog({ pageName, requests, busy, onApprove, on
           })}
         </ul>
 
-        <p className="text-xs text-foreground/50">{t('pages.grants.expiryNote')}</p>
+        <p className="text-meta text-text-secondary">{t('pages.grants.expiryNote')}</p>
 
         <DialogFooter>
           <Button variant="outline" disabled={busy} onClick={onDeny}>

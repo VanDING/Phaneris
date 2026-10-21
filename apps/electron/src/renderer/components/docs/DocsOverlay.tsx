@@ -118,14 +118,14 @@ export function DocsOverlay() {
       title={t('docs.title')}
       headerActions={
         <div className="relative">
-          <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/40" />
+          <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
           <input
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('docs.searchPlaceholder')}
             aria-label={t('docs.searchPlaceholder')}
-            className="craft-field-input h-7 w-24 rounded-md border border-border/60 bg-background/60 pl-7 pr-2 text-xs outline-none placeholder:text-foreground/40 sm:w-56 sm:focus:w-72"
+            className="craft-field-input h-7 w-24 rounded-md border border-border/60 bg-background/60 pl-7 pr-2 text-meta outline-none placeholder:text-text-secondary sm:w-56 sm:focus:w-72"
           />
         </div>
       }
@@ -150,7 +150,7 @@ export function DocsOverlay() {
                 </li>
               ))}
               {hits.length === 0 && (
-                <li className="px-2 text-xs text-foreground/50">{t('docs.noResults')}</li>
+                <li className="px-2 text-meta text-text-secondary">{t('docs.noResults')}</li>
               )}
             </ul>
           ) : (
@@ -160,7 +160,7 @@ export function DocsOverlay() {
                   {/* A single-page section whose name matches its page needs no
                       group label — "Skills" over "Skills" is noise. */}
                   {!(docsSection.pages.length === 1 && docsSection.pages[0]!.title === docsSection.title) && (
-                    <div className="px-2 pb-1 text-micro font-semibold uppercase tracking-wide text-foreground/40">
+                    <div className="px-2 pb-1 text-micro font-semibold uppercase tracking-wide text-text-secondary">
                       {docsSection.title}
                     </div>
                   )}
@@ -183,22 +183,22 @@ export function DocsOverlay() {
 
         <article className="mx-auto min-w-0 w-full max-w-[760px]">
           <div className="space-y-2 pb-3 pt-14 md:hidden">
-            <select aria-label={t('docs.title')} value={page?.slug ?? DOCS_HOME_SLUG} onChange={event => goTo(event.target.value)} className="craft-field-input w-full rounded-md border border-border bg-background p-2 text-sm">
+            <select aria-label={t('docs.title')} value={page?.slug ?? DOCS_HOME_SLUG} onChange={event => goTo(event.target.value)} className="craft-field-input w-full rounded-md border border-border bg-background p-2 text-body">
               {sections.map(group => <optgroup key={group.id} label={group.title}>{group.pages.map(entry => <option key={entry.slug} value={entry.slug}>{entry.title}</option>)}</optgroup>)}
             </select>
-            {searching && <ul>{hits.map(hit => <li key={hit.page.slug}><NavButton active={hit.page.slug === page?.slug} label={hit.page.title} hint={hit.sectionTitle} onClick={() => goTo(hit.page.slug)} /></li>)}{hits.length === 0 && <li className="text-sm text-text-secondary">{t('docs.noResults')}</li>}</ul>}
+            {searching && <ul>{hits.map(hit => <li key={hit.page.slug}><NavButton active={hit.page.slug === page?.slug} label={hit.page.title} hint={hit.sectionTitle} onClick={() => goTo(hit.page.slug)} /></li>)}{hits.length === 0 && <li className="text-body text-text-secondary">{t('docs.noResults')}</li>}</ul>}
           </div>
           <div className="rounded-card bg-background px-4 py-8 shadow-strong sm:px-10">
             {section && page && (
-              <div className="flex items-center gap-1.5 pb-2 text-meta text-foreground/40">
+              <div className="flex items-center gap-1.5 pb-2 text-meta text-text-secondary">
                 <BookOpen className="h-3 w-3" />
                 <span>{section.title}</span>
               </div>
             )}
             {content === null ? (
-              <p className="text-sm text-foreground/60">{t('docs.notWritten')}</p>
+              <p className="text-body text-text-secondary">{t('docs.notWritten')}</p>
             ) : (
-              <div className="text-sm">
+              <div className="text-body">
                 <Markdown mode="minimal" onUrlClick={handleUrlClick}>
                   {content.replaceAll(`](${DOCS_LINK_PREFIX}`, `](${DOCS_ANCHOR_PREFIX}`)}
                 </Markdown>
@@ -228,14 +228,14 @@ function NavButton({
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'w-full rounded-md px-2 py-1 text-left text-xs transition-colors',
+        'w-full rounded-md px-2 py-1 text-left text-meta transition-colors',
         active
           ? 'bg-accent/12 font-medium text-accent'
-          : 'text-foreground/70 hover:bg-foreground/6 hover:text-foreground',
+          : 'text-text-secondary hover:bg-foreground/6 hover:text-foreground',
       )}
     >
       <span className="block truncate">{label}</span>
-      {hint && <span className="block truncate text-micro text-foreground/40">{hint}</span>}
+      {hint && <span className="block truncate text-micro text-text-secondary">{hint}</span>}
     </button>
   )
 }

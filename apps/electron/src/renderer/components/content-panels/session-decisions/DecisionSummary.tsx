@@ -56,7 +56,7 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
   const report = data.report
   return (
     <div className="space-y-4">
-    {report?.reliability && <details data-runtime-reliability className="rounded-xl border border-border/55 px-3 py-2 text-xs">
+    {report?.reliability && <details data-runtime-reliability className="rounded-xl border border-border/55 px-3 py-2 text-meta">
       <summary className="cursor-pointer font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{t('trajectory.reliability.title')}</summary>
       {report.reliability.state === 'unavailable' ? <p className="mt-2 text-text-secondary">{t('trajectory.reliability.unavailable')}</p> : <div className="mt-2 space-y-2">
         <p className="text-text-secondary">{t('trajectory.reliability.scope')}</p>

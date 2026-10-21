@@ -12,7 +12,7 @@ import { Spinner } from '@phaneris/ui'
 import { cn } from '@/lib/utils'
 
 const groupHeaderVariants = cva(
-  'px-4 py-2 border-b border-border/30 text-xs font-semibold uppercase tracking-wide',
+  'px-4 py-2 border-b border-border/30 text-meta font-semibold uppercase tracking-wide',
   {
     variants: {
       variant: {
@@ -73,7 +73,7 @@ function Info_GroupedListRoot({
 
   if (error) {
     return (
-      <div className={cn('px-4 py-4 text-sm text-muted-foreground', className)}>
+      <div className={cn('px-4 py-4 text-body text-muted-foreground', className)}>
         {error === 'Source requires authentication' ? (
           <span>{t('sourceInfo.authenticateToViewTools')}</span>
         ) : (
@@ -95,7 +95,7 @@ function Info_GroupedListRoot({
 
   if (!hasItems && empty) {
     return (
-      <div className={cn('px-4 py-4 text-sm text-muted-foreground', className)}>
+      <div className={cn('px-4 py-4 text-body text-muted-foreground', className)}>
         {empty}
       </div>
     )

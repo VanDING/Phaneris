@@ -42,7 +42,7 @@ export function PageGrantsDialog({ workspaceId, page, open, onOpenChange }: Page
         </DialogHeader>
 
         {grants.length === 0 ? (
-          <p className="text-sm text-foreground/50">{t('pages.grants.none')}</p>
+          <p className="text-body text-text-secondary">{t('pages.grants.none')}</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {grants.map(grant => {
@@ -57,20 +57,20 @@ export function PageGrantsDialog({ workspaceId, page, open, onOpenChange }: Page
                   <Icon
                     className={
                       isScript
-                        ? 'mt-0.5 h-4 w-4 shrink-0 text-red-600 dark:text-red-500'
-                        : 'mt-0.5 h-4 w-4 shrink-0 text-foreground/50'
+                        ? 'mt-0.5 h-4 w-4 shrink-0 text-destructive-text'
+                        : 'mt-0.5 h-4 w-4 shrink-0 text-text-secondary'
                     }
                   />
-                  <div className="min-w-0 flex-1 text-sm">
+                  <div className="min-w-0 flex-1 text-body">
                     <div className="break-words font-medium">{describeGrantAction(grant.action, t)}</div>
                     {grant.description && (
-                      <div className="mt-0.5 break-words text-xs text-foreground/60">{grant.description}</div>
+                      <div className="mt-0.5 break-words text-meta text-text-secondary">{grant.description}</div>
                     )}
                     <div
                       className={
                         status.usable
-                          ? 'mt-0.5 text-xs text-foreground/50'
-                          : 'mt-0.5 text-xs text-amber-600 dark:text-amber-500'
+                          ? 'mt-0.5 text-meta text-text-secondary'
+                          : 'mt-0.5 text-meta text-info-text'
                       }
                     >
                       {status.label}
@@ -83,7 +83,7 @@ export function PageGrantsDialog({ workspaceId, page, open, onOpenChange }: Page
                     disabled={busyGrantId !== null}
                     onClick={() => void removeGrant(grant.id)}
                   >
-                    {busyGrantId === grant.id && <Spinner className="text-xs" />}
+                    {busyGrantId === grant.id && <Spinner className="text-meta" />}
                     {t('pages.grants.remove')}
                   </Button>
                 </li>

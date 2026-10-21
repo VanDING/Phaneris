@@ -104,7 +104,7 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
             <div
               key={item.id}
               className={cn(
-                'group relative isolate flex h-7 max-w-40 shrink-0 items-center rounded-lg text-xs transition-colors',
+                'group relative isolate flex h-7 max-w-40 shrink-0 items-center rounded-lg text-meta transition-colors',
                 active
                   ? 'text-foreground'
                   : 'text-muted-foreground hover:bg-secondary/45 hover:text-foreground',

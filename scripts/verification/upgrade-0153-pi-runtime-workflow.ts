@@ -197,6 +197,8 @@ try {
       requests.push(record)
 
       switch (scene) {
+        case 'pc-01':
+          return sseResponse(record, [{ role: 'assistant' }, ...(sceneAttempt === 1 ? [{ reasoning_content: 'PC01_PRIVATE_MODEL_A_THINKING' }] : []), { content: REPLY['pc-01'] }], 'stop')
         // PC-02: the first provider request answers with a tool call whose
         // `arguments` is not valid JSON; the follow-up request is a normal reply.
         case 'pc-02': {
@@ -333,13 +335,14 @@ try {
       workspace: { id: 'pi-runtime', name: 'Pi runtime fixture', rootPath: workspace },
       session: { id, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1 },
       isHeadless: true,
+      ...(id === 'pc-01-session' ? { thinkingLevel: 'medium' } : {}),
       // Auto-compaction off: PC-05 exercises the manual path deliberately.
       contextPolicy: 'manual',
       runtime: {
         paths: { piServer: join(root, 'packages/pi-agent-server/dist/index.js'), node: process.execPath },
         baseUrl: providerUrl,
         customEndpoint: CUSTOM_ENDPOINT,
-        customModels: CUSTOM_MODELS,
+        customModels: id === 'pc-01-session' ? [{ ...MODEL_A, supportsThinking: true }, { ...MODEL_B, supportsThinking: false }] : CUSTOM_MODELS,
       },
       envOverrides: {
         HOME: fixture,
@@ -478,7 +481,7 @@ try {
   {
     scene = 'pc-01'
     sceneAttempt = 0
-    probes = ['PC_01_REPLY', 'PC01_TURN_ONE']
+    probes = ['PC_01_REPLY', 'PC01_TURN_ONE', 'PC01_PRIVATE_MODEL_A_THINKING']
     const agent = createAgent('pc-01-session', `pi/${MODEL_A.id}`)
     await agent.ensureSubprocess()
     const pid = trackChild(agent, 'pc-01')
@@ -489,6 +492,7 @@ try {
       assert.equal(requestA?.model, MODEL_A.id, 'the first provider request must carry model A')
       assert.equal(requestA?.maxTokens, MODEL_A.maxTokens, 'model A must cap output at its own maxTokens')
       assert.equal(firstSettled.event.aborted, false)
+      assert(wireRows(agent).some(row => JSON.stringify(row).includes('PC01_PRIVATE_MODEL_A_THINKING')), 'the first model must actually emit thinking before switching')
 
       // The production runtime-config switch (the exact host→subprocess message
       // `update_runtime_config` used by SessionManager.tryRefreshAgentRuntime).
@@ -523,6 +527,7 @@ try {
       assert.equal(requestsAfterSwitch.length, 2, 'exactly one provider request per turn')
       assert.equal(requestsAfterSwitch[1]!.model, MODEL_B.id, 'the second provider request must carry model B')
       assert.equal(requestsAfterSwitch[1]!.maxTokens, MODEL_B.maxTokens, 'the cap must follow the switched model')
+      assert.equal(requestsAfterSwitch[1]!.contains.PC01_PRIVATE_MODEL_A_THINKING, false, 'model A thinking must not leak into the switched model B request')
       // The subprocess also re-reports occupancy at every boundary; after the
       // switch that snapshot is taken through the new model (session-event-adapter.ts:203-210).
       assert.equal(secondSettled.event.contextUsage?.contextWindow, MODEL_B.contextWindow,

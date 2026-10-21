@@ -114,7 +114,7 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
           <div className="flex h-full min-h-0 flex-col">
             <div className="shrink-0 border-b border-border/50 bg-background/60 px-2.5 pb-2.5 pt-1.5">
               <div className="relative">
-                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50" />
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
                 <Input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}

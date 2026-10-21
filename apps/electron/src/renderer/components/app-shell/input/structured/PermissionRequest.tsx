@@ -58,11 +58,11 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
       {/* Content - grows to fill available space and scrolls before actions disappear */}
       <div className="p-4 space-y-3 flex-1 min-h-0 flex flex-col overflow-y-auto">
         <div className="space-y-2 pb-1">
-          <div className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+          <div className="flex items-center gap-1.5 text-body font-medium text-foreground">
             <ShieldAlert className="h-3.5 w-3.5 text-info" />
             <span>{t('chat.permissionRequired')}</span>
           </div>
-          <div className="text-xs leading-[18px] text-muted-foreground">
+          <div className="text-meta leading-[18px] text-muted-foreground">
             <span className="font-medium text-foreground">{t('chat.permissionTool')}</span> {request.toolName}
             <br />
             {request.description}
@@ -80,7 +80,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
 
         {/* Command preview */}
         {request.command && (
-          <div className="bg-foreground/5 rounded-md p-3 font-mono text-xs text-foreground/90 whitespace-pre-wrap break-all max-h-24 overflow-y-auto">
+          <div className="bg-foreground/5 rounded-md p-3 font-mono text-meta text-foreground/90 whitespace-pre-wrap break-all max-h-24 overflow-y-auto">
             {request.command}
           </div>
         )}

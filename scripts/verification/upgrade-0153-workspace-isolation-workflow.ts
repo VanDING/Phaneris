@@ -48,6 +48,9 @@ await verificationWorkflow('upgrade-0153-workspace-isolation', async run => {
 
     // --- CSW-01: A→B, B answers first, A answers last ------------------------
     await check('CSW-01-late-response-from-abandoned-workspace-is-dropped', async () => {
+      await page.evaluate(() => window.workspaceIsolationFixture.announce())
+      await page.waitForFunction(() => window.workspaceIsolationFixture.pending().length === 1)
+      const aCall = (await state()).calls.filter(call => call.workspaceId === 'ws-a').pop()!.index
       await page.evaluate(() => window.workspaceIsolationFixture.setWorkspace('ws-b'))
       // B is asked now; A's read is still outstanding.
       await page.waitForFunction(() => window.workspaceIsolationFixture.calls().some(call => call.workspaceId === 'ws-b'))
@@ -59,17 +62,11 @@ await verificationWorkflow('upgrade-0153-workspace-isolation', async run => {
       await page.waitForFunction(() => window.workspaceIsolationFixture.shown().join(',') === 'B starter')
 
       // A late answer from A must not be able to overwrite B.
-      const aLate = await page.evaluate(() => {
-        const calls = window.workspaceIsolationFixture.calls()
-        const a = calls.filter(call => call.workspaceId === 'ws-a').pop()
-        const remaining = window.workspaceIsolationFixture.pending().length
-        return { aIndex: a?.index ?? null, remaining }
-      })
-      if (aLate.aIndex !== null && aLate.remaining > 0) {
-        await page.evaluate(({ index }) => window.workspaceIsolationFixture.resolveCall(index, {
-          chatStarters: [{ label: 'A late', prompt: 'A prompt' }],
-        }), { index: aLate.aIndex }).catch(() => {})
-      }
+      assert.equal((await state()).pending, 1, 'the abandoned A read must actually remain unresolved')
+      await page.evaluate(({ index }) => window.workspaceIsolationFixture.resolveCall(index, {
+        chatStarters: [{ label: 'A late', prompt: 'A prompt' }],
+      }), { index: aCall })
+      assert.equal((await state()).pending, 0, 'the late A response was actually injected')
       await page.waitForTimeout(300)
       const after = await state()
       assert.deepEqual(after.shown, ['B starter'], `A's late response must not replace B's starters (${JSON.stringify(after)})`)

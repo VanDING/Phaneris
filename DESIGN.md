@@ -90,6 +90,35 @@ Rules:
 - Never introduce a new hex in a component. Author it in the theme engine
   (`DEFAULT_THEME` or a theme file) so every host and mode receives it.
 
+### Status and state colours
+
+The product's status language is the four semantic roles plus the neutral ink.
+There is no fifth hue: a state either means "waiting / in flight", "good",
+"broken" or "identity", and those are `info`, `success`, `destructive` and
+`accent`. The 2026-10-20 review found 172 raw palette classes in their place —
+`text-amber-600 dark:text-amber-300` next to `text-emerald-600 dark:…` — each
+pair hand-picked per mode, which is why Ink and Cyberpunk 2077 could not govern
+state at all. They now resolve through the theme.
+
+| Meaning | Surface / icon | Text | Was |
+| --- | --- | --- | --- |
+| Pending, running, needs review | `bg-info/10`, `border-info/30` | `text-info-text` | `amber-*`, `orange-*`, `yellow-*` |
+| Done, accepted, added | `bg-success/10`, `border-success/30`, `bg-success` | `text-success-text` | `emerald-*`, `green-*`, `teal-*`, `lime-*` |
+| Failed, blocked, removed | `bg-destructive/10`, `border-destructive/30`, `bg-destructive` | `text-destructive-text` | `red-*`, `rose-*` |
+| Identity: author, source, "informational" | `bg-accent/10`, `bg-accent` | `text-accent-text` | `sky-*`, `blue-*`, `cyan-*`, `indigo-*`, `violet-*`, `purple-*` |
+| Neutral, injected, skipped | `bg-muted` | `text-text-secondary` | `slate-*`, `gray-*`, `zinc-*`, `stone-*` |
+
+Rules:
+
+- **Never write a raw palette class** (`bg-amber-500`, `text-emerald-600`) and
+  never pair a `dark:` twin with one: the role already resolves per mode.
+  `check:design-drift` counts them; the only exemption is a brand mark
+  (`ConnectionIcon`), because a vendor logo owns its colour.
+- A solid role surface takes `text-on-accent`, never `text-white`: the token
+  flips with the mode, and the contrast gate asserts it per theme.
+- Text on a role *surface* uses the `*-text` mix; the raw role is only for
+  borders, fills and icons.
+
 ## Typography
 
 Families: Inter Variable (UI), JetBrains Mono (code), Noto Sans SC (CJK), with
@@ -115,6 +144,143 @@ Rules:
 - Counters, timers, token totals and diff line numbers use `tabular-nums`.
 - Body copy uses `text-wrap: pretty`; headings use `text-wrap: balance`.
 - Inline icons align optically with `vertical-align: -0.125em` at body sizes.
+- Tailwind's own type scale (`text-xs`, `text-sm`, `text-base`, `text-lg`, …) is
+  **not** part of this contract. It resolves in rem, so it lands between tiers
+  (11.25 / 13.125 / 16.875px at a 15px root). The 832 historical sites were
+  renamed to tiers by `scripts/migrate-default-type-scale.ts`, and
+  `theme-adapter.css` now aliases the scale onto the tiers, so a leftover — in
+  the playground or a future branch — still renders on-contract instead of
+  0.125px off it. `check:design-drift` holds the count at zero.
+- Two object-scale glyph roles exist for text that is *sized by the object it
+  sits in*, not by the reading hierarchy: `glyph-watermark` (36px monogram
+  watermark) and `glyph-avatar` (48px avatar initials). They are deliberately
+  outside `--ui-scale`; do not add a third without a real object behind it.
+
+## Contrast
+
+Text and informative graphics have floors, not preferences. Both are WCAG 2.1
+values and both are enforced by `bun run check:contrast-floor` against every
+built-in palette (Default, Geek, Cyberpunk 2077, Ink) in every supported mode:
+
+| Content | Floor | Applies to |
+| --- | --- | --- |
+| Text | **4.5:1** | Body copy, labels, hints, placeholders, timestamps, counts |
+| Large text (≥18.66px, or ≥14px bold) | 3:1 | `text-title` / `text-display` only |
+| Non-text graphics | **3:1** | Focus rings, icons that carry state, control boundaries |
+| Disabled controls | exempt | WCAG 1.4.3 exemption — use `--text-disabled`, nothing else |
+
+Rules:
+
+- **Two text tones.** Hierarchy is `--text-primary` (ink) then
+  `--text-secondary` (dimmed ink, the AA-safe token; `--text-tertiary` resolves
+  to the same value on purpose). Below that there is no legible third tone:
+  measured across the shipped palettes, a third step between 4.5:1 and the
+  secondary tone is under 0.5:1 apart and therefore invisible. Express the
+  faintest tier with **size and weight** (`text-micro` / `text-meta`), never by
+  lowering contrast.
+- **Alpha text is not a tone.** `text-foreground/40` composites against whatever
+  is behind it: on the Default canvas that is 2.40:1, and `/60` is still only
+  4.24:1. Never put an opacity modifier on a text colour. `check:design-drift`
+  counts the survivors; the count may only fall.
+- **States stay distinguishable.** A toggle or selected row must not encode its
+  state as two dim tones — after the AA floor they read as identical. Use
+  `text-foreground` for the active state and `--text-secondary` for the
+  inactive one (see `CompactModelSelector`'s vision toggle).
+- **Status text uses the `*-text` variant.** `--info-text`, `--success-text`,
+  `--destructive-text` and `--accent-text` are the raw status colour mixed 50%
+  toward the foreground, which is what clears 4.5:1. Never dim a status colour.
+- **Scenic mode is the author's risk, with a checklist.** When `--background`
+  is a background image, contrast depends on the picture and no gate here can
+  measure it. A scenic theme ships nothing unless it answers all four:
+  1. **Panel opacity floor.** Every text-bearing surface is at least 55% opaque
+     over the image; `--popover-solid` stays 100%.
+  2. **Protective gradient.** A text column sits on a scrim — the dark scenic
+     has a 40% black gradient, and a light scenic needs an equivalent wash. No
+     scrim, no scenic theme.
+  3. **Blur budget.** `backdrop-filter` is for floating panels only (never a
+     repeating row — see Perceived performance), and `glassBlur` above 24px
+     is a performance decision, not a taste one.
+  4. **Picture audit.** At least three of the shipped images, measured where the
+     text actually lands: body text ≥4.5:1 and secondary text ≥4.5:1.
+
+## Interaction States
+
+Every interactive element must answer the same six questions. Missing answers
+are the most common defect in review, because a default that is invisible looks
+like a design choice.
+
+| State | Default answer | Notes |
+| --- | --- | --- |
+| Hover | `bg-foreground/5` on ghost controls; never a colour change alone | Pointer devices only |
+| Active / pressed | `bg-foreground/10`, plus `--motion-scale-pressed` where motion is welcome | |
+| Focus | 2px accent ring at 2px offset, or the `craft-*` three-layer ring | **Keyboard only** — `:focus-visible`, never `:focus` |
+| Selected | `--action-selected` surface plus primary text; the accent is allowed here | Accent-Is-For-Intent |
+| Disabled | `--text-disabled` text, `disabled:opacity-*`, `pointer-events-none` | WCAG exempts it; never fake it with a dim tone |
+| Invalid | `--destructive` ring or border, `aria-invalid="true"` | Paired with a message, never colour alone |
+
+Rules:
+
+- `The Focus-Is-Never-Optional Rule` — a focusable element must show focus. An
+  `outline-none` / `focus-visible:ring-0` is only legal when the same element or
+  its declared shell supplies the ring. `focus-visible:ring-0` also cancels the
+  `craft-control` ring, so pairing the two is a silent regression.
+- **Composite fields own the ring on the shell.** An icon + input + trailing
+  action inside one frame uses `.craft-field-shell`; the shell draws the ring and
+  the inner control drops its own. A ring on the inner input sits inside the
+  padding and reads as a stray rectangle.
+- **Focus on open is declared, never inherited.** utoFocus cannot tell a
+  dialog the user just opened from a page that just loaded, which is why the
+  rule exists. A surface that takes focus does it through
+  `useInitialFocus()` (`@phaneris/ui`): a stable callback ref that focuses on
+  the next frame, so it wins its race with a Radix focus scope deterministically
+  instead of stealing focus at mount. Policy: a surface the user opened may take
+  focus and returns it to the trigger on close; nothing on initial load takes
+  focus; a list field opts in with `useInitialFocus(index === 0)`.
+- **Background brightening is never the only cue.** `bg-muted/50` →
+  `bg-background` is 1.01:1.
+- **Separators are focusable too.** A keyboard-resizable divider colours its own
+  1px line with the accent on `:focus-visible`; a ring is unusable at that width.
+- **Touch targets.** Under `pointer: coarse` every `craft-control`,
+  `craft-icon-button` and `craft-row-actions` reaches 44×44px, and row actions
+  stay visible instead of revealing on hover.
+
+## Icons
+
+- Stroke weight has exactly one source: `--icon-stroke-width` (1.65 Default,
+  theme-adjustable — Ink uses 1.4). Three rules carry it:
+  `.lucide` for Lucide, `svg[stroke="currentColor"]` for hand-written product
+  glyphs, and nothing at all for injected third-party SVG (Mermaid, Shiki, PDF),
+  which brings its own stroke intent.
+- Never write a numeric `strokeWidth` under 4 on a component or an `<svg>`. On a
+  Lucide icon it was already dead — a CSS declaration beats the presentation
+  attribute, so `strokeWidth={2}` on a 1.65 theme painted 1.65. On a hand-written
+  glyph it was live and wrong. All 113 were removed; `check:design-drift` holds
+  the count at zero. A value ≥4 is a brand glyph authored in viewBox units (the
+  MCP mark is 12 in a 150×170 box) and is left alone.
+- Exceptions, all deliberate: the loading spinner ring (1.75–2),
+  `EmptyMedia variant="icon"` (1.5) and the composer's `thinking-blocks`. These
+  are *loading* and *illustration* semantics, not icon semantics.
+- File identity has one component per input shape, and no hand-written SVG paths:
+  `FileTypeIcon` (Electron, colour assets, keyed by name) for file trees and
+  attachment cards, `FileKindIcon` (`@phaneris/ui`, three mono kinds) for inline
+  badges and menus, and `attachment-helpers.FileTypeIcon` (keyed by MIME type)
+  for attachment chips. Adding a fourth is the defect the 2026-10-20 review
+  found three times over.
+- An icon that carries state also carries `aria-label` and a tooltip; an icon
+  that decorates adjacent text is `aria-hidden`.
+
+## Tooltips
+
+- Interactive affordances — icon buttons, menu triggers, toolbar actions — use
+  the shared `Tooltip` primitive. It is themable, keyboard-reachable, dismissible
+  with Esc, and works on touch after a long press.
+- The native `title` attribute is **only** for `text-overflow: ellipsis`
+  fallback: when a filename, path or label is truncated and the full string has
+  nowhere else to go.
+- A `title` on a button is a defect: it appears after ~1s, cannot be styled,
+  never appears on touch, and is unreliable for assistive technology.
+  `check:design-drift` counts the 91 historical sites.
+- `aria-label` is independent of both. A tooltip is not a name.
 
 ## Layout
 
@@ -126,6 +292,30 @@ Rules:
 - Spacing follows a 4px rhythm (`spacing.1–6`).
 - Control heights are contract tiers `18/22/26/30/34/38px`. Heights above the
   control band describe layout space, not hit targets, and are not tiered.
+
+### One scaling model
+
+There used to be two: contract tiers painted fixed pixels while Tailwind's rem
+heights (`h-8`, `h-9`) followed the root font size, so a theme with a 18px root
+grew half the toolbar and left the other half alone.
+
+Now every control dimension is `tier × --ui-scale`:
+
+- `.h-control-*` and `.size-control-*` are `calc(var(--control-height-*) *
+  var(--ui-scale))`; `craft-control`'s min-height points at the same tiers
+  instead of a hard-coded `2.25rem`.
+- The settled primitives consume tiers directly — Button (`h-control-lg` /
+  `-md` / `-xl` by size), Input, Select trigger, Command input, header icon
+  buttons (`size-control-sm`). At `--ui-scale: 1` that is 33.75→34px, i.e. the
+  sub-pixel change the review allowed.
+- `--ui-scale` is a user preference (`ThemePreferences.uiScale`), surfaced in
+  Appearance as **Interface scale 100 / 110 / 125%**, applied by the theme
+  provider on `:root`.
+- Type tiers multiply by the same variable, so text and controls grow together.
+  The reading column does **not**: `text-reading` and `--reading-width` follow
+  `--reading-scale`, because enlarging the interface must not reflow prose.
+- A style written with a bare rem height (`h-8`) still resolves, but it is not
+  part of the model and will not follow the preference. New controls use a tier.
 
 ## Elevation & Depth
 
@@ -157,6 +347,24 @@ Role shapes derive from the theme radius: `--shape-card` (×1.333),
 `--shape-bubble` (16px, neutral message object) and `--shape-composer`
 (theme radius ×1.5). Changing `--theme-radius` must move every role shape.
 
+**Two axes, one letter apart.** `rounded-md` and `rounded-shape-md` are not the
+same tier. Read the prefix: `rounded-{sm,md,lg,…}` is *theme-derived*, and
+`rounded-shape-*` is a *fixed contract tier*. At the default 6px radius the
+same-looking names differ by 1.5–3px, which is exactly enough to make a silent
+visual change look like a refactor.
+
+| Utility family | Source | Example | Renames with the theme? |
+| --- | --- | --- | --- |
+| `rounded-{sm,md,lg,xl,2xl,3xl,4xl}` | `--theme-radius` × {0.5, 0.75, 1, 1.5, 2, 3, 4} | `rounded-md` = 4.5px | Yes |
+| `rounded-{panel,inner,card,control,chip}` | role shapes above | `rounded-card` | Yes |
+| `rounded-shape-{xs,sm,md,lg,xl}` | fixed contract tiers | `rounded-shape-md` = 6px | No |
+| `rounded-{bubble,composer,round}` | fixed role shapes | `rounded-bubble` = 16px | No |
+
+The same dual axis exists for type: `text-{micro…display}` are contract tiers,
+`text-{xs,sm,base,lg,…}` are Tailwind rem defaults that are **not** in the
+contract. When in doubt, grep for the prefix: `text-` + a tier name is the
+contract, `text-` + a Tailwind scale word is drift.
+
 ## Components
 
 - **Buttons** — existing size variants keep their heights; new compact controls
@@ -172,17 +380,72 @@ Role shapes derive from the theme radius: `--shape-card` (×1.333),
   horizontal scroll with edge fade.
 - **Dialogs / popovers** — `rounded-shape-xl`, modal shadow, focus trap; the
   scroll container fades at the top and bottom.
+- **Composite fields** — `.craft-field-shell` around icon + input + action; the
+  shell owns the focus ring and the inner control drops its own.
+- **Toasts** — Sonner, themed; never a bespoke banner for a transient result.
+
+## Rules and their gates
+
+Every rule above that can be checked mechanically is checked. This table is the
+map: if a rule is not in the right column, it is review-only, and review-only
+rules drift.
+
+| Rule | Gate |
+| --- | --- |
+| Scale tiers, radius tiers, control heights | `check:scale-contract`, `lint` (`theme-contracts/scale`) |
+| No arbitrary `text-[Npx]` / `rounded-[Npx]` / `h-[Npx]` | `theme-contracts/scale` ESLint rule |
+| Shadows, z-index, `transition: all` | `theme-contracts/shadows`, `/z-index`, `/motion` |
+| Contrast floors for built-in palettes | `check:contrast-floor` |
+| No alpha text, no Tailwind default type scale, no numeric `strokeWidth`, no raw palette hue, no button `title` | `check:design-drift` (ratcheted by `scripts/design-drift-baseline.json`) |
+| Motion vocabulary has no orphaned animation class | `check:design-drift` (zero tolerance) |
+| Theme field parity, motion TS/CSS parity | `check:themes` |
+| Accessibility findings never grow | `check:visual-contracts` + `scripts/visual-debt-ledger.json` |
+| Bundled fonts, no CDN | `check:fonts` |
+
+Lowering a frozen count after a migration batch: `bun run design:drift`. It
+rewrites the baseline; the diff is the review record.
+
+## Perceived performance
+
+A long transcript is the product's worst case, so it has a budget instead of an
+opinion. un run test:long-session-budget renders 200 real turns and measures
+frame deltas; the recorded run is in
+`docs/verification/results/long-session-budget-2026-10-20/`.
+
+| Action (200 turns) | Measured | Budget |
+| --- | --- | --- |
+| Scroll, p95 frame | 16.7 ms | ≤ 40 ms |
+| Append one turn, p95 | 283 ms | ceiling 300 ms, target 40 ms |
+| Glass panel over the transcript, p95 delta | 0 ms | ≤ 8 ms |
+
+Rules:
+
+- **Never put `backdrop-filter` on a repeating row.** Blur belongs to floating
+  panels; a panel that is not focused may drop it, exactly like the shadow
+  level (isFocusedPanel).
+- **An append touches one row.** Grouping is memoised per turn; re-deriving
+  every row on each delta is the defect the 283 ms measures, and the ceiling is
+  there so it cannot get worse while the fix is scheduled.
+- **Scrolling is the hard floor.** Anything that animates during scroll is cut
+  before anything else.
+- Measure before optimising, and leave the number in an artifact.
 
 ## Do's and Don'ts
 
 - **Do** route every visual value through a token or a contract tier.
 - **Do** keep the accent for intent; use neutral surfaces for content.
 - **Do** verify both modes and all three hosts (Electron, WebUI, Viewer).
+- **Do** express the faintest text with `text-micro` / `text-meta`, not with a
+  lower-contrast colour.
 - **Don't** nest bordered containers (Russian dolls).
 - **Don't** introduce per-character or blur streaming effects. `The Quiet-Stream
   Rule`: streamed text appears directly; the reading position stays stable.
 - **Don't** write `text-[13px]`, `rounded-[8px]`, `h-[30px]` or inline colors.
   The lint contract rejects new values.
+- **Don't** put an opacity modifier on a text colour (`text-foreground/50`), use
+  `text-text-secondary`.
+- **Don't** cancel a focus ring (`focus-visible:ring-0`, `outline-none`) without
+  supplying one on the same element or its declared shell.
 - **Don't** add a second implementation of a menu, empty state or roving-focus
   protocol. Extend the shared primitive.
 - **Don't** change the settled identity decisions: white paper and ink, violet

@@ -30,6 +30,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 升级续审：[2026-10-19 第二轮复核](verification/upgrade-2026-10-19-review-2.md) — 尚未验收通过；复现 HEIC 打包解析与 Chat Starters 失败路径，要求修正模型保存、验收计数并定位 critical 挂起。
 
+升级收口：[2026-10-20 实施清单](dependencies/upgrade-closeout-2026-10-20.md) — Codex 直接实施剩余产品修复和验收，基线为 `ac85d33b0`；最终状态以新采集结果为准。
+
 | Document | Status | Purpose |
 | --- | --- | --- |
 | [Project README](../README.md) / [中文](../README.zh-CN.md) | Current | Product introduction, capabilities, screenshots, setup, and positioning. |
@@ -104,6 +106,9 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | [State matrix](verification/state-matrix.md) | Maintained | Five states × ten surfaces; recovery path required for every cell. |
 | [Scale & theme system implementation](verification/frontend-scale-contract-implementation-2026-10-17.md) | Implemented; contract and real-app evidence recorded | Four-wave delivery: baseline, DESIGN.md/PRODUCT.md constitution, ESLint scale gate, primitive convergence, optical and motion upgrades. [Screenshots](verification/results/scale-contract-2026-10-17/). |
 | [Frontend P2 fixes](verification/frontend-p2-fixes-2026-10-17.md) | Implementation and browser verification | Copy feedback with reduced motion, scroll viewport masks, and runtime high-DPI hairlines. |
+| [Frontend design wave 1 (focus, contrast, drift gates)](verification/frontend-design-w1-failure-matrix-2026-10-20.md) | Implemented; rendered-browser evidence recorded | Focus visibility for composite fields and separators, 391 sub-AA text sites migrated to `--text-secondary`, the Ink dark palette corrected, two new gates (`check:design-drift`, `check:contrast-floor`) plus a cleaned motion vocabulary. [Recorded results](verification/results/frontend-design-w1-2026-10-20/README.md). |
+| [Frontend design wave 2 (metrics, status colour, icons)](verification/frontend-design-w2-failure-matrix-2026-10-20.md) | Implemented; rendered-browser evidence recorded | One type scale (832 sites renamed, Tailwind's rem scale aliased onto the tiers), one control-geometry model with a user-facing interface scale, 172 raw palette classes replaced by the four status roles, and one icon-stroke source plus a shared mono file glyph. [Recorded results](verification/results/frontend-design-w2-2026-10-20/README.md). |
+| [Frontend design wave 3–4 (accessibility policy, author tooling, draw budget)](verification/frontend-design-w34-failure-matrix-2026-10-20.md) | Implemented; rendered-browser evidence recorded | Dialog focus policy replaces every `autoFocus` with a declared `useInitialFocus()` ref (22 occurrences, ledger −18), label/media/separator semantics, an axe-core audit over a real surface with a 44px touch-target sweep, theme-compiler contrast warnings for authored tokens, and a frozen 200-turn draw-cost budget that found a 100 ms append stall. [Recorded budget](verification/results/long-session-budget-2026-10-20/README.md) · [axe run](verification/results/a11y-audit-2026-10-20/README.md) · [visual baselines](verification/visual-baselines/README.md). |
 | [Theme contract failure matrix](verification/theme-contract-failure-matrix-2026-10-12.md) | Written before W2–W5 implementation | Validation, roles, domains, adapters and governance mutation gates. |
 | [Governance completion failure matrix](verification/governance-completion-failure-matrix.md) | Written before implementation | G3–G8 failure cases and actual workflow acceptance. |
 | [Verification index](verification/README.md) | Maintained | Commands, platform notes, and result locations. |

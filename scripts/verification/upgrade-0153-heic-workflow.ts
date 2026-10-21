@@ -25,6 +25,7 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { VerificationRun } from './verification-artifacts'
+import { withIpmaWidths } from './fixtures/heic-ipma'
 import {
   HEIC_DECODE_TIMEOUT_MS, HEIC_MAX_CONCURRENT_TRANSCODES, MAX_HEIC_BYTES, MAX_HEIC_PIXELS,
   decodeHeicToJpeg, ensureDecodableImage, heicTranscodeStats, isAvifBuffer, isHeicBuffer,
@@ -117,6 +118,19 @@ try {
   }
   scenes.push('dimensions-resolved-from-primary-item-and-bounded')
 
+  const widths = []
+  for (const version of [0, 1] as const) for (const wide of [false, true]) {
+    const variant = withIpmaWidths(heic, version, wide)
+    assert.deepEqual(readHeicDimensions(variant), real)
+    const decoded = await decodeHeicToJpeg(variant)
+    const metadata = await (await import('sharp')).default(decoded).metadata()
+    assert.equal(metadata.width, real!.width)
+    assert.equal(metadata.height, real!.height)
+    widths.push({ version, flags: wide ? 1 : 0, bytes: variant.length, sha256: sha256(variant), decoded: sha256(decoded) })
+  }
+  report.ipmaWidths = widths
+  scenes.push('ipma-version-and-flags-four-real-decode-combinations')
+
   // --- HE-10: the deadline terminates the worker; the loop stays responsive --
   // 1 ms is far below a real decode, so the timer wins and must terminate it.
   const terminatedBefore = heicTranscodeStats.terminated
@@ -196,7 +210,7 @@ try {
   scenes.push('python-img-tool-reads-heic')
 
   evidence.complete(scenes, [
-    'Windows packaged Electron renderer drag/drop/paste path (covered by upgrade-0153-heic-store-workflow)',
+    'Windows packaged Electron renderer drag/drop/paste path (separate native acceptance)',
     'macOS/Linux execution',
     'live model upload of a transcoded attachment',
   ])

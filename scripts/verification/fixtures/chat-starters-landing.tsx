@@ -221,7 +221,7 @@ declare global {
 
 createRoot(document.getElementById('root')!).render(
   <Provider>
-    <I18nextProvider i18n={i18n}>
+    <React.StrictMode><I18nextProvider i18n={i18n}>
       <ThemeProvider defaultMode="light">
         <ModalProvider>
           <EscapeInterruptProvider>
@@ -237,6 +237,6 @@ createRoot(document.getElementById('root')!).render(
           </EscapeInterruptProvider>
         </ModalProvider>
       </ThemeProvider>
-    </I18nextProvider>
+    </I18nextProvider></React.StrictMode>
   </Provider>,
 )

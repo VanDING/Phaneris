@@ -57,7 +57,7 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
             <ArtifactIcon kind={event.kind} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-semibold">{event.title}</span>
+            <span className="block truncate text-body font-semibold">{event.title}</span>
             <span className="block truncate text-meta text-muted-foreground">{event.sourcePath}</span>
             {event.provenance?.model && (
               <span className="block truncate text-micro text-muted-foreground" title={event.provenance.prompt}>
@@ -67,8 +67,8 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
           </span>
           <span className={cn(
             'rounded-full px-2 py-0.5 text-micro font-semibold uppercase tracking-wide',
-            status === 'ready' && 'bg-amber-500/12 text-amber-700 dark:text-amber-300',
-            status === 'accepted' && 'bg-emerald-500/12 text-emerald-700 dark:text-emerald-300',
+            status === 'ready' && 'bg-info/12 text-info-text',
+            status === 'accepted' && 'bg-success/12 text-success-text',
             status === 'conflict' && 'bg-destructive/10 text-destructive',
             (status === 'draft' || status === 'current') && 'bg-primary/10 text-primary',
             status === 'discarded' && 'bg-foreground/8 text-muted-foreground',
@@ -117,7 +117,7 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
           {validation && (
             <span className="inline-flex items-center gap-1">
               {validation.valid
-                ? <Check className="h-3 w-3 text-emerald-600" />
+                ? <Check className="h-3 w-3 text-success-text" />
                 : <AlertTriangle className="h-3 w-3 text-destructive" />}
               {validation.summary}
             </span>

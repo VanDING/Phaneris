@@ -354,8 +354,8 @@ function PlatformRow({ platform, workspaceId }: { platform: Platform; workspaceI
         <div className="flex items-center gap-3 px-4 py-3.5">
           <MessagingPlatformIcon platform={platform} size={22} />
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium">{label}</div>
-            <div className="mt-0.5 truncate text-xs text-text-secondary">
+            <div className="text-body font-medium">{label}</div>
+            <div className="mt-0.5 truncate text-meta text-text-secondary">
               {t(`settings.messaging.${platform}.apiType`)} · {description}
             </div>
           </div>
@@ -642,12 +642,12 @@ function DirectSessionRow({
     <div className="flex items-center gap-3 px-4 py-2.5">
       <SubRowIcon icon={MessageSquare} />
       <div className="min-w-0 flex-1">
-        <div className="truncate text-sm">
+        <div className="truncate text-body">
           {t('settings.messaging.telegram.directSessionSubtitle', {
             defaultValue: 'Direct message session',
           })}
         </div>
-        <div className="mt-0.5 truncate text-xs text-text-secondary">{sessionLabel}</div>
+        <div className="mt-0.5 truncate text-meta text-text-secondary">{sessionLabel}</div>
       </div>
       <BindingAllowListPopover
         access={bindingToAccess(binding)}
@@ -665,10 +665,10 @@ function UnpairedSupergroupRow({ onPair }: { onPair: () => void }) {
     <div className="flex items-center gap-3 px-4 py-2.5">
       <SubRowIcon icon={MessagesSquare} />
       <div className="min-w-0 flex-1">
-        <div className="text-sm">
+        <div className="text-body">
           {t('settings.messaging.telegram.supergroup.label', { defaultValue: 'Supergroup' })}
         </div>
-        <div className="mt-0.5 truncate text-xs text-text-secondary">
+        <div className="mt-0.5 truncate text-meta text-text-secondary">
           {t('settings.messaging.telegram.supergroup.notConfigured', {
             defaultValue: 'Not configured',
           })}
@@ -725,10 +725,10 @@ function PairedSupergroupSection({
         <SubRowIcon icon={MessagesSquare} />
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <div className="truncate text-sm font-medium">{supergroup.title}</div>
-            <div className="truncate text-xs text-text-secondary">({supergroup.chatId})</div>
+            <div className="truncate text-body font-medium">{supergroup.title}</div>
+            <div className="truncate text-meta text-text-secondary">({supergroup.chatId})</div>
           </div>
-          <div className="mt-0.5 truncate text-xs text-text-secondary">{subtitle}</div>
+          <div className="mt-0.5 truncate text-meta text-text-secondary">{subtitle}</div>
         </div>
         {isExpanded ? (
           <ChevronDown className="h-4 w-4 shrink-0 text-text-secondary" />
@@ -740,7 +740,7 @@ function PairedSupergroupSection({
       <InlineExpand isOpen={isExpanded}>
         <div className="border-t border-border/50">
           {topicBindings.length === 0 ? (
-            <div className="flex items-start gap-3 px-4 py-3 text-xs text-text-secondary">
+            <div className="flex items-start gap-3 px-4 py-3 text-meta text-text-secondary">
               <IconSpacer />
               <span>
                 {t('settings.messaging.telegram.supergroup.noTopicsHint', {
@@ -803,11 +803,11 @@ function TopicBindingRow({
     <div className="flex items-center gap-3 px-4 py-2.5">
       <IconSpacer />
       <div className="min-w-0 flex-1">
-        <div className="truncate text-sm">{sessionLabel}</div>
-        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-text-secondary">
+        <div className="truncate text-body">{sessionLabel}</div>
+        <div className="mt-0.5 flex items-center gap-1.5 text-meta text-text-secondary">
           <Hash className="h-3 w-3" />
           <span className="truncate">
-            {topicName} <span className="text-foreground/30">·</span> Topic #{binding.threadId}
+            {topicName} <span className="text-text-secondary">·</span> Topic #{binding.threadId}
           </span>
         </div>
       </div>
@@ -838,7 +838,7 @@ function FlatBindingRow({
   const sessionLabel = meta ? getSessionTitle(meta) : binding.channelName || binding.channelId
   return (
     <div className="flex items-center justify-between gap-4 px-4 py-2.5 pl-[52px]">
-      <div className="min-w-0 truncate text-sm">{sessionLabel}</div>
+      <div className="min-w-0 truncate text-body">{sessionLabel}</div>
       <RowActions onOpen={onOpen} onUnbind={onUnbind} />
     </div>
   )

@@ -63,7 +63,7 @@ function Calendar({
         ),
         // Dropdown container for month/year selectors
         dropdowns: cn(
-          'flex h-[--cell-size] w-full items-center justify-center gap-1.5 text-sm font-medium',
+          'flex h-[--cell-size] w-full items-center justify-center gap-1.5 text-body font-medium',
           defaultClassNames.dropdowns
         ),
         // Individual dropdown wrapper (month or year)
@@ -76,13 +76,13 @@ function Calendar({
         caption_label: cn(
           'select-none font-medium',
           captionLayout === 'label'
-            ? 'text-sm'
-            : 'flex h-7 items-center gap-1 rounded-md pl-2 pr-1 text-sm [&>svg]:text-foreground/40 [&>svg]:size-3.5',
+            ? 'text-body'
+            : 'flex h-7 items-center gap-1 rounded-md pl-2 pr-1 text-body [&>svg]:text-text-secondary [&>svg]:size-3.5',
           defaultClassNames.caption_label
         ),
         weekdays: cn('flex', defaultClassNames.weekdays),
         weekday: cn(
-          'text-foreground/40 flex-1 select-none rounded-md text-[0.8rem] font-normal',
+          'text-text-secondary flex-1 select-none rounded-md text-[0.8rem] font-normal',
           defaultClassNames.weekday
         ),
         week: cn('mt-2 flex w-full', defaultClassNames.week),
@@ -95,11 +95,11 @@ function Calendar({
           defaultClassNames.today
         ),
         outside: cn(
-          'text-foreground/25 aria-selected:text-foreground/40',
+          'text-text-secondary aria-selected:text-text-secondary',
           defaultClassNames.outside
         ),
         disabled: cn(
-          'text-foreground/25 opacity-50',
+          'text-text-secondary opacity-50',
           defaultClassNames.disabled
         ),
         hidden: cn('invisible', defaultClassNames.hidden),
@@ -147,7 +147,7 @@ function CalendarDayButton({
       ref={ref}
       type="button"
       className={cn(
-        'inline-flex items-center justify-center rounded-md text-sm',
+        'inline-flex items-center justify-center rounded-md text-body',
         // Fill the cell: flexible width, fixed min size from CSS var
         'h-[--cell-size] w-full min-w-[--cell-size] select-none',
         'hover:bg-foreground/5 transition-colors cursor-pointer',

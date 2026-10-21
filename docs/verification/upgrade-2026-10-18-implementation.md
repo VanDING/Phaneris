@@ -1,6 +1,8 @@
 # 上游 0.15.3 与依赖升级实施记录（2026-10-18，2026-10-19 修订）
 
-执行者：DSH。规划者：Codex。分支：`codex/upstream-0153-dependencies-20261018`（自 `82714e2ae3b76643ae16ef1d3a6abfe66e8bf574` 创建，**未提交、未推送**）。
+当前状态（2026-10-20）：升级主体已提交为 `d0fb6be7b`，另有 Pi 中断恢复提交 `ac85d33b0`；本轮 Codex 直接实施的收口修改保持未提交、未推送。当前清单与验收结论见[升级收口](../dependencies/upgrade-closeout-2026-10-20.md)和[机器结果](results/upgrade-2026-10-18.json)。下文各批次为当时记录，不作为当前 HEAD 或整棵工作树已经验收的证明。
+
+此前批次执行者：DSH；规划者：Codex。分支为 `codex/upstream-0153-dependencies-20261018`，最初自 `82714e2ae3b76643ae16ef1d3a6abfe66e8bf574` 创建。
 
 - 失败判定见 [upgrade-2026-10-18-failure-matrix.md](upgrade-2026-10-18-failure-matrix.md)（含实施期间追加的 7.1–7.6 与复核后追加的 8.1–8.6）。
 - 首轮复核见 [upgrade-2026-10-19-review.md](upgrade-2026-10-19-review.md)（changes-requested）；本版按该记录第 5 节重做，改动集中在 §8。

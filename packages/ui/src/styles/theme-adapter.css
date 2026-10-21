@@ -83,6 +83,32 @@
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
+  /* === TYPE SCALE ADAPTER === */
+  /* Tailwind's own rem scale is not a design tier (DESIGN.md → Typography →
+     "The Scale-Is-Spoken Rule"). At the 15px root it lands *between* tiers:
+     xs 11.25, sm 13.125, base 15, lg 16.875, 2xl 22.5. Two live type systems is
+     exactly the drift the 2026-10-20 review found, so the scale is aliased onto
+     the contract tiers: a leftover `text-sm` renders at `text-body`'s size
+     instead of 0.125px off it. The names themselves are retired by
+     `scripts/migrate-default-type-scale.ts`; this block keeps any straggler
+     (playground, a future PR) on-contract in the meantime.
+     `--text-reading` is authored in typography.css because reading surfaces
+     follow `--reading-scale`, not `--ui-scale`. */
+  --text-xs: calc(var(--type-meta-size) * var(--ui-scale));
+  --text-xs--line-height: 1.45;
+  --text-sm: calc(var(--type-body-size) * var(--ui-scale));
+  --text-sm--line-height: 1.5;
+  --text-base: calc(var(--type-reading-size) * var(--ui-scale));
+  --text-base--line-height: 1.7;
+  --text-lg: calc(var(--type-title-size) * var(--ui-scale));
+  --text-lg--line-height: 1.45;
+  --text-xl: calc(var(--type-display-size) * var(--ui-scale));
+  --text-xl--line-height: 1.3;
+  --text-2xl: calc(var(--type-display-size) * var(--ui-scale));
+  --text-2xl--line-height: 1.3;
+  --text-3xl: calc(var(--type-display-size) * var(--ui-scale));
+  --text-3xl--line-height: 1.3;
+
   /* Theme-driven Tailwind shape scale. Arbitrary radii remain intentionally
      untouched; semantic rounded-* utilities follow the selected theme. */
   --radius-sm: calc(var(--theme-radius) * 0.5);
@@ -124,6 +150,13 @@
 @layer base {
   * { border-style: var(--theme-border-style); }
   .lucide { stroke-width: var(--icon-stroke-width); stroke-linecap: var(--icon-stroke-linecap); }
+  /* A hand-written product glyph that strokes with `currentColor` inherits the
+     theme's optical weight, exactly like a Lucide icon. Scoped by attribute, not
+     by tag: injected/third-party SVG (Mermaid, Shiki, PDF) brings its own stroke
+     intent, and brand marks drawn in viewBox units (the MCP glyph is 12 units in
+     a 150x170 box) keep their authored value. Same shape as the existing
+     `.menu-icon svg[viewBox]` rule in the renderer stylesheet. */
+  svg[stroke="currentColor"] { stroke-width: var(--icon-stroke-width); }
   body { line-height: var(--line-height-base); letter-spacing: var(--tracking-normal); }
 }
 

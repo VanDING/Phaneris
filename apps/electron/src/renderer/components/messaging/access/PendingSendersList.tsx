@@ -64,18 +64,18 @@ function PendingRow({
   return (
     <div className="flex items-center gap-3 px-4 py-2.5">
       <div className="flex h-control-xs w-[22px] shrink-0 items-center justify-center">
-        <Clock className="h-4 w-4 text-foreground/50" strokeWidth={1.5} />
+        <Clock className="h-4 w-4 text-text-secondary" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <span className="truncate text-sm">{primary}</span>
+          <span className="truncate text-body">{primary}</span>
           {sender.username && (
-            <span className="shrink-0 truncate text-xs text-foreground/40">
+            <span className="shrink-0 truncate text-meta text-text-secondary">
               @{sender.username}
             </span>
           )}
         </div>
-        <div className="mt-0.5 truncate text-xs text-foreground/50">
+        <div className="mt-0.5 truncate text-meta text-text-secondary">
           {t('settings.messaging.telegram.access.pending.metaLine', {
             attempts: attemptText,
             relative: lastAttemptText,
@@ -92,7 +92,7 @@ function PendingRow({
           variant="ghost"
           size="sm"
           onClick={onIgnore}
-          className="text-foreground/60 hover:text-foreground"
+          className="text-text-secondary hover:text-foreground"
         >
           <X className="h-3.5 w-3.5" />
           {t('settings.messaging.telegram.access.pending.ignore')}

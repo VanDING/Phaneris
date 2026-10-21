@@ -558,3 +558,50 @@ bun run bundle:report --check
 - **剩余失败（28/115）**：`upgrade-2026-10-19` 轮次中该工作流从未跑完，因此这些断言此前从未被观察到通过（115/115 的记录来自 2026-10-12、升级前的环境）。失败全部属于同一族：`TF10/TF11/TF12/TF16-<host>-<mode>` 的 `Keyboard outline must be visible`，即 fixture 的 `[data-testid=link|button|input|wrapped]` 在 `:focus-visible` 命中（`visible: true`）时 `outline-style` 仍为 `none`；同一场景里 `[data-testid=native]`（TF09）的 outline 正常（`solid 2px`、颜色解析为 oklch）。
 - **已知的相关事实**：这些元素是共享 `Button`/`Input` 组件（依赖 ring 阴影而非 outline），而 outline 断言来自 `packages/ui/src/styles/controls.css` 的 `:focus-visible { outline: 2px solid … }`；`TF09` 的原生 `<button>` 通过，说明样式表本身已加载。**尚未归属**：是 fixture 断言与 ring-based 焦点样式的既有分歧，还是本轮依赖组合下的真实 outline 回归——没有旧依赖组合对照不得断言其一。
 - **状态**：`test-critical` 仍为 failed，但原因从「一小时超时」变为「28 条具名断言失败 + 完整阶段证据」，且不计入任何通过数。
+
+## 12. Codex 直接收口的先行失败路径（2026-10-20）
+
+用户已要求由 Codex 实施。当前基线 `ac85d33b0`，不再沿用旧 HEAD/未提交升级的描述；[执行清单](../dependencies/upgrade-closeout-2026-10-20.md)。以下在本轮产品修改前记录。
+
+| 编号 | 触发与失败判定 | 必须保留的对照/产物 |
+| --- | --- | --- |
+| CO-01 | 真 HEIC 经 File API 返回空/错误 MIME，前端变 unknown，服务端跳过图片分支；或提升服务端类型后 renderer 仍发送旧 type/name | 选择/拖拽/粘贴真实入口 + 生产存储 RPC，最终 type/name/MIME/bytes/size 一致；AVIF 不转换，普通二进制不误升级为图片；原始文件哈希不变 |
+| CO-02 | 损坏 HEIC/存储拒绝后输入已清空，过滤掉失败图片仍发送；异步成功又清掉用户新输入 | 失败发送数为零，文本/所有附件草稿保留；多附件部分失败不静默丢失；成功清理只对应提交快照，不清后来编辑；正常排队/中断/发送不退化 |
+| CO-03 | worker 超时 terminate 与 exit/message 竞争，结果/计数不确定；ipma 合法组合未进入正式回归 | deadline 只结算一次且回收 worker，循环仍响应；ipma v0/v1 × flags0/1 正向、损坏/伪 ispe 负向，真实 decoder 对照 |
+| CO-04 | 设置读取未完成或失败仍允许整组保存，覆盖已存 starters；只有 Textarea 无富文本 mentions | 挂起读取时禁止写；失败可重试并保留编辑；RichTextInput + 生产 mentions，标签/长度/0/1/3/服务器拒绝/中英文/键盘及焦点场景 |
+| CO-05 | StrictMode cleanup 后 ref 永久 false；取消等待后迟到启用仍发送；工作区首次 render 返回旧提示 | setup/cleanup/setup 后正常一次发送；等待期间 Escape/Stop 失效且不发送，下一次仍可发送；同步按 workspace 过滤，真实未决 A→B→B先返回→A后返回，断言确已释放 A 请求 |
+| CO-06 | 切 provider 后目录挂起、失败、乱序时提交旧 provider 的 default/models；假目录外夹具令保留断言空转 | 当前目录/provider/request 身份一致才可保存；A/B 乱序；真实目录外 ID；分别只改 key/utility/default/清空utility/切provider及 legacy provider 推断 |
+| CO-07 | 焦点断言只接受 outline，误拒现有 ring；以透明或任意阴影放宽则假通过；production build 无期限 | 保留 115 个原场景，检查共享控件实际 accent ring（现行 1.5px + spacer）及 zoom；native/forced-colors 2px outline；build 超时有界杀掉并回收本任务子进程 |
+| CO-08 | 仅用多轮 operation 代替一轮多次 provider 调用，分支继承父账单、warming 混入主调用或重复入账 | 真实 Pi/SessionManager/SQLite，一轮工具循环多请求逐行对账、恢复/分支/独立warming与投影；保留 U-01 明确延期，不伪装计费真相 |
+| CO-09 | resume 丢工具、切模型带入思考、Go 旧默认未规范化、headers 丢失、undici 取消/代理遗留连接 | 真实子进程与回环请求记录；精确旧URL/自定义URL正反对照；稳定session header；有界取消与资源清理，无真实账户 |
+| CO-10 | 编辑器撤销/列表/上传退化，日历时区/DST错日，PDF渲染资源未释放或仅 smoke 无代表任务 | 生产编辑器/日历和随包 Python 实际任务，语义/落盘/渲染产物和资源关闭证据，版本保持冻结 |
+| CO-11 | 仅单独 CJS 模块烟测就称真实 packaged main/RPC 通过；真实 Electron nativeImage/窗口生命周期未覆盖 | 真 main/preload/renderer，仓库外 unpacked、隔离配置，HEIC 选择/拖放/粘贴/失败草稿、窗口重开及深链接；node-pty/decoder 实际消费路径 |
+| CO-12 | 任何 server 构建失败均标环境受限；手工改机器结果、快照只匹配少量文件却称整个 tip 通过 | 平台拒绝按实际输出分类，其他失败保持红；完整/部分采集分离，当前 HEAD/dirty/锁及最终源码哈希，原门禁与 registry 不放宽，文档唯一当前结论 |
+
+### 12.1 CO-10 实施中追加：编辑器文件粘贴闭包
+
+新增 ED-04 在生产 MarkdownArtifactEditor 中完成撤销、重做、无序→有序列表和 HTML 粘贴后，文件粘贴没有插入任何图片（`upgrade-0153-editor-mHSM4R` 等失败产物）。文件处理器在 extensions 的首次 memo 中捕获 `editable=false`，而产物编辑器必须等 lossless gate 通过后才切换为可编辑；memo 不以 editable 为依赖，故文件处理器永久拒绝。修复前先记录此失败路径：使用当前 editor.isEditable 判断，不因 editable 改变重建 extensions/清空历史；只读时仍必须拒绝文件粘贴/拖放。ED-04 检查真实 File→FileReader→图片节点→Markdown，并保留前面的历史与列表断言。
+
+### 12.2 CO-03/11 实施中追加：原生 worker 小图片传输
+
+真正 Electron main 的 `file:storeAttachment` 处理 small.heic 时返回 `Cannot transfer object of unsupported type`，CDP 原始 RPC 已归档于 native-attachments 失败运行。worker 使用 Buffer.from(output) 后传输 bytes.buffer；小输出会落入 Node 标为不可转移的 Buffer 池，Bun 路径未复现。改用独立 Uint8Array，保持零拷贝 transfer 及父端 JPEG 校验；验收必须经真正 main/preload/renderer，并包含小 HEIC，不能用 ELECTRON_RUN_AS_NODE 或 Bun 单独成功代替。
+
+### 12.3 CO-07 实施中追加：菜单异步焦点与构建失败清理
+
+`theme-foundation-9L6qgK` 完整执行 115 项，114 项通过；`TF12-ui-light` 键盘选择仍为第一项，预期第二项。Radix Select 的 ArrowDown 处理通过 setTimeout 执行焦点移动；需在既有构建上记录 ArrowDown 前后焦点，区分产品不响应与 Enter 抢先。若属异步焦点竞争，等待真实第二项获得焦点后再发 Enter，保持“仅一次 ArrowDown、第二项确被选中、Escape 恢复 trigger”断言，不用重复按键或强制选择绕过。
+
+复核 `fixture-bundle.ts` 还发现失败分支调用 killAndReap 未 await；契约要求超时返回前确认子进程退出。补 await 与有界 reap，保留失败退出；用真实 Node/Vite 构建的极短超时记录子进程 PID 与退出状态，不能只验证错误文本。
+
+### 12.4 CO-10/12：八个 Python 工具的留存证据
+
+现有 test:doc-tools 实际含创建/读回/转换任务，但 TemporaryDirectory 在结束时清理，不能留下逐工具产物给审计复验。新增工作流先固定失败判定：八个工具均经过随包 uv 与产品 Python；任一命令非零、输出文件缺失/为空、读回标记/结构不符均失败；仅 --help 或文件存在不算成功。保留每条实际 argv、stdout、原始 stderr、退出码、工具脚本和产物哈希；不更改八个工具实现或依赖，不把 PDF 渲染专项替换成此基础流程。
+
+### 12.5 CO-07：后续主题契约的 dev 宿主卡顿
+
+第五次完整采集中 theme-foundation 已 115/115；critical 的前 35 个工作流通过后，theme-contract 在 Vite optimizer 阶段超过五分钟仍没有 preparation.json，120 秒页面期限也未完成退出。进程 CPU/内存和原始日志在 `.cache/upgrade-20261018/theme-contract-stall.{json,log}`；相同夹具的独立 Node dev 宿主也未在 5 秒内响应 HTML 请求，不能简单断言是 Bun 单一根因。停止本次未完成采集，改用已有独立 Node 一次性构建和静态托管，保留四个真实 CSS 入口、真实 ThemeProvider/Viewer/P2 组件及全部 119 个最低场景和原断言；仅迁移宿主与 CSS 编译入口，不用缩减场景数或忽略页面错误掩盖卡顿。
+
+静态 theme-contract 已 119/119；后续 theme-roles 独立运行也在准备阶段持续超过 120 秒、未生成 preparation.json（`theme-roles-stall.*`）。将共享 roles 夹具的 roles/domains/design 三条流程一起迁移；同批主题 browser-host/login 使用相同独立构建宿主，避免继续混用 dev 预优化。保持最低 76/56/36/23/5 个场景与全部原断言，CSS wrappers 显式包含 roles、domains、layout 的原 @source；login 直接以原 HTML 为构建入口，不复制重写登录页面。
+
+### 12.6 CO-12：夹具生成器登记为工作流却没有验证 manifest
+
+第六次完整采集的 critical 已通过前 44 项（含全部主题），随后因 upgrade-0153-fixtures 没有在 --output-dir 输出统一 manifest 而失败。两个生成器只有自定义数据 manifest，minimum:0 不代表可以跳过产物校验；不能将 testrunner 改成对它们忽略验证或虚报通过。新增薄封装，在独占目录中调用原生成器，核对九个图像/五个 PDF 的精确集合、格式、字节数及 SHA-256，保留原数据 manifest 与命令日志，再发布到既有后续流程的缓存路径；两个登记项均要求至少一项真实生成与产物完整性验收。

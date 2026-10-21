@@ -15,6 +15,7 @@ import type {
   KanbanProject,
   KanbanTask,
 } from './types'
+import { useInitialFocus } from '@phaneris/ui'
 
 interface KanbanColumnProps {
   column: KanbanColumnMeta
@@ -176,6 +177,9 @@ function ColumnHeader({
   onRemove?: () => void
 }) {
   const { t } = useTranslation()
+  // The rename field only exists after the user chooses "rename", so focusing it
+  // continues that action instead of surprising anyone at page load.
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [open, setOpen] = React.useState(false)
 
   const pillStyle = color ? { backgroundColor: color.solid, color: color.onAccent } : undefined
@@ -269,11 +273,7 @@ function ColumnHeader({
             <input
               type="text"
               defaultValue={label}
-              // The rule guards against stealing focus on load; this field only exists
-              // after the user chooses to rename the column, so focusing it is the
-              // expected continuation of that action rather than a surprise.
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
+              ref={initialFocusRef}
               onBlur={e => {
                 const next = e.target.value.trim()
                 if (next && next !== label) onRename(next)
@@ -288,7 +288,7 @@ function ColumnHeader({
                   setOpen(false)
                 }
               }}
-              className="craft-field-input w-full rounded-md border border-border/60 bg-background px-2 py-1 text-xs text-foreground outline-none focus:border-border"
+              className="craft-field-input w-full rounded-md border border-border/60 bg-background px-2 py-1 text-meta text-foreground outline-none focus:border-border"
             />
           </div>
         )}
@@ -306,7 +306,7 @@ function ColumnHeader({
                   className="craft-control craft-focus grid h-5 w-5 place-items-center rounded-full ring-1 ring-border/40 transition-transform hover:scale-110"
                   style={{ backgroundColor: hex }}
                 >
-                  {color?.solid === hex && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+                  {color?.solid === hex && <Check className="h-3 w-3 text-white" />}
                 </button>
               ))}
             </div>
@@ -333,7 +333,7 @@ function ColumnHeader({
               onRemove()
               setOpen(false)
             }}
-            className="craft-control craft-focus flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-destructive-text transition-colors hover:bg-destructive/10"
+            className="craft-control craft-focus flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-meta font-medium text-destructive-text transition-colors hover:bg-destructive/10"
           >
             <Trash2 className="h-3.5 w-3.5" />
             {t('kanban.column.remove')}

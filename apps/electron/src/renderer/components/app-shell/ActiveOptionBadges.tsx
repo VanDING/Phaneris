@@ -36,7 +36,7 @@ function PermissionModeIcon({ mode, className }: { mode: PermissionMode; classNa
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -299,10 +299,10 @@ function PluginBadge({
   const { t } = useTranslation()
   return (
     <div
-      className="h-control-md pl-3 pr-2 text-xs font-medium rounded-shape-lg flex items-center shadow-minimal outline-none select-none shrink-0 bg-[color-mix(in_srgb,var(--background)_97%,var(--foreground))]"
+      className="h-control-md pl-3 pr-2 text-meta font-medium rounded-shape-lg flex items-center shadow-minimal outline-none select-none shrink-0 bg-[color-mix(in_srgb,var(--background)_97%,var(--foreground))]"
       title={t('chat.activePlugin', { name: pluginName })}
     >
-      <Shapes className="shrink-0 h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
+      <Shapes className="shrink-0 h-3.5 w-3.5 text-muted-foreground" />
       {/* `ml-2` after the icon matches MetadataBadge 's icon/label gap. */}
       <span className="ml-2 max-w-[14rem] truncate">{pluginName}</span>
       {onClear && (
@@ -312,7 +312,7 @@ function PluginBadge({
           className="shrink-0 ml-1.5 -mr-0.5 grid place-items-center h-4 w-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-colors"
           aria-label={t('chat.clearPlugin')}
         >
-          <X className="h-3 w-3" strokeWidth={2.5} />
+          <X className="h-3 w-3" />
         </button>
       )}
     </div>
@@ -439,7 +439,7 @@ function StateBadge({
           showChevron
           icon={(
             <span
-              className="shrink-0 flex items-center w-3.5 h-3.5 [&>svg]:w-full [&>svg]:h-full [&>img]:w-full [&>img]:h-full [&>span]:text-xs"
+              className="shrink-0 flex items-center w-3.5 h-3.5 [&>svg]:w-full [&>svg]:h-full [&>img]:w-full [&>img]:h-full [&>span]:text-meta"
               style={applyColor ? { color: state.resolvedColor } : undefined}
             >
               {state.icon}
@@ -484,7 +484,7 @@ function FilesPopoverButton({ sessionId, sessionFolderPath }: { sessionId?: stri
         <button
           type="button"
           className={cn(
-            "h-control-md pl-[12px] pr-[14px] text-xs font-medium rounded-shape-lg flex items-center gap-1.5 shrink-0",
+            "h-control-md pl-[12px] pr-[14px] text-meta font-medium rounded-shape-lg flex items-center gap-1.5 shrink-0",
             "outline-none select-none transition-colors shadow-minimal",
             "hover:bg-foreground/5 data-[state=open]:bg-foreground/5",
             "bg-[color-mix(in_srgb,var(--background)_97%,var(--foreground)_3%)]",
@@ -542,7 +542,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
   // - allow-all (Auto): accent color - purple, full autonomy
   const modeStyles: Record<PermissionMode, { className: string; shadowVar: string }> = {
     'safe': {
-      className: 'bg-foreground/5 text-foreground/60',
+      className: 'bg-foreground/5 text-text-secondary',
       shadowVar: 'var(--foreground)',
     },
     'ask': {
@@ -564,7 +564,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
           type="button"
           data-tutorial="permission-mode-dropdown"
           className={cn(
-            "h-control-md pl-2.5 pr-2 text-xs font-medium rounded-shape-lg flex items-center gap-1.5 shadow-tinted outline-none select-none",
+            "h-control-md pl-2.5 pr-2 text-meta font-medium rounded-shape-lg flex items-center gap-1.5 shadow-tinted outline-none select-none",
             currentStyle.className
           )}
           style={{ '--shadow-color': currentStyle.shadowVar } as React.CSSProperties}
@@ -599,7 +599,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
         {!guardedAvailable && <button type="button" onClick={() => { setOpen(false); openDecisionModelSettings() }}
           className="craft-control flex w-full items-start gap-3 border-t border-border/60 px-3 py-3 text-left hover:bg-foreground/3">
           <PermissionModeIcon mode="guarded" className="size-4 mt-0.5 text-muted-foreground" />
-          <span><span className="block text-sm">{t("mode.guarded")}</span><span className="block text-xs text-muted-foreground">{t("settings.ai.guarded.configureHint")}</span></span>
+          <span><span className="block text-body">{t("mode.guarded")}</span><span className="block text-meta text-muted-foreground">{t("settings.ai.guarded.configureHint")}</span></span>
         </button>}
       </PopoverContent>
     </Popover>

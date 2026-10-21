@@ -194,7 +194,7 @@ export function KanbanBoard({
             title={t('kanban.column.add')}
             className="craft-control flex h-9 w-9 shrink-0 items-center justify-center self-start rounded-lg border border-dashed border-border text-text-secondary transition-colors hover:border-border/80 hover:bg-foreground/[0.03] hover:text-text-secondary"
           >
-            <Plus className="h-4 w-4" strokeWidth={2.5} />
+            <Plus className="h-4 w-4" />
           </button>
         )}
       </div>

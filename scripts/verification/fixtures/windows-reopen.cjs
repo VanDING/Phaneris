@@ -119,6 +119,13 @@ function cleanupProfile(profile) {
     await until(() => active.app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().some(window => window.isVisible() && !window.isMinimized())), 'Existing minimized window was not restored')
     assert.equal(await active.app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().length), 1)
     checks.push('duplicate-launch-restores-one-existing-window-without-restarting')
+    const deepLink = `${verificationScheme}://workspace/reopen/settings/ai`
+    assert.equal((await second(active.app, { ...orphan, args: [...orphan.args, deepLink] })).code, 0)
+    await recovered.locator('#context-policy-select').waitFor({ timeout: 20000 })
+    assert.equal(await recovered.evaluate(() => window.electronAPI.getWindowWorkspace()), 'reopen')
+    assert.equal(active.app.process().pid, originalPid, 'deep link must reuse the existing native owner')
+    observations.push({ case: 'actual-second-instance-deep-link', deepLink, pid: originalPid, workspace: 'reopen', target: 'settings/ai' })
+    checks.push('native-second-instance-deep-link-routes-to-the-requested-workspace-and-settings')
     await active.app.close(); active = undefined
 
     const repeated = seed('ordinary-reopen')

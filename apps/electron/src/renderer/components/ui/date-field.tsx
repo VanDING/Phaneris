@@ -30,13 +30,13 @@ export function DateField({ value, onChange, placeholder = 'Select date', disabl
             disabled={disabled}
             aria-label={ariaLabel}
             className={cn(
-              'flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-background px-3 text-left text-sm outline-none transition-colors',
+              'flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-background px-3 text-left text-body outline-none transition-colors',
               'hover:bg-foreground/[0.025] focus-visible:border-ring/60 focus-visible:ring-2 focus-visible:ring-ring/15 disabled:opacity-45',
-              !value && 'text-foreground/45',
+              !value && 'text-text-secondary',
               className,
             )}
           >
-            <CalendarDays className="h-4 w-4 flex-none text-foreground/40" />
+            <CalendarDays className="h-4 w-4 flex-none text-text-secondary" />
             <span className="min-w-0 flex-1 truncate">{selected ? format(selected, 'yyyy-MM-dd') : placeholder}</span>
           </button>
         </PopoverTrigger>
@@ -48,7 +48,7 @@ export function DateField({ value, onChange, placeholder = 'Select date', disabl
               event.stopPropagation()
               onChange('')
             }}
-            className="absolute right-1.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-foreground/35 hover:bg-foreground/[0.06] hover:text-foreground/70"
+            className="absolute right-1.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-text-secondary hover:bg-foreground/[0.06] hover:text-text-secondary"
           >
             <X className="h-3.5 w-3.5" />
           </button>

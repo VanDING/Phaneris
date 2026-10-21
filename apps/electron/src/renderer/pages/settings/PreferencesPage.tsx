@@ -198,7 +198,7 @@ export default function PreferencesPage() {
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <Spinner className="text-lg text-text-secondary" />
+        <Spinner className="text-title text-text-secondary" />
       </div>
     )
   }
@@ -226,7 +226,7 @@ export default function PreferencesPage() {
                     src={formState.avatarDataUrl || undefined}
                     alt={displayName}
                     fallback={getInitials(displayName)}
-                    className="h-20 w-20 rounded-full bg-accent text-2xl font-medium text-background shadow-minimal select-none"
+                    className="h-20 w-20 rounded-full bg-accent text-display font-medium text-background shadow-minimal select-none"
                     fallbackClassName="bg-accent text-background"
                     imageClassName="object-cover"
                   />
@@ -249,9 +249,9 @@ export default function PreferencesPage() {
                     </button>
                   )}
                 </div>
-                <h2 className="mt-4 text-2xl font-semibold tracking-tight">{displayName}</h2>
-                {profileMeta && <p className="mt-1 text-sm text-text-secondary">{profileMeta}</p>}
-                <div className="mt-2 inline-flex items-center gap-1.5 text-xs text-text-secondary">
+                <h2 className="mt-4 text-display font-semibold tracking-tight">{displayName}</h2>
+                {profileMeta && <p className="mt-1 text-body text-text-secondary">{profileMeta}</p>}
+                <div className="mt-2 inline-flex items-center gap-1.5 text-meta text-text-secondary">
                   <LockKeyhole className="w-3 h-3" />
                   <span>{t('settings.preferences.localOnly')}</span>
                 </div>
@@ -267,8 +267,8 @@ export default function PreferencesPage() {
                       {index > 0 && (
                         <div className={`${index === 2 ? 'hidden sm:block' : ''} absolute left-0 top-3 bottom-3 w-px bg-border/50`} />
                       )}
-                      <div className="text-base font-semibold tabular-nums">{value}</div>
-                      <div className="mt-1 text-xs text-text-secondary">{label}</div>
+                      <div className="text-reading font-semibold tabular-nums">{value}</div>
+                      <div className="mt-1 text-meta text-text-secondary">{label}</div>
                     </div>
                   ))}
                 </div>
@@ -287,13 +287,13 @@ export default function PreferencesPage() {
               >
                 <SettingsCard>
                   <SettingsRow label={t('settings.preferences.busiestDay')}>
-                    <span className="text-sm tabular-nums">{weekday}</span>
+                    <span className="text-body tabular-nums">{weekday}</span>
                   </SettingsRow>
                   <SettingsRow label={t('settings.preferences.averageTokens')}>
-                    <span className="text-sm tabular-nums">{formatCompactNumber(profile.averageTokens, locale)}</span>
+                    <span className="text-body tabular-nums">{formatCompactNumber(profile.averageTokens, locale)}</span>
                   </SettingsRow>
                   <SettingsRow label={t('settings.preferences.peakSessionTokens')}>
-                    <span className="text-sm tabular-nums">{formatCompactNumber(profile.peakSessionTokens, locale)}</span>
+                    <span className="text-body tabular-nums">{formatCompactNumber(profile.peakSessionTokens, locale)}</span>
                   </SettingsRow>
                 </SettingsCard>
               </SettingsSection>

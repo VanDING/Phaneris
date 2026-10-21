@@ -130,15 +130,15 @@ export function BackgroundFinishedChip({ sessionId }: BackgroundFinishedChipProp
             aria-label={`${entry.title} — ${t('chat.backgroundSessionFinished')}`}
             className={cn(
               'flex items-center gap-1.5 h-control-sm pl-2 pr-2.5 rounded-full',
-              'motion-interactive text-xs font-medium select-none outline-none transition-[color,background-color,box-shadow,transform] active:scale-[var(--motion-scale-pressed)]',
-              'text-purple-700 dark:text-purple-200',
-              'bg-purple-500/12 hover:bg-purple-500/20',
-              'ring-1 ring-inset ring-purple-400/30 dark:ring-purple-300/25',
+              'motion-interactive text-meta font-medium select-none outline-none transition-[color,background-color,box-shadow,transform] active:scale-[var(--motion-scale-pressed)]',
+              'text-accent-text',
+              'bg-accent/12 hover:bg-accent/20',
+              'ring-1 ring-inset ring-accent/30',
               'shadow-tinted backdrop-blur-md',
             )}
             style={{ '--shadow-color': 'rgba(168,85,247,0.35)' } as CSSProperties}
           >
-            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-purple-500 dark:text-purple-300" />
+            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-accent-text" />
             <span className="truncate max-w-[150px]">{entry.title}</span>
           </button>
         </motion.div>

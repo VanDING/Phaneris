@@ -88,6 +88,9 @@ try {
   const workspace = join(fixture, 'workspace')
   mkdirSync(configRoot, { recursive: true })
   mkdirSync(workspace, { recursive: true })
+  writeFileSync(join(configRoot, 'config.json'), JSON.stringify({
+    workspaces: [{ id: 'usage-ledger', name: 'Usage ledger', rootPath: workspace }], activeWorkspaceId: 'usage-ledger',
+  }))
 
   // --- the production retry policy this workflow exercises -------------------
   const { PHANERIS_PI_RETRY_SETTINGS } = await import(join(root, 'packages/pi-agent-server/src/session-settings.ts')) as
@@ -98,7 +101,7 @@ try {
   const providerAttempts = 1 + PHANERIS_PI_RETRY_SETTINGS.provider.maxRetries
 
   // --- loopback provider fixture --------------------------------------------
-  type PlanStep = { label: string; outcome: 'fail' | 'ok'; prompt?: number; completion?: number; text?: string }
+  type PlanStep = { label: string; outcome: 'fail' | 'ok'; prompt?: number; completion?: number; text?: string; tool?: { name: string; args: Record<string, unknown> } }
   const PLAN: PlanStep[] = [
     { label: 'L1', outcome: 'ok', prompt: 1234, completion: 57, text: 'L1_LEDGER_ACCEPTED' },
     { label: 'L2', outcome: 'fail' },
@@ -111,6 +114,11 @@ try {
     { label: 'L4', outcome: 'ok', prompt: 2000, completion: 30, text: 'L4_FIRST' },
     { label: 'L4', outcome: 'ok', prompt: 2100, completion: 31, text: 'L4_SECOND' },
     { label: 'L4', outcome: 'ok', prompt: 2200, completion: 32, text: 'L4_THIRD' },
+    { label: 'L5', outcome: 'ok', prompt: 31000, completion: 45, tool: { name: process.platform === 'win32' ? 'powershell' : 'bash', args: { command: process.platform === 'win32' ? 'Start-Sleep -Milliseconds 2500' : 'sleep 2.5' } } },
+    { label: 'L5', outcome: 'ok', prompt: 32000, completion: 46, text: 'L5_TOOL_LOOP_DONE' },
+    { label: 'L6', outcome: 'ok', prompt: 3300, completion: 47, tool: { name: 'read', args: { path: join(workspace, 'resume-proof.txt') } } },
+    { label: 'L6', outcome: 'ok', prompt: 3400, completion: 48, text: 'L6_RESUMED_TOOL_DONE' },
+    { label: 'L7', outcome: 'ok', prompt: 3500, completion: 49, text: 'L7_BRANCH_DONE' },
   ]
   const seen: FixtureRequest[] = []
   let served = 0, unscripted = 0
@@ -119,13 +127,17 @@ try {
     async fetch(request) {
       const body = await request.json() as Record<string, unknown>
       const raw = JSON.stringify(body)
-      const step = PLAN[served]
+      const warming = body.max_tokens === 1 || body.max_completion_tokens === 1
+      const step: PlanStep | undefined = warming
+        ? { label: 'WARM', outcome: 'ok', prompt: 5000, completion: 1, text: 'WARM_RESPONSE_NOT_FOR_TRANSCRIPT' }
+        : PLAN[served]
       if (!step) {
         unscripted++
         return new Response(JSON.stringify({ error: { message: 'unscripted fixture request', type: 'fixture_error' } }),
           { status: 500, headers: { 'Content-Type': 'application/json', 'x-should-retry': 'false' } })
       }
-      const record: FixtureRequest = { seq: ++served, label: step.label, status: step.outcome === 'ok' ? 200 : 503,
+      if (!warming) served++
+      const record: FixtureRequest = { seq: seen.length + 1, label: step.label, status: step.outcome === 'ok' ? 200 : 503,
         method: request.method, path: new URL(request.url).pathname, requestBody: body,
         requestBodyBytes: Buffer.byteLength(raw), requestBodySha256: sha256(raw),
         responseUsage: step.outcome === 'ok'
@@ -147,8 +159,13 @@ try {
       })}\n\n`
       const stream = new ReadableStream<Uint8Array>({ start(controller) {
         controller.enqueue(encoder.encode(chunk({ role: 'assistant' })))
-        controller.enqueue(encoder.encode(chunk({ content: step.text })))
-        controller.enqueue(encoder.encode(chunk({}, 'stop')))
+        if (step.tool) {
+          const tools = body.tools as { function: { name: string } }[]
+          const toolName = tools.find(tool => tool.function.name.toLowerCase() === step.tool!.name)?.function.name
+          assert(toolName, `The resumed/runtime session must expose ${step.tool.name}`)
+          controller.enqueue(encoder.encode(chunk({ tool_calls: [{ index: 0, id: `call-${record.seq}`, type: 'function', function: { name: toolName, arguments: JSON.stringify(step.tool.args) } }] })))
+        } else controller.enqueue(encoder.encode(chunk({ content: step.text })))
+        controller.enqueue(encoder.encode(chunk({}, step.tool ? 'tool_calls' : 'stop')))
         controller.enqueue(encoder.encode('data: [DONE]\n\n'))
         controller.close()
       } })
@@ -190,17 +207,17 @@ try {
     for (const kind of ['duplicate', 'missing', 'mismatch', 'unexpected', 'pending_outcome', 'reconciled_without_usage'])
       assert(!shape.issues.some(issue => issue.kind === kind), `${what}: unexpected ${kind} issue`)
   }
-  function assemble(sessionId: string) {
+  function assemble(sessionId: string, sdkSessionId?: string, branchFromSessionPath?: string) {
     const agent = assembleSessionAgent({
       context: { provider: 'pi', authType: 'api_key', resolvedModel: 'pi/fixture', capabilities: { needsHttpPoolServer: true },
         connection: { slug: 'usage-fixture', name: 'Usage fixture', providerType: 'pi_compat', authType: 'api_key', createdAt: 1,
           baseUrl: server.url.href, customEndpoint: { api: 'openai-completions' },
           models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Loopback usage fixture',
-            provider: 'pi', contextWindow: 128000, maxTokens: 4096, cost: { ...COST_RATES } }] } },
+            provider: 'pi', contextWindow: 128000, maxTokens: 4096, cost: { ...COST_RATES }, promptCache: { short: 10.5 } }] } },
       hostRuntime: { appRootPath: root, isPackaged: false, nodeRuntimePath: process.execPath },
       config: { model: 'pi/fixture', miniModel: 'pi/fixture',
         workspace: { id: 'usage-ledger', slug: 'usage-ledger', createdAt: 1, name: 'Usage ledger acceptance', rootPath: workspace },
-        session: { id: sessionId, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1 }, isHeadless: true,
+        session: { id: sessionId, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1, sdkSessionId, branchFromSessionPath }, isHeadless: true,
         envOverrides: { PHANERIS_CONFIG_DIR: configRoot, HOME: fixture, USERPROFILE: fixture, NODE_ENV: 'test' } },
       callbacks: {}, resources: bindPiRuntime(durable, { sessionId, workspaceRootPath: workspace }),
     }) as any
@@ -208,6 +225,13 @@ try {
     wire.set(sessionId, captured)
     const original = agent.handleLine.bind(agent)
     agent.handleLine = (line: string) => { try { captured.push(JSON.parse(line)) } catch { /* transport noise */ } return original(line) }
+    const send = agent.send.bind(agent)
+    agent.send = (message: any) => {
+      if (message.type === 'init') evidence.json(`${sessionId}-init-flags.json`, {
+        promptCacheWarming: message.promptCacheWarming, customModels: message.customModels, cacheRetention: message.cacheRetention,
+      })
+      return send(message)
+    }
     return agent
   }
   const audits = new Map<string, { observationId: string; seq: number; audit: unknown }>()
@@ -240,6 +264,9 @@ try {
     durable.execution.accept(handle, { operationId, userMessageId: `${operationId}-user`, userMessage: prompt })
     const result = await durable.execution.drive(handle, driver, { message: prompt, options: { inputId: `${operationId}-user` } })
     unsubscribe()
+    if (result.kind !== 'terminal') evidence.json(`${operationId}-nonterminal.json`, {
+      result, wire: rows(sessionId), events: facts(operationId), operations: durable.queries.operations(workspace), usage: sessionRows(sessionId),
+    })
     assert.equal(result.kind, 'terminal', `Run ${operationId} did not settle as terminal: ${JSON.stringify(result)}`)
     return result
   }
@@ -550,6 +577,62 @@ try {
     scenes.push('L4-multi-call-session-rows-and-summary-reconcile')
   }
 
+  // A real tool loop, unlike L4's three independent turns. Warming is accelerated
+  // with the SDK's supported per-model TTL, while the real shell tool is pending.
+  const { setPromptCacheWarming } = await import('../../packages/shared/src/config/storage')
+  const { CONFIG_DIR } = await import('../../packages/shared/src/config/paths')
+  assert.equal(CONFIG_DIR, configRoot, 'all configuration writes must remain in the disposable profile')
+  const { setPowerShellValidatorRoot } = await import('../../packages/shared/src/agent/powershell-validator')
+  setPowerShellValidatorRoot(join(root, 'apps/electron/resources'))
+  setPromptCacheWarming(true)
+  const L5 = { sessionId: 'l5-tool-loop', operationId: 'l5-run' }
+  const loopAgent = assemble(L5.sessionId)
+  agents.set(L5.sessionId, loopAgent)
+  loopAgent.setPermissionMode('allow-all')
+  await turn(L5.sessionId, L5.operationId, 'Run the short shell command, then finish.')
+  const l5Rows = operationRows(L5.operationId)
+  const ordinary = l5Rows.filter(row => (row.payload as { kind?: string }).kind !== 'cache_warm')
+  const warmRows = sessionRows(L5.sessionId).filter(row => (row.payload as { kind?: string }).kind === 'cache_warm')
+  assert.equal(ordinary.length, 2, 'both requests of one tool loop must be billed exactly once')
+  assert.equal(ordinary.reduce((n, row) => n + (row.inputTokens ?? 0), 0), 63000)
+  assert.equal(ordinary.reduce((n, row) => n + (row.outputTokens ?? 0), 0), 91)
+  assert(warmRows.length > 0, 'the real SDK must warm while the tool runs')
+  assert.equal(warmRows.length, seen.filter(request => request.label === 'WARM').length, 'each warm request has exactly one independent row')
+  assert(warmRows.every(row => row.inputTokens === 5000 && row.outputTokens === 1))
+  assert(!JSON.stringify(facts(L5.operationId)).includes('WARM_RESPONSE_NOT_FOR_TRANSCRIPT'))
+  evidence.json('usage-tool-loop-warming.json', { ordinary, warmRows, requests: seen.filter(request => ['L5', 'WARM'].includes(request.label)), projection: projectDurableUsage(sessionRows(L5.sessionId) as never) })
+  scenes.push('L5-one-turn-tool-loop-and-independent-warming')
+
+  // Restart the real Pi subprocess against its existing SDK journal, then make
+  // another actual tool call. Parent rows remain immutable across recovery.
+  setPromptCacheWarming(false)
+  const sdkSessionId = loopAgent.piSessionId as string
+  assert(sdkSessionId, 'the subprocess must report the persisted SDK session identity')
+  const beforeRecovery = JSON.stringify(sessionRows(L5.sessionId))
+  await durable.execution.disposeDriver(L5.sessionId)
+  agents.set(L5.sessionId, assemble(L5.sessionId, sdkSessionId))
+  writeFileSync(join(workspace, 'resume-proof.txt'), 'RESUMED_READ_PROOF')
+  await turn(L5.sessionId, 'l6-resume-run', 'Read resume-proof.txt, then finish.')
+  assert.equal(operationRows('l6-resume-run').length, 2)
+  assert.equal(JSON.stringify(operationRows(L5.operationId)), JSON.stringify(l5Rows), 'recovery must not rebill the parent turn')
+  const resumedRequest = seen.find(request => request.label === 'L6')!.requestBody as { messages: unknown[] }
+  assert(JSON.stringify(resumedRequest.messages).includes('L5_TOOL_LOOP_DONE'), 'the new process must resume prior context')
+  evidence.json('usage-resume.json', { sdkSessionId, beforeRecovery, rows: sessionRows(L5.sessionId), resumedRequest })
+  scenes.push('L6-resumed-process-tools-and-ledger-attribution')
+
+  const parentRows = JSON.stringify(sessionRows(L5.sessionId))
+  const childSession = 'l7-branch'
+  agents.set(childSession, assemble(childSession, undefined, join(workspace, 'sessions', L5.sessionId)))
+  await turn(childSession, 'l7-branch-run', 'Continue from the parent session in this branch.')
+  const branchRequest = seen.find(request => request.label === 'L7')!.requestBody
+  assert(JSON.stringify(branchRequest).includes('L6_RESUMED_TOOL_DONE'), 'the actual SDK fork must inherit parent context')
+  assert.equal(sessionRows(childSession).length, 1, 'the child ledger contains only its own billed request')
+  assert.equal(operationRows('l7-branch-run')[0]!.sessionId, childSession)
+  assert.equal(operationRows('l7-branch-run')[0]!.inputTokens, 3500)
+  assert.equal(JSON.stringify(sessionRows(L5.sessionId)), parentRows, 'forking cannot mutate or duplicate the parent bill')
+  evidence.json('usage-branch.json', { parent: sessionRows(L5.sessionId), child: sessionRows(childSession), branchRequest })
+  scenes.push('L7-real-sdk-fork-inherits-context-with-independent-billing')
+
   // --- database-level evidence and summary -----------------------------------
   assert.equal(served, PLAN.length, 'the fixture served exactly the scripted plan')
   assert.equal(unscripted, 0, 'no provider request escaped the scripted plan')
@@ -582,7 +665,8 @@ try {
     providerRequests: seen.map(request => ({ seq: request.seq, label: request.label, status: request.status, path: request.path,
       requestBodyBytes: request.requestBodyBytes, requestBodySha256: request.requestBodySha256, responseUsage: request.responseUsage })),
     ledgers: { [L1.sessionId]: sessionRows(L1.sessionId), [L2.sessionId]: sessionRows(L2.sessionId),
-      [L3.sessionId]: sessionRows(L3.sessionId), [F1.sessionId]: sessionRows(F1.sessionId) },
+      [L3.sessionId]: sessionRows(L3.sessionId), [F1.sessionId]: sessionRows(F1.sessionId),
+      [L4.sessionId]: sessionRows(L4.sessionId), [L5.sessionId]: sessionRows(L5.sessionId), [childSession]: sessionRows(childSession) },
     audits: Object.fromEntries(audits),
     database: { path: databasePath, sha256: databaseSha256, schema, primaryKey, duplicateIdentities,
       rowsPerSession: { [L1.sessionId]: 1, [L2.sessionId]: 1, [L3.sessionId]: 1, [F1.sessionId]: 2 } },
@@ -597,7 +681,7 @@ try {
         'packages/server-core/src/durable-runtime/coordinator.ts:849-860'],
       evidence: 'usage-agent-retry-deviation.json (scene F1: 3 x 503 then success -> row model:f1-run:1 = 0/0/$0 alongside model:f1-run:2 = 5150/64)',
       whyTheAuditMissesIt: 'model-usage-audit.ts:5-63 compares ledger rows with committed outcomes and never asks whether a failed outcome carried metered usage; expected/actual stayed 2/2 with issueCount 0.',
-      proposedMinimalFix: 'In packages/pi-agent-server/src/index.ts:1009-1019 omit `usage` when the committed message proves nothing was metered (stopReason === "error" && message.usage.totalTokens === 0 && message.content.length === 0). commitModelOutcome already handles an absent usage by committing the outcome fact with no ledger row (coordinator.ts:849-860), which keeps dispatch/outcome parity (no pending_outcome) while removing the fabricated charge. Alternative site: the same condition gated in durable-model-stream.ts:49-54.',
+      proposedMinimalFix: 'Deferred U-01: a zero-token empty error does not establish billing truth. Separate unavailable metering from known zero using provider/dispatch/reconciliation evidence before changing ledger semantics.',
       affectedProperty: 'docs/verification/upgrade-2026-10-19-review.md:72 — a failed retry must be accounted from actual usage, not uniformly zero-cost.',
     },
     limitations: ['the agent_settled observation used for the audit attachment is issued by the workflow at run completion; the subprocess does not emit one for a main session in this harness configuration',
@@ -617,9 +701,6 @@ try {
     'abort-before-dispatch known-zero accounting and thrown-stream pending semantics (durable-model-stream.ts:32-45, :57-67)',
     'recovery_parked reconciliation verdicts (provider_not_billed / billed_response_unavailable / manual_abandon)',
     'the conflicting-content branch of appendUsage (store.ts:1000-1002)',
-    'within-turn tool-loop accounting (multiple provider requests inside ONE run): this workflow prices one request per run; the multi-request turn is exercised by upgrade-0153-pi-runtime (PC-01/PC-04/PC-05) and durable-runtime-boundary',
-    'session branching attribution: covered by the registered session-branch and durable-runtime-boundary runs, not re-derived here',
-    'cache warming as a separate ledger fact: the fixture reports no cache tokens, so warming is not asserted here',
     ...knownIssues.map(issue => `${issue.id}: ${issue.status} — ${issue.summary}`),
   ])
 } catch (error) {

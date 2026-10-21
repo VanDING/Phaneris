@@ -96,7 +96,7 @@ export function TableOfContents({
   if (headings.length === 0) {
     return (
       <div className={cn('h-full flex items-center justify-center p-4', className)}>
-        <span className="text-xs text-muted-foreground">{t("tableOfContents.noHeadings")}</span>
+        <span className="text-meta text-muted-foreground">{t("tableOfContents.noHeadings")}</span>
       </div>
     )
   }

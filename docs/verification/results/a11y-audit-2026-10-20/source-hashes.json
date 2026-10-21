@@ -1,0 +1,8 @@
+{
+  "scripts/verification/fixtures/a11y-surface.tsx": "d4cfd3c6cc10c2372ae0c8b3b4ec70e8ff50b98a3278ab6f8a6ea7b2ad74d54c",
+  "scripts/verification/a11y-audit-workflow.ts": "80bb071d09a2e402dec4dc9bed06e363d202dad0efa9dcaf71de839e8672ab77",
+  "apps/electron/src/renderer/components/app-shell/SessionSearchHeader.tsx": "faa99bfb19400de97e4cad4d17de019eb3c1fa4f53868042b0ee614520efe4fa",
+  "apps/electron/src/renderer/components/ui/button.tsx": "6e7b720db50c68ae5b4112d3067fbabd2c90eb9639dd074744fbd6bcc885b2d6",
+  "apps/electron/src/renderer/components/ui/dialog.tsx": "761f612aba921ef5300a7d485d5a12eff0aa04bbc2863a7082e7af4dae57557b",
+  "apps/electron/src/renderer/components/ui/styled-dropdown.tsx": "8d7684f5450f0df6ef173c22bb9dd313127b4cdc37380b90e0e9686c3c92745f"
+}

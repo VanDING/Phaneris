@@ -81,31 +81,31 @@ export function PairingCodeDialog({
 
         <div className="flex flex-col items-center gap-4 py-4">
           {error ? (
-            <p className="text-sm text-destructive text-center">{error}</p>
+            <p className="text-body text-destructive text-center">{error}</p>
           ) : code ? (
             <>
-              <div className="rounded-lg bg-muted px-6 py-4 font-mono text-3xl font-bold tracking-[0.3em]">
+              <div className="rounded-lg bg-muted px-6 py-4 font-mono text-display font-bold tracking-[0.3em]">
                 {code}
               </div>
 
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-body">
                 <code className="rounded bg-muted px-2 py-1 font-mono">{pairCommand}</code>
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs hover:bg-accent"
+                  className="inline-flex items-center gap-1 rounded px-2 py-1 text-meta hover:bg-accent"
                   title={t('common.copy')}
                 >
                   <Copy className="h-3.5 w-3.5" />
                 </button>
               </div>
 
-              <p className="text-center text-sm text-muted-foreground">
+              <p className="text-center text-body text-muted-foreground">
                 {t(sendCommandKey)}
               </p>
 
               {platform === 'whatsapp' && (
-                <p className="text-center text-xs text-muted-foreground">
+                <p className="text-center text-meta text-muted-foreground">
                   {t('dialog.pairingCode.whatsappSelfHint')}
                 </p>
               )}
@@ -115,7 +115,7 @@ export function PairingCodeDialog({
                   href={botLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                  className="inline-flex items-center gap-1 text-body text-primary hover:underline"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
                   t.me/{botUsername}
@@ -123,16 +123,16 @@ export function PairingCodeDialog({
               )}
 
               {secondsLeft > 0 && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-meta text-muted-foreground">
                   {t('dialog.pairingCode.expires')} ({minutes}:{seconds.toString().padStart(2, '0')})
                 </p>
               )}
               {secondsLeft === 0 && expiresAt && (
-                <p className="text-xs text-destructive">{t('dialog.pairingCode.expired')}</p>
+                <p className="text-meta text-destructive">{t('dialog.pairingCode.expired')}</p>
               )}
             </>
           ) : (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-body text-muted-foreground">
               {t('dialog.pairingCode.generating')}
             </p>
           )}

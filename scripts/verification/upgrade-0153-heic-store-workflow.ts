@@ -170,6 +170,15 @@ try {
   scenes.push('real-heic-rpc-store-yields-one-consistent-jpeg')
 
   // --- scene 2: content detection beats a wrong MIME, and empty MIME works
+  const unknown = await storeAttachment(ctx, sessionId, {
+    name: 'photo.heic', type: 'unknown', mimeType: 'application/octet-stream', size: heic.length,
+    base64: heic.toString('base64'),
+  } as never) as StoredAttachment
+  assert.equal(unknown.type, 'image', 'browser empty MIME classification must not bypass HEIC decoding')
+  assert.equal(unknown.mimeType, 'image/jpeg')
+  assert.equal((await compress(unknown)).format, 'jpeg')
+  assert(unknown.resizedBase64, 'the renderer receives the normalized bytes')
+  evidence.json('unknown-mime.json', { inputType: 'unknown', stored: unknown, format: 'jpeg' })
   const wrongMime = await storeAttachment(ctx, sessionId, {
     name: 'renamed.jpg', type: 'image', mimeType: 'image/jpeg', size: heic.length,
     base64: heic.toString('base64'),

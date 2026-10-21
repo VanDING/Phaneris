@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageCircleQuestion, Check, ChevronLeft, ChevronRight, X, Pencil } from 'lucide-react'
-import { Markdown } from '@phaneris/ui'
+import { Markdown, useInitialFocus } from '@phaneris/ui'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type {
@@ -112,7 +112,7 @@ function OptionRow({
       )}
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-medium text-foreground">{text}</span>
+          <span className="text-meta font-medium text-foreground">{text}</span>
           {recommended && (
             <span className="rounded-sm bg-info/15 px-1.5 py-px text-micro font-medium text-info">
               {t('chat.question.recommended')}
@@ -138,6 +138,7 @@ function OptionRow({
  * takes the generic option/free-text flow. The answer encoding is identical.
  */
 export function QuestionPanel({ request, onResponse, unstyled = false }: QuestionPanelProps) {
+  const initialFocusRef = useInitialFocus<HTMLTextAreaElement>()
   const { t } = useTranslation()
   const questions = request.questions
   const review = React.useMemo(() => planReviewOf(questions), [questions])
@@ -239,7 +240,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
           unstyled ? 'border-0' : 'border border-info/30 rounded-shape-lg shadow-middle',
         )}
       >
-        <div className="flex items-center gap-1.5 px-4 pt-3 text-xs font-medium text-info">
+        <div className="flex items-center gap-1.5 px-4 pt-3 text-meta font-medium text-info">
           <MessageCircleQuestion className="h-3.5 w-3.5" />
           <span>{q.header || t('chat.question.planReview')}</span>
         </div>
@@ -306,7 +307,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
                   {question.header}
                 </div>
               )}
-              <div className="text-sm font-medium text-foreground">{question.question}</div>
+              <div className="text-body font-medium text-foreground">{question.question}</div>
             </div>
             {total > 1 && (
               <span className="shrink-0 text-micro tabular-nums text-muted-foreground">
@@ -316,7 +317,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
           </div>
 
           {question.detail && (
-            <div className="rounded-md bg-foreground/5 p-3 text-xs leading-[18px]">
+            <div className="rounded-md bg-foreground/5 p-3 text-meta leading-[18px]">
               <Markdown mode="minimal">{question.detail}</Markdown>
             </div>
           )}
@@ -359,7 +360,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
             </span>
           )}
           <textarea
-            autoFocus={!hasOptions}
+            ref={hasOptions ? undefined : initialFocusRef}
             value={customDraft}
             rows={hasOptions ? 1 : 2}
             placeholder={hasOptions ? t('chat.question.otherPlaceholder') : t('chat.question.answerPlaceholder')}
@@ -372,7 +373,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
               handleContinue()
             }}
             className={cn(
-              'min-w-0 flex-1 resize-none bg-transparent text-xs leading-[18px] text-foreground outline-none placeholder:text-muted-foreground',
+              'min-w-0 flex-1 resize-none bg-transparent text-meta leading-[18px] text-foreground outline-none placeholder:text-muted-foreground',
               !hasOptions && 'rounded-md border border-foreground/15 px-2.5 py-2',
             )}
           />

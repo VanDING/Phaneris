@@ -76,7 +76,7 @@ await verificationWorkflow('upgrade-0153-model-form', async run => {
       assert(submitted, 'the form must submit')
       assert.equal(submitted!.utilityModel, 'kimi-legacy', 'the chosen utility model must be saved')
       assert.equal(submitted!.connectionDefaultModel, 'kimi-k2', 'the untouched default model must be preserved')
-      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'kimi-legacy'],
+      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'my-own-model'],
         'an off-catalog stored model must survive a utility-only edit')
     })
 
@@ -89,7 +89,7 @@ await verificationWorkflow('upgrade-0153-model-form', async run => {
       const submitted = await last()
       assert.equal(submitted!.utilityModel, null, 'clearing the utility model must submit a cleared value, not the stored one')
       assert.equal(submitted!.connectionDefaultModel, 'kimi-k2', 'the default model is untouched')
-      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'kimi-legacy'], 'the stored list is untouched')
+      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'my-own-model'], 'the stored list is untouched')
     })
 
     await check('MF03-only-default-changed', async () => {
@@ -100,8 +100,8 @@ await verificationWorkflow('upgrade-0153-model-form', async run => {
       await page.waitForFunction(() => window.apiKeyFixture.submissions.length > 0, undefined, { timeout: 15_000 })
       const submitted = await last()
       assert.equal(submitted!.connectionDefaultModel, 'kimi-k2-mini', 'the chosen default must be saved')
-      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'kimi-legacy'],
-        'an explicit default change submits the catalog list for this provider')
+      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'my-own-model'],
+        'a default-only edit preserves the stored off-catalog model')
     })
 
     await check('MF04-only-key-changed-keeps-every-model-choice', async () => {
@@ -114,7 +114,7 @@ await verificationWorkflow('upgrade-0153-model-form', async run => {
       assert.equal(submitted!.apiKey, 'rotated-key-123', 'the new key is submitted')
       assert.equal(submitted!.connectionDefaultModel, 'kimi-k2', 'a key-only edit must not rewrite the default model')
       assert.equal(submitted!.utilityModel, 'kimi-k2-mini', 'a key-only edit must not rewrite the utility model')
-      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'kimi-legacy'], 'a key-only edit must not rewrite the model list')
+      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'my-own-model'], 'a key-only edit must not rewrite the model list')
     })
 
     await check('MF05-provider-switch-does-not-carry-the-old-catalog', async () => {
@@ -134,6 +134,38 @@ await verificationWorkflow('upgrade-0153-model-form', async run => {
       assert.equal(submitted!.connectionDefaultModel, 'opencode-sonnet', 'the default comes from the new catalog')
       assert.equal(submitted!.utilityModel, null, 'no utility model was chosen for the new provider')
       await page.screenshot({ path: join(run.directory, 'model-form-opencode.png') })
+    })
+
+    await check('MF06-pending-provider-cannot-submit-stale-catalog', async () => {
+      await reloadForm()
+      await reset()
+      await page.evaluate(() => window.apiKeyFixture.setCatalogDelay('opencode', 800))
+      await page.getByTestId('api-key-preset-trigger').click()
+      await page.getByText('OpenCode', { exact: true }).click()
+      await page.getByTestId('api-key-input').evaluate(form => (form as HTMLFormElement).requestSubmit())
+      await page.waitForTimeout(100)
+      assert.equal((await page.evaluate(() => window.apiKeyFixture.submissions)).length, 0, 'loading a different catalog must block save')
+      await page.waitForFunction(() => document.body.textContent?.includes('OpenCode Sonnet'))
+      await page.getByTestId('api-key-input').evaluate(form => (form as HTMLFormElement).requestSubmit())
+      const submitted = await last()
+      assert.deepEqual(submitted!.models, ['opencode-sonnet', 'opencode-haiku'])
+      assert.equal(submitted!.connectionDefaultModel, 'opencode-sonnet')
+    })
+
+    await check('MF07-late-provider-response-cannot-replace-current-catalog', async () => {
+      await reloadForm()
+      await reset()
+      await page.evaluate(() => window.apiKeyFixture.setCatalogDelay('opencode', 800))
+      await page.getByTestId('api-key-preset-trigger').click()
+      await page.getByText('OpenCode', { exact: true }).click()
+      await page.waitForTimeout(100)
+      await page.getByTestId('api-key-preset-trigger').click()
+      await page.getByText('Kimi (Coding)', { exact: true }).click()
+      await page.waitForTimeout(1000)
+      await page.getByTestId('api-key-input').evaluate(form => (form as HTMLFormElement).requestSubmit())
+      const submitted = await last()
+      assert.equal((submitted as unknown as { piAuthProvider: string }).piAuthProvider, 'kimi-coding')
+      assert.deepEqual(submitted!.models, ['kimi-k2', 'kimi-k2-mini', 'my-own-model'])
     })
 
     const finalState = await page.evaluate(() => ({ submissions: window.apiKeyFixture.submissions, catalogCalls: window.apiKeyFixture.catalogCalls(), renders: window.apiKeyFixture.renders() }))

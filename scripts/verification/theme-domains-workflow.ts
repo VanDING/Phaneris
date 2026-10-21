@@ -1,24 +1,20 @@
 /** TC11–14: feature states, third-party adapters and authored-content isolation. */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
-import { join, relative, resolve } from 'node:path'
-import { createServer } from 'vite'
+import { readFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+import { buildFixturePage } from './fixture-bundle'
 import { verificationWorkflow } from './verification-artifacts'
 import { launchWorkflowBrowser } from './workflow-browser'
 import { warmThemePage } from './fixtures/warm-theme-page'
 await verificationWorkflow('theme-domains', async run => {
-  const root = resolve(import.meta.dir, '../..'), fixture = join(root, 'scripts/verification/fixtures/theme-roles.tsx')
+  const root = resolve(import.meta.dir, '../..')
   const sources = ['packages/ui/src/components/terminal/TerminalOutput.tsx', 'packages/ui/src/components/trajectory/trajectory-theme.css',
     'apps/electron/src/renderer/components/content-panels/session-decisions/DecisionBoard.tsx', 'apps/electron/src/renderer/components/pages/PageFrame.tsx',
     'apps/electron/src/renderer/components/content-panels/PdfFilePreview.tsx', 'scripts/verification/fixtures/theme-domains-content.tsx']
   run.json('source-hashes.json', Object.fromEntries(sources.map(path => [path, createHash('sha256').update(readFileSync(join(root, path))).digest('hex')])))
-  const prefix = `/${relative(root, run.directory).replaceAll('\\', '/')}`
-  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><div id="root"></div><script type="module" src="/scripts/verification/fixtures/theme-roles.tsx"></script>')
-  writeFileSync(join(run.directory, 'host.css'), `@import "${relative(run.directory, join(root, 'apps/electron/src/renderer/index.css')).replaceAll('\\', '/')}";\n@source "${fixture.replaceAll('\\', '/')}";\n@source "${join(root, 'scripts/verification/fixtures/theme-domains-content.tsx').replaceAll('\\', '/')}";`)
-  const launched = await launchWorkflowBrowser(), server = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
-    optimizeDeps: { entries: [fixture], include: ['react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'], exclude: ['pdfjs-dist/build/pdf.worker.min.mjs?url'] }, server: { host: '127.0.0.1', port: 0, open: false } })
-  await server.listen(); const base = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}`
+  const launched = await launchWorkflowBrowser(), server = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/theme-roles.tsx' })
+  const base = server.url
   const context = await launched.browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce', hasTouch: true }), page = await context.newPage()
   const checks: { id: string; passed: boolean; error?: string }[] = [], samples: unknown[] = [], errors: string[] = []
   page.on('pageerror', error => errors.push(error.message)); page.on('console', message => { if (message.type() === 'error') errors.push(message.text()) })
@@ -34,8 +30,8 @@ await verificationWorkflow('theme-domains', async run => {
     await page.evaluate(async () => { await document.fonts.ready; await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))) })
   }
   try {
-    run.json('preparation.json', await warmThemePage(context, `${base}${prefix}/index.html?domains=true&css=${encodeURIComponent(`${prefix}/host.css`)}`, '[data-domains-ready]'))
-    await page.goto(`${base}${prefix}/index.html?domains=true&css=${encodeURIComponent(`${prefix}/host.css`)}`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
+    run.json('preparation.json', await warmThemePage(context, `${base}?domains=true&css=electron.css`, '[data-domains-ready]'))
+    await page.goto(`${base}?domains=true&css=electron.css`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
     await page.locator('[data-domains-ready]').waitFor({ timeout: 120_000 }); await page.getByTestId('domain-mermaid').locator('svg').first().waitFor({ timeout: 120_000 })
     await page.getByTestId('domain-pdf').locator('canvas').waitFor({ timeout: 120_000 })
     const pdf = page.getByTestId('domain-pdf').locator('canvas'), frame = page.frameLocator('[data-testid="domain-pages"] iframe')

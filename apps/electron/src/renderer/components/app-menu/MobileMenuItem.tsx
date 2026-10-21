@@ -49,24 +49,24 @@ export function MobileMenuItem({
       {icon && (
         <span className={cn(
           'shrink-0 flex items-center justify-center',
-          destructive ? 'text-destructive' : 'text-foreground/70',
+          destructive ? 'text-destructive' : 'text-text-secondary',
         )}>
           {icon}
         </span>
       )}
       <span className="flex-1 min-w-0">
-        <span className="block text-base leading-tight">{label}</span>
+        <span className="block text-reading leading-tight">{label}</span>
         {description && (
-          <span className="block text-body text-foreground/50 truncate mt-0.5">
+          <span className="block text-body text-text-secondary truncate mt-0.5">
             {description}
           </span>
         )}
       </span>
       {affordance === 'chevron' && (
-        <ChevronRight className="h-4 w-4 shrink-0 text-foreground/40" strokeWidth={1.75} />
+        <ChevronRight className="h-4 w-4 shrink-0 text-text-secondary" />
       )}
       {affordance === 'external' && (
-        <ExternalLink className="h-4 w-4 shrink-0 text-foreground/40" strokeWidth={1.75} />
+        <ExternalLink className="h-4 w-4 shrink-0 text-text-secondary" />
       )}
     </button>
   )

@@ -141,17 +141,16 @@ export function SearchableModelInput({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t("apiSetup.searchModels")}
                 className={cn(
-                  'craft-control w-full h-8 pl-8 pr-3 text-sm rounded-md',
+                  'craft-control w-full h-8 pl-8 pr-3 text-body rounded-md',
                   'bg-foreground/5 border-0',
                   'placeholder:text-text-secondary',
-                  'focus-visible:ring-0'
                 )}
               />
             </div>
             {/* Model list */}
             <div className="max-h-64 overflow-auto space-y-0.5">
               {filteredModels.length === 0 ? (
-                <div className="px-2.5 py-3 text-sm text-text-secondary text-center">
+                <div className="px-2.5 py-3 text-body text-text-secondary text-center">
                   {t('chat.noResults')}
                 </div>
               ) : (
@@ -162,7 +161,7 @@ export function SearchableModelInput({
                     aria-pressed={value === model.id}
                     type="button"
                     className={cn(
-                      'craft-control craft-menu-item w-full px-2.5 py-[var(--theme-menu-item-padding-y)] text-left text-sm rounded-lg',
+                      'craft-control craft-menu-item w-full px-2.5 py-[var(--theme-menu-item-padding-y)] text-left text-body rounded-lg',
                       'hover:bg-foreground/5 transition-colors',
                       value === model.id && 'bg-foreground/3'
                     )}

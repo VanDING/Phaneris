@@ -271,7 +271,12 @@ export function FileTreeNode({
           for plain files so every row lines up. */}
       <span className="flex h-4 shrink-0 items-center gap-0.5">
         {hasChildren ? (
+          /* Decorative chevron: the row is already a <button>, so a nested
+             control would be invalid markup. Expansion state is exposed on the
+             row through aria-expanded. */
           <span
+            role="presentation"
+            aria-hidden="true"
             className="flex h-3 w-3 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
             onClick={handleChevronClick}
           >
@@ -295,7 +300,7 @@ export function FileTreeNode({
       {/* File/folder name - min-w-0 required for truncate to work in flex container */}
       <span className="flex-1 min-w-0 truncate">{file.name}</span>
       {file.type === 'file' && file.size !== undefined && (
-        <span className={cn('shrink-0 text-micro tabular-nums text-muted-foreground/45 transition-opacity', !isSelected && 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100')}>
+        <span className={cn('shrink-0 text-micro tabular-nums text-text-secondary transition-opacity', !isSelected && 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100')}>
           {formatFileSize(file.size)}
         </span>
       )}

@@ -46,7 +46,7 @@ function Fixture() {
     </div>
     <div className="mx-4 h-60" data-testid="risks"><PermissionRequest request={{ sessionId: 'plan-fixture', requestId: 'guarded', toolName: 'Bash', type: 'bash', command: 'git push origin HEAD', description: 'Guarded approval', risks: ['publishes', 'sends'], canRemember: false }} onResponse={response => calls.push({ action: 'approval', response })} /></div>
     <div className="mx-4" data-testid="plan-input"><EscapeInterruptProvider><FreeFormInput sessionId="plan-fixture" currentModel="pi/gpt-5-mini" permissionMode="safe" previousPermissionMode="guarded"
-      onModelChange={() => {}} onPermissionModeChange={value => calls.push({ action: 'plan-mode', value })} onSubmit={text => calls.push({ action: 'plan-submit', text })} /></EscapeInterruptProvider></div>
+      onModelChange={() => {}} onPermissionModeChange={value => calls.push({ action: 'plan-mode', value })} onSubmit={text => { calls.push({ action: 'plan-submit', text }) }} /></EscapeInterruptProvider></div>
     <div className="h-[900px]" data-testid="settings"><AiSettingsPage /></div>
   </div>
 }

@@ -249,10 +249,10 @@ function GanttDateControl({ row }: { row: ITask }) {
         if (await reschedule(String(row.id), date(start), addDays(date(end), 1))) setOpen(false)
         else setError(true)
       }}>
-        <p className="text-sm font-medium">{t('gantt.rescheduleTask', { title: row.text })}</p>
-        <label className="block space-y-1 text-xs">{t('gantt.startDate')}<Input type="date" required value={start} onChange={event => setStart(event.target.value)} disabled={row.saving} /></label>
-        <label className="block space-y-1 text-xs">{t('gantt.endDate')}<Input type="date" required min={start} value={end} onChange={event => setEnd(event.target.value)} disabled={row.saving} /></label>
-        {error && <p role="alert" className="text-xs text-destructive">{t('gantt.saveFailed')}</p>}
+        <p className="text-body font-medium">{t('gantt.rescheduleTask', { title: row.text })}</p>
+        <label className="block space-y-1 text-meta">{t('gantt.startDate')}<Input type="date" required value={start} onChange={event => setStart(event.target.value)} disabled={row.saving} /></label>
+        <label className="block space-y-1 text-meta">{t('gantt.endDate')}<Input type="date" required min={start} value={end} onChange={event => setEnd(event.target.value)} disabled={row.saving} /></label>
+        {error && <p role="alert" className="text-meta text-destructive">{t('gantt.saveFailed')}</p>}
         <div className="flex justify-end gap-2"><Button type="button" variant="ghost" size="sm" disabled={row.saving} onClick={() => setOpen(false)}>{t('common.cancel')}</Button><Button type="submit" size="sm" disabled={row.saving}>{t(row.saving ? 'gantt.saving' : 'common.save')}</Button></div>
       </form>
     </PopoverContent>
@@ -990,16 +990,16 @@ export function GanttView() {
             </div>
           )}
           <label className="relative hidden min-w-32 @min-[980px]/panel:block @min-[980px]/panel:w-44">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/35" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t('kanban.workItemSearch')}
-              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-xs outline-none focus:border-ring/60"
+              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-meta outline-none focus:border-ring/60"
             />
           </label>
-          <span className="truncate text-xs font-medium text-text-secondary">
+          <span className="truncate text-meta font-medium text-text-secondary">
             {t('gantt.itemCount', { count: scheduledCount })}
           </span>
           {/*
@@ -1012,7 +1012,7 @@ export function GanttView() {
               <PopoverTrigger asChild>
                 <button
                   type="button"
-                  className="craft-control inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-text-secondary transition-colors hover:text-foreground"
+                  className="craft-control inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-meta font-medium text-text-secondary transition-colors hover:text-foreground"
                 >
                   <CalendarOff className="h-3.5 w-3.5" />
                   {t('gantt.unscheduledCount', { count: unscheduledItems.length })}
@@ -1020,7 +1020,7 @@ export function GanttView() {
               </PopoverTrigger>
               <PopoverContent align="start" className="w-80 p-0">
                 <div className="border-b border-border/60 px-3 py-2">
-                  <div className="text-xs font-semibold">{t('gantt.unscheduledTitle')}</div>
+                  <div className="text-meta font-semibold">{t('gantt.unscheduledTitle')}</div>
                   <p className="pt-1 text-meta leading-snug text-text-secondary">
                     {t('gantt.unscheduledHint')}
                   </p>
@@ -1032,7 +1032,7 @@ export function GanttView() {
                         key={item.id}
                         type="button"
                         onClick={() => navigateToSession(item.id)}
-                        className="craft-control flex min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs hover:bg-foreground/[0.06]"
+                        className="craft-control flex min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-left text-meta hover:bg-foreground/[0.06]"
                       >
                         <span
                           className="h-2 w-2 flex-none rounded-full"
@@ -1057,7 +1057,7 @@ export function GanttView() {
           <button
             type="button"
             onClick={goToToday}
-            className="craft-control h-8 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-text-secondary transition-colors hover:text-foreground"
+            className="craft-control h-8 rounded-md border border-foreground/15 px-2.5 text-meta font-medium text-text-secondary transition-colors hover:text-foreground"
           >
             {t('common.today')}
           </button>
@@ -1091,7 +1091,7 @@ export function GanttView() {
             disabled={!activeWorkspaceId}
             className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
           >
-            <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+            <Plus className="h-3.5 w-3.5" />
             <span className="@max-[1100px]/panel:hidden">{t('kanban.newTask')}</span>
           </button>
           {/* Surface-injected close + fullscreen controls. */}
@@ -1103,7 +1103,7 @@ export function GanttView() {
         {isLoading ? (
           /* The projection arrives asynchronously; without this the view claims
              "nothing scheduled" for however long the fetch takes. */
-          <div className="grid h-full place-items-center text-sm text-text-secondary">
+          <div className="grid h-full place-items-center text-body text-text-secondary">
             {t('common.loading')}
           </div>
         ) : (

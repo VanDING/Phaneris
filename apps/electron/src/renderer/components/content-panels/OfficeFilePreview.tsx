@@ -68,7 +68,7 @@ export default function OfficeFilePreview({ filePath, mimeType }: { filePath: st
     }
   }, [filePath, mimeType, i18n.language, loaded, attempt, t])
   return <div className="flex h-full min-h-0 flex-col">
-    {error && <div role="alert" className="p-3 text-sm text-destructive"><p>{error}</p>
+    {error && <div role="alert" className="p-3 text-body text-destructive"><p>{error}</p>
       <button type="button" className="mt-2 underline" onClick={() => setAttempt(value => value + 1)}>{t('filePreview.retry')}</button>
     </div>}
     <iframe ref={frame} title={t('filePreview.office')} sandbox="allow-same-origin" srcDoc={FRAME_DOCUMENT}

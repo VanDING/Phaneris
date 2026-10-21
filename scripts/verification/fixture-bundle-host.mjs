@@ -25,8 +25,9 @@ if (!runDirectory || !entryFile) {
 const root = resolve(here, '../..')
 const outDir = join(resolve(runDirectory), 'bundle')
 mkdirSync(outDir, { recursive: true })
-const page = join(resolve(runDirectory), 'index.html')
-writeFileSync(page,
+const htmlEntry = entryFile.endsWith('.html')
+const page = htmlEntry ? resolve(root, entryFile) : join(resolve(runDirectory), 'index.html')
+if (!htmlEntry) writeFileSync(page,
   `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/${entryFile.replaceAll('\\', '/')}"></script></body></html>`)
 
 await build({

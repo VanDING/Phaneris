@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, FileText, MessagesSquare, Paperclip, Sparkles, TerminalSquare, UserRound } from 'lucide-react'
 import type { TrajectorySnapshot } from './trajectory-contract'
 import { deriveRequestContexts, requestContextDelta, type TrajectoryContextCategory } from './trajectory-context'
+import { useInitialFocus } from '../../lib/use-initial-focus'
 
 interface TrajectoryContextViewProps {
   snapshot: TrajectorySnapshot
@@ -25,11 +26,11 @@ const CATEGORY_ICON = {
 
 const CATEGORY_TONE: Record<TrajectoryContextCategory, string> = {
   system: 'bg-accent',
-  user: 'bg-sky-500',
+  user: 'bg-accent',
   assistant: 'bg-success',
   tools: 'bg-info',
-  attachments: 'bg-cyan-500',
-  injected: 'bg-slate-500',
+  attachments: 'bg-accent',
+  injected: 'bg-muted',
 }
 
 function formatNumber(value: number): string {
@@ -38,6 +39,7 @@ function formatNumber(value: number): string {
 
 export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFocus, onOpenChat, onOpenFile }: TrajectoryContextViewProps) {
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const reduceMotion = useReducedMotionConfig()
   const contexts = useMemo(() => deriveRequestContexts(snapshot), [snapshot])
   const [selectedSeq, setSelectedSeq] = useState<number | null>(() => focusedRequestSeq ?? contexts.at(-1)?.requestSeq ?? null)
@@ -99,7 +101,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
           {requestMenuOpen && (
             <div className="absolute left-0 top-9 z-component-panel w-72 overflow-hidden rounded-lg border border-border/60 bg-background shadow-modal-small">
               <div className="border-b border-border/50 p-2">
-                <input autoFocus value={requestFilter} onChange={event => setRequestFilter(event.target.value)} onKeyDown={event => { if (event.key === 'Escape') setRequestMenuOpen(false) }} placeholder={t('trajectory.context.searchRequests')} className="craft-field-input h-7 w-full rounded-md bg-foreground/[0.035] px-2 text-label outline-none placeholder:text-text-secondary focus:ring-2 focus:ring-ring" />
+                <input ref={initialFocusRef} value={requestFilter} onChange={event => setRequestFilter(event.target.value)} onKeyDown={event => { if (event.key === 'Escape') setRequestMenuOpen(false) }} placeholder={t('trajectory.context.searchRequests')} className="craft-field-input h-7 w-full rounded-md bg-foreground/[0.035] px-2 text-label outline-none placeholder:text-text-secondary focus:ring-2 focus:ring-ring" />
               </div>
               <div className="max-h-64 overflow-y-auto p-1" role="listbox">
                 {filteredContexts.map((context) => {

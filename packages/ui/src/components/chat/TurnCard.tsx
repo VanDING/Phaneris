@@ -844,7 +844,7 @@ export function ActivityStatusIcon({
     // Default icon logic
     switch (status) {
       case 'pending':
-        return <Circle className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-muted-foreground/50")} />
+        return <Circle className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-text-secondary")} />
       case 'running':
         return (
           <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
@@ -959,11 +959,19 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
       <div className="flex items-stretch">
         <TreeViewConnector depth={depth} isLastChild={isLastChild} />
         <div
+          role={onOpenDetails && isComplete ? 'button' : undefined}
+          tabIndex={onOpenDetails && isComplete ? 0 : undefined}
           className={cn(
-            "group/row flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-foreground/75 flex-1 min-w-0",
+            "group/row flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-text-secondary flex-1 min-w-0",
             SIZE_CONFIG.fontSize
           )}
           onClick={onOpenDetails && isComplete ? onOpenDetails : undefined}
+          onKeyDown={onOpenDetails && isComplete ? (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return
+            event.preventDefault()
+            event.stopPropagation()
+            onOpenDetails()
+          } : undefined}
         >
           {isThinking ? (
             <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
@@ -973,24 +981,15 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
             <MessageCircleDashed className={cn(SIZE_CONFIG.iconSize, "shrink-0")} />
           )}
           <span className={cn("truncate flex-1", onOpenDetails && isComplete && "group-hover/row:underline")}>{displayContent}</span>
-          {/* Open details button */}
+          {/* Open-details affordance. It used to be a nested role="button" that
+              duplicated the row's own action; now the row is the control, so the
+              arrow is decoration and survives only as the hover cue. */}
           {onOpenDetails && isComplete && (
             <div
-              role="button"
-              tabIndex={0}
-              onClick={(e) => {
-                e.stopPropagation()
-                onOpenDetails()
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.stopPropagation()
-                  onOpenDetails()
-                }
-              }}
+              aria-hidden="true"
               className={cn(
                 "p-0.5 rounded-shape-sm opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0",
-                "hover:bg-muted/80 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                "hover:bg-muted/80"
               )}
             >
               <ArrowUpRight className={SIZE_CONFIG.iconSize} />
@@ -1073,11 +1072,19 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
     <div className="flex items-stretch">
       <TreeViewConnector depth={depth} isLastChild={isLastChild} />
       <div
+        role={onOpenDetails && isComplete ? 'button' : undefined}
+        tabIndex={onOpenDetails && isComplete ? 0 : undefined}
         className={cn(
           "group/row flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-muted-foreground flex-1 min-w-0",
           SIZE_CONFIG.fontSize
         )}
         onClick={onOpenDetails && isComplete ? onOpenDetails : undefined}
+        onKeyDown={onOpenDetails && isComplete ? (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          event.preventDefault()
+          event.stopPropagation()
+          onOpenDetails()
+        } : undefined}
       >
         <ActivityStatusIcon status={activity.status} toolName={activity.toolName} customIcon={toolDisplay.icon} />
         {/* MCP/API tools: Source name (shrink-0) then error badge (if any) then compound label (flex-1) */}
@@ -1102,7 +1109,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
             )}
             {/* Model badge for LLM Query */}
             {activity.toolName === 'mcp__session__call_llm' && activity.toolInput?.model && (
-              <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-micro text-foreground/60 shrink-0">
+              <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-micro text-text-secondary shrink-0">
                 {String(activity.toolInput.model)}
               </span>
             )}
@@ -1154,7 +1161,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
               // Craft canonical format: file_path
               if (typeof activity.toolInput?.file_path === 'string') {
                 return (
-                  <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-foreground/70">
+                  <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-text-secondary">
                     {normalizePath(activity.toolInput.file_path).split('/').pop()}
                   </span>
                 )
@@ -1164,7 +1171,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
                 const firstChange = activity.toolInput.changes[0] as { path?: string } | undefined
                 if (firstChange?.path) {
                   return (
-                    <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-foreground/70">
+                    <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-text-secondary">
                       {normalizePath(firstChange.path).split('/').pop()}
                     </span>
                   )
@@ -1177,7 +1184,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
         {/* Filename badge for Read tool (no diff stats) */}
         {!isMcpOrApiTool && !isBackgrounded && !diffStats && activity.toolName === 'Read' && typeof activity.toolInput?.file_path === 'string' && (
           <span className="flex items-center gap-1.5 text-micro shrink-0">
-            <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-foreground/70">
+            <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-text-secondary">
               {normalizePath(activity.toolInput.file_path).split('/').pop()}
             </span>
           </span>
@@ -1325,12 +1332,21 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
     >
       {/* Task header row - no left padding, chevron aligned with activity row icons */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={isExpanded}
         className={cn(
           "group/row flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] rounded-md cursor-pointer text-muted-foreground",
           "hover:text-foreground transition-colors",
           SIZE_CONFIG.fontSize
         )}
         onClick={toggleExpanded}
+        onKeyDown={(event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          event.preventDefault()
+          event.stopPropagation()
+          toggleExpanded()
+        }}
       >
         {/* Chevron for expand/collapse - aligned with activity row icons */}
         <motion.div
@@ -1360,7 +1376,7 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
 
         {/* Duration and token stats from TaskOutput (only when complete) */}
         {isComplete && group.taskOutputData && (
-          <span className="shrink-0 text-muted-foreground/60 tabular-nums">
+          <span className="shrink-0 text-text-secondary tabular-nums">
             {group.taskOutputData.durationMs !== undefined && (
               <span>{formatDuration(group.taskOutputData.durationMs)}</span>
             )}
@@ -1524,7 +1540,7 @@ function BranchDropdown({ onBranch }: BranchDropdownProps) {
         <StyledDropdownMenuItem onClick={handleBranchClick} className="items-start py-2">
           <div className="flex flex-col gap-0.5">
             <span className="text-body leading-tight">{t('chat.branchFromThisMessage')}</span>
-            <span className="max-w-[220px] whitespace-normal text-xs leading-tight text-muted-foreground">
+            <span className="max-w-[220px] whitespace-normal text-meta leading-tight text-muted-foreground">
               {t('chat.branchFromThisMessageDescription')}
             </span>
           </div>
@@ -2519,7 +2535,7 @@ export function ResponseCard({
               "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-2 right-2 p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
               "opacity-0 group-hover:opacity-100",
               "bg-background shadow-minimal",
-              "text-muted-foreground/50 hover:text-foreground",
+              "text-text-secondary hover:text-foreground",
               "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100"
             )}
             title={t('common.viewFullscreen')}
@@ -2542,12 +2558,17 @@ export function ResponseCard({
           )}
 
           {/* Scrollable content area with subtle fade at edges (dark mode only) */}
+          {/* The pointer handlers track where a text selection started so the
+              annotation popover can tell a selection from a click. They are not
+              an interaction: the content has no activation behaviour, and
+              keyboard selection is the browser's own. */}
+          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div
             ref={contentRef}
             data-search-root="response"
             onMouseDown={handleSelectionPointerDown}
             onMouseUp={handleTextSelection}
-            className="pl-[22px] pr-[16px] py-3 text-sm overflow-y-auto scrollbar-hover"
+            className="pl-[22px] pr-[16px] py-3 text-body overflow-y-auto scrollbar-hover"
             style={{
               maxHeight: MAX_HEIGHT,
               // Subtle fade at top and bottom edges (16px) - only in dark mode for better contrast
@@ -2689,12 +2710,15 @@ export function ResponseCard({
       <div className="bg-background shadow-minimal rounded-shape-lg overflow-hidden group">
         {/* Content area - uses displayedText (throttled) for performance */}
         {/* Subtle fade at top and bottom edges (dark mode only) */}
+        {/* Same selection-tracking handlers as the streamed branch above: not an
+            interaction, and keyboard selection is native. */}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
           ref={contentRef}
           data-search-root="response"
           onMouseDown={handleSelectionPointerDown}
           onMouseUp={handleTextSelection}
-          className="pl-[22px] pr-4 py-3 text-sm overflow-y-auto scrollbar-hover"
+          className="pl-[22px] pr-4 py-3 text-body overflow-y-auto scrollbar-hover"
           style={{
             maxHeight: MAX_HEIGHT,
             // Subtle fade at top and bottom edges (16px) - only in dark mode for better contrast
@@ -2741,7 +2765,7 @@ export function ResponseCard({
 function TodoStatusIcon({ status }: { status: TodoStatus }) {
   switch (status) {
     case 'pending':
-      return <Circle className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-muted-foreground/50")} />
+      return <Circle className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-text-secondary")} />
     case 'in_progress':
       return (
         <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
@@ -2751,7 +2775,7 @@ function TodoStatusIcon({ status }: { status: TodoStatus }) {
     case 'completed':
       return <CircleCheck className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-accent")} />
     case 'interrupted':
-      return <Ban className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-muted-foreground/50")} />
+      return <Ban className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-text-secondary")} />
   }
 }
 
@@ -3160,7 +3184,7 @@ export const TurnCard = React.memo(function TurnCard({
             )}
           </button>
           {requiresRecovery && (
-            <div className="mx-2.5 mb-1.5 flex items-start gap-2 rounded-md border border-warning/20 bg-warning/10 px-2.5 py-2 text-xs text-warning">
+            <div className="mx-2.5 mb-1.5 flex items-start gap-2 rounded-md border border-warning/20 bg-warning/10 px-2.5 py-2 text-meta text-warning">
               <CircleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               <div>
                 <div className="font-medium">{i18n.t('turnCard.recoveryRequired')}</div>
@@ -3172,7 +3196,7 @@ export const TurnCard = React.memo(function TurnCard({
                   return activity ? (
                     <button
                       type="button"
-                      className="mt-2 rounded-md border border-warning/30 bg-background/70 px-2 py-1 text-xs font-medium text-foreground hover:bg-background"
+                      className="mt-2 rounded-md border border-warning/30 bg-background/70 px-2 py-1 text-meta font-medium text-foreground hover:bg-background"
                       onClick={(event) => {
                         event.stopPropagation()
                         onReviewRecovery(activity)
@@ -3274,7 +3298,7 @@ export const TurnCard = React.memo(function TurnCard({
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={motionRowEnter(reduceMotion)}
-                      className={cn("flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-muted-foreground/70", SIZE_CONFIG.fontSize)}
+                      className={cn("flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-text-secondary", SIZE_CONFIG.fontSize)}
                     >
                       <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
                       <span>{isBuffering ? 'Preparing response...' : 'Thinking...'}</span>

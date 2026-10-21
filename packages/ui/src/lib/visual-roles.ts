@@ -22,6 +22,10 @@ export const VISUAL_ROLE_TOKENS = {
   ...Object.fromEntries(Object.entries(CONTROL_HEIGHT_TIERS).map(([tier, px]) => [`--control-height-${tier}`, `${px}px`])),
   // Semantic type scale. Values are rem so the user font-size setting scales them.
   ...Object.fromEntries(Object.entries(FONT_SIZE_TIERS).map(([tier, px]) => [`--type-${tier}-size`, rem(px)])),
+  // Object-scale glyphs: a monogram watermark and avatar initials are sized by
+  // the object they sit in, not by the reading hierarchy, so they are not type
+  // tiers. Kept here so a component never needs an arbitrary literal.
+  '--glyph-watermark-size': '2.25rem', '--glyph-avatar-size': '3rem',
   '--ui-scale': '1', '--reading-scale': '1',
   '--ui-caption-size': '.75rem', '--ui-label-size': '.866667rem', '--ui-body-size': '.875rem',
   '--ui-title-size': '1rem', '--ui-heading-size': '1.2rem', '--ui-line-height': '1.5',

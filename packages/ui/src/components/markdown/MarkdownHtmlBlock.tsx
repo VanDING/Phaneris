@@ -184,7 +184,7 @@ export function MarkdownHtmlBlock({ code, className }: MarkdownHtmlBlockProps) {
       <div className={cn('relative group rounded-shape-lg overflow-hidden border bg-muted/10', className)}>
         {/* Header */}
         <div className="px-3 py-2 bg-muted/50 border-b flex items-center gap-2">
-          <Globe className="w-3.5 h-3.5 text-muted-foreground/50" />
+          <Globe className="w-3.5 h-3.5 text-text-secondary" />
           <span className="text-label text-muted-foreground font-medium flex-1">
             {spec.title || t('preview.htmlPreview')}
           </span>
@@ -195,7 +195,7 @@ export function MarkdownHtmlBlock({ code, className }: MarkdownHtmlBlockProps) {
               className={`craft-row-actions ${cn(
                 "motion-interactive p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] select-none",
                 "bg-background shadow-minimal",
-                "text-muted-foreground/50 hover:text-foreground",
+                "text-text-secondary hover:text-foreground",
                 "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100",
                 hasMultiple ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               )}`}
@@ -234,7 +234,7 @@ export function MarkdownHtmlBlock({ code, className }: MarkdownHtmlBlockProps) {
 
           {/* Error state for uncached active item */}
           {!activeHtml && !loading && error && (
-            <div className="py-6 text-center text-destructive/70 text-body">{error}</div>
+            <div className="py-6 text-center text-destructive-text text-body">{error}</div>
           )}
 
           {/* Bottom fade gradient */}

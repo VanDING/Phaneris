@@ -44,13 +44,26 @@ export function CollapsibleSection({
 
   return (
     <div className="markdown-collapsible-section" data-section-id={sectionId}>
-      {/* Heading with toggle trigger */}
+      {/* Heading with toggle trigger. The heading text is the control, so the
+          wrapper is a disclosure button: a heading full of inline markup cannot
+          become a <button> (it may contain code and links), and role="button"
+          plus aria-expanded is the correct pattern for that nesting. */}
       <div
+        role={hasContent ? 'button' : undefined}
+        tabIndex={hasContent ? 0 : undefined}
+        aria-expanded={hasContent ? isExpanded : undefined}
         className={cn(
           'relative group',
           hasContent && 'cursor-pointer'
         )}
         onClick={() => hasContent && onToggle(sectionId)}
+        onKeyDown={(event) => {
+          if (!hasContent) return
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          event.preventDefault()
+          event.stopPropagation()
+          onToggle(sectionId)
+        }}
       >
         {/* Chevron - always visible when collapsed, hover-only when expanded */}
         <motion.div

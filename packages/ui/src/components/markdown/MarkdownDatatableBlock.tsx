@@ -74,7 +74,7 @@ type SortDir = 'asc' | 'desc' | null
 // ── Cell formatting ──────────────────────────────────────────────────────────
 
 function formatCell(value: unknown, type?: ColumnDef['type']): React.ReactNode {
-  if (value === null || value === undefined) return <span className="text-muted-foreground/40">—</span>
+  if (value === null || value === undefined) return <span className="text-text-secondary">—</span>
   switch (type) {
     case 'currency': {
       const num = typeof value === 'number' ? value : Number(value)
@@ -457,7 +457,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
         <div className="px-3 py-2 bg-muted/50 border-b">
           <span className="text-label text-muted-foreground font-medium">{spec.title || t('datatable.defaultTitle')}</span>
         </div>
-        <div className="py-6 text-center text-destructive/70 text-body">{fileError}</div>
+        <div className="py-6 text-center text-destructive-text text-body">{fileError}</div>
       </div>
     )
   }
@@ -519,7 +519,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
                   <span className="inline-flex items-center gap-2 text-label font-medium text-muted-foreground">
                     <ChevronRight className={cn('w-3 h-3 transition-transform', !collapsedGroups.has(group.value) && 'rotate-90')} />
                     {groupColumnLabel}: {group.value}
-                    <span className="text-muted-foreground/50">({group.rows.length})</span>
+                    <span className="text-text-secondary">({group.rows.length})</span>
                   </span>
                 </td>
               </tr>
@@ -548,7 +548,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
               ? 'opacity-100 bg-accent/5 text-accent shadow-tinted'
               : alwaysVisible
                 ? 'opacity-70 hover:opacity-100 transition-opacity'
-                : 'opacity-0 group-hover:opacity-100 text-muted-foreground/50 hover:text-foreground',
+                : 'opacity-0 group-hover:opacity-100 text-text-secondary hover:text-foreground',
             'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100',
           )}
           title={t('table.tableControls')}
@@ -676,7 +676,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
             "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-[7px] right-2 p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
             "bg-background shadow-minimal",
             hasActiveControls ? "opacity-100" : "opacity-0 group-hover:opacity-100",
-            "text-muted-foreground/50 hover:text-foreground",
+            "text-text-secondary hover:text-foreground",
             "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100"
           )}
           title={t('common.viewFullscreen')}

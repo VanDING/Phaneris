@@ -642,6 +642,44 @@ await verificationWorkflow('upgrade-0153-editor', async run => {
       console.log('[editor] ED-03 buttons', JSON.stringify({ before: before.pane.buttons, after: after.pane.buttons, back: back.pane.buttons }))
     })
 
+    await check('ED-04-history-list-paste-and-image-upload', async () => {
+      await setMarkdown('# History\n\nBody\n', 'artifact')
+      const editor = page.locator('#artifact-pane .tiptap[contenteditable=true]')
+      await editor.click(); await page.keyboard.press('Control+End')
+      await page.keyboard.type(' HISTORYMARKER')
+      await page.waitForFunction(() => window.editorFixture.getMarkdown('artifact').includes('HISTORYMARKER'), undefined, { timeout: 5000 }).catch(() => {})
+      evidence.typed = { markdown: await markdown('artifact'), pane: await pane('artifact'), artifact: await page.evaluate(() => window.editorFixture.artifact()) }
+      assert((await markdown('artifact')).includes('HISTORYMARKER'), `typed text must reach the controlled document: ${JSON.stringify(evidence.typed)}`)
+      await page.keyboard.press('Control+z')
+      evidence.history = { afterUndo: await markdown('artifact'), pane: await pane('artifact') }
+      assert(!(await markdown('artifact')).includes('HISTORYMARKER'), `undo must remove typed text: ${JSON.stringify(evidence.history)}`)
+      await page.keyboard.press('Control+Shift+z')
+      assert((await markdown('artifact')).includes('HISTORYMARKER'), 'redo must restore typed text')
+      await page.keyboard.press('Control+Shift+8')
+      assert.equal(await editor.locator('ul li').count(), 1)
+      await page.keyboard.press('Control+Shift+7')
+      assert.equal(await editor.locator('ol li').count(), 1)
+      assert.equal(await editor.locator('ul').count(), 0)
+      await editor.evaluate(element => {
+        const data = new DataTransfer()
+        data.setData('text/html', '<p><strong>PASTEDBOLD</strong> <a href="https://example.invalid/pasted">PASTEDLINK</a></p>')
+        element.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }))
+      })
+      assert((await markdown('artifact')).includes('**PASTEDBOLD**'), 'HTML paste must preserve strong markup')
+      assert((await markdown('artifact')).includes('https://example.invalid/pasted'), 'HTML paste must preserve link target')
+      await editor.evaluate((element, bytes) => {
+        const data = new DataTransfer()
+        data.items.add(new File([new Uint8Array(bytes)], 'pasted.png', { type: 'image/png' }))
+        element.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }))
+      }, [...PIXEL_PNG])
+      const pastedImage = editor.locator('img[src^="data:image/png;base64,"]')
+      await pastedImage.waitFor({ state: 'attached' })
+      assert(await pastedImage.evaluate(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth === 1), 'the uploaded image must decode from the pasted file bytes')
+      await page.waitForFunction(() => window.editorFixture.getMarkdown('artifact').includes('data:image/png;base64,'))
+      evidence.editing = { markdown: await markdown('artifact'), pane: await pane('artifact') }
+      await page.screenshot({ path: join(run.directory, 'editor-history-paste.png') })
+    })
+
     const final = await page.evaluate(() => ({ unknownApi: window.editorFixture.unknownApi(), i18n: window.editorFixture.i18n(), body: document.body.innerText.slice(0, 800) }))
     evidence.final = final
     if (checks.some(item => !item.passed)) assert.fail(JSON.stringify(checks.filter(item => !item.passed)))
@@ -653,7 +691,7 @@ await verificationWorkflow('upgrade-0153-editor', async run => {
     const unexpectedPageErrors = errors.filter(message => !/contentMatchAt on a node with invalid content/.test(message))
     assert.deepEqual(unexpectedPageErrors, [], `page errors: ${unexpectedPageErrors.join('\n')}`)
     assert.deepEqual(consoleErrors, [], `console errors: ${consoleErrors.join('\n')}`)
-    assert.equal(checks.length, 3, 'all three scenes must execute')
+    assert.equal(checks.length, 4, 'all four scenes must execute')
   } finally {
     run.json('editor.json', {
       fixture: fixture.url, browser: launched.browser.version(), boot: bootEvidence,

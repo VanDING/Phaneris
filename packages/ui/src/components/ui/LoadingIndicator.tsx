@@ -33,12 +33,12 @@ export interface SpinnerProps {
  * Usage:
  * ```tsx
  * // Inherits color and size from parent
- * <div className="text-muted-foreground text-sm">
+ * <div className="text-muted-foreground text-body">
  *   <Spinner />
  * </div>
  *
  * // Or override with className
- * <Spinner className="text-amber-500 text-lg" />
+ * <Spinner className="text-info-text text-title" />
  * ```
  */
 export function Spinner({ className }: SpinnerProps) {
@@ -50,8 +50,8 @@ export function Spinner({ className }: SpinnerProps) {
       aria-label={t("common.loading")}
     >
       <svg className="spinner-ring" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.75" opacity="0.2" />
-        <path d="M8 2a6 6 0 0 1 6 6" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+        <circle cx="8" cy="8" r="6" stroke="currentColor" opacity="0.2" />
+        <path d="M8 2a6 6 0 0 1 6 6" stroke="currentColor" strokeLinecap="round" />
       </svg>
     </span>
   )
@@ -81,7 +81,7 @@ export interface LoadingIndicatorProps {
   showElapsed?: boolean | number
   /** Additional className for the container */
   className?: string
-  /** Additional className for the spinner (e.g., "text-xs" to make it smaller) */
+  /** Additional className for the spinner (e.g., "text-meta" to make it smaller) */
   spinnerClassName?: string
 }
 
@@ -143,7 +143,7 @@ export function LoadingIndicator({
 
       {/* Elapsed time */}
       {showElapsed && elapsed >= 1000 && (
-        <span className="text-muted-foreground/60 tabular-nums">
+        <span className="text-text-secondary tabular-nums">
           ({formatDuration(elapsed)})
         </span>
       )}

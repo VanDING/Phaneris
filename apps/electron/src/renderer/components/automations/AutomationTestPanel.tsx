@@ -23,7 +23,7 @@ export function AutomationTestPanel({ result, className }: AutomationTestPanelPr
   // Running state
   if (result.state === 'running') {
     return (
-      <div className={cn('flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground', className)}>
+      <div className={cn('flex items-center gap-2 px-4 py-3 text-body text-muted-foreground', className)}>
         <Loader2 className="h-4 w-4 animate-spin" />
         <span>{t('automations.testRunning')}</span>
       </div>
@@ -37,7 +37,7 @@ export function AutomationTestPanel({ result, className }: AutomationTestPanelPr
         <Info_Alert.Title>
           {t('automations.testPassed')}
           {result.duration != null && (
-            <span className="ml-2 text-xs font-normal text-muted-foreground">
+            <span className="ml-2 text-meta font-normal text-muted-foreground">
               {result.duration}ms
             </span>
           )}
@@ -53,7 +53,7 @@ export function AutomationTestPanel({ result, className }: AutomationTestPanelPr
         <Info_Alert.Title>{t('automations.testFailed')}</Info_Alert.Title>
         {result.stderr && (
           <Info_Alert.Description>
-            <pre className="font-mono text-xs mt-1 whitespace-pre-wrap text-destructive">{result.stderr}</pre>
+            <pre className="font-mono text-meta mt-1 whitespace-pre-wrap text-destructive">{result.stderr}</pre>
           </Info_Alert.Description>
         )}
       </Info_Alert>

@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { useInitialFocus } from '@phaneris/ui'
 
 export type OAuthStatus = 'idle' | 'validating' | 'success' | 'error'
 
@@ -45,6 +46,7 @@ export function OAuthConnect({
   formId = "auth-code-form",
 }: OAuthConnectProps) {
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [authCode, setAuthCode] = useState('')
 
   const handleAuthCodeSubmit = (e: React.FormEvent) => {
@@ -71,15 +73,15 @@ export function OAuthConnect({
               onChange={(e) => setAuthCode(e.target.value)}
               placeholder={t("apiSetup.pasteAuthCode")}
               className={cn(
-                "border-0 bg-transparent shadow-none font-mono text-sm",
+                "border-0 bg-transparent shadow-none font-mono text-body",
                 status === 'error' && "focus-visible:ring-destructive"
               )}
               disabled={status === 'validating'}
-              autoFocus
+              ref={initialFocusRef}
             />
           </div>
           {status === 'error' && errorMessage && (
-            <p className="text-sm text-destructive">{errorMessage}</p>
+            <p className="text-body text-destructive">{errorMessage}</p>
           )}
         </div>
       </form>
@@ -95,7 +97,7 @@ export function OAuthConnect({
   return (
     <div className="space-y-3">
       {/* Error message displayed below content, matching the API key pattern */}
-      <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive text-center">
+      <div className="rounded-md bg-destructive/10 p-3 text-body text-destructive text-center">
         {errorMessage}
       </div>
     </div>

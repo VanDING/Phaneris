@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState, useCallback } from 'react'
 import { Key, User, Lock, Eye, EyeOff, CheckCircle2, XCircle, type LucideIcon } from 'lucide-react'
-import { Spinner } from '@phaneris/ui'
+import { Spinner, useInitialFocus } from '@phaneris/ui'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -21,7 +21,7 @@ const VARIANT_STYLES: Record<AuthCardVariant, { bg: string; textClass: string; s
   default: { bg: 'var(--background)', textClass: 'text-foreground shadow-minimal' },
   success: { bg: 'oklch(from var(--success) l c h / 0.03)', textClass: 'text-[var(--success-text)] shadow-tinted', shadowColor: 'var(--success)' },
   error: { bg: 'oklch(from var(--destructive) l c h / 0.03)', textClass: 'text-[var(--destructive-text)] shadow-tinted', shadowColor: 'var(--destructive)' },
-  muted: { bg: 'var(--foreground-3)', textClass: 'text-foreground/70 shadow-minimal' },
+  muted: { bg: 'var(--foreground-3)', textClass: 'text-text-secondary shadow-minimal' },
 }
 
 interface AuthCardHeaderProps {
@@ -49,25 +49,25 @@ function AuthCardHeader({
       {Icon && <Icon className={cn('h-4 w-4 shrink-0 mt-0.5', iconClassName)} />}
       <div className="flex-1 min-w-0">
         {/* Title inherits container text color */}
-        <div className="text-sm font-medium leading-5">
+        <div className="text-body font-medium leading-5">
           {title}
           {titleSuffix && (
-            <span className="text-xs text-muted-foreground ml-2">({titleSuffix})</span>
+            <span className="text-meta text-muted-foreground ml-2">({titleSuffix})</span>
           )}
         </div>
         {/* Subtitles use 50% opacity of inherited color */}
         {subtitle && (
-          <div className="text-xs mt-0.5 opacity-50">
+          <div className="text-meta mt-0.5 opacity-50">
             {subtitle}
           </div>
         )}
         {subtitleSecondary && (
-          <div className="text-xs mt-0.5 opacity-50">
+          <div className="text-meta mt-0.5 opacity-50">
             {subtitleSecondary}
           </div>
         )}
         {description && (
-          <p className="text-xs text-muted-foreground mt-1">{description}</p>
+          <p className="text-meta text-muted-foreground mt-1">{description}</p>
         )}
       </div>
     </div>
@@ -164,6 +164,7 @@ interface AuthRequestCardProps {
  * - failed: Show error state
  */
 export function AuthRequestCard({ message, onRespondToCredential, sessionId, isInteractive = true }: AuthRequestCardProps) {
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [value, setValue] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -403,10 +404,10 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
         <div className="flex gap-3">
           <Spinner className="text-micro shrink-0 mt-1" />
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium leading-5">
+            <div className="text-body font-medium leading-5">
               {`${authSourceName} Authenticating...`}
             </div>
-            <div className="text-xs mt-0.5 opacity-50">
+            <div className="text-meta mt-0.5 opacity-50">
               Complete authentication in your browser
             </div>
           </div>
@@ -443,7 +444,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
           <>
             {/* Username field */}
             <div className="space-y-1.5">
-              <Label htmlFor={`auth-username-${authRequestId}`} className="text-xs">
+              <Label htmlFor={`auth-username-${authRequestId}`} className="text-meta">
                 {usernameLabel}
               </Label>
               <div className="relative">
@@ -458,14 +459,14 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
                   onKeyDown={handleKeyDown}
                   className="pl-9"
                   placeholder={`Enter ${usernameLabel.toLowerCase()}`}
-                  autoFocus
+                  ref={initialFocusRef}
                   disabled={isSubmitting}
                 />
               </div>
             </div>
             {/* Password field */}
             <div className="space-y-1.5">
-              <Label htmlFor={`auth-password-${authRequestId}`} className="text-xs">
+              <Label htmlFor={`auth-password-${authRequestId}`} className="text-meta">
                 {passwordLabel}
               </Label>
               <div className="relative">
@@ -498,7 +499,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
           <>
             {authHeaderNames.map((headerName, index) => (
               <div key={headerName} className="space-y-1.5">
-                <Label htmlFor={`auth-header-${authRequestId}-${index}`} className="text-xs">
+                <Label htmlFor={`auth-header-${authRequestId}-${index}`} className="text-meta">
                   {headerName}
                 </Label>
                 <div className="relative">
@@ -516,7 +517,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
                     onKeyDown={handleKeyDown}
                     className="pl-9 pr-9"
                     placeholder={`Enter ${headerName}`}
-                    autoFocus={index === 0}
+                    ref={index === 0 ? initialFocusRef : undefined}
                     disabled={isSubmitting}
                   />
                   <button
@@ -534,7 +535,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
         ) : (
           /* Single credential field (API key, bearer token) */
           <div className="space-y-1.5">
-            <Label htmlFor={`auth-value-${authRequestId}`} className="text-xs">
+            <Label htmlFor={`auth-value-${authRequestId}`} className="text-meta">
               {credentialLabel}
               {authCredentialMode === 'header' && authHeaderName && (
                 <span className="text-muted-foreground ml-1">
@@ -554,7 +555,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
                 onKeyDown={handleKeyDown}
                 className="pl-9 pr-9"
                 placeholder={`Enter ${credentialLabel.toLowerCase()}`}
-                autoFocus
+                ref={initialFocusRef}
                 disabled={isSubmitting}
               />
               <button

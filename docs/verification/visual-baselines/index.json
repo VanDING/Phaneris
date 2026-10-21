@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "viewport": {
+    "width": 900,
+    "height": 760
+  },
+  "cells": {
+    "default-light-comfortable": {
+      "png": "docs/verification/visual-baselines/default-light-comfortable.png",
+      "sha256": "6b0053e4d3ece537a1b484aea5079a3c469994573415db97ba5aa42569b1ae9c"
+    },
+    "default-dark-comfortable": {
+      "png": "docs/verification/visual-baselines/default-dark-comfortable.png",
+      "sha256": "15ac2580f2894bffee5da3f48e7f6657c0f00338794232eb871401469b5fb0b1"
+    },
+    "default-light-compact": {
+      "png": "docs/verification/visual-baselines/default-light-compact.png",
+      "sha256": "b1b1663eeab7c229747b24f9ba533692cb91b0040814c164757c8cf97e0ff8e4"
+    },
+    "ink-light-comfortable": {
+      "png": "docs/verification/visual-baselines/ink-light-comfortable.png",
+      "sha256": "28586e09a379f2061f1af2f08c69a7fa1ddaab38963d7f492b0e3be8c8c7f04d"
+    },
+    "geek-dark-comfortable": {
+      "png": "docs/verification/visual-baselines/geek-dark-comfortable.png",
+      "sha256": "4869f980024cc4d9aa6f891507450c9c450963b4285daa525074b921cfb0c8c3"
+    },
+    "cyberpunk-dark-comfortable": {
+      "png": "docs/verification/visual-baselines/cyberpunk-dark-comfortable.png",
+      "sha256": "141c1483fb5d62c84d69bda10f8db1869e5c3e4b4cba50b287897d8619501a8b"
+    }
+  }
+}

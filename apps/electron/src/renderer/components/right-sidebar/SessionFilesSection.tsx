@@ -214,12 +214,12 @@ export function SessionFilesSection({
       {/* Header - matches sidebar styling with select-none, extra top padding for visual balance */}
       {!hideHeader && (
         <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0 select-none">
-          <span className="text-xs font-medium text-muted-foreground">{t("chat.sessionFiles")}</span>
+          <span className="text-meta font-medium text-muted-foreground">{t("chat.sessionFiles")}</span>
           {nativeFiles && sessionFolderPath && (
             <button
               type="button"
               onClick={() => handleRevealInFileManager(sessionFolderPath)}
-              className="text-xs text-foreground/50 hover:text-foreground/80 hover:underline underline-offset-2 transition-colors"
+              className="text-meta text-text-secondary hover:text-foreground/80 hover:underline underline-offset-2 transition-colors"
             >
               {t("chat.viewInFileManager", { fileManager: fileManagerName })}
             </button>
@@ -232,7 +232,7 @@ export function SessionFilesSection({
       <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pb-2">
         {loadError ? (
           <div className="px-4 text-destructive select-none">
-            <p className="text-xs">{t('chat.sessionFilesError')}</p>
+            <p className="text-meta">{t('chat.sessionFilesError')}</p>
           </div>
         ) : files.length === 0 ? (
           isLoading ? (
@@ -246,12 +246,12 @@ export function SessionFilesSection({
             </div>
           ) : (
             <div className="px-4 py-4 text-center text-muted-foreground select-none">
-              <p className="text-xs">{t('chat.sessionFilesEmpty')}</p>
+              <p className="text-meta">{t('chat.sessionFilesEmpty')}</p>
             </div>
           )
         ) : visibleFiles.length === 0 ? (
           <div className="px-4 text-muted-foreground select-none">
-            <p className="text-xs">{t('contentPanel.files.noFilterMatches')}</p>
+            <p className="text-meta">{t('contentPanel.files.noFilterMatches')}</p>
           </div>
         ) : (
           /* Root nav has px-2 to match LeftSidebar exactly - this constrains grid width */

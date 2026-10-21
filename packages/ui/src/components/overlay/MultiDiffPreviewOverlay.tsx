@@ -348,10 +348,10 @@ export function MultiDiffPreviewOverlay({
                         >
                           <X className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-semibold text-destructive/70 mb-0.5">
+                            <div className="text-meta font-semibold text-destructive-text mb-0.5">
                               {change.toolType} Failed
                             </div>
-                            <p className="text-sm text-destructive whitespace-pre-wrap break-words">
+                            <p className="text-body text-destructive whitespace-pre-wrap break-words">
                               {change.error}
                             </p>
                           </div>

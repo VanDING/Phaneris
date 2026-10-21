@@ -15,7 +15,7 @@ export function ActionMenuItem({ action, onClick, children }: ActionMenuItemProp
     <StyledDropdownMenuItem onClick={onClick}>
       <span>{children || label}</span>
       {hotkey && (
-        <span className="ml-auto text-xs text-muted-foreground">{hotkey}</span>
+        <span className="ml-auto text-meta text-muted-foreground">{hotkey}</span>
       )}
     </StyledDropdownMenuItem>
   )

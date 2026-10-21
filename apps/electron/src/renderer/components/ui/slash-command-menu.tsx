@@ -80,7 +80,7 @@ function PermissionModeIcon({ mode, className }: PermissionModeIconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -201,7 +201,7 @@ function CommandItemContent({ command, isActive }: { command: SlashCommand; isAc
       <div className="flex-1 min-w-0">{label}</div>
       {isActive && (
         <div className="shrink-0 h-4 w-4 rounded-full bg-current flex items-center justify-center">
-          <Check className="h-2.5 w-2.5 text-white dark:text-black" strokeWidth={3} />
+          <Check className="h-2.5 w-2.5 text-white dark:text-black" />
         </div>
       )}
     </>
@@ -307,13 +307,13 @@ export function SlashCommandMenu({
             value={filter}
             onValueChange={setFilter}
             placeholder={effectiveFilterPlaceholder}
-            className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="w-full bg-transparent text-body outline-none placeholder:text-muted-foreground"
           />
         </div>
       )}
       <CommandPrimitive.List className={MENU_LIST_STYLE}>
         {allFilteredCommands.length === 0 ? (
-          <CommandPrimitive.Empty className="py-4 text-center text-sm text-muted-foreground">
+          <CommandPrimitive.Empty className="py-4 text-center text-body text-muted-foreground">
             No commands found
           </CommandPrimitive.Empty>
         ) : filteredGroups ? (
@@ -368,6 +368,7 @@ export function InlineSlashCommand({
   position,
   className,
 }: InlineSlashCommandProps) {
+  const { t } = useTranslation()
   const menuRef = React.useRef<HTMLDivElement>(null)
   const listRef = React.useRef<HTMLDivElement>(null)
   const [selectedIndex, setSelectedIndex] = React.useState(0)
@@ -465,7 +466,9 @@ export function InlineSlashCommand({
       className={cn('fixed z-dropdown', MENU_CONTAINER_STYLE, className)}
       style={{ left: Math.round(position.x) - 10, bottom: bottomPosition, minWidth: 220, maxWidth: 260 }}
     >
-      <div ref={listRef} className={MENU_LIST_STYLE}>
+      {/* The ArrowUp/ArrowDown model lives in this component, so the rows carry
+          an explicit listbox contract; focus stays in the composer input. */}
+      <div ref={listRef} role="listbox" aria-label={t('commands.searchCommands')} className={MENU_LIST_STYLE}>
         {filteredSections.map((section, sectionIndex) => (
           <React.Fragment key={section.id}>
             {/* Section header */}
@@ -485,8 +488,20 @@ export function InlineSlashCommand({
                 return (
                   <div
                     key={`${section.id}-${item.id}`}
+                    role="option"
+                    aria-selected={isSelected}
+                    tabIndex={-1}
                     data-selected={isSelected}
                     onClick={() => handleSelect(item)}
+                    onKeyDown={(event) => {
+                      // Assistive technology can put a virtual cursor on the option
+                      // even though Tab never reaches it; Enter there must select,
+                      // not fall through to the composer.
+                      if (event.key !== 'Enter' && event.key !== ' ') return
+                      event.preventDefault()
+                      event.stopPropagation()
+                      handleSelect(item)
+                    }}
                     onMouseEnter={() => setSelectedIndex(itemIndex)}
                     className={cn(
                       MENU_ITEM_STYLE,
@@ -494,7 +509,7 @@ export function InlineSlashCommand({
                     )}
                   >
                     <div className="shrink-0 text-muted-foreground">
-                      <Shapes className={MENU_ICON_SIZE} strokeWidth={1.75} />
+                      <Shapes className={MENU_ICON_SIZE} />
                     </div>
                     <div className="flex-1 min-w-0 truncate">
                       <span>{item.label}</span>
@@ -504,7 +519,7 @@ export function InlineSlashCommand({
                     </div>
                     {isActive && (
                       <div className="shrink-0 h-4 w-4 rounded-full bg-current flex items-center justify-center">
-                        <Check className="h-2.5 w-2.5 text-white dark:text-black" strokeWidth={3} />
+                        <Check className="h-2.5 w-2.5 text-white dark:text-black" />
                       </div>
                     )}
                   </div>
@@ -514,8 +529,20 @@ export function InlineSlashCommand({
                 return (
                   <div
                     key={`${section.id}-${item.id}`}
+                    role="option"
+                    aria-selected={isSelected}
+                    tabIndex={-1}
                     data-selected={isSelected}
                     onClick={() => handleSelect(item)}
+                    onKeyDown={(event) => {
+                      // Assistive technology can put a virtual cursor on the option
+                      // even though Tab never reaches it; Enter there must select,
+                      // not fall through to the composer.
+                      if (event.key !== 'Enter' && event.key !== ' ') return
+                      event.preventDefault()
+                      event.stopPropagation()
+                      handleSelect(item)
+                    }}
                     onMouseEnter={() => setSelectedIndex(itemIndex)}
                     className={cn(
                       MENU_ITEM_STYLE,
@@ -523,7 +550,7 @@ export function InlineSlashCommand({
                     )}
                   >
                     <div className="shrink-0 text-muted-foreground">
-                      <Icon_Folder className={MENU_ICON_SIZE} strokeWidth={1.75} />
+                      <Icon_Folder className={MENU_ICON_SIZE} />
                     </div>
                     <div className="flex-1 min-w-0 truncate">
                       <span>{item.label}</span>
@@ -537,8 +564,20 @@ export function InlineSlashCommand({
                 return (
                   <div
                     key={item.id}
+                    role="option"
+                    aria-selected={isSelected}
+                    tabIndex={-1}
                     data-selected={isSelected}
                     onClick={() => handleSelect(item)}
+                    onKeyDown={(event) => {
+                      // Assistive technology can put a virtual cursor on the option
+                      // even though Tab never reaches it; Enter there must select,
+                      // not fall through to the composer.
+                      if (event.key !== 'Enter' && event.key !== ' ') return
+                      event.preventDefault()
+                      event.stopPropagation()
+                      handleSelect(item)
+                    }}
                     onMouseEnter={() => setSelectedIndex(itemIndex)}
                     className={cn(
                       MENU_ITEM_STYLE,
@@ -556,7 +595,7 @@ export function InlineSlashCommand({
       </div>
       {/* Always-visible footer hint for @ mentions */}
       <div className="h-px bg-border/50 mx-2" />
-      <div className="px-3 py-2.5 select-none text-xs text-muted-foreground">
+      <div className="px-3 py-2.5 select-none text-meta text-muted-foreground">
         Use @ for skills and files
       </div>
     </div>

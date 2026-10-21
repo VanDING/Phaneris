@@ -49,7 +49,7 @@ export function NewTaskComposer({ onCreate, className }: NewTaskComposerProps) {
           className
         )}
       >
-        <Plus className="h-3.5 w-3.5" strokeWidth={2} />
+        <Plus className="h-3.5 w-3.5" />
         {t('kanban.newTask')}
       </button>
     )
@@ -74,7 +74,7 @@ export function NewTaskComposer({ onCreate, className }: NewTaskComposerProps) {
       rows={1}
       placeholder={t('kanban.newTaskTitle')}
       className={cn(
-        'craft-field-input w-full resize-none rounded-lg border border-border/60 bg-background px-2.5 py-2 text-sm text-foreground outline-none field-sizing-content max-h-40 focus:border-border',
+        'craft-field-input w-full resize-none rounded-lg border border-border/60 bg-background px-2.5 py-2 text-body text-foreground outline-none field-sizing-content max-h-40 focus:border-border',
         className
       )}
     />

@@ -234,6 +234,7 @@ const EVIDENCE_FILE: Record<string, string> = {
   'PDF-03': 'forms.json',
   'PDF-04': 'damaged.json',
   'PDF-05': 'cyclic.json',
+  'PDF-06': 'render-resources.json',
 }
 
 /** Replays one pypdf call from the tool's own pinned dependency set, so the
@@ -266,7 +267,7 @@ const run = new VerificationRun('upgrade-0153-pdf')
 const sceneIds: string[] = []
 const summaries: Record<string, unknown>[] = []
 const untested = [
-  'pdf_tool commands other than info/extract/fill-form (merge, split, rotate, reorder, duplicate, watermark, compress, crop, resize, flatten, header-footer, encrypt, decrypt, redact, sanitize, to-image, from-image, to-docx, to-pptx)',
+  'pdf_tool commands other than info/extract/fill-form/to-image (merge, split, rotate, reorder, duplicate, watermark, compress, crop, resize, flatten, header-footer, encrypt, decrypt, redact, sanitize, from-image, to-docx, to-pptx)',
   'decrypt with the correct password — the encrypted fixture is only ever read without one',
   'the -o/--output form of info and extract (both are driven through stdout)',
   'platforms other than the recorded one: fixtures are generated and driven on win32-x64 with CPython 3.12.15',
@@ -616,6 +617,58 @@ try {
     scene.observations.sharedPageMarker = markers[0]
     scene.observations.unreachedMarker = markers[1]
     scene.observations.rootCount = rootCount
+  })
+
+  scene('PDF-06', 'real rendering and repeated calls release native PDF resources', async scene => {
+    const normal = scene.useFixture(fixture('normal.pdf'))
+    const output = join(scene.cwd, 'rendered')
+    const rendered = await scene.step('to-image normal.pdf --pages 2 --dpi 72', toolArgv(['to-image', normal.path, '--pages', '2', '--dpi', '72', '-o', output]))
+    scene.expect('the actual CLI renders the selected page successfully', () => assert.equal(rendered.exitCode, 0, rendered.stderr))
+    const sharp = (await import('sharp')).default
+    const image = join(output, 'page_2.png')
+    const metadata = await sharp(image).metadata()
+    scene.expect('rendered PNG has the original page dimensions at 72 DPI', () => {
+      assert.equal(metadata.format, 'png'); assert.equal(metadata.width, 612); assert.equal(metadata.height, 792)
+      assert.deepEqual(readdirSync(output), ['page_2.png'])
+    })
+    scene.observations.rendered = { sha256: sha256(image), width: metadata.width, height: metadata.height }
+    const pixels = await sharp(image).stats()
+    scene.expect('the page contains rendered content rather than a blank bitmap', () => assert(pixels.channels.some(channel => channel.stdev > 1)))
+    const probeFile = join(scene.cwd, 'resource-probe.py')
+    writeFileSync(probeFile, `# /// script
+# dependencies = ["pypdf==6.21.1", "pypdfium2==5.14.0", "click==8.5.0", "Pillow==12.3.0"]
+# ///
+import importlib.util, json, sys
+from click.testing import CliRunner
+import pypdfium2 as pdfium
+objects = []
+for cls in [pdfium.PdfDocument, pdfium.PdfPage, pdfium.PdfTextPage, pdfium.PdfBitmap]:
+    original = cls.__init__
+    def tracked(self, *args, _original=original, **kwargs):
+        _original(self, *args, **kwargs)
+        objects.append(self)
+    cls.__init__ = tracked
+spec = importlib.util.spec_from_file_location("pdf_tool", ${JSON.stringify(toolScript)})
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+runner = CliRunner()
+for i in range(3):
+    for args in [["extract", sys.argv[1]], ["to-image", sys.argv[1], "--pages", "1", "--dpi", "72", "-o", "probe-output"], ["to-image", sys.argv[1], "--pages", "999", "-o", "invalid-output"]]:
+        result = runner.invoke(module.cli, args)
+        assert result.exit_code == (1 if "999" in args else 0), result.output
+        leaked = [type(item).__name__ for item in objects if item.raw is not None]
+        assert not leaked, f"Native resources remain open after {args[0]}: {leaked}"
+print(json.dumps({"calls": 9, "objects": len(objects), "all_closed": True}))
+`)
+    const environment = await scene.step('locate the tool script environment', [uv, 'python', 'find', '--script', toolScript])
+    assert.equal(environment.exitCode, 0, environment.stderr)
+    const probe = await scene.step('repeat real CLI callbacks and inspect native handles', [environment.stdout.trim(), probeFile, normal.path])
+    scene.expect('success and exception paths close every document/page/text/bitmap handle', () => {
+      assert.equal(probe.exitCode, 0, probe.stderr)
+      const report = JSON.parse(probe.stdout)
+      assert.equal(report.calls, 9); assert.equal(report.all_closed, true); assert(report.objects > 12)
+      scene.observations.resources = report
+    })
   })
 
   const failures: string[] = []

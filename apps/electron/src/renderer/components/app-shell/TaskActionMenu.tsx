@@ -142,22 +142,22 @@ export function TaskActionMenu({ task, sessionId, onKillTask, onInsertMessage, o
     "hover:bg-white/80 dark:hover:bg-white/15",
     "data-[state=open]:bg-white/80 dark:data-[state=open]:bg-white/15",
     task.status === 'failed' && "bg-destructive/10 hover:bg-destructive/15 dark:bg-destructive/15",
-    (task.status === 'orphaned' || task.status === 'stale') && "bg-amber-500/10 hover:bg-amber-500/15 dark:bg-amber-500/15",
+    (task.status === 'orphaned' || task.status === 'stale') && "bg-info/10 hover:bg-info/15",
   )
 
   const StatusIcon = () => {
     switch (task.status) {
       case 'completed':
-        return <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-500" />
+        return <CheckCircle2 className="h-3.5 w-3.5 text-success-text" />
       case 'failed':
         return <XCircle className="h-3.5 w-3.5 text-destructive" />
       case 'stopped':
         return <Square className="h-3 w-3 opacity-60" />
       case 'orphaned':
       case 'stale':
-        return <AlertTriangle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-500" />
+        return <AlertTriangle className="h-3.5 w-3.5 text-info-text" />
       default:
-        return <Spinner className="text-xs" />
+        return <Spinner className="text-meta" />
     }
   }
 
@@ -196,7 +196,7 @@ export function TaskActionMenu({ task, sessionId, onKillTask, onInsertMessage, o
         <button
           type="button"
           className={cn(
-            "h-control-md pl-2.5 pr-2 text-xs font-medium rounded-shape-lg",
+            "h-control-md pl-2.5 pr-2 text-meta font-medium rounded-shape-lg",
             "flex items-center gap-1.5 shrink-0 select-none",
             "motion-interactive transition-[color,background-color,border-color,box-shadow,opacity,transform] shadow-minimal cursor-pointer",
             statusTint,

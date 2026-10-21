@@ -24,8 +24,8 @@ export function ImageSupportWarningBanner({
 }: ImageSupportWarningBannerProps) {
   const { t } = useTranslation()
   return (
-    <div className="flex items-center gap-2 px-3 py-2 mx-2 mt-2 rounded-md bg-amber-500/10 text-foreground/70 text-xs">
-      <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+    <div className="flex items-center gap-2 px-3 py-2 mx-2 mt-2 rounded-md bg-info/10 text-text-secondary text-meta">
+      <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-info-text" />
       <span className="flex-1 min-w-0">
         {t('chat.imageWarning.title', { modelName })}
       </span>

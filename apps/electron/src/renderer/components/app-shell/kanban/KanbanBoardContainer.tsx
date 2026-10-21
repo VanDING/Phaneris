@@ -560,13 +560,13 @@ export function KanbanBoardContainer() {
             <KanbanProjectFilter projects={projectOptions} value={projectFilter} onChange={setProjectFilter} />
           )}
           <label className="relative hidden @min-[620px]/panel:block">
-            <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/35" />
+            <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t('kanban.workItemSearch')}
-              className="craft-field-input h-8 w-44 rounded-lg border border-border bg-background pl-7 pr-2 text-xs outline-none focus:border-ring/60"
+              className="craft-field-input h-8 w-44 rounded-lg border border-border bg-background pl-7 pr-2 text-meta outline-none focus:border-ring/60"
             />
           </label>
           {usingProjectColumns && editingProject && (
@@ -587,7 +587,7 @@ export function KanbanBoardContainer() {
             disabled={!activeWorkspaceId}
             className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
           >
-            <Plus className="h-3.5 w-3.5" strokeWidth={2.5} /> {t('kanban.newTask')}
+            <Plus className="h-3.5 w-3.5" /> {t('kanban.newTask')}
           </button>
           {/* Surface-injected close + fullscreen controls. */}
           {trailingAction}

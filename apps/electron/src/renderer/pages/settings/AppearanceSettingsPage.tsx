@@ -117,6 +117,8 @@ export default function AppearanceSettingsPage() {
     setColorTheme,
     font,
     setFont,
+    uiScale,
+    setUiScale,
     activeWorkspaceId,
     setWorkspaceColorTheme,
     themeLoadError,
@@ -354,6 +356,17 @@ export default function AppearanceSettingsPage() {
                       ]}
                     />
                   </SettingsRow>
+                  <SettingsRow label={t("settings.appearance.interfaceScale")}>
+                    <SettingsSegmentedControl
+                      value={String(uiScale)}
+                      onValueChange={(value) => setUiScale(Number(value) as 1 | 1.1 | 1.25)}
+                      options={[
+                        { value: '1', label: '100%' },
+                        { value: '1.1', label: '110%' },
+                        { value: '1.25', label: '125%' },
+                      ]}
+                    />
+                  </SettingsRow>
                   <SettingsRow label={t("settings.appearance.language")}>
                     <SettingsMenuSelect
                       value={(i18n.resolvedLanguage ?? i18n.language) as LanguageCode}
@@ -373,12 +386,12 @@ export default function AppearanceSettingsPage() {
                   </SettingsRow>
                 </SettingsCard>
                 {themeLoadError && (
-                  <p className="mt-2 text-xs text-info-text">
+                  <p className="mt-2 text-meta text-info-text">
                     {t("settings.appearance.themeWarning")} {themeLoadError} ({t("settings.appearance.usingDefaultTheme")})
                   </p>
                 )}
                 {themePreferenceError && (
-                  <p className="mt-2 text-xs text-destructive-text">
+                  <p className="mt-2 text-meta text-destructive-text">
                     {themePreferenceError}
                   </p>
                 )}

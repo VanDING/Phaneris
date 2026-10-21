@@ -1,9 +1,9 @@
 /** TC01–TC10: authored before W2 implementation; browser tests keep failure evidence. */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
-import { join, relative, resolve } from 'node:path'
-import { createServer } from 'vite'
+import { readFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+import { buildFixturePage } from './fixture-bundle'
 import { BUILTIN_THEMES } from '../../packages/shared/src/config/theme'
 import { PresetThemeSchema } from '../../packages/shared/src/config/schemas'
 import { verificationWorkflow } from './verification-artifacts'
@@ -12,9 +12,11 @@ import { warmThemePage } from './fixtures/warm-theme-page'
 import { verifyFrontendP2 } from './frontend-p2-checks'
 
 await verificationWorkflow('theme-contract', async run => {
-  const root = resolve(import.meta.dir, '../..'), fixture = join(root, 'scripts/verification/fixtures/theme-contract.tsx')
+  const root = resolve(import.meta.dir, '../..')
   const checks: { id: string; passed: boolean; error?: string }[] = [], samples: unknown[] = [], errors: string[] = []
-  const sources = ['packages/shared/src/config/theme.ts', 'packages/shared/src/config/schemas.ts', 'packages/shared/src/config/themes/ink.json',
+  const sources = ['scripts/verification/fixtures/theme-contract-css/electron.css', 'scripts/verification/fixtures/theme-contract-css/ui.css',
+    'scripts/verification/fixtures/theme-contract-css/viewer.css', 'scripts/verification/fixtures/theme-contract-css/webui.css',
+    'packages/shared/src/config/theme.ts', 'packages/shared/src/config/schemas.ts', 'packages/shared/src/config/themes/ink.json',
     'packages/ui/src/styles/index.css', 'apps/electron/src/renderer/index.css', 'apps/viewer/src/index.css', 'apps/viewer/src/App.tsx',
     'apps/electron/src/renderer/context/ThemeContext.tsx', 'packages/ui/src/context/ShikiThemeContext.tsx',
     'packages/ui/src/components/markdown/CodeBlock.tsx', 'packages/ui/src/lib/theme-compiler.ts', 'packages/shared/src/config/theme-runtime.ts',
@@ -28,16 +30,9 @@ await verificationWorkflow('theme-contract', async run => {
   }
   const hosts = { electron: 'apps/electron/src/renderer/index.css', ui: 'packages/ui/src/styles/index.css',
     viewer: 'apps/viewer/src/index.css', webui: 'apps/webui/src/index.css' }
-  const prefix = `/${relative(root, run.directory).replaceAll('\\', '/')}`
-  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/theme-contract.tsx"></script></body></html>')
-  for (const [host, path] of Object.entries(hosts)) writeFileSync(join(run.directory, `${host}.css`),
-    `@import "${relative(run.directory, join(root, path)).replaceAll('\\', '/')}";\n@source "${fixture.replaceAll('\\', '/')}";\n@source "${join(root, 'scripts/verification/fixtures/frontend-p2.tsx').replaceAll('\\', '/')}";\n`)
   const launched = await launchWorkflowBrowser()
-  const server = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
-    optimizeDeps: { entries: [fixture, join(root, 'apps/viewer/src/App.tsx')], include: ['react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'], exclude: ['pdfjs-dist/build/pdf.worker.min.mjs?url'] },
-    server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**', `${run.directory}/**`] } } })
-  await server.listen()
-  const base = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}`
+  const server = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/theme-contract.tsx' })
+  const base = server.url
   const context = await launched.browser.newContext({ viewport: { width: 1280, height: 820 }, reducedMotion: 'reduce', colorScheme: 'light' })
   const page = await context.newPage(); page.on('pageerror', error => errors.push(error.message))
   await context.tracing.start({ screenshots: true, snapshots: true })
@@ -56,9 +51,9 @@ await verificationWorkflow('theme-contract', async run => {
   }
   const parity = new Map<string, unknown>()
   try {
-    run.json('preparation.json', await warmThemePage(context, `${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/electron.css`)}`, '[data-contract-ready]'))
+    run.json('preparation.json', await warmThemePage(context, `${base}?css=electron.css`, '[data-contract-ready]'))
     for (const host of Object.keys(hosts)) {
-      await gotoWithRetry(page, `${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/${host}.css`)}`)
+      await gotoWithRetry(page, `${base}?css=${host}.css`)
       await page.locator('[data-contract-ready]').waitFor()
       for (const id of Object.keys(BUILTIN_THEMES)) for (const mode of ['light', 'dark'] as const) {
         await choose(id, mode)
@@ -126,7 +121,7 @@ await verificationWorkflow('theme-contract', async run => {
       await page.keyboard.press('Escape'); await overlay.waitFor({ state: 'detached' })
     })
     await check('TC08-standalone', async () => {
-      await gotoWithRetry(page, `${base}${prefix}/index.html?standalone=true&css=${encodeURIComponent(`${prefix}/ui.css`)}`, { waitUntil: 'networkidle' })
+      await gotoWithRetry(page, `${base}?standalone=true&css=ui.css`, { waitUntil: 'networkidle' })
       await page.locator('pre.shiki.github-light').waitFor({ timeout: 60_000 }); await page.evaluate(() => window.themeContract.toggleDOM())
       await page.locator('pre.shiki.github-dark').waitFor({ timeout: 20_000 })
     })
@@ -134,7 +129,7 @@ await verificationWorkflow('theme-contract', async run => {
       await page.route('**/s/api/theme-contract', route => route.fulfill({ json: { id: 'theme-contract', name: '主题与代码', workspaceId: 'fixture', createdAt: 0, lastUsedAt: 0,
         messages: [{ id: 'user', type: 'user', content: 'Show code', timestamp: 1 },
           { id: 'assistant-code', type: 'assistant', content: '```typescript\nconst answer = 42;\nconsole.log(answer)\n```', timestamp: 2, isIntermediate: false }] } }))
-      await gotoWithRetry(page, `${base}${prefix}/index.html?viewer=true&css=${encodeURIComponent(`${prefix}/viewer.css`)}`)
+      await gotoWithRetry(page, `${base}?viewer=true&css=viewer.css`)
       await page.locator('pre.shiki.github-light').waitFor({ timeout: 60_000 }); await page.screenshot({ path: join(run.directory, 'viewer-code-light.png') })
       await page.getByRole('button', { name: 'Switch to dark mode' }).click()
       await page.locator('pre.shiki.github-dark').waitFor({ timeout: 20_000 }); await page.screenshot({ path: join(run.directory, 'viewer-code-dark.png') })
@@ -145,12 +140,12 @@ await verificationWorkflow('theme-contract', async run => {
       assert(await page.evaluate(() => document.documentElement.classList.contains('dark')), 'An explicit Viewer choice survives an OS theme change')
       // The isolated server serves the fixture entry, while Viewer changes its
       // history to /s/theme-contract. Reopen the entry with the same origin/storage.
-      await gotoWithRetry(page, `${base}${prefix}/index.html?viewer=true&css=${encodeURIComponent(`${prefix}/viewer.css`)}`, { waitUntil: 'networkidle' })
+      await gotoWithRetry(page, `${base}?viewer=true&css=viewer.css`, { waitUntil: 'networkidle' })
       await page.locator('pre.shiki.github-dark').waitFor({ timeout: 20_000 })
     })
     await check('TC18-page-errors', () => assert.deepEqual(errors, []))
     await verifyFrontendP2({ browser: launched.browser, directory: run.directory, check, samples,
-      url: `${base}${prefix}/index.html?frontend-p2=true&css=${encodeURIComponent(`${prefix}/electron.css`)}` })
+      url: `${base}?frontend-p2=true&css=electron.css` })
   } finally {
     await context.tracing.stop({ path: join(run.directory, 'trace.zip') })
     run.json('theme-contract.json', { checks, samples, errors, browser: launched.browser.version(), viewport: { width: 1280, height: 820 },

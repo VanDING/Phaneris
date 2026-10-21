@@ -289,17 +289,17 @@ function SessionLoadErrorScreen({
   return (
     <div className="flex h-full items-center justify-center p-6">
       <div className="max-w-lg rounded-xl border border-border/50 bg-background shadow-minimal p-6 text-center">
-        <h2 className="text-lg font-semibold text-foreground">{t("errors.failedToLoadSessions")}</h2>
-        <p className="mt-2 text-sm text-foreground/60">
+        <h2 className="text-title font-semibold text-foreground">{t("errors.failedToLoadSessions")}</h2>
+        <p className="mt-2 text-body text-text-secondary">
           {t("errors.failedToLoadSessionsDesc")}
         </p>
-        <p className="mt-3 rounded-lg bg-foreground/5 px-3 py-2 text-left text-xs text-foreground/70 break-words">
+        <p className="mt-3 rounded-lg bg-foreground/5 px-3 py-2 text-left text-meta text-text-secondary break-words">
           {message}
         </p>
         <button
           type="button"
           onClick={onRetry}
-          className="mt-4 inline-flex h-8 items-center justify-center rounded-shape-lg bg-foreground text-background px-3 text-sm font-medium hover:opacity-90 transition-opacity"
+          className="mt-4 inline-flex h-8 items-center justify-center rounded-shape-lg bg-foreground text-background px-3 text-body font-medium hover:opacity-90 transition-opacity"
         >
           {t("errors.retryLoadingSessions")}
         </button>
@@ -1449,42 +1449,23 @@ export default function App() {
       let processedAttachments: FileAttachment[] | undefined
 
       if (attachments?.length) {
-        // Store each attachment to disk (generates thumbnails, converts Office→markdown)
-        // Use allSettled so one failure doesn't kill all attachments
+        // Finish every store before acknowledging dispatch or retaining the draft.
         const storeResults = await Promise.allSettled(
           attachments.map(a => window.electronAPI.storeAttachment(sessionId, a))
         )
 
-        // Filter successful stores, warn about failures
-        storedAttachments = []
-        const successfulAttachments: FileAttachment[] = []
-        storeResults.forEach((result, i) => {
-          if (result.status === 'fulfilled') {
-            storedAttachments!.push(result.value)
-            successfulAttachments.push(attachments[i])
-          } else {
-            console.warn(`Failed to store attachment "${attachments[i].name}":`, result.reason)
-          }
-        })
-
-        // Notify user about failed attachments
-        const failedCount = storeResults.filter(r => r.status === 'rejected').length
-        if (failedCount > 0) {
-          console.warn(`${failedCount} attachment(s) failed to store`)
-          // Add warning message to session so user knows some attachments weren't included
-          const failedNames = attachments
-            .filter((_, i) => storeResults[i].status === 'rejected')
-            .map(a => a.name)
-            .join(', ')
-          updateSessionById(sessionId, (s) => ({
-            messages: [...s.messages, {
-              id: generateMessageId(),
-              role: 'warning' as const,
-              content: `⚠️ ${failedCount} attachment(s) could not be stored and will not be sent: ${failedNames}`,
-              timestamp: Date.now()
-            }]
-          }))
+        // A failed attachment must not silently turn an illustrated request into
+        // a text-only send. The composer keeps its draft until this acknowledges
+        // dispatch, so reject the whole submission before creating a user turn.
+        const failedStore = storeResults.find(result => result.status === 'rejected')
+        if (failedStore?.status === 'rejected') {
+          throw failedStore.reason instanceof Error ? failedStore.reason : new Error(String(failedStore.reason))
         }
+
+        storedAttachments = storeResults.map(result => {
+          if (result.status === 'rejected') throw result.reason
+          return result.value
+        })
 
         // Step 2: Create processed attachments for Claude
         // - Office files: Convert to text with markdown content
@@ -1492,7 +1473,7 @@ export default function App() {
         // - All: Include storedPath so agent knows where files are stored
         // - Resized images: Use resizedBase64 instead of original large base64
         processedAttachments = await Promise.all(
-          successfulAttachments.map(async (att, i) => {
+          attachments.map(async (att, i) => {
             const stored = storedAttachments?.[i]
             if (!stored) {
               console.error(`Missing stored attachment at index ${i}`)
@@ -1505,6 +1486,8 @@ export default function App() {
             // is authoritative for what the model is sent.
             return {
               ...att,
+              type: stored.type,
+              name: stored.name,
               storedPath: stored.storedPath,
               markdownPath: stored.markdownPath,
               // Reflect the server's final format so the model receives a supported
@@ -1603,6 +1586,7 @@ export default function App() {
         badges: badges.length > 0 ? badges : undefined,
         optimisticMessageId: userMessage.id,
       })
+      return true
     } catch (error) {
       console.error('Failed to send message:', error)
       updateSessionById(sessionId, (s) => ({
@@ -1617,6 +1601,7 @@ export default function App() {
           }
         ]
       }))
+      return false
     }
   }, [updateSessionById, skills, sources, windowWorkspaceSlug, store])
 

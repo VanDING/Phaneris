@@ -29,10 +29,10 @@ export function MarkdownArtifactEditor({ value, onChange }: { value: string; onC
       <Button size="sm" variant={mode === 'visual' ? 'secondary' : 'ghost'} aria-pressed={mode === 'visual'} disabled={sourceRequired}
         onClick={() => { canWrite.current = false; setLossless(false); setMode('visual') }}>{t('artifact.visualEditor')}</Button>
       <Button size="sm" variant={mode === 'source' ? 'secondary' : 'ghost'} aria-pressed={mode === 'source'} onClick={() => { canWrite.current = false; setMode('source') }}>{t('artifact.sourceEditor')}</Button>
-      {sourceRequired && <span role="status" className="text-sm text-foreground/80">{t('artifact.sourceRequired')}</span>}
+      {sourceRequired && <span role="status" className="text-body text-foreground/80">{t('artifact.sourceRequired')}</span>}
     </div>
     {mode === 'source' ? <textarea data-testid="artifact-source-editor" aria-label={t('artifact.sourceEditor')} value={value}
-      onChange={event => onChange(event.target.value)} className="h-full min-h-0 w-full resize-none bg-transparent p-4 font-mono text-sm leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+      onChange={event => onChange(event.target.value)} className="h-full min-h-0 w-full resize-none bg-transparent p-4 font-mono text-body leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-ring" />
       : <div className="min-h-0 flex-1 overflow-auto p-4"><EditorBoundary fallback={fail}>
         <React.Suspense fallback={<span role="status">{t('common.loading')}</span>}>
           <RichEditor content={value} markdownEngine="official" editable={lossless} onReady={ready}

@@ -71,12 +71,12 @@ function displayPath(filePath: string): string {
 
 const contextMenuContentClasses = cn(
   'popover-styled z-dropdown min-w-40 overflow-hidden p-1',
-  'w-fit font-sans whitespace-nowrap text-xs flex flex-col gap-0.5',
+  'w-fit font-sans whitespace-nowrap text-meta flex flex-col gap-0.5',
   'animate-in fade-in-0 zoom-in-95'
 )
 
 const contextMenuItemClasses = cn(
-  'relative flex cursor-default items-center gap-2 px-2 py-1.5 text-sm outline-hidden select-none',
+  'relative flex cursor-default items-center gap-2 px-2 py-1.5 text-body outline-hidden select-none',
   '[&_svg]:pointer-events-none [&_svg]:shrink-0',
   'pr-4 rounded-shape-sm hover:bg-foreground/[0.03] focus:bg-foreground/[0.03]',
   '[&>svg]:h-3.5 [&>svg]:w-3.5 [&>svg]:shrink-0'
@@ -165,7 +165,7 @@ function FilePathBadge({ filePath }: FilePathBadgeProps) {
             <button
               className={cn(
                 'flex items-center gap-1.5 h-control-sm px-2.5 rounded-shape-md',
-                'font-sans text-body font-medium text-foreground/70',
+                'font-sans text-body font-medium text-text-secondary',
                 'bg-background shadow-minimal',
                 'min-w-0 cursor-pointer group'
               )}

@@ -19,7 +19,7 @@ export default function PdfPreview({ bytes, onError }: { bytes: Uint8Array; onEr
     return () => observer.disconnect()
   }, [])
   return <div ref={host} className="flex h-full min-h-0 flex-col">
-    <div className="flex shrink-0 items-center justify-center gap-3 border-b p-2 text-sm">
+    <div className="flex shrink-0 items-center justify-center gap-3 border-b p-2 text-body">
       <button type="button" className="craft-control rounded-control px-2 text-text-secondary hover:bg-action-hover disabled:opacity-50" disabled={page <= 1} onClick={() => setPage(value => value - 1)}>{t('filePreview.previous')}</button>
       <span>{page} / {pages || '…'}</span>
       <button type="button" className="craft-control rounded-control px-2 text-text-secondary hover:bg-action-hover disabled:opacity-50" disabled={page >= pages} onClick={() => setPage(value => value + 1)}>{t('filePreview.next')}</button>

@@ -46,7 +46,7 @@ function CommandInput({
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          'craft-control flex h-10 w-full rounded-md bg-transparent py-3 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+          'craft-control flex h-control-xl w-full rounded-md bg-transparent py-3 text-body placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
         {...props}
@@ -75,7 +75,7 @@ function CommandEmpty({
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
-      className={cn('py-6 text-center text-sm', className)}
+      className={cn('py-6 text-center text-body', className)}
       {...props}
     />
   )
@@ -89,7 +89,7 @@ function CommandGroup({
     <CommandPrimitive.Group
       data-slot="command-group"
       className={cn(
-        'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground',
+        'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-meta [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground',
         className
       )}
       {...props}
@@ -118,7 +118,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "craft-menu-item relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-[var(--theme-menu-item-padding-y)] text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-foreground/5 data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        "craft-menu-item relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-[var(--theme-menu-item-padding-y)] text-body outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-foreground/5 data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -134,7 +134,7 @@ function CommandShortcut({
     <span
       data-slot="command-shortcut"
       className={cn(
-        'ml-auto text-xs tracking-widest text-muted-foreground',
+        'ml-auto text-meta tracking-widest text-muted-foreground',
         className
       )}
       {...props}

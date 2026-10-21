@@ -152,13 +152,13 @@ export function RecoveryReconciliationDialog({
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400" />
+            <AlertTriangle className="size-4 text-info-text" />
             {t('recovery.dialog.title')}
           </DialogTitle>
           <DialogDescription>{t('recovery.dialog.description')}</DialogDescription>
         </DialogHeader>
 
-        <div className="rounded-md border border-amber-500/25 bg-amber-500/5 p-3 text-xs">
+        <div className="rounded-md border border-info/25 bg-info/5 p-3 text-meta">
           <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
             <dt className="text-muted-foreground">{t('recovery.dialog.tool')}</dt>
             <dd className="font-medium">{activity?.displayName || activity?.toolName || t('common.unknown')}</dd>
@@ -198,7 +198,7 @@ export function RecoveryReconciliationDialog({
               disabled={isSubmitting}
             />
             {decision === 'manual_abandon' && (
-              <p className="text-xs text-muted-foreground">{t('recovery.dialog.evidenceOptional')}</p>
+              <p className="text-meta text-muted-foreground">{t('recovery.dialog.evidenceOptional')}</p>
             )}
           </div>
 

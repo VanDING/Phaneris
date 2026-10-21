@@ -135,7 +135,7 @@ function getTurnKey(turn: Turn): string {
 
 interface ChatDisplayProps {
   session: Session | null
-  onSendMessage: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void
+  onSendMessage: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void | Promise<boolean | void>
   onOpenFile: (path: string) => void
   onOpenUrl: (url: string) => void
   // Model selection
@@ -406,7 +406,7 @@ function ProcessingIndicator({ startTime, statusMessage }: ProcessingIndicatorPr
           <span className="whitespace-nowrap">{displayMessage}</span>
         </ContentSwap>
         {elapsed >= 1 && (
-          <span className="text-muted-foreground/60 ml-1 tabular-nums">
+          <span className="text-text-secondary ml-1 tabular-nums">
             {formatElapsed(elapsed)}
           </span>
         )}
@@ -1226,7 +1226,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
   // Handle message submission from InputContainer
   // Backend handles interruption and queueing if currently processing
-  const handleSubmit = (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => {
+  const handleSubmit = async (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => {
     const hasBaseMessage = message.trim().length > 0
     const followUpSection = formatFollowUpSection(pendingFollowUpAnnotations, {
       includeTopSeparator: hasBaseMessage,
@@ -1238,7 +1238,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
     // Force stick-to-bottom when user sends a message
     isStickToBottomRef.current = true
-    onSendMessage(normalizedMessage, attachments, skillSlugs)
+    if (await onSendMessage(normalizedMessage, attachments, skillSlugs) === false) return false
 
     // Persist sent marker on follow-up annotations so TurnCard can distinguish
     // sent vs pending follow-ups. If user edits a follow-up later, TurnCard
@@ -1275,6 +1275,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     requestAnimationFrame(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: scrollBehavior('follow') })
     })
+    return true
   }
 
   const handleSaveAndSendFollowUp = useCallback((_target: {
@@ -1303,6 +1304,11 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   // Handle stop request from InputContainer
   // silent=true when redirecting (sending new message), silent=false when user clicks Stop button
   const handleStop = (silent = false) => {
+    if (starterRunRef.current) {
+      starterRunRef.current.cancelled = true
+      starterRunRef.current = null
+      return
+    }
     if (!session?.isProcessing) return
 
     // Explicit Stop (not a redirect/new-message send): put the in-flight prompt
@@ -1566,9 +1572,23 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   const liveSendableRef = React.useRef(false)
   liveSendableRef.current = !(isInputDisabled || disableSend || connectionUnavailable)
   const mountedRef = React.useRef(true)
-  React.useEffect(() => () => { mountedRef.current = false }, [])
+  React.useEffect(() => {
+    mountedRef.current = true
+    return () => { mountedRef.current = false }
+  }, [])
   /** One enable-then-send at a time: a double click must not send twice. */
-  const starterRunRef = React.useRef<string | null>(null)
+  const starterRunRef = React.useRef<{ sessionId: string; cancelled: boolean } | null>(null)
+  React.useEffect(() => {
+    const cancelPendingStarter = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.isComposing || event.defaultPrevented) return
+      if (!starterRunRef.current || !zoneRef.current?.contains(event.target as Node)) return
+      starterRunRef.current.cancelled = true
+      starterRunRef.current = null
+      event.preventDefault()
+    }
+    window.addEventListener('keydown', cancelPendingStarter)
+    return () => window.removeEventListener('keydown', cancelPendingStarter)
+  }, [zoneRef])
 
   const handleRunChatStarter = async (starter: { label: string; prompt: string }) => {
     if (!session) return
@@ -1587,7 +1607,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
       availableSkills: (skills ?? []).map(skill => skill.slug),
       enabledSources: session.enabledSourceSlugs ?? [],
     })
-    starterRunRef.current = runSessionId
+    const run = { sessionId: runSessionId, cancelled: false }
+    starterRunRef.current = run
     try {
       if (action.enableSources.length > 0 && onSourcesChange) {
         // Wait for the server to apply the selection: a starter enables its source
@@ -1607,14 +1628,16 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
         }
         // The click is only still valid for the session, workspace and sendable
         // state it started with.
-        if (!mountedRef.current) return
+        if (run.cancelled || !mountedRef.current) return
         if (liveSessionRef.current?.id !== runSessionId) return
         if ((liveWorkspaceRef.current ?? liveSessionRef.current?.workspaceId) !== runWorkspaceId) return
         if (!liveSendableRef.current) return
       }
-      handleSubmit(action.prompt, undefined, action.skillSlugs.length > 0 ? action.skillSlugs : undefined)
+      await handleSubmit(action.prompt, undefined, action.skillSlugs.length > 0 ? action.skillSlugs : undefined)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error))
     } finally {
-      starterRunRef.current = null
+      if (starterRunRef.current === run) starterRunRef.current = null
     }
   }
 
@@ -1684,7 +1707,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                         transition={compactMode ? { duration: 0 } : { duration: MOTION_DURATION.fast, ease: MOTION_EASE.enter }}
                         className="flex items-center justify-center h-64"
                       >
-                        <Spinner className="text-foreground/30" />
+                        <Spinner className="text-text-secondary" />
                       </motion.div>
                     ) : messagesLoadError ? (
                       <motion.div
@@ -1702,15 +1725,15 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                             '--shadow-color': 'var(--destructive)',
                           } as React.CSSProperties}
                         >
-                          <AlertTriangle className="mx-auto mb-2 h-4 w-4 text-destructive/70" />
-                          <div className="text-sm font-medium text-destructive">{t("chat.failedToLoadConversation")}</div>
-                          <p className="mt-1 break-words text-xs text-destructive/70">{messagesLoadError}</p>
+                          <AlertTriangle className="mx-auto mb-2 h-4 w-4 text-destructive-text" />
+                          <div className="text-body font-medium text-destructive">{t("chat.failedToLoadConversation")}</div>
+                          <p className="mt-1 break-words text-meta text-destructive-text">{messagesLoadError}</p>
                           {onRetryMessagesLoad && (
                             <button
                               type="button"
                               onClick={onRetryMessagesLoad}
                               disabled={messagesRetrying}
-                              className="mt-3 rounded border border-destructive/20 px-2 py-0.5 text-xs text-destructive/70 transition-colors hover:border-destructive/40 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
+                              className="mt-3 rounded border border-destructive/20 px-2 py-0.5 text-meta text-destructive-text transition-colors hover:border-destructive/40 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
                             >
                               {messagesRetrying ? t("common.retrying") : t("common.retry")}
                             </button>
@@ -1739,22 +1762,22 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                   {/* Empty state for compact mode - inviting conversational prompt, centered in full popover */}
                   {compactMode && turns.length === 0 && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center select-none gap-1 pointer-events-none">
-                      <span className="text-sm text-muted-foreground">{t("editPopover.whatToChange")}</span>
-                      <span className="text-xs text-muted-foreground/50">{t("editPopover.justDescribe")}</span>
+                      <span className="text-body text-muted-foreground">{t("editPopover.whatToChange")}</span>
+                      <span className="text-meta text-text-secondary">{t("editPopover.justDescribe")}</span>
                     </div>
                   )}
                   {!compactMode && hasUnrenderedLoadedMessages && (
                     <div className="flex h-64 items-center justify-center px-4 text-center">
                       <div className="max-w-sm rounded-shape-lg border border-border/50 bg-foreground/[0.03] px-4 py-3">
-                        <CircleAlert className="mx-auto mb-2 h-4 w-4 text-foreground/50" />
-                        <div className="text-sm font-medium text-foreground/70">Conversation loaded, but no renderable messages were found.</div>
-                        <p className="mt-1 text-xs text-foreground/50">Try reloading the session. If this persists, the message history may contain an unsupported format.</p>
+                        <CircleAlert className="mx-auto mb-2 h-4 w-4 text-text-secondary" />
+                        <div className="text-body font-medium text-text-secondary">Conversation loaded, but no renderable messages were found.</div>
+                        <p className="mt-1 text-meta text-text-secondary">Try reloading the session. If this persists, the message history may contain an unsupported format.</p>
                       </div>
                     </div>
                   )}
                   {/* Load more indicator - shown when there are older messages */}
                   {hasMoreAbove && (
-                    <div className="text-center text-muted-foreground/60 text-xs py-3 select-none">
+                    <div className="text-center text-text-secondary text-meta py-3 select-none">
                       ↑ {t('chat.scrollUpForEarlier', { count: startIndex })}
                     </div>
                   )}
@@ -2259,10 +2282,10 @@ function ErrorMessage({ message, onOpenUrl, sessionId, onRetry }: { message: Mes
           '--shadow-color': 'var(--destructive)',
         } as React.CSSProperties}
       >
-        <div className="text-xs text-destructive/50 mb-0.5 font-semibold">
+        <div className="text-meta text-destructive-text mb-0.5 font-semibold">
           {message.errorTitle || t('common.error')}
         </div>
-        <p className="text-sm text-destructive">{message.content}</p>
+        <p className="text-body text-destructive">{message.content}</p>
 
         {/* Action buttons */}
         {actions && actions.length > 0 && (
@@ -2277,7 +2300,7 @@ function ErrorMessage({ message, onOpenUrl, sessionId, onRetry }: { message: Mes
                     onRetry,
                   })
                 }}
-                className="text-xs px-2 py-0.5 rounded border border-destructive/20 text-destructive/70 hover:text-destructive hover:border-destructive/40 transition-colors"
+                className="text-meta px-2 py-0.5 rounded border border-destructive/20 text-destructive-text hover:text-destructive hover:border-destructive/40 transition-colors"
               >
                 {action.label}{action.action === 'open_url' ? ' ↗' : ''}
               </button>
@@ -2290,14 +2313,14 @@ function ErrorMessage({ message, onOpenUrl, sessionId, onRetry }: { message: Mes
           <div className="mt-2">
             <button
               onClick={() => setDetailsOpen(!detailsOpen)}
-              className="flex items-center gap-1 text-xs text-destructive/70 hover:text-destructive transition-colors"
+              className="flex items-center gap-1 text-meta text-destructive-text hover:text-destructive transition-colors"
             >
               {detailsOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
               <span>{detailsOpen ? t('chat.hideTechnicalDetails') : t('chat.showTechnicalDetails')}</span>
             </button>
 
             <InlineExpand isOpen={detailsOpen} clip="clip">
-              <div className="mt-2 pt-2 border-t border-destructive/20 text-xs text-destructive/60 font-mono space-y-0.5">
+              <div className="mt-2 pt-2 border-t border-destructive/20 text-meta text-destructive-text font-mono space-y-0.5">
                 {message.errorDetails?.map((detail, i) => (
                   <div key={i}>{detail}</div>
                 ))}
@@ -2416,7 +2439,7 @@ function MessageBubble({
       return (
         <div className="flex items-center gap-3 my-12 px-3">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-sm text-muted-foreground/70 select-none">
+          <span className="text-body text-text-secondary select-none">
             Conversation Compacted
           </span>
           <div className="flex-1 h-px bg-border" />
@@ -2448,13 +2471,13 @@ function MessageBubble({
     return (
       <div className="flex justify-start">
         <div className="max-w-[80%] bg-info/10 rounded-shape-lg pl-5 pr-4 pt-2 pb-2.5 break-words select-none">
-          <div className="text-xs text-info/50 mb-0.5 font-semibold">
+          <div className="text-meta text-info-text mb-0.5 font-semibold">
             Warning
           </div>
-          <p className="text-sm text-info">{message.content}</p>
+          <p className="text-body text-info">{message.content}</p>
           {onReconcileModel && message.durableOperationId && (
             <button
-              className="mt-2 rounded border border-info/30 px-2 py-1 text-xs text-info hover:border-info/60"
+              className="mt-2 rounded border border-info/30 px-2 py-1 text-meta text-info hover:border-info/60"
               onClick={() => onReconcileModel(message)}
             >
               {t('recovery.model.review')}

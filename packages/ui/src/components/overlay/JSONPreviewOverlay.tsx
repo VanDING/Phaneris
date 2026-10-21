@@ -155,7 +155,7 @@ export function JSONPreviewOverlay({
                   const isCopied = (props as Record<string, unknown>)['data-copied']
                   return isCopied ? (
                     <Check
-                      className="ml-1.5 inline-flex cursor-pointer text-green-500"
+                      className="ml-1.5 inline-flex cursor-pointer text-success-text"
                       size={10}
                       onClick={props.onClick}
                     />

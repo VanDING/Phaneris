@@ -79,11 +79,11 @@ function SurfaceErrorFallback({
         <div className="mx-auto grid h-9 w-9 place-items-center rounded-full bg-destructive/10 text-destructive">
           <AlertTriangle className="h-4 w-4" />
         </div>
-        <p className="mt-3 text-sm font-medium text-foreground">{t('errors.surfaceFailedTitle')}</p>
-        <p className="mt-1 text-xs text-foreground/60">{t('errors.surfaceFailedDescription')}</p>
-        <p className="mt-2 text-meta text-foreground/35">{surface}</p>
+        <p className="mt-3 text-body font-medium text-foreground">{t('errors.surfaceFailedTitle')}</p>
+        <p className="mt-1 text-meta text-text-secondary">{t('errors.surfaceFailedDescription')}</p>
+        <p className="mt-2 text-meta text-text-secondary">{surface}</p>
         {errorMessage && (
-          <pre className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap rounded-md bg-foreground/[0.04] p-2 text-left text-micro text-destructive/80">
+          <pre className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap rounded-md bg-foreground/[0.04] p-2 text-left text-micro text-destructive-text">
             {errorMessage}
           </pre>
         )}

@@ -80,6 +80,7 @@ export const StoredConfigSchema = z.object({
   colorTheme: z.string().min(1).optional(),
   themeMode: z.enum(['light', 'dark', 'system']).optional(),
   themeFont: z.enum(['theme', 'inter', 'system']).optional(),
+  uiScale: z.union([z.literal(1), z.literal(1.1), z.literal(1.25)]).optional(),
   // Note: tokenDisplay, showCost, cumulativeUsage, defaultPermissionMode removed
   // Permission mode and cyclable modes are now per-workspace in workspace config.json
 });

@@ -29,15 +29,15 @@ import { CONTEXT_HANDOFF_ACTIVE_PHASES } from '@phaneris/shared/agent/context-po
 const PLATFORM_PILL: Record<string, { label: string; colorClass: string }> = {
   telegram: {
     label: 'Telegram',
-    colorClass: 'bg-sky-500/10 text-sky-600 dark:bg-sky-400/15 dark:text-sky-300',
+    colorClass: 'bg-accent/10 text-accent-text',
   },
   whatsapp: {
     label: 'WhatsApp',
-    colorClass: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-300',
+    colorClass: 'bg-success/10 text-success-text',
   },
   wechat: {
     label: 'WeChat',
-    colorClass: 'bg-green-500/10 text-green-600 dark:bg-green-400/15 dark:text-green-300',
+    colorClass: 'bg-success/10 text-success-text',
   },
 };
 export interface SessionItemProps {
@@ -316,8 +316,8 @@ export function SessionItem({
           className={cn(
             "inline-flex items-center justify-center min-w-[24px] px-1 py-0.5 rounded-shape-md text-micro font-medium tabular-nums leading-tight whitespace-nowrap shadow-tinted",
             isSelected
-              ? "bg-yellow-300/50 border border-yellow-500 text-yellow-900"
-              : "bg-yellow-300/10 border border-yellow-600/20 text-yellow-800"
+              ? "bg-info/50 border border-info text-info-text"
+              : "bg-info/10 border border-info/20 text-info-text"
           )}
           style={{
             '--shadow-color': isSelected ? 'rgb(234, 179, 8)' : 'rgb(133, 77, 14)',

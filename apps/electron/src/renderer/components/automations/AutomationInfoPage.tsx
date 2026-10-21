@@ -138,7 +138,7 @@ export function AutomationInfoPage({
             </Info_Table.Row>
             {automation.matcher && (
               <Info_Table.Row label={t('automations.labelOnlyWhenMatching')}>
-                <code className="text-xs font-mono bg-foreground/5 px-1.5 py-0.5 rounded">
+                <code className="text-meta font-mono bg-foreground/5 px-1.5 py-0.5 rounded">
                   {automation.matcher}
                 </code>
               </Info_Table.Row>
@@ -147,7 +147,7 @@ export function AutomationInfoPage({
               <>
                 <Info_Table.Row label={t('automations.labelRepeats')} value={describeCron(automation.cron)} />
                 <Info_Table.Row label={t('automations.labelScheduleExpression')}>
-                  <code className="text-xs font-mono bg-foreground/5 px-1.5 py-0.5 rounded">
+                  <code className="text-meta font-mono bg-foreground/5 px-1.5 py-0.5 rounded">
                     {automation.cron}
                   </code>
                 </Info_Table.Row>
@@ -157,7 +157,7 @@ export function AutomationInfoPage({
                       {(() => {
                         const spansYears = nextRuns.length > 1 && nextRuns[0].getFullYear() !== nextRuns[nextRuns.length - 1].getFullYear()
                         return nextRuns.map((date, i) => (
-                          <span key={i} className="text-sm text-foreground/70">
+                          <span key={i} className="text-body text-text-secondary">
                             {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', ...(spansYears && { year: 'numeric' }) })}{' '}
                             {date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}
                           </span>
@@ -182,7 +182,7 @@ export function AutomationInfoPage({
             <Info_Table>
               {flattenConditions(automation.conditions).map((row, i) => (
                 <Info_Table.Row key={i} label={row.label}>
-                  <span className="text-sm text-foreground/70">
+                  <span className="text-body text-text-secondary">
                     {row.description}
                   </span>
                 </Info_Table.Row>
@@ -231,10 +231,10 @@ export function AutomationInfoPage({
               <Info_Table.Row label={t('automations.labelTelegramTopic')}>
                 <div className="flex flex-col gap-1">
                   <div className="inline-flex items-center gap-1.5 text-foreground">
-                    <Hash className="size-3.5 text-foreground/50" />
-                    <span className="font-mono text-xs">{automation.telegramTopic}</span>
+                    <Hash className="size-3.5 text-text-secondary" />
+                    <span className="font-mono text-meta">{automation.telegramTopic}</span>
                   </div>
-                  <span className="text-xs text-foreground/50">
+                  <span className="text-meta text-text-secondary">
                     {hasSupergroup === false
                       ? t('automations.telegramTopicHintNoSupergroup')
                       : t('automations.telegramTopicHintBound')}

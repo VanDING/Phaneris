@@ -155,7 +155,7 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
     <JsonErrorBoundary fallback={fallback}>
       <div className={cn('relative group rounded-shape-lg overflow-hidden border bg-muted/30', className)}>
         {/* Header — matches CodeBlock full mode (label + copy on hover) */}
-        <div className="flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b text-xs">
+        <div className="flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b text-meta">
           <span className="text-muted-foreground font-medium uppercase tracking-wide">json</span>
           <button
             onClick={handleCopy}
@@ -171,7 +171,7 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
         </div>
 
         {/* Interactive tree viewer */}
-        <div className="p-3 overflow-x-auto text-sm">
+        <div className="p-3 overflow-x-auto text-body">
           <JsonView
             value={parsed}
             style={jsonTheme}
@@ -186,7 +186,7 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
                 const isCopied = (props as Record<string, unknown>)['data-copied']
                 return isCopied ? (
                   <Check
-                    className="ml-1.5 inline-flex cursor-pointer text-green-500"
+                    className="ml-1.5 inline-flex cursor-pointer text-success-text"
                     size={10}
                     onClick={props.onClick}
                   />

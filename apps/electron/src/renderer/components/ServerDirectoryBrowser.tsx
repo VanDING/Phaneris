@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { useRegisterModal } from '@/context/ModalContext'
 import type { DirectoryListingResult } from '../../shared/types'
 import { FolderIcon, FolderSymlinkIcon, ChevronRightIcon } from 'lucide-react'
-import { Spinner } from '@phaneris/ui'
+import { Spinner, useInitialFocus } from '@phaneris/ui'
 
 /**
  * Detect paths that are clearly from the wrong platform.
@@ -47,6 +47,8 @@ export function ServerDirectoryBrowser({
 }: ServerDirectoryBrowserProps) {
   useRegisterModal(open, onCancel)
   const { t } = useTranslation()
+  // Focus target for the path field; the hook is the explicit replacement for autoFocus.
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
 
   const [listing, setListing] = useState<DirectoryListingResult | null>(null)
   const [loading, setLoading] = useState(false)
@@ -54,7 +56,6 @@ export function ServerDirectoryBrowser({
   const [pathInput, setPathInput] = useState('')
   const [selectedEntry, setSelectedEntry] = useState<string | null>(null)
   const [serverHomePath, setServerHomePath] = useState<string | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   // Navigate to a directory (for browse mode)
   const navigateTo = useCallback(async (dirPath: string) => {
@@ -184,14 +185,14 @@ export function ServerDirectoryBrowser({
       {/* Path input */}
       <div className="flex gap-2">
         <Input
-          ref={inputRef}
+          ref={initialFocusRef}
           value={pathInput}
           onChange={e => setPathInput(e.target.value)}
           onKeyDown={e => {
             if (e.key === 'Enter') handlePathSubmit()
           }}
           placeholder={t("common.enterPath")}
-          className="flex-1 font-mono text-xs"
+          className="flex-1 font-mono text-meta"
         />
         <Button variant="outline" size="sm" onClick={handlePathSubmit} disabled={loading}>
           Go
@@ -200,10 +201,10 @@ export function ServerDirectoryBrowser({
 
       {/* Breadcrumbs */}
       {listing && (
-        <div className="flex items-center gap-0.5 text-xs text-muted-foreground overflow-x-auto py-1 min-h-[24px]">
+        <div className="flex items-center gap-0.5 text-meta text-muted-foreground overflow-x-auto py-1 min-h-[24px]">
           {listing.breadcrumbs.map((crumb, i) => (
             <span key={crumb.path} className="flex items-center gap-0.5 shrink-0">
-              {i > 0 && <ChevronRightIcon className="size-3 text-muted-foreground/50" />}
+              {i > 0 && <ChevronRightIcon className="size-3 text-text-secondary" />}
               <button
                 type="button"
                 onClick={() => navigateTo(crumb.path)}
@@ -221,25 +222,25 @@ export function ServerDirectoryBrowser({
         <div className="overflow-y-auto max-h-[300px]">
           {loading && (
             <div className="flex items-center justify-center gap-2 py-8 text-muted-foreground">
-              <Spinner className="text-sm" />
+              <Spinner className="text-body" />
               Loading...
             </div>
           )}
 
           {error && (
-            <div className="px-3 py-4 text-sm text-destructive">
+            <div className="px-3 py-4 text-body text-destructive">
               {error}
             </div>
           )}
 
           {!loading && !error && listing?.truncated && (
-            <div className="border-b border-foreground/10 px-3 py-2 text-xs text-muted-foreground">
+            <div className="border-b border-foreground/10 px-3 py-2 text-meta text-muted-foreground">
               Showing the first {listing.entries.length} folders out of {listing.totalEntries}. Narrow the path if the folder you want is missing.
             </div>
           )}
 
           {!loading && !error && listing && listing.entries.length === 0 && (
-            <div className="px-3 py-4 text-sm text-muted-foreground">
+            <div className="px-3 py-4 text-body text-muted-foreground">
               No subdirectories. Use the path input above to navigate.
             </div>
           )}
@@ -250,7 +251,7 @@ export function ServerDirectoryBrowser({
               type="button"
               onClick={() => handleEntryClick(entry.path)}
               onDoubleClick={() => handleEntryDoubleClick(entry.path)}
-              className={`w-full flex items-center gap-2 px-3 py-1.5 text-sm text-left transition-colors hover:bg-foreground/5 ${
+              className={`w-full flex items-center gap-2 px-3 py-1.5 text-body text-left transition-colors hover:bg-foreground/5 ${
                 selectedEntry === entry.path ? 'bg-foreground/5' : ''
               }`}
             >
@@ -260,7 +261,7 @@ export function ServerDirectoryBrowser({
               }
               <span className="truncate">{entry.name}</span>
               {entry.isSymlink && (
-                <span className="text-xs text-muted-foreground/60 shrink-0">symlink</span>
+                <span className="text-meta text-text-secondary shrink-0">symlink</span>
               )}
             </button>
           ))}
@@ -272,19 +273,18 @@ export function ServerDirectoryBrowser({
   // Manual mode content
   const renderManualMode = () => (
     <>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-body text-muted-foreground">
         Enter the full path on the server:
       </p>
       <Input
-        ref={inputRef}
+        ref={initialFocusRef}
         value={pathInput}
         onChange={e => setPathInput(e.target.value)}
         onKeyDown={e => {
           if (e.key === 'Enter') handleSelect()
         }}
         placeholder="/Users/username/projects/my-project"
-        className="font-mono text-xs"
-        autoFocus
+        className="font-mono text-meta"
       />
     </>
   )

@@ -306,7 +306,12 @@ export function SimpleDropdown({
 
   return (
     <>
+      {/* Presentation wrapper: it widens the hit area around whatever `trigger`
+          renders (a Button, in every current caller), and the trigger keeps the
+          role, the tab stop and the keyboard activation. Keyboard Enter on the
+          trigger bubbles here exactly like a click. */}
       <div
+        role="presentation"
         ref={triggerRef}
         onClick={handleToggle}
         className={cn('inline-flex', disabled && 'opacity-50 pointer-events-none')}

@@ -172,7 +172,7 @@ export function InlineExecution({
 
       {/* Error message - rendered as markdown */}
       {error && (
-        <div className={cn("text-destructive/80 leading-relaxed prose-compact", SIZE_CONFIG.fontSize)}>
+        <div className={cn("text-destructive-text leading-relaxed prose-compact", SIZE_CONFIG.fontSize)}>
           <Markdown>{error}</Markdown>
         </div>
       )}

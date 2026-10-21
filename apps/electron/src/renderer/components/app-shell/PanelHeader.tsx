@@ -166,7 +166,7 @@ export function PanelHeader({
     >
       <div className="flex min-w-0 max-w-full items-center justify-center gap-1">
         <h1 className={cn(
-          "truncate font-sans text-sm font-semibold leading-tight",
+          "truncate font-sans text-body font-semibold leading-tight",
           isRegeneratingTitle && "animate-shimmer-text"
         )}>{title}</h1>
         {badge}

@@ -15,12 +15,12 @@ setupI18n([LanguageDetector, initReactI18next])
 function CrashFallback() {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-foreground/50 gap-3">
-      <p className="text-base font-medium">{t("auth.somethingWentWrong")}</p>
+    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
+      <p className="text-reading font-medium">{t("auth.somethingWentWrong")}</p>
       <p className="text-body">{t("errors.pleaseReload")}</p>
       <button
         onClick={() => window.location.reload()}
-        className="mt-2 px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-foreground/70 cursor-pointer"
+        className="mt-2 px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
       >
         {t("common.reload")}
       </button>

@@ -58,7 +58,7 @@ interface SpreadsheetSpec {
 // ── Cell formatting ──────────────────────────────────────────────────────────
 
 function formatCell(value: unknown, type?: ColumnDef['type']): React.ReactNode {
-  if (value === null || value === undefined) return <span className="text-muted-foreground/40">—</span>
+  if (value === null || value === undefined) return <span className="text-text-secondary">—</span>
   switch (type) {
     case 'currency': {
       const num = typeof value === 'number' ? value : Number(value)
@@ -209,7 +209,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
         <div className="px-3 py-2 bg-muted/50 border-b">
           <span className="text-label text-muted-foreground font-medium">{errorLabel}</span>
         </div>
-        <div className="py-6 text-center text-destructive/70 text-body">{fileError}</div>
+        <div className="py-6 text-center text-destructive-text text-body">{fileError}</div>
       </div>
     )
   }
@@ -236,14 +236,14 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
         {/* Column letter headers */}
         <thead>
           <tr className="border-b border-foreground/[0.08] bg-foreground/[0.03]">
-            <th className="text-center py-1 px-2 font-normal text-muted-foreground/40 w-10 border-r border-foreground/[0.06] text-meta" />
+            <th className="text-center py-1 px-2 font-normal text-text-secondary w-10 border-r border-foreground/[0.06] text-meta" />
             {colLetters.map((letter) => (
-              <th key={letter} className="text-center py-1 px-3 font-normal text-muted-foreground/40 border-r border-foreground/[0.06] last:border-0 text-meta">{letter}</th>
+              <th key={letter} className="text-center py-1 px-3 font-normal text-text-secondary border-r border-foreground/[0.06] last:border-0 text-meta">{letter}</th>
             ))}
           </tr>
           {/* Row 1: column labels */}
           <tr className="border-b border-foreground/[0.06] bg-foreground/[0.02]">
-            <td className="text-center py-1.5 px-2 text-muted-foreground/40 border-r border-foreground/[0.06] text-meta font-mono">1</td>
+            <td className="text-center py-1.5 px-2 text-text-secondary border-r border-foreground/[0.06] text-meta font-mono">1</td>
             {parsed.columns.map((col) => (
               <td key={col.key} className="py-1.5 px-3 font-semibold text-foreground border-r border-foreground/[0.06] last:border-0">{col.label}</td>
             ))}
@@ -252,7 +252,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
         <tbody>
           {parsed.rows.map((row, i) => (
             <tr key={i} className="border-b border-foreground/[0.03] last:border-0 hover:bg-foreground/[0.015] transition-colors">
-              <td className="text-center py-1.5 px-2 text-muted-foreground/40 border-r border-foreground/[0.06] text-meta font-mono">{i + 2}</td>
+              <td className="text-center py-1.5 px-2 text-text-secondary border-r border-foreground/[0.06] text-meta font-mono">{i + 2}</td>
               {parsed.columns.map((col) => {
                 const val = row[col.key]
                 const numeric = isNumericType(col.type) || isNumericValue(val)
@@ -283,7 +283,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
             "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-[7px] right-2 p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
             "opacity-0 group-hover:opacity-100",
             "bg-background shadow-minimal",
-            "text-muted-foreground/50 hover:text-foreground",
+            "text-text-secondary hover:text-foreground",
             "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100"
           )}
           title={t('common.viewFullscreen')}

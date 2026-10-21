@@ -2037,7 +2037,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/files.ts",
-          "line": 637,
+          "line": 642,
           "args": [
             "dirPath: string"
           ],
@@ -2058,7 +2058,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/files.ts",
-          "line": 552,
+          "line": 557,
           "args": [
             "basePath: string",
             "query: string"

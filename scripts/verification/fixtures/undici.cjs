@@ -1,0 +1,76 @@
+const assert = require('node:assert/strict')
+const http = require('node:http')
+const net = require('node:net')
+const { writeFileSync } = require('node:fs')
+const { join } = require('node:path')
+const { fetch, Agent, ProxyAgent } = require('undici')
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+;(async () => {
+  const checks = [], requests = [], tunnels = new Set(), sockets = new Set()
+  let cancelled = false
+  const origin = http.createServer((req, res) => {
+    requests.push({ url: req.url, header: req.headers['x-upgrade-acceptance'] })
+    res.writeHead(200, { 'Content-Type': 'text/event-stream' })
+    res.write('data: first\n\n')
+    if (req.url === '/cancel') { res.on('close', () => { cancelled = true }); return }
+    setTimeout(() => res.end('data: last\n\n'), 30)
+  })
+  const proxy = http.createServer()
+  const connects = []
+  proxy.on('connect', (req, client, head) => {
+    connects.push(req.url)
+    const [host, port] = req.url.split(':')
+    assert.equal(host, '127.0.0.1')
+    const remote = net.connect(Number(port), host, () => {
+      client.write('HTTP/1.1 200 Connection Established\r\n\r\n')
+      if (head.length) remote.write(head)
+      client.pipe(remote); remote.pipe(client)
+    })
+    tunnels.add(client); sockets.add(remote)
+    client.on('close', () => { tunnels.delete(client); remote.destroy() })
+    remote.on('close', () => { sockets.delete(remote); client.destroy() })
+    client.on('error', () => remote.destroy()); remote.on('error', () => client.destroy())
+  })
+  const listen = server => new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
+  await listen(origin); await listen(proxy)
+  const url = `http://127.0.0.1:${origin.address().port}`
+  const direct = new Agent(), proxied = new ProxyAgent({ uri: `http://127.0.0.1:${proxy.address().port}`, proxyTunnel: true })
+  try {
+    assert.equal(require('undici/package.json').version, '8.12.2')
+    let response = await fetch(url + '/stream', { dispatcher: direct, headers: { 'x-upgrade-acceptance': 'direct' } })
+    const reader = response.body.getReader()
+    const first = await reader.read()
+    assert.equal(new TextDecoder().decode(first.value), 'data: first\n\n')
+    let rest = ''
+    for (;;) { const part = await reader.read(); if (part.done) break; rest += new TextDecoder().decode(part.value) }
+    assert.equal(rest, 'data: last\n\n'); assert.equal(requests[0].header, 'direct')
+    checks.push('direct undici streams incrementally and preserves request headers')
+    console.log('direct-stream-complete')
+    response = await fetch(url + '/proxy', { dispatcher: proxied, headers: { 'x-upgrade-acceptance': 'proxy' } })
+    assert.equal(await response.text(), 'data: first\n\ndata: last\n\n')
+    assert.equal(requests.at(-1).header, 'proxy'); assert.equal(connects.length, 1)
+    checks.push('direct undici ProxyAgent uses the actual CONNECT tunnel')
+    console.log('proxy-stream-complete')
+    const abort = new AbortController()
+    response = await fetch(url + '/cancel', { dispatcher: proxied, signal: abort.signal })
+    const pending = response.body.getReader()
+    assert.equal((await pending.read()).done, false)
+    abort.abort()
+    await assert.rejects(() => pending.read(), error => error.name === 'AbortError')
+    const deadline = Date.now() + 3000
+    while (!cancelled && Date.now() < deadline) await sleep(10)
+    assert(cancelled, 'abort must reach the origin through the proxy')
+    console.log('abort-reached-origin')
+    await direct.close(); await proxied.close()
+    while ((tunnels.size || sockets.size) && Date.now() < deadline) await sleep(10)
+    assert.equal(tunnels.size, 0); assert.equal(sockets.size, 0)
+    checks.push('stream abort reaches origin and dispatcher close releases all proxy sockets')
+    console.log('dispatchers-closed')
+  } finally {
+    await direct.destroy(); await proxied.destroy()
+    for (const socket of [...tunnels, ...sockets]) socket.destroy()
+    origin.closeAllConnections(); proxy.closeAllConnections()
+    await Promise.all([new Promise(resolve => origin.close(resolve)), new Promise(resolve => proxy.close(resolve))])
+    writeFileSync(join(process.argv[2], 'undici.json'), JSON.stringify({ checks, node: process.version, module: require.resolve('undici'), version: require('undici/package.json').version, requests, connects, cancelled, tunnels: tunnels.size, sockets: sockets.size }, null, 2))
+  }
+})().catch(error => { console.error(error); process.exitCode = 1 })

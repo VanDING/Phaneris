@@ -92,12 +92,12 @@ function FilePreview(props: FilePreviewContentProps) {
     } catch (cause) { toast.error(t('toast.failedToOpenFile'), { description: String(cause) }) }
   }
   const source = text === undefined ? <Loading /> : <div className="h-full overflow-auto">
-    {text.length > TEXT_LIMIT && <p className="p-2 text-xs text-muted-foreground">{t('filePreview.truncated')}</p>}
+    {text.length > TEXT_LIMIT && <p className="p-2 text-meta text-muted-foreground">{t('filePreview.truncated')}</p>}
     <ShikiCodeViewer code={text.slice(0, TEXT_LIMIT)} filePath={filePath} language={getLanguageFromPath(filePath)} startLine={1} />
   </div>
   let content
   if (tooLarge || error) {
-    content = <div className="p-4 text-sm" role="alert">
+    content = <div className="p-4 text-body" role="alert">
       <p className="text-destructive">{tooLarge ? t('filePreview.tooLarge') : error}</p>
       {!tooLarge && <button type="button" className="mt-3 inline-flex items-center gap-1" onClick={() => setAttempt(value => value + 1)}><RotateCcw className="size-3" />{t('filePreview.retry')}</button>}
     </div>
@@ -117,25 +117,29 @@ function FilePreview(props: FilePreviewContentProps) {
   } else if (format.preview === 'pdf') content = bytes ? <Suspense fallback={<Loading />}><PdfPreview bytes={bytes} onError={setError} /></Suspense> : <Loading />
   else if (format.preview === 'image') content = url ? <div className="flex h-full items-center justify-center overflow-auto p-4"><img src={url} alt={filePath} className="max-h-full max-w-full object-contain" onError={() => setError(t('filePreview.decodeFailed'))} /></div> : <Loading />
   else if (media) content = url ? <div className="flex h-full items-center justify-center p-4">
+    {/* jsx-a11y/media-has-caption: these are the user's own audio/video files.
+        A caption track would have to exist inside the file; the preview cannot
+        invent one, and an empty <track> would lie to assistive technology. The
+        finding is registered in scripts/visual-debt-ledger.json. */}
     {format.artifactKind === 'audio'
       ? <audio controls preload="metadata" src={url} className="w-full" onError={() => setError(t('filePreview.decodeFailed'))} />
       : <video controls preload="metadata" src={url} className="max-h-full max-w-full" onError={() => setError(t('filePreview.decodeFailed'))} />}
   </div> : <Loading />
   else content = <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
     <FileQuestion className="size-9 text-muted-foreground" />
-    <p className="break-all text-sm">{filePath.replaceAll('\\', '/').split('/').pop()}</p>
-    <p className="text-xs text-muted-foreground">{mimeType ?? format.mimeType}{fileSize !== undefined ? ` · ${fileSize.toLocaleString()} B` : ''}</p>
-    <p className="text-sm text-muted-foreground">{t('artifact.previewUnavailable')}</p>
+    <p className="break-all text-body">{filePath.replaceAll('\\', '/').split('/').pop()}</p>
+    <p className="text-meta text-muted-foreground">{mimeType ?? format.mimeType}{fileSize !== undefined ? ` · ${fileSize.toLocaleString()} B` : ''}</p>
+    <p className="text-body text-muted-foreground">{t('artifact.previewUnavailable')}</p>
   </div>
 
   return <div className="flex h-full min-h-0 flex-col">
     <div className="flex shrink-0 items-center gap-1 border-b border-border px-3 py-2">
       {canSwitch && <div role="group" aria-label={t('filePreview.viewMode')} className="flex gap-1">
         {(['preview', 'source'] as const).map(value => <button key={value} type="button" aria-pressed={mode === value}
-          className={`rounded px-2 py-1 text-xs ${mode === value ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+          className={`rounded px-2 py-1 text-meta ${mode === value ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
           onClick={() => setMode(value)}>{t(`filePreview.${value}`)}</button>)}
       </div>}
-      <button type="button" className="ml-auto inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground" onClick={() => void openExternal()}>
+      <button type="button" className="ml-auto inline-flex items-center gap-1 text-meta text-muted-foreground hover:text-foreground" onClick={() => void openExternal()}>
         <ExternalLink className="size-3" />{t('filePreview.openExternal')}
       </button>
     </div>
@@ -148,7 +152,7 @@ function JsonPreview({ text }: { text: string }) {
     try { return { data: JSON.parse(text) as unknown } } catch (cause) { return { error: String(cause) } }
   }, [text])
   return <div className="h-full overflow-auto p-4">
-    {value.error ? <p role="alert" className="text-sm text-destructive">{value.error}</p>
+    {value.error ? <p role="alert" className="text-body text-destructive">{value.error}</p>
       : value.data !== null && typeof value.data === 'object' ? <JsonView value={value.data} collapsed={2} style={{ background: 'transparent', color: 'inherit' }} />
         : <pre>{JSON.stringify(value.data)}</pre>}
   </div>

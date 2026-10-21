@@ -172,7 +172,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
               description={t('pluginsList.skillsDescription')}
             >
               {plugin.skills.length === 0 ? (
-                <p className="px-1 text-sm text-muted-foreground">{t('pluginsList.noContributedSkills')}</p>
+                <p className="px-1 text-body text-muted-foreground">{t('pluginsList.noContributedSkills')}</p>
               ) : (
                 <div className="rounded-shape-lg border border-border/50 divide-y divide-border/30 overflow-hidden">
                   {plugin.skills.map((skill) => (
@@ -181,9 +181,9 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                       onClick={() => navigate(routes.view.skills(skill.slug))}
                       className="w-full text-left px-3 py-2 hover:bg-foreground/[0.03] transition-colors"
                     >
-                      <div className="text-sm font-medium">{skill.name}</div>
-                      <div className="text-xs text-muted-foreground">{skill.description}</div>
-                      {skill.availability && <div className="text-xs text-muted-foreground">{t(`pluginsList.availability.${skill.availability}`)}</div>}
+                      <div className="text-body font-medium">{skill.name}</div>
+                      <div className="text-meta text-muted-foreground">{skill.description}</div>
+                      {skill.availability && <div className="text-meta text-muted-foreground">{t(`pluginsList.availability.${skill.availability}`)}</div>}
                     </button>
                   ))}
                 </div>
@@ -195,7 +195,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
               description={`${t('pluginsList.sourcesDescription')} ${t('pluginsList.availability.notice')}`}
             >
               {plugin.sources.length === 0 ? (
-                <p className="px-1 text-sm text-muted-foreground">{t('pluginsList.noContributedSources')}</p>
+                <p className="px-1 text-body text-muted-foreground">{t('pluginsList.noContributedSources')}</p>
               ) : (
                 <div className="rounded-shape-lg border border-border/50 divide-y divide-border/30 overflow-hidden">
                   {plugin.sources.map((source) => (
@@ -204,8 +204,8 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                       onClick={() => navigate(routes.view.sources({ sourceSlug: source.slug }))}
                       className="w-full text-left px-3 py-2 hover:bg-foreground/[0.03] transition-colors flex items-center justify-between gap-3"
                     >
-                      <span className="text-sm font-medium">{source.slug}</span>
-                      <span className="text-xs text-muted-foreground text-right">{source.type.toUpperCase()} · {t(`pluginsList.availability.${source.availability ?? 'configured'}`)}</span>
+                      <span className="text-body font-medium">{source.slug}</span>
+                      <span className="text-meta text-muted-foreground text-right">{source.type.toUpperCase()} · {t(`pluginsList.availability.${source.availability ?? 'configured'}`)}</span>
                     </button>
                   ))}
                 </div>
@@ -241,7 +241,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
             <DialogTitle>{t('pluginsList.uninstallTitle', { name: uninstallPlan?.name ?? '' })}</DialogTitle>
             <DialogDescription>{t('pluginsList.uninstallDescription')}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 text-sm">
+          <div className="space-y-3 text-body">
             <div>
               <p className="mb-1 text-muted-foreground">{t('pluginsList.removesNotice')}</p>
               {uninstallPlan && uninstallPlan.removes.length > 0 ? (

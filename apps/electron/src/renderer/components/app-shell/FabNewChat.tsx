@@ -30,7 +30,7 @@ export function FabNewChat({ onClick, className }: FabNewChatProps) {
       aria-label={t("menu.newChat")}
       className={cn(
         "fixed right-4 z-component-panel size-14 rounded-full",
-        "bg-accent text-white dark:text-background",
+        "bg-accent text-on-accent",
         "flex items-center justify-center",
         // Shadow via approved utilities: shadow-tinted takes a --shadow-color
         "shadow-tinted",
@@ -43,7 +43,7 @@ export function FabNewChat({ onClick, className }: FabNewChatProps) {
       )}
       style={{ "--shadow-color": "rgba(109,93,252,0.55)" } as CSSProperties}
     >
-      <Plus className="size-6 text-white" strokeWidth={2.5} />
+      <Plus className="size-6 text-white" />
     </button>,
     document.body,
   )

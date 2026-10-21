@@ -232,7 +232,7 @@ export function DataTable<TData extends RowData>({
 
   const paginationControls = paginationEnabled && table.getPageCount() > 1 && (
     <div className="flex items-center justify-between px-2 py-3 border-t border-border">
-      <div className="text-sm text-muted-foreground">
+      <div className="text-body text-muted-foreground">
         {table.getFilteredRowModel().rows.length} total
       </div>
       <div className="flex items-center gap-2">
@@ -244,7 +244,7 @@ export function DataTable<TData extends RowData>({
         >
           Previous
         </Button>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-body text-muted-foreground">
           Page {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
         </span>
         <Button

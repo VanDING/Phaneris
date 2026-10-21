@@ -98,11 +98,11 @@ export function RtkUpdateDialog({ open, onOpenChange, status, onStatusChange, on
             {t('rtkUpdate.body', { version: status.version ?? '?', min: status.minSafeVersion })}
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-2 text-sm">
+        <div className="space-y-2 text-body">
           <p className="text-foreground/80">{t('rtkUpdate.instructions')}</p>
-          <pre className="rounded-lg bg-foreground/5 px-3 py-2 text-xs font-mono whitespace-pre-wrap break-all select-all">{status.updateCommand}</pre>
+          <pre className="rounded-lg bg-foreground/5 px-3 py-2 text-meta font-mono whitespace-pre-wrap break-all select-all">{status.updateCommand}</pre>
           {status.foundPath && (
-            <p className="text-xs text-foreground/60">{t('rtkUpdate.foundAt', { path: status.foundPath })}</p>
+            <p className="text-meta text-text-secondary">{t('rtkUpdate.foundAt', { path: status.foundPath })}</p>
           )}
         </div>
         <DialogFooter>

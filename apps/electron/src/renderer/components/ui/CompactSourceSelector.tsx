@@ -59,13 +59,13 @@ export function CompactSourceSelector({
         {sources.length > 0 && (
           <div className="px-4 pb-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40 pointer-events-none" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary pointer-events-none" />
               <input
                 type="text"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder={t('common.search')}
-                className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-base outline-none focus:bg-foreground/[0.07] transition-colors"
+                className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-body outline-none focus:bg-foreground/[0.07] transition-colors"
               />
             </div>
           </div>
@@ -73,11 +73,11 @@ export function CompactSourceSelector({
 
         <div className="px-2 pb-4 flex flex-col gap-0.5 max-h-[55vh] overflow-y-auto">
           {sources.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-foreground/50">
+            <div className="px-4 py-8 text-center text-body text-text-secondary">
               {t('sourcesList.noSourcesConfigured')}
             </div>
           ) : filteredSources.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-foreground/50">
+            <div className="px-4 py-8 text-center text-body text-text-secondary">
               {t('chat.noResults')}
             </div>
           ) : (
@@ -96,9 +96,9 @@ export function CompactSourceSelector({
                   <div className="shrink-0 flex items-center">
                     {source.config.slug
                       ? <SourceAvatar source={source} size="md" />
-                      : <DatabaseZap className="h-5 w-5 text-foreground/60" />}
+                      : <DatabaseZap className="h-5 w-5 text-text-secondary" />}
                   </div>
-                  <div className="flex-1 min-w-0 text-sm font-medium truncate">
+                  <div className="flex-1 min-w-0 text-body font-medium truncate">
                     {source.config.name}
                   </div>
                   <div
@@ -109,7 +109,7 @@ export function CompactSourceSelector({
                         : 'border-foreground/20',
                     )}
                   >
-                    {isSelected && <Check className="h-3 w-3 text-background" strokeWidth={3} />}
+                    {isSelected && <Check className="h-3 w-3 text-background" />}
                   </div>
                 </button>
               )

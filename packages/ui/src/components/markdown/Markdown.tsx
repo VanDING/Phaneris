@@ -313,7 +313,7 @@ function createComponents(
       li: ({ children }) => <li className="my-0.5">{children}</li>,
       // Plain tables
       table: ({ children }) => (
-        <table className="my-2 font-mono text-sm">{children}</table>
+        <table className="my-2 font-mono text-body">{children}</table>
       ),
       th: ({ children }) => <th className="text-left pr-4">{children}</th>,
       td: ({ children }) => <td className="pr-4">{children}</td>,
@@ -434,7 +434,7 @@ function createComponents(
       // Clean tables
       table: ({ children }) => (
         <div className="my-3 overflow-x-auto">
-          <table className="min-w-full text-sm">{children}</table>
+          <table className="min-w-full text-body">{children}</table>
         </div>
       ),
       thead: ({ children }) => <thead className="border-b">{children}</thead>,
@@ -562,10 +562,10 @@ function createComponents(
     thead: ({ children }) => <thead className="bg-muted/50">{children}</thead>,
     tbody: ({ children }) => <tbody className="divide-y divide-border">{children}</tbody>,
     th: ({ children }) => (
-      <th className="text-left py-3 px-4 font-semibold text-sm">{children}</th>
+      <th className="text-left py-3 px-4 font-semibold text-body">{children}</th>
     ),
     td: ({ children }) => (
-      <td className="py-3 px-4 text-sm">{children}</td>
+      <td className="py-3 px-4 text-body">{children}</td>
     ),
     tr: ({ children }) => (
       <tr className="hover:bg-muted/30 transition-colors">{children}</tr>

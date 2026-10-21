@@ -53,7 +53,7 @@ export function ItemNavigator({ items, activeIndex, onSelect, size = 'sm' }: Ite
         disabled={activeIndex === 0}
         className={cn(
           'bg-background shadow-minimal cursor-pointer',
-          'text-foreground/50 hover:text-foreground transition-colors',
+          'text-text-secondary hover:text-foreground transition-colors',
           'disabled:opacity-30 disabled:cursor-not-allowed',
           size === 'md' ? 'p-1.5 rounded-shape-lg' : 'p-1 rounded-shape-md'
         )}
@@ -96,7 +96,7 @@ export function ItemNavigator({ items, activeIndex, onSelect, size = 'sm' }: Ite
         disabled={activeIndex === items.length - 1}
         className={cn(
           'bg-background shadow-minimal cursor-pointer',
-          'text-foreground/50 hover:text-foreground transition-colors',
+          'text-text-secondary hover:text-foreground transition-colors',
           'disabled:opacity-30 disabled:cursor-not-allowed',
           size === 'md' ? 'p-1.5 rounded-shape-lg' : 'p-1 rounded-shape-md'
         )}

@@ -41,7 +41,7 @@ function SettingsSelectField({ label, description, value, onValueChange, options
         <SelectTrigger {...aria} {...field.controlProps} aria-busy={loading || undefined} className="w-full">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent><Options options={options} />{options.length === 0 && <p role="status" className="px-3 py-2 text-sm text-text-secondary">{t('chat.noResults')}</p>}</SelectContent>
+        <SelectContent><Options options={options} />{options.length === 0 && <p role="status" className="px-3 py-2 text-body text-text-secondary">{t('chat.noResults')}</p>}</SelectContent>
       </Select>
       {loading && <p role="status" className="craft-field-description mt-1">{t('common.loading')}</p>}
     </div>

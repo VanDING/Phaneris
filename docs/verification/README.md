@@ -2,6 +2,8 @@
 
 本页汇总架构治理与产品验证入口。治理工作流默认生成唯一 `.cache/verification/<run-id>/`，成功/失败均保留 manifest、SHA、日志及数据库；历史 `results/` 只由明确归档操作写入。部分历史产品脚本仍写固定结果，其范围见各行说明。
 
+2026-10-20 上游 0.15.3 升级收口由 Codex 直接实施：[修改、验收与保留边界](../dependencies/upgrade-closeout-2026-10-20.md)。原始规划和两轮审计保持历史；[机器结果](results/upgrade-2026-10-18.json)自动采集当前 Git、锁图变化、32 项门禁和原生验证。部分采集写独立 partial 文件，不能作最终验收。
+
 2026-10-13 规划收敛：本页维护验证方法与历史覆盖，不承担独立待办。当前关键路径验收为[价值裁定与执行队列](../process/implementation-value-register-2026-10-13.md)的 R03，发布与实机范围由 C01/L01–L15 约束；历史未测事实继续保留。
 
 2026-10-14 R01–R07 实施使用[事先失败矩阵](implementation-r01-r07-failure-matrix-2026-10-14.md)，[本地验收与结论产物](results/implementation-r01-r07-2026-10-14/README.md)已收口。七个工作包及文件链接浏览器回归通过，生产 Windows 桌面 27 项通过；当前状态统一维护在价值裁定台账。签名、其他平台和外部账号范围继续保留 NOT RUN。

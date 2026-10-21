@@ -15,10 +15,19 @@ export interface FixtureBundle {
 }
 
 /** Kill a child and wait (bounded) for it to actually go away. */
-async function killAndReap(child: { kill: () => void; exited: Promise<number> }): Promise<void> {
+async function killAndReap(child: { kill: (signal?: 'SIGKILL') => void; exited: Promise<number> }): Promise<void> {
+  async function exitedWithin(ms: number) {
+    let timer: ReturnType<typeof setTimeout> | undefined
+    try {
+      return await Promise.race([child.exited.then(() => true), new Promise<false>(resolve => {
+        timer = setTimeout(() => resolve(false), ms)
+      })])
+    } finally { clearTimeout(timer) }
+  }
   try { child.kill() } catch { /* already gone */ }
-  const reaped = await Promise.race([child.exited.then(() => true), Bun.sleep(10_000).then(() => false)])
-  if (!reaped) { try { (child as { kill: (signal?: string) => void }).kill('SIGKILL') } catch { /* gone */ } }
+  if (await exitedWithin(10_000)) return
+  try { child.kill('SIGKILL') } catch { /* already gone */ }
+  if (!await exitedWithin(5_000)) throw new Error('fixture bundle host did not exit after forced cleanup')
 }
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -69,7 +78,7 @@ export async function buildFixturePage(options: { runDirectory: string; entry: s
     // A failed build must not leave the child behind: the timer used to be the
     // only thing cleared here, so a timed-out bundle kept running (and could hold
     // the suite open) while the workflow had already given up on it.
-    killAndReap(child)
+    await killAndReap(child)
     throw error
   } finally {
     clearTimeout(timer)
@@ -79,7 +88,7 @@ export async function buildFixturePage(options: { runDirectory: string; entry: s
   // must not hold the workflow open.
   const exited = await Promise.race([child.exited.then(() => true), Bun.sleep(15_000).then(() => false)])
   if (!exited) {
-    killAndReap(child)
+    await killAndReap(child)
     throw new Error('fixture bundle host did not exit after publishing its output')
   }
   if (!built || !existsSync(built.html)) throw new Error(`fixture bundle produced no html (exit ${child.exitCode})`)
