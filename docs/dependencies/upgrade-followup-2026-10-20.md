@@ -1,5 +1,7 @@
 # 升级延期项实施：2026-10-20
 
+> 2026-10-21：升级与主题/字体工作现已整合到 main，组合验收见[main 整合记录](../verification/main-consolidation-2026-10-21.md)。本文的独立工作树范围与此前状态保留为实施历史。
+
 用户已批准 Codex 完整推进本轮，继续使用隔离工作树与分支 `codex/upstream-0153-closeout-isolated-20261020`。不交 DSH，不混入 E:\Phaneris 的字体/设计迁移，不提交、推送、发布或改版本。
 
 上一轮[收口记录](upgrade-closeout-2026-10-20.md)的 31 pass / 1 environment-limited 是上一轮源码证据。本轮扩展后重新运行全部适用门禁；最终状态由本文末尾自动采集段和[机器结果](../verification/results/upgrade-2026-10-18.json)给出。先行失败路径见[失败矩阵 §13](../verification/upgrade-2026-10-18-failure-matrix.md)。
@@ -33,7 +35,7 @@ FullCalendar 7.1.0 与 http-cache-semantics 加固补丁继续作为批准例外
 <!-- upgrade-closeout-results:start -->
 ## 自动采集的最终门禁
 
-采集时间：2026-10-20T14:44:25.741Z。通过 32，失败 0，环境受限 1。适用门禁已通过；环境限制与批准延期不计为通过。
+采集时间：2026-10-21T01:39:38.349Z。通过 32，失败 0，环境受限 1。适用门禁已通过；环境限制与批准延期不计为通过。
 
 每个门禁记录执行前后源码指纹、完整日志及哈希。当前 Git、锁文件全图 churn、改动文件哈希和各次历史失败都由脚本读取；以[机器结果](../verification/results/upgrade-2026-10-18.json)为当前验收结论。
 <!-- upgrade-closeout-results:end -->

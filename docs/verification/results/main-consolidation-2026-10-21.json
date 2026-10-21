@@ -1,0 +1,481 @@
+{
+  "complete": true,
+  "at": "2026-10-21T01:59:16.213Z",
+  "testedHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+  "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+  "codeFingerprint": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+  "gates": {
+    "upgrade": {
+      "pass": 32,
+      "environment-limited": 1
+    },
+    "themes": {
+      "pass": 5
+    }
+  },
+  "critical": {
+    "path": ".cache/verification/critical-z1gS8j",
+    "passed": 71,
+    "workflows": [
+      {
+        "id": "upstream-015-core",
+        "passed": 11,
+        "manifest": ".cache/verification/critical-z1gS8j/upstream-015-core/manifest.json",
+        "sha256": "ac783af8eba97215ab1be34c06c12191a62afafceb9a6aab4e3da70424538f43"
+      },
+      {
+        "id": "upstream-015-orchestration",
+        "passed": 5,
+        "manifest": ".cache/verification/critical-z1gS8j/upstream-015-orchestration/manifest.json",
+        "sha256": "e0c95737dda759951222905e5374e0e9e76fd0c97e12dedc94ff9471314ba0be"
+      },
+      {
+        "id": "upstream-015-browser",
+        "passed": 11,
+        "manifest": ".cache/verification/critical-z1gS8j/upstream-015-browser/manifest.json",
+        "sha256": "dc24e959e5b014ecae860c5e8410f359c013c7f71bd80604915bbb49aa159883"
+      },
+      {
+        "id": "upstream-015-renderer",
+        "passed": 6,
+        "manifest": ".cache/verification/critical-z1gS8j/upstream-015-renderer/manifest.json",
+        "sha256": "c027745c13c57e005482f45e4e530d658c83b20cbbdfacf4737a94c4b434fb45"
+      },
+      {
+        "id": "task-permission",
+        "passed": 9,
+        "manifest": ".cache/verification/critical-z1gS8j/task-permission/manifest.json",
+        "sha256": "5bd8aa21900657e7f5171c238d0d5b8a8f143d7a0340eccd460866b23c308168"
+      },
+      {
+        "id": "plugin-consistency",
+        "passed": 17,
+        "manifest": ".cache/verification/critical-z1gS8j/plugin-consistency/manifest.json",
+        "sha256": "dcc4e56d41d84854acc59ee327446e7e862a91b181085eb8d777c3581eb4554a"
+      },
+      {
+        "id": "workspace-recovery",
+        "passed": 10,
+        "manifest": ".cache/verification/critical-z1gS8j/workspace-recovery/manifest.json",
+        "sha256": "3d124a3218ea8f04df14a8c2697387c929efd2aea8d9407d3886fec5abc9b76e"
+      },
+      {
+        "id": "runtime-reliability",
+        "passed": 10,
+        "manifest": ".cache/verification/critical-z1gS8j/runtime-reliability/manifest.json",
+        "sha256": "027e3095207109ac8a097a8092feaa43ff524bc074053c3bb1387b6e864c39a6"
+      },
+      {
+        "id": "task-file-scope",
+        "passed": 11,
+        "manifest": ".cache/verification/critical-z1gS8j/task-file-scope/manifest.json",
+        "sha256": "270f4c6289b8332a3337b97523a1d726b89ca75a531031b953732774a0a72a4c"
+      },
+      {
+        "id": "gantt-reschedule",
+        "passed": 14,
+        "manifest": ".cache/verification/critical-z1gS8j/gantt-reschedule/manifest.json",
+        "sha256": "ec8901b03f8069e90963e7f0b3fd76bc93e2939d9cf1a0251b5e4eb1926dbe70"
+      },
+      {
+        "id": "planning-collection",
+        "passed": 17,
+        "manifest": ".cache/verification/critical-z1gS8j/planning-collection/manifest.json",
+        "sha256": "3885b85543732d6201f8c3024f91e980ca3ea89a2b763243a2e5cc2d5708dcdf"
+      },
+      {
+        "id": "planning-performance",
+        "passed": 20,
+        "manifest": ".cache/verification/critical-z1gS8j/planning-performance/manifest.json",
+        "sha256": "ba87a942a6c6bc7691c57b4576f1f10006e9096617eb3fb503c9d1c20eb88ecc"
+      },
+      {
+        "id": "docs-locale",
+        "passed": 52,
+        "manifest": ".cache/verification/critical-z1gS8j/docs-locale/manifest.json",
+        "sha256": "ff1e1348899b4208621fe973713046f2669c47d9aac377b94b83782f9ede16a8"
+      },
+      {
+        "id": "markdown-file-links",
+        "passed": 18,
+        "manifest": ".cache/verification/critical-z1gS8j/markdown-file-links/manifest.json",
+        "sha256": "45aa9962a71ebbfde35be203499ba6455cae42531df44556e02bf68e176f92a5"
+      },
+      {
+        "id": "verification-output",
+        "passed": 7,
+        "manifest": ".cache/verification/critical-z1gS8j/verification-output/manifest.json",
+        "sha256": "54e88158954da6252f391fb64233d30a3fe075563238c72855336c27773eb01a"
+      },
+      {
+        "id": "governance-gates",
+        "passed": 10,
+        "manifest": ".cache/verification/critical-z1gS8j/governance-gates/manifest.json",
+        "sha256": "2b41a0196afc25623cf8ccd73ecfafd421dc27f24f57684be5b4d3e094627407"
+      },
+      {
+        "id": "governance-closeout",
+        "passed": 22,
+        "manifest": ".cache/verification/critical-z1gS8j/governance-closeout/manifest.json",
+        "sha256": "98fbd862e618ee1263a4c97103d3070ff2de4da30541020bae96bc97fa0a6d58"
+      },
+      {
+        "id": "runtime-boundary-gate",
+        "passed": 10,
+        "manifest": ".cache/verification/critical-z1gS8j/runtime-boundary-gate/manifest.json",
+        "sha256": "cd70cc2af6389546fcd0508f5fbc47f633343932795e3740c6ea376ee014e18b"
+      },
+      {
+        "id": "durable-runtime-boundary",
+        "passed": 15,
+        "manifest": ".cache/verification/critical-z1gS8j/durable-runtime-boundary/manifest.json",
+        "sha256": "4d6cffbe69b92a161314f2806413bad58006aed6941d34344a88a7ecd5486c60"
+      },
+      {
+        "id": "durable-runtime-crash",
+        "passed": 8,
+        "manifest": ".cache/verification/critical-z1gS8j/durable-runtime-crash/manifest.json",
+        "sha256": "844cb6415407efc75da2d213dd86aaf4e3611d42fb61e1797690666a852a180c"
+      },
+      {
+        "id": "plugin-transaction",
+        "passed": 13,
+        "manifest": ".cache/verification/critical-z1gS8j/plugin-transaction/manifest.json",
+        "sha256": "84bfc79cd1e87cce9d90ec5954dde3be8454ef0d2b4c79af38a874c4ce0523e4"
+      },
+      {
+        "id": "session-branch",
+        "passed": 4,
+        "manifest": ".cache/verification/critical-z1gS8j/session-branch/manifest.json",
+        "sha256": "013ac3f1dd48470d88d0e7e269b3dd3e276662b5f6f88b5a4fb6e8fac22799a4"
+      },
+      {
+        "id": "webui-auth-lifecycle",
+        "passed": 14,
+        "manifest": ".cache/verification/critical-z1gS8j/webui-auth-lifecycle/manifest.json",
+        "sha256": "b70f65934d2aa2da46348fea6f170f6c3b2153ce838c9d0f83f3024f5676c250"
+      },
+      {
+        "id": "process-lifecycle",
+        "passed": 12,
+        "manifest": ".cache/verification/critical-z1gS8j/process-lifecycle/manifest.json",
+        "sha256": "5b6deb7a967500d141a2d9c7d113c0c1bd0c8404ae40d7dc9bf623e235ba05cd"
+      },
+      {
+        "id": "config-domains",
+        "passed": 22,
+        "manifest": ".cache/verification/critical-z1gS8j/config-domains/manifest.json",
+        "sha256": "80a1aca5895407525d44f698c6a323d53aa131d843571daad031efec769db22c"
+      },
+      {
+        "id": "rpc-contracts",
+        "passed": 7,
+        "manifest": ".cache/verification/critical-z1gS8j/rpc-contracts/manifest.json",
+        "sha256": "0e78583eeef1fcb7eff599074923efa72e537aa58bf778f27d3f2a8730a73d8b"
+      },
+      {
+        "id": "governance-boundaries",
+        "passed": 17,
+        "manifest": ".cache/verification/critical-z1gS8j/governance-boundaries/manifest.json",
+        "sha256": "830f6b32e7f33ee53efbe55d6a00f60303cb0418e4428055b68b149b410ac396"
+      },
+      {
+        "id": "import-graph",
+        "passed": 7,
+        "manifest": ".cache/verification/critical-z1gS8j/import-graph/manifest.json",
+        "sha256": "43be3ebeff443ca188638fb7de236be844544af51aeb75aca2cdabf52da29c92"
+      },
+      {
+        "id": "cycle-gate",
+        "passed": 6,
+        "manifest": ".cache/verification/critical-z1gS8j/cycle-gate/manifest.json",
+        "sha256": "a605bb3c24d2b70aef929c9349a4aedf509a47e12f6db683c982b6d20e43a427"
+      },
+      {
+        "id": "pi-control",
+        "passed": 9,
+        "manifest": ".cache/verification/critical-z1gS8j/pi-control/manifest.json",
+        "sha256": "72beb1ccb30932cdb33ebba57d6f20aff1d0a796dc67e08c6c781f76b0e92ff3"
+      },
+      {
+        "id": "durable-runtime-pi",
+        "passed": 6,
+        "manifest": ".cache/verification/critical-z1gS8j/durable-runtime-pi/manifest.json",
+        "sha256": "9898705b154ffa635ca518657dea5dcc630964da29f612d00108103f5991f0fa"
+      },
+      {
+        "id": "session-owners",
+        "passed": 8,
+        "manifest": ".cache/verification/critical-z1gS8j/session-owners/manifest.json",
+        "sha256": "1395688bb30f5bb09a05f557853676a54358020c0f4e3805ab6897ab803cd884"
+      },
+      {
+        "id": "client-platform",
+        "passed": 25,
+        "manifest": ".cache/verification/critical-z1gS8j/client-platform/manifest.json",
+        "sha256": "d6b5c666e44fae7b142694cc4401f9c2c6ecea494ddeca954d58b036a9f7bce8"
+      },
+      {
+        "id": "markdown-popout",
+        "passed": 18,
+        "manifest": ".cache/verification/critical-z1gS8j/markdown-popout/manifest.json",
+        "sha256": "ef6bde4ad8f3b35479a76b0f705e51e97a977f1198f428f91c1913f55cf61431"
+      },
+      {
+        "id": "theme-foundation",
+        "passed": 115,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-foundation/manifest.json",
+        "sha256": "7c5daafd0f2884406b6736f5a12f1d82bd1b1e228d8b9e60dd2d2a83f1e50a2a"
+      },
+      {
+        "id": "theme-contract",
+        "passed": 119,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-contract/manifest.json",
+        "sha256": "4c461c047a7d2385fc9d98a49c8c15ad6088ba51e78c3e8314655209de6ecf43"
+      },
+      {
+        "id": "theme-roles",
+        "passed": 76,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-roles/manifest.json",
+        "sha256": "9e59735611fec23478bfb7be94513379dd9dfc7a217647d2d99abed0ec0de40f"
+      },
+      {
+        "id": "theme-domains",
+        "passed": 56,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-domains/manifest.json",
+        "sha256": "037487f364099cbc8f62b555d02c373ab431790287f854fdf165878545a6f0ff"
+      },
+      {
+        "id": "theme-browser-host",
+        "passed": 23,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-browser-host/manifest.json",
+        "sha256": "634f8f4533315f83bc2a74ce17dd89156567911a5ec32ebe7436db4dede139f7"
+      },
+      {
+        "id": "theme-login",
+        "passed": 5,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-login/manifest.json",
+        "sha256": "6125536bf320bf26a31e64294a6e95bab23d9f1ec8955bb8bad5373a2ad60fdd"
+      },
+      {
+        "id": "theme-design",
+        "passed": 42,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-design/manifest.json",
+        "sha256": "4031fb942aec09a516da3a07e236bbae65d07e70843d80f59169ccdcdb90004e"
+      },
+      {
+        "id": "theme-governance",
+        "passed": 49,
+        "manifest": ".cache/verification/critical-z1gS8j/theme-governance/manifest.json",
+        "sha256": "bbb44dba2fca1948bb242bd5eb90c620e407e88ccebdc95ab569937198cd2250"
+      },
+      {
+        "id": "distribution-inputs",
+        "passed": 12,
+        "manifest": ".cache/verification/critical-z1gS8j/distribution-inputs/manifest.json",
+        "sha256": "53582cf83076608f55f18f64ec514b1903b53246c2ab956e7a8c4b44148bb484"
+      },
+      {
+        "id": "identity-gate",
+        "passed": 6,
+        "manifest": ".cache/verification/critical-z1gS8j/identity-gate/manifest.json",
+        "sha256": "e658bfeb131dcf229ded2eba94e292e6093017f6f14179a9514316e49be107c9"
+      },
+      {
+        "id": "upgrade-0153-fixtures",
+        "passed": 1,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-fixtures/manifest.json",
+        "sha256": "682fcfc620db8b56f6556218fb1ae1b2c327099da219257df66cbb5abd789cb6"
+      },
+      {
+        "id": "upgrade-0153-heic",
+        "passed": 6,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-heic/manifest.json",
+        "sha256": "d5114bdf01f386a230b672dd5c94519710ec6fa281d4f1f77d39daa6e65e4c8a"
+      },
+      {
+        "id": "upgrade-0153-heic-store",
+        "passed": 6,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-heic-store/manifest.json",
+        "sha256": "e0e741e6a4ffc0d24b8d5fe43f3472468991d01cbdd9a23b7dd71024a2f88bd9"
+      },
+      {
+        "id": "upgrade-0153-chat-starters",
+        "passed": 4,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-chat-starters/manifest.json",
+        "sha256": "812b82c55143d28255fbb5a6c73f032e92768b71da95f46e0ea4af57e60525b2"
+      },
+      {
+        "id": "upgrade-0153-endpoints",
+        "passed": 4,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-endpoints/manifest.json",
+        "sha256": "cce94b748e07ff0c8ea6602757b0b42747f45e54d87d4c5c9514668ca14edfe3"
+      },
+      {
+        "id": "upgrade-0153-b1",
+        "passed": 5,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-b1/manifest.json",
+        "sha256": "1390f4f0f86d553b3f72e78a3b26cd8c25fdca61da085f06febea1638e816cf0"
+      },
+      {
+        "id": "upgrade-0153-pi-runtime",
+        "passed": 13,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-pi-runtime/manifest.json",
+        "sha256": "b04f33e9bc3d690a7caa16c55c5eed74cf60b62ee2210572c813a12eb0a58ac1"
+      },
+      {
+        "id": "upgrade-0153-followup-browser",
+        "passed": 12,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-followup-browser/manifest.json",
+        "sha256": "457e4437ac822ec25a91a60f4e4feb58e5ef2eaa6b28e10d93516677dac46d68"
+      },
+      {
+        "id": "upgrade-0153-mcp",
+        "passed": 3,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-mcp/manifest.json",
+        "sha256": "410930100e862b660ca16d4c1f7e3a40df7515bcf6931e2e9d041b968cfb984d"
+      },
+      {
+        "id": "upgrade-0153-usage-ledger",
+        "passed": 16,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-usage-ledger/manifest.json",
+        "sha256": "d4017c4c27ee416b0a1d506059975e4bfbcbcbca0421dc878f0279d059793830"
+      },
+      {
+        "id": "upgrade-0153-pdf-fixtures",
+        "passed": 1,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-pdf-fixtures/manifest.json",
+        "sha256": "2d42f59a12bb1157308f5e518f1e7fc89c2848548783d0829cee46bef649f8f9"
+      },
+      {
+        "id": "upgrade-0153-pdf",
+        "passed": 6,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-pdf/manifest.json",
+        "sha256": "32753d2e72a024d59905c75308f1119b07c4792912a9d2073be3c68f7bfc2401"
+      },
+      {
+        "id": "upgrade-0153-chat-starters-browser",
+        "passed": 13,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-chat-starters-browser/manifest.json",
+        "sha256": "b180dd18ad88b4fd0e75f7b641d86071f2cf7ec9424cd32a2c8743f13eac4e88"
+      },
+      {
+        "id": "upgrade-0153-chat-starters-landing",
+        "passed": 12,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-chat-starters-landing/manifest.json",
+        "sha256": "e948da4cf13ad8579f3d077af4af1dc7c4863022d429520531b54f091d846453"
+      },
+      {
+        "id": "upgrade-0153-workspace-isolation",
+        "passed": 5,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-workspace-isolation/manifest.json",
+        "sha256": "30f6bb3866c5f4f3ee633ad5ec70daa235cce6cf4a70229b6ec10adf18fd409f"
+      },
+      {
+        "id": "upgrade-0153-model-form",
+        "passed": 7,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-model-form/manifest.json",
+        "sha256": "c41aed29676d3c9f041db82fbee772b151810a95f4ab6d878904118a3aa88678"
+      },
+      {
+        "id": "upgrade-0153-session-info-scroll",
+        "passed": 4,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-session-info-scroll/manifest.json",
+        "sha256": "5437d3ebfb363042af1113e8dc52410fe282dc4b37b604a470911e3a534baf2f"
+      },
+      {
+        "id": "upgrade-0153-calendar-drag",
+        "passed": 5,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-calendar-drag/manifest.json",
+        "sha256": "24a787015de29bea8cce3a452aae4100180397ff5cff5ce91f8e50cb6f655884"
+      },
+      {
+        "id": "upgrade-0153-editor",
+        "passed": 4,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-editor/manifest.json",
+        "sha256": "63692b1c3730c56ab695a5317af7d655193dce19227d4e099258842292f3fced"
+      },
+      {
+        "id": "upgrade-0153-undici",
+        "passed": 3,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-undici/manifest.json",
+        "sha256": "0dd0abac5efdc673a6d59e449b097097e8895a0c940bbdd81dc3a10e9c0f6366"
+      },
+      {
+        "id": "upgrade-0153-document-tools",
+        "passed": 8,
+        "manifest": ".cache/verification/critical-z1gS8j/upgrade-0153-document-tools/manifest.json",
+        "sha256": "0ac70d1010753f3cd60d1332696df64210de7a27b5c84f02d05e4294c23a470e"
+      }
+    ],
+    "packageGroups": 6,
+    "manifestSha256": "538e04310e7564609e697c27b13c8e860d63a5d49e411915339ca7bf6214f54a",
+    "artifactEntries": 16336
+  },
+  "themeRuns": [
+    {
+      "workflow": "design-w1",
+      "passed": 14,
+      "path": ".cache/verification/design-w1-UMwUTT",
+      "manifestSha256": "7aab07016cdf7d6a1af3dec458cb262df707b687e22635b6682ff10275ee267c"
+    },
+    {
+      "workflow": "design-w2",
+      "passed": 7,
+      "path": ".cache/verification/design-w2-I1x5Ci",
+      "manifestSha256": "dc32d8c6c63bcb96e455c7e01222c83817d25b90b455a263ff3eabfe85bea0cb"
+    },
+    {
+      "workflow": "long-session-budget",
+      "passed": 5,
+      "path": ".cache/verification/long-session-budget-ogX7Y7",
+      "manifestSha256": "4461659cfa1a2d986fff72384efab443dd123797c77b5ab2ed06d67be97523fa"
+    },
+    {
+      "workflow": "a11y-audit",
+      "passed": 6,
+      "path": ".cache/verification/a11y-audit-obhdQv",
+      "manifestSha256": "7135796c7743a8c1ba51c82db93a6ebd1b97bc12a95d88e1e9eb4c284f706266"
+    },
+    {
+      "workflow": "visual-baselines",
+      "passed": 7,
+      "path": ".cache/verification/visual-baselines-LxpZpJ",
+      "manifestSha256": "3377a0034370f9f38d96f718993e1253329568eb0e3ebe7ccb3110a73afad05d"
+    }
+  ],
+  "preservation": {
+    "sourceFiles": 590,
+    "manifest": "E:/Phaneris/.cache/merge-main-20261021/preservation-verification.json",
+    "sha256": "f20aaa89c963cfbc32f3bce8a1e9fc5a597fe721192ad6e6dcf3a16e5694f321",
+    "bundle": {
+      "path": ".cache/merge-main-20261021/pre-consolidation.bundle",
+      "sha256": "f777d584d836357225b3dd51171dda1e60da2fb988d3879076fb44172fe53461"
+    }
+  },
+  "securityPatches": {
+    "follow-redirects": "1.16.1",
+    "markdown-it": "14.3.3"
+  },
+  "priorFailuresRetained": true,
+  "archive": {
+    "originalRoot": "C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris",
+    "archiveRoot": "C:/Users/dotty/.codex/verification-archives/Phaneris-upgrade-20261021",
+    "strategy": "same-volume directory rename preserving the original directory and all evidence files",
+    "status": "planned-after-checkpoint",
+    "originalDirectoryIdentity": {
+      "dev": "1794930378",
+      "ino": "5910974511136736"
+    },
+    "receipt": "E:/Phaneris/.cache/merge-main-20261021/original-cache-archive-receipt.json",
+    "secondaryCopy": {
+      "path": "E:/Phaneris/.cache/merge-main-20261021/archives/isolated-upgrade/.cache",
+      "completeCopy": true,
+      "shaAudit": "not-completed; interrupted full audit retained in logs; original directory will be preserved by same-volume rename"
+    }
+  },
+  "testedDocumentSnapshot": {
+    "path": "E:/Phaneris/.cache/merge-main-20261021/tested-docs/upgrade-followup-2026-10-20.md",
+    "sha256": "f872845c2b66e4fd22d6c00ef9d5eb851c77903da3d2271cce1cd9e1f3958b1a"
+  }
+}

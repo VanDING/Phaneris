@@ -1,533 +1,21 @@
 {
   "schemaVersion": 2,
   "batch": "upgrade-2026-10-18",
-  "recordedAt": "2026-10-20T14:44:26.089Z",
+  "recordedAt": "2026-10-21T01:39:38.681Z",
   "timezone": "Asia/Shanghai",
   "complete": true,
   "baseCommit": "82714e2ae3b76643ae16ef1d3a6abfe66e8bf574",
-  "head": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
-  "codeFingerprint": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-  "branch": "codex/upstream-0153-closeout-isolated-20261020",
+  "head": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+  "codeFingerprint": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+  "branch": "main",
   "workingTree": {
     "dirty": true,
     "note": "Upgrade implementation is committed in d0fb6be7b and ac85d33b0; this Codex closeout remains uncommitted for review. HEAD is read from Git, not inferred from the original freeze.",
-    "headTree": "d842150664dc56b19b6f2aa81be4feb87613285f",
+    "headTree": "d24b8178ed157b2b0455e7b431f1cba04dfb01b6",
     "changes": [
       {
-        "path": "apps/electron/resources/release-notes/next.md",
-        "sha256": "c0e118d4e5465f9adce0f9715e0b1e59c5e4eb23c0ca5693c7b8ab3eece17b2e"
-      },
-      {
-        "path": "apps/electron/resources/scripts/pdf_tool.py",
-        "sha256": "b1477e2020d599df400401024b4f49ce707d74bce94e4ad06e8c964e4e76ea25"
-      },
-      {
-        "path": "apps/electron/src/renderer/App.tsx",
-        "sha256": "07d2ad315c5d1078a86e5dd03dad2fd196964277ce4bd48055f793ce6594c797"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/RtkUpdateDialog.tsx",
-        "sha256": "e13d7b1e17c566414f335170d9d5052fae1f928e8b05f396e1574aa4a8f59955"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
-        "sha256": "109730b552c118d0739f80af0d0e8cd1a1acfba8b569008366a5c70fcc838fcd"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
-        "sha256": "f9e925a98a728e2eb10c31a27847958950a58a8379347beb115301970c3a5c65"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
-        "sha256": "4d795b1bdf28647e539a45e49a3b5d063001e0a2fe9d53ad7a714818f224ef12"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
-        "sha256": "88951eca831ce69a7bc931490296185b0e73a9b2cc4f59e823553b50e358a4be"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/settings/CompactionThresholdSetting.tsx",
-        "sha256": "f8a1180c42f552e7a094631b575266e5c955a7f37fa1055dcfc39949edcc5f97"
-      },
-      {
-        "path": "apps/electron/src/renderer/context/AppShellContext.tsx",
-        "sha256": "f0b1f8bf3a478235238d66568e129d96cd64fa5c499819a18c17cf36b53dcb44"
-      },
-      {
-        "path": "apps/electron/src/renderer/hooks/useLabels.ts",
-        "sha256": "fbf1bfee45d46ea240ca0498d4bce2f291f8dc0cc95d57e3b10d1a59e6f45388"
-      },
-      {
-        "path": "apps/electron/src/renderer/hooks/useStatuses.ts",
-        "sha256": "263f5e6cdb32ae38625ab395027ab1880066a3b043e55984c76fcdf79cc243ea"
-      },
-      {
-        "path": "apps/electron/src/renderer/hooks/useWorkspaceChatStarters.ts",
-        "sha256": "c940ccc728de41c7631349f0b28563a282b14b9801b1752535239d3943f1d427"
-      },
-      {
-        "path": "apps/electron/src/renderer/lib/read-after-reconnect.ts",
-        "sha256": "fa844724d1bfc9678197c7198a49fb41c43898fa0474615e0e7ce5dea28e553c"
-      },
-      {
-        "path": "apps/electron/src/renderer/pages/ChatPage.tsx",
-        "sha256": "227cd3e392b54a5092e53bf8763efcdc5ee5ac53dd4eadba726d4be735507b39"
-      },
-      {
-        "path": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
-        "sha256": "43f1df5f2817442217e326c1c9f111830fb2f545190fbb5a93078c54966a56a7"
-      },
-      {
-        "path": "apps/electron/src/renderer/pages/settings/ChatStartersSection.tsx",
-        "sha256": "e387947db517f06520f9b0603d28bd151018ad912774dbdd0db4f6be69abfc0f"
-      },
-      {
-        "path": "apps/electron/src/shared/__tests__/ipc-channels.test.ts",
-        "sha256": "5287f8288077be13b114f0b822b30b0da058b532d6e5d64f641421b1b1007c76"
-      },
-      {
-        "path": "apps/electron/src/shared/types.ts",
-        "sha256": "10d71632ffe4d28dcaabd364a0b8dc86013a507ddfe7171ce67dd2b90ec813d7"
-      },
-      {
-        "path": "apps/electron/src/transport/channel-map.ts",
-        "sha256": "c9007e1e2a6f622547b8e21f5b397d291c13c902d5ab82cba0fe6bd09d3a519c"
-      },
-      {
-        "path": "docs/README.md",
-        "sha256": "a6d0b9d0a9d533a3261424b3f1baa04c6bd786f4a4d3df8b97c41e01aafb2cc8"
-      },
-      {
-        "path": "docs/dependencies/upgrade-closeout-2026-10-20.md",
-        "sha256": "360a8206d97bf61831db717cce96ebada436e24933abf518b7f14d1a5cb79ccb"
-      },
-      {
         "path": "docs/dependencies/upgrade-followup-2026-10-20.md",
-        "sha256": "3382fa742ae72811c44d0557b1406e6392b63afc067ee628b766efa2fd000842"
-      },
-      {
-        "path": "docs/dependencies/upgrade-plan-2026-10-18.md",
-        "sha256": "7ed35232cdfeb507a1898f699d82e4cf3d9415ae6d9b7ce97022ed703e83cc76"
-      },
-      {
-        "path": "docs/verification/README.md",
-        "sha256": "cc2c170678e0b117e98a93c1b3dfef201b0e0078232aa78eb230eef8f8a7e0e1"
-      },
-      {
-        "path": "docs/verification/upgrade-2026-10-18-failure-matrix.md",
-        "sha256": "9e2002cab33c4cdeb2c953707654908e93ba14fded4d08aa544c55d2630feadc"
-      },
-      {
-        "path": "docs/verification/upgrade-2026-10-18-implementation.md",
-        "sha256": "a5537c34d40bfc8cb46f9cf027f8ef4b2fc7d99417c0c8e0a34bf8be48eacea4"
-      },
-      {
-        "path": "packages/pi-agent-server/src/assistant-timing.ts",
-        "sha256": "e05cb50f1b2518c4b35a2bcaff4ae1509c348fc54569cd8c86e6e42a54b374a3"
-      },
-      {
-        "path": "packages/pi-agent-server/src/compaction-threshold.ts",
-        "sha256": "9ed470f337b5586d963b95a85c89d8256712511735ddcf0332af9172b866f80f"
-      },
-      {
-        "path": "packages/pi-agent-server/src/durable-model-stream.ts",
-        "sha256": "46e585217a599ecca21e4169892d0b0a4e7a6eae912d9c79192a603557e6b032"
-      },
-      {
-        "path": "packages/pi-agent-server/src/index.ts",
-        "sha256": "ca76fcf5b3f4b12a067c198422f7673a346611ded546a3989cb284fab577edbb"
-      },
-      {
-        "path": "packages/pi-agent-server/src/messages.ts",
-        "sha256": "4c32f276ea63c5b4115ef40d1adea5321152234e57561552550f6a9064b82ab3"
-      },
-      {
-        "path": "packages/pi-agent-server/src/model-metering.ts",
-        "sha256": "37291c2846614bdde6befe23240b37558e8da519e237eb45dd4d2cf25374230f"
-      },
-      {
-        "path": "packages/pi-agent-server/src/native-request-observation.ts",
-        "sha256": "476ea85fd77be23aa5ed9f333a82f8ae37ad20f37469c7f65f35222c01a40074"
-      },
-      {
-        "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
-        "sha256": "349b2ec999947d4bb095b902de934f706420ddb6e8764242856e39d349616b42"
-      },
-      {
-        "path": "packages/pi-agent-server/src/session-event-adapter.ts",
-        "sha256": "58eec84134c5780a6cf35b7249031d0766ddb258f2af333fee9cf2124b180377"
-      },
-      {
-        "path": "packages/pi-agent-server/src/session-settings.ts",
-        "sha256": "13bb3e92c5eef806cbdb3d7693322a42c113505cef26bb473788d808ca0b2b61"
-      },
-      {
-        "path": "packages/server-core/src/durable-runtime/model-usage-audit.ts",
-        "sha256": "06282159f614837abddf88614294ccf0fbe783ffc4aa2551f95b2326246ae76d"
-      },
-      {
-        "path": "packages/server-core/src/handlers/rpc/files.ts",
-        "sha256": "758f74b2d7c7b6fdc0e6d284effcf572b333c6a087b12ee951a858127fe8437e"
-      },
-      {
-        "path": "packages/server-core/src/handlers/rpc/settings.ts",
-        "sha256": "700a49612f7c466a53cbc5ac17cdb1181248c13a9aa74a08e65387ec2dcab2a1"
-      },
-      {
-        "path": "packages/server-core/src/handlers/session-manager-interface.ts",
-        "sha256": "699c2b6cd298b1b12623b77d0c9cc01cf5c3be2574dcf990338131fb47b3a827"
-      },
-      {
-        "path": "packages/server-core/src/runtime-adapters/session-projection.ts",
-        "sha256": "0f45de9012f530cba79aa32c2d3d40d9a37646cbb57073c5424da23902a299d4"
-      },
-      {
-        "path": "packages/server-core/src/services/heic.ts",
-        "sha256": "ee929715fe7c7bff60864a1d28b9001f99371b6e7cf7292dee07657b5e426415"
-      },
-      {
-        "path": "packages/server-core/src/sessions/SessionManager.ts",
-        "sha256": "f3a49671cfe0c708a4812f1396b798bf394a958278c0e0491d6a056cfe519841"
-      },
-      {
-        "path": "packages/shared/package.json",
-        "sha256": "a9742989ff8bca77a79a6b17b5efaf93ed42c942cd81f7a6f925fa130e86204f"
-      },
-      {
-        "path": "packages/shared/src/agent/backend/pi/event-adapter.ts",
-        "sha256": "b99e17a6f67d750005b0ec71653e46aa2f5db3116a761a825da142f5b7ad6847"
-      },
-      {
-        "path": "packages/shared/src/agent/backend/types.ts",
-        "sha256": "1f0d9d5d098e0e37ba8d0dbb676923205287697a8efc4409adc7c55eb52f7bf0"
-      },
-      {
-        "path": "packages/shared/src/agent/compaction-threshold.ts",
-        "sha256": "6d344f1eab3a231d22c52b83c5fa2110b08e2dc7f0e16eff31ed50442cb87893"
-      },
-      {
-        "path": "packages/shared/src/agent/pi-agent.ts",
-        "sha256": "db407bde6c6414f2975625b389e4c228a66a5545a73bb0732b3c58fc4cfa779e"
-      },
-      {
-        "path": "packages/shared/src/config/appearance.ts",
-        "sha256": "d28be8ce4666ea57f16bf92835b5ac919ba3f8152a01ae993d746239bed16bb1"
-      },
-      {
-        "path": "packages/shared/src/config/persisted-types.ts",
-        "sha256": "59deba5a69def8c33fda786c901069072dfa3f7c279aba7e29cb695efb9d47db"
-      },
-      {
-        "path": "packages/shared/src/config/storage.ts",
-        "sha256": "1ac1f6c8800f289c29a635c6bf03ac94aab72a0bcbac8584ba003757137fb18d"
-      },
-      {
-        "path": "packages/shared/src/durable-runtime/types.ts",
-        "sha256": "8deaa863a069c698dbb99e91b6032326cedfdc4d8f2baada2eb737bc5baadb50"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/de.json",
-        "sha256": "246528b6be89114039fb8d5f768b5018654974441ab6b7b1996984049a521830"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/en.json",
-        "sha256": "c414d92fccbc6e963cfe4b73dcc7af1479c0fc59f54e6573fb812e5dc63226b7"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/es.json",
-        "sha256": "0146dc52c1842b0c12eda4cb9f83ecec3961b6639a64509855d72dccc66a2e2e"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/hu.json",
-        "sha256": "5b87251d4884cbf9e18fafc1750edef3ea192372ac3eba1687d5c6e7e30e69a2"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/ja.json",
-        "sha256": "dc1f205684e2ce596e0530275eeb3befeaa22b12cf04a329a41af2e99723b565"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/pl.json",
-        "sha256": "0a0b7bcd7c47bdb0594acd2c16d042502511a4a8f2dddf5096950135c0972ba0"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
-        "sha256": "343327a8cf925b8ae9dc4f81b7cb8db7d4a1951cde060062473486455c0c7a06"
-      },
-      {
-        "path": "packages/shared/src/protocol/channels.ts",
-        "sha256": "45e252c2b5c2e9abd4a393e04848b232e9f07009f2797a6ef461e392518b137c"
-      },
-      {
-        "path": "packages/shared/src/protocol/routing.ts",
-        "sha256": "bda0815e12fc3fe47e4cab3433101621dfb77ff19429fbcf049ea218e441559b"
-      },
-      {
-        "path": "packages/ui/src/components/markdown/TiptapMarkdownEditor.tsx",
-        "sha256": "09d7f44b639586eb4a72ffb8b98a1814ea68875a909dabd81c9adbea0dd04230"
-      },
-      {
-        "path": "packages/ui/src/components/trajectory/TrajectoryOverview.tsx",
-        "sha256": "bfff8418e56c33d2df3d2fba8c16b3a574f290b90b1c3a9806ff1e02643b4bfb"
-      },
-      {
-        "path": "scripts/check-governance-boundaries.ts",
-        "sha256": "16eb241dc4cf7345d45b2683a5e824ae059de9cde6399d657fa86b985d2eefcf"
-      },
-      {
-        "path": "scripts/check-governance.ts",
-        "sha256": "76c32f9ba61c424dda2a681daca7f6f4a973dbdd59410ba923005e18baebb2d0"
-      },
-      {
-        "path": "scripts/contract-inventory.ts",
-        "sha256": "96ad5c1ae43e8034f085b4c533ae157abcc0fbcc352f95db4aa68a68a4f8afe1"
-      },
-      {
-        "path": "scripts/critical-scenario-policy.json",
-        "sha256": "174f279ab58aeb23d3eb6cb55c71634e52b07d4fbae66504248d62f12b23a6b6"
-      },
-      {
-        "path": "scripts/critical-scenarios.ts",
-        "sha256": "b90a564b5f596314e7292fe6a952dc755816c8f8948c164f52b5f5f5a8066f44"
-      },
-      {
-        "path": "scripts/rpc-contract-inventory.json",
-        "sha256": "a483ab7361a756f247cc81539b350023851f8b7ef45513dcd9d4ddbfefe7e36c"
-      },
-      {
-        "path": "scripts/verification/fixture-bundle-host.mjs",
-        "sha256": "1acefd06ba9effd76051d96b2113a99aa54769e482aeceb38475f0e68cd35c38"
-      },
-      {
-        "path": "scripts/verification/fixture-bundle.ts",
-        "sha256": "eab2187577dbf3ee0ac44694bdbb5641214b47dcca40d6d277fba27730e0d04a"
-      },
-      {
-        "path": "scripts/verification/fixtures/ai-settings-refinement.tsx",
-        "sha256": "afe5e7ecbc169d157608aef52d4b0b3c0a1990ab39074db132018ce7b64a2a19"
-      },
-      {
-        "path": "scripts/verification/fixtures/ai-settings-structure.tsx",
-        "sha256": "803410df754ab28b40818d123ef2c1f81acc47735ac95338a59cae9285d0d7a4"
-      },
-      {
-        "path": "scripts/verification/fixtures/api-key-form.tsx",
-        "sha256": "1d6dbb227ca82fc4e48fa99f95f56b6572fe911b4f17ac522723aad00ac94da1"
-      },
-      {
-        "path": "scripts/verification/fixtures/calendar-drag.tsx",
-        "sha256": "0e60ea4def25fca0f4590bff050a33c2eea366f79780d612639bc802026be1d3"
-      },
-      {
-        "path": "scripts/verification/fixtures/chat-starters-landing.tsx",
-        "sha256": "864c1e7abe73c9521ef76b25fe9999baf67fe7dbb2ace3f16ff62d33c51b5ac8"
-      },
-      {
-        "path": "scripts/verification/fixtures/chat-starters.tsx",
-        "sha256": "9016fa08299ad5abede6fa61939f2567bf31ab6af34b7bf9f973fc6b4b3f9335"
-      },
-      {
-        "path": "scripts/verification/fixtures/default-theme-preview.tsx",
-        "sha256": "202dc2949ae549327004ffe080a59147a1c988b3c8dac6f03c8e9be8dcb71fa5"
-      },
-      {
-        "path": "scripts/verification/fixtures/document-tools.py",
-        "sha256": "920c3ecc54b60860b5d447814b1527860af2510a4d3c08f9491732a42abca8f7"
-      },
-      {
-        "path": "scripts/verification/fixtures/generator-acceptance.ts",
-        "sha256": "49b74eeaacf42b17e0b99e79749fbb00c72c2c92a5f17710045917621b91fd56"
-      },
-      {
-        "path": "scripts/verification/fixtures/heic-ipma.ts",
-        "sha256": "6c3fcd836abcc61bf9ee946c8f7458d5d96c5b9e81736f63e657674a7fe366d2"
-      },
-      {
-        "path": "scripts/verification/fixtures/native-attachments.cjs",
-        "sha256": "53b170abfa1d1d2a9c0e4b23eb7e6ed12ce1bed62d100838668741a646e0346a"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-contract-css/electron.css",
-        "sha256": "6fcad08b5538174505c1fdd6f70aa27749bc423fbd73c67ca7a538250cb9153d"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-contract-css/ui.css",
-        "sha256": "08ac4121e3cb1b30aaf4d5d606c1d9ad768cb5cd2d22ffe440bea9050971e2a8"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-contract-css/viewer.css",
-        "sha256": "e77c207eef271902cab51de2adb65568cabe3a48c5e0fde66c3dba0a17f9cbdd"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-contract-css/webui.css",
-        "sha256": "a8e7d178707a71001d202c92fdda565755d7279920f58dd9ed3774ad08f08202"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-contract.tsx",
-        "sha256": "829baf9fdde18bab75244145e82befbd9cb5a4a97424107ff731d3a3b596359c"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-foundation-css/electron.css",
-        "sha256": "bebbe7a9bd66d3282015463e7bf7135e383fbfde46c934df65346f710d03fe90"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-foundation-css/ui.css",
-        "sha256": "9db4859da8f2b598379f13d78c26b3e5b759871a53ba8b8df6586a813a0e9fd5"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-foundation-css/viewer.css",
-        "sha256": "2112c553420c2444ca8b57f6f137b7aa4f91034b3e94e8bf1110f48cca48ee01"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-foundation-css/webui.css",
-        "sha256": "4e3750aa44516e25ae8093c29b91da514fcbb2303e02eef4b660504cdf5d0cd7"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-foundation.tsx",
-        "sha256": "dfb2cfa1eacc555ab3495af434796be9c3bab66b2e39fd0bf7faf5b7b86454d4"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-roles-css/electron.css",
-        "sha256": "ea99cf1d324f6dd4da7a9ee18affd15b06a7454f1c0553d67349e6d35e74ee5e"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-roles-css/viewer.css",
-        "sha256": "e50dfd17f2290c9b8d2f336f4e1d392cc3cd662f5ad4bc01119f0bf8e98cc57c"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-roles-css/webui.css",
-        "sha256": "25cf0612f91dc4e401c80beb446f837bd9c5101dfa1eebcc65e83bba6bb22648"
-      },
-      {
-        "path": "scripts/verification/fixtures/theme-roles.tsx",
-        "sha256": "e794e3dce4b447e76987e497c26fa01c94ce2b80e04806e55e72a7b5a1103063"
-      },
-      {
-        "path": "scripts/verification/fixtures/undici.cjs",
-        "sha256": "c604ce6cb2bcdca538ef1d20f104126c6d98254206595375baa4355545629896"
-      },
-      {
-        "path": "scripts/verification/fixtures/upgrade-followup.tsx",
-        "sha256": "24fce7c0046d22792e820511000225bade1a0ccec8689241ed79f22eb277c5d4"
-      },
-      {
-        "path": "scripts/verification/fixtures/upstream-015-renderer.tsx",
-        "sha256": "989694975283870fca6091f75f56a070d022c01fb202ba7cdbadf0fbbfa1a64e"
-      },
-      {
-        "path": "scripts/verification/fixtures/windows-reopen.cjs",
-        "sha256": "6d152116d58918b4fbab18d239854b971dbc6cb743f0c0e9651d80b0da3530ba"
-      },
-      {
-        "path": "scripts/verification/theme-browser-host-workflow.ts",
-        "sha256": "936fd819dfe6164c909ed720eeef48ab854317d09a29e8df029b751ee0a84942"
-      },
-      {
-        "path": "scripts/verification/theme-contract-workflow.ts",
-        "sha256": "c5d086e5be167a233abaa51df68a471706fd6b1b12162bd16b9e1a20badbd516"
-      },
-      {
-        "path": "scripts/verification/theme-design-workflow.ts",
-        "sha256": "7505ca904388c7a23ff61d92ce3214040401501faa82458d790b6833c651589b"
-      },
-      {
-        "path": "scripts/verification/theme-domains-workflow.ts",
-        "sha256": "a29a62e2ca54c5ef3fde441a65774c4a69ff68b2a86244d9ef6dc375e2309681"
-      },
-      {
-        "path": "scripts/verification/theme-foundation-workflow.ts",
-        "sha256": "49b811f497f7a03d0d6184ded60e01722f53e4f3ec8dcb79fc39ba5d38285108"
-      },
-      {
-        "path": "scripts/verification/theme-login-workflow.ts",
-        "sha256": "dd1e2a77eba032ee157b522344e6968f3bb1dd8e2ad1680d68c6f982c4338081"
-      },
-      {
-        "path": "scripts/verification/theme-roles-workflow.ts",
-        "sha256": "1f52583363ce9fda756ed31482eba4aa904b374d5a9f013a2ceb5f528bd71b34"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-calendar-drag-workflow.ts",
-        "sha256": "dd30cc1ff3ef0e5c344252c462f5c78ba88941af29f4860a46202baed25ea89d"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-chat-starters-browser-workflow.ts",
-        "sha256": "01eda1d68d77f7e0e830f5461b15f6d4b0e08cb933a50b779c68ea0d0bfcbdd2"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-chat-starters-landing-workflow.ts",
-        "sha256": "a41501faea026949ec34a65b0f383106d53a3262256f8da4ba85995428e6e249"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-document-tools-workflow.ts",
-        "sha256": "fcd2c8e2f2654cf3f0c37c5d663fecab64157a5fee45ca1e40c80694089feb1a"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-editor-workflow.ts",
-        "sha256": "f220bea45f987bf2d4f35ea11248b111d7d71cdf829325f364974c3760cdb69c"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-endpoints-workflow.ts",
-        "sha256": "72c60a6593ac1b3946efc0e02835bb969a45935011a538937ebb97438021bd40"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-fixtures-workflow.ts",
-        "sha256": "05633553a86ba41173deafb73f1a6ff7c3f96330441da7d0d977831e741365d5"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-followup-browser-workflow.ts",
-        "sha256": "304cd4fedce338eb768f051832781c7f9829d353db950bdd9541a21633e88a76"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-heic-store-workflow.ts",
-        "sha256": "3a083c7d80db895bc981551c1cefdd1f9d3fba560fcd6175c6490c3c65047390"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-heic-workflow.ts",
-        "sha256": "d6c07d09e07ef2e4ee17d0e2062eed89eda53a82cf2e74fb4ee0cbd9821a061b"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-model-form-workflow.ts",
-        "sha256": "fb4e885f1dcc4f17651d5b1558a71369d5ccaa6b389efeb78528667f671e3a00"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-native-attachments-workflow.ts",
-        "sha256": "12501c08a56548ff692151e00acea5c4fa7fc0561f95655cfd27d48b208d9bcb"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-packaged-workflow.ts",
-        "sha256": "02337391e0870c70ebea4ff2d6c3e4071f0692e5622e9c90d5cdfb98b13e96f6"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-pdf-fixtures-workflow.ts",
-        "sha256": "249c332d6ebf67c4c75bd51a10082d3c76a6859888ba7ca1089f1569601ec697"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-pdf-workflow.ts",
-        "sha256": "d254cb2ec1a7898f03c0b76eeccd8f2769a161abe636f3e8782a147cfa628137"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-pi-runtime-workflow.ts",
-        "sha256": "05e58d82bd8229528f02a7592f3bbae895762ce06ce0d6142623db361e1e6f7b"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-results.ts",
-        "sha256": "06438a1a68b324e087584206b97a7a46f56d11446e8326bd9c41bdb7e7947eb7"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-undici-workflow.ts",
-        "sha256": "02b4aa718ebbcfa7734c9ccdcf9f2830c79393a5932f8748764427fb6eca81f0"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-usage-ledger-workflow.ts",
-        "sha256": "ca052b05bcf84d9a4d7bb30d0cdfcd6c62c204ca4748a56e5485374fb403df5c"
-      },
-      {
-        "path": "scripts/verification/upgrade-0153-workspace-isolation-workflow.ts",
-        "sha256": "af6fb0016752fe3ecd879d997e65778638620a61c6ec34d82c0128cb3a65a5ea"
-      },
-      {
-        "path": "scripts/verification/upstream-0140-b4b5-ui.tsx",
-        "sha256": "904352bdfef455c09168ab4e187c9847c9661894851cea376e3741dd53bba704"
+        "sha256": "f872845c2b66e4fd22d6c00ef9d5eb851c77903da3d2271cce1cd9e1f3958b1a"
       }
     ],
     "generatedResultExclusions": [
@@ -537,11 +25,11 @@
   },
   "lockfile": {
     "path": "bun.lock",
-    "sha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+    "sha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
     "churnFromFreeze": {
       "baseCommit": "82714e2ae3b76643ae16ef1d3a6abfe66e8bf574",
       "counts": {
-        "version-or-source-changed": 81,
+        "version-or-source-changed": 83,
         "added": 15,
         "removed": 20,
         "resolution-metadata-changed": 2
@@ -1112,6 +600,12 @@
           "after": "eslint@10.13.0"
         },
         {
+          "name": "follow-redirects",
+          "status": "version-or-source-changed",
+          "before": "follow-redirects@1.16.0",
+          "after": "follow-redirects@1.16.1"
+        },
+        {
           "name": "heic-convert",
           "status": "added",
           "before": null,
@@ -1146,6 +640,12 @@
           "status": "added",
           "before": null,
           "after": "libheif-js@1.23.5"
+        },
+        {
+          "name": "markdown-it",
+          "status": "version-or-source-changed",
+          "before": "markdown-it@14.3.1",
+          "after": "markdown-it@14.3.3"
         },
         {
           "name": "marked",
@@ -1541,12 +1041,12 @@
   },
   "artifacts": {
     "package.json": {
-      "sha256": "6018e02dcfdb8e01b4167960f8c774359bbfde637e1c6908beec00d6ef49f42b",
-      "bytes": 19408
+      "sha256": "a694408d51f78bdf4cd9f45be9e59c673385fdfe4b6db1563ff0fe2918f77e11",
+      "bytes": 20250
     },
     "bun.lock": {
-      "sha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "bytes": 606659
+      "sha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+      "bytes": 606753
     },
     "apps/electron/electron-builder.yml": {
       "sha256": "934cd1a4c88aa3f1df8521bf82a44c9a567d11d708c3c6a408edbc1cc69745f5",
@@ -1605,16 +1105,16 @@
       "bytes": 3328
     },
     "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx": {
-      "sha256": "109730b552c118d0739f80af0d0e8cd1a1acfba8b569008366a5c70fcc838fcd",
-      "bytes": 44673
+      "sha256": "0b03eb1aa744a4ad11063f6259075ff5879251a8294cf091b31870a4bc9e6c97",
+      "bytes": 45027
     },
     "apps/electron/src/renderer/components/apisetup/tier-models.ts": {
       "sha256": "4307e7e9ef2bcd97d676866c59945e6eaf29580677e5b3d136f7789af8c25647",
       "bytes": 788
     },
     "apps/electron/src/renderer/components/app-shell/AttachmentPreview.tsx": {
-      "sha256": "51ba3dba5137c052ed39983967d0db79d5f5c6801d1ea5ee2dcd21fe1c161586",
-      "bytes": 5244
+      "sha256": "2bcb64fe1fe843246b8fc721ceb098a0cb6fa99ad5ad82cc4b8b3a7671e59c41",
+      "bytes": 5246
     },
     "apps/electron/src/renderer/components/chat/ChatStarters.tsx": {
       "sha256": "9b015a7548a4df168ca71b4ecac1ec163ced77ef86a9a38d8d62185becdb14e4",
@@ -1625,8 +1125,8 @@
       "bytes": 1536
     },
     "apps/electron/src/renderer/pages/settings/ChatStartersSection.tsx": {
-      "sha256": "e387947db517f06520f9b0603d28bd151018ad912774dbdd0db4f6be69abfc0f",
-      "bytes": 9389
+      "sha256": "252e16dc24e1ca86fafffd4eea1b382e9017ade3427f79d8f9a8fdce9c472ef4",
+      "bytes": 9401
     },
     "scripts/verification/workflow-browser.ts": {
       "sha256": "52c4aa0785f4d123e0a85081013501c1fe8b312c3ab736d0a573f21b014ab822",
@@ -1652,493 +1152,9 @@
       "sha256": "e9a62f6134263139e8c91900606355e0b6ef7910d85d7b5ea360ecf10c53895a",
       "bytes": 9
     },
-    "apps/electron/resources/release-notes/next.md": {
-      "sha256": "c0e118d4e5465f9adce0f9715e0b1e59c5e4eb23c0ca5693c7b8ab3eece17b2e",
-      "bytes": 7126
-    },
-    "apps/electron/src/renderer/App.tsx": {
-      "sha256": "07d2ad315c5d1078a86e5dd03dad2fd196964277ce4bd48055f793ce6594c797",
-      "bytes": 103468
-    },
-    "apps/electron/src/renderer/components/RtkUpdateDialog.tsx": {
-      "sha256": "e13d7b1e17c566414f335170d9d5052fae1f928e8b05f396e1574aa4a8f59955",
-      "bytes": 6609
-    },
-    "apps/electron/src/renderer/components/app-shell/AppShell.tsx": {
-      "sha256": "f9e925a98a728e2eb10c31a27847958950a58a8379347beb115301970c3a5c65",
-      "bytes": 203796
-    },
-    "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx": {
-      "sha256": "4d795b1bdf28647e539a45e49a3b5d063001e0a2fe9d53ad7a714818f224ef12",
-      "bytes": 109903
-    },
-    "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx": {
-      "sha256": "88951eca831ce69a7bc931490296185b0e73a9b2cc4f59e823553b50e358a4be",
-      "bytes": 113587
-    },
-    "apps/electron/src/renderer/components/settings/CompactionThresholdSetting.tsx": {
-      "sha256": "f8a1180c42f552e7a094631b575266e5c955a7f37fa1055dcfc39949edcc5f97",
-      "bytes": 2648
-    },
-    "apps/electron/src/renderer/context/AppShellContext.tsx": {
-      "sha256": "f0b1f8bf3a478235238d66568e129d96cd64fa5c499819a18c17cf36b53dcb44",
-      "bytes": 13214
-    },
-    "apps/electron/src/renderer/hooks/useLabels.ts": {
-      "sha256": "fbf1bfee45d46ea240ca0498d4bce2f291f8dc0cc95d57e3b10d1a59e6f45388",
-      "bytes": 2787
-    },
-    "apps/electron/src/renderer/hooks/useStatuses.ts": {
-      "sha256": "263f5e6cdb32ae38625ab395027ab1880066a3b043e55984c76fcdf79cc243ea",
-      "bytes": 2471
-    },
-    "apps/electron/src/renderer/hooks/useWorkspaceChatStarters.ts": {
-      "sha256": "c940ccc728de41c7631349f0b28563a282b14b9801b1752535239d3943f1d427",
-      "bytes": 3710
-    },
-    "apps/electron/src/renderer/lib/read-after-reconnect.ts": {
-      "sha256": "fa844724d1bfc9678197c7198a49fb41c43898fa0474615e0e7ce5dea28e553c",
-      "bytes": 1293
-    },
-    "apps/electron/src/renderer/pages/ChatPage.tsx": {
-      "sha256": "227cd3e392b54a5092e53bf8763efcdc5ee5ac53dd4eadba726d4be735507b39",
-      "bytes": 34099
-    },
-    "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx": {
-      "sha256": "43f1df5f2817442217e326c1c9f111830fb2f545190fbb5a93078c54966a56a7",
-      "bytes": 78630
-    },
-    "apps/electron/src/shared/__tests__/ipc-channels.test.ts": {
-      "sha256": "5287f8288077be13b114f0b822b30b0da058b532d6e5d64f641421b1b1007c76",
-      "bytes": 13215
-    },
-    "apps/electron/src/shared/types.ts": {
-      "sha256": "10d71632ffe4d28dcaabd364a0b8dc86013a507ddfe7171ce67dd2b90ec813d7",
-      "bytes": 69969
-    },
-    "apps/electron/src/transport/channel-map.ts": {
-      "sha256": "c9007e1e2a6f622547b8e21f5b397d291c13c902d5ab82cba0fe6bd09d3a519c",
-      "bytes": 27908
-    },
-    "docs/README.md": {
-      "sha256": "a6d0b9d0a9d533a3261424b3f1baa04c6bd786f4a4d3df8b97c41e01aafb2cc8",
-      "bytes": 32877
-    },
-    "docs/dependencies/upgrade-closeout-2026-10-20.md": {
-      "sha256": "360a8206d97bf61831db717cce96ebada436e24933abf518b7f14d1a5cb79ccb",
-      "bytes": 14602
-    },
     "docs/dependencies/upgrade-followup-2026-10-20.md": {
-      "sha256": "3382fa742ae72811c44d0557b1406e6392b63afc067ee628b766efa2fd000842",
+      "sha256": "f872845c2b66e4fd22d6c00ef9d5eb851c77903da3d2271cce1cd9e1f3958b1a",
       "bytes": 5419
-    },
-    "docs/dependencies/upgrade-plan-2026-10-18.md": {
-      "sha256": "7ed35232cdfeb507a1898f699d82e4cf3d9415ae6d9b7ce97022ed703e83cc76",
-      "bytes": 24159
-    },
-    "docs/verification/README.md": {
-      "sha256": "cc2c170678e0b117e98a93c1b3dfef201b0e0078232aa78eb230eef8f8a7e0e1",
-      "bytes": 24965
-    },
-    "docs/verification/upgrade-2026-10-18-failure-matrix.md": {
-      "sha256": "9e2002cab33c4cdeb2c953707654908e93ba14fded4d08aa544c55d2630feadc",
-      "bytes": 87723
-    },
-    "docs/verification/upgrade-2026-10-18-implementation.md": {
-      "sha256": "a5537c34d40bfc8cb46f9cf027f8ef4b2fc7d99417c0c8e0a34bf8be48eacea4",
-      "bytes": 53148
-    },
-    "packages/pi-agent-server/src/assistant-timing.ts": {
-      "sha256": "e05cb50f1b2518c4b35a2bcaff4ae1509c348fc54569cd8c86e6e42a54b374a3",
-      "bytes": 3033
-    },
-    "packages/pi-agent-server/src/compaction-threshold.ts": {
-      "sha256": "9ed470f337b5586d963b95a85c89d8256712511735ddcf0332af9172b866f80f",
-      "bytes": 3912
-    },
-    "packages/pi-agent-server/src/durable-model-stream.ts": {
-      "sha256": "46e585217a599ecca21e4169892d0b0a4e7a6eae912d9c79192a603557e6b032",
-      "bytes": 3919
-    },
-    "packages/pi-agent-server/src/index.ts": {
-      "sha256": "ca76fcf5b3f4b12a067c198422f7673a346611ded546a3989cb284fab577edbb",
-      "bytes": 100329
-    },
-    "packages/pi-agent-server/src/messages.ts": {
-      "sha256": "4c32f276ea63c5b4115ef40d1adea5321152234e57561552550f6a9064b82ab3",
-      "bytes": 11609
-    },
-    "packages/pi-agent-server/src/model-metering.ts": {
-      "sha256": "37291c2846614bdde6befe23240b37558e8da519e237eb45dd4d2cf25374230f",
-      "bytes": 3301
-    },
-    "packages/pi-agent-server/src/native-request-observation.ts": {
-      "sha256": "476ea85fd77be23aa5ed9f333a82f8ae37ad20f37469c7f65f35222c01a40074",
-      "bytes": 3725
-    },
-    "packages/pi-agent-server/src/phaneris-resource-loader.ts": {
-      "sha256": "349b2ec999947d4bb095b902de934f706420ddb6e8764242856e39d349616b42",
-      "bytes": 5124
-    },
-    "packages/pi-agent-server/src/session-event-adapter.ts": {
-      "sha256": "58eec84134c5780a6cf35b7249031d0766ddb258f2af333fee9cf2124b180377",
-      "bytes": 11130
-    },
-    "packages/pi-agent-server/src/session-settings.ts": {
-      "sha256": "13bb3e92c5eef806cbdb3d7693322a42c113505cef26bb473788d808ca0b2b61",
-      "bytes": 6315
-    },
-    "packages/server-core/src/durable-runtime/model-usage-audit.ts": {
-      "sha256": "06282159f614837abddf88614294ccf0fbe783ffc4aa2551f95b2326246ae76d",
-      "bytes": 4143
-    },
-    "packages/server-core/src/handlers/session-manager-interface.ts": {
-      "sha256": "699c2b6cd298b1b12623b77d0c9cc01cf5c3be2574dcf990338131fb47b3a827",
-      "bytes": 17852
-    },
-    "packages/server-core/src/runtime-adapters/session-projection.ts": {
-      "sha256": "0f45de9012f530cba79aa32c2d3d40d9a37646cbb57073c5424da23902a299d4",
-      "bytes": 8358
-    },
-    "packages/server-core/src/sessions/SessionManager.ts": {
-      "sha256": "f3a49671cfe0c708a4812f1396b798bf394a958278c0e0491d6a056cfe519841",
-      "bytes": 527021
-    },
-    "packages/shared/package.json": {
-      "sha256": "a9742989ff8bca77a79a6b17b5efaf93ed42c942cd81f7a6f925fa130e86204f",
-      "bytes": 8282
-    },
-    "packages/shared/src/agent/backend/pi/event-adapter.ts": {
-      "sha256": "b99e17a6f67d750005b0ec71653e46aa2f5db3116a761a825da142f5b7ad6847",
-      "bytes": 59188
-    },
-    "packages/shared/src/agent/backend/types.ts": {
-      "sha256": "1f0d9d5d098e0e37ba8d0dbb676923205287697a8efc4409adc7c55eb52f7bf0",
-      "bytes": 27078
-    },
-    "packages/shared/src/agent/compaction-threshold.ts": {
-      "sha256": "6d344f1eab3a231d22c52b83c5fa2110b08e2dc7f0e16eff31ed50442cb87893",
-      "bytes": 498
-    },
-    "packages/shared/src/agent/pi-agent.ts": {
-      "sha256": "db407bde6c6414f2975625b389e4c228a66a5545a73bb0732b3c58fc4cfa779e",
-      "bytes": 151278
-    },
-    "packages/shared/src/config/appearance.ts": {
-      "sha256": "d28be8ce4666ea57f16bf92835b5ac919ba3f8152a01ae993d746239bed16bb1",
-      "bytes": 29869
-    },
-    "packages/shared/src/config/persisted-types.ts": {
-      "sha256": "59deba5a69def8c33fda786c901069072dfa3f7c279aba7e29cb695efb9d47db",
-      "bytes": 4846
-    },
-    "packages/shared/src/config/storage.ts": {
-      "sha256": "1ac1f6c8800f289c29a635c6bf03ac94aab72a0bcbac8584ba003757137fb18d",
-      "bytes": 3738
-    },
-    "packages/shared/src/durable-runtime/types.ts": {
-      "sha256": "8deaa863a069c698dbb99e91b6032326cedfdc4d8f2baada2eb737bc5baadb50",
-      "bytes": 10220
-    },
-    "packages/shared/src/i18n/locales/de.json": {
-      "sha256": "246528b6be89114039fb8d5f768b5018654974441ab6b7b1996984049a521830",
-      "bytes": 186685
-    },
-    "packages/shared/src/i18n/locales/en.json": {
-      "sha256": "c414d92fccbc6e963cfe4b73dcc7af1479c0fc59f54e6573fb812e5dc63226b7",
-      "bytes": 171367
-    },
-    "packages/shared/src/i18n/locales/es.json": {
-      "sha256": "0146dc52c1842b0c12eda4cb9f83ecec3961b6639a64509855d72dccc66a2e2e",
-      "bytes": 184845
-    },
-    "packages/shared/src/i18n/locales/hu.json": {
-      "sha256": "5b87251d4884cbf9e18fafc1750edef3ea192372ac3eba1687d5c6e7e30e69a2",
-      "bytes": 191691
-    },
-    "packages/shared/src/i18n/locales/ja.json": {
-      "sha256": "dc1f205684e2ce596e0530275eeb3befeaa22b12cf04a329a41af2e99723b565",
-      "bytes": 204378
-    },
-    "packages/shared/src/i18n/locales/pl.json": {
-      "sha256": "0a0b7bcd7c47bdb0594acd2c16d042502511a4a8f2dddf5096950135c0972ba0",
-      "bytes": 183962
-    },
-    "packages/shared/src/i18n/locales/zh-Hans.json": {
-      "sha256": "343327a8cf925b8ae9dc4f81b7cb8db7d4a1951cde060062473486455c0c7a06",
-      "bytes": 168354
-    },
-    "packages/shared/src/protocol/channels.ts": {
-      "sha256": "45e252c2b5c2e9abd4a393e04848b232e9f07009f2797a6ef461e392518b137c",
-      "bytes": 20725
-    },
-    "packages/shared/src/protocol/routing.ts": {
-      "sha256": "bda0815e12fc3fe47e4cab3433101621dfb77ff19429fbcf049ea218e441559b",
-      "bytes": 21463
-    },
-    "packages/ui/src/components/markdown/TiptapMarkdownEditor.tsx": {
-      "sha256": "09d7f44b639586eb4a72ffb8b98a1814ea68875a909dabd81c9adbea0dd04230",
-      "bytes": 13764
-    },
-    "packages/ui/src/components/trajectory/TrajectoryOverview.tsx": {
-      "sha256": "bfff8418e56c33d2df3d2fba8c16b3a574f290b90b1c3a9806ff1e02643b4bfb",
-      "bytes": 18053
-    },
-    "scripts/check-governance-boundaries.ts": {
-      "sha256": "16eb241dc4cf7345d45b2683a5e824ae059de9cde6399d657fa86b985d2eefcf",
-      "bytes": 11333
-    },
-    "scripts/check-governance.ts": {
-      "sha256": "76c32f9ba61c424dda2a681daca7f6f4a973dbdd59410ba923005e18baebb2d0",
-      "bytes": 9968
-    },
-    "scripts/contract-inventory.ts": {
-      "sha256": "96ad5c1ae43e8034f085b4c533ae157abcc0fbcc352f95db4aa68a68a4f8afe1",
-      "bytes": 6393
-    },
-    "scripts/critical-scenario-policy.json": {
-      "sha256": "174f279ab58aeb23d3eb6cb55c71634e52b07d4fbae66504248d62f12b23a6b6",
-      "bytes": 20525
-    },
-    "scripts/rpc-contract-inventory.json": {
-      "sha256": "a483ab7361a756f247cc81539b350023851f8b7ef45513dcd9d4ddbfefe7e36c",
-      "bytes": 350219
-    },
-    "scripts/verification/fixture-bundle-host.mjs": {
-      "sha256": "1acefd06ba9effd76051d96b2113a99aa54769e482aeceb38475f0e68cd35c38",
-      "bytes": 2989
-    },
-    "scripts/verification/fixture-bundle.ts": {
-      "sha256": "eab2187577dbf3ee0ac44694bdbb5641214b47dcca40d6d277fba27730e0d04a",
-      "bytes": 5244
-    },
-    "scripts/verification/fixtures/ai-settings-refinement.tsx": {
-      "sha256": "afe5e7ecbc169d157608aef52d4b0b3c0a1990ab39074db132018ce7b64a2a19",
-      "bytes": 5432
-    },
-    "scripts/verification/fixtures/ai-settings-structure.tsx": {
-      "sha256": "803410df754ab28b40818d123ef2c1f81acc47735ac95338a59cae9285d0d7a4",
-      "bytes": 11599
-    },
-    "scripts/verification/fixtures/api-key-form.tsx": {
-      "sha256": "1d6dbb227ca82fc4e48fa99f95f56b6572fe911b4f17ac522723aad00ac94da1",
-      "bytes": 4914
-    },
-    "scripts/verification/fixtures/calendar-drag.tsx": {
-      "sha256": "0e60ea4def25fca0f4590bff050a33c2eea366f79780d612639bc802026be1d3",
-      "bytes": 14405
-    },
-    "scripts/verification/fixtures/chat-starters-landing.tsx": {
-      "sha256": "864c1e7abe73c9521ef76b25fe9999baf67fe7dbb2ace3f16ff62d33c51b5ac8",
-      "bytes": 10708
-    },
-    "scripts/verification/fixtures/chat-starters.tsx": {
-      "sha256": "9016fa08299ad5abede6fa61939f2567bf31ab6af34b7bf9f973fc6b4b3f9335",
-      "bytes": 7567
-    },
-    "scripts/verification/fixtures/default-theme-preview.tsx": {
-      "sha256": "202dc2949ae549327004ffe080a59147a1c988b3c8dac6f03c8e9be8dcb71fa5",
-      "bytes": 10841
-    },
-    "scripts/verification/fixtures/document-tools.py": {
-      "sha256": "920c3ecc54b60860b5d447814b1527860af2510a4d3c08f9491732a42abca8f7",
-      "bytes": 5886
-    },
-    "scripts/verification/fixtures/generator-acceptance.ts": {
-      "sha256": "49b74eeaacf42b17e0b99e79749fbb00c72c2c92a5f17710045917621b91fd56",
-      "bytes": 3497
-    },
-    "scripts/verification/fixtures/heic-ipma.ts": {
-      "sha256": "6c3fcd836abcc61bf9ee946c8f7458d5d96c5b9e81736f63e657674a7fe366d2",
-      "bytes": 4136
-    },
-    "scripts/verification/fixtures/native-attachments.cjs": {
-      "sha256": "53b170abfa1d1d2a9c0e4b23eb7e6ed12ce1bed62d100838668741a646e0346a",
-      "bytes": 8708
-    },
-    "scripts/verification/fixtures/theme-contract-css/electron.css": {
-      "sha256": "6fcad08b5538174505c1fdd6f70aa27749bc423fbd73c67ca7a538250cb9153d",
-      "bytes": 123
-    },
-    "scripts/verification/fixtures/theme-contract-css/ui.css": {
-      "sha256": "08ac4121e3cb1b30aaf4d5d606c1d9ad768cb5cd2d22ffe440bea9050971e2a8",
-      "bytes": 119
-    },
-    "scripts/verification/fixtures/theme-contract-css/viewer.css": {
-      "sha256": "e77c207eef271902cab51de2adb65568cabe3a48c5e0fde66c3dba0a17f9cbdd",
-      "bytes": 112
-    },
-    "scripts/verification/fixtures/theme-contract-css/webui.css": {
-      "sha256": "a8e7d178707a71001d202c92fdda565755d7279920f58dd9ed3774ad08f08202",
-      "bytes": 111
-    },
-    "scripts/verification/fixtures/theme-contract.tsx": {
-      "sha256": "829baf9fdde18bab75244145e82befbd9cb5a4a97424107ff731d3a3b596359c",
-      "bytes": 5808
-    },
-    "scripts/verification/fixtures/theme-foundation-css/electron.css": {
-      "sha256": "bebbe7a9bd66d3282015463e7bf7135e383fbfde46c934df65346f710d03fe90",
-      "bytes": 95
-    },
-    "scripts/verification/fixtures/theme-foundation-css/ui.css": {
-      "sha256": "9db4859da8f2b598379f13d78c26b3e5b759871a53ba8b8df6586a813a0e9fd5",
-      "bytes": 91
-    },
-    "scripts/verification/fixtures/theme-foundation-css/viewer.css": {
-      "sha256": "2112c553420c2444ca8b57f6f137b7aa4f91034b3e94e8bf1110f48cca48ee01",
-      "bytes": 84
-    },
-    "scripts/verification/fixtures/theme-foundation-css/webui.css": {
-      "sha256": "4e3750aa44516e25ae8093c29b91da514fcbb2303e02eef4b660504cdf5d0cd7",
-      "bytes": 83
-    },
-    "scripts/verification/fixtures/theme-foundation.tsx": {
-      "sha256": "dfb2cfa1eacc555ab3495af434796be9c3bab66b2e39fd0bf7faf5b7b86454d4",
-      "bytes": 4285
-    },
-    "scripts/verification/fixtures/theme-roles-css/electron.css": {
-      "sha256": "ea99cf1d324f6dd4da7a9ee18affd15b06a7454f1c0553d67349e6d35e74ee5e",
-      "bytes": 183
-    },
-    "scripts/verification/fixtures/theme-roles-css/viewer.css": {
-      "sha256": "e50dfd17f2290c9b8d2f336f4e1d392cc3cd662f5ad4bc01119f0bf8e98cc57c",
-      "bytes": 172
-    },
-    "scripts/verification/fixtures/theme-roles-css/webui.css": {
-      "sha256": "25cf0612f91dc4e401c80beb446f837bd9c5101dfa1eebcc65e83bba6bb22648",
-      "bytes": 171
-    },
-    "scripts/verification/fixtures/theme-roles.tsx": {
-      "sha256": "e794e3dce4b447e76987e497c26fa01c94ce2b80e04806e55e72a7b5a1103063",
-      "bytes": 9640
-    },
-    "scripts/verification/fixtures/undici.cjs": {
-      "sha256": "c604ce6cb2bcdca538ef1d20f104126c6d98254206595375baa4355545629896",
-      "bytes": 4476
-    },
-    "scripts/verification/fixtures/upgrade-followup.tsx": {
-      "sha256": "24fce7c0046d22792e820511000225bade1a0ccec8689241ed79f22eb277c5d4",
-      "bytes": 2650
-    },
-    "scripts/verification/fixtures/upstream-015-renderer.tsx": {
-      "sha256": "989694975283870fca6091f75f56a070d022c01fb202ba7cdbadf0fbbfa1a64e",
-      "bytes": 3954
-    },
-    "scripts/verification/fixtures/windows-reopen.cjs": {
-      "sha256": "6d152116d58918b4fbab18d239854b971dbc6cb743f0c0e9651d80b0da3530ba",
-      "bytes": 14251
-    },
-    "scripts/verification/theme-browser-host-workflow.ts": {
-      "sha256": "936fd819dfe6164c909ed720eeef48ab854317d09a29e8df029b751ee0a84942",
-      "bytes": 5265
-    },
-    "scripts/verification/theme-contract-workflow.ts": {
-      "sha256": "c5d086e5be167a233abaa51df68a471706fd6b1b12162bd16b9e1a20badbd516",
-      "bytes": 13929
-    },
-    "scripts/verification/theme-design-workflow.ts": {
-      "sha256": "7505ca904388c7a23ff61d92ce3214040401501faa82458d790b6833c651589b",
-      "bytes": 6875
-    },
-    "scripts/verification/theme-domains-workflow.ts": {
-      "sha256": "a29a62e2ca54c5ef3fde441a65774c4a69ff68b2a86244d9ef6dc375e2309681",
-      "bytes": 8816
-    },
-    "scripts/verification/theme-foundation-workflow.ts": {
-      "sha256": "49b811f497f7a03d0d6184ded60e01722f53e4f3ec8dcb79fc39ba5d38285108",
-      "bytes": 37209
-    },
-    "scripts/verification/theme-login-workflow.ts": {
-      "sha256": "dd1e2a77eba032ee157b522344e6968f3bb1dd8e2ad1680d68c6f982c4338081",
-      "bytes": 4279
-    },
-    "scripts/verification/theme-roles-workflow.ts": {
-      "sha256": "1f52583363ce9fda756ed31482eba4aa904b374d5a9f013a2ceb5f528bd71b34",
-      "bytes": 11505
-    },
-    "scripts/verification/upgrade-0153-calendar-drag-workflow.ts": {
-      "sha256": "dd30cc1ff3ef0e5c344252c462f5c78ba88941af29f4860a46202baed25ea89d",
-      "bytes": 28371
-    },
-    "scripts/verification/upgrade-0153-chat-starters-browser-workflow.ts": {
-      "sha256": "01eda1d68d77f7e0e830f5461b15f6d4b0e08cb933a50b779c68ea0d0bfcbdd2",
-      "bytes": 21814
-    },
-    "scripts/verification/upgrade-0153-chat-starters-landing-workflow.ts": {
-      "sha256": "a41501faea026949ec34a65b0f383106d53a3262256f8da4ba85995428e6e249",
-      "bytes": 17183
-    },
-    "scripts/verification/upgrade-0153-document-tools-workflow.ts": {
-      "sha256": "fcd2c8e2f2654cf3f0c37c5d663fecab64157a5fee45ca1e40c80694089feb1a",
-      "bytes": 2003
-    },
-    "scripts/verification/upgrade-0153-editor-workflow.ts": {
-      "sha256": "f220bea45f987bf2d4f35ea11248b111d7d71cdf829325f364974c3760cdb69c",
-      "bytes": 44189
-    },
-    "scripts/verification/upgrade-0153-endpoints-workflow.ts": {
-      "sha256": "72c60a6593ac1b3946efc0e02835bb969a45935011a538937ebb97438021bd40",
-      "bytes": 15033
-    },
-    "scripts/verification/upgrade-0153-fixtures-workflow.ts": {
-      "sha256": "05633553a86ba41173deafb73f1a6ff7c3f96330441da7d0d977831e741365d5",
-      "bytes": 113
-    },
-    "scripts/verification/upgrade-0153-followup-browser-workflow.ts": {
-      "sha256": "304cd4fedce338eb768f051832781c7f9829d353db950bdd9541a21633e88a76",
-      "bytes": 10027
-    },
-    "scripts/verification/upgrade-0153-heic-store-workflow.ts": {
-      "sha256": "3a083c7d80db895bc981551c1cefdd1f9d3fba560fcd6175c6490c3c65047390",
-      "bytes": 16790
-    },
-    "scripts/verification/upgrade-0153-heic-workflow.ts": {
-      "sha256": "d6c07d09e07ef2e4ee17d0e2062eed89eda53a82cf2e74fb4ee0cbd9821a061b",
-      "bytes": 12119
-    },
-    "scripts/verification/upgrade-0153-model-form-workflow.ts": {
-      "sha256": "fb4e885f1dcc4f17651d5b1558a71369d5ccaa6b389efeb78528667f671e3a00",
-      "bytes": 11653
-    },
-    "scripts/verification/upgrade-0153-native-attachments-workflow.ts": {
-      "sha256": "12501c08a56548ff692151e00acea5c4fa7fc0561f95655cfd27d48b208d9bcb",
-      "bytes": 4966
-    },
-    "scripts/verification/upgrade-0153-packaged-workflow.ts": {
-      "sha256": "02337391e0870c70ebea4ff2d6c3e4071f0692e5622e9c90d5cdfb98b13e96f6",
-      "bytes": 5462
-    },
-    "scripts/verification/upgrade-0153-pdf-fixtures-workflow.ts": {
-      "sha256": "249c332d6ebf67c4c75bd51a10082d3c76a6859888ba7ca1089f1569601ec697",
-      "bytes": 111
-    },
-    "scripts/verification/upgrade-0153-pdf-workflow.ts": {
-      "sha256": "d254cb2ec1a7898f03c0b76eeccd8f2769a161abe636f3e8782a147cfa628137",
-      "bytes": 39435
-    },
-    "scripts/verification/upgrade-0153-pi-runtime-workflow.ts": {
-      "sha256": "05e58d82bd8229528f02a7592f3bbae895762ce06ce0d6142623db361e1e6f7b",
-      "bytes": 71272
-    },
-    "scripts/verification/upgrade-0153-results.ts": {
-      "sha256": "06438a1a68b324e087584206b97a7a46f56d11446e8326bd9c41bdb7e7947eb7",
-      "bytes": 27236
-    },
-    "scripts/verification/upgrade-0153-undici-workflow.ts": {
-      "sha256": "02b4aa718ebbcfa7734c9ccdcf9f2830c79393a5932f8748764427fb6eca81f0",
-      "bytes": 1086
-    },
-    "scripts/verification/upgrade-0153-usage-ledger-workflow.ts": {
-      "sha256": "ca052b05bcf84d9a4d7bb30d0cdfcd6c62c204ca4748a56e5485374fb403df5c",
-      "bytes": 64436
-    },
-    "scripts/verification/upgrade-0153-workspace-isolation-workflow.ts": {
-      "sha256": "af6fb0016752fe3ecd879d997e65778638620a61c6ec34d82c0128cb3a65a5ea",
-      "bytes": 9426
-    },
-    "scripts/verification/upstream-0140-b4b5-ui.tsx": {
-      "sha256": "904352bdfef455c09168ab4e187c9847c9661894851cea376e3741dd53bba704",
-      "bytes": 5167
     }
   },
   "gates": [
@@ -2152,19 +1168,19 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 5624,
+      "durationMs": 1785,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/install-frozen.log",
-        "sha256": "05a7622b56346ced12d6cb19966d6fe63f24a9f96e23f3f6faf68af34c5a5342"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/install-frozen.log",
+        "sha256": "b79cb213ffd3969692717549555ccc70fb474d75c959ff4979e91b4f81566fc3"
       },
       "outputTail": [
         "bun install v1.4.3 (c6da4a4d3)",
         "",
-        "2 packages installed [4.91s]",
+        "2 packages installed [994.00ms]",
         "",
         "Resolving dependencies",
         "Resolved, downloaded and extracted [3]",
@@ -2182,18 +1198,18 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 310376,
+      "durationMs": 264096,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/validate-ci.log",
-        "sha256": "7eb9de0cd2f91473fad768e42c3d25e3a6adf73d2c1a786afa718db07c91c7e4"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/validate-ci.log",
+        "sha256": "c6d096d8da9555e1978a7462e9f3ac5dd64f343945a6797e618316fd55055960"
       },
       "outputTail": [
         " 15 expect() calls",
-        "Ran 4 tests across 1 file. [414.00ms]",
+        "Ran 4 tests across 1 file. [44.00ms]",
         "$ bun run scripts/check-i18n-parity.ts",
         "$ bun run scripts/sort-locales.ts --check",
         "$ bun run scripts/check-i18n-coverage.ts",
@@ -2216,21 +1232,22 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 1730,
+      "durationMs": 1550,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/audit-dependencies.log",
-        "sha256": "21740e9b697afa9bbe5410b3da7bd99b14e3719be863147505ccfe8eaec29fdf"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/audit-dependencies.log",
+        "sha256": "aa5dd45783418325547350b667cc38ba594f26d2407ee045b46bf1edb897862a"
       },
       "outputTail": [
-        "Dependency audit OK with 4 known advisories (1 low, 1 critical, 2 moderate); no new high/critical findings.",
+        "Dependency audit OK with 5 known advisories (1 low, 3 moderate, 1 critical); no new high/critical findings.",
         "",
         "$ bun run scripts/audit-dependencies.ts",
-        "New advisories (3):",
+        "New advisories (4):",
         "  - LOW GHSA-238p-pmpm-9mq7",
+        "  - MODERATE GHSA-5r4p-p66f-jhc7",
         "  - MODERATE GHSA-hp3w-g68c-fv3c",
         "  - MODERATE GHSA-rj75-hqrm-r3gf"
       ]
@@ -2245,14 +1262,14 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 1561716,
+      "durationMs": 1549069,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/test-critical.log",
-        "sha256": "1ea7a1bcec7c1aee23d48fbec46159fa199ea2b0fd690a987ebfc031a0aabb68"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/test-critical.log",
+        "sha256": "1f395f720e9d31994ecfa5f7221e81507d21a78c6e4687ae07e5a9f80dbe42eb"
       },
       "outputTail": [
         "  sessionId: \"child-1\",",
@@ -2261,12 +1278,12 @@
         "  branchContextStrategy: \"sdk-fork\",",
         "  error: \"pi preflight boom\",",
         "}",
-        "(pass) session branch rollback on preflight failure > runs backend preflight for pi branches and rolls back on failure [2.36ms]",
+        "(pass) session branch rollback on preflight failure > runs backend preflight for pi branches and rolls back on failure [1.66ms]",
         "",
         " 3 pass",
         " 0 fail",
         " 13 expect() calls",
-        "Ran 3 tests across 1 file. [819.00ms]"
+        "Ran 3 tests across 1 file. [964.00ms]"
       ]
     },
     {
@@ -2279,19 +1296,19 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 54027,
+      "durationMs": 58885,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/test-upstream-015.log",
-        "sha256": "b421668e2c8aa1e3949ad5311220cdcbb84b6fc5a942d0f01f6fc2ab7128379c"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/test-upstream-015.log",
+        "sha256": "0c37cd7eb956f21c93f70c0189bbe4b2033fb2cb53efc43b5fdd6d5393dafedb"
       },
       "outputTail": [
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
+        "✓ built in 5.04s",
+        "",
+        "$ bun run scripts/verification/upstream-015-core-workflow.ts && bun run scripts/verification/upstream-015-orchestration-workflow.ts && bun run scripts/verification/upstream-015-browser-workflow.ts && bun run scripts/verification/upstream-015-renderer-workflow.ts",
         "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/abr.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/additionalInfo.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin rolldown:vite-resolve] Module \"buffer\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/safer-buffer/safer.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
@@ -2313,17 +1330,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 7281,
+      "durationMs": 7875,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/build-runtime.log",
-        "sha256": "c7eb7309ded8482c07885e77ed7fabdafcea94034b14a067b2b4f4f12993df22"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/build-runtime.log",
+        "sha256": "ad1f4ab9eaf1d9567109cee3cdde507f56b583a07b2011bec4a2aa249f8a2c72"
       },
       "outputTail": [
-        "📨 Building WhatsApp worker (bundling Baileys) — build 2026-10-20T14:32:55.682Z (ac85d33b0+dirty)...",
+        "📨 Building WhatsApp worker (bundling Baileys) — build 2026-10-21T01:27:27.476Z (1aa6346e6)...",
         "🔍 Verifying worker output...",
         "✅ WhatsApp worker built (7.16 MB) → C:\\Users\\dotty\\.codex\\worktrees\\upstream-0153-closeout\\Phaneris\\packages\\messaging-whatsapp-worker\\dist\\worker.cjs",
         "",
@@ -2334,7 +1351,7 @@
         "",
         "  packages\\messaging-whatsapp-worker\\dist\\worker.cjs  7.2mb",
         "",
-        "Done in 2569ms"
+        "Done in 2853ms"
       ]
     },
     {
@@ -2347,14 +1364,14 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 41126,
+      "durationMs": 48410,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/electron-build.log",
-        "sha256": "c1530bde1ebc531a2ba0fff06b2b473aacebeefca835874cfef13f050d7f2b0c"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/electron-build.log",
+        "sha256": "9b02ba12e380f73f14c0b1bfb56873b85b8b19369a934cd78903f96351e62ef2"
       },
       "outputTail": [
         "[plugin rolldown:vite-resolve] Module \"events\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/electron-log/src/node/transports/file/FileRegistry.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
@@ -2381,23 +1398,23 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 18649,
+      "durationMs": 21204,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/webui-build.log",
-        "sha256": "3ec2ca1b5247ca1302a96759e6392114022bab2e493095f5951bc997cf374082"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/webui-build.log",
+        "sha256": "426d3aa206e261d590cfa4f5d2f3d9f4bb9936ee275b15be56609657af1a3bd8"
       },
       "outputTail": [
-        "✓ built in 15.00s",
+        "✓ built in 17.20s",
         "",
         "$ bun run vite build --config apps/webui/vite.config.ts",
-        "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/abr.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
-        "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/additionalInfo.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin rolldown:vite-resolve] Module \"buffer\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/safer-buffer/safer.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin rolldown:vite-resolve] Module \"buffer\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/safe-buffer/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
+        "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/abr.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
+        "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/additionalInfo.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin builtin:vite-reporter] ",
         "(!) Some chunks are larger than 500 kB after minification. Consider:",
         "- Using dynamic import() to code-split the application",
@@ -2415,21 +1432,21 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 11145,
+      "durationMs": 11551,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/viewer-build.log",
-        "sha256": "d378519116343e669dc3e8f391d673c2a731eeafe77025cfab7755ac4381bc68"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/viewer-build.log",
+        "sha256": "a562824b10812095e7237a78fd63a63378915b95e4b04f2448646b133269eb07"
       },
       "outputTail": [
         "apps/viewer/dist/assets/emacs-lisp-DR2vtWaj.js                                   790.05 kB │ gzip: 200.35 kB │ map:   800.01 kB",
         "apps/viewer/dist/assets/dist-Dvu8hHlm.js                                       1,522.92 kB │ gzip: 469.49 kB │ map: 5,022.87 kB",
-        "apps/viewer/dist/assets/index-Csv0kWt9.js                                      2,136.08 kB │ gzip: 627.53 kB │ map: 8,577.98 kB",
+        "apps/viewer/dist/assets/index-DkKpYgK6.js                                      2,134.44 kB │ gzip: 626.58 kB │ map: 8,584.13 kB",
         "",
-        "✓ built in 7.06s",
+        "✓ built in 7.39s",
         "",
         "$ bun run vite build --config apps/viewer/vite.config.ts",
         "[plugin builtin:vite-reporter] ",
@@ -2449,14 +1466,14 @@
       "status": "environment-limited",
       "exitCode": 1,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
       "environmentLimited": "scripts/build-server.ts accepts only darwin/linux; it rejects win32 before doing any work",
-      "durationMs": 2040,
+      "durationMs": 2365,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/server-build.log",
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/server-build.log",
         "sha256": "a3671a7b9ba969f59762be3d84ddc3f4e44ed3c237573aea5fe6bb7f8c760e30"
       },
       "outputTail": [
@@ -2476,13 +1493,13 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 1277,
+      "durationMs": 1044,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/bundle-report-check.log",
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/bundle-report-check.log",
         "sha256": "019d5ab2418c17912c61fbe45244832617dc7531f5b7576ae8a75677ee4e9425"
       },
       "outputTail": [
@@ -2504,13 +1521,13 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 983,
+      "durationMs": 945,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/security-cache-ocr.log",
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/security-cache-ocr.log",
         "sha256": "43f5198f6709c83d8ab90b3bf71e16c045ca6ea766ca782abcf6dd925acc669b"
       },
       "outputTail": [
@@ -2527,14 +1544,14 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 9201,
+      "durationMs": 12335,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-heic.log",
-        "sha256": "fd3e1c1c60e0d36cb6e64843e3f8848716d1a70528524f5d71ef0fdc09261574"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-heic.log",
+        "sha256": "e1b5106b5a8057fca45150a79aa970cdd6539dcccbaca6f00f8be7f4383ee0ff"
       },
       "outputTail": [
         "Decoding image failed heif_image_handle {} {",
@@ -2542,12 +1559,9 @@
         "  subcode: l {},",
         "  message: 'Invalid input: Unexpected end of file: Extent in iloc box references data outside of file bounds (points to file position 380)\\n'",
         "}",
-        "{\"passed\":6,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-heic-5boSYC\"}",
+        "{\"passed\":6,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-heic-w0mC89\"}",
         "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
-        "Converted to JPEG, saved to C:\\Users\\dotty\\.codex\\worktrees\\upstream-0153-closeout\\Phaneris\\.cache\\verification\\upgrade-0153-heic-5boSYC\\img-tool-converted.jpg"
+        "Converted to JPEG, saved to C:\\Users\\dotty\\.codex\\worktrees\\upstream-0153-closeout\\Phaneris\\.cache\\verification\\upgrade-0153-heic-w0mC89\\img-tool-converted.jpg"
       ]
     },
     {
@@ -2560,28 +1574,28 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 5615,
+      "durationMs": 7948,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-heic-store.log",
-        "sha256": "932ad4547369b480b28775a8bb0d4f575b9358d22d6b1d410f22a944d9b7b6d0"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-heic-store.log",
+        "sha256": "80c753937392cd3a0fe594ef047acbe99bc9acac44113493643065600bb90dd1"
       },
       "outputTail": [
-        "2026-10-20T14:34:30.138Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)",
+        "2026-10-21T01:29:14.012Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)",
+        "2026-10-21T01:29:14.484Z INFO  HEIC/HEIF attachment transcoded to JPEG: photo.heic",
+        "2026-10-21T01:29:14.484Z INFO  Resizing image from 2048x1536 to 1568x1176",
+        "2026-10-21T01:29:14.536Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)",
         "Decoding image failed heif_image_handle {} {",
         "  code: l {},",
         "  subcode: l {},",
         "  message: 'Invalid input: Unexpected end of file: Extent in iloc box references data outside of file bounds (points to file position 380)\\n'",
         "}",
-        "{\"passed\":6,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-heic-store-PgOfgU\"}",
+        "{\"passed\":6,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-heic-store-8aBYec\"}",
         "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
-        "2026-10-20T14:34:30.256Z ERROR storeAttachment error: Could not decode HEIC/HEIF image (brand heic [mif1 heic miaf]): HEIF processing error"
+        "2026-10-21T01:29:17.726Z ERROR storeAttachment error: Could not decode HEIC/HEIF image (brand heic [mif1 heic miaf]): HEIF processing error"
       ]
     },
     {
@@ -2594,21 +1608,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 2135,
+      "durationMs": 1522,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-chat-starters.log",
-        "sha256": "29ee553443067d55a0fa4011be3006a795d3f4af7423f833bc8986a277303f43"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-chat-starters.log",
+        "sha256": "9dfe51c80c699ff16a2fd430c3fbb93cc4626a8cdb5826be7dd7fb54c2a568ae"
       },
       "outputTail": [
-        "{\"passed\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-chat-starters-FjhMyb\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-chat-starters-AWcfev\"}"
       ]
     },
     {
@@ -2621,21 +1631,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 4303,
+      "durationMs": 3963,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-endpoints.log",
-        "sha256": "6929e0b453a2ff09a0281e511e643342817acb26efd1a6566bf2b084cc5e914f"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-endpoints.log",
+        "sha256": "f21e11503b3b2cb2044d89055ec33d5887cc73c9955997c42907cc428b1687b5"
       },
       "outputTail": [
-        "{\"passed\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-endpoints-eefSGv\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-endpoints-fIEdck\"}"
       ]
     },
     {
@@ -2648,21 +1654,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 4287,
+      "durationMs": 4160,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-b1-pi.log",
-        "sha256": "a1594c0694d7c0d1cdf282b36dafaac765589973c82b255ac3e10794731a1d69"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-b1-pi.log",
+        "sha256": "d5719f227e3f4b7a77e017aa4f1472602189b64730b13227c830028c6cb6a7c3"
       },
       "outputTail": [
-        "{\"passed\":5,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-b1-02c0Kj\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":5,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-b1-dmDpea\"}"
       ]
     },
     {
@@ -2675,19 +1677,16 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 26965,
+      "durationMs": 29834,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-followup-browser.log",
-        "sha256": "e3eff9ff26d9ed6e20feca49749583573f1d610471402611ae8df96bcaac2b94"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-followup-browser.log",
+        "sha256": "8beaa2fe0bfd4c678540e37c4c2dae9418f8ab138b0905b7599adad31b4bb943"
       },
       "outputTail": [
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
         "\u001b[33m[INEFFECTIVE_DYNAMIC_IMPORT] \u001b[0mnode_modules/shiki/dist/index.mjs is dynamically imported by packages/ui/src/components/markdown/code-highlight.ts but also statically imported by node_modules/@pierre/diffs/dist/highlighter/languages/resolveLanguage.js, node_modules/@pierre/diffs/dist/highlighter/shared_highlighter.js, node_modules/@pierre/diffs/dist/highlighter/themes/registerCustomCSSVariableTheme.js, node_modules/@pierre/diffs/dist/index.js, node_modules/@pierre/diffs/dist/utils/createSpanNodeFromToken.js, ..., dynamic import will not move module into another chunk.",
         "",
         "\u001b[33m[INEFFECTIVE_DYNAMIC_IMPORT] \u001b[0mpackages/shared/src/i18n/locales/zh-Hans.json is dynamically imported by packages/shared/src/i18n/registry.ts but also statically imported by scripts/verification/fixtures/upgrade-followup.tsx, dynamic import will not move module into another chunk."
@@ -2703,21 +1702,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 63801,
+      "durationMs": 65227,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-pi-runtime.log",
-        "sha256": "d7eaa8de36345466837ace629e9d68bf35147ce9fd3606ee87bc18a790823614"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-pi-runtime.log",
+        "sha256": "3584d8821ce07086cd60a239a6cce214aa3624e2c0b777e976e2f00f5db708d0"
       },
       "outputTail": [
-        "{\"passed\":13,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-pi-runtime-oymfg3\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":13,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-pi-runtime-vEFz8A\"}"
       ]
     },
     {
@@ -2730,21 +1725,18 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 7874,
+      "durationMs": 7731,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-mcp.log",
-        "sha256": "8f0bda9801a0489b91e3d03b55b5761508a59db08e5b24a9c379dbead2034145"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-mcp.log",
+        "sha256": "c74602035897e68f8a45197fc185de06c6f636a4cb86ff37b63cd2eb556adcca"
       },
       "outputTail": [
-        "{\"passed\":3,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-mcp-Wk7J2d\"}",
+        "{\"passed\":3,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-mcp-3BCxON\"}",
         "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
         "[McpClientPool] Proxy name collision on mcp__dotted__foo_bar (source dotted): keeping foo.bar, skipping foo_bar — the skipped tool will not be callable"
       ]
     },
@@ -2758,21 +1750,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 18157,
+      "durationMs": 18736,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-usage-ledger.log",
-        "sha256": "e75d05a93202e06618e322b61aac13c35e14d6d13208aec390640c7f905037f4"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-usage-ledger.log",
+        "sha256": "1b93b3be92ffe9bdb0535d4812dd956b90dc50b07682d14db7a2bf3ada4cfd3e"
       },
       "outputTail": [
-        "{\"passed\":16,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-usage-ledger-TxWqiN\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":16,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-usage-ledger-ycU8Rf\"}"
       ]
     },
     {
@@ -2785,21 +1773,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 17926,
+      "durationMs": 20179,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-pdf.log",
-        "sha256": "a0f5421a50886057e3649ccf5bdb19905fecea97022f5192d2e137cee96d9c35"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-pdf.log",
+        "sha256": "15b3540f26e467620f1e5c47f5891eda6d575aa377d539976356665d94649043"
       },
       "outputTail": [
-        "{\"passed\":6,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-pdf-zTMcQw\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":6,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-pdf-LJtCtV\"}"
       ]
     },
     {
@@ -2812,25 +1796,21 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 22812,
+      "durationMs": 23546,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-chat-starters-browser.log",
-        "sha256": "dc513d36ece35563289c148961be22e4bfc8f3e736e810d57cb2c616c84be558"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-chat-starters-browser.log",
+        "sha256": "bb00b2f8377b85b359912400f56613b5239923e473b74726e9847fa374f6cfe0"
       },
       "outputTail": [
         "[cs-browser] browser 156.0.8078.4",
-        "[cs-browser] fixture page http://127.0.0.1:50821/.cache/verification/upgrade-0153-chat-starters-browser-1coIC2/index.html from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0153-closeout\\Phaneris\\.cache\\verification\\upgrade-0153-chat-starters-browser-1coIC2\\bundle",
+        "[cs-browser] fixture page http://127.0.0.1:51581/.cache/verification/upgrade-0153-chat-starters-browser-GgdBab/index.html from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0153-closeout\\Phaneris\\.cache\\verification\\upgrade-0153-chat-starters-browser-GgdBab\\bundle",
         "[cs-browser] boot attempt 1",
         "[cs-browser] attempt 1 ready=true",
-        "{\"passed\":13,\"total\":13,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-chat-starters-browser-1coIC2\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":13,\"total\":13,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-chat-starters-browser-GgdBab\"}"
       ]
     },
     {
@@ -2843,26 +1823,24 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 24580,
+      "durationMs": 27808,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-chat-starters-landing.log",
-        "sha256": "392b4a0ed58dda7a216c2113cfc87f13e12ef4e24b0f94380c8235d1aebf6a73"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-chat-starters-landing.log",
+        "sha256": "d274818ec9df8fa2eab33d4f232eb45aee970412da2269dd1d8043c81cff447a"
       },
       "outputTail": [
-        "[landing] fixture page http://127.0.0.1:60129/.cache/verification/upgrade-0153-chat-starters-landing-JkhORb/index.html",
+        "[landing] browser 156.0.8078.4",
+        "[landing] fixture page http://127.0.0.1:55306/.cache/verification/upgrade-0153-chat-starters-landing-SgmxD3/index.html",
         "[landing] boot attempt 1",
         "[landing] attempt 1 ready=true",
-        "{\"passed\":12,\"total\":12,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-chat-starters-landing-JkhORb\"}",
+        "{\"passed\":12,\"total\":12,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-chat-starters-landing-SgmxD3\"}",
         "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
-        "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/abr.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/additionalInfo.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
+        "[plugin rolldown:vite-resolve] Module \"util\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/ag-psd/dist/abr.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin rolldown:vite-resolve] Module \"buffer\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/safer-buffer/safer.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.",
         "[plugin rolldown:vite-resolve] Module \"buffer\" has been externalized for browser compatibility, imported by \"C:/Users/dotty/.codex/worktrees/upstream-0153-closeout/Phaneris/node_modules/safe-buffer/index.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details."
       ]
@@ -2877,25 +1855,21 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 18782,
+      "durationMs": 19816,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-session-info-scroll.log",
-        "sha256": "30bd9207e4a8767867e76e07e90e78711bc733cd52ab8119d2e38650c34d8e78"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-session-info-scroll.log",
+        "sha256": "bcaaeab6d688988b4aaf8a0b8fa3cab5402bb6e7cd26f9b91c0acb1a2bb804ac"
       },
       "outputTail": [
-        "[sis] browser 156.0.8078.4 95ms",
-        "[sis] fixture page http://127.0.0.1:58618/.cache/verification/upgrade-0153-session-info-scroll-qxca1a/index.html built in 2261ms",
+        "[sis] browser 156.0.8078.4 111ms",
+        "[sis] fixture page http://127.0.0.1:63608/.cache/verification/upgrade-0153-session-info-scroll-2k19ak/index.html built in 3540ms",
         "[sis] boot attempt 1",
         "[sis] attempt 1 ready=true",
-        "{\"passed\":4,\"total\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-session-info-scroll-qxca1a\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":4,\"total\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-session-info-scroll-2k19ak\"}"
       ]
     },
     {
@@ -2908,26 +1882,22 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 21038,
+      "durationMs": 21536,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-calendar-drag.log",
-        "sha256": "6eeee7e27f7ec02613aa387f8ade0f09473dcb3b9582d6f47dc9bd267486cefd"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-calendar-drag.log",
+        "sha256": "e6064155fc6ef6df2f402ef9297f5453d2d02d052d73c6fd34eeb95aea81d37e"
       },
       "outputTail": [
-        "[cal] browser 156.0.8078.4 90ms",
-        "[cal] fixture page http://127.0.0.1:51816/.cache/verification/upgrade-0153-calendar-drag-ulPxd7/index.html built in 4597ms",
+        "[cal] browser 156.0.8078.4 132ms",
+        "[cal] fixture page http://127.0.0.1:56452/.cache/verification/upgrade-0153-calendar-drag-cjsoUD/index.html built in 5221ms",
         "[cal] boot attempt 1",
         "[cal] attempt 1 ready=true",
-        "[cal] drag ev-1 2026-10-20 -> 2026-10-19 from {\"x\":283.046875,\"y\":289.0625} to {\"x\":133.125,\"y\":289.0625}",
-        "{\"passed\":5,\"total\":5,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-calendar-drag-ulPxd7\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "[cal] drag ev-1 2026-10-21 -> 2026-10-19 from {\"x\":433.8359375,\"y\":289.0625} to {\"x\":133.125,\"y\":289.0625}",
+        "{\"passed\":5,\"total\":5,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-calendar-drag-cjsoUD\"}"
       ]
     },
     {
@@ -2940,24 +1910,24 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 20121,
+      "durationMs": 20986,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-editor.log",
-        "sha256": "8e666a479f2b4562f501ea045ccde26c3850af9368f5896b58dcb155168fc784"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-editor.log",
+        "sha256": "b5e32501c8231e87cee8d3be743cad71e1cdfeb0ce0e2f656e018c632cf1e585"
       },
       "outputTail": [
-        "{\"passed\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-editor-Z3jKzr\"}",
+        "[editor] ED-03 passed",
+        "[editor] ED-04-history-list-paste-and-image-upload start",
+        "[editor] ED-04-history-list-paste-and-image-upload passed",
+        "{\"passed\":4,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-editor-ITsTvI\"}",
         "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
-        "\u001b[33m[PLUGIN_TIMINGS] \u001b[0mJavaScript callbacks ran for 1.8s of this 3.0s build (59%).",
+        "\u001b[33m[PLUGIN_TIMINGS] \u001b[0mJavaScript callbacks ran for 2.4s of this 4.0s build (60%).",
         "The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):",
-        "  - plugin vite:worker-import-meta-url transform (35%, 1.1s, 1 call)",
+        "  - plugin vite:worker-import-meta-url transform (37%, 1.5s, 1 call)",
         "Additional callback time came from the callbacks below and from callbacks under 1s.",
         "1 callback is listed without a time. Its calls overlapped, so the time inside one call includes work from other calls. To find its cost, profile the build with `node --cpu-prof`:",
         "  - plugin vite:css transform (4 calls)",
@@ -2974,21 +1944,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 18201,
+      "durationMs": 18231,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-workspace-isolation.log",
-        "sha256": "9b94b5650b7fa5f72b4c9abb5f034f08d2e211fda7210a4e4950e6165712d16a"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-workspace-isolation.log",
+        "sha256": "756f4861b2cab119d05b25b7f156009fb933c87f9e6f01f2c43837fa197c80ab"
       },
       "outputTail": [
-        "{\"passed\":5,\"total\":5,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-workspace-isolation-82JtdD\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":5,\"total\":5,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-workspace-isolation-4bH4is\"}"
       ]
     },
     {
@@ -3001,21 +1967,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 77805,
+      "durationMs": 79115,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-model-form.log",
-        "sha256": "959b1f8b9905b7dcf93d60c5c86ade5d0f83b9b90190b5142757a2427dd5f5ca"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-model-form.log",
+        "sha256": "e742cb39a2c49f78b932cbd161d43d6ffbe14f4c50193230e3035544fc783cbf"
       },
       "outputTail": [
-        "{\"passed\":7,\"total\":7,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-model-form-EIEIFp\"}",
-        "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        "{\"passed\":7,\"total\":7,\"output\":\"C:\\\\Users\\\\dotty\\\\.codex\\\\worktrees\\\\upstream-0153-closeout\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-model-form-KI7cCw\"}"
       ]
     },
     {
@@ -3028,19 +1990,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 1582,
+      "durationMs": 1549,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-undici.log",
-        "sha256": "09797a8f68aca4da6d096f481d9f1d38b8b899a3a81a3c76ee7a30a71297a470"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-undici.log",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
       },
       "outputTail": [
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        ""
       ]
     },
     {
@@ -3053,19 +2013,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 18696,
+      "durationMs": 20865,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-document-tools.log",
-        "sha256": "09797a8f68aca4da6d096f481d9f1d38b8b899a3a81a3c76ee7a30a71297a470"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-document-tools.log",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
       },
       "outputTail": [
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        ""
       ]
     },
     {
@@ -3078,19 +2036,17 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 22356,
+      "durationMs": 26225,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-native-attachments.log",
-        "sha256": "09797a8f68aca4da6d096f481d9f1d38b8b899a3a81a3c76ee7a30a71297a470"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-native-attachments.log",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
       },
       "outputTail": [
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it"
+        ""
       ]
     },
     {
@@ -3103,21 +2059,18 @@
       "status": "pass",
       "exitCode": 0,
       "source": {
-        "startedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
-        "endedWithCode": "3a2505d0f4e5542aeab71c0e51efb699e3bbc7b3c0e81869e4c7c16231f5068b",
+        "startedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
+        "endedWithCode": "ac900a856eeaf6fdfb74349d62262a70cdedeee1cc0eb0a0a49f5d02f61bd269",
         "changedDuringGate": false
       },
-      "durationMs": 200389,
+      "durationMs": 205854,
       "log": {
-        "path": ".cache/upgrade-20261018/gate-logs-1792504839119/verification-packaged.log",
-        "sha256": "ec3de380aea5096eac97f09e2f500bec74567bd4bc3ae82d254c84b7357db74a"
+        "path": ".cache/upgrade-20261018/gate-logs-1792544168722/verification-packaged.log",
+        "sha256": "450ede2aae79330626e52662115b34eb5732ca2984229866f81aef570948db3d"
       },
       "outputTail": [
         "Copying Pi Agent Server...",
         "",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-failure-matrix.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'docs/verification/upgrade-2026-10-18-implementation.md', CRLF will be replaced by LF the next time Git touches it",
-        "warning: in the working copy of 'packages/shared/src/config/storage.ts', CRLF will be replaced by LF the next time Git touches it",
         "  Warning: koffi not found in node_modules. Pi SDK sessions may not work."
       ]
     }
@@ -3147,31 +2100,31 @@
       }
     ],
     "knownIssuesScope": {
-      "collectionStartedAt": "2026-10-20T14:00:39.119Z",
+      "collectionStartedAt": "2026-10-21T00:56:08.722Z",
       "directories": [
-        ".cache/verification/upgrade-0153-b1-02c0Kj",
-        ".cache/verification/upgrade-0153-calendar-drag-ulPxd7",
-        ".cache/verification/upgrade-0153-chat-starters-browser-1coIC2",
-        ".cache/verification/upgrade-0153-chat-starters-FjhMyb",
-        ".cache/verification/upgrade-0153-chat-starters-landing-JkhORb",
-        ".cache/verification/upgrade-0153-document-tools-BdXRab",
-        ".cache/verification/upgrade-0153-editor-Z3jKzr",
-        ".cache/verification/upgrade-0153-endpoints-eefSGv",
-        ".cache/verification/upgrade-0153-followup-browser-vZvW6f",
-        ".cache/verification/upgrade-0153-heic-5boSYC",
-        ".cache/verification/upgrade-0153-heic-store-PgOfgU",
-        ".cache/verification/upgrade-0153-mcp-Wk7J2d",
-        ".cache/verification/upgrade-0153-model-form-EIEIFp",
-        ".cache/verification/upgrade-0153-native-attachments-gwhe2q",
-        ".cache/verification/upgrade-0153-packaged-GNivjF",
-        ".cache/verification/upgrade-0153-pdf-zTMcQw",
-        ".cache/verification/upgrade-0153-pi-runtime-oymfg3",
-        ".cache/verification/upgrade-0153-session-info-scroll-qxca1a",
-        ".cache/verification/upgrade-0153-undici-oKEsHa",
-        ".cache/verification/upgrade-0153-usage-ledger-TxWqiN",
-        ".cache/verification/upgrade-0153-workspace-isolation-82JtdD"
+        ".cache/verification/upgrade-0153-b1-dmDpea",
+        ".cache/verification/upgrade-0153-calendar-drag-cjsoUD",
+        ".cache/verification/upgrade-0153-chat-starters-AWcfev",
+        ".cache/verification/upgrade-0153-chat-starters-browser-GgdBab",
+        ".cache/verification/upgrade-0153-chat-starters-landing-SgmxD3",
+        ".cache/verification/upgrade-0153-document-tools-XVyoby",
+        ".cache/verification/upgrade-0153-editor-ITsTvI",
+        ".cache/verification/upgrade-0153-endpoints-fIEdck",
+        ".cache/verification/upgrade-0153-followup-browser-KZoaIl",
+        ".cache/verification/upgrade-0153-heic-store-8aBYec",
+        ".cache/verification/upgrade-0153-heic-w0mC89",
+        ".cache/verification/upgrade-0153-mcp-3BCxON",
+        ".cache/verification/upgrade-0153-model-form-KI7cCw",
+        ".cache/verification/upgrade-0153-native-attachments-z4qL78",
+        ".cache/verification/upgrade-0153-packaged-7Yhupk",
+        ".cache/verification/upgrade-0153-pdf-LJtCtV",
+        ".cache/verification/upgrade-0153-pi-runtime-vEFz8A",
+        ".cache/verification/upgrade-0153-session-info-scroll-2k19ak",
+        ".cache/verification/upgrade-0153-undici-daKubn",
+        ".cache/verification/upgrade-0153-usage-ledger-ycU8Rf",
+        ".cache/verification/upgrade-0153-workspace-isolation-4bH4is"
       ],
-      "historicalRunsExcludedFromCurrentIssues": 79
+      "historicalRunsExcludedFromCurrentIssues": 100
     },
     "resolvedFollowups": [
       "P-01 failure-hook tool identity",
@@ -3198,6 +2151,24 @@
       "artifacts": 5,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-b1",
+      "directory": ".cache/verification/upgrade-0153-b1-dmDpea",
+      "manifestSha256": "1bcce9df051ea57cc70683acd1af44d8a823495d149705248a4af066fec0db84",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "pi-130-uniform-sdk-graph",
+        "anthropic-schema-keeps-additional-properties",
+        "openai-schema-unchanged",
+        "provider-endpoints-and-legacy-normalization",
+        "pi-subprocess-tools-and-model-reserve"
+      ],
+      "artifacts": 5,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3216,7 +2187,7 @@
       "artifacts": 5,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-b1",
@@ -3234,7 +2205,7 @@
       "artifacts": 5,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-b1",
@@ -3252,6 +2223,24 @@
       "artifacts": 5,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-calendar-drag",
+      "directory": ".cache/verification/upgrade-0153-calendar-drag-cjsoUD",
+      "manifestSha256": "53a7fd48e844a11812fd1019af18b15afb1d643f21d0b7107b3905f0e0424950",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "CAL-01-pointer-drag-persists-new-date",
+        "CAL-02-pointer-resize-changes-end-not-start",
+        "CAL-03-gridcell-contract-and-pinned-version",
+        "CAL-04-language-switch-while-mounted",
+        "CAL-05-timezones-and-DST-preserve-local-dates"
+      ],
+      "artifacts": 912,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3270,7 +2259,7 @@
       "artifacts": 912,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-calendar-drag",
@@ -3288,7 +2277,7 @@
       "artifacts": 912,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-calendar-drag",
@@ -3306,7 +2295,7 @@
       "artifacts": 912,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-calendar-drag",
@@ -3324,7 +2313,7 @@
       "artifacts": 912,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters",
@@ -3341,6 +2330,23 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-chat-starters",
+      "directory": ".cache/verification/upgrade-0153-chat-starters-AWcfev",
+      "manifestSha256": "62d51d225be83d998cc835cf6cb5e48339ebea0f11602ac42ed8c4d49f0dfd5b",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "validation-accepts-0-1-3-and-rejects-malformed",
+        "persistence-and-workspace-isolation",
+        "empty-list-clears-the-field",
+        "click-resolves-sources-and-skills-with-unknowns-ignored"
+      ],
+      "artifacts": 3,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3367,7 +2373,7 @@
       "artifacts": 911,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters-browser",
@@ -3393,6 +2399,32 @@
       "artifacts": 911,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-chat-starters-browser",
+      "directory": ".cache/verification/upgrade-0153-chat-starters-browser-GgdBab",
+      "manifestSha256": "ae4e71286599eb8f1927f31ff5badb262cbb88a2f74e94ca1a90b79d8b03534b",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "CSB-01-chips-rendered",
+        "CSB-02-pointer-selects",
+        "CSB-03-keyboard-and-focus",
+        "CSB-04-disabled-is-inert",
+        "CSB-05-long-label-truncates",
+        "CSB-06-settings-add",
+        "CSB-07-settings-limit-and-remove",
+        "CSB-08-settings-rejections-keep-the-draft",
+        "CSB-09-bilingual",
+        "CSB-10-settings-pending-read-cannot-overwrite-stored-values",
+        "CSB-11-settings-read-failure-requires-retry",
+        "CSB-12-rich-editor-inserts-workspace-mentions",
+        "CSB-13-workspace-switch-isolates-pending-writes-and-editor-drafts"
+      ],
+      "artifacts": 911,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3419,7 +2451,7 @@
       "artifacts": 911,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters-browser",
@@ -3445,7 +2477,7 @@
       "artifacts": 911,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters",
@@ -3462,7 +2494,7 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters-landing",
@@ -3487,7 +2519,7 @@
       "artifacts": 925,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters-landing",
@@ -3512,7 +2544,7 @@
       "artifacts": 925,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters-landing",
@@ -3537,6 +2569,31 @@
       "artifacts": 925,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-chat-starters-landing",
+      "directory": ".cache/verification/upgrade-0153-chat-starters-landing-SgmxD3",
+      "manifestSha256": "96cbd7776048dd88c2064675407a0454d93c8f2c4c57547ad18d140fd8806b24",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "CSL-01-landing-chips",
+        "CSL-02-source-enabled-before-send",
+        "CSL-03-second-starter",
+        "CSL-04-no-mention-sends-nothing-extra",
+        "CSL-05-safe-mode-no-bypass",
+        "CSL-06-disabled-is-inert",
+        "CSL-07-source-failure-does-not-send",
+        "CSL-08-disabled-during-wait-does-not-send",
+        "CSL-09-session-switch-during-wait-does-not-send",
+        "CSL-10-workspace-switch-during-wait-does-not-send",
+        "CSL-11-double-click-sends-once",
+        "CSL-12-escape-cancels-await-and-next-click-works"
+      ],
+      "artifacts": 925,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3562,7 +2619,7 @@
       "artifacts": 925,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters",
@@ -3579,7 +2636,7 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-chat-starters",
@@ -3596,7 +2653,7 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-document-tools",
@@ -3617,7 +2674,7 @@
       "artifacts": 17,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-document-tools",
@@ -3638,7 +2695,7 @@
       "artifacts": 17,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-document-tools",
@@ -3659,6 +2716,27 @@
       "artifacts": 17,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-document-tools",
+      "directory": ".cache/verification/upgrade-0153-document-tools-XVyoby",
+      "manifestSha256": "9bd5e76d746e32d4371ff7efda4a82f12962e4a45b2ccb29e3eec371b2d1f2e3",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "DOC-01-docx-create-extract",
+        "DOC-02-xlsx-write-read-export",
+        "DOC-03-pptx-create-extract",
+        "DOC-04-image-resize-convert-read",
+        "DOC-05-pdf-create-inspect",
+        "DOC-06-ical-create-read",
+        "DOC-07-document-difference",
+        "DOC-08-markitdown-document-conversion"
+      ],
+      "artifacts": 17,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3676,6 +2754,23 @@
       "artifacts": 891,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-editor",
+      "directory": ".cache/verification/upgrade-0153-editor-ITsTvI",
+      "manifestSha256": "d5d5439e7f3f04f9d3a910821eb2d52560b0363b594fb7429513014e7152a8e7",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "ED-01",
+        "ED-02",
+        "ED-03",
+        "ED-04-history-list-paste-and-image-upload"
+      ],
+      "artifacts": 891,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3693,7 +2788,7 @@
       "artifacts": 891,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-editor",
@@ -3710,7 +2805,7 @@
       "artifacts": 891,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-endpoints",
@@ -3727,7 +2822,7 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-endpoints",
@@ -3744,6 +2839,23 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-endpoints",
+      "directory": ".cache/verification/upgrade-0153-endpoints-fIEdck",
+      "manifestSha256": "c0f1f3a2c34a7fec2689cde47b531a6a9329dac479bc2d8c11a3b4f289ec906e",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "connections-normalized-without-losing-models",
+        "default-model-not-swapped-by-catalog",
+        "pi-subprocess-runs-off-catalog-model",
+        "native-opencode-and-go-stable-session-and-custom-headers"
+      ],
+      "artifacts": 3,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3761,7 +2873,7 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-endpoints",
@@ -3778,7 +2890,7 @@
       "artifacts": 3,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-followup-browser",
@@ -3803,7 +2915,7 @@
       "artifacts": 917,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-followup-browser",
@@ -3828,6 +2940,31 @@
       "artifacts": 917,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-followup-browser",
+      "directory": ".cache/verification/upgrade-0153-followup-browser-KZoaIl",
+      "manifestSha256": "e48126e807f832083587a65019b821f2a8af5620b5ba81645f295e29fff10754",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "pending-read-cannot-overwrite-stored-settings",
+        "invalid-form-value-is-not-written",
+        "production-input-saves-through-real-rpc-and-storage",
+        "rpc-invalid-values-have-no-persistence-effect",
+        "failed-save-retains-user-input-and-previous-setting",
+        "failed-write-can-be-retried",
+        "failed-read-blocks-editing-and-explicit-retry-loads-current-value",
+        "language-change-preserves-unsaved-threshold",
+        "clearing-input-removes-override",
+        "fresh-server-reads-the-persisted-override",
+        "production-trajectory-distinguishes-unknown-zero-and-known-subtotal",
+        "legacy-rows-remain-unchanged"
+      ],
+      "artifacts": 916,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3853,7 +2990,7 @@
       "artifacts": 917,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-heic",
@@ -3872,7 +3009,7 @@
       "artifacts": 4,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-heic",
@@ -3891,7 +3028,7 @@
       "artifacts": 4,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-heic",
@@ -3910,6 +3047,25 @@
       "artifacts": 4,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-heic-store",
+      "directory": ".cache/verification/upgrade-0153-heic-store-8aBYec",
+      "manifestSha256": "ab3f346a7cb7798a1b0ff954d2e1d7e4d798408b761967dbdd3743b05db1d6e1",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "real-heic-rpc-store-yields-one-consistent-jpeg",
+        "wrong-or-empty-mime-still-transcodes-by-content",
+        "avif-never-transcoded",
+        "small-heic-transcodes-without-resize",
+        "duplicate-sends-and-failure-cleanup",
+        "source-file-and-directory-hygiene"
+      ],
+      "artifacts": 5,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -3929,7 +3085,7 @@
       "artifacts": 5,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-heic-store",
@@ -3948,7 +3104,7 @@
       "artifacts": 5,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-heic-store",
@@ -3967,7 +3123,7 @@
       "artifacts": 5,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-heic-store",
@@ -3979,7 +3135,7 @@
       "artifacts": 2,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-heic",
@@ -3991,6 +3147,41 @@
       "artifacts": 2,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-heic",
+      "directory": ".cache/verification/upgrade-0153-heic-w0mC89",
+      "manifestSha256": "947fae081b5632d549bf44e414b05dca3523dfe525334a859495f0a6b1155aef",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "avif-excluded-heic-detected",
+        "dimensions-resolved-from-primary-item-and-bounded",
+        "ipma-version-and-flags-four-real-decode-combinations",
+        "deadline-terminates-worker-and-loop-stays-responsive",
+        "transcode-output-and-platform-processor",
+        "python-img-tool-reads-heic"
+      ],
+      "artifacts": 4,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+      "boundToCurrentLock": true
+    },
+    {
+      "workflow": "upgrade-0153-mcp",
+      "directory": ".cache/verification/upgrade-0153-mcp-3BCxON",
+      "manifestSha256": "522259753f66b4ce66a42611c4d171be55c573bf51507abe7107140e3de6da68",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "mcp-stdio",
+        "mcp-http",
+        "mcp-oauth"
+      ],
+      "artifacts": 9,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4007,7 +3198,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-mcp",
@@ -4023,7 +3214,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-mcp",
@@ -4039,7 +3230,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-mcp",
@@ -4055,7 +3246,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-model-form",
@@ -4075,7 +3266,7 @@
       "artifacts": 903,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-model-form",
@@ -4095,6 +3286,26 @@
       "artifacts": 903,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-model-form",
+      "directory": ".cache/verification/upgrade-0153-model-form-KI7cCw",
+      "manifestSha256": "2a2eada974ccb3cc257767efd3eec710cdcddc075495feaa9622d1726fe560b5",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "MF01-only-utility-changed",
+        "MF02-utility-cleared-stays-cleared",
+        "MF03-only-default-changed",
+        "MF04-only-key-changed-keeps-every-model-choice",
+        "MF05-provider-switch-does-not-carry-the-old-catalog",
+        "MF06-pending-provider-cannot-submit-stale-catalog",
+        "MF07-late-provider-response-cannot-replace-current-catalog"
+      ],
+      "artifacts": 903,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4115,7 +3326,7 @@
       "artifacts": 903,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-native-attachments",
@@ -4135,7 +3346,7 @@
       "artifacts": 7,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-native-attachments",
@@ -4155,7 +3366,7 @@
       "artifacts": 7,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-native-attachments",
@@ -4175,6 +3386,43 @@
       "artifacts": 7,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-native-attachments",
+      "directory": ".cache/verification/upgrade-0153-native-attachments-z4qL78",
+      "manifestSha256": "7f8413204ace9363c46e9145a28b065d0ab47e3cf146c24e2b5d43c16795cf7f",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "actual choose HEIC normalizes metadata and bytes before provider dispatch",
+        "actual drop HEIC normalizes metadata and bytes before provider dispatch",
+        "actual paste HEIC normalizes metadata and bytes before provider dispatch",
+        "a late storage acknowledgement preserves text typed after submission",
+        "failed transcode retains the text and attachment without dispatch",
+        "actual main-process nativeImage decodes the RPC-normalized JPEG",
+        "actual Electron main loads node-pty and executes a real ConPTY child"
+      ],
+      "artifacts": 7,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+      "boundToCurrentLock": true
+    },
+    {
+      "workflow": "upgrade-0153-packaged",
+      "directory": ".cache/verification/upgrade-0153-packaged-7Yhupk",
+      "manifestSha256": "706a906637e620d748bb45546b0645648d5ffabb01393623e0815168fb55823d",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "production-staging-and-current-build-hashes",
+        "real-unpacked-main-preload-renderer-attachments-from-foreign-cwd",
+        "packaged-native-reopen-and-lifecycle",
+        "existing-release-directory-preserved"
+      ],
+      "artifacts": 2273,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4192,7 +3440,7 @@
       "artifacts": 2272,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-packaged",
@@ -4209,7 +3457,7 @@
       "artifacts": 2275,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pdf",
@@ -4228,7 +3476,7 @@
       "artifacts": 21,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pdf",
@@ -4246,7 +3494,7 @@
       "artifacts": 22,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pdf",
@@ -4258,7 +3506,7 @@
       "artifacts": 1,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pdf",
@@ -4277,6 +3525,25 @@
       "artifacts": 21,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-pdf",
+      "directory": ".cache/verification/upgrade-0153-pdf-LJtCtV",
+      "manifestSha256": "d773e43bb1cf89b7a56252227318c45160a22e7be6a15546f0e01356a3f8567d",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "PDF-01",
+        "PDF-02",
+        "PDF-03",
+        "PDF-04",
+        "PDF-05",
+        "PDF-06"
+      ],
+      "artifacts": 21,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4296,7 +3563,7 @@
       "artifacts": 21,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pdf",
@@ -4315,7 +3582,7 @@
       "artifacts": 21,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4327,7 +3594,7 @@
       "artifacts": 11,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4353,7 +3620,7 @@
       "artifacts": 11,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4365,7 +3632,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4377,7 +3644,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4389,7 +3656,7 @@
       "artifacts": 8,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4401,7 +3668,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4426,7 +3693,7 @@
       "artifacts": 11,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4438,7 +3705,7 @@
       "artifacts": 9,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4450,7 +3717,7 @@
       "artifacts": 2,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4470,7 +3737,7 @@
       "artifacts": 8,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4490,7 +3757,7 @@
       "artifacts": 8,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4510,7 +3777,7 @@
       "artifacts": 8,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4536,7 +3803,7 @@
       "artifacts": 11,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4548,7 +3815,7 @@
       "artifacts": 10,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-pi-runtime",
@@ -4574,6 +3841,32 @@
       "artifacts": 11,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-pi-runtime",
+      "directory": ".cache/verification/upgrade-0153-pi-runtime-vEFz8A",
+      "manifestSha256": "498574b6a4aecebf9f599ae2f3d1403845b0eac62af1876ca58e2a76d227e870",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "pc-01-model-switch-mid-session",
+        "pc-02-malformed-tool-arguments",
+        "pc-03-abort-mid-stream-no-orphan",
+        "pc-04a-transient-provider-error-recovered",
+        "pc-04b-mid-stream-error-retried",
+        "pc-04c-retries-exhausted-one-typed-error",
+        "pc-05-per-model-output-cap",
+        "pc-06-independent-summary-budget-and-sdk-metadata",
+        "pc-06-model-switch-and-default-restoration",
+        "pc-06-real-automatic-threshold",
+        "pc-06-real-overflow-compacts-with-original-budget-and-retries",
+        "pc-06-failure-does-not-fall-back-to-enlarged-budget",
+        "pc-06-cancel-and-restart-retain-policy"
+      ],
+      "artifacts": 11,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4586,6 +3879,23 @@
       "artifacts": 10,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-session-info-scroll",
+      "directory": ".cache/verification/upgrade-0153-session-info-scroll-2k19ak",
+      "manifestSha256": "2b76b3925dd9cb64f7ee19ca3e81d5e2ebf420f0783061b85eb579bf2f7c1dd2",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "SIS-01-popover-long-list-scrolls",
+        "SIS-02-popover-dark-scroll-unchanged",
+        "SIS-03-drawer-long-list-scrolls-at-390",
+        "SIS-04-no-horizontal-scroll-and-no-errors"
+      ],
+      "artifacts": 130,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4603,7 +3913,7 @@
       "artifacts": 130,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-session-info-scroll",
@@ -4620,7 +3930,7 @@
       "artifacts": 130,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-session-info-scroll",
@@ -4637,7 +3947,7 @@
       "artifacts": 130,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-session-info-scroll",
@@ -4654,6 +3964,22 @@
       "artifacts": 130,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-undici",
+      "directory": ".cache/verification/upgrade-0153-undici-daKubn",
+      "manifestSha256": "160901dd9fb6318eb34d5e82fb1da5821dd78e5255e5596418828ac4e648d4c5",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "direct undici streams incrementally and preserves request headers",
+        "direct undici ProxyAgent uses the actual CONNECT tunnel",
+        "stream abort reaches origin and dispatcher close releases all proxy sockets"
+      ],
+      "artifacts": 2,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4670,7 +3996,7 @@
       "artifacts": 2,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-undici",
@@ -4686,7 +4012,7 @@
       "artifacts": 2,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-undici",
@@ -4702,7 +4028,7 @@
       "artifacts": 2,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4714,7 +4040,7 @@
       "artifacts": 29,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4726,7 +4052,7 @@
       "artifacts": 8,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4755,7 +4081,7 @@
       "artifacts": 34,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4775,7 +4101,7 @@
       "artifacts": 18,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4800,7 +4126,7 @@
       "artifacts": 26,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4829,7 +4155,7 @@
       "artifacts": 33,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4841,7 +4167,7 @@
       "artifacts": 29,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4866,7 +4192,7 @@
       "artifacts": 26,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4886,7 +4212,7 @@
       "artifacts": 18,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4915,7 +4241,7 @@
       "artifacts": 33,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4944,6 +4270,35 @@
       "artifacts": 34,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-usage-ledger",
+      "directory": ".cache/verification/upgrade-0153-usage-ledger-ycU8Rf",
+      "manifestSha256": "8965a318558c872d16b41262cfff7e1ca782ab5aa1bbb0911810238f147e0d7c",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "L1-success-recorded-once-with-provider-numbers",
+        "L2-retry-accounted-from-actually-billed-attempt",
+        "L3-replay-same-providerRequestId-single-row",
+        "F1-agent-retry-retains-unavailable-metering-separately",
+        "L4-multi-call-session-rows-and-summary-reconcile",
+        "L5-one-turn-tool-loop-and-independent-warming",
+        "L6-resumed-process-tools-and-ledger-attribution",
+        "L7-real-sdk-fork-inherits-context-with-independent-billing",
+        "X0-explicit-metering-semantics",
+        "XM-explicit-metering-semantics",
+        "XE-explicit-metering-semantics",
+        "XP-explicit-metering-semantics",
+        "XA-pre-dispatch-cancellation-is-proven-zero",
+        "XB-in-stream-cancellation-retains-unknown-metering",
+        "XC-independent-budget-compaction-is-durably-metered",
+        "XR-sqlite-restart-and-explicit-reconciliation-preserve-unknown-effects"
+      ],
+      "artifacts": 34,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4956,7 +4311,7 @@
       "artifacts": 26,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-usage-ledger",
@@ -4968,6 +4323,24 @@
       "artifacts": 27,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
+      "boundToCurrentLock": false
+    },
+    {
+      "workflow": "upgrade-0153-workspace-isolation",
+      "directory": ".cache/verification/upgrade-0153-workspace-isolation-4bH4is",
+      "manifestSha256": "e726a2e04a31aefc630189816a6662a59032cf8c8f164b33b8d85a32b307776a",
+      "exitCode": 0,
+      "status": "pass",
+      "sceneIds": [
+        "CSW-01-late-response-from-abandoned-workspace-is-dropped",
+        "CSW-02-failed-read-shows-nothing",
+        "CSW-03-newest-read-wins",
+        "CSW-04-no-active-workspace-shows-nothing",
+        "CSW-05-switch-clears-before-the-new-read-answers"
+      ],
+      "artifacts": 123,
+      "sourceHead": "1aa6346e605906d0ee2d5449d4c4177eaa3dac1a",
+      "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
       "boundToCurrentLock": true
     },
     {
@@ -4986,7 +4359,7 @@
       "artifacts": 123,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-workspace-isolation",
@@ -5004,7 +4377,7 @@
       "artifacts": 123,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     },
     {
       "workflow": "upgrade-0153-workspace-isolation",
@@ -5022,7 +4395,7 @@
       "artifacts": 123,
       "sourceHead": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
       "lockfileSha256": "b58da580384e251f3c5c2a963c7ce19af66d689f738c3101a4472c582e8dd1dc",
-      "boundToCurrentLock": true
+      "boundToCurrentLock": false
     }
   ],
   "notVerified": [
