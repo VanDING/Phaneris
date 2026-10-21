@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-17T02:11:22.951Z",
+  "date": "2026-10-21T02:38:28.642Z",
   "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "graceMs": 25000,
-  "userDataDir": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-3QA0eV\\user-data",
+  "userDataDir": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-t9UEHa\\user-data",
   "checks": [
     {
       "name": "app launched and stayed alive without crashing",
@@ -24,7 +24,7 @@
     },
     {
       "name": "main process booted and initialized its config",
-      "observation": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-3QA0eV\\config.json",
+      "observation": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-t9UEHa\\config.json",
       "status": "pass",
       "detail": null
     },
