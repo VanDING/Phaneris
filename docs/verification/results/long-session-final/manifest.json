@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "workflow": "long-session-budget",
+  "startedAt": "2026-10-21T09:14:04.838Z",
+  "finishedAt": "2026-10-21T09:14:54.115Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\long-session-budget-workflow.ts",
+    "--output-dir=docs/verification/results/long-session-final",
+    "--replace"
+  ],
+  "source": {
+    "headSha": "5e4804da048b57148c6a4b5c9f503d2f2e0a16e6",
+    "dirtyPaths": [
+      "?? docs/verification/results/long-session-budget/failure.json",
+      "?? docs/verification/results/long-session-budget/host.css",
+      "?? docs/verification/results/long-session-budget/index.html",
+      "?? docs/verification/results/long-session-budget/long-session-budget.json",
+      "?? docs/verification/results/long-session-budget/long-session-glass.png",
+      "?? docs/verification/results/long-session-budget/long-session-scrolled.png",
+      "?? docs/verification/results/long-session-budget/manifest.json",
+      "?? docs/verification/results/long-session-budget/source-hashes.json",
+      "?? docs/verification/results/long-session-final/host.css",
+      "?? docs/verification/results/long-session-final/index.html",
+      "?? docs/verification/results/long-session-final/long-session-budget.json",
+      "?? docs/verification/results/long-session-final/long-session-glass.png",
+      "?? docs/verification/results/long-session-final/long-session-scrolled.png",
+      "?? docs/verification/results/long-session-final/long-session-top.png",
+      "?? docs/verification/results/long-session-final/manifest.json",
+      "?? docs/verification/results/long-session-final/source-hashes.json",
+      "?? docs/verification/results/shell-visual/build-hashes.json",
+      "?? docs/verification/results/shell-visual/collapse-after-expanded-hover-focus-frames.json",
+      "?? docs/verification/results/shell-visual/collapse-frames.json",
+      "?? docs/verification/results/shell-visual/default-light-collapsed.png",
+      "?? docs/verification/results/shell-visual/default-light-expanded.png",
+      "?? docs/verification/results/shell-visual/expand-after-rail-tooltip-frames.json",
+      "?? docs/verification/results/shell-visual/expand-frames.json",
+      "?? docs/verification/results/shell-visual/failure.json",
+      "?? docs/verification/results/shell-visual/fixture.json",
+      "?? docs/verification/results/shell-visual/manifest.json",
+      "?? docs/verification/results/shell-visual/process.log",
+      "?? docs/verification/results/shell-visual/reverse-frames.json",
+      "?? docs/verification/results/shell-visual/shell-visual.json"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "docs/verification/results/long-session-budget/failure.json",
+        "sha256": "f7794e67959f4e628b1ac692d635ab422c5fda4a880e07cfbc6794216e4e6afb"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/host.css",
+        "sha256": "e5fc8d9234647eb9923b547433d63e091e5b55ec6d0618ffaefbabc5abf6bcd1"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/index.html",
+        "sha256": "10fe3a83238ecb1276efb7b282f50787ca50c3beb25e5cfc3980bc82ff798e29"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/long-session-budget.json",
+        "sha256": "02bd1ba0c3c30aefd40422d327bd163cf1349a47f5f6759071ce7a41ab4e83fe"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/long-session-glass.png",
+        "sha256": "c8ac097c3f338102818049330af9fce03872e80f975f2a710705493a89b26369"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/long-session-scrolled.png",
+        "sha256": "beeeeb7c8370f174fd975a5c865e36bc1c7814a53bdebecabf17bfba4282129f"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/manifest.json",
+        "sha256": "cb397fa4f9b32a07041fc99f5127add9d3aa51b98be9c55992921f72aaf9c53b"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/source-hashes.json",
+        "sha256": "c49ecaba4afd5103c48066fb08407a4d6632c8f271793d2594ba67cb3b4ce583"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/host.css",
+        "sha256": "e5fc8d9234647eb9923b547433d63e091e5b55ec6d0618ffaefbabc5abf6bcd1"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/index.html",
+        "sha256": "10fe3a83238ecb1276efb7b282f50787ca50c3beb25e5cfc3980bc82ff798e29"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-budget.json",
+        "sha256": "1bdef461733d4e5003b1540553d429ef3b024cc6e543bb209a45e94b33a8e63a"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-glass.png",
+        "sha256": "c8ac097c3f338102818049330af9fce03872e80f975f2a710705493a89b26369"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-scrolled.png",
+        "sha256": "beeeeb7c8370f174fd975a5c865e36bc1c7814a53bdebecabf17bfba4282129f"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-top.png",
+        "sha256": "e8fb63beefc23a92eda555458675c238ff3f09e26731fb17a37412cc017f634f"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/manifest.json",
+        "sha256": "19a04722fac3a5a035edc7afe8486b26155422d0f3b86107579bd0df9f98db96"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/source-hashes.json",
+        "sha256": "c49ecaba4afd5103c48066fb08407a4d6632c8f271793d2594ba67cb3b4ce583"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/build-hashes.json",
+        "sha256": "1e7a50a4f55b764eeb063d1ba91b316cfb848c9c1780ea1a0fff5b399e7ac241"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/collapse-after-expanded-hover-focus-frames.json",
+        "sha256": "aae7f85a6e52d93523d4cf432fe3284d2c8c95a54a06b150e0abbb9a8c845f86"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/collapse-frames.json",
+        "sha256": "e90d801d4066fbc834e68a0605eed72d12be5208004648640f5e629f33bdf324"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/default-light-collapsed.png",
+        "sha256": "6cafc608c0886865e9667053eaf71f89bcedfab090acea5575d530c7d7e72659"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/default-light-expanded.png",
+        "sha256": "75abc465961c9d2f796597ff33a46aea9147f8e33a7309154f68123ce340fd4f"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/expand-after-rail-tooltip-frames.json",
+        "sha256": "df1101eea7e30073013e7e32cbbac8e3964225d5c3e7cb7aac3b69eaeba94ab8"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/expand-frames.json",
+        "sha256": "faa5c219c689661ffe39bef04234294ee2ac1f8d9b95e528ec643046f85838c1"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/failure.json",
+        "sha256": "a7bc5f5808c64618660bd249ad81bea76a176da9279cff8cbd893ac41a1b8c0a"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/fixture.json",
+        "sha256": "4c19ae88c347c660a36e012e39dfa10680fe9a353d97e57b9d8359a61ef80b3f"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/manifest.json",
+        "sha256": "d35e62463a466f571e8dcf1cc7caf84b9a41f3ab84e5db2b271876edaa680bd6"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/process.log",
+        "sha256": "6028db8438aabd88667e4e29bb99aaa7a5baf4a392af4038c2daf2ddb2b7aaca"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/reverse-frames.json",
+        "sha256": "e9bfe1ded10c354f014479d2989fd38e5f8188417e5f8184a4ebbaf2cc84ebf8"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/shell-visual.json",
+        "sha256": "b56533d93f2ac00e4b02c9310ac9ab1f8ca9ff7838e2220d4a8406c3194c3480"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "LS1-initial-render-budget",
+    "LS2-scroll-frame-budget",
+    "LS3-append-frame-budget",
+    "LS4-glass-panel-cost",
+    "LS5-no-page-errors"
+  ],
+  "passed": 5,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "host.css",
+      "sha256": "e5fc8d9234647eb9923b547433d63e091e5b55ec6d0618ffaefbabc5abf6bcd1",
+      "bytes": 137
+    },
+    {
+      "path": "index.html",
+      "sha256": "10fe3a83238ecb1276efb7b282f50787ca50c3beb25e5cfc3980bc82ff798e29",
+      "bytes": 287
+    },
+    {
+      "path": "long-session-budget.json",
+      "sha256": "2dc769fb0b957e932b7c1f8189e72a04347e3a65dbea8929666038b4bb4a3e0c",
+      "bytes": 1548
+    },
+    {
+      "path": "long-session-glass.png",
+      "sha256": "c8ac097c3f338102818049330af9fce03872e80f975f2a710705493a89b26369",
+      "bytes": 86511
+    },
+    {
+      "path": "long-session-scrolled.png",
+      "sha256": "beeeeb7c8370f174fd975a5c865e36bc1c7814a53bdebecabf17bfba4282129f",
+      "bytes": 82571
+    },
+    {
+      "path": "long-session-top.png",
+      "sha256": "e8fb63beefc23a92eda555458675c238ff3f09e26731fb17a37412cc017f634f",
+      "bytes": 80882
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "c49ecaba4afd5103c48066fb08407a4d6632c8f271793d2594ba67cb3b4ce583",
+      "bytes": 604
+    }
+  ],
+  "untested": [
+    "Physical GPU/driver variance (headless software rasterisation differs from a desktop compositor)",
+    "heavily nested tool output and image-heavy turns",
+    "Physical touch/scrolling devices",
+    "Multi-window sessions and WebSocket transport"
+  ]
+}

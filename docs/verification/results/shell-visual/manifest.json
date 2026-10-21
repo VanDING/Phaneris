@@ -1,0 +1,388 @@
+{
+  "schemaVersion": 1,
+  "workflow": "shell-visual",
+  "startedAt": "2026-10-21T09:15:28.978Z",
+  "finishedAt": "2026-10-21T09:16:20.620Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\shell-visual-workflow.ts",
+    "--output-dir=docs/verification/results/shell-visual",
+    "--replace"
+  ],
+  "source": {
+    "headSha": "5e4804da048b57148c6a4b5c9f503d2f2e0a16e6",
+    "dirtyPaths": [
+      "?? docs/verification/results/long-session-budget/failure.json",
+      "?? docs/verification/results/long-session-budget/host.css",
+      "?? docs/verification/results/long-session-budget/index.html",
+      "?? docs/verification/results/long-session-budget/long-session-budget.json",
+      "?? docs/verification/results/long-session-budget/long-session-glass.png",
+      "?? docs/verification/results/long-session-budget/long-session-scrolled.png",
+      "?? docs/verification/results/long-session-budget/manifest.json",
+      "?? docs/verification/results/long-session-budget/source-hashes.json",
+      "?? docs/verification/results/long-session-final/host.css",
+      "?? docs/verification/results/long-session-final/index.html",
+      "?? docs/verification/results/long-session-final/long-session-budget.json",
+      "?? docs/verification/results/long-session-final/long-session-glass.png",
+      "?? docs/verification/results/long-session-final/long-session-scrolled.png",
+      "?? docs/verification/results/long-session-final/long-session-top.png",
+      "?? docs/verification/results/long-session-final/manifest.json",
+      "?? docs/verification/results/long-session-final/source-hashes.json",
+      "?? docs/verification/results/shell-visual/build-hashes.json",
+      "?? docs/verification/results/shell-visual/collapse-after-expanded-hover-focus-frames.json",
+      "?? docs/verification/results/shell-visual/collapse-frames.json",
+      "?? docs/verification/results/shell-visual/default-light-collapsed.png",
+      "?? docs/verification/results/shell-visual/default-light-expanded.png",
+      "?? docs/verification/results/shell-visual/expand-after-rail-tooltip-frames.json",
+      "?? docs/verification/results/shell-visual/expand-frames.json",
+      "?? docs/verification/results/shell-visual/failure.json",
+      "?? docs/verification/results/shell-visual/fixture.json",
+      "?? docs/verification/results/shell-visual/manifest.json",
+      "?? docs/verification/results/shell-visual/process.log",
+      "?? docs/verification/results/shell-visual/reverse-frames.json",
+      "?? docs/verification/results/shell-visual/shell-visual.json"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "docs/verification/results/long-session-budget/failure.json",
+        "sha256": "f7794e67959f4e628b1ac692d635ab422c5fda4a880e07cfbc6794216e4e6afb"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/host.css",
+        "sha256": "e5fc8d9234647eb9923b547433d63e091e5b55ec6d0618ffaefbabc5abf6bcd1"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/index.html",
+        "sha256": "10fe3a83238ecb1276efb7b282f50787ca50c3beb25e5cfc3980bc82ff798e29"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/long-session-budget.json",
+        "sha256": "02bd1ba0c3c30aefd40422d327bd163cf1349a47f5f6759071ce7a41ab4e83fe"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/long-session-glass.png",
+        "sha256": "c8ac097c3f338102818049330af9fce03872e80f975f2a710705493a89b26369"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/long-session-scrolled.png",
+        "sha256": "beeeeb7c8370f174fd975a5c865e36bc1c7814a53bdebecabf17bfba4282129f"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/manifest.json",
+        "sha256": "cb397fa4f9b32a07041fc99f5127add9d3aa51b98be9c55992921f72aaf9c53b"
+      },
+      {
+        "path": "docs/verification/results/long-session-budget/source-hashes.json",
+        "sha256": "c49ecaba4afd5103c48066fb08407a4d6632c8f271793d2594ba67cb3b4ce583"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/host.css",
+        "sha256": "e5fc8d9234647eb9923b547433d63e091e5b55ec6d0618ffaefbabc5abf6bcd1"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/index.html",
+        "sha256": "10fe3a83238ecb1276efb7b282f50787ca50c3beb25e5cfc3980bc82ff798e29"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-budget.json",
+        "sha256": "2dc769fb0b957e932b7c1f8189e72a04347e3a65dbea8929666038b4bb4a3e0c"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-glass.png",
+        "sha256": "c8ac097c3f338102818049330af9fce03872e80f975f2a710705493a89b26369"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-scrolled.png",
+        "sha256": "beeeeb7c8370f174fd975a5c865e36bc1c7814a53bdebecabf17bfba4282129f"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/long-session-top.png",
+        "sha256": "e8fb63beefc23a92eda555458675c238ff3f09e26731fb17a37412cc017f634f"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/manifest.json",
+        "sha256": "49dea5fe93061b8f99839880c472a241e71b5454f96415b162cd7f4d12a7d2b3"
+      },
+      {
+        "path": "docs/verification/results/long-session-final/source-hashes.json",
+        "sha256": "c49ecaba4afd5103c48066fb08407a4d6632c8f271793d2594ba67cb3b4ce583"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/build-hashes.json",
+        "sha256": "1e7a50a4f55b764eeb063d1ba91b316cfb848c9c1780ea1a0fff5b399e7ac241"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/collapse-after-expanded-hover-focus-frames.json",
+        "sha256": "aae7f85a6e52d93523d4cf432fe3284d2c8c95a54a06b150e0abbb9a8c845f86"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/collapse-frames.json",
+        "sha256": "e90d801d4066fbc834e68a0605eed72d12be5208004648640f5e629f33bdf324"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/default-light-collapsed.png",
+        "sha256": "6cafc608c0886865e9667053eaf71f89bcedfab090acea5575d530c7d7e72659"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/default-light-expanded.png",
+        "sha256": "75abc465961c9d2f796597ff33a46aea9147f8e33a7309154f68123ce340fd4f"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/expand-after-rail-tooltip-frames.json",
+        "sha256": "df1101eea7e30073013e7e32cbbac8e3964225d5c3e7cb7aac3b69eaeba94ab8"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/expand-frames.json",
+        "sha256": "faa5c219c689661ffe39bef04234294ee2ac1f8d9b95e528ec643046f85838c1"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/failure.json",
+        "sha256": "a7bc5f5808c64618660bd249ad81bea76a176da9279cff8cbd893ac41a1b8c0a"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/fixture.json",
+        "sha256": "4c19ae88c347c660a36e012e39dfa10680fe9a353d97e57b9d8359a61ef80b3f"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/manifest.json",
+        "sha256": "d35e62463a466f571e8dcf1cc7caf84b9a41f3ab84e5db2b271876edaa680bd6"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/process.log",
+        "sha256": "6028db8438aabd88667e4e29bb99aaa7a5baf4a392af4038c2daf2ddb2b7aaca"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/reverse-frames.json",
+        "sha256": "e9bfe1ded10c354f014479d2989fd38e5f8188417e5f8184a4ebbaf2cc84ebf8"
+      },
+      {
+        "path": "docs/verification/results/shell-visual/shell-visual.json",
+        "sha256": "b56533d93f2ac00e4b02c9310ac9ab1f8ca9ff7838e2220d4a8406c3194c3480"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "verified panel title centers align",
+    "verified new-session top aligns with panel top",
+    "verified new-session matches ordinary row height",
+    "verified new-session has breathing room before navigation",
+    "verified expanded default width 200",
+    "verified sidebar has no extra navigator seam",
+    "verified navigation rows 28",
+    "verified navigation icons 16",
+    "verified new session symmetric insets",
+    "verified navigation and first-row insets match",
+    "verified expanded footer retains bottom anchor",
+    "verified default light neutral border",
+    "verified default light visible soft panel shadow",
+    "verified native default panel radius",
+    "verified native default edge radius",
+    "verified sidebar drag follows pointer delta without seam jump",
+    "verified navigator drag follows pointer delta without seam jump",
+    "verified collapsed new-session keeps the panel top line",
+    "verified collapsed width 48 with breathing room",
+    "verified icons centered in the visible rail including its boundary",
+    "verified collapsed controls are 28px squares",
+    "verified state-specific icon alignment",
+    "verified both states share compact 2px navigation gaps",
+    "verified both states share one icon column",
+    "verified first navigation center stays at same height",
+    "verified collapse keeps original button nodes",
+    "verified collapse interpolates control width",
+    "verified collapse fades text",
+    "verified collapse keeps icon column steady",
+    "verified footer icons centered",
+    "verified collapsed footer retains bottom anchor",
+    "verified collapsed navigator drag uses same geometry",
+    "verified collapsed tooltip remains usable",
+    "verified expand keeps original button nodes",
+    "verified expand fades text",
+    "verified expanded navigation suppresses tooltip",
+    "verified keyboard collapse after expanded hover and focus leaves no tooltip",
+    "verified collapsed rail shows exactly the hovered tooltip",
+    "verified leaving the rail removes the tooltip",
+    "verified expanding after a rail tooltip leaves no residue",
+    "verified expanded context menu remains usable",
+    "verified rapid reverse occurs before closing finishes",
+    "verified rapid reverse finishes at latest expanded state",
+    "verified keyboard switch preserves focused navigation node",
+    "verified collapsed keyboard focus visible",
+    "collapsed profile opens",
+    "default dark retains own material",
+    "verified ink authored panel radius preserved",
+    "verified geek authored panel radius preserved",
+    "verified cyberpunk-2077 authored panel radius preserved",
+    "verified sidebar width slider keyboard adjusts and persists",
+    "verified width slider keyboard focus visible",
+    "verified sidebar width slider keyboard lower bound",
+    "verified sidebar width slider keyboard upper bound",
+    "verified navigator width slider keyboard adjusts and persists",
+    "verified navigator width slider keyboard lower bound",
+    "verified navigator width slider keyboard upper bound",
+    "verified saved width survives refresh",
+    "verified 200 percent native zoom reflows",
+    "verified large text rows expand together",
+    "verified large root text retains square rail",
+    "verified scrolling navigation retains symmetric insets",
+    "verified last navigation item reachable",
+    "verified touch rail and controls remain usable",
+    "verified reduced motion reaches final geometry immediately",
+    "verified startup reveals only the final persisted size",
+    "verified Windows default radius stays 6",
+    "no native renderer errors"
+  ],
+  "passed": 68,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "1e7a50a4f55b764eeb063d1ba91b316cfb848c9c1780ea1a0fff5b399e7ac241",
+      "bytes": 330
+    },
+    {
+      "path": "collapse-after-expanded-hover-focus-frames.json",
+      "sha256": "b53a79c75bcc0ce50a03bf20c67688926436edf21b09e8e0460c5d9a222d9907",
+      "bytes": 35166
+    },
+    {
+      "path": "collapse-frames.json",
+      "sha256": "dba3777dcfe7e74c073cc63d765d14325b4dc0a56d4155c65db7d9c6157b82c5",
+      "bytes": 33098
+    },
+    {
+      "path": "cyberpunk-2077-expanded.png",
+      "sha256": "fd735a6d6678fe14c4a6e0f6ae513d5de842512d9c83d5b1d243f4ef7891af7d",
+      "bytes": 89700
+    },
+    {
+      "path": "default-dark-expanded.png",
+      "sha256": "cba474790a337db538c2522dbd1c3e2b796892ef03576e678a3859faf1c7a50e",
+      "bytes": 82823
+    },
+    {
+      "path": "default-light-collapsed.png",
+      "sha256": "bc4e5ce317b394e46b6eb7c78a8e43819e87deb3cea1a24f3c7001e9b5275020",
+      "bytes": 69801
+    },
+    {
+      "path": "default-light-expanded.png",
+      "sha256": "cc6a6399612acf4a27db50b601072ebb6ba2f0949f28b2967b2ce3d3650d9dbf",
+      "bytes": 95850
+    },
+    {
+      "path": "expand-after-rail-tooltip-frames.json",
+      "sha256": "3be323881c4b9694c8c2b17fd47d389d71b21f0524de77f45571833a0f1404e1",
+      "bytes": 35146
+    },
+    {
+      "path": "expand-frames.json",
+      "sha256": "943ad4e05538e4bbed313133544f2e32aa53c213414e42664312e828ed5f8085",
+      "bytes": 35457
+    },
+    {
+      "path": "fixture.json",
+      "sha256": "d88f4da79e35664b9006cd8ec956e047a8a8f05cebcf2beafcbe79ea20f6e8a9",
+      "bytes": 224
+    },
+    {
+      "path": "geek-expanded.png",
+      "sha256": "1636204a963d27448d12173081fc3dd13853bfc9bfa545a22cba261c91c2cd97",
+      "bytes": 89415
+    },
+    {
+      "path": "ink-expanded.png",
+      "sha256": "02d6267d231e376748499ba7d7e0b2c8f786c84a01180e9322c5732e5ab266ed",
+      "bytes": 102088
+    },
+    {
+      "path": "large-text-collapsed.png",
+      "sha256": "b7505c7841e0544fbb447446483054951cfc35ebb79b4ab66533290eb222075e",
+      "bytes": 134003
+    },
+    {
+      "path": "large-text.png",
+      "sha256": "3d0b67be03742996d1806b67852f029447429f268fd1ee2aeb832e59a0f1f9d1",
+      "bytes": 176191
+    },
+    {
+      "path": "native-zoom-200.png",
+      "sha256": "0e2786c0baf376fbe809126bc49b24332a7ae259dd595a865ecdd1391daa95f6",
+      "bytes": 94862
+    },
+    {
+      "path": "process.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reduced-motion-collapsed.png",
+      "sha256": "dfde94b68a4c8d6065fc37e8ab5aaddfb5ac4c14a9c6def04e0996c17baac809",
+      "bytes": 68576
+    },
+    {
+      "path": "reduced-motion-frames.json",
+      "sha256": "3fcc2b0324f68423e08c67343480f29c970601a7f175b62b305353f2b9ce50e7",
+      "bytes": 18830
+    },
+    {
+      "path": "reverse-frames.json",
+      "sha256": "1fd304b255a979d74f00407c9ac54eb9891f5682342a162ccb51fb686cdb34fd",
+      "bytes": 46144
+    },
+    {
+      "path": "shell-recording.webm",
+      "sha256": "857ee96cace5e0b53b32b96bf2fa1f3271827879821b5513b994f10b67053dae",
+      "bytes": 7913254
+    },
+    {
+      "path": "shell-visual.json",
+      "sha256": "f4c74642e38b3e4e2b52baba271375d339f17c7383dbeab0628ee142ccba7956",
+      "bytes": 897274
+    },
+    {
+      "path": "short-window.png",
+      "sha256": "5e1eb5604792a6c7525438df2c943227583198f15e42505e00436b783fd5e903",
+      "bytes": 78155
+    },
+    {
+      "path": "startup-frames.json",
+      "sha256": "6079eaa58e4234d2ab435d1ca15afe1f909a0018508c8ad45ed3ce1cde0ef321",
+      "bytes": 19238
+    },
+    {
+      "path": "startup-settled.png",
+      "sha256": "8551412fd3a7205cd47cdca2c843525383cd3a11e473b22314144a8a3b043ff8",
+      "bytes": 87422
+    },
+    {
+      "path": "touch-collapsed.png",
+      "sha256": "3031af99d45af9c3e89a2a7c8e7fd761c62c9ddc31bce1f71abb97468ceb434c",
+      "bytes": 70053
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "c7232cf28fea211535de1559b347f1d13b4e5c256e513dae17fb83594431855a",
+      "bytes": 47924496
+    },
+    {
+      "path": "windows-policy.png",
+      "sha256": "254d0d515187f0d22d155d81119b4957987a543afdc12f907aa7a919cb31cafd",
+      "bytes": 95031
+    }
+  ],
+  "untested": [
+    "Windows native compositor: platform policy simulated in the macOS renderer",
+    "Signed installer, native Linux, physical touch hardware"
+  ]
+}
