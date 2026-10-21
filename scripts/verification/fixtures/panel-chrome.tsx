@@ -193,6 +193,7 @@ function HighlightProbe() {
     void (async () => {
       const { collectHighlightRanges, applyHighlightRanges, clearHighlightRanges, countHighlightRanges } =
         await import('@/components/app-shell/transcript-highlights')
+      const { nextMatchIndex, previousMatchIndex } = await import('@/components/app-shell/search-navigation')
       if (cancelled) return
       const host = document.createElement('div')
       host.innerHTML = `
@@ -216,6 +217,8 @@ function HighlightProbe() {
           withActive,
           withoutActive,
           cleared,
+          next: [nextMatchIndex(0, 3), nextMatchIndex(2, 3), nextMatchIndex(0, 0)],
+          prev: [previousMatchIndex(2, 3), previousMatchIndex(0, 3), previousMatchIndex(2, 0)],
         }
       } finally {
         host.remove()

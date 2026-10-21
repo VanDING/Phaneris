@@ -341,6 +341,10 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.deepEqual(probe.withActive, { passive: 1, active: 1 }, 'the current match is painted alone')
       assert.deepEqual(probe.withoutActive, { passive: 2, active: 0 }, 'without a current match every range is passive')
       assert.deepEqual(probe.cleared, { passive: 0, active: 0 }, 'clearing removes both registries')
+      // Navigation never wraps: the last match stays last, the first stays first,
+      // and an empty result never moves the index.
+      assert.deepEqual(probe.next, [1, 2, 0], 'next stops at the last match and a frozen empty result')
+      assert.deepEqual(probe.prev, [1, 0, 2], 'previous stops at the first match and a frozen empty result')
     })
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))

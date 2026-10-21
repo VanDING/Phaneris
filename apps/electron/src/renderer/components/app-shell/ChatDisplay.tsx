@@ -87,6 +87,7 @@ import {
   getCSSHighlights,
 } from './transcript-highlights'
 import { MemoizedMessageBubble } from './ChatMessageBubble'
+import { nextMatchIndex, previousMatchIndex } from './search-navigation'
 import { openMarkdownPopoutAtom, type MarkdownPopout } from "@/atoms/preview"
 import { chatFocusRequestAtom, filesPanelFocusRequestAtom } from "@/atoms/content-panel-ui"
 import { usePanelTriggerOpener } from "@/lib/panel-triggers"
@@ -733,14 +734,14 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     applyHighlightRanges(allRanges, currentMatchIndex)
   }, [currentMatchIndex])
 
-  // Navigate to next match (no looping - stops at last match)
+  // Navigate to next match (no looping - stops at last match). The policy lives in
+  // search-navigation.ts so "it does not wrap" can be asserted without a transcript.
   const goToNextMatch = useCallback(() => {
     if (validMatches.length === 0) return
     setCurrentMatchIndex(prev => {
-      // Don't loop - stop at last match
-      if (prev >= validMatches.length - 1) return prev
-      shouldScrollToMatchRef.current = true
-      return prev + 1
+      const next = nextMatchIndex(prev, validMatches.length)
+      if (next !== prev) shouldScrollToMatchRef.current = true
+      return next
     })
   }, [validMatches])
 
@@ -748,10 +749,9 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   const goToPrevMatch = useCallback(() => {
     if (validMatches.length === 0) return
     setCurrentMatchIndex(prev => {
-      // Don't loop - stop at first match
-      if (prev <= 0) return prev
-      shouldScrollToMatchRef.current = true
-      return prev - 1
+      const next = previousMatchIndex(prev, validMatches.length)
+      if (next !== prev) shouldScrollToMatchRef.current = true
+      return next
     })
   }, [validMatches])
 
