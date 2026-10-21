@@ -2,6 +2,8 @@
 
 状态：2026-10-05，用户授权直接替换内置 Default，已同步内置 JSON、canonical TypeScript、Electron/shared UI 静态样式与窗口启动背景。稳定选择 ID 保持 `default`。
 
+> 2026-10-21 追加：默认主题强调色与聚焦环已改为用户指定的品牌紫 `#7851A9`；深色模式使用同色相的提亮值 `oklch(0.660 0.160 302.3)`（字面值在深色画布上聚焦环仅 2.97:1、黑字 3.55:1，不过 WCAG 底线）。下文 2026-10-05 的紫色与对比度数值是当时的阶段记录，以 `DESIGN.md` 和 `check:contrast-floor` 为当前权威。
+
 内置文件：[`default.json`](../../../apps/electron/resources/themes/default.json)。[`default-preview.json`](./default-preview.json) 保留为独立设计参考，在用户主题列表里显示 **Default Preview**；正式内置主题名称为 **Default**。
 
 预览：原对照页与浅色／深色对话、浅色／深色设置页截图已于 2026-10-13 按仓库瘦身移除（见[档案裁剪](../../verification/README.md#档案裁剪)）。当时使用真实组件与示例数据，对照页保留修改前的 Default 截图；可对照的设计数据仍保留在 [`default-preview.json`](./default-preview.json)。

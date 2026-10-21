@@ -46,6 +46,7 @@ const replaceOnce = (source: string, find: string, replacement: string) => {
 
 const DEFAULT_THEME_JSON = 'apps/electron/resources/themes/default.json'
 const TYPOGRAPHY_CSS = 'packages/ui/src/styles/typography.css'
+const GENERATED_TOKENS_CSS = 'packages/ui/src/styles/theme-tokens.css'
 const ELECTRON_CSS = 'apps/electron/src/renderer/index.css'
 const WEBUI_ENTRY = 'apps/webui/src/main.tsx'
 
@@ -70,8 +71,9 @@ const mutations: Mutation[] = [
   },
   {
     id: 'FA05', rule: 'static-css-parity', failureMode: 'A non-font token drifts between DEFAULT_THEME and the static CSS',
-    file: ELECTRON_CSS,
-    apply: source => replaceOnce(source, '  --accent: oklch(0.488 0.275 280.3);', '  --accent: oklch(0.5 0.275 280.3);'),
+    // The palette lives in the generated tokens file, which both host entrypoints import.
+    file: GENERATED_TOKENS_CSS,
+    apply: source => replaceOnce(source, '  --accent: #7851A9;', '  --accent: #7851AA;'),
     command: themeTest, expect: 'fail', expectPattern: /typography and material tokens synchronized/,
   },
   {

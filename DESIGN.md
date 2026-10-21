@@ -11,7 +11,8 @@ colors:
   muted: "#F7F8FB"
   border: "#E5E5E6"
   user-message-bubble: "#F3F3F3"
-  accent-violet: "oklch(0.488 0.275 280.3)"
+  accent-violet: "#7851A9"
+  accent-violet-dark: "#A577E2"
   info-amber: "#94601C"
   success-green: "#267454"
   danger-red: "#B63E4C"
@@ -78,7 +79,7 @@ Roles, not hues:
 | Ink | `#20232C` | `#EEF0F6` | Primary text |
 | Dimmed ink | `#606775` | `#AAB1C1` | Secondary text |
 | Border | `#E5E5E6` | `#343946` | Hairlines and control outlines |
-| Accent | `oklch(0.488 0.275 280.3)` | `oklch(0.626 0.221 291.7)` | Focus, selection, active state |
+| Accent | `#7851A9` | `oklch(0.660 0.160 302.3)` | Focus, selection, active state |
 | User bubble | `#F3F3F3` | `#2B2B2B` | User message surface (neutral, not accent) |
 
 Rules:
@@ -89,6 +90,12 @@ Rules:
   `*-text` variant mixed 50% toward the foreground for AA text contrast.
 - Never introduce a new hex in a component. Author it in the theme engine
   (`DEFAULT_THEME` or a theme file) so every host and mode receives it.
+- **One accent hue, two mode values.** Light ships the brand value verbatim
+  (`#7851A9`); dark ships the same hue lifted to `oklch(0.660 0.160 302.3)`.
+  The literal value cannot serve dark: on `#17191E` the focus ring measures
+  2.97:1 (floor 3) and black `--on-accent` text 3.55:1 (floor 4.5).
+  `check:contrast-floor` is the authority — never paste the light hex into the
+  dark override.
 
 ### Status and state colours
 
@@ -408,24 +415,28 @@ rewrites the baseline; the diff is the review record.
 ## Perceived performance
 
 A long transcript is the product's worst case, so it has a budget instead of an
-opinion. un run test:long-session-budget renders 200 real turns and measures
-frame deltas; the recorded run is in
-`docs/verification/results/long-session-budget-2026-10-20/`.
+opinion. `bun run test:long-session-budget` renders 200 real turns and measures
+frame deltas; the 2026-10-20 baseline is in
+`docs/verification/results/long-session-budget-2026-10-20/`, and the post-fix run
+is in `docs/verification/results/long-session-budget-w1/`.
 
 | Action (200 turns) | Measured | Budget |
 | --- | --- | --- |
 | Scroll, p95 frame | 16.7 ms | ≤ 40 ms |
-| Append one turn, p95 | 283 ms | ceiling 300 ms, target 40 ms |
+| Append one turn, p95 | 33.4 ms (p50 16.7) | ≤ 40 ms target, 120 ms ceiling |
 | Glass panel over the transcript, p95 delta | 0 ms | ≤ 8 ms |
 
 Rules:
 
 - **Never put `backdrop-filter` on a repeating row.** Blur belongs to floating
   panels; a panel that is not focused may drop it, exactly like the shadow
-  level (isFocusedPanel).
-- **An append touches one row.** Grouping is memoised per turn; re-deriving
-  every row on each delta is the defect the 283 ms measures, and the ceiling is
-  there so it cannot get worse while the fix is scheduled.
+  level (isFocusedPanel). Sticky headers that scroll with a list are opaque
+  surfaces, not glass.
+- **An append touches one row.** Four mechanisms keep it true, and removing any
+  one re-opens the 83–300 ms regression: `storedToMessage` preserves message
+  identity (`WeakMap`), `reuseStableTurns` reuses every completed turn whose
+  signature did not move, viewer rows are memoised, and TurnCard renders its
+  body through `MemoizedMarkdown`.
 - **Scrolling is the hard floor.** Anything that animates during scroll is cut
   before anything else.
 - Measure before optimising, and leave the number in an artifact.

@@ -48,10 +48,10 @@ if (builtin) await check('Applied Default matches approved visual tokens, bundle
       assert.equal((mode ? dark : light).get(key), value, `${path} ${mode ? 'dark' : 'light'} ${key}`)
   }
 })
-if (builtin) await check('Default preserves its original light/dark purple without changing approved message surfaces', () => {
-  assert.equal(DEFAULT_THEME_FILE.accent, 'oklch(0.488 0.275 280.3)')
+if (builtin) await check('Default carries the #7851A9 brand accent in both modes without changing approved message surfaces', () => {
+  assert.equal(DEFAULT_THEME_FILE.accent, '#7851A9')
   assert.equal(DEFAULT_THEME_FILE.ring, DEFAULT_THEME_FILE.accent)
-  assert.equal(DEFAULT_THEME_FILE.dark?.accent, 'oklch(0.626 0.221 291.7)')
+  assert.equal(DEFAULT_THEME_FILE.dark?.accent, 'oklch(0.660 0.160 302.3)')
   assert.equal(DEFAULT_THEME_FILE.dark?.ring, DEFAULT_THEME_FILE.dark?.accent)
   assert.equal(DEFAULT_THEME_FILE.userMessageBubble, '#F3F3F3')
   assert.equal(DEFAULT_THEME_FILE.dark?.userMessageBubble, '#2B2B2B')

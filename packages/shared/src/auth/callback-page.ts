@@ -65,8 +65,8 @@ export function generateCallbackPage(options: {
     }
 
     .logo {
-      /* Purple accent: oklch(0.62 0.13 293) */
-      color: #8b5fb3;
+      /* Brand accent: #7851A9 (DEFAULT_THEME.accent) */
+      color: #7851A9;
       font-size: 28px;
       font-weight: 600;
       line-height: 1.2;
@@ -125,14 +125,14 @@ export function generateCallbackPage(options: {
       font-size: 14px;
       font-weight: 500;
       color: #fff;
-      background-color: #8b5fb3;
+      background-color: #7851A9;
       border-radius: 6px;
       text-decoration: none;
       transition: background-color 0.15s ease;
     }
 
     .return-link:hover {
-      background-color: #7a4fa3;
+      background-color: #6A4795;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -140,8 +140,8 @@ export function generateCallbackPage(options: {
         background-color: #1a1a1a;
       }
       .logo {
-        /* Brighter purple in dark mode: oklch(0.68 0.13 293) */
-        color: #a882c9;
+        /* Same hue lifted for the dark surface: DEFAULT_THEME.dark.accent */
+        color: #A577E2;
       }
       .card {
         ${isSuccess

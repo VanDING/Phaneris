@@ -70,7 +70,7 @@ try {
     const tokens = await page.evaluate(() => {
       const sample = document.createElement('span'); document.body.append(sample)
       const color = (value: string) => { sample.style.color = value; return getComputedStyle(sample).color }
-      const actual = color('var(--accent)'), ring = color('var(--ring)'), expected = color('oklch(0.488 0.275 280.3)')
+      const actual = color('var(--accent)'), ring = color('var(--ring)'), expected = color('#7851A9')
       sample.remove(); return { actual, ring, expected }
     })
     assert.equal(tokens.actual, tokens.expected); assert.equal(tokens.ring, tokens.expected)
@@ -111,7 +111,7 @@ try {
     const colors = await page.evaluate(() => {
       const sample = document.createElement('span'); document.body.append(sample)
       const color = (value: string) => { sample.style.color = value; return getComputedStyle(sample).color }
-      const actual = color('var(--accent)'), ring = color('var(--ring)'), expected = color('oklch(0.626 0.221 291.7)')
+      const actual = color('var(--accent)'), ring = color('var(--ring)'), expected = color('oklch(0.660 0.160 302.3)')
       sample.remove(); return { actual, ring, expected }
     })
     assert.equal(colors.actual, colors.expected); assert.equal(colors.ring, colors.expected)

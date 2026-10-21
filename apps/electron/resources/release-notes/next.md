@@ -12,6 +12,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- **Default accent** — The default theme's accent and focus ring now use the brand purple `#7851A9`. Dark mode uses the same hue lifted to `oklch(0.660 0.160 302.3)`, because the literal value measures 2.97:1 against the graphite canvas and 3.55:1 for black `--on-accent` text; every built-in palette still clears its WCAG floor.
 - **Navigation and planning surfaces** — Give sidebar icons the same contrast as session menus, restore the previous Pages icon, and clip the Gantt chart to its rounded frame while keeping scrollbars and task menus usable.
 - **Activity and icons** — Expand the profile activity heatmap by simplifying its surrounding controls, use Phaneris branding for the bundled tool icon, normalize sidebar and session-menu icons, add colored file-type artwork, and show a blocks-wave animation while thinking.
 - **Task reliability** — Pass dependency replies to dependent nodes, accept only the current child turn's output, and use activity-aware deadlines with a moderate thinking level when generating task definitions.

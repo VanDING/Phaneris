@@ -14,7 +14,7 @@
 @property --accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: oklch(0.488 0.275 280.3);
+  initial-value: #7851A9;
 }
 
 @property --info {
@@ -68,7 +68,7 @@
   --foreground-95: color-mix(in srgb, var(--foreground) 95%, var(--background));
   --background: #FFFFFF;
   --foreground: #20232C;
-  --accent: oklch(0.488 0.275 280.3);
+  --accent: #7851A9;
   --info: #94601C;
   --success: #267454;
   --destructive: #B63E4C;
@@ -82,7 +82,7 @@
   --card-foreground: #20232C;
   --popover-foreground: #20232C;
   --border: #E5E5E6;
-  --ring: oklch(0.488 0.275 280.3);
+  --ring: #7851A9;
   --user-message-bubble: #F3F3F3;
   --paper: #FFFFFF;
   --input: #FFFFFF;
@@ -148,7 +148,7 @@
   --foreground-95: color-mix(in srgb, var(--foreground) 95%, var(--background));
   --background: #17191E;
   --foreground: #EEF0F6;
-  --accent: oklch(0.626 0.221 291.7);
+  --accent: oklch(0.660 0.160 302.3);
   --info: #E3B674;
   --success: #83CBA7;
   --destructive: #F18C98;
@@ -162,7 +162,7 @@
   --card-foreground: #EEF0F6;
   --popover-foreground: #EEF0F6;
   --border: #343946;
-  --ring: oklch(0.626 0.221 291.7);
+  --ring: oklch(0.660 0.160 302.3);
   --user-message-bubble: #2B2B2B;
   --paper: #1C1F26;
   --input: #191C21;

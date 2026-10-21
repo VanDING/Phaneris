@@ -531,8 +531,8 @@ export const DEFAULT_THEME: ThemeOverrides = {
   "mutedForeground": "#606775",
   "border": "#E5E5E6",
   "userMessageBubble": "#F3F3F3",
-  "accent": "oklch(0.488 0.275 280.3)",
-  "ring": "oklch(0.488 0.275 280.3)",
+  "accent": "#7851A9",
+  "ring": "#7851A9",
   "info": "#94601C",
   "success": "#267454",
   "destructive": "#B63E4C",
@@ -581,8 +581,12 @@ export const DEFAULT_THEME: ThemeOverrides = {
     "mutedForeground": "#AAB1C1",
     "border": "#343946",
     "userMessageBubble": "#2B2B2B",
-    "accent": "oklch(0.626 0.221 291.7)",
-    "ring": "oklch(0.626 0.221 291.7)",
+    // Same hue and near-chroma as #7851A9, lifted to 0.660 so black `--on-accent`
+    // text clears 4.5:1 (6.33) and the focus ring clears 3:1 on the dark canvas
+    // (5.30 / 4.70). The literal brand value fails there: 2.97:1 ring and
+    // 3.55:1 black text — see check:contrast-floor.
+    "accent": "oklch(0.660 0.160 302.3)",
+    "ring": "oklch(0.660 0.160 302.3)",
     "info": "#E3B674",
     "success": "#83CBA7",
     "destructive": "#F18C98",

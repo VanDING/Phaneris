@@ -222,8 +222,8 @@ revision; code highlighting and standalone browser chrome follow that revision.
 The generated authoring manifest lives at `docs/design/theme-contract.generated.json`
 in the source repository. Old `fontSize` still changes the root size and rem geometry.
 
-- **Light:** pure white canvas, settings cards, inputs and menus (`#FFFFFF`), ink text (`#20232C`), neutral gray user messages (`#F3F3F3`), and the original Default purple (`oklch(0.488 0.275 280.3)`). Fine borders and light shadows define surfaces.
-- **Dark:** graphite canvas (`#17191E`), softened white text (`#EEF0F6`), neutral dark gray user messages (`#2B2B2B`), the original dark-mode purple (`oklch(0.626 0.221 291.7)`), and separate card, input and menu surfaces.
+- **Light:** pure white canvas, settings cards, inputs and menus (`#FFFFFF`), ink text (`#20232C`), neutral gray user messages (`#F3F3F3`), and the brand accent `#7851A9` for focus, selection and the active control. Fine borders and light shadows define surfaces.
+- **Dark:** graphite canvas (`#17191E`), softened white text (`#EEF0F6`), neutral dark gray user messages (`#2B2B2B`), the same accent hue lifted to `oklch(0.660 0.160 302.3)` so focus rings and `--on-accent` text stay legible, and separate card, input and menu surfaces.
 - **New Session:** the sidebar button uses the same card surface and text colors as settings cards. It stays white in light mode and uses the theme's dark card surface in dark mode; hover changes its shadow while preserving the surface.
 - **Style:** platform UI and code fonts with CJK fallbacks, 15px base type, 1.5 line height, 6px base radius, comfortable density, light-mode elevation and flat dark cards with raised menus. Explicit font preferences still take precedence.
 - **Native sidebar:** no authored navigator color; platform transparency is preserved.

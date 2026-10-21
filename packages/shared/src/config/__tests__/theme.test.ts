@@ -161,8 +161,8 @@ describe('theme resolution', () => {
       expect(validateThemeContent(JSON.stringify(theme)).valid).toBe(true);
     }
     expect(DEFAULT_THEME_FILE.name).toBe('Default');
-    expect(DEFAULT_THEME_FILE.accent).toBe('oklch(0.488 0.275 280.3)');
-    expect(DEFAULT_THEME_FILE.dark?.accent).toBe('oklch(0.626 0.221 291.7)');
+    expect(DEFAULT_THEME_FILE.accent).toBe('#7851A9');
+    expect(DEFAULT_THEME_FILE.dark?.accent).toBe('oklch(0.660 0.160 302.3)');
   });
 
   test('keeps Electron startup backgrounds aligned with the Default CSS colors', () => {
