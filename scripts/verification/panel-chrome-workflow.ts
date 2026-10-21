@@ -239,6 +239,20 @@ await verificationWorkflow('panel-chrome', async run => {
     })
     run.json('card-density.json', { generatedAt: new Date().toISOString(), rowBudget: 3, heightBudgetPx: CARD_HEIGHT_BUDGET_PX, measured: cardMetrics })
 
+    await check('pc11-artifacts-view-adds-no-second-row', async () => {
+      // The filter used to be a permanent row of `aria-pressed` chips under the
+      // view tabs. It is a menu in the view's own header now, so switching views
+      // must not grow the chrome stack.
+      await page.getByRole('tab', { name: 'Artifacts', exact: true }).click()
+      await page.waitForFunction(() => !document.querySelector('[data-chrome-row="files"] input'), undefined, { timeout: 5_000 })
+      assert.equal(await page.locator('[data-chrome-row]').count(), 1,
+        'the artifacts view must keep the single chrome row')
+      assert.equal(await page.locator('[aria-pressed]').count(), 0,
+        'the artifacts scope filter must be a menu, not a row of aria-pressed chips')
+      await page.getByRole('tab', { name: 'Browse', exact: true }).click()
+      await page.waitForFunction(() => Boolean(document.querySelector('[data-chrome-row="files"] input')), undefined, { timeout: 5_000 })
+    })
+
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))

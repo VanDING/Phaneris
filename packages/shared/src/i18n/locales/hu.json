@@ -451,6 +451,7 @@
   "contentPanel.files.artifacts.filter.all": "Összes",
   "contentPanel.files.artifacts.filter.current": "Megnyitott fájlok",
   "contentPanel.files.artifacts.filter.delivered": "Eredmények",
+  "contentPanel.files.artifacts.filterLabel": "Artefaktumok szűrése",
   "contentPanel.files.browse.session": "Ez a munkamenet",
   "contentPanel.files.filterPlaceholder": "Fájlok szűrése…",
   "contentPanel.files.noFilterMatches": "Nincs a szűrőnek megfelelő fájl.",

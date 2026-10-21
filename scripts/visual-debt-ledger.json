@@ -4644,16 +4644,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "bce072144bd4db31831bad21136d9e32f062d13b664c6c95649ad40b79e55403",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",

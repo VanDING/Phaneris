@@ -451,6 +451,7 @@
   "contentPanel.files.artifacts.filter.all": "All",
   "contentPanel.files.artifacts.filter.current": "Opened files",
   "contentPanel.files.artifacts.filter.delivered": "Deliverables",
+  "contentPanel.files.artifacts.filterLabel": "Filter artifacts",
   "contentPanel.files.browse.session": "This session",
   "contentPanel.files.filterPlaceholder": "Filter files…",
   "contentPanel.files.noFilterMatches": "No files match the filter.",

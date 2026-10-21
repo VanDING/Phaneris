@@ -451,6 +451,7 @@
   "contentPanel.files.artifacts.filter.all": "すべて",
   "contentPanel.files.artifacts.filter.current": "開いたファイル",
   "contentPanel.files.artifacts.filter.delivered": "成果物",
+  "contentPanel.files.artifacts.filterLabel": "成果物を絞り込む",
   "contentPanel.files.browse.session": "このセッション",
   "contentPanel.files.filterPlaceholder": "ファイルを絞り込む…",
   "contentPanel.files.noFilterMatches": "フィルターに一致するファイルがありません。",

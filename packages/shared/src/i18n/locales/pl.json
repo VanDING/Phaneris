@@ -451,6 +451,7 @@
   "contentPanel.files.artifacts.filter.all": "Wszystkie",
   "contentPanel.files.artifacts.filter.current": "Otwarte pliki",
   "contentPanel.files.artifacts.filter.delivered": "Efekty",
+  "contentPanel.files.artifacts.filterLabel": "Filtruj artefakty",
   "contentPanel.files.browse.session": "Ta sesja",
   "contentPanel.files.filterPlaceholder": "Filtruj pliki…",
   "contentPanel.files.noFilterMatches": "Żadne pliki nie pasują do filtra.",

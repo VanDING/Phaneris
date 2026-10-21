@@ -451,6 +451,7 @@
   "contentPanel.files.artifacts.filter.all": "Alle",
   "contentPanel.files.artifacts.filter.current": "Geöffnete Dateien",
   "contentPanel.files.artifacts.filter.delivered": "Ergebnisse",
+  "contentPanel.files.artifacts.filterLabel": "Artefakte filtern",
   "contentPanel.files.browse.session": "Diese Sitzung",
   "contentPanel.files.filterPlaceholder": "Dateien filtern…",
   "contentPanel.files.noFilterMatches": "Keine Dateien entsprechen dem Filter.",

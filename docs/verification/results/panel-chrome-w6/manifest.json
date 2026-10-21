@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "workflow": "panel-chrome",
+  "startedAt": "2026-10-21T06:16:11.763Z",
+  "finishedAt": "2026-10-21T06:17:01.042Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
+    "--output-dir=docs/verification/results/panel-chrome-w6"
+  ],
+  "source": {
+    "headSha": "c1c17a18d1939ca4237de2dc9152f5d7f0493aa4",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M scripts/verification/panel-chrome-workflow.ts"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
+        "sha256": "40fd23f34bfb60993dacd78328accd251790a7010c7f2bb3638384991acbb770"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "8c88a7a60c2134e2c1b0df3e1a77068dd1bfed5b6d9ad58d88020e7c9f9d73c1"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "19c25e4c86705537a8ff0e04500a6d05b3ef2f3e327b78f35e705b3b21a103a0"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "d06b8ebe524ea5d980979a20906ff847a12412fcf1e593ad0c08ea57e1cd31a6"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "cbb287cfb51a3d3d732e1639037d18fb48acbbc1845ef6ba45ba0eb0e31c340c"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "ca7335e354f1e4fb20fea37cf2f2bad924d21106b6f2d1f8b560564fcf9b82bf"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "68dd33c575f1ec617a4821fb1ffaed60d786950d1fddb043f8414d9441879e28"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "bab4ea2dbc261bcaa09f92218601f561d34168e859969b438841dfab3ac44ba1"
+      },
+      {
+        "path": "scripts/verification/panel-chrome-workflow.ts",
+        "sha256": "0811f348f2adc3891ebf6f55b7c6080aae8b7294de6dafcd5714f2fca20e78d1"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "pc1-single-chrome-row",
+    "pc2-row-height",
+    "pc3-tabs-and-filter-share-the-row",
+    "pc4-content-follows-the-row",
+    "pc5-total-chrome-budget",
+    "pc6-tabs-are-keyboard-navigable",
+    "pc7-done-column-starts-collapsed",
+    "pc8-empty-column-offers-an-exit",
+    "pc9-task-moves-by-keyboard",
+    "pc10-card-is-three-rows",
+    "pc11-artifacts-view-adds-no-second-row"
+  ],
+  "passed": 11,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "card-density.json",
+      "sha256": "ffdbbe18bb143d81a205e8b8e1575bd63190e7d057bed2e897b6ae7b0d3987cd",
+      "bytes": 146
+    },
+    {
+      "path": "files-panel-chrome-dark.png",
+      "sha256": "bc065d287cbbff63d15dee81a6c9f76524c0a37f311799b81d61c1fe88f7e6fd",
+      "bytes": 28331
+    },
+    {
+      "path": "files-panel-chrome-light.png",
+      "sha256": "ecc0359035460c823f9a13fe4fa18b18c90367de432cfce48b722a95ab7f438e",
+      "bytes": 27974
+    },
+    {
+      "path": "host.css",
+      "sha256": "fd036a1f80ca3f902571cb7799a8e6173a97f3de44f4018164d91719f705f8d2",
+      "bytes": 130
+    },
+    {
+      "path": "index.html",
+      "sha256": "aa434fe1e0ba4ee232f01373e3fca2e03ed580e574894e1934546821bd9924c9",
+      "bytes": 280
+    },
+    {
+      "path": "panel-chrome.json",
+      "sha256": "31ab80c557c984fe54ff56062d2539ceef86fb137bc20c97f9bb2bebec00375b",
+      "bytes": 341
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

@@ -451,6 +451,7 @@
   "contentPanel.files.artifacts.filter.all": "全部",
   "contentPanel.files.artifacts.filter.current": "打开过的文件",
   "contentPanel.files.artifacts.filter.delivered": "交付物",
+  "contentPanel.files.artifacts.filterLabel": "筛选产物",
   "contentPanel.files.browse.session": "本会话",
   "contentPanel.files.filterPlaceholder": "过滤文件…",
   "contentPanel.files.noFilterMatches": "没有匹配筛选条件的文件。",

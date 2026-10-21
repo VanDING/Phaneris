@@ -451,6 +451,7 @@
   "contentPanel.files.artifacts.filter.all": "Todos",
   "contentPanel.files.artifacts.filter.current": "Archivos abiertos",
   "contentPanel.files.artifacts.filter.delivered": "Entregables",
+  "contentPanel.files.artifacts.filterLabel": "Filtrar artefactos",
   "contentPanel.files.browse.session": "Esta sesión",
   "contentPanel.files.filterPlaceholder": "Filtrar archivos…",
   "contentPanel.files.noFilterMatches": "Ningún archivo coincide con el filtro.",

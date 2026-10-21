@@ -14,11 +14,12 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtom } from 'jotai'
 import { toast } from 'sonner'
-import { AlertTriangle, Check, Eye, FilePenLine, Package, RotateCcw, Trash2 } from 'lucide-react'
+import { AlertTriangle, Check, ChevronDown, Eye, FilePenLine, Package, RotateCcw, Trash2 } from 'lucide-react'
 import type { ArtifactDescriptor, ResolvedArtifact } from '@phaneris/shared/artifacts/browser'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@phaneris/ui'
 import { confirmDialog } from '@/components/ConfirmDialogHost'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { PanelEmptyState } from './PanelEmptyState'
 import { useArtifacts } from '@/hooks/useArtifacts'
 import { useAppShellContext } from '@/context/AppShellContext'
@@ -152,6 +153,14 @@ export function ArtifactsPanel({ sessionId }: { sessionId: string }) {
     [artifactStore.artifacts],
   )
 
+  // Per-scope counts for the filter menu: the number a user needs to decide
+  // whether switching scope will show anything.
+  const counts = useMemo(() => ({
+    delivered: artifactStore.artifacts.filter(({ artifact }) => matchesFilter(artifact, 'delivered')).length,
+    all: artifactStore.artifacts.length,
+    current: currentCount,
+  }) as Record<ArtifactStatusFilter, number>, [artifactStore.artifacts, currentCount])
+
   const open = useCallback((artifactId: string) => {
     navigate(routes.view.artifact(artifactId))
   }, [])
@@ -189,29 +198,46 @@ export function ArtifactsPanel({ sessionId }: { sessionId: string }) {
     { id: 'all', label: t('contentPanel.files.artifacts.filter.all') },
     { id: 'current', label: t('contentPanel.files.artifacts.filter.current') },
   ]
+  const activeFilter = filters.find(filter => filter.id === statusFilter) ?? filters[0]!
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex h-10 shrink-0 items-center gap-1 border-b border-border/50 bg-background/60 px-2.5">
-        {filters.map(filter => (
-          <button
-            key={filter.id}
-            type="button"
-            aria-pressed={statusFilter === filter.id}
-            onClick={() => setStatusFilter(filter.id)}
-            className={cn(
-              'h-6 rounded-md px-2 text-meta font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              statusFilter === filter.id ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-foreground/[0.04]',
-            )}
-          >
-            {filter.label}
-            {filter.id === 'current' && currentCount > 0 ? ` (${currentCount})` : ''}
-          </button>
-        ))}
-        <span className="ml-auto shrink-0 text-meta tabular-nums text-muted-foreground" data-testid="artifacts-count">
-          {visible.length}
-        </span>
-      </div>
+      {/* One menu, not three competing chips. The old row was a third selection
+          grammar inside the panel (`aria-pressed` pills) whose subordinate
+          "current" filter rendered larger than the view tabs above it. The
+          trigger states the active filter and the menu carries a count per
+          scope, so choosing a filter costs a menu, not a permanent row. */}
+      {artifactStore.artifacts.length > 0 && (
+        <div className="flex h-control-lg shrink-0 items-center gap-2 border-b border-border/50 bg-background px-2.5">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                aria-label={t('contentPanel.files.artifacts.filterLabel')}
+                className="craft-segment craft-focus flex items-center gap-1 px-1 text-meta font-medium text-text-secondary hover:text-foreground"
+              >
+                {activeFilter.label}
+                <ChevronDown className="h-3 w-3 shrink-0" aria-hidden />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {filters.map(filter => (
+                <DropdownMenuItem key={filter.id} onSelect={() => setStatusFilter(filter.id)}>
+                  <Check
+                    className={cn('h-3.5 w-3.5 shrink-0', statusFilter === filter.id ? 'opacity-100' : 'opacity-0')}
+                    aria-hidden
+                  />
+                  {filter.label}
+                  <span className="ml-auto pl-3 text-meta tabular-nums text-text-secondary">{counts[filter.id]}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <span className="ml-auto shrink-0 text-meta tabular-nums text-text-secondary" data-testid="artifacts-count">
+            {visible.length}
+          </span>
+        </div>
+      )}
 
       {artifactStore.isLoading && artifactStore.artifacts.length === 0 ? (
         <div className="flex h-full items-center justify-center"><Spinner /></div>
