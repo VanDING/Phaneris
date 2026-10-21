@@ -1,58 +1,69 @@
 {
   "schemaVersion": 1,
   "workflow": "panel-chrome",
-  "startedAt": "2026-10-21T08:46:54.600Z",
-  "finishedAt": "2026-10-21T08:47:49.525Z",
+  "startedAt": "2026-10-21T08:52:38.427Z",
+  "finishedAt": "2026-10-21T08:53:30.323Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
-    "--output-dir=docs/verification/results/panel-chrome"
+    "--output-dir=docs/verification/results/panel-chrome",
+    "--replace"
   ],
   "source": {
-    "headSha": "cb49cbff67c0c4694750d58e5ae0dcb4e69f761a",
+    "headSha": "ac920fe935cd4ef7f0d0ac978b215173fb96e316",
     "dirtyPaths": [
-      "M docs/verification/results/packaged-client-smoke-win.json",
-      " M docs/verification/results/packaged-client-verification-win.json",
-      " D docs/verification/results/panel-chrome-w4/files-panel-chrome-dark.png",
-      " D docs/verification/results/panel-chrome-w4/files-panel-chrome-light.png",
-      " D docs/verification/results/panel-chrome-w4/host.css",
-      " D docs/verification/results/panel-chrome-w4/index.html",
-      " D docs/verification/results/panel-chrome-w4/manifest.json",
-      " D docs/verification/results/panel-chrome-w4/panel-chrome.json"
+      "M apps/electron/src/renderer/components/ui/mention-menu.tsx",
+      " D docs/verification/results/panel-chrome/card-density.json",
+      " D docs/verification/results/panel-chrome/files-panel-chrome-dark.png",
+      " D docs/verification/results/panel-chrome/files-panel-chrome-light.png",
+      " D docs/verification/results/panel-chrome/host.css",
+      " D docs/verification/results/panel-chrome/index.html",
+      " M docs/verification/results/panel-chrome/manifest.json",
+      " D docs/verification/results/panel-chrome/panel-chrome.json",
+      " M scripts/verification/verification-artifacts.ts",
+      "?? docs/verification/results/panel-chrome/failure.json"
     ],
     "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
     "changedFiles": [
       {
-        "path": "docs/verification/results/packaged-client-smoke-win.json",
-        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+        "path": "apps/electron/src/renderer/components/ui/mention-menu.tsx",
+        "sha256": "ab683435440b2f458d93cc9a999694a9652836a448b3d31e1acb67870bf96d68"
       },
       {
-        "path": "docs/verification/results/packaged-client-verification-win.json",
-        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
-      },
-      {
-        "path": "docs/verification/results/panel-chrome-w4/files-panel-chrome-dark.png",
+        "path": "docs/verification/results/panel-chrome/card-density.json",
         "sha256": null
       },
       {
-        "path": "docs/verification/results/panel-chrome-w4/files-panel-chrome-light.png",
+        "path": "docs/verification/results/panel-chrome/failure.json",
+        "sha256": "73f41123a319380f3ce919422cde1c9f6523e6453799089e70b9d5684ca7f5f9"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome/files-panel-chrome-dark.png",
         "sha256": null
       },
       {
-        "path": "docs/verification/results/panel-chrome-w4/host.css",
+        "path": "docs/verification/results/panel-chrome/files-panel-chrome-light.png",
         "sha256": null
       },
       {
-        "path": "docs/verification/results/panel-chrome-w4/index.html",
+        "path": "docs/verification/results/panel-chrome/host.css",
         "sha256": null
       },
       {
-        "path": "docs/verification/results/panel-chrome-w4/manifest.json",
+        "path": "docs/verification/results/panel-chrome/index.html",
         "sha256": null
       },
       {
-        "path": "docs/verification/results/panel-chrome-w4/panel-chrome.json",
+        "path": "docs/verification/results/panel-chrome/manifest.json",
+        "sha256": "16ecc9001248e09470cc36f86c1aff203aae47ff7039691c69da913a38cbe380"
+      },
+      {
+        "path": "docs/verification/results/panel-chrome/panel-chrome.json",
         "sha256": null
+      },
+      {
+        "path": "scripts/verification/verification-artifacts.ts",
+        "sha256": "fa8f0087c735b359ac6dce545b280e89d6b2649b219fac47e3196c63886ed09e"
       }
     ],
     "dirty": true
@@ -88,13 +99,13 @@
   "artifacts": [
     {
       "path": "card-density.json",
-      "sha256": "64c6e82aef23733fda472d42e32abcc6dd1c2e3246aee0ffbfc292b36fa9f65c",
+      "sha256": "52aa6f8a9f3782ce5ccb31f344b295324eb026f7387143027a9e1a683b34359e",
       "bytes": 146
     },
     {
       "path": "files-panel-chrome-dark.png",
-      "sha256": "18d3315ef01f01d435dc0bf025fb0ed9c85f42c89ddfbd095bf3a42f0b07489f",
-      "bytes": 26585
+      "sha256": "8a866c7826fc37ef87920ac60a792860c8be7582c323a68fd00b5ffef8420b5d",
+      "bytes": 28502
     },
     {
       "path": "files-panel-chrome-light.png",
@@ -113,7 +124,7 @@
     },
     {
       "path": "panel-chrome.json",
-      "sha256": "78c716ece8b80e49bdda3ebb3af1a308c2a8f08039e2f284efaaac0e14b04cd5",
+      "sha256": "b3cc3cb5094f93690258549a15042c040618d0e52500057acadf81e2be2716d4",
       "bytes": 341
     }
   ],

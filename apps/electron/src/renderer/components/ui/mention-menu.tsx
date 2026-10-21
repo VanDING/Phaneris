@@ -121,8 +121,12 @@ function filterCacheResults(cache: FileSearchResult[], query: string): MentionIt
  * 1 = contains filter (mid-word)
  * 0 = no match
  */
-function getMatchScore(text: string, filter: string): number {
+function getMatchScore(text: string, filter: string | undefined): number {
   const lowerText = text.toLowerCase()
+  // No query yet (the menu renders before the first keystroke): every entry
+  // matches equally. Without this guard the empty state crashed on
+  // `filter.replace` — which is how the composer fixture found it.
+  if (!filter) return 3
   // Best: starts with filter (first word)
   if (lowerText.startsWith(filter)) return 3
   // Good: word boundary match (after space/hyphen/underscore)

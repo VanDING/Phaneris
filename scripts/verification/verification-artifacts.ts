@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { arch, release } from 'node:os'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 
@@ -44,13 +44,19 @@ export class VerificationRun {
     if (explicit) {
       this.directory = resolve(explicit)
       mkdirSync(dirname(this.directory), { recursive: true })
-      mkdirSync(this.directory) // EEXIST is intentional; mkdir must claim the run atomically.
+      // EEXIST is intentional: mkdir must claim the run atomically, so two runs
+      // cannot write into one directory. `--replace` is the explicit opt-in for
+      // re-running into a canonical evidence path (docs/verification/results/...)
+      // after the previous run's contents have been read.
+      if (args.includes('--replace') && existsSync(this.directory)) rmSync(this.directory, { recursive: true, force: true })
+      mkdirSync(this.directory)
     } else this.directory = mkdtempSync(join(parent, `${workflow}-`))
   }
   checkArguments(allowed: string[] = []) {
     const args = [...this.args]
     for (let index = 0; index < args.length; index++) {
       const argument = args[index]!
+      if (argument === '--replace') continue
       if (argument === '--output-dir') {
         assert(args[++index] && !args[index]!.startsWith('--'), '--output-dir requires a directory')
       } else if (argument.startsWith('--output-dir=')) assert(argument.slice('--output-dir='.length), '--output-dir requires a directory')
