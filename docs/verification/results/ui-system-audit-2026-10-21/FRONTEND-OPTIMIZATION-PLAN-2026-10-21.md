@@ -333,7 +333,7 @@ bun run bundle:report              # W1 前后对比
 
 **剩余三项及阻塞原因**
 
-1. **FreeFormInput 的 composer controller**——需要先 stub shell 的路径/平台上下文才能挂载（已排除 `workingDirectory` 与 `getMatchScore` 两条假设）。
+1. **FreeFormInput 的 composer controller**——崩溃点已二分收窄：composer 自身目录内**不存在**任何 `.replace(` 调用（已 grep 全部 `input/` 文件），因此崩溃发生在更深的子组件（`rich-text-input.tsx:163` 的 `label.replace` 是当前唯一已知的无守卫点，仅在渲染 mention 徽章时执行）。下一步：给 `RichTextInput` / mention 菜单 / 工作目录选择器**各挂一个错误边界**逐一隔离，不要继续探测 shell context。
 2. **AppShell 3,942 行**——剩余大块是侧栏导航树与过滤器下拉（各 250–650 行，与大量状态交织），需要像搜索那样先建观测点。
 3. **2 处 hooks 债**——`useAction` 的 spread 依赖是其 API 契约；`useSessionDecisions` 的 cleanup 需读 ref 计数以丢弃过期响应。
 
