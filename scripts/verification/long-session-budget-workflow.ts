@@ -29,22 +29,26 @@ import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
 /** Scrolling a 200-turn transcript must stay inside a 60fps frame. */
 const SCROLL_P95_BUDGET_MS = 40
 /**
- * Appending one turn is the streaming shape. The measured cost on this baseline
- * is p50 100–283ms for 200 turns: every append re-renders the whole transcript,
- * which the review's "no published budget" note predicted. The target is 40ms;
- * until grouping is memoised per turn this is a *frozen ceiling* — the
- * experiment fails the moment it gets worse, and the number is in the artifact
- * so the follow-up has a before-value.
+ * Appending one turn is the streaming shape.
  *
- * The assertion uses the **median**, not p95: ten appends produce about twelve
- * frames, so "p95" is the single worst append and one GC pause dominates it.
- * Across four runs of the same tree the p95 moved 283 → 417 → 386 → 566ms while
- * the median moved 100 → 183 → 117 → 283ms. p95 and max are recorded in the
- * artifact for the follow-up; the gate watches the median, so it fails on a
- * real regression instead of on host noise.
+ * Before the 2026-10-21 fix the append re-rendered the whole transcript:
+ * p50 83–133ms, p95 200–300ms for 200 turns. `storedToMessage` now preserves
+ * message identity, `reuseStableTurns` reuses every completed turn whose
+ * signature did not move, the viewer rows are memoised, and TurnCard renders
+ * through `MemoizedMarkdown` — so an append touches one row.
+ *
+ * Measured after the fix (same fixture, same host): p50 16.7ms, p95 33.4ms.
+ * The ceilings below freeze that: a regression to the old shape (~83ms median)
+ * fails both. The target is still 40ms p95; the ceiling leaves headroom for a
+ * shared CI host without allowing the whole-transcript redraw back in.
+ *
+ * The assertion uses the **median** as well as p95 because ten appends produce
+ * about twelve frames: one GC pause owns a single p95 sample, so the median is
+ * what tracks the product. Both are recorded in the artifact.
  */
 const APPEND_P95_TARGET_MS = 40
-const APPEND_P50_CEILING_MS = 350
+const APPEND_P95_CEILING_MS = 120
+const APPEND_P50_CEILING_MS = 60
 /** A backdrop-filter panel may not cost more than this on top of scrolling. */
 const GLASS_P95_ALLOWANCE_MS = 8
 
@@ -174,6 +178,8 @@ await verificationWorkflow('long-session-budget', async run => {
       samples.push({ id: 'append', ...profile })
       assert(profile.p50 <= APPEND_P50_CEILING_MS,
         `median append frame ${profile.p50.toFixed(1)}ms exceeds the ${APPEND_P50_CEILING_MS}ms ceiling (p95 ${profile.p95.toFixed(1)}ms, target ${APPEND_P95_TARGET_MS}ms)`)
+      assert(profile.p95 <= APPEND_P95_CEILING_MS,
+        `p95 append frame ${profile.p95.toFixed(1)}ms exceeds the ${APPEND_P95_CEILING_MS}ms ceiling — the append is re-rendering rows it does not own`)
     })
 
     await check('LS4-glass-panel-cost', async () => {
@@ -210,7 +216,7 @@ await verificationWorkflow('long-session-budget', async run => {
       browser: launched.browser.version(),
       scope: 'Real SessionViewer + real host stylesheet; 200 synthetic turns (400 messages), desktop Chromium, '
         + 'Default palette, headless. Frame deltas sampled with requestAnimationFrame.',
-      budgets: { scrollP95Ms: SCROLL_P95_BUDGET_MS, appendP95TargetMs: APPEND_P95_TARGET_MS, appendP50CeilingMs: APPEND_P50_CEILING_MS, glassP95AllowanceMs: GLASS_P95_ALLOWANCE_MS },
+      budgets: { scrollP95Ms: SCROLL_P95_BUDGET_MS, appendP95TargetMs: APPEND_P95_TARGET_MS, appendP95CeilingMs: APPEND_P95_CEILING_MS, appendP50CeilingMs: APPEND_P50_CEILING_MS, glassP95AllowanceMs: GLASS_P95_ALLOWANCE_MS },
     })
     await context.close(); await server.close(); await launched.close()
   }

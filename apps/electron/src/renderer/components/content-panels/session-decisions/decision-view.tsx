@@ -246,7 +246,7 @@ export function DecisionToolbar({ query, onChange, count, total, turns }: {
 }) {
   const { t } = useTranslation()
   return (
-    <div className="sticky top-0 z-component-chrome flex min-h-9 min-w-0 items-center gap-1 border-b border-border/55 bg-background/88 px-2 backdrop-blur">
+    <div className="sticky top-0 z-component-chrome flex min-h-9 min-w-0 items-center gap-1 border-b border-border/55 bg-background px-2">
       <div className="flex min-w-0 items-center gap-0.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <button
           type="button"

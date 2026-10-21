@@ -8,9 +8,73 @@
 import { getMessageTextUpdate } from '@phaneris/core/utils'
 import type { Message, StoredMessage, MessageRole } from '@phaneris/core'
 import { isParentTaskTool } from '@phaneris/shared/utils/toolNames'
-import { storedToMessage } from '@phaneris/core'
+import { storedToMessage as convertStoredMessage } from '@phaneris/core'
 
-export { storedToMessage }
+/**
+ * Identity-preserving `storedToMessage`.
+ *
+ * Grouping compares message identity, and the viewers re-derive `Message[]` from
+ * `StoredMessage[]` on every render. Without this cache every append produced
+ * brand-new message objects, so every turn looked new and every `TurnCard`
+ * re-rendered — the measured 66–300ms append cost. Caching by the stored
+ * object's identity keeps unchanged messages identical across renders, which is
+ * what lets `reuseStableTurns` (and the memoised rows) bail out.
+ */
+const storedMessageCache = new WeakMap<StoredMessage, Message>()
+
+export function storedToMessage(stored: StoredMessage): Message {
+  const cached = storedMessageCache.get(stored)
+  if (cached) return cached
+  const message = convertStoredMessage(stored)
+  storedMessageCache.set(stored, message)
+  return message
+}
+
+/** Cheap content hash so two completed turns cannot share a reuse signature. */
+function textSignature(text: string | undefined): number {
+  if (!text) return 0
+  let hash = 0
+  for (let index = 0; index < text.length; index++) hash = (hash * 31 + text.charCodeAt(index)) | 0
+  return hash
+}
+
+function turnSignature(turn: Turn): string {
+  if (turn.type === 'user') return `user:${turn.message.id}`
+  if (turn.type === 'system') return `system:${turn.message.id}`
+  if (turn.type === 'auth-request') return `auth:${turn.message.id}`
+  const lastActivity = turn.activities.at(-1)
+  return [
+    'assistant', turn.turnId, turn.isComplete, turn.isStreaming,
+    turn.activities.length, lastActivity?.id ?? '', textSignature(turn.response?.text),
+    textSignature(turn.activities.at(-1)?.content), turn.todos?.length ?? 0,
+  ].join(':')
+}
+
+/**
+ * Reuse the previous objects for turns whose signature is unchanged.
+ *
+ * A completed turn cannot change: its messages are final. Reusing the object
+ * keeps `React.memo` boundaries above it intact, so an append re-renders the
+ * appended row instead of the whole transcript. Streaming turns and any turn
+ * whose signature moved are returned as freshly grouped objects.
+ */
+export function reuseStableTurns(previous: readonly Turn[] | undefined, next: Turn[]): Turn[] {
+  if (!previous?.length) return next
+  const reusable = new Map<string, Turn>()
+  for (const turn of previous) {
+    if (turn.type === 'assistant' && !turn.isComplete) continue
+    reusable.set(turnSignature(turn), turn)
+  }
+  let replaced = false
+  const result = next.map(turn => {
+    if (turn.type === 'assistant' && !turn.isComplete) return turn
+    const candidate = reusable.get(turnSignature(turn))
+    if (!candidate || candidate === turn) return turn
+    replaced = true
+    return candidate
+  })
+  return replaced ? result : next
+}
 import type { ActivityItem, ActivityStatus, ActivityType, ResponseContent, TodoItem } from './TurnCard'
 
 // Re-export ActivityItem for consumers

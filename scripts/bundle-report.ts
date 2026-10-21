@@ -48,7 +48,11 @@ console.log(`  main.cjs:         ${(mainRaw / 1024 / 1024).toFixed(2)} MB raw, $
 console.log(`  pi bundle:        ${(piRaw / 1024 / 1024).toFixed(2)} MB raw`);
 
 if (process.argv.includes('--check')) {
-  const maxRendererRaw = Number(process.env.PHANERIS_MAX_RENDERER_INITIAL_BYTES ?? 4_800_000);
+  // The initial renderer graph is 0.80 MB raw (0.24 MB gzip). The old 4.8 MB
+  // ceiling would hide a whole optional dependency leaking back into first
+  // paint — `@uiw/react-json-view` plus two themes is ~250 KB, shiki far more.
+  // 1.2 MB freezes today's lean graph with headroom for normal growth.
+  const maxRendererRaw = Number(process.env.PHANERIS_MAX_RENDERER_INITIAL_BYTES ?? 1_200_000);
   // A ratchet, not a target. The documented 15 MB goal for main.cjs needs ESM
   // splitting or a separate worker bundle — a build-architecture change that has
   // not been made, so the old 25 MB ceiling let main.cjs reach 20.27 MiB

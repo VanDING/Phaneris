@@ -47,6 +47,7 @@ import {
   TurnCard,
   UserMessageBubble,
   groupImmutableMessagesByTurn,
+  reuseStableTurns,
   formatTurnAsMarkdown,
   formatActivityAsMarkdown,
   getAssistantTurnUiKey,
@@ -699,9 +700,16 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   const structuralMessages = session?.messages ? getMessageStructureSource(session.messages) : undefined
   const turnMessages = session?.messages
   const turnProcessing = session?.isProcessing
+  const previousTurnsRef = React.useRef<Turn[] | undefined>(undefined)
   const allTurns = React.useMemo(() => {
     if (!turnMessages) return []
-    return groupImmutableMessagesByTurn(turnMessages, { isSessionProcessing: turnProcessing })
+    const grouped = groupImmutableMessagesByTurn(turnMessages, { isSessionProcessing: turnProcessing })
+    // Reuse the previous object for every completed turn whose signature did
+    // not move: an append or a streaming delta then leaves earlier rows with
+    // identical `turn` props instead of re-rendering the whole transcript.
+    const stable = reuseStableTurns(previousTurnsRef.current, grouped)
+    previousTurnsRef.current = stable
+    return stable
   }, [turnMessages, turnProcessing])
 
   // Find ALL individual match occurrences (not just turns)

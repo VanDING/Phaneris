@@ -522,7 +522,7 @@ export function CalendarView() {
           overlay): left reserves macOS traffic lights, right reserves the
           floating restore button of the expanded overlay. */}
       <div
-        className="grid h-[42px] flex-none grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-b border-border/50 bg-background/80 px-4 backdrop-blur-sm @max-[760px]/panel:grid-cols-[auto_minmax(0,1fr)]"
+        className="grid h-[42px] flex-none grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-b border-border/50 bg-background px-4 @max-[760px]/panel:grid-cols-[auto_minmax(0,1fr)]"
         style={{
           paddingLeft: compensateForStoplight ? 84 : 16,
           paddingRight: compensateForStoplight ? 48 : 16,

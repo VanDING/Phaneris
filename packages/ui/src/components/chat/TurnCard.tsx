@@ -29,7 +29,7 @@ import { cn } from '../../lib/utils'
 import { MOTION_DURATION, MOTION_EASE, motionRowEnter, motionStaggerDelay, motionTween } from '../../lib/motion'
 import { useScrollBehavior } from '../../lib/scroll-intent'
 import { useExitIsolation } from '../../lib/presence'
-import { Markdown } from '../markdown'
+import { MemoizedMarkdown } from '../markdown'
 import { ThinkingIndicator } from '../ui/LoadingIndicator'
 import { type IslandTransitionConfig } from '../ui'
 import { AnnotationIslandMenu } from '../annotations/AnnotationIslandMenu'
@@ -2579,13 +2579,14 @@ export function ResponseCard({
             }}
           >
             <div ref={contentLayerRef} className="relative">
-              <Markdown
+              <MemoizedMarkdown
+                id={`${sessionId ?? 'session'}:${messageId ?? 'message'}:preview`}
                 mode="minimal"
                 onUrlClick={onOpenUrl}
                 onFileClick={onOpenFile}
               >
                 {text}
-              </Markdown>
+              </MemoizedMarkdown>
               {supplementaryContent}
               {annotationOverlayLayer}
             </div>
@@ -2729,13 +2730,14 @@ export function ResponseCard({
           }}
         >
           <div ref={contentLayerRef} className="relative">
-            <Markdown
+            <MemoizedMarkdown
+              id={`${sessionId ?? 'session'}:${messageId ?? 'message'}:response`}
               mode="minimal"
               onUrlClick={onOpenUrl}
               onFileClick={onOpenFile}
             >
               {displayedText}
-            </Markdown>
+            </MemoizedMarkdown>
             {supplementaryContent}
             {annotationOverlayLayer}
           </div>

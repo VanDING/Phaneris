@@ -248,7 +248,7 @@ function RecordTable({ items, selectedId, locale, onSelect }: {
               key={key}
               scope="col"
               className={cn(
-                'sticky top-9 z-component-chrome h-control-sm overflow-hidden border-b border-border/55 bg-background/95 px-2 text-meta font-medium whitespace-nowrap text-ellipsis text-text-secondary backdrop-blur',
+                'sticky top-9 z-component-chrome h-control-sm overflow-hidden border-b border-border/55 bg-background px-2 text-meta font-medium whitespace-nowrap text-ellipsis text-text-secondary',
                 width, align,
               )}
             >

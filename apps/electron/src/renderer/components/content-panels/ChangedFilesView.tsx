@@ -213,7 +213,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
   return (
     <div className="flex h-full min-h-0 flex-col">
       {changes.length > 0 && (
-        <div className="flex h-10 shrink-0 items-center gap-2 border-b border-border/50 bg-background/55 px-2.5 backdrop-blur-sm">
+        <div className="flex h-10 shrink-0 items-center gap-2 border-b border-border/50 bg-background px-2.5">
           <div
             className="flex min-w-0 items-center gap-2 text-meta font-medium tabular-nums text-muted-foreground @max-[420px]/panel:hidden"
             aria-label={`${t('contentPanel.files.view.changed')}: ${sections.length}`}

@@ -8,7 +8,7 @@
  */
 
 import type { ReactNode } from 'react'
-import { useMemo, useState, useCallback } from 'react'
+import { memo, useMemo, useRef, useState, useCallback } from 'react'
 import type { StoredSession } from '@phaneris/core'
 import { cn } from '../../lib/utils'
 import { CHAT_LAYOUT, CHAT_CLASSES } from '../../lib/layout'
@@ -20,7 +20,10 @@ import {
   groupMessagesByTurn,
   storedToMessage,
   getAssistantTurnUiKey,
+  reuseStableTurns,
   type ActivityItem,
+  type AssistantTurn,
+  type Turn,
 } from './turn-utils'
 
 export type SessionViewerMode = 'interactive' | 'readonly'
@@ -71,12 +74,97 @@ function PhanerisLogo({ className }: { className?: string }) {
 }
 
 /**
+ * Stable empty actions object.
+ *
+ * `platformActions = {}` in the destructuring default would allocate a new
+ * object on every render, which defeats the memo boundary below and re-renders
+ * every turn card on every append.
+ */
+const EMPTY_PLATFORM_ACTIONS: PlatformActions = {}
+
+/**
+ * One memoised turn row.
+ *
+ * The viewer re-renders whenever `session.messages` changes (an append, a
+ * reload). Without this boundary every `TurnCard` rebuilt its whole subtree —
+ * the measured 66–300ms append cost in `long-session-budget`. All props here are
+ * either data (`turn`, `expandedActivityGroups`) or stable callbacks, so an
+ * unchanged turn bails out of rendering; only the appended row is new.
+ */
+interface ViewerTurnCardProps {
+  turn: AssistantTurn
+  turnKey: string
+  isExpanded: boolean
+  expandedActivityGroups: Set<string>
+  platformActions: PlatformActions
+  sessionId: string
+  sessionFolderPath?: string
+  annotationInteractionMode: 'interactive' | 'tooltip-only'
+  onToggleExpanded: (turnKey: string, expanded: boolean) => void
+  onOpenTurnDetails: (turnId: string) => void
+  onOpenActivityDetails: (activity: ActivityItem) => void
+  onExpandedActivityGroupsChange: (groups: Set<string>) => void
+  onOpenMultiFileDiff?: (sessionId: string, turnId: string) => void
+}
+
+const ViewerTurnCard = memo(function ViewerTurnCard({
+  turn,
+  turnKey,
+  isExpanded,
+  expandedActivityGroups,
+  platformActions,
+  sessionId,
+  sessionFolderPath,
+  annotationInteractionMode,
+  onToggleExpanded,
+  onOpenTurnDetails,
+  onOpenActivityDetails,
+  onExpandedActivityGroupsChange,
+  onOpenMultiFileDiff,
+}: ViewerTurnCardProps) {
+  const handleExpandedChange = useCallback(
+    (expanded: boolean) => onToggleExpanded(turnKey, expanded),
+    [onToggleExpanded, turnKey],
+  )
+  const handleOpenDetails = useCallback(() => onOpenTurnDetails(turn.turnId), [onOpenTurnDetails, turn.turnId])
+  const handleOpenMultiFileDiff = useMemo(
+    () => (onOpenMultiFileDiff ? () => onOpenMultiFileDiff(sessionId, turn.turnId) : undefined),
+    [onOpenMultiFileDiff, sessionId, turn.turnId],
+  )
+
+  return (
+    <TurnCard
+      turnId={turn.turnId}
+      activities={turn.activities}
+      response={turn.response}
+      intent={turn.intent}
+      isStreaming={turn.isStreaming}
+      isComplete={turn.isComplete}
+      isExpanded={isExpanded}
+      onExpandedChange={handleExpandedChange}
+      onOpenFile={platformActions.onOpenFile}
+      onOpenUrl={platformActions.onOpenUrl}
+      onPopOut={platformActions.onOpenMarkdownPreview}
+      onOpenDetails={handleOpenDetails}
+      onOpenActivityDetails={onOpenActivityDetails}
+      todos={turn.todos}
+      expandedActivityGroups={expandedActivityGroups}
+      onExpandedActivityGroupsChange={onExpandedActivityGroupsChange}
+      hasEditOrWriteActivities={turn.activities.some(a => a.toolName === 'Edit' || a.toolName === 'Write')}
+      onOpenMultiFileDiff={handleOpenMultiFileDiff}
+      sessionFolderPath={sessionFolderPath}
+      annotationInteractionMode={annotationInteractionMode}
+    />
+  )
+})
+
+/**
  * SessionViewer - Read-only session transcript viewer component
  */
 export function SessionViewer({
   session,
   mode = 'readonly',
-  platformActions = {},
+  platformActions = EMPTY_PLATFORM_ACTIONS,
   className,
   onTurnClick,
   onActivityClick,
@@ -88,10 +176,17 @@ export function SessionViewer({
   // Convert StoredMessage[] to Message[] and group into turns.
   // Viewer is always a snapshot of a finished session, so we mark it as not processing
   // to force the open turn (if any) to flush with the intermediate-text fallback applied.
-  const turns = useMemo(
-    () => groupMessagesByTurn(session.messages.map(storedToMessage), { isSessionProcessing: false }),
-    [session.messages]
-  )
+  //
+  // `reuseStableTurns` keeps the previous object for every completed turn whose
+  // signature did not move, so an append leaves earlier `ViewerTurnCard`s with
+  // identical props and their memo boundary skips them.
+  const previousTurnsRef = useRef<Turn[] | undefined>(undefined)
+  const turns = useMemo(() => {
+    const grouped = groupMessagesByTurn(session.messages.map(storedToMessage), { isSessionProcessing: false })
+    const stable = reuseStableTurns(previousTurnsRef.current, grouped)
+    previousTurnsRef.current = stable
+    return stable
+  }, [session.messages])
 
   // Track expanded turns (for controlled state)
   const [expandedTurns, setExpandedTurns] = useState<Set<string>>(() => {
@@ -140,6 +235,10 @@ export function SessionViewer({
       platformActions.onOpenTurnDetails(session.id, turnId)
     }
   }, [onTurnClick, platformActions, session.id])
+
+  const handleOpenMultiFileDiff = useCallback((sessionId: string, turnId: string) => {
+    platformActions.onOpenMultiFileDiff?.(sessionId, turnId)
+  }, [platformActions])
 
   return (
     <PlatformProvider actions={platformActions}>
@@ -193,33 +292,21 @@ export function SessionViewer({
               if (turn.type === 'assistant') {
                 const assistantUiKey = getAssistantTurnUiKey(turn, index)
                 return (
-                  <TurnCard
+                  <ViewerTurnCard
                     key={assistantUiKey}
-                    turnId={turn.turnId}
-                    activities={turn.activities}
-                    response={turn.response}
-                    intent={turn.intent}
-                    isStreaming={turn.isStreaming}
-                    isComplete={turn.isComplete}
+                    turnKey={assistantUiKey}
+                    turn={turn}
                     isExpanded={expandedTurns.has(assistantUiKey)}
-                    onExpandedChange={(expanded) => handleExpandedChange(assistantUiKey, expanded)}
-                    onOpenFile={platformActions.onOpenFile}
-                    onOpenUrl={platformActions.onOpenUrl}
-                    onPopOut={platformActions.onOpenMarkdownPreview}
-                    onOpenDetails={() => handleOpenTurnDetails(turn.turnId)}
-                    onOpenActivityDetails={handleOpenActivityDetails}
-                    todos={turn.todos}
                     expandedActivityGroups={expandedActivityGroups}
-                    onExpandedActivityGroupsChange={handleExpandedActivityGroupsChange}
-                    hasEditOrWriteActivities={turn.activities.some(a =>
-                      a.toolName === 'Edit' || a.toolName === 'Write'
-                    )}
-                    onOpenMultiFileDiff={platformActions.onOpenMultiFileDiff
-                      ? () => platformActions.onOpenMultiFileDiff!(session.id, turn.turnId)
-                      : undefined
-                    }
+                    platformActions={platformActions}
+                    sessionId={session.id}
                     sessionFolderPath={sessionFolderPath}
                     annotationInteractionMode={mode === 'readonly' ? 'tooltip-only' : 'interactive'}
+                    onToggleExpanded={handleExpandedChange}
+                    onOpenTurnDetails={handleOpenTurnDetails}
+                    onOpenActivityDetails={handleOpenActivityDetails}
+                    onExpandedActivityGroupsChange={handleExpandedActivityGroupsChange}
+                    onOpenMultiFileDiff={platformActions.onOpenMultiFileDiff ? handleOpenMultiFileDiff : undefined}
                   />
                 )
               }

@@ -90,7 +90,7 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
       data-workbench-tabs
       role="tablist"
       aria-label={t('contentPanel.workbench')}
-      className="flex h-10 shrink-0 items-center gap-1 border-b border-border/50 bg-background/75 px-1.5 backdrop-blur-sm"
+      className="flex h-10 shrink-0 items-center gap-1 border-b border-border/50 bg-background px-1.5"
     >
       <LayoutGroup id="context-workbench-tabs">
       <div className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

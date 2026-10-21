@@ -10,31 +10,63 @@
  * - Uses craft themes (transparent bg, CSS variable fonts)
  * - Defaults to collapsed={2} for inline chat context
  * - Falls back to CodeBlock if JSON parsing or rendering fails
+ *
+ * Performance: `@uiw/react-json-view` (and its two theme modules) is loaded on
+ * demand, not with the chat bundle. Every markdown document imports this module
+ * through `Markdown.tsx`, so a static import put an alpha dependency plus two
+ * theme objects on the first-paint path for users who never open a JSON block.
+ * The CodeBlock fallback renders immediately and is swapped for the interactive
+ * tree once the module resolves.
  */
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import JsonView from '@uiw/react-json-view'
-import { vscodeTheme } from '@uiw/react-json-view/vscode'
-import { githubLightTheme } from '@uiw/react-json-view/githubLight'
 import { Copy, Check } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { CodeBlock } from './CodeBlock'
 
-// ── Themes (same as JSONPreviewOverlay) ────────────────────────────────────
-// Transparent background so the container's bg-muted/30 shows through,
-// and CSS variable font so it matches the app's monospace font.
+// ── Lazy JSON viewer ───────────────────────────────────────────────────────
+// Transparent background so the container's bg-muted/30 shows through, and a
+// CSS variable font so it matches the app's monospace font.
 
-const phanerisDarkTheme = {
-  ...vscodeTheme,
-  '--w-rjv-font-family': 'var(--font-mono, ui-monospace, monospace)',
-  '--w-rjv-background-color': 'transparent',
+const JSON_THEME_FONT = 'var(--font-mono, ui-monospace, monospace)'
+
+interface JsonViewModule {
+  View: React.ComponentType<Record<string, unknown>>
+  Copied: React.ComponentType<{ render?: (props: Record<string, unknown>) => React.ReactNode }>
+  darkTheme: Record<string, string>
+  lightTheme: Record<string, string>
 }
 
-const phanerisLightTheme = {
-  ...githubLightTheme,
-  '--w-rjv-font-family': 'var(--font-mono, ui-monospace, monospace)',
-  '--w-rjv-background-color': 'transparent',
+let cachedJsonView: JsonViewModule | null = null
+let loadingJsonView: Promise<JsonViewModule> | null = null
+
+function loadJsonView(): Promise<JsonViewModule> {
+  if (cachedJsonView) return Promise.resolve(cachedJsonView)
+  loadingJsonView ??= (async () => {
+    const [module, vscode, github] = await Promise.all([
+      import('@uiw/react-json-view'),
+      import('@uiw/react-json-view/vscode'),
+      import('@uiw/react-json-view/githubLight'),
+    ])
+    const View = module.default as unknown as JsonViewModule['View'] & { Copied: JsonViewModule['Copied'] }
+    cachedJsonView = {
+      View,
+      Copied: View.Copied,
+      darkTheme: {
+        ...(vscode.vscodeTheme as unknown as Record<string, string>),
+        '--w-rjv-font-family': JSON_THEME_FONT,
+        '--w-rjv-background-color': 'transparent',
+      },
+      lightTheme: {
+        ...(github.githubLightTheme as unknown as Record<string, string>),
+        '--w-rjv-font-family': JSON_THEME_FONT,
+        '--w-rjv-background-color': 'transparent',
+      },
+    }
+    return cachedJsonView
+  })()
+  return loadingJsonView
 }
 
 // ── Deep parse helper (same as JSONPreviewOverlay) ─────────────────────────
@@ -122,6 +154,7 @@ export interface MarkdownJsonBlockProps {
 export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
   const { t } = useTranslation()
   const [copied, setCopied] = React.useState(false)
+  const [jsonView, setJsonView] = React.useState<JsonViewModule | null>(cachedJsonView)
 
   // Try to parse – fall back to syntax-highlighted CodeBlock if invalid JSON
   const parsed = React.useMemo(() => {
@@ -133,6 +166,15 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
     }
   }, [code])
 
+  React.useEffect(() => {
+    if (jsonView) return
+    let active = true
+    // A rejected import must not surface as an unhandled rejection; the
+    // CodeBlock fallback stays rendered instead.
+    void loadJsonView().then(module => { if (active) setJsonView(module) }).catch(() => undefined)
+    return () => { active = false }
+  }, [jsonView])
+
   const handleCopy = React.useCallback(async () => {
     try {
       await navigator.clipboard.writeText(code)
@@ -143,13 +185,13 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
     }
   }, [code])
 
-  if (parsed === null) {
-    return <CodeBlock code={code} language="json" mode="full" className={className} />
-  }
-
-  const dark = isDarkMode()
-  const jsonTheme = dark ? phanerisDarkTheme : phanerisLightTheme
   const fallback = <CodeBlock code={code} language="json" mode="full" className={className} />
+
+  if (parsed === null) return fallback
+  if (!jsonView) return fallback
+
+  const { View, Copied, darkTheme, lightTheme } = jsonView
+  const jsonTheme = isDarkMode() ? darkTheme : lightTheme
 
   return (
     <JsonErrorBoundary fallback={fallback}>
@@ -172,7 +214,7 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
 
         {/* Interactive tree viewer */}
         <div className="p-3 overflow-x-auto text-body">
-          <JsonView
+          <View
             value={parsed}
             style={jsonTheme}
             collapsed={2}
@@ -181,25 +223,25 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
             shortenTextAfterLength={100}
           >
             {/* Custom copy icon — same as JSONPreviewOverlay */}
-            <JsonView.Copied
+            <Copied
               render={(props) => {
-                const isCopied = (props as Record<string, unknown>)['data-copied']
+                const isCopied = props['data-copied']
                 return isCopied ? (
                   <Check
                     className="ml-1.5 inline-flex cursor-pointer text-success-text"
                     size={10}
-                    onClick={props.onClick}
+                    onClick={props.onClick as React.MouseEventHandler}
                   />
                 ) : (
                   <Copy
                     className="ml-1.5 inline-flex cursor-pointer text-muted-foreground hover:text-foreground"
                     size={10}
-                    onClick={props.onClick}
+                    onClick={props.onClick as React.MouseEventHandler}
                   />
                 )
               }}
             />
-          </JsonView>
+          </View>
         </div>
       </div>
     </JsonErrorBoundary>
