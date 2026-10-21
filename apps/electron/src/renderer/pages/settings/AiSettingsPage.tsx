@@ -63,6 +63,7 @@ import { useRtkSettings } from './useRtkSettings'
 import { useDecisionLayerSettings } from './useDecisionLayerSettings'
 import { usePerformanceSettings } from './usePerformanceSettings'
 import { useImageSettings } from './useImageSettings'
+import { useConnectionRename } from './useConnectionRename'
 import { OnboardingWizard, type ApiSetupMethod } from '@/components/onboarding'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { useAppShellContext } from '@/context/AppShellContext'
@@ -423,6 +424,16 @@ export default function AiSettingsPage() {
     handleTestDecision,
   } = useDecisionLayerSettings(llmConnections)
 
+  const {
+    renameDialogOpen,
+    setRenameDialogOpen,
+    renamingConnection,
+    renameValue,
+    setRenameValue,
+    handleRenameClick,
+    handleRenameSubmit,
+  } = useConnectionRename(refreshLlmConnections)
+
   // Validation state per connection
   const [validationStates, setValidationStates] = useState<Record<string, {
     state: ValidationState
@@ -436,10 +447,6 @@ export default function AiSettingsPage() {
   // Credential health state (for startup warning banner)
   const [credentialHealthIssues, setCredentialHealthIssues] = useState<CredentialHealthIssue[]>([])
 
-  // Rename dialog state
-  const [renameDialogOpen, setRenameDialogOpen] = useState(false)
-  const [renamingConnection, setRenamingConnection] = useState<{ slug: string; name: string } | null>(null)
-  const [renameValue, setRenameValue] = useState('')
 
   // Load workspaces, default settings, and credential health
   useEffect(() => {
@@ -530,41 +537,6 @@ export default function AiSettingsPage() {
     }
   }, [llmConnections, openApiSetup])
 
-  // Connection action handlers
-  const handleRenameClick = useCallback((connection: LlmConnectionWithStatus) => {
-    setRenamingConnection({ slug: connection.slug, name: connection.name })
-    setRenameValue(connection.name)
-    // Defer dialog open to next frame to let dropdown fully unmount first
-    requestAnimationFrame(() => {
-      setRenameDialogOpen(true)
-    })
-  }, [])
-
-  const handleRenameSubmit = useCallback(async () => {
-    if (!renamingConnection || !window.electronAPI) return
-    const trimmedName = renameValue.trim()
-    if (!trimmedName || trimmedName === renamingConnection.name) {
-      setRenameDialogOpen(false)
-      return
-    }
-    try {
-      // Get the full connection, update name, and save
-      const connection = await window.electronAPI.getLlmConnection(renamingConnection.slug)
-      if (connection) {
-        const result = await window.electronAPI.saveLlmConnection({ ...connection, name: trimmedName })
-        if (result.success) {
-          refreshLlmConnections?.()
-        } else {
-          console.error('Failed to rename connection:', result.error)
-        }
-      }
-    } catch (error) {
-      console.error('Failed to rename connection:', error)
-    }
-    setRenameDialogOpen(false)
-    setRenamingConnection(null)
-    setRenameValue('')
-  }, [renamingConnection, renameValue, refreshLlmConnections])
 
   const handleReauthenticateConnection = useCallback((connection: LlmConnectionWithStatus) => {
     openApiSetup(connection.slug)
