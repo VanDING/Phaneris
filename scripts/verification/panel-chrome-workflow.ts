@@ -136,6 +136,30 @@ await verificationWorkflow('panel-chrome', async run => {
       assert(total <= CHROME_BUDGET_PX, `workbench strip + panel row = ${total}px, above the ${CHROME_BUDGET_PX}px budget`)
     })
 
+    await check('pc6-tabs-are-keyboard-navigable', async () => {
+      // The audit found the Files view tabs were `role="tab"` buttons with no
+      // roving focus: one tab stop per tab, no arrow keys. A tablist has one
+      // stop and answers Arrow/Home/End.
+      const tabs = page.locator('[data-chrome-row="files"] [role="tab"]')
+      await tabs.first().focus()
+      assert.equal(await page.locator('[data-chrome-row="files"] [role="tab"][tabindex="0"]').count(), 1,
+        'a tablist must expose exactly one tab stop')
+      await page.keyboard.press('ArrowRight')
+      const focused = await page.evaluate(() => {
+        const element = document.activeElement as HTMLElement | null
+        return {
+          role: element?.getAttribute('role') ?? null,
+          selected: element?.getAttribute('aria-selected') ?? null,
+          label: element?.textContent?.trim() ?? null,
+        }
+      })
+      assert.equal(focused.role, 'tab', 'ArrowRight must move focus to the next tab')
+      assert.equal(focused.selected, 'true', 'selection follows focus in this tablist')
+      await page.keyboard.press('Home')
+      const home = await page.evaluate(() => (document.activeElement as HTMLElement | null)?.getAttribute('aria-selected') ?? null)
+      assert.equal(home, 'true', 'Home must return to the first tab and select it')
+    })
+
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))

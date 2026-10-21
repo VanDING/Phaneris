@@ -14,6 +14,7 @@ import { FolderTree, Search } from 'lucide-react'
 import { Spinner } from '@phaneris/ui'
 import type { StoredAttachment } from '../../../shared/types'
 import { Input } from '@/components/ui/input'
+import { SegmentedTabs } from '@/components/ui/segmented-tabs'
 import { PanelEmptyState } from './PanelEmptyState'
 import { ChangedFilesView } from './ChangedFilesView'
 import { BrowseTree } from './BrowseTree'
@@ -45,6 +46,8 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
   const { onOpenFile, workspaces } = useAppShellContext()
   const focusRequest = useAtomValue(filesPanelFocusRequestAtom)
   const setFilesFocusRequest = useSetAtom(filesPanelFocusRequestAtom)
+  // Stable item identity: the shared tab strip derives its roving ids from it.
+  const tabs = useMemo(() => FILE_VIEWS.map(item => ({ id: item.id, label: t(item.key) })), [t])
 
   const meta = activeSessionId ? sessionMetaMap.get(activeSessionId) : undefined
   const workingDirectory = meta?.workingDirectory
@@ -95,24 +98,13 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
         data-chrome-row="files"
         className="flex h-control-lg shrink-0 items-stretch gap-2 border-b border-border/50 bg-background px-3"
       >
-        <div
-          role="tablist"
-          aria-label={t('contentPanel.files.views')}
-          className="flex min-w-0 items-stretch gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {FILE_VIEWS.map(item => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={view === item.id}
-              onClick={() => setView(item.id)}
-              className={`craft-segment relative shrink-0 px-0.5 text-label font-medium ${view === item.id ? 'text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t after:bg-accent' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              {t(item.key)}
-            </button>
-          ))}
-        </div>
+        <SegmentedTabs
+          items={tabs}
+          value={view}
+          onChange={setView}
+          ariaLabel={t('contentPanel.files.views')}
+          className="gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        />
         {view === 'browse' && (
           <div className="relative ml-auto flex w-40 shrink-0 items-center @max-[420px]/files:w-24">
             <Search aria-hidden className="pointer-events-none absolute left-2 h-3.5 w-3.5 text-text-secondary" />
