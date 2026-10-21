@@ -345,6 +345,15 @@ await verificationWorkflow('panel-chrome', async run => {
       // and an empty result never moves the index.
       assert.deepEqual(probe.next, [1, 2, 0], 'next stops at the last match and a frozen empty result')
       assert.deepEqual(probe.prev, [1, 0, 2], 'previous stops at the first match and a frozen empty result')
+      // Composer helpers: whitespace collapses, an empty text falls back, a long
+      // label elides to the cap, the shuffle is a permutation of a copy, and the
+      // modifier key is never empty.
+      assert.deepEqual(probe.chip[0], 'a b', 'runs of whitespace collapse and edges are trimmed')
+      assert.equal(probe.chip[1], 'fallback', 'blank text uses the fallback label')
+      assert.equal(probe.chip[2], 50, 'a long label elides to the cap, ellipsis included')
+      assert.deepEqual(probe.shuffle.slice(0, 2), ['1,2,3,4,5', '1,2,3,4,5'], 'the shuffle copies instead of mutating and keeps every element')
+      assert.equal(probe.shuffle[2], 5, 'the shuffled copy keeps the length')
+      assert.equal(probe.cmdKey, true, 'the modifier key label is non-empty')
     })
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))

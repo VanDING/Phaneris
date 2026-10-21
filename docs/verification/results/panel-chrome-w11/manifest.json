@@ -1,33 +1,23 @@
 {
   "schemaVersion": 1,
   "workflow": "panel-chrome",
-  "startedAt": "2026-10-21T08:07:40.878Z",
-  "finishedAt": "2026-10-21T08:08:29.349Z",
+  "startedAt": "2026-10-21T08:22:28.980Z",
+  "finishedAt": "2026-10-21T08:23:17.716Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
-    "--output-dir=docs/verification/results/panel-chrome-w10"
+    "--output-dir=docs/verification/results/panel-chrome-w11"
   ],
   "source": {
-    "headSha": "8472e3c8fd9c9171d8a7ef6ee0ecee143f2367a3",
+    "headSha": "92bf58d5343a3c1dff4372c22557cd8b3aeb74bd",
     "dirtyPaths": [
-      "M apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
-      " M docs/verification/results/packaged-client-smoke-win.json",
+      "M docs/verification/results/packaged-client-smoke-win.json",
       " M docs/verification/results/packaged-client-verification-win.json",
       " M scripts/verification/fixtures/panel-chrome.tsx",
-      " M scripts/verification/panel-chrome-workflow.ts",
-      "?? apps/electron/src/renderer/components/app-shell/search-navigation.ts"
+      " M scripts/verification/panel-chrome-workflow.ts"
     ],
     "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
     "changedFiles": [
-      {
-        "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
-        "sha256": "81408ec8550a50cf4d696bbabd656bc178615fd40df05a0f85b47457deb5e7c2"
-      },
-      {
-        "path": "apps/electron/src/renderer/components/app-shell/search-navigation.ts",
-        "sha256": "abb8dc338878c126545b53b12b6c96c3ed79c2c551eaa1ee3a5e993bfbb257f7"
-      },
       {
         "path": "docs/verification/results/packaged-client-smoke-win.json",
         "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
@@ -38,11 +28,11 @@
       },
       {
         "path": "scripts/verification/fixtures/panel-chrome.tsx",
-        "sha256": "d62ba5a4eb675536cbf3b0b4ce2b0dbc77c1df6e210df66eee6d935cd62135c4"
+        "sha256": "bd3dd6824f8e7ead2d4a7eed32a6f12e16a14fbd11a56833330e3c9b856e440c"
       },
       {
         "path": "scripts/verification/panel-chrome-workflow.ts",
-        "sha256": "49d2a0d3b271afba811035d45ad28d60dfee32942ef026465a54e1f3370dbcdb"
+        "sha256": "06dd305d9ba37bed22c6019b8cde639cb9536d23a90aabf4f0bc755de085a561"
       }
     ],
     "dirty": true
@@ -77,13 +67,13 @@
   "artifacts": [
     {
       "path": "card-density.json",
-      "sha256": "030a21baa49006e43bcbdf7a033268c8363706af1f162b529baa8f624cacb0aa",
+      "sha256": "8c903fd4962395504ee1305a21d576bc5db8377a10ef18b338369215521cedb3",
       "bytes": 146
     },
     {
       "path": "files-panel-chrome-dark.png",
-      "sha256": "feeb69366c20ba66d1b3b395fd5f679b62d5bcf4855047cb65c8ec8d01918cce",
-      "bytes": 28330
+      "sha256": "f059163a7434378567fcdc03289694b9120ec8c50e55c622a8298d16722e0da0",
+      "bytes": 28331
     },
     {
       "path": "files-panel-chrome-light.png",
@@ -102,7 +92,7 @@
     },
     {
       "path": "panel-chrome.json",
-      "sha256": "7938f4ea898458357f2bb136a8b7dab4552022ce1fd704b2512eef3afde921d7",
+      "sha256": "7fc831bb37f4d6867e3f99bd5cc0080995e3476a097dcf379831e9c23b3994db",
       "bytes": 341
     }
   ],

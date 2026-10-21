@@ -194,6 +194,7 @@ function HighlightProbe() {
       const { collectHighlightRanges, applyHighlightRanges, clearHighlightRanges, countHighlightRanges } =
         await import('@/components/app-shell/transcript-highlights')
       const { nextMatchIndex, previousMatchIndex } = await import('@/components/app-shell/search-navigation')
+      const { formatFollowUpChipText, shuffleArray, cmdKey } = await import('@/components/app-shell/input/composer-badges')
       if (cancelled) return
       const host = document.createElement('div')
       host.innerHTML = `
@@ -219,6 +220,10 @@ function HighlightProbe() {
           cleared,
           next: [nextMatchIndex(0, 3), nextMatchIndex(2, 3), nextMatchIndex(0, 0)],
           prev: [previousMatchIndex(2, 3), previousMatchIndex(0, 3), previousMatchIndex(2, 0)],
+          // The composer helpers moved out of the component; these are their contracts.
+          chip: [formatFollowUpChipText('  a   b  ', 'fallback'), formatFollowUpChipText('   ', 'fallback'), formatFollowUpChipText('x'.repeat(60), 'fallback').length],
+          shuffle: (() => { const input = [1, 2, 3, 4, 5]; const out = shuffleArray(input); return [input.join(','), out.slice().sort().join(','), out.length] })(),
+          cmdKey: cmdKey.length > 0,
         }
       } finally {
         host.remove()
