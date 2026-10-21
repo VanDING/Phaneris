@@ -98,31 +98,8 @@ import {
   stripPiPrefixForDisplay,
 } from './model-picker-helpers'
 import { useModelVisionToggle } from './useModelVisionToggle'
+import { WorkingDirectoryBadge, cmdKey, formatFollowUpChipText, shuffleArray } from './composer-badges'
 
-function formatFollowUpChipText(text: string, fallback: string, maxLength = 50): string {
-  const normalized = text.replace(/\s+/g, ' ').trim()
-  if (!normalized) return fallback
-
-  return normalized.length > maxLength
-    ? `${normalized.slice(0, maxLength - 1).trimEnd()}…`
-    : normalized
-}
-
-
-/** Platform-specific modifier key for keyboard shortcuts */
-const cmdKey = isMac ? '⌘' : 'Ctrl'
-
-/** Default rotating placeholders are now generated inside FreeFormInput via useMemo + t() */
-
-/** Fisher-Yates shuffle — returns a new array in random order */
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array]
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled
-}
 
 export interface FollowUpInputItem {
   id: string
@@ -2474,54 +2451,3 @@ export function FreeFormInput({
   )
 }
 
-/**
- * WorkingDirectoryBadge - chat-input trigger for the shared WorkingDirectorySelector.
- *
- * Renders the context-badge trigger; the picker popover + folder state machine
- * live in {@link WorkingDirectorySelector} so the Tasks editor reuses the same
- * picker (and can supply its own trigger).
- */
-function WorkingDirectoryBadge({
-  workingDirectory,
-  onWorkingDirectoryChange,
-  sessionFolderPath,
-  isEmptySession = false,
-  workspaceId,
-}: {
-  workingDirectory?: string
-  onWorkingDirectoryChange: (path: string) => void
-  sessionFolderPath?: string
-  isEmptySession?: boolean
-  workspaceId?: string
-}) {
-  const { t } = useTranslation()
-  return (
-    <WorkingDirectorySelector
-      workingDirectory={workingDirectory}
-      onWorkingDirectoryChange={onWorkingDirectoryChange}
-      sessionFolderPath={sessionFolderPath}
-      workspaceId={workspaceId}
-      renderTrigger={({ open, hasFolder, folderName, workingDirectory: wd, homeDir, gitBranch }) => (
-        <span className="shrink min-w-0 overflow-hidden">
-          <FreeFormInputContextBadge
-            icon={<Icon_Home className="h-4 w-4" />}
-            label={folderName ?? t('chat.workInFolder')}
-            isExpanded={isEmptySession}
-            hasSelection={hasFolder}
-            showChevron={true}
-            isOpen={open}
-            tooltip={
-              hasFolder ? (
-                <span className="flex flex-col gap-0.5">
-                  <span className="font-medium">{t("chat.workingDirectory")}</span>
-                  <span className="text-meta opacity-70">{formatPathForDisplay(wd, homeDir)}</span>
-                  {gitBranch && <span className="text-meta opacity-70">{t("chat.onBranch", { branch: gitBranch })}</span>}
-                </span>
-              ) : t("chat.chooseWorkingDirectory")
-            }
-          />
-        </span>
-      )}
-    />
-  )
-}
