@@ -61,6 +61,7 @@ import { useOnboarding } from '@/hooks/useOnboarding'
 import { RtkUpdateDialog } from '@/components/RtkUpdateDialog'
 import { useRtkSettings } from './useRtkSettings'
 import { useDecisionLayerSettings } from './useDecisionLayerSettings'
+import { usePerformanceSettings } from './usePerformanceSettings'
 import { OnboardingWizard, type ApiSetupMethod } from '@/components/onboarding'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { useAppShellContext } from '@/context/AppShellContext'
@@ -347,16 +348,22 @@ export default function AiSettingsPage() {
     return () => { cancelled = true }
   }, [activeWorkspaceId, llmConnections])
 
+  const {
+    extendedPromptCache,
+    savingExtendedCache,
+    performanceOpen,
+    setPerformanceOpen,
+    promptCacheWarming,
+    savingCacheWarming,
+    contextPolicy,
+    savingContextPolicy,
+    handleExtendedPromptCacheChange,
+    handlePromptCacheWarmingChange,
+    handleContextPolicyChange,
+  } = usePerformanceSettings(activeWorkspaceId)
+
   // Default settings state (app-level)
   const [defaultThinking, setDefaultThinking] = useState<ThinkingLevel>(DEFAULT_THINKING_LEVEL)
-  const [extendedPromptCache, setExtendedPromptCache] = useState(false)
-  const [savingExtendedCache, setSavingExtendedCache] = useState(false)
-  const [performanceOpen, setPerformanceOpen] = useState(false)
-  const [imageConnectionSetup, setImageConnectionSetup] = useState(false)
-  const [promptCacheWarming, setPromptCacheWarming] = useState(false)
-  const [savingCacheWarming, setSavingCacheWarming] = useState(false)
-  const [contextPolicy, setContextPolicy] = useState<ContextPolicy>('compact')
-  const [savingContextPolicy, setSavingContextPolicy] = useState(false)
   const contextPolicyOptions = [
     { value: 'compact', label: t("settings.ai.context.autoCompact"), description: t("settings.ai.context.autoCompactDesc") },
     { value: 'handoff', label: t("settings.ai.context.autoHandoff"), description: t("settings.ai.context.autoHandoffDesc") },
@@ -415,6 +422,10 @@ export default function AiSettingsPage() {
     error?: string
   }>>({})
 
+  // Image connection setup rides the shared API-setup overlay with an openai
+  // preset; it belongs to the image domain, which still lives in this page.
+  const [imageConnectionSetup, setImageConnectionSetup] = useState(false)
+
   // Credential health state (for startup warning banner)
   const [credentialHealthIssues, setCredentialHealthIssues] = useState<CredentialHealthIssue[]>([])
 
@@ -431,10 +442,6 @@ export default function AiSettingsPage() {
         const defaultThinkingLevel = await window.electronAPI.getDefaultThinkingLevel()
         setDefaultThinking(defaultThinkingLevel)
 
-        const extendedCache = await window.electronAPI.getExtendedPromptCache()
-        setExtendedPromptCache(extendedCache)
-        setPromptCacheWarming(await window.electronAPI.getPromptCacheWarming())
-        setContextPolicy(await window.electronAPI.getContextPolicy())
 
         // Check credential health for potential issues (corruption, machine migration)
         const health = await window.electronAPI.getCredentialHealth()
@@ -738,42 +745,6 @@ export default function AiSettingsPage() {
     }
   }, [defaultThinking])
 
-  const handleExtendedPromptCacheChange = useCallback(async (enabled: boolean) => {
-    const previous = extendedPromptCache
-    setSavingExtendedCache(true); setExtendedPromptCache(enabled)
-    try { await window.electronAPI.setExtendedPromptCache(enabled) }
-    catch { setExtendedPromptCache(previous); toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.extendedPromptCache") })) }
-    finally { setSavingExtendedCache(false) }
-  }, [extendedPromptCache, t])
-
-  const handlePromptCacheWarmingChange = useCallback(async (enabled: boolean) => {
-    setSavingCacheWarming(true)
-    try {
-      await window.electronAPI.setPromptCacheWarming(enabled)
-      setPromptCacheWarming(enabled)
-    } catch {
-      toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.promptCacheWarming") }))
-    } finally {
-      setSavingCacheWarming(false)
-    }
-  }, [t])
-
-  const handleContextPolicyChange = useCallback(async (next: ContextPolicy) => {
-    const previous = contextPolicy
-    if (next === previous) return
-    setSavingContextPolicy(true)
-    // Optimistic switch: the two strategies are mutually exclusive by
-    // construction, so the UI must never show both as on.
-    setContextPolicy(next)
-    try {
-      await window.electronAPI.setContextPolicy(next)
-    } catch {
-      setContextPolicy(previous)
-      toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.context.title") }))
-    } finally {
-      setSavingContextPolicy(false)
-    }
-  }, [contextPolicy, t])
 
   const [imageRetry, setImageRetry] = useState(0)
   useEffect(() => {
