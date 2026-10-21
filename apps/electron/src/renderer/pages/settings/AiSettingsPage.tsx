@@ -58,7 +58,8 @@ import {
   SettingsInput,
 } from '@/components/settings'
 import { useOnboarding } from '@/hooks/useOnboarding'
-import { RtkUpdateDialog, type RtkStatusInfo } from '@/components/RtkUpdateDialog'
+import { RtkUpdateDialog } from '@/components/RtkUpdateDialog'
+import { useRtkSettings } from './useRtkSettings'
 import { OnboardingWizard, type ApiSetupMethod } from '@/components/onboarding'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { useAppShellContext } from '@/context/AppShellContext'
@@ -361,12 +362,22 @@ export default function AiSettingsPage() {
     { value: 'handoff', label: t("settings.ai.context.autoHandoff"), description: t("settings.ai.context.autoHandoffDesc") },
     { value: 'manual', label: t("settings.ai.context.manual"), description: t("settings.ai.context.manualDesc") },
   ]
-  const [rtkEnabled, setRtkEnabled] = useState(false)
-  const [savingRtk, setSavingRtk] = useState(false)
-  const [rtkStatus, setRtkStatus] = useState<RtkStatusInfo | null>(null)
-  const [rtkRechecking, setRtkRechecking] = useState(false)
-  const [rtkUpdateOpen, setRtkUpdateOpen] = useState(false)
-  const [rtkGain, setRtkGain] = useState<{ totalCommands: number; totalInput: number; totalOutput: number; totalSaved: number; avgSavingsPct: number; totalTimeMs: number; avgTimeMs: number } | null>(null)
+  // RTK owns its own state, effects and handlers (see useRtkSettings): the row
+  // only shares the workspace id and nothing else on this page.
+  const {
+    rtkEnabled,
+    savingRtk,
+    rtkStatus,
+    setRtkStatus,
+    rtkRechecking,
+    rtkUpdateOpen,
+    setRtkUpdateOpen,
+    rtkGain,
+    refreshRtkGain,
+    handleRtkToggle,
+    handleRecheckRtk,
+    handleGetRtk,
+  } = useRtkSettings(activeWorkspaceId)
 
   // Decision model (Jev / TypeSafe System One) — opt-in decision layer.
   // The card is always shown; everything behind it stays off until the user enables it.
@@ -411,13 +422,6 @@ export default function AiSettingsPage() {
         setExtendedPromptCache(extendedCache)
         setPromptCacheWarming(await window.electronAPI.getPromptCacheWarming())
         setContextPolicy(await window.electronAPI.getContextPolicy())
-
-
-        const rtkOn = await window.electronAPI.getRtkEnabled()
-        setRtkEnabled(rtkOn)
-
-        const status = await window.electronAPI.getRtkStatus()
-        setRtkStatus(status)
 
         // Check credential health for potential issues (corruption, machine migration)
         const health = await window.electronAPI.getCredentialHealth()
@@ -757,42 +761,6 @@ export default function AiSettingsPage() {
       setSavingContextPolicy(false)
     }
   }, [contextPolicy, t])
-
-  const handleRtkToggle = useCallback(async (enabled: boolean) => {
-    const previous = rtkEnabled
-    setSavingRtk(true); setRtkEnabled(enabled)
-    try { await window.electronAPI.setRtkEnabled(enabled) }
-    catch { setRtkEnabled(previous); toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.rtk.title") })) }
-    finally { setSavingRtk(false) }
-  }, [rtkEnabled, t])
-
-  const handleRecheckRtk = useCallback(async () => {
-    setRtkRechecking(true)
-    try {
-      const status = await window.electronAPI?.getRtkStatus({ forceRecheck: true })
-      if (status) setRtkStatus(status)
-    } finally {
-      setRtkRechecking(false)
-    }
-  }, [])
-
-  const handleGetRtk = useCallback(() => {
-    window.electronAPI?.openUrl('https://github.com/rtk-ai/rtk')
-  }, [])
-
-  const refreshRtkGain = useCallback(async () => {
-    const gain = await window.electronAPI?.getRtkGain()
-    setRtkGain(gain ?? null)
-  }, [])
-
-  // Refresh gain stats whenever rtk transitions to installed-and-enabled
-  useEffect(() => {
-    if (rtkStatus?.path && !rtkStatus.outdated && rtkEnabled) {
-      refreshRtkGain()
-    } else {
-      setRtkGain(null)
-    }
-  }, [rtkStatus?.path, rtkStatus?.outdated, rtkEnabled, refreshRtkGain])
 
   const [imageRetry, setImageRetry] = useState(0)
   useEffect(() => {
