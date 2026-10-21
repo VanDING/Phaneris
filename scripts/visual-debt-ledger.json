@@ -3844,16 +3844,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "7da6e418dca009cb730dca6e3c1fe9c567f4125b1f4282ac87358b784315d7d7",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/CompactSessionListFilter.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
