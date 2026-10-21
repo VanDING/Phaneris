@@ -277,14 +277,19 @@ export function useEntityListInteractions<T>({
 
   // ---- Build return values ----
   const containerProps = getContainerProps()
+  // Name the two fields the memo actually reads: a dependency array cannot
+  // compare `containerProps.role` across renders, and listing `containerProps`
+  // would invalidate the memo on every render (it is rebuilt above).
+  const containerRole = containerProps.role
+  const containerActiveDescendant = containerProps['aria-activedescendant'] ?? ''
 
   const listProps = useMemo(() => ({
     containerRef: undefined as React.Ref<HTMLDivElement> | undefined,
     containerProps: {
-      role: containerProps.role,
-      'aria-activedescendant': containerProps['aria-activedescendant'] ?? '',
+      role: containerRole,
+      'aria-activedescendant': containerActiveDescendant,
     },
-  }), [containerProps.role, containerProps['aria-activedescendant']])
+  }), [containerRole, containerActiveDescendant])
 
   const getRowProps = useCallback((item: T, index: number) => {
     const id = getId(item)

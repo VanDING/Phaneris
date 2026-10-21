@@ -51,7 +51,10 @@ export function useSessionDecisions(sessionId: string | undefined, workspaceId: 
       setValue({ key, state: 'loading' })
       refresh()
     })
-    return () => { disposed = true; if (generation.current >= current) ++generation.current; clearTimeout(timer); unsubscribe?.(); reconnect?.() }
+    // Compare against the generation this effect started with: reading the ref in
+    // the cleanup would compare against whatever ran last, not against this run.
+    const generationAtStart = current
+    return () => { disposed = true; if (generation.current >= generationAtStart) ++generation.current; clearTimeout(timer); unsubscribe?.(); reconnect?.() }
     // The serialized key owns the query and prevents stale session/filter responses from painting.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, enabled])

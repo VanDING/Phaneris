@@ -65,6 +65,10 @@ interface CompactModelSelectorProps {
   }
 }
 
+/** One shared empty list: a fresh [] in a dependency array re-creates the value
+ *  on every render, which defeats the memo the list feeds. */
+const EMPTY_CONNECTIONS: never[] = []
+
 export function CompactModelSelector({
   currentModel,
   currentConnection,
@@ -81,7 +85,7 @@ export function CompactModelSelector({
   const [expandedConnection, setExpandedConnection] = React.useState<string | null>(null)
 
   const appShellCtx = useOptionalAppShellContext()
-  const llmConnections = appShellCtx?.llmConnections ?? []
+  const llmConnections = appShellCtx?.llmConnections ?? EMPTY_CONNECTIONS
   const workspaceDefaultConnection = appShellCtx?.workspaceDefaultLlmConnection
 
   const toggleVision = useModelVisionToggle()

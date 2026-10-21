@@ -7,6 +7,10 @@ import {
 } from '@config/llm-connections'
 import { useOptionalAppShellContext } from '@/context/AppShellContext'
 
+/** One shared empty list: a fresh [] in a dependency array re-creates the value
+ *  on every render, which defeats the memo the list feeds. */
+const EMPTY_CONNECTIONS: never[] = []
+
 export type ToggleModelVision = (
   connectionSlug: string,
   modelId: string,
@@ -24,7 +28,7 @@ export type ToggleModelVision = (
 export function useModelVisionToggle(): ToggleModelVision {
   const { t } = useTranslation()
   const appShellCtx = useOptionalAppShellContext()
-  const llmConnections = appShellCtx?.llmConnections ?? []
+  const llmConnections = appShellCtx?.llmConnections ?? EMPTY_CONNECTIONS
   const refreshLlmConnections = appShellCtx?.refreshLlmConnections
 
   return React.useCallback(async (connectionSlug, modelId, enabled) => {

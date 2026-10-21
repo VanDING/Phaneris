@@ -12,67 +12,11 @@
       "owner": "apps/electron"
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 98) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/input/useModelVisionToggle.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "The 'llmConnections' logical expression could make the dependencies of useCallback Hook (at line 48) change on every render. Move it inside the useCallback callback. Alternatively, wrap the initialization of 'llmConnections' in its own useMemo() Hook.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useEffect has a missing dependency: 'targetWorkspaces'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useEffect has a missing dependency: 'remoteTargets'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ui/EditPopover.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "The 'setOpen' function makes the dependencies of useCallback Hook (at line 1052) change on every render. To fix this, wrap the definition of 'setOpen' in its own useCallback() Hook.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
       "file": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_ConnectRemote.tsx",
       "rule": "unused-eslint-disable",
       "message": "Unused eslint-disable directive (no problems were reported from 'no-constant-condition').",
       "count": 1,
       "reason": "Existing unused suppression; remove when maintaining this file (G1).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useEntityListInteractions.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useMemo has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useEntityListInteractions.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useMemo has a missing dependency: 'containerProps'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
       "owner": "apps/electron"
     },
     {
