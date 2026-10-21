@@ -79,6 +79,13 @@ import { collectFileChangesFromActivities, getFirstFileChangeIdForActivity } fro
 import { handleErrorMessageAction } from "./error-message-actions"
 import { ErrorMessage } from './ChatErrorMessage'
 import { ProcessingIndicator, ScrollOnMount } from './ChatProcessingIndicator'
+import {
+  MAX_HIGHLIGHT_RANGES,
+  applyHighlightRanges,
+  clearHighlightRanges,
+  collectHighlightRanges,
+  getCSSHighlights,
+} from './transcript-highlights'
 import { MemoizedMessageBubble } from './ChatMessageBubble'
 import { openMarkdownPopoutAtom, type MarkdownPopout } from "@/atoms/preview"
 import { chatFocusRequestAtom, filesPanelFocusRequestAtom } from "@/atoms/content-panel-ui"
@@ -91,17 +98,8 @@ import { RecoveryReconciliationDialog } from "./RecoveryReconciliationDialog"
 import { ModelRecoveryReconciliationDialog } from "./ModelRecoveryReconciliationDialog"
 
 // ============================================================================
-// CSS Custom Highlight API helper
+// CSS Custom Highlight API: the helper lives in transcript-highlights.ts
 // ============================================================================
-
-/** Access CSS.highlights lazily — avoids stale ref from module-init / HMR timing */
-function getCSSHighlights(): Map<string, Highlight> | undefined {
-  try {
-    return (CSS as any).highlights as Map<string, Highlight> | undefined
-  } catch {
-    return undefined
-  }
-}
 
 // ============================================================================
 // (Overlay types removed — overlays converged into workbench panels, Task 10)
@@ -686,120 +684,37 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   // to find matches that span multiple DOM nodes (e.g. Shiki-split tokens).
   // ---------------------------------------------------------------------------
 
-  const MAX_HIGHLIGHT_RANGES = 5000
   // Store computed ranges so the active-match effect can restyle without re-walking the DOM
   const highlightRangesRef = React.useRef<Range[]>([])
 
-  // Effect 1: Walk DOM and collect highlight ranges when search/session/pagination changes
+  // Effect 1: Collect ranges when search, session or pagination changes. The
+  // walk itself lives in transcript-highlights.ts so it can be exercised against
+  // a real DOM without mounting a transcript.
   useEffect(() => {
-    const cssHighlights = getCSSHighlights()
     highlightRangesRef.current = []
+    clearHighlightRanges()
 
-    // Clear previous highlights
-    try {
-      cssHighlights?.delete('search-passive')
-      cssHighlights?.delete('search-active')
-    } catch { /* API unavailable — no-op */ }
-
-    if (!searchQuery.trim() || !isSearchActive || !cssHighlights) return
-
-    const query = searchQuery.toLowerCase()
+    if (!searchQuery.trim() || !isSearchActive || !getCSSHighlights()) return
     const matchingTurnIdSet = new Set(matchingTurnIds)
     if (matchingTurnIdSet.size === 0) return
 
     const rafId = requestAnimationFrame(() => {
       const allRanges: Range[] = []
-
       turnRefs.current.forEach((container, turnKey) => {
         if (allRanges.length >= MAX_HIGHLIGHT_RANGES) return
         if (!matchingTurnIdSet.has(turnKey)) return
-
-        // For assistant turns, narrow search to response content root
         const searchRoot = container.querySelector('[data-search-root="response"]') || container
-
-        // Collect ALL eligible text nodes (no query filter — needed for cross-node matching)
-        const walker = document.createTreeWalker(
-          searchRoot,
-          NodeFilter.SHOW_TEXT,
-          {
-            acceptNode: (node) => {
-              const parent = node.parentElement
-              if (!parent) return NodeFilter.FILTER_REJECT
-              const tag = parent.tagName.toLowerCase()
-              if (tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT
-              if (parent.closest('[data-search-exclude="true"]')) return NodeFilter.FILTER_REJECT
-              return NodeFilter.FILTER_ACCEPT
-            },
-          }
-        )
-
-        // Build concatenated string with node offset mapping for cross-node matching
-        const textNodes: Text[] = []
-        let currentNode: Node | null
-        while ((currentNode = walker.nextNode())) {
-          textNodes.push(currentNode as Text)
-        }
-        if (textNodes.length === 0) return
-
-        const nodeOffsets: { node: Text; start: number; end: number }[] = []
-        let totalLength = 0
-        for (const node of textNodes) {
-          const text = node.textContent || ''
-          nodeOffsets.push({ node, start: totalLength, end: totalLength + text.length })
-          totalLength += text.length
-        }
-        const concatenated = textNodes.map(n => n.textContent || '').join('')
-        const lowerConcatenated = concatenated.toLowerCase()
-
-        // Find all matches in the concatenated string
-        let searchPos = 0
-        while (searchPos < lowerConcatenated.length && allRanges.length < MAX_HIGHLIGHT_RANGES) {
-          const idx = lowerConcatenated.indexOf(query, searchPos)
-          if (idx === -1) break
-          const matchEnd = idx + query.length
-
-          // Create a Range spanning the match (may cross node boundaries)
-          try {
-            const range = new Range()
-            let startSet = false
-
-            for (const offset of nodeOffsets) {
-              if (offset.end <= idx) continue
-              if (offset.start >= matchEnd) break
-
-              if (!startSet) {
-                range.setStart(offset.node, idx - offset.start)
-                startSet = true
-              }
-              range.setEnd(offset.node, Math.min(offset.end - offset.start, matchEnd - offset.start))
-            }
-
-            if (startSet) {
-              allRanges.push(range)
-            }
-          } catch {
-            // Range creation can fail if node was removed during walk
-          }
-
-          searchPos = matchEnd
-        }
+        allRanges.push(...collectHighlightRanges(searchRoot, searchQuery, MAX_HIGHLIGHT_RANGES - allRanges.length))
       })
 
-      // Store ranges for the active-match effect to use
       highlightRangesRef.current = allRanges
-
-      if (allRanges.length === 0 && matchingTurnIdSet.size > 0) {
-        console.warn('[search-highlight] 0 ranges from', matchingTurnIdSet.size, 'matching turns — possible turn ID mismatch')
+      if (allRanges.length === 0) {
+        if (matchingTurnIdSet.size > 0) {
+          console.warn('[search-highlight] 0 ranges from', matchingTurnIdSet.size, 'matching turns — possible turn ID mismatch')
+        }
+        return
       }
-
-      if (allRanges.length === 0) return
-
-      try {
-        // Apply all ranges as passive initially — the active-match effect will restyle
-        cssHighlights.set('search-passive', new Highlight(...allRanges))
-      } catch {
-        // Highlight API call failed — degrade gracefully
-      }
+      applyHighlightRanges(allRanges, -1)
     })
 
     return () => cancelAnimationFrame(rafId)
@@ -807,34 +722,15 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
   // CSS.highlights is document-global: a transcript that unmounts while a search
   // is active would otherwise leave its ranges painted over whatever renders
-  // next. This runs on unmount only — clearing inside effect 1's cleanup would
-  // blank the highlights for a frame on every re-run.
-  useEffect(() => () => {
-    const cssHighlights = getCSSHighlights()
-    try {
-      cssHighlights?.delete('search-passive')
-      cssHighlights?.delete('search-active')
-    } catch { /* API unavailable — no-op */ }
-  }, [])
+  // next. Unmount only — clearing here on every re-run would blank a frame.
+  useEffect(() => () => clearHighlightRanges(), [])
 
-  // Effect 2: Update active/passive highlight split when navigation index changes
-  // Lightweight — just reshuffles existing Range objects between two Highlight instances
+  // Effect 2: Reshuffle the existing ranges between the passive and active
+  // registries when navigation moves — no DOM walk.
   useEffect(() => {
-    const cssHighlights = getCSSHighlights()
     const allRanges = highlightRangesRef.current
-    if (!cssHighlights || allRanges.length === 0) return
-
-    try {
-      const activeRange = allRanges[currentMatchIndex]
-      if (activeRange) {
-        const passiveRanges = allRanges.filter((_, i) => i !== currentMatchIndex)
-        cssHighlights.set('search-passive', new Highlight(...passiveRanges))
-        cssHighlights.set('search-active', new Highlight(activeRange))
-      } else {
-        cssHighlights.set('search-passive', new Highlight(...allRanges))
-        cssHighlights.delete('search-active')
-      }
-    } catch { /* graceful degradation */ }
+    if (allRanges.length === 0) return
+    applyHighlightRanges(allRanges, currentMatchIndex)
   }, [currentMatchIndex])
 
   // Navigate to next match (no looping - stops at last match)

@@ -322,6 +322,26 @@ await verificationWorkflow('panel-chrome', async run => {
         `project colours below 4.5:1 as rendered: ${JSON.stringify(failing)}`)
     })
 
+    await check('pc14-transcript-highlights-match-across-elements', async () => {
+      // The highlighter concatenates a subtree's text so a match can cross element
+      // boundaries, skips excluded cells, and keeps the current match in its own
+      // registry. Verified against a real DOM so the module can be trusted inside
+      // ChatDisplay, which needs a whole session to reach it.
+      const read = () => page.evaluate(() => (window as unknown as { __highlightProbe?: unknown }).__highlightProbe)
+      await page.waitForFunction(() => Boolean((window as unknown as { __highlightProbe?: unknown }).__highlightProbe), undefined, { timeout: 30_000 })
+      const probe = await read() as {
+        matches: number
+        crossNode: number
+        withActive: { passive: number; active: number }
+        withoutActive: { passive: number; active: number }
+        cleared: { passive: number; active: number }
+      }
+      assert.equal(probe.matches, 2, `expected two matches (the excluded cell is skipped), got ${probe.matches}`)
+      assert.equal(probe.crossNode, 2, 'both matches span element boundaries')
+      assert.deepEqual(probe.withActive, { passive: 1, active: 1 }, 'the current match is painted alone')
+      assert.deepEqual(probe.withoutActive, { passive: 2, active: 0 }, 'without a current match every range is passive')
+      assert.deepEqual(probe.cleared, { passive: 0, active: 0 }, 'clearing removes both registries')
+    })
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))

@@ -180,11 +180,58 @@ const recordMove = (taskId: string, columnId: string) => {
   )
 }
 
+/**
+ * Exercises the transcript highlighter against a fixed subtree: a match that
+ * crosses element boundaries (`foo<strong>bar</strong>` for "oob"), a match that
+ * must be ignored because it sits in an excluded cell, and the active/passive
+ * split. Results land on `window.__highlightProbe` for the workflow to read —
+ * the same code runs in ChatDisplay, where only a full session could reach it.
+ */
+function HighlightProbe() {
+  React.useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      const { collectHighlightRanges, applyHighlightRanges, clearHighlightRanges, countHighlightRanges } =
+        await import('@/components/app-shell/transcript-highlights')
+      if (cancelled) return
+      const host = document.createElement('div')
+      host.innerHTML = `
+        <p>foo<strong>bar</strong>baz foo<i>bar</i>baz</p>
+        <p data-search-exclude="true">foobarbaz</p>
+      `
+      document.body.appendChild(host)
+      try {
+        const ranges = collectHighlightRanges(host, 'oob')
+        applyHighlightRanges(ranges, 0)
+        const withActive = countHighlightRanges()
+        applyHighlightRanges(ranges, -1)
+        const withoutActive = countHighlightRanges()
+        clearHighlightRanges()
+        const cleared = countHighlightRanges()
+        ;(window as unknown as { __highlightProbe?: unknown }).__highlightProbe = {
+          matches: ranges.length,
+          // A cross-node match produces one Range whose start and end live in
+          // different text nodes.
+          crossNode: ranges.filter(range => range.startContainer !== range.endContainer).length,
+          withActive,
+          withoutActive,
+          cleared,
+        }
+      } finally {
+        host.remove()
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
+  return null
+}
+
 function Fixture() {
   return (
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
         <AppShellProvider value={contextValue}>
+          <HighlightProbe />
           <div data-chrome-host className="h-screen bg-background text-foreground">
             <div style={{ width: 420, height: 620 }} className="flex flex-col">
               <FilesPanel sessionId={SESSION_ID} />
