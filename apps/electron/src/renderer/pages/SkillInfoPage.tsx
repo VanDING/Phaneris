@@ -84,7 +84,7 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
       isMounted = false
       unsubscribe?.()
     }
-  }, [workspaceId, skillSlug, workingDirectory])
+  }, [workspaceId, skillSlug, workingDirectory, t])
 
   // Handle open in finder
   const handleOpenInFinder = useCallback(async () => {
@@ -113,7 +113,7 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
         description: err instanceof Error ? err.message : undefined,
       })
     }
-  }, [skill, workspaceId, skillSlug])
+  }, [skill, workspaceId, skillSlug, t])
 
   // Handle opening in new window
   const handleOpenInNewWindow = useCallback(() => {

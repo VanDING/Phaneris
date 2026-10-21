@@ -23,6 +23,11 @@ import {
 } from "@/components/ui/styled-dropdown"
 import { cn } from "@/lib/utils"
 import { Check, ChevronDown, Eye, EyeOff, Loader2 } from "lucide-react"
+
+/** Providers with well-known endpoints handled by the SDK: the endpoint/model
+ *  fields stay hidden. Module scope so the Set keeps one identity across renders -
+ *  a per-render Set made every hook that lists it re-create its callback. */
+const DEFAULT_ENDPOINT_PROVIDERS = new Set(['anthropic', 'openai', 'pi', 'google'])
 import { resolveDefaultCatalogModel, type PiModelInfo } from "./tier-models"
 import {
   resolveCustomEndpointPayload,
@@ -268,8 +273,6 @@ export function ApiKeyInput({
 
   const isPiApiKeyFlow = providerType === 'pi_api_key'
   const isBedrock = activePreset === 'amazon-bedrock'
-  // Hide endpoint/model fields for providers with well-known endpoints handled by the SDK
-  const DEFAULT_ENDPOINT_PROVIDERS = new Set(['anthropic', 'openai', 'pi', 'google'])
   const isDefaultProviderPreset = DEFAULT_ENDPOINT_PROVIDERS.has(activePreset)
 
   // Provider-specific placeholders from the active preset
@@ -324,7 +327,7 @@ export function ApiKeyInput({
     } finally {
       if (isCurrent()) setPiModelsLoading(false)
     }
-  }, [isPiApiKeyFlow])
+  }, [isPiApiKeyFlow, initialPreset, initialValues?.connectionDefaultModel, initialValues?.models, initialValues?.utilityModel])
 
   useEffect(() => {
     loadPiModels(activePreset)

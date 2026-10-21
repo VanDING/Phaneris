@@ -12,14 +12,6 @@
       "owner": "apps/electron"
     },
     {
-      "file": "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has missing dependencies: 'DEFAULT_ENDPOINT_PROVIDERS', 'initialPreset', 'initialValues?.connectionDefaultModel', 'initialValues?.models', and 'initialValues?.utilityModel'. Either include them or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
       "rule": "react-hooks/exhaustive-deps",
       "message": "The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 98) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook.",
@@ -70,14 +62,6 @@
     {
       "file": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
       "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
-      "rule": "react-hooks/exhaustive-deps",
       "message": "React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked.",
       "count": 1,
       "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
@@ -92,49 +76,9 @@
       "owner": "apps/electron"
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/WorkspaceSwitcher.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 2,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ResetConfirmationDialog.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useMemo has an unnecessary dependency: 'open'. Either exclude it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
       "file": "apps/electron/src/renderer/components/ui/EditPopover.tsx",
       "rule": "react-hooks/exhaustive-deps",
       "message": "The 'setOpen' function makes the dependencies of useCallback Hook (at line 1052) change on every render. To fix this, wrap the definition of 'setOpen' in its own useCallback() Hook.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ui/label-menu.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook React.useCallback has an unnecessary dependency: 'items'. Either exclude it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ui/rich-text-input.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook React.useMemo has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_ConnectRemote.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 'isReconnectMode'. Either include it or remove the dependency array.",
       "count": 1,
       "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
       "owner": "apps/electron"
@@ -145,38 +89,6 @@
       "message": "Unused eslint-disable directive (no problems were reported from 'no-constant-condition').",
       "count": 1,
       "reason": "Existing unused suppression; remove when maintaining this file (G1).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/components/workspace/WorkspaceCreationScreen.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useAutomations.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 5,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useDirectoryPicker.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useEntityListInteractions.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 'setSelectionState'. Either include it or remove the dependency array.",
-      "count": 5,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
       "owner": "apps/electron"
     },
     {
@@ -196,41 +108,9 @@
       "owner": "apps/electron"
     },
     {
-      "file": "apps/electron/src/renderer/hooks/useOnboarding.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 'editingSlug'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useOnboarding.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has an unnecessary dependency: 'state.apiSetupMethod'. Either exclude it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
       "file": "apps/electron/src/renderer/hooks/useSessionDecisions.ts",
       "rule": "react-hooks/exhaustive-deps",
       "message": "The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useUpdateChecker.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 2,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/hooks/useWorkspaceIcon.ts",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useEffect has a missing dependency: 'workspace'. Either include it or remove the dependency array.",
       "count": 1,
       "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
       "owner": "apps/electron"
@@ -241,70 +121,6 @@
       "message": "Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API.",
       "count": 5,
       "reason": "Accepted device/window presentation cache; preferences and Runtime facts retain their existing authoritative owners.",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/ChatPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook React.useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 3,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/ChatPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook React.useMemo has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 2,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/ChatPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook React.useMemo has an unnecessary dependency: 'session.id'. Either exclude it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useMemo has an unnecessary dependency: 't'. Either exclude it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/SkillInfoPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/SkillInfoPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/SourceInfoPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 1,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
-      "owner": "apps/electron"
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/SourceInfoPage.tsx",
-      "rule": "react-hooks/exhaustive-deps",
-      "message": "React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array.",
-      "count": 2,
-      "reason": "Existing hook lifecycle debt; verify subscription/cancellation E2E before changing dependencies (G7).",
       "owner": "apps/electron"
     },
     {

@@ -84,7 +84,7 @@ export function WorkspaceCreationScreen({
     } finally {
       setIsCreating(false)
     }
-  }, [onWorkspaceCreated])
+  }, [onWorkspaceCreated, t])
 
   const handleReconnectWorkspace = useCallback(async (workspaceId: string, remoteServer: { url: string; token?: string; remoteWorkspaceId: string; allowInsecureTls?: boolean }) => {
     if (!onReconnectWorkspace) {

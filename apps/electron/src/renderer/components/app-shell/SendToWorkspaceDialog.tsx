@@ -166,7 +166,7 @@ export function SendToWorkspaceDialog({
     } finally {
       setIsTransferring(false)
     }
-  }, [selectedWorkspaceId, sessionIds, workspaces, onOpenChange, onTransferComplete])
+  }, [selectedWorkspaceId, sessionIds, workspaces, onOpenChange, onTransferComplete, t])
 
   const count = sessionIds.length
 

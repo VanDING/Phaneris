@@ -142,19 +142,19 @@ export function useEntityListInteractions<T>({
 
   const toggle = useCallback((id: string, index: number) => {
     setSelectionState(prev => MultiSelect.toggleSelect(prev, id, index))
-  }, [])
+  }, [setSelectionState])
 
   const range = useCallback((toIndex: number) => {
     setSelectionState(prev => MultiSelect.rangeSelect(prev, toIndex, allIds))
-  }, [allIds])
+  }, [allIds, setSelectionState])
 
   const selectAllItems = useCallback(() => {
     setSelectionState(MultiSelect.selectAll(allIds))
-  }, [allIds])
+  }, [allIds, setSelectionState])
 
   const clearSelection = useCallback(() => {
     setSelectionState(prev => MultiSelect.clearMultiSelect(prev))
-  }, [])
+  }, [setSelectionState])
 
   const isMultiSelectActive = MultiSelect.isMultiSelectActive(selectionState)
 
@@ -250,7 +250,7 @@ export function useEntityListInteractions<T>({
       lastClickIndexRef.current = index
       setActiveIndex(index)
     }
-  }, [getId, multiSelectEnabled, isMultiSelectActive, selectionState.selectedIds, toggle, range, setActiveIndex])
+  }, [getId, multiSelectEnabled, isMultiSelectActive, selectionState.selectedIds, toggle, range, setActiveIndex, setSelectionState])
 
   // ---- Search input keyboard forwarding ----
   // Forwards ArrowDown/ArrowUp from a search input to the roving tabindex handler.

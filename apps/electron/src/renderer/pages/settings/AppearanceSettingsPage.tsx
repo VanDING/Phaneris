@@ -304,7 +304,7 @@ export default function AppearanceSettingsPage() {
         value: t.id,
         label: t.name || t.id,
       })),
-  ], [presetThemes, t])
+  ], [presetThemes])
 
   // Workspace inheritance names the app's selected theme, including Default.
   const appDefaultLabel = useMemo(() => {

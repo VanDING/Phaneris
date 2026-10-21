@@ -138,7 +138,7 @@ export function AddWorkspaceStep_ConnectRemote({
       setTestState('error')
       setTestError(err instanceof Error ? err.message : 'Connection failed')
     }
-  }, [serverUrl, token, allowInsecureTls, reconnectWorkspace])
+  }, [serverUrl, token, allowInsecureTls, reconnectWorkspace, isReconnectMode])
 
   const handleConnect = useCallback(async () => {
     // A reconnect may only change URL/TLS while keeping the stored token.
