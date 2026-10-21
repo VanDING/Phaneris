@@ -1,33 +1,171 @@
 {
   "schemaVersion": 1,
   "workflow": "panel-chrome",
-  "startedAt": "2026-10-21T05:23:26.579Z",
-  "finishedAt": "2026-10-21T05:24:07.515Z",
+  "startedAt": "2026-10-21T05:26:25.844Z",
+  "finishedAt": "2026-10-21T05:27:07.715Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
-    "--output-dir=docs/verification/results/panel-chrome-w2"
+    "--output-dir=docs/verification/results/panel-chrome-w2-final"
   ],
   "source": {
-    "headSha": "71307625a6f16cbf55bb0267dad4ef977febd257",
+    "headSha": "0bbd120254da9d61e661914a86cb2b9135d0fcf9",
     "dirtyPaths": [
-      "M apps/electron/src/renderer/components/app-shell/ContextWorkbenchTabs.tsx",
+      "M apps/electron/src/renderer/App.tsx",
+      " M apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      " M apps/electron/src/renderer/components/app-shell/BackgroundFinishedChip.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+      " M apps/electron/src/renderer/components/app-shell/MainContentPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SessionList.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/CalendarView.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanBoardContainer.tsx",
+      " M apps/electron/src/renderer/components/app-shell/use-session-navigation.ts",
+      " M apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx",
       " M apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
+      " M apps/electron/src/renderer/components/content-panels/TrajectoryPanel.tsx",
+      " M apps/electron/src/renderer/components/pages/PageSourceAuthBanner.tsx",
+      " M apps/electron/src/renderer/components/pages/PageView.tsx",
+      " M apps/electron/src/renderer/components/pages/PagesHome.tsx",
+      " M apps/electron/src/renderer/components/projects/TaskEditorOverlay.tsx",
+      "RM apps/electron/src/renderer/contexts/NavigationContext.tsx -> apps/electron/src/renderer/context/NavigationContext.tsx",
+      "R  apps/electron/src/renderer/contexts/__tests__/navigation-history-key.test.ts -> apps/electron/src/renderer/context/__tests__/navigation-history-key.test.ts",
+      "R  apps/electron/src/renderer/contexts/__tests__/navigation-reconcile.test.ts -> apps/electron/src/renderer/context/__tests__/navigation-reconcile.test.ts",
+      "R  apps/electron/src/renderer/contexts/__tests__/surface-url.test.ts -> apps/electron/src/renderer/context/__tests__/surface-url.test.ts",
+      "R  apps/electron/src/renderer/contexts/navigation-history.ts -> apps/electron/src/renderer/context/navigation-history.ts",
+      "R  apps/electron/src/renderer/contexts/navigation-reconcile.ts -> apps/electron/src/renderer/context/navigation-reconcile.ts",
+      "R  apps/electron/src/renderer/contexts/surface-url.ts -> apps/electron/src/renderer/context/surface-url.ts",
+      " M apps/electron/src/renderer/hooks/useSessionMenuActions.ts",
+      " M apps/electron/src/renderer/hooks/useSessionSearch.ts",
+      " M apps/electron/src/renderer/pages/SourceInfoPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/MessagingSettingsPage.tsx",
+      " M apps/electron/src/renderer/playground/demos/mobile-webui/MobilePlaygroundProviders.tsx",
+      " M apps/electron/src/renderer/playground/registry/schedule-views.tsx",
       " M docs/verification/results/packaged-client-smoke-win.json",
       " M docs/verification/results/packaged-client-verification-win.json",
-      " M package.json",
-      "?? scripts/verification/fixtures/panel-chrome.tsx",
-      "?? scripts/verification/panel-chrome-workflow.ts"
+      " M packages/ui/src/styles/roles.css"
     ],
     "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
     "changedFiles": [
       {
-        "path": "apps/electron/src/renderer/components/app-shell/ContextWorkbenchTabs.tsx",
-        "sha256": "b889a474cc663abdf268c143f2552edcc55aba20d27f01d91cc74b9dbf9877f9"
+        "path": "apps/electron/src/renderer/App.tsx",
+        "sha256": "dfb352e27773c01ac5ac6776b436897db17276fa6ecd35637044b8751ec6cee6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+        "sha256": "971784dfd4ea66cee2e51a1320e5ee1d624c647cf4abce974fbba22259e94cf4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/BackgroundFinishedChip.tsx",
+        "sha256": "7308f5ce110b7ee719fee3d2cf102554c955ff9a3a5245732cacb9231094389b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "sha256": "d6f5895bd0dcaeb5939e715beb1b928579d3969f1a2ac8b8293b6b4a0d4b97de"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/MainContentPanel.tsx",
+        "sha256": "f2a3bfc33a995305c1fff25dcbb384cd3a26533eabf282a5b3300ec5243c63de"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SessionList.tsx",
+        "sha256": "c55c525201c895b6b21a53a3c36555f259557108c8fd09c72773f459507237a0"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/CalendarView.tsx",
+        "sha256": "f3c15d65db50032b6f19357d894619048ff7e33d091dc21954e02d7a0daeb7d1"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+        "sha256": "d823db64690560adc6ce289c73ef377d7308ea30eee5117aceb33581396d99b2"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoardContainer.tsx",
+        "sha256": "fe005c169a3de0ddab3825d584ed1b5ab0ef0269d7eead5277e4349b262aad46"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/use-session-navigation.ts",
+        "sha256": "6b52acf57b97e667520a1caaec2a734a0a4a6765f2d515b3e3e8d9fdbea92c35"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx",
+        "sha256": "d41ac61136b15380ce5162506f0489fcf82bc084e3b2802c5b8f478e6fedd72b"
       },
       {
         "path": "apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
-        "sha256": "be2f79b03b459a484c201c87cf13d00bc6328c937a665671baa956da3970be9b"
+        "sha256": "81fc6dcb83f09b5d2e11ab6900965ade36e8e34dda7753d2347a01c976775ebd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/TrajectoryPanel.tsx",
+        "sha256": "2606672fda02e0cd9e9e17182ce7ab6a439b3542c1e3a2689306d2011f78f0d8"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PageSourceAuthBanner.tsx",
+        "sha256": "078c3574af6a704ebf7f85371ed70659b62ecd6cccd9f92920944d78e1092a4e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PageView.tsx",
+        "sha256": "3e88934292bf80109f83bf587305cefd07e1090014025db6a2abde74a8930959"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
+        "sha256": "b238a86adf6f22d9418549a5b82dc472d60c246eace298259835b6b002dfc841"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/projects/TaskEditorOverlay.tsx",
+        "sha256": "7b940b064aa905f3d8e7938e996b3af10c341bce23c2783725b3b250f28b0987"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/NavigationContext.tsx",
+        "sha256": "ed8a37e2c5a518bcaed1371a2fbcd7e36d7c0eaf7f2f1ab830b84c8be951e837"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/__tests__/navigation-history-key.test.ts",
+        "sha256": "9e212eda76b9c6cf56694bd0c1c202046823d7346348d267fcafa15d100aa3f2"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/__tests__/navigation-reconcile.test.ts",
+        "sha256": "96c86998b7ab3c8399c21ff970f74189998b4e6bdab7a56a2889ada609710385"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/__tests__/surface-url.test.ts",
+        "sha256": "bbd4e523d01ec7b753fbab133936894917747e739b72f5409559089f1f0c9b42"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/navigation-history.ts",
+        "sha256": "fa05d68dddc39c77c255e4de5009f662ee06a9fd63e57dee8e0b2baa641ba14e"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/navigation-reconcile.ts",
+        "sha256": "de978b9abfb726d8b004688c13bfe3047a0031ecd94e3bb4c8f906f87e132f14"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/surface-url.ts",
+        "sha256": "94974e35be73f40087c573aa3163e2bd4bd6941d2e15a8109ff3af1f81f62e0e"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/useSessionMenuActions.ts",
+        "sha256": "6d0a9f65591ebc6706ca7162b3e8d50305b3ee026f2e42fc93b6ffd82256dc59"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/useSessionSearch.ts",
+        "sha256": "a4dbbf7ce0829c5957203854c82b7c560215795651ba5ea789680c48a6610158"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/SourceInfoPage.tsx",
+        "sha256": "232c4ac765ec78553d49d8ba103f068c2a892fb6909ebcfe3f0a3a0e72828941"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/MessagingSettingsPage.tsx",
+        "sha256": "53bb1979a18190c6622a28a530aff26c61576fd5348a96eaafcda9effb5f1a9a"
+      },
+      {
+        "path": "apps/electron/src/renderer/playground/demos/mobile-webui/MobilePlaygroundProviders.tsx",
+        "sha256": "ba2109bcd3fef4382406b5611a41944da68c04c68e9a6435e0c5365516447c12"
+      },
+      {
+        "path": "apps/electron/src/renderer/playground/registry/schedule-views.tsx",
+        "sha256": "777e07b52f18061b7808a0b75080cac4b55d4eea792496916108d65a5b4322c9"
       },
       {
         "path": "docs/verification/results/packaged-client-smoke-win.json",
@@ -38,16 +176,8 @@
         "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
       },
       {
-        "path": "package.json",
-        "sha256": "2b6b424e63b9e9e289733d3fe6ce519ff3b4244832edcada6194a5c2b1bded41"
-      },
-      {
-        "path": "scripts/verification/fixtures/panel-chrome.tsx",
-        "sha256": "99664915bed572cb712eddc6144761f30495c1cf92b2451c9fc554eeb72be48d"
-      },
-      {
-        "path": "scripts/verification/panel-chrome-workflow.ts",
-        "sha256": "5be68ddc7395c0de2a29fba6b7f0ed91922a0c00c6fc0490b479084bddf9989e"
+        "path": "packages/ui/src/styles/roles.css",
+        "sha256": "3c7ff5680fdc6a26c84517f537f7ac55acf5903dfdaceef1f6788c7e2ecd09bb"
       }
     ],
     "dirty": true
@@ -73,8 +203,8 @@
   "artifacts": [
     {
       "path": "files-panel-chrome-dark.png",
-      "sha256": "c088aaf5f5a5a717802a6268ae9169bd4b7ae911427d7af69e0de08af03b4291",
-      "bytes": 14753
+      "sha256": "1ceda7d4f2163f7f2cf58b81a740de9c15cb5d574b76ca00ccae822d2d5fda1e",
+      "bytes": 14751
     },
     {
       "path": "files-panel-chrome-light.png",
@@ -93,7 +223,7 @@
     },
     {
       "path": "panel-chrome.json",
-      "sha256": "36fc33befa42683586b189425caf18d4b888ac0133b7bc434f877260a28478b5",
+      "sha256": "724b0373c5218eb82c248eb3b108bafbe2fc0345569ea26afc216b8a8b42eee9",
       "bytes": 341
     }
   ],

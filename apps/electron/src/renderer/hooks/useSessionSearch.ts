@@ -9,7 +9,7 @@ import { fuzzyScore } from "@phaneris/shared/search"
 import { getSessionTitle, getSessionStatus } from "@/utils/session"
 import type { SessionMeta } from "@/atoms/sessions"
 import type { ViewConfig } from "@phaneris/shared/views"
-import type { SessionFilter } from "@/contexts/NavigationContext"
+import type { SessionFilter } from "@/context/NavigationContext"
 
 // ---------------------------------------------------------------------------
 // Constants

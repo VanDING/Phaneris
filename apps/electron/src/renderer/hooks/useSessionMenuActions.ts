@@ -30,7 +30,7 @@ import { toast } from 'sonner'
 import { extractLabelId, toggleLabelInList } from '@phaneris/shared/labels'
 import type { SessionMeta } from '@/atoms/sessions'
 import type { ContextPolicy } from '@phaneris/shared/agent/context-policy'
-import { useNavigation } from '@/contexts/NavigationContext'
+import { useNavigation } from '@/context/NavigationContext'
 
 export interface UseSessionMenuActionsOptions {
   item: SessionMeta

@@ -37,7 +37,7 @@ import {
   isAutomationsNavigation,
   isProjectsNavigation,
   isPagesNavigation,
-} from '@/contexts/NavigationContext'
+} from '@/context/NavigationContext'
 import { useSessionSelection, useIsMultiSelectActive, useSelectedIds, useSelectionCount } from '@/hooks/useSession'
 import { sourceSelection, skillSelection, automationSelection } from '@/hooks/useEntitySelection'
 import { extractLabelId } from '@phaneris/shared/labels'

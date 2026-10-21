@@ -71,7 +71,7 @@ import type { StructuredInputState, StructuredResponse, PermissionResponse, Admi
 import type { RichTextInputHandle } from "@/components/ui/rich-text-input"
 import { useBackgroundTasks } from "@/hooks/useBackgroundTasks"
 import { useTurnCardExpansion } from "@/hooks/useTurnCardExpansion"
-import { useNavigation } from "@/contexts/NavigationContext"
+import { useNavigation } from "@/context/NavigationContext"
 import { useAppShellContext } from "@/context/AppShellContext"
 import { navigate, routes } from "@/lib/navigate"
 import { CHAT_LAYOUT } from "@/config/layout"

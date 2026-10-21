@@ -16,7 +16,7 @@ import * as React from 'react'
 import { useAtom } from 'jotai'
 import { kanbanEditorTargetAtom } from '@/atoms/kanban'
 import { useAppShellContext } from '@/context/AppShellContext'
-import { useNavigation } from '@/contexts/NavigationContext'
+import { useNavigation } from '@/context/NavigationContext'
 import { buildModelCatalog } from '@/components/app-shell/kanban/model-catalog'
 import { TaskEditor } from '@/components/app-shell/kanban/TaskEditor'
 

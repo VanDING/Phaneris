@@ -107,7 +107,7 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
               role="tab"
               aria-selected={view === item.id}
               onClick={() => setView(item.id)}
-              className={`relative h-control-lg shrink-0 px-0.5 text-label font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${view === item.id ? 'text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t after:bg-accent' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`craft-segment relative shrink-0 px-0.5 text-label font-medium ${view === item.id ? 'text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t after:bg-accent' : 'text-muted-foreground hover:text-foreground'}`}
             >
               {t(item.key)}
             </button>

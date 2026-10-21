@@ -36,7 +36,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { MOTION_SPRING } from '@phaneris/ui/motion'
-import { NavigationContext } from '@/contexts/NavigationContext'
+import { NavigationContext } from '@/context/NavigationContext'
 import { navigate, routes } from '@/lib/navigate'
 import { primarySessionIdAtom } from '@/atoms/workbench'
 import {

@@ -23,7 +23,7 @@ import { sessionAtomFamily, sessionMetaMapAtom, ensureSessionMessagesLoadedAtom 
 import { chatFocusRequestAtom, filesPanelFocusRequestAtom, updateWorkbenchFocusAtom, workbenchFocusBySessionAtom } from '@/atoms/content-panel-ui'
 import { collapseWorkbenchAtom, openWorkbenchItemAtom, setWorkbenchItemBindingAtom } from '@/atoms/workbench'
 import { useAppShellContext } from '@/context/AppShellContext'
-import { useNavigation } from '@/contexts/NavigationContext'
+import { useNavigation } from '@/context/NavigationContext'
 import { useLabels } from '@/hooks/useLabels'
 import { findLabelById } from '@phaneris/shared/labels'
 import { contextBadgeUsage } from '@/lib/context-usage'

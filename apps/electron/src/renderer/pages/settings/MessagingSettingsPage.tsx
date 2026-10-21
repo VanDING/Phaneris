@@ -64,7 +64,7 @@ import {
   type PlatformOwner,
 } from '@/components/messaging/access'
 import { useActiveWorkspace } from '@/context/AppShellContext'
-import { useNavigation } from '@/contexts/NavigationContext'
+import { useNavigation } from '@/context/NavigationContext'
 import {
   messagingBindingsAtom,
   setMessagingBindingsAtom,

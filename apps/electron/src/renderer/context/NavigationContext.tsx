@@ -17,7 +17,7 @@ import { shouldRevealNavigator } from '@/lib/nav-helpers'
  * (and thus scroll position, streaming state, etc.).
  *
  * Usage:
- *   import { useNavigation, useNavigationState } from '@/contexts/NavigationContext'
+ *   import { useNavigation, useNavigationState } from '@/context/NavigationContext'
  *   import { routes } from '@/shared/routes'
  *
  *   const { navigate } = useNavigation()

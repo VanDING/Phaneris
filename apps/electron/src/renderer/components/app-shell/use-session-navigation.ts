@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { isSessionsNavigation, useNavigationState } from '@/contexts/NavigationContext'
+import { isSessionsNavigation, useNavigationState } from '@/context/NavigationContext'
 
 /** Navigation subscription and session-route projection have one renderer owner. */
 export function useSessionNavigation() {

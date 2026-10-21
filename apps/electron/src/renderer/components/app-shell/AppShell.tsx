@@ -143,7 +143,7 @@ import {
   isProjectsNavigation,
   isPagesNavigation,
   type NavigationState,
-} from "@/contexts/NavigationContext"
+} from "@/context/NavigationContext"
 import type { SettingsSubpage } from "../../../shared/types"
 import { SourcesListPanel } from "./SourcesListPanel"
 import { SkillsListPanel } from "./SkillsListPanel"

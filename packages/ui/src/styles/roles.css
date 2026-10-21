@@ -58,6 +58,22 @@
   .text-title { font-size: calc(var(--type-title-size) * var(--ui-scale)); line-height: 1.45; }
   /* Display is the single headline tier: landing and empty-state invitations. */
   .text-display { font-size: calc(var(--type-display-size) * var(--ui-scale)); line-height: 1.3; }
+  /* Segmented / tab item: a horizontal navigational control that owns its height
+     and its focus ring. It is deliberately not a `craft-control`: a tab is not a
+     button, so it keeps the control tier height without the control's min-height
+     or press scale. `theme-contracts/roles` accepts this role for native
+     `<button>` elements used as tabs. */
+  .craft-segment {
+    display: inline-flex;
+    align-items: center;
+    height: calc(var(--control-height-lg) * var(--ui-scale));
+    outline: none;
+  }
+  .craft-segment:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--shape-sm);
+  }
   /* Object-scale glyphs (monogram watermark, avatar initials). Not type tiers:
      the object they sit in decides the size, and neither follows --ui-scale. */
   .glyph-watermark { font-size: var(--glyph-watermark-size); line-height: 1; }
