@@ -383,6 +383,19 @@ contract, `text-` + a Tailwind scale word is drift.
 - **Buttons** — existing size variants keep their heights; new compact controls
   use `h-control-2xs/xs/sm`. Inner toolbar buttons are ghost: transparent at
   rest, foreground/5 hover, foreground/10 pressed.
+- **Tabs** — one primitive, `SegmentedTabs`: selection follows focus, the strip
+  keeps a single `tabIndex=0`, Arrow/Home/End work. Appearance is a prop
+  (`underline` for panel views, `segment` for filters); never hand-roll a
+  `role="tablist"`. A tab is not a button, so `.craft-segment` owns its contract
+  height and focus ring and does **not** inherit `craft-control`'s min-height.
+- **Board columns** — progress, not decoration: neutral until started, `info`
+  while active, `success` when done; identity is a 2px dot/bar, never a filled
+  header or a whole-column tint. A finished column above a screenful starts
+  collapsed with an explicit toggle that keeps the count. An empty column states
+  that it is empty and offers the new-task action.
+- **List rows** — one identity channel (a 2px project stripe) and one state
+  channel (the status icon). Never paint a project colour as text; group headers
+  always report their count.
 - **Composer** — role shape `rounded-composer`, resting/hover/focus-within
   shadow states; focus adds the accent ring. Drop targets get an inset accent
   glow, not a border.
@@ -396,6 +409,8 @@ contract, `text-` + a Tailwind scale word is drift.
 - **Composite fields** — `.craft-field-shell` around icon + input + action; the
   shell owns the focus ring and the inner control drops its own.
 - **Toasts** — Sonner, themed; never a bespoke banner for a transient result.
+- **Panel chrome** — one chrome row per panel, ≤75px from the panel top to its
+  content. Filters share the view-tab row; a second bar has to earn its height.
 
 ## Rules and their gates
 
@@ -414,6 +429,11 @@ rules drift.
 | Theme field parity, motion TS/CSS parity | `check:themes` |
 | Accessibility findings never grow | `check:visual-contracts` + `scripts/visual-debt-ledger.json` |
 | Bundled fonts, no CDN | `check:fonts` |
+| A class literal keeps its contract font-size tier through `cn()` | `audit:ui-merge` (part of `lint`; 0 losses over the whole tree) |
+| A control paints its contract tier, height and label contrast | `test:ui:primitives` (6 scenes: 2 modes × 3 widths) |
+| One chrome row per panel, ≤75px to content | `test:ui:chrome` (rendered; also asserts the tablist keyboard contract) |
+| An append touches one row on a 200-turn transcript | `test:long-session-budget` (p50 ≤60ms, p95 ≤120ms) |
+| Initial renderer graph stays lean | `bundle:report --check` (1.2MB raw ratchet) |
 
 Lowering a frozen count after a migration batch: `bun run design:drift`. It
 rewrites the baseline; the diff is the review record.
