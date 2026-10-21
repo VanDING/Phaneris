@@ -13,7 +13,8 @@ const baselineFile = baselineArgument ? resolve(baselineArgument.slice('--baseli
 const evidence = new VerificationRun('lint-workspace', args)
 let failure: unknown
 try {
-    evidence.checkArguments(baselineArgument ? [baselineArgument] : [])
+    const prune = args.includes('--prune')
+  evidence.checkArguments([...(baselineArgument ? [baselineArgument] : []), ...(prune ? ['--prune'] : [])])
   const coverage = JSON.parse(readFileSync(join(root, 'scripts/quality-coverage.json'), 'utf8')) as { members: Record<string, unknown> }
   const configured = ['apps/electron', 'packages/shared', 'packages/ui']
   const results: ESLint.LintResult[] = []
@@ -60,6 +61,17 @@ try {
   }
   for (const [key, entry] of registered) {
     if ((current.get(key)?.count ?? 0) < entry.count) changes.push(`Retire stale warning allowance: ${entry.file} ${entry.rule}`)
+  }
+  // `--prune` is the retirement path for the message above: drop the allowances
+  // that no longer fire and keep the rest byte-identical, so paying down warning
+  // debt is one supported command (mirroring `check-visual-contracts --prune`)
+  // instead of a hand-edit of a 500-line JSON file.
+  if (prune) {
+    const kept = baseline.entries.filter(entry => (current.get(JSON.stringify([entry.file, entry.rule, entry.message]))?.count ?? 0) >= entry.count)
+    const writeFileSync = (await import('node:fs')).writeFileSync
+    writeFileSync(baselineFile, JSON.stringify({ ...baseline, entries: kept }, null, 2) + '\n')
+    console.log(`Warning baseline pruned: ${baseline.entries.length - kept.length} stale retired, ${kept.length} entries.`)
+    changes.length = 0
   }
   assert.equal(changes.length, 0, changes.join('\n'))
   evidence.complete([...Object.keys(coverage.members).map(member => `lint:${member}`), 'lint:tooling'])
