@@ -32,7 +32,6 @@ export interface StoredConfig {
   themeMode?: 'light' | 'dark' | 'system';
   themeFont?: 'theme' | 'inter' | 'system';
   /** Interface scale: multiplies control geometry and type, not reading width. */
-  uiScale?: 1 | 1.1 | 1.25;
   // Auto-update
   dismissedUpdateVersion?: string;  // Version that user dismissed (skip notifications for this version)
   // Input settings

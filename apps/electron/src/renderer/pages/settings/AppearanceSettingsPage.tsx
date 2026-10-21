@@ -117,8 +117,6 @@ export default function AppearanceSettingsPage() {
     setColorTheme,
     font,
     setFont,
-    uiScale,
-    setUiScale,
     activeWorkspaceId,
     setWorkspaceColorTheme,
     themeLoadError,
@@ -353,17 +351,6 @@ export default function AppearanceSettingsPage() {
                         { value: 'theme', label: t("settings.appearance.fontTheme") },
                         { value: 'inter', label: t("settings.appearance.fontInter") },
                         { value: 'system', label: t("settings.appearance.fontSystem") },
-                      ]}
-                    />
-                  </SettingsRow>
-                  <SettingsRow label={t("settings.appearance.interfaceScale")}>
-                    <SettingsSegmentedControl
-                      value={String(uiScale)}
-                      onValueChange={(value) => setUiScale(Number(value) as 1 | 1.1 | 1.25)}
-                      options={[
-                        { value: '1', label: '100%' },
-                        { value: '1.1', label: '110%' },
-                        { value: '1.25', label: '125%' },
                       ]}
                     />
                   </SettingsRow>

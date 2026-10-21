@@ -25,12 +25,15 @@ const CATEGORY_ICON = {
 } satisfies Record<TrajectoryContextCategory, typeof Sparkles>
 
 const CATEGORY_TONE: Record<TrajectoryContextCategory, string> = {
+  // Five categories, five distinguishable tones. They used to be `accent` twice
+  // and `muted` for injected context — the first pair was indistinguishable in
+  // the legend, and a near-white segment is invisible on the context bar.
   system: 'bg-accent',
-  user: 'bg-accent',
+  user: 'bg-accent/55',
   assistant: 'bg-success',
   tools: 'bg-info',
-  attachments: 'bg-accent',
-  injected: 'bg-muted',
+  attachments: 'bg-accent/80',
+  injected: 'bg-foreground-dimmed',
 }
 
 function formatNumber(value: number): string {

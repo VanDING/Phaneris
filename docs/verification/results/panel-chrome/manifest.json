@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "workflow": "panel-chrome",
-  "startedAt": "2026-10-21T09:08:12.868Z",
-  "finishedAt": "2026-10-21T09:09:08.643Z",
+  "startedAt": "2026-10-21T09:41:13.897Z",
+  "finishedAt": "2026-10-21T09:42:28.347Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
@@ -10,11 +10,103 @@
     "--replace"
   ],
   "source": {
-    "headSha": "c5764da432af06c68bc85a4e2021738db28dbd32",
-    "dirtyPaths": [],
+    "headSha": "1165f632a281f57599ef72db0e1f67d2c9a02b77",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+      " M apps/electron/src/renderer/context/ThemeContext.tsx",
+      " M apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
+      " M packages/shared/src/config/__tests__/theme-storage.test.ts",
+      " M packages/shared/src/config/appearance.ts",
+      " M packages/shared/src/config/persisted-types.ts",
+      " M packages/shared/src/config/schemas.ts",
+      " M packages/shared/src/config/theme.ts",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M packages/ui/src/components/trajectory/TrajectoryContextView.tsx"
+    ],
     "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
-    "changedFiles": [],
-    "dirty": false
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+        "sha256": "ac91c0af915f58a63fae5e688bb6280dc68e7b459f7446b9b6fb1677d3dffe74"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+        "sha256": "7dab205d94d8b60d7b59ac66eaca5530c350cbe93702dd3b91344ceba789bd32"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+        "sha256": "e176a09e34ca639fc96c8f61cbb38b4b780183892cb81c09e3bd17fd8067520c"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/ThemeContext.tsx",
+        "sha256": "804d673f1b35f1411c7298a5d9ec0f4e7d64243a73c1f82a6a78e2c266d76b37"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
+        "sha256": "7226e6e4e5a652e1ff53fa5df2cdd28114448959212be9d3c00698e3152549df"
+      },
+      {
+        "path": "packages/shared/src/config/__tests__/theme-storage.test.ts",
+        "sha256": "2ac5b59c5142f3b696fa91ffc454a205490c3cbdaa6c1e23b487e9e7044a126a"
+      },
+      {
+        "path": "packages/shared/src/config/appearance.ts",
+        "sha256": "d28be8ce4666ea57f16bf92835b5ac919ba3f8152a01ae993d746239bed16bb1"
+      },
+      {
+        "path": "packages/shared/src/config/persisted-types.ts",
+        "sha256": "5f0b1363cf4a7d50fd953a2b1e9e0c7cdd5ee258b3dcc95d8d5a62ce4f680014"
+      },
+      {
+        "path": "packages/shared/src/config/schemas.ts",
+        "sha256": "09259207f0dc11744b6b269985568c19dd1c460dc729a3728ebe5fa0097bd35c"
+      },
+      {
+        "path": "packages/shared/src/config/theme.ts",
+        "sha256": "40469db1c756aafcba1f67440541a1ad1e7951f4010723a426094dd57b1eadeb"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "1b91e3944e0ee7215fc55934196e7443f5a436cd08edf8d680a5f413eb41cc2b"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "00dbf96f09d605295a5c24451074b1916716cc371a743d05891eae741054a4bf"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "3b513868db48f2974c94a106081a2ba597fcbeea1f805297f8e988302c1db96a"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "ec50016d303a617fe78c6b84ec097b8ffa42a4810d3e2b6658c5a1fdd5d73c1f"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "5bcd6dfb010ec79bf4342a900e132e1f76f7fd44b35aed6fd7e564fe606ecc2d"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "d11c4e720e645856e7c2fa0be2c22a908cfe50efc3d33d7927374c95569fb9e2"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "0f160e30abaa8720ea6046393708b30f8a77618bf87b5a06fbb6679a1a75adcc"
+      },
+      {
+        "path": "packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
+        "sha256": "4bad838889d7149625d6edae5f856886d7e42023ee4ac46a367de2c88c220653"
+      }
+    ],
+    "dirty": true
   },
   "runtime": {
     "bun": "1.4.2",
@@ -47,18 +139,18 @@
   "artifacts": [
     {
       "path": "card-density.json",
-      "sha256": "041bb234c4ee61de12e33f5fb68de3833ae25c2b90735b6cc7911b32419a93be",
+      "sha256": "706e2f82c4c1187152d057067fabc424607a71da64f5fc25bd54a695a0a58ad1",
       "bytes": 146
     },
     {
       "path": "files-panel-chrome-dark.png",
-      "sha256": "e4ef0250c5aa33437def31f9445106403a720af6669899a0b61c9025d089d4c4",
-      "bytes": 27491
+      "sha256": "b7c37e24e5421ffde2b40b2c6109c49009edf7a218fc70ae3210b24c411af478",
+      "bytes": 25251
     },
     {
       "path": "files-panel-chrome-light.png",
-      "sha256": "1a0d2e35984f61650a8839b64f7e178e2799762fdc770f4a2f263cf8f01e73bd",
-      "bytes": 30448
+      "sha256": "5b9472e715aba7e01a71d2c512a3e508b1536cad34b7e32562f69b3f6791a1f5",
+      "bytes": 27956
     },
     {
       "path": "host.css",
@@ -72,7 +164,7 @@
     },
     {
       "path": "panel-chrome.json",
-      "sha256": "ac5984a7b4b4cfd33677d1764f74358054f97230febb89c63b766fb590c975d3",
+      "sha256": "6a19be9a44e592a944ee4859a2cd9ca9002c5fe4382e8fea7e64a8e5d7d6f43d",
       "bytes": 341
     }
   ],

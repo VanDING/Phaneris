@@ -24,7 +24,6 @@ import {
   type ThemeOverrides,
   type ThemePreferenceMode,
   type ThemePreferences,
-  type ThemeUiScale,
   type PresetTheme,
 } from '@config/theme'
 import { compileThemeInBrowser } from '@phaneris/ui/theme-compiler'
@@ -42,12 +41,9 @@ interface ThemeContextType {
   mode: ThemeMode
   colorTheme: string
   font: FontFamily
-  /** Interface scale; 1, 1.1 or 1.25. Applied as --ui-scale on the root. */
-  uiScale: ThemeUiScale
   setMode: (mode: ThemeMode) => void
   setColorTheme: (theme: string) => void
   setFont: (font: FontFamily) => void
-  setUiScale: (scale: ThemeUiScale) => void
 
   activeWorkspaceId: string | null
   workspaceColorTheme: string | null
@@ -205,8 +201,7 @@ export function ThemeProvider({
       mode: defaultMode,
       colorTheme: defaultColorTheme,
       font: defaultFont,
-      uiScale: 1,
-    }
+        }
   ))
   const preferencesRef = useRef(preferences)
   const preferenceGeneration = useRef(0)
@@ -231,7 +226,6 @@ export function ThemeProvider({
   const [userThemeRevision, setUserThemeRevision] = useState(0)
 
   const { mode, colorTheme, font } = preferences
-  const uiScale: ThemeUiScale = preferences.uiScale ?? 1
   const resolvedMode = mode === 'system' ? systemPreference : mode
   const effectiveColorTheme = previewColorTheme ?? workspaceColorTheme ?? colorTheme
   const effectiveColorThemeSource: 'preview' | 'workspace' | 'app' =
@@ -365,9 +359,6 @@ export function ThemeProvider({
     persistPreferences({ font: nextFont })
   }, [persistPreferences])
 
-  const setUiScale = useCallback((nextScale: ThemeUiScale) => {
-    persistPreferences({ uiScale: nextScale })
-  }, [persistPreferences])
 
   // Workspace theme selection is loaded with a request generation so a slow
   // response from the previous workspace can never overwrite the active one.
@@ -585,8 +576,7 @@ export function ThemeProvider({
       : resolvedTheme
     // One knob for control geometry and type. --reading-scale stays separate so
     // enlarging the UI never reflows the reading column.
-    root.style.setProperty('--ui-scale', String(uiScale))
-    root.dataset.themeDepth = effectiveVisualTheme.depth ?? 'elevated'
+      root.dataset.themeDepth = effectiveVisualTheme.depth ?? 'elevated'
     root.dataset.themeDensity = effectiveVisualTheme.density ?? 'comfortable'
     const styleId = 'craft-theme-overrides'
     let styleElement = document.getElementById(styleId) as HTMLStyleElement | null
@@ -602,7 +592,7 @@ export function ThemeProvider({
     window.dispatchEvent(new CustomEvent('craft-theme-change', {
       detail: { ...snapshot, id: snapshot.appliedId, mode: snapshot.actualMode },
     }))
-  }, [actualMode, font, isDark, isScenic, loadedTheme, resolvedMode, resolvedTheme, snapshot, systemPreference, uiScale])
+  }, [actualMode, font, isDark, isScenic, loadedTheme, resolvedMode, resolvedTheme, snapshot, systemPreference])
 
   useEffect(() => {
     const setTitleBarOverlay = window.electronAPI?.setTitleBarOverlay
@@ -627,8 +617,6 @@ export function ThemeProvider({
     setMode,
     setColorTheme,
     setFont,
-    uiScale,
-    setUiScale,
     activeWorkspaceId,
     workspaceColorTheme,
     setWorkspaceColorTheme,
@@ -670,8 +658,6 @@ export function ThemeProvider({
     resolvedTheme,
     setColorTheme,
     setFont,
-    uiScale,
-    setUiScale,
     setMode,
     setWorkspaceColorTheme,
     shikiConfig,

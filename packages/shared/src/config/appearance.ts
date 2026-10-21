@@ -16,7 +16,7 @@ import { mergeDecisionLayerSettings, normalizeDecisionLayerSettings, type Decisi
 
 import { normalizeImageGenerationSettings, type ImageGenerationSettings } from './image-generation.ts';
 
-import { BUILTIN_THEMES, DEFAULT_THEME_FILE, isBuiltinThemeId, normalizeBuiltinThemeId, DEFAULT_THEME_PREFERENCES, isValidUserThemeId, resolveTheme, type ThemeOverrides, type ThemeFile, type PresetTheme, type ThemePreferences, type ThemeUiScale, type ThemeSummary } from './theme.ts';
+import { BUILTIN_THEMES, DEFAULT_THEME_FILE, isBuiltinThemeId, normalizeBuiltinThemeId, DEFAULT_THEME_PREFERENCES, isValidUserThemeId, resolveTheme, type ThemeOverrides, type ThemeFile, type PresetTheme, type ThemePreferences, type ThemeSummary } from './theme.ts';
 import type { ThemeDiagnostic } from './theme-manifest.ts';
 
 import { type NetworkProxySettings } from './types.ts';
@@ -681,13 +681,7 @@ export function getThemePreferences(): ThemePreferences {
     font: config?.themeFont === 'theme' || config?.themeFont === 'inter' || config?.themeFont === 'system'
       ? config.themeFont
       : DEFAULT_THEME_PREFERENCES.font,
-    uiScale: normalizeUiScale(config?.uiScale),
   };
-}
-
-/** Unknown or legacy values fall back to 1 rather than inventing a scale. */
-function normalizeUiScale(value: unknown): ThemeUiScale {
-  return value === 1.1 || value === 1.25 || value === 1 ? value : 1;
 }
 
 /** Persist all theme preferences as one atomic config update. */
@@ -700,7 +694,6 @@ export function setThemePreferences(preferences: ThemePreferences): ThemePrefere
     font: preferences.font === 'theme' || preferences.font === 'inter' || preferences.font === 'system'
       ? preferences.font
       : DEFAULT_THEME_PREFERENCES.font,
-    uiScale: normalizeUiScale(preferences.uiScale),
   };
 
   const config = loadStoredConfig();
@@ -708,7 +701,6 @@ export function setThemePreferences(preferences: ThemePreferences): ThemePrefere
   config.themeMode = normalized.mode;
   config.colorTheme = normalized.colorTheme;
   config.themeFont = normalized.font;
-  config.uiScale = normalized.uiScale;
   saveConfig(config);
   return normalized;
 }

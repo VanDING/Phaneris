@@ -1482,7 +1482,6 @@
   "settings.appearance.fontTheme": "テーマ",
   "settings.appearance.iconHeader": "アイコン",
   "settings.appearance.interface": "インターフェース",
-  "settings.appearance.interfaceScale": "表示スケール",
   "settings.appearance.kanbanBoard": "カンバンボード",
   "settings.appearance.kanbanBoardDesc": "ボードの列の色と動きをカスタマイズします",
   "settings.appearance.kanbanColumnColor": "{{column}}の色",

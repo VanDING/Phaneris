@@ -326,7 +326,7 @@ export function TaskTile({
           </div>
         )}
 
-        <div data-tile-row className="mt-2 flex items-center justify-between gap-2 text-meta">
+        <div data-tile-row className="mt-2.5 flex items-center justify-between gap-2 border-t border-border/50 pt-2 text-meta">
           {task.model ? <ModelChip model={task.model} /> : <span />}
           {(relativeTime || hasMessages) && (
             <div className="flex shrink-0 items-center gap-2 text-meta text-text-secondary">
