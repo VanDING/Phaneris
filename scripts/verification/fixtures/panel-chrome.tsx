@@ -19,7 +19,8 @@ import { FilesPanel } from '@/components/content-panels/FilesPanel'
 import { DndContext } from '@dnd-kit/core'
 import { KanbanColumn } from '@/components/app-shell/kanban/KanbanColumn'
 import { KANBAN_COLUMNS } from '@/components/app-shell/kanban/status-column'
-import type { KanbanColumnColor } from '@/hooks/useKanbanColumnColors'
+import { makeColumnColor, type KanbanColumnColor } from '@/hooks/useKanbanColumnColors'
+import { PROJECT_COLOR_PALETTE } from '@/utils/project-colors'
 import type { KanbanTask } from '@/components/app-shell/kanban/types'
 import type { SessionStatus } from '@/config/session-status-config'
 import { AppShellProvider, type AppShellContextType } from '@/context/AppShellContext'
@@ -155,6 +156,25 @@ const recordMove = (taskId: string, columnId: string) => {
           expandedTaskIds={new Set()}
           onCreateTask={() => {}}
         />
+      </div>
+      {/* Every project colour a user can pick, rendered exactly as a custom
+          column paints it (solid fill + computed onAccent). The workflow reads
+          the painted pair back and checks WCAG contrast: a user-chosen colour
+          must not be able to produce an unreadable column header. */}
+      <div data-color-swatches className="flex flex-wrap gap-2 px-3 pb-3">
+        {PROJECT_COLOR_PALETTE.map(color => {
+          const resolved = makeColumnColor(color)
+          return (
+            <span
+              key={color}
+              data-swatch={color}
+              className="rounded-shape-sm px-2 py-1 text-meta font-medium"
+              style={{ backgroundColor: resolved.solid, color: resolved.onAccent }}
+            >
+              {color}
+            </span>
+          )
+        })}
       </div>
     </DndContext>
   )

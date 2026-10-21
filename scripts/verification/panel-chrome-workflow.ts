@@ -285,6 +285,43 @@ await verificationWorkflow('panel-chrome', async run => {
       }
     })
 
+    await check('pc13-project-colours-stay-readable', async () => {
+      // A custom column paints its header with the user's colour and a computed
+      // onAccent. Every colour in the palette must clear 4.5:1 as rendered; the
+      // audit's board failed this at 2.15:1 with a hard-coded white.
+      const swatches = await page.evaluate(() => {
+        const canvas = document.createElement('canvas')
+        canvas.width = canvas.height = 1
+        const context2d = canvas.getContext('2d', { willReadFrequently: true })!
+        const rgba = (value: string): [number, number, number] => {
+          context2d.clearRect(0, 0, 1, 1)
+          context2d.fillStyle = '#000'
+          context2d.fillStyle = value
+          context2d.fillRect(0, 0, 1, 1)
+          const [r, g, b] = context2d.getImageData(0, 0, 1, 1).data
+          return [r!, g!, b!]
+        }
+        const luminance = ([r, g, b]: [number, number, number]) => {
+          const channel = (value: number) => {
+            const c = value / 255
+            return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+          }
+          return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
+        }
+        return [...document.querySelectorAll<HTMLElement>('[data-swatch]')].map(element => {
+          const style = getComputedStyle(element)
+          const a = luminance(rgba(style.color))
+          const b = luminance(rgba(style.backgroundColor))
+          const [light, dark] = a >= b ? [a, b] : [b, a]
+          return { color: element.dataset.swatch ?? '', ratio: Math.round(((light + 0.05) / (dark + 0.05)) * 100) / 100 }
+        })
+      })
+      assert(swatches.length >= 8, `expected the whole project palette, measured ${swatches.length}`)
+      const failing = swatches.filter(swatch => swatch.ratio < 4.5)
+      assert.equal(failing.length, 0,
+        `project colours below 4.5:1 as rendered: ${JSON.stringify(failing)}`)
+    })
+
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))
