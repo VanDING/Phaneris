@@ -23,6 +23,8 @@ import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
 const CHROME_ROW_MAX_PX = 36
 /** Total chrome above content: workbench strip + panel row, both at 34px. */
 const CHROME_BUDGET_PX = 75
+/** A resting card is three rows; measured 75px, frozen at 96 to catch a fourth row. */
+const CARD_HEIGHT_BUDGET_PX = 96
 
 await verificationWorkflow('panel-chrome', async run => {
   const root = resolve(import.meta.dir, '../..')
@@ -145,6 +147,9 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.equal(await page.locator('[data-chrome-row="files"] [role="tab"][tabindex="0"]').count(), 1,
         'a tablist must expose exactly one tab stop')
       await page.keyboard.press('ArrowRight')
+      // Roving focus moves on the next frame; wait for the state, not the clock.
+      await page.waitForFunction(() => document.activeElement?.getAttribute('role') === 'tab'
+        && document.activeElement?.getAttribute('aria-selected') === 'true', undefined, { timeout: 2_000 })
       const focused = await page.evaluate(() => {
         const element = document.activeElement as HTMLElement | null
         return {
@@ -156,6 +161,10 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.equal(focused.role, 'tab', 'ArrowRight must move focus to the next tab')
       assert.equal(focused.selected, 'true', 'selection follows focus in this tablist')
       await page.keyboard.press('Home')
+      await page.waitForFunction(() => {
+        const element = document.activeElement as HTMLElement | null
+        return element?.getAttribute('role') === 'tab' && element.textContent?.trim() === 'Browse'
+      }, undefined, { timeout: 2_000 })
       const home = await page.evaluate(() => (document.activeElement as HTMLElement | null)?.getAttribute('aria-selected') ?? null)
       assert.equal(home, 'true', 'Home must return to the first tab and select it')
     })
@@ -207,6 +216,28 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.equal(observed.moves[0]!.to, 'backlog')
       assert.equal(observed.moves[0]!.taskId, 'done-0')
     })
+
+    await check('pc10-card-is-three-rows', async () => {
+      // The audit's card carried two dividers and up to seven rows of metadata.
+      // A resting card is meta / title / footer: three rows, no matter how much
+      // the tile could say.
+      const tile = page.locator('[data-board-fixture] [data-task-tile]').first()
+      const rows = await tile.locator('[data-tile-row]').count()
+      assert.equal(rows, 3, `a resting card paints ${rows} rows; the budget is 3 (meta, title, footer)`)
+      const box = await tile.boundingBox()
+      assert(box !== null, 'the first card has no layout box')
+      assert(box!.height <= CARD_HEIGHT_BUDGET_PX, `card height ${box!.height.toFixed(1)}px exceeds the ${CARD_HEIGHT_BUDGET_PX}px budget`)
+    })
+
+    const cardMetrics = await page.evaluate(() => {
+      const tile = document.querySelector('[data-board-fixture] [data-task-tile]')
+      if (!tile) return null
+      return {
+        height: Math.round(tile.getBoundingClientRect().height * 100) / 100,
+        rows: tile.querySelectorAll('[data-tile-row]').length,
+      }
+    })
+    run.json('card-density.json', { generatedAt: new Date().toISOString(), rowBudget: 3, heightBudgetPx: CARD_HEIGHT_BUDGET_PX, measured: cardMetrics })
 
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))

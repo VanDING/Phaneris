@@ -207,9 +207,15 @@ export function TaskTile({
       )}
 
       <div className="relative p-3 pl-3.5">
-        {(project || task.isFlagged) && (
-          // Right padding keeps the flag clear of the hover-revealed corner pencil.
-          <div className={cn('mb-1.5 flex items-center justify-between gap-2', onEdit && task.isFlagged && 'pr-7')}>
+        {(project || task.isFlagged || status) && (
+          // One meta row carries identity (project dot + name), state (status
+          // badge) and attention (flag). Status used to sit on its own line under
+          // the title, which made a resting card four rows of chrome before any
+          // content.
+          <div
+            data-tile-row
+            className={cn('mb-1.5 flex min-w-0 items-center gap-2', onEdit && task.isFlagged && 'pr-7')}
+          >
             {project ? (
               <span className="inline-flex min-w-0 items-center gap-1 text-meta font-medium text-text-secondary">
                 <span
@@ -220,7 +226,20 @@ export function TaskTile({
                 <span className="truncate">{project.name}</span>
               </span>
             ) : (
-              <span />
+              <span className="min-w-0 flex-1" />
+            )}
+            {status && (
+              onStatusChange && statuses && statuses.length > 0 ? (
+                <StatusPicker
+                  status={status}
+                  statuses={statuses}
+                  activeStateId={task.statusId}
+                  live={isLive}
+                  onSelect={onStatusChange}
+                />
+              ) : (
+                <StatusBadge status={status} live={isLive} />
+              )
             )}
             {task.isFlagged && (
               <Flag className="h-3.5 w-3.5 shrink-0 fill-info text-info-text" aria-hidden />
@@ -229,6 +248,7 @@ export function TaskTile({
         )}
 
         <div
+          data-tile-row
           className={cn(
             'text-body font-medium leading-snug line-clamp-2',
             // Strike done/cancelled by *status* (not column — placement ≠ status).
@@ -236,21 +256,6 @@ export function TaskTile({
           )}
         >
           {task.title}
-        </div>
-
-        <div className="mt-2">
-          {status &&
-            (onStatusChange && statuses && statuses.length > 0 ? (
-              <StatusPicker
-                status={status}
-                statuses={statuses}
-                activeStateId={task.statusId}
-                live={isLive}
-                onSelect={onStatusChange}
-              />
-            ) : (
-              <StatusBadge status={status} live={isLive} />
-            ))}
         </div>
 
         {(subtaskCount > 0 || onAddSubtask) && (
@@ -321,7 +326,7 @@ export function TaskTile({
           </div>
         )}
 
-        <div className="mt-2 flex items-center justify-between gap-2 text-meta">
+        <div data-tile-row className="mt-2 flex items-center justify-between gap-2 text-meta">
           {task.model ? <ModelChip model={task.model} /> : <span />}
           {(relativeTime || hasMessages) && (
             <div className="flex shrink-0 items-center gap-2 text-meta text-text-secondary">

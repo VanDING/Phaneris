@@ -21,6 +21,7 @@ import { KanbanColumn } from '@/components/app-shell/kanban/KanbanColumn'
 import { KANBAN_COLUMNS } from '@/components/app-shell/kanban/status-column'
 import type { KanbanColumnColor } from '@/hooks/useKanbanColumnColors'
 import type { KanbanTask } from '@/components/app-shell/kanban/types'
+import type { SessionStatus } from '@/config/session-status-config'
 import { AppShellProvider, type AppShellContextType } from '@/context/AppShellContext'
 import { loadedSessionsAtom, sessionAtomFamily, sessionMetaMapAtom } from '@/atoms/sessions'
 import { filesPanelViewAtom } from '@/atoms/content-panel-ui'
@@ -107,6 +108,18 @@ const doneTasks = Array.from({ length: 30 }, (_, index) => ({
   statusId: 'done',
   subtasks: [],
 })) as unknown as KanbanTask[]
+// A status renders the tile's meta row, so the chrome measurement sees a card in
+// its real shape rather than a title-only skeleton.
+const doneStatus = {
+  id: 'done',
+  label: 'Done',
+  category: 'closed',
+  resolvedColor: 'var(--accent)',
+  icon: null,
+  iconColorable: true,
+} as unknown as SessionStatus
+const statusesById = new Map([['done', doneStatus]])
+const statuses = [doneStatus]
 const successColor: KanbanColumnColor = { solid: 'var(--success)', tint: 'transparent', onAccent: 'var(--foreground)' }
 const neutralColor: KanbanColumnColor = { solid: 'var(--foreground-dimmed)', tint: 'transparent', onAccent: 'var(--foreground)' }
 
@@ -123,8 +136,8 @@ const recordMove = (taskId: string, columnId: string) => {
           color={successColor}
           tasks={doneTasks}
           projectsById={new Map()}
-          statusesById={new Map()}
-          statuses={[]}
+          statusesById={statusesById}
+          statuses={statuses}
           treatment="stripe"
           expandedTaskIds={new Set()}
           onCreateTask={() => {}}
@@ -136,8 +149,8 @@ const recordMove = (taskId: string, columnId: string) => {
           color={neutralColor}
           tasks={[]}
           projectsById={new Map()}
-          statusesById={new Map()}
-          statuses={[]}
+          statusesById={statusesById}
+          statuses={statuses}
           treatment="stripe"
           expandedTaskIds={new Set()}
           onCreateTask={() => {}}
