@@ -31,6 +31,8 @@ export interface StoredConfig {
   colorTheme?: string;  // ID of selected preset theme (e.g., 'dracula', 'nord'). Default: 'default'
   themeMode?: 'light' | 'dark' | 'system';
   themeFont?: 'theme' | 'inter' | 'system';
+  /** Interface scale: multiplies control geometry and type, not reading width. */
+  uiScale?: 1 | 1.1 | 1.25;
   // Auto-update
   dismissedUpdateVersion?: string;  // Version that user dismissed (skip notifications for this version)
   // Input settings

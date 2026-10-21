@@ -25,7 +25,7 @@ export const HeaderIconButton = forwardRef<HTMLButtonElement, HeaderIconButtonPr
         type="button"
         className={cn(
           "craft-icon-button header-icon-btn inline-flex items-center justify-center",
-          "h-7 w-7 shrink-0 titlebar-no-drag",
+          "size-control-sm shrink-0 titlebar-no-drag",
           "text-muted-foreground hover:text-foreground hover:bg-foreground/3",
           "data-[state=open]:text-foreground data-[state=open]:bg-foreground/3",
           "motion-interactive transition-[color,background-color,opacity,transform] active:scale-[var(--motion-scale-pressed)] ",

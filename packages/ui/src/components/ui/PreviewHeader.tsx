@@ -17,19 +17,19 @@ import { cn } from '../../lib/utils'
  * Badge variants using semantic colors
  */
 export const PREVIEW_BADGE_VARIANTS = {
-  edit: 'text-foreground/70',
-  write: 'text-foreground/70',
-  read: 'text-foreground/70',
-  bash: 'text-foreground/70',
-  grep: 'text-foreground/70',
-  glob: 'text-foreground/70',
-  blue: 'text-foreground/70',
-  amber: 'text-foreground/70',
-  orange: 'text-foreground/70',
-  green: 'text-foreground/70',
-  purple: 'text-foreground/70',
-  gray: 'text-foreground/70',
-  default: 'text-foreground/70',
+  edit: 'text-text-secondary',
+  write: 'text-text-secondary',
+  read: 'text-text-secondary',
+  bash: 'text-text-secondary',
+  grep: 'text-text-secondary',
+  glob: 'text-text-secondary',
+  blue: 'text-text-secondary',
+  amber: 'text-text-secondary',
+  orange: 'text-text-secondary',
+  green: 'text-text-secondary',
+  purple: 'text-text-secondary',
+  gray: 'text-text-secondary',
+  default: 'text-text-secondary',
 } as const
 
 export type PreviewBadgeVariant = keyof typeof PREVIEW_BADGE_VARIANTS

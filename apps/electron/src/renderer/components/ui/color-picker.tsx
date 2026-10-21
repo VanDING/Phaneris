@@ -79,12 +79,12 @@ export function ColorPicker({
           />
 
           <div className="flex items-center gap-2 px-0.5">
-            <span className="text-foreground/40 text-xs font-mono">#</span>
+            <span className="text-text-secondary text-meta font-mono">#</span>
             <HexColorInput
               color={displayColor}
               onChange={onChange}
               prefixed={false}
-              className="flex-1 bg-transparent text-sm font-mono outline-none rounded px-1.5 py-1 ring-1 ring-foreground/10 focus:ring-foreground/30 transition-shadow"
+              className="flex-1 bg-transparent text-body font-mono outline-none rounded px-1.5 py-1 ring-1 ring-foreground/10 focus:ring-foreground/30 transition-shadow"
               aria-label={t('common.hexValue')}
             />
           </div>
@@ -111,7 +111,7 @@ export function ColorPicker({
                     {isActive && (
                       <Check
                         className="h-3 w-3 text-white"
-                        strokeWidth={3}
+
                         style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.4))' }}
                       />
                     )}
@@ -125,7 +125,7 @@ export function ColorPicker({
             <button
               type="button"
               onClick={onClear}
-              className="craft-focus text-xs text-foreground/50 hover:text-foreground self-start mt-1"
+              className="craft-focus text-meta text-text-secondary hover:text-foreground self-start mt-1"
             >
               {clearLabel}
             </button>

@@ -85,7 +85,10 @@ export function MermaidPreviewOverlay({
       title={t('overlay.mermaidDiagram')}
       headerActions={headerActions}
     >
+      {/* Pan surface: a pointer-only gesture container. The diagram inside
+          carries the content; the container adds no semantics. */}
       <div
+        role="presentation"
         ref={containerRef}
         className="flex items-center justify-center select-none"
         onMouseDown={onMouseDown}

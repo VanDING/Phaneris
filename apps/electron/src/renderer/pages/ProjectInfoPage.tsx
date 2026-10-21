@@ -227,7 +227,7 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
       {project && (
         <Info_Page.Content>
           <Info_Page.Hero
-            avatar={<FolderKanban className="h-6 w-6 text-foreground/60" />}
+            avatar={<FolderKanban className="h-6 w-6 text-text-secondary" />}
             title={project.config.name}
             tagline={project.config.description ?? t('projectInfo.taglineFallback')}
           />
@@ -257,7 +257,7 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
               }
             >
               {projectSessions.length === 0 ? (
-                <div className="px-4 py-6 text-sm text-muted-foreground">
+                <div className="px-4 py-6 text-body text-muted-foreground">
                   {t('projectInfo.noSessions')}
                 </div>
               ) : (
@@ -266,7 +266,7 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
                     <li key={s.id} className="px-4 py-2">
                       <button
                         type="button"
-                        className="text-sm text-foreground hover:underline text-left"
+                        className="text-body text-foreground hover:underline text-left"
                         onClick={() => navigate(routes.view.allSessions(s.id))}
                       >
                         {s.name}
@@ -284,7 +284,7 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
               title={t('projectInfo.tabAssets')}
               actions={
                 <label
-                  className="inline-flex items-center gap-1 h-7 px-3 text-xs font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 h-7 px-3 text-meta font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors cursor-pointer"
                 >
                   <Upload className="h-3.5 w-3.5" />
                   {t('projectInfo.uploadAssets')}
@@ -302,7 +302,7 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
               }
             >
               {assets.length === 0 ? (
-                <div className="px-4 py-6 text-sm text-muted-foreground">
+                <div className="px-4 py-6 text-body text-muted-foreground">
                   {t('projectInfo.noAssets')}
                 </div>
               ) : (
@@ -310,8 +310,8 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
                   {assets.map((a) => (
                     <li key={a.filename} className="px-4 py-2 flex items-center gap-3">
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm truncate">{a.filename}</div>
-                        <div className="text-xs text-foreground/50">
+                        <div className="text-body truncate">{a.filename}</div>
+                        <div className="text-meta text-text-secondary">
                           {(a.sizeBytes / 1024).toFixed(1)} KB · {a.mimeType}
                         </div>
                       </div>
@@ -409,13 +409,13 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
               <Info_Table.Row label={t('common.slug')} value={project.config.slug} />
               <Info_Table.Row label={t('common.location')}>
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="flex-1 min-w-0 truncate font-mono text-xs">{project.folderPath}</span>
+                  <span className="flex-1 min-w-0 truncate font-mono text-meta">{project.folderPath}</span>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
                         type="button"
                         onClick={() => onOpenFile(project.folderPath)}
-                        className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded text-foreground/50 hover:text-foreground hover:bg-foreground/5 transition-colors"
+                        className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded text-text-secondary hover:text-foreground hover:bg-foreground/5 transition-colors"
                         aria-label={t('projectInfo.openLocation')}
                       >
                         <FolderOpen className="h-3.5 w-3.5" />
@@ -447,10 +447,10 @@ function TabButton({
       type="button"
       onClick={onClick}
       className={cn(
-        'px-3 py-1.5 text-sm rounded-t-md border-b-2',
+        'px-3 py-1.5 text-body rounded-t-md border-b-2',
         active
           ? 'border-foreground/80 text-foreground'
-          : 'border-transparent text-foreground/60 hover:text-foreground/80'
+          : 'border-transparent text-text-secondary hover:text-foreground/80'
       )}
     >
       {children}
@@ -469,9 +469,9 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="text-xs font-medium text-foreground/70 mb-1">{label}</div>
+      <div className="text-meta font-medium text-text-secondary mb-1">{label}</div>
       {children}
-      {hint && <div className="mt-1 text-xs text-foreground/50">{hint}</div>}
+      {hint && <div className="mt-1 text-meta text-text-secondary">{hint}</div>}
     </label>
   )
 }

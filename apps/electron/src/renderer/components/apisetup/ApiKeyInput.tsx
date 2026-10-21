@@ -31,6 +31,7 @@ import {
 } from "./submit-helpers"
 
 import type { CustomEndpointApi, CustomEndpointConfig } from '@config/llm-connections'
+import { useInitialFocus } from '@phaneris/ui'
 
 export type ApiKeyStatus = 'idle' | 'validating' | 'success' | 'error'
 
@@ -219,6 +220,7 @@ export function ApiKeyInput({
   const initialPreset = allowedPresets && !presets.some(p => p.key === requestedPreset) ? defaultPreset.key : requestedPreset
 
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [apiKey, setApiKey] = useState(initialValues?.apiKey ?? '')
   const [showValue, setShowValue] = useState(false)
   const [baseUrl, setBaseUrl] = useState(initialValues?.baseUrl ?? defaultPreset.url)
@@ -502,7 +504,7 @@ export function ApiKeyInput({
               status === 'error' && "focus-visible:ring-destructive"
             )}
             disabled={isDisabled}
-            autoFocus
+            ref={initialFocusRef}
           />
           <button
             type="button"
@@ -528,7 +530,7 @@ export function ApiKeyInput({
             <DropdownMenuTrigger
               data-testid="api-key-preset-trigger"
               disabled={isDisabled}
-              className="flex h-6 items-center gap-1 rounded-shape-md bg-background shadow-minimal pl-2.5 pr-2 text-label font-medium text-foreground/50 hover:bg-foreground/5 hover:text-foreground focus:outline-none"
+              className="flex h-6 items-center gap-1 rounded-shape-md bg-background shadow-minimal pl-2.5 pr-2 text-label font-medium text-text-secondary hover:bg-foreground/5 hover:text-foreground focus:outline-none"
             >
               {presets.find(p => p.key === activePreset)?.label}
               <ChevronDown className="size-2.5 opacity-50" />
@@ -586,17 +588,17 @@ export function ApiKeyInput({
                 disabled={isDisabled}
                 onClick={() => setCustomApi(value)}
                 className={cn(
-                  "flex-1 py-1.5 text-label font-medium transition-colors",
+                  "craft-control flex-1 py-1.5 text-label font-medium transition-colors",
                   customApi === value
                     ? "bg-background text-foreground shadow-minimal"
-                    : "text-foreground/50 hover:text-foreground/70"
+                    : "text-text-secondary hover:text-foreground"
                 )}
               >
                 {label}
               </button>
             ))}
           </div>
-          <p className="text-xs text-foreground/30">
+          <p className="text-meta text-text-secondary">
             {isLegacyCustomResponses
               ? 'This connection used the retired custom Responses adapter. Saving migrates it to OpenAI Compatible.'
               : 'Most third-party APIs (Ollama, vLLM, DashScope) use OpenAI Compatible.'}
@@ -625,10 +627,10 @@ export function ApiKeyInput({
                   disabled={isDisabled}
                   onClick={() => setBedrockAuthMethod(value)}
                   className={cn(
-                    "flex-1 py-1.5 text-label font-medium transition-colors",
+                    "craft-control flex-1 py-1.5 text-label font-medium transition-colors",
                     bedrockAuthMethod === value
                       ? "bg-background text-foreground shadow-minimal"
-                      : "text-foreground/50 hover:text-foreground/70"
+                      : "text-text-secondary hover:text-foreground"
                   )}
                 >
                   {label}
@@ -641,7 +643,7 @@ export function ApiKeyInput({
           {bedrockAuthMethod === 'iam_credentials' && (
             <div className="space-y-3">
               <div className="space-y-1.5">
-                <Label htmlFor="aws-access-key-id" className="text-muted-foreground font-normal text-xs">
+                <Label htmlFor="aws-access-key-id" className="text-muted-foreground font-normal text-meta">
                   Access Key ID
                 </Label>
                 <div className={cn("rounded-md shadow-minimal transition-colors", "bg-foreground-2 focus-within:bg-background")}>
@@ -653,12 +655,12 @@ export function ApiKeyInput({
                     placeholder="AKIA..."
                     className="border-0 bg-transparent shadow-none"
                     disabled={isDisabled}
-                    autoFocus
+                    ref={initialFocusRef}
                   />
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="aws-secret-key" className="text-muted-foreground font-normal text-xs">
+                <Label htmlFor="aws-secret-key" className="text-muted-foreground font-normal text-meta">
                   Secret Access Key
                 </Label>
                 <div className={cn("relative rounded-md shadow-minimal transition-colors", "bg-foreground-2 focus-within:bg-background")}>
@@ -682,8 +684,8 @@ export function ApiKeyInput({
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="aws-session-token" className="text-muted-foreground font-normal text-xs">
-                  Session Token <span className="text-foreground/30">· optional</span>
+                <Label htmlFor="aws-session-token" className="text-muted-foreground font-normal text-meta">
+                  Session Token <span className="text-text-secondary">· optional</span>
                 </Label>
                 <div className={cn("rounded-md shadow-minimal transition-colors", "bg-foreground-2 focus-within:bg-background")}>
                   <Input
@@ -703,15 +705,15 @@ export function ApiKeyInput({
           {/* Environment info */}
           {bedrockAuthMethod === 'environment' && (
             <div className="rounded-md bg-foreground-2 p-3">
-              <p className="text-xs text-foreground/50">
-                Uses your existing AWS credential chain — <code className="text-foreground/70">~/.aws/credentials</code>, <code className="text-foreground/70">AWS_PROFILE</code>, IAM roles, SSO sessions, and environment variables.
+              <p className="text-meta text-text-secondary">
+                Uses your existing AWS credential chain — <code className="text-text-secondary">~/.aws/credentials</code>, <code className="text-text-secondary">AWS_PROFILE</code>, IAM roles, SSO sessions, and environment variables.
               </p>
             </div>
           )}
 
           {/* AWS Region */}
           <div className="space-y-1.5">
-            <Label htmlFor="aws-region" className="text-muted-foreground font-normal text-xs">
+            <Label htmlFor="aws-region" className="text-muted-foreground font-normal text-meta">
               AWS Region
             </Label>
             <div className={cn("rounded-md shadow-minimal transition-colors", "bg-foreground-2 focus-within:bg-background")}>
@@ -735,13 +737,13 @@ export function ApiKeyInput({
           {piModelsLoading ? (
             <div className="flex items-center gap-2 py-3 text-muted-foreground">
               <Loader2 className="size-3.5 animate-spin" />
-              <span className="text-xs">{t("apiSetup.loadingModels")}</span>
+              <span className="text-meta">{t("apiSetup.loadingModels")}</span>
             </div>
           ) : (
             <>
                 <div className="space-y-1.5">
-                  <Label className="text-muted-foreground font-normal text-xs">
-                    Default model <span className="text-foreground/30">· main conversations</span>
+                  <Label className="text-muted-foreground font-normal text-meta">
+                    Default model <span className="text-text-secondary">· main conversations</span>
                   </Label>
                   <button
                     type="button"
@@ -759,7 +761,7 @@ export function ApiKeyInput({
                       }
                     }}
                     className={cn(
-                      "flex h-9 w-full items-center justify-between rounded-md px-3 text-sm",
+                      "flex h-9 w-full items-center justify-between rounded-md px-3 text-body",
                       "bg-foreground-2 shadow-minimal transition-colors",
                       "hover:bg-background focus:outline-none focus:bg-background",
                       isDisabled && "opacity-50 pointer-events-none"
@@ -772,8 +774,8 @@ export function ApiKeyInput({
                   </button>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-muted-foreground font-normal text-xs">
-                    Utility model <span className="text-foreground/30">· automatic by default</span>
+                  <Label className="text-muted-foreground font-normal text-meta">
+                    Utility model <span className="text-text-secondary">· automatic by default</span>
                   </Label>
                   <button
                     type="button"
@@ -791,7 +793,7 @@ export function ApiKeyInput({
                       }
                     }}
                     className={cn(
-                      "flex h-9 w-full items-center justify-between rounded-md px-3 text-sm",
+                      "flex h-9 w-full items-center justify-between rounded-md px-3 text-body",
                       "bg-foreground-2 shadow-minimal transition-colors",
                       "hover:bg-background focus:outline-none focus:bg-background",
                       isDisabled && "opacity-50 pointer-events-none"
@@ -807,7 +809,10 @@ export function ApiKeyInput({
                 </div>
               {openTier && tierDropdownPosition && (
                 <>
+                  {/* Click-outside scrim: Escape closes the same dropdown, so this
+                      element adds no semantics of its own. */}
                   <div
+                    role="presentation"
                     className="fixed inset-0 z-floating-backdrop"
                     onClick={() => { setOpenTier(null); setTierFilter('') }}
                   />
@@ -829,8 +834,7 @@ export function ApiKeyInput({
                           value={tierFilter}
                           onValueChange={setTierFilter}
                           placeholder={t("apiSetup.searchModels")}
-                          autoFocus
-                          className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground placeholder:select-none"
+                          className="w-full bg-transparent text-body outline-none placeholder:text-muted-foreground placeholder:select-none"
                         />
                       </div>
                       <CommandPrimitive.List className="max-h-[240px] overflow-y-auto p-1">
@@ -874,7 +878,7 @@ export function ApiKeyInput({
                               <div className="flex items-center gap-2 min-w-0">
                                 <span className="truncate">{model.name}</span>
                                 {model.reasoning && (
-                                  <span className="text-micro text-foreground/30 shrink-0">reasoning</span>
+                                  <span className="text-micro text-text-secondary shrink-0">reasoning</span>
                                 )}
                               </div>
                               <Check className={cn(
@@ -891,7 +895,7 @@ export function ApiKeyInput({
                 </>
               )}
               {modelError && (
-                <p className="text-xs text-destructive">{modelError}</p>
+                <p className="text-meta text-destructive">{modelError}</p>
               )}
             </>
           )}
@@ -900,7 +904,7 @@ export function ApiKeyInput({
         <div className="space-y-2">
           <Label htmlFor="connection-default-model" className="text-muted-foreground font-normal">
             Default Model{' '}
-            <span className="text-foreground/30">
+            <span className="text-text-secondary">
               · optional
             </span>
           </Label>
@@ -923,13 +927,13 @@ export function ApiKeyInput({
             />
           </div>
           {modelError && (
-            <p className="text-xs text-destructive">{modelError}</p>
+            <p className="text-meta text-destructive">{modelError}</p>
           )}
-          <p className="text-xs text-foreground/30">
+          <p className="text-meta text-text-secondary">
             Models are discovered automatically when the endpoint supports listing. Enter a comma-separated list only as a fallback; the first model is the default.
           </p>
           {(activePreset === 'custom' || !activePreset) && (
-            <p className="text-xs text-foreground/30">
+            <p className="text-meta text-text-secondary">
               Use provider-specific model IDs when manual configuration is needed.
             </p>
           )}
@@ -938,7 +942,7 @@ export function ApiKeyInput({
 
       {/* Error message */}
       {status === 'error' && errorMessage && (
-        <p className="text-sm text-destructive">{errorMessage}</p>
+        <p className="text-body text-destructive">{errorMessage}</p>
       )}
     </form>
   )

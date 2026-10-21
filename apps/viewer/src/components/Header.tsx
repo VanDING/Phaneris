@@ -40,7 +40,7 @@ export function Header({ hasSession, sessionTitle, isDark, onToggleTheme, onClea
       {/* Session title - centered */}
       <div className="flex justify-center">
         {sessionTitle && (
-          <span className="text-sm font-semibold text-foreground truncate max-w-md">
+          <span className="text-body font-semibold text-foreground truncate max-w-md">
             {sessionTitle}
           </span>
         )}

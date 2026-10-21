@@ -29,9 +29,9 @@ import { motionSpring } from '@phaneris/ui/motion'
 import { useScrollBehavior } from '@phaneris/ui/scroll-intent'
 
 const KIND_DOTS: Record<DiffKind, string> = {
-  add: 'bg-emerald-500',
-  del: 'bg-rose-500',
-  mix: 'bg-amber-500',
+  add: 'bg-success',
+  del: 'bg-destructive',
+  mix: 'bg-info',
 }
 
 /** Localized label for a diff kind — used as the dot's tooltip (the visual
@@ -53,9 +53,9 @@ function SectionStats({ changes }: { changes: import('@phaneris/ui').FileChange[
   if (additions === 0 && deletions === 0) return null
   return (
     <span className="shrink-0 text-meta font-medium tabular-nums">
-      <span className="text-emerald-600 dark:text-emerald-400">+{additions}</span>
-      <span className="mx-0.5 text-muted-foreground/40">/</span>
-      <span className="text-rose-600 dark:text-rose-400">-{deletions}</span>
+      <span className="text-success-text">+{additions}</span>
+      <span className="mx-0.5 text-text-secondary">/</span>
+      <span className="text-destructive-text">-{deletions}</span>
     </span>
   )
 }
@@ -190,7 +190,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
           </div>
         </LayoutGroup>
         {styleHint && (
-          <span className="hidden max-w-40 truncate text-micro text-muted-foreground/70 @min-[520px]/files:block" title={styleHint}>
+          <span className="hidden max-w-40 truncate text-micro text-text-secondary @min-[520px]/files:block" title={styleHint}>
             {styleHint}
           </span>
         )}
@@ -224,8 +224,8 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
             </span>
             {(totalStats.additions > 0 || totalStats.deletions > 0) && (
               <span className="inline-flex items-center gap-1.5">
-                <span className="text-emerald-600 dark:text-emerald-400">+{totalStats.additions}</span>
-                <span className="text-rose-600 dark:text-rose-400">-{totalStats.deletions}</span>
+                <span className="text-success-text">+{totalStats.additions}</span>
+                <span className="text-destructive-text">-{totalStats.deletions}</span>
               </span>
             )}
           </div>
@@ -290,7 +290,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
                         >
                           {change.error ? (
                             <div className="px-4 py-4">
-                              <p className="text-sm whitespace-pre-wrap break-words text-destructive">
+                              <p className="text-body whitespace-pre-wrap break-words text-destructive">
                                 {change.toolType} failed: {change.error}
                               </p>
                             </div>

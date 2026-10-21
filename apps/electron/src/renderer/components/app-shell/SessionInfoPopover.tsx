@@ -65,7 +65,7 @@ export function SessionInfoPopover({
           }}
         >
           <DrawerHeader className="border-b border-border/50 px-4 py-3 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-left">
-            <DrawerTitle className="text-sm font-medium">{t('chat.sessionInfo')}</DrawerTitle>
+            <DrawerTitle className="text-body font-medium">{t('chat.sessionInfo')}</DrawerTitle>
           </DrawerHeader>
           {/* A grid row with a zero minimum gives the content a definite height
               inside this max-height-capped drawer. As a plain `flex-1` item the
@@ -140,15 +140,15 @@ function SessionInfoPopoverContent({ sessionId, sessionFolderPath }: { sessionId
   return (
     <div className="h-full min-h-0 flex flex-col">
       <div className="shrink-0 p-3 border-b border-border/50">
-        <label className="text-xs font-medium text-muted-foreground block mb-1.5 select-none">
+        <label className="text-meta font-medium text-muted-foreground block mb-1.5 select-none">
           {t("chat.title")}
         </label>
-        <div className="rounded-lg bg-foreground-2 has-[:focus]:bg-background shadow-minimal transition-colors">
+        <div className="craft-field-shell rounded-lg bg-foreground-2 has-[:focus]:bg-background shadow-minimal transition-colors">
           <Input
             value={name}
             onChange={handleNameChange}
             placeholder={t("chat.titlePlaceholder")}
-            className="h-9 py-2 text-sm border-0 shadow-none bg-transparent focus-visible:ring-0"
+            className="h-9 py-2 text-body border-0 shadow-none bg-transparent"
           />
         </div>
       </div>

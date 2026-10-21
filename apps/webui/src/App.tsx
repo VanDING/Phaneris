@@ -42,7 +42,7 @@ function LoadingScreen() {
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-foreground/50 gap-3">
+    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
       <div className="animate-spin w-6 h-6 border-2 border-current border-t-transparent rounded-full" />
       <p className="text-body">{t("webui.connectingToServer")}</p>
     </div>
@@ -53,13 +53,13 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-foreground/50 gap-3">
-      <p className="text-base font-medium text-destructive">{t("webui.connectionFailed")}</p>
+    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
+      <p className="text-reading font-medium text-destructive">{t("webui.connectionFailed")}</p>
       <p className="text-body max-w-md text-center">{message}</p>
       <div className="flex gap-2 mt-2">
         <button
           onClick={onRetry}
-          className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-foreground/70 cursor-pointer"
+          className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
         >
           {t("common.retry")}
         </button>
@@ -69,7 +69,7 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
               window.location.href = '/login'
             })
           }}
-          className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-foreground/70 cursor-pointer"
+          className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
         >
           {t("webui.logOut")}
         </button>

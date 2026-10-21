@@ -87,7 +87,7 @@ function ActionShortcutRow({ actionId }: { actionId: ActionId }) {
 
   return (
     <div className="group flex items-center justify-between py-1.5">
-      <span className="text-sm">{label}</span>
+      <span className="text-body">{label}</span>
       <div className="flex-1 mx-3 h-px bg-[repeating-linear-gradient(90deg,currentColor_0_2px,transparent_2px_8px)] opacity-0 group-hover:opacity-15" />
       <div className="flex items-center gap-1">
         {keys.map((key, keyIndex) => (
@@ -112,7 +112,7 @@ export default function ShortcutsPage() {
             {/* Registry-driven sections */}
             {Object.entries(actionsByCategory).map(([category, actions]) => (
               <div key={category}>
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 pb-1.5 border-b border-border/50">
+                <h3 className="text-meta font-semibold text-muted-foreground uppercase tracking-wide mb-2 pb-1.5 border-b border-border/50">
                   {category}
                 </h3>
                 <div className="space-y-0.5">
@@ -126,7 +126,7 @@ export default function ShortcutsPage() {
             {/* Component-specific sections */}
             {componentSpecificSections.map((section) => (
               <div key={section.title}>
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 pb-1.5 border-b border-border/50">
+                <h3 className="text-meta font-semibold text-muted-foreground uppercase tracking-wide mb-2 pb-1.5 border-b border-border/50">
                   {section.title}
                 </h3>
                 <div className="space-y-0.5">
@@ -135,7 +135,7 @@ export default function ShortcutsPage() {
                       key={index}
                       className="group flex items-center justify-between py-1.5"
                     >
-                      <span className="text-sm">{shortcut.description}</span>
+                      <span className="text-body">{shortcut.description}</span>
                       <div className="flex-1 mx-3 h-px bg-[repeating-linear-gradient(90deg,currentColor_0_2px,transparent_2px_8px)] opacity-0 group-hover:opacity-15" />
                       <div className="flex items-center gap-1">
                         {shortcut.keys.map((key, keyIndex) => (

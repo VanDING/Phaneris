@@ -543,7 +543,7 @@ export function CalendarView() {
                 <button
                   type="button"
                   data-calendar-untimed-trigger
-                  className="craft-control hidden h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-text-secondary transition-colors hover:text-foreground @max-[900px]/panel:inline-flex"
+                  className="craft-control hidden h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-meta font-medium text-text-secondary transition-colors hover:text-foreground @max-[900px]/panel:inline-flex"
                 >
                   <CalendarOff className="h-3.5 w-3.5" />
                   {t('schedule.untimedCount', { count: untimedEntries.length })}
@@ -551,7 +551,7 @@ export function CalendarView() {
               </PopoverTrigger>
               <PopoverContent align="start" className="w-80 p-0">
                 <div className="border-b border-border/60 px-3 py-2">
-                  <div className="text-xs font-semibold">{t('schedule.untimedTitle')}</div>
+                  <div className="text-meta font-semibold">{t('schedule.untimedTitle')}</div>
                   <p className="pt-1 text-meta leading-snug text-text-secondary">{t('schedule.untimedHint')}</p>
                 </div>
                 <ScrollArea className="max-h-80">
@@ -566,13 +566,13 @@ export function CalendarView() {
             </Popover>
           )}
           <label className="relative hidden min-w-32 @min-[980px]/panel:block @min-[980px]/panel:w-44">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/35" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t('kanban.workItemSearch')}
-              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-xs outline-none focus:border-ring/60"
+              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-meta outline-none focus:border-ring/60"
             />
           </label>
         </div>
@@ -585,7 +585,7 @@ export function CalendarView() {
           >
             ‹
           </button>
-          <span className="text-sm font-semibold" data-calendar-title>{liveTitle}</span>
+          <span className="text-body font-semibold" data-calendar-title>{liveTitle}</span>
           <button
             type="button"
             onClick={() => controller.next()}
@@ -597,7 +597,7 @@ export function CalendarView() {
           <button
             type="button"
             onClick={() => controller.today()}
-            className="craft-control h-8 rounded-md border border-foreground/15 px-3 text-xs font-medium text-text-secondary transition-colors hover:text-foreground @max-[560px]/panel:hidden"
+            className="craft-control h-8 rounded-md border border-foreground/15 px-3 text-meta font-medium text-text-secondary transition-colors hover:text-foreground @max-[560px]/panel:hidden"
           >
             {t('common.today')}
           </button>
@@ -627,7 +627,7 @@ export function CalendarView() {
             className="gap-1.5"
             onClick={() => openCreate({ date: planDayKeyFromDate(new Date()) })}
           >
-            <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+            <Plus className="h-3.5 w-3.5" />
             <span className="@max-[940px]/panel:hidden">{t('schedule.newEntry')}</span>
           </Button>
           {/* Surface-injected close + fullscreen controls. */}

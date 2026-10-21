@@ -128,16 +128,16 @@ export function CredentialsStep({
         }
       >
         <div className="space-y-4">
-          <div className="rounded-xl bg-foreground-2 p-4 text-sm text-muted-foreground">
+          <div className="rounded-xl bg-foreground-2 p-4 text-body text-muted-foreground">
             <p>{t("onboarding.credentials.chatGPTInstructions")}</p>
           </div>
           {status === 'error' && errorMessage && (
-            <div className="rounded-lg bg-destructive/10 text-destructive text-sm p-3">
+            <div className="rounded-lg bg-destructive/10 text-destructive text-body p-3">
               {errorMessage}
             </div>
           )}
           {status === 'success' && (
-            <div className="rounded-lg bg-success/10 text-success text-sm p-3">
+            <div className="rounded-lg bg-success/10 text-success text-body p-3">
               {t("onboarding.credentials.chatGPTConnected")}
             </div>
           )}
@@ -168,34 +168,34 @@ export function CredentialsStep({
         }
       >
         <div className="space-y-4">
-          <div className="rounded-xl bg-foreground-2 p-4 text-sm text-muted-foreground">
+          <div className="rounded-xl bg-foreground-2 p-4 text-body text-muted-foreground">
             <p>{t("onboarding.credentials.connectOAuthInstructions")}</p>
             {copilotDeviceCode?.userCode && (
               <div className="mt-3 p-3 bg-background rounded-lg border border-border text-center">
-                <p className="text-xs text-muted-foreground mb-2">{t("onboarding.credentials.enterCodeOnGitHub")}</p>
-                <code className="text-lg font-mono font-bold tracking-widest">{copilotDeviceCode.userCode}</code>
+                <p className="text-meta text-muted-foreground mb-2">{t("onboarding.credentials.enterCodeOnGitHub")}</p>
+                <code className="text-title font-mono font-bold tracking-widest">{copilotDeviceCode.userCode}</code>
               </div>
             )}
             {copilotDeviceCode?.verificationUri && !copilotDeviceCode.userCode && !copilotDeviceCode.manualCodeRequested && (
               <div className="mt-3 p-3 bg-background rounded-lg border border-border text-center">
-                <p className="text-xs text-muted-foreground mb-2">
+                <p className="text-meta text-muted-foreground mb-2">
                   {t("onboarding.credentials.browserOpenedOAuth")}
                 </p>
                 <a
                   href={copilotDeviceCode.verificationUri}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-primary underline break-all hover:opacity-80"
+                  className="text-body text-primary underline break-all hover:opacity-80"
                 >
                   {copilotDeviceCode.verificationUri}
                 </a>
                 {copilotDeviceCode.instructions && (
-                  <p className="text-xs text-muted-foreground mt-2">{copilotDeviceCode.instructions}</p>
+                  <p className="text-meta text-muted-foreground mt-2">{copilotDeviceCode.instructions}</p>
                 )}
               </div>
             )}
             {copilotDeviceCode?.progressMessage && (
-              <p className="mt-3 text-xs text-muted-foreground">{copilotDeviceCode.progressMessage}</p>
+              <p className="mt-3 text-meta text-muted-foreground">{copilotDeviceCode.progressMessage}</p>
             )}
             {copilotDeviceCode?.manualCodeRequested && (
               <ManualCodeForm
@@ -205,12 +205,12 @@ export function CredentialsStep({
             )}
           </div>
           {status === 'error' && errorMessage && (
-            <div className="rounded-lg bg-destructive/10 text-destructive text-sm p-3">
+            <div className="rounded-lg bg-destructive/10 text-destructive text-body p-3">
               {errorMessage}
             </div>
           )}
           {status === 'success' && (
-            <div className="rounded-lg bg-success/10 text-success text-sm p-3">
+            <div className="rounded-lg bg-success/10 text-success text-body p-3">
               {t("onboarding.credentials.oauthConnected")}
             </div>
           )}
@@ -242,7 +242,7 @@ export function CredentialsStep({
       >
         <div className="space-y-4">
           {copilotDeviceCode ? (
-            <div className="rounded-xl bg-foreground-2 p-4 text-sm space-y-3">
+            <div className="rounded-xl bg-foreground-2 p-4 text-body space-y-3">
               <p className="text-muted-foreground text-center">
                 {t("onboarding.credentials.enterCodeOnGitHub")}
               </p>
@@ -250,31 +250,31 @@ export function CredentialsStep({
                 <button
                   type="button"
                   onClick={handleCopyCode}
-                  className="text-2xl font-mono font-bold tracking-widest text-foreground px-4 py-2 rounded-lg bg-background border border-border hover:bg-foreground-2 transition-colors cursor-pointer"
+                  className="text-display font-mono font-bold tracking-widest text-foreground px-4 py-2 rounded-lg bg-background border border-border hover:bg-foreground-2 transition-colors cursor-pointer"
                 >
                   {copilotDeviceCode.userCode}
                 </button>
-                <span className={`text-xs text-muted-foreground flex items-center gap-1 transition-opacity ${copiedCode ? 'opacity-100' : 'opacity-0'}`}>
+                <span className={`text-meta text-muted-foreground flex items-center gap-1 transition-opacity ${copiedCode ? 'opacity-100' : 'opacity-0'}`}>
                   <Check className="size-3" />
                   {t("onboarding.credentials.copiedToClipboard")}
                 </span>
               </div>
-              <p className="text-muted-foreground text-xs text-center">
+              <p className="text-muted-foreground text-meta text-center">
                 {t("onboarding.credentials.browserOpenedGitHub")}
               </p>
             </div>
           ) : (
-            <div className="rounded-xl bg-foreground-2 p-4 text-sm text-muted-foreground text-center">
+            <div className="rounded-xl bg-foreground-2 p-4 text-body text-muted-foreground text-center">
               <p>{t("onboarding.credentials.clickToSignInGitHub")}</p>
             </div>
           )}
           {status === 'error' && errorMessage && (
-            <div className="rounded-lg bg-destructive/10 text-destructive text-sm p-3 text-center">
+            <div className="rounded-lg bg-destructive/10 text-destructive text-body p-3 text-center">
               {errorMessage}
             </div>
           )}
           {status === 'success' && (
-            <div className="rounded-lg bg-success/10 text-success text-sm p-3 text-center">
+            <div className="rounded-lg bg-success/10 text-success text-body p-3 text-center">
               {t("onboarding.credentials.copilotConnected")}
             </div>
           )}
@@ -411,7 +411,7 @@ function ManualCodeForm({
 
   return (
     <div className="mt-3 p-3 bg-background rounded-lg border border-border space-y-2">
-      <p className="text-xs text-muted-foreground">{t("onboarding.credentials.pasteOAuthCode")}</p>
+      <p className="text-meta text-muted-foreground">{t("onboarding.credentials.pasteOAuthCode")}</p>
       <div className="flex gap-2">
         <input
           type="text"
@@ -420,19 +420,19 @@ function ManualCodeForm({
           placeholder={placeholder ?? '…'}
           onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
           disabled={submitted}
-          className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+          className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
         />
         <button
           type="button"
           onClick={handleSubmit}
           disabled={submitted || !code.trim()}
-          className="rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground hover:opacity-90 disabled:opacity-50 cursor-pointer"
+          className="rounded-lg bg-primary px-3 py-2 text-body text-primary-foreground hover:opacity-90 disabled:opacity-50 cursor-pointer"
         >
           {t("common.continue")}
         </button>
       </div>
       {submitted && (
-        <p className="text-xs text-success">{t("onboarding.credentials.oauthCodeSubmitted")}</p>
+        <p className="text-meta text-success">{t("onboarding.credentials.oauthCodeSubmitted")}</p>
       )}
     </div>
   )

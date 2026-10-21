@@ -40,13 +40,13 @@ export function ProjectSelectMenu({
           type="button"
           aria-label={ariaLabel}
           className={cn(
-            'inline-flex h-8 min-w-0 items-center gap-1.5 rounded-lg border border-border/60 bg-foreground/[0.02] px-2 text-xs font-medium text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground data-[state=open]:bg-foreground/5',
+            'inline-flex h-8 min-w-0 items-center gap-1.5 rounded-lg border border-border/60 bg-foreground/[0.02] px-2 text-meta font-medium text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground data-[state=open]:bg-foreground/5',
             className,
           )}
         >
           {leadingIcon}
           <span className="min-w-0 flex-1 truncate text-left">{selected?.label}</span>
-          <ChevronDown className="h-3 w-3 shrink-0 text-foreground/40" strokeWidth={2} />
+          <ChevronDown className="h-3 w-3 shrink-0 text-text-secondary" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -56,7 +56,7 @@ export function ProjectSelectMenu({
         {options.map((option) => (
           <DropdownMenuItem
             key={option.value}
-            className="text-xs"
+            className="text-meta"
             disabled={option.value === value}
             onSelect={() => onValueChange(option.value)}
           >

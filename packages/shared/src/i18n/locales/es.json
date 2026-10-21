@@ -1477,6 +1477,7 @@
   "settings.appearance.fontTheme": "Tema",
   "settings.appearance.iconHeader": "Icono",
   "settings.appearance.interface": "Interfaz",
+  "settings.appearance.interfaceScale": "Escala de la interfaz",
   "settings.appearance.kanbanBoard": "Tablero Kanban",
   "settings.appearance.kanbanBoardDesc": "Personaliza los colores de columna y el movimiento del tablero",
   "settings.appearance.kanbanColumnColor": "Color de {{column}}",

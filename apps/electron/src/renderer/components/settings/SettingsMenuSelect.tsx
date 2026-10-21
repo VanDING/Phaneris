@@ -123,7 +123,7 @@ export function SettingsMenuSelect({
           aria-label={ariaLabel}
           aria-describedby={describedBy}
           className={cn(
-            'craft-control inline-flex max-w-full items-center h-8 px-3 gap-1 text-sm rounded-lg',
+            'craft-control inline-flex max-w-full items-center h-8 px-3 gap-1 text-body rounded-lg',
             'bg-input shadow-minimal',
             'hover:bg-input/80 transition-colors',
             'disabled:cursor-not-allowed disabled:opacity-50',
@@ -155,17 +155,16 @@ export function SettingsMenuSelect({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={effectiveSearchPlaceholder}
               className={cn(
-                'craft-control w-full h-8 pl-8 pr-3 text-sm rounded-md',
+                'craft-control w-full h-8 pl-8 pr-3 text-body rounded-md',
                 'bg-foreground/5 border-0',
                 'placeholder:text-text-secondary',
-                'focus-visible:ring-0'
               )}
             />
           </div>
         )}
         <div className="space-y-0.5 max-h-64 overflow-auto">
           {filteredOptions.length === 0 ? (
-            <div className="px-2.5 py-3 text-sm text-text-secondary text-center">
+            <div className="px-2.5 py-3 text-body text-text-secondary text-center">
               {t('chat.noResults')}
             </div>
           ) : (

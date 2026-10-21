@@ -1477,6 +1477,7 @@
   "settings.appearance.fontTheme": "Design",
   "settings.appearance.iconHeader": "Symbol",
   "settings.appearance.interface": "Oberfläche",
+  "settings.appearance.interfaceScale": "Oberflächenskalierung",
   "settings.appearance.kanbanBoard": "Kanban-Board",
   "settings.appearance.kanbanBoardDesc": "Passe die Spaltenfarben und Animationen des Boards an",
   "settings.appearance.kanbanColumnColor": "Farbe für {{column}}",

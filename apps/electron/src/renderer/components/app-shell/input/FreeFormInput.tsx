@@ -1769,13 +1769,13 @@ export function FreeFormInput({
                                 {chipIndex}
                               </span>
                             </TooltipTrigger>
-                            <TooltipContent side="top" className="max-w-[420px] break-words text-xs">
+                            <TooltipContent side="top" className="max-w-[420px] break-words text-meta">
                               {tooltipText}
                             </TooltipContent>
                           </Tooltip>
                           <span className="min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap pr-0.5 text-left">
-                            <span className="italic text-foreground/60">{selectedExcerpt}</span>
-                            <span className="mx-1 text-foreground/40">·</span>
+                            <span className="italic text-text-secondary">{selectedExcerpt}</span>
+                            <span className="mx-1 text-text-secondary">·</span>
                             <span>{noteExcerpt}</span>
                           </span>
                         </motion.button>
@@ -2076,7 +2076,7 @@ export function FreeFormInput({
               onClick={onRequestExpand}
               onMouseEnter={onRequestExpand}
               aria-label={t('chat.tapToType')}
-              className="craft-focus flex-1 h-7 mx-1 flex items-center justify-center text-foreground/30 hover:text-foreground/60 transition-colors cursor-pointer rounded-shape-md hover:bg-foreground/5 focus-visible:ring-1 focus-visible:ring-ring"
+              className="craft-control flex-1 h-7 mx-1 flex items-center justify-center text-text-secondary hover:text-foreground transition-colors cursor-pointer rounded-shape-md hover:bg-foreground/5 focus-visible:ring-1 focus-visible:ring-ring"
             >
               <ChevronUp className="h-4 w-4" />
             </button>
@@ -2127,8 +2127,8 @@ export function FreeFormInput({
               {connectionUnavailable && (
                 <div className="flex flex-col items-center justify-center py-6 px-4 text-center">
                   <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-                  <div className="font-medium text-sm mb-1">{t('chat.connectionUnavailable')}</div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="font-medium text-body mb-1">{t('chat.connectionUnavailable')}</div>
+                  <div className="text-meta text-muted-foreground">
                     {t('chat.connectionUnavailableDescription')}
                   </div>
                 </div>
@@ -2152,8 +2152,8 @@ export function FreeFormInput({
                       className="flex items-center justify-between px-2 py-2 rounded-lg"
                     >
                       <div className="text-left">
-                        <div className="font-medium text-sm">{stripPiPrefixForDisplay(connectionDefaultModel)}</div>
-                        <div className="text-xs text-muted-foreground">{t('chat.connectionDefault')}</div>
+                        <div className="font-medium text-body">{stripPiPrefixForDisplay(connectionDefaultModel)}</div>
+                        <div className="text-meta text-muted-foreground">{t('chat.connectionDefault')}</div>
                       </div>
                       <div className="flex items-center gap-1 ml-3 shrink-0">
                         {showVisionToggle && effectiveConnectionDetails && (
@@ -2181,7 +2181,7 @@ export function FreeFormInput({
                               >
                                 <ImageIcon className={cn(
                                   "h-3.5 w-3.5",
-                                  visionOn ? "text-foreground/70" : "text-foreground/30"
+                                  visionOn ? "text-foreground" : "text-text-secondary"
                                 )} />
                               </span>
                             </TooltipTrigger>
@@ -2214,13 +2214,13 @@ export function FreeFormInput({
                         )}
                       >
                         <div className="text-left flex-1">
-                          <div className="font-medium text-sm flex items-center gap-1.5">
+                          <div className="font-medium text-body flex items-center gap-1.5">
                             <ConnectionIcon connection={conn} size={14} />
                             {conn.name}
                             {isCurrentConnection && <Check className="h-3 w-3 text-foreground" />}
                           </div>
                           {!isAuthenticated && (
-                            <div className="text-xs text-muted-foreground">{t('settings.ai.notAuthenticated')}</div>
+                            <div className="text-meta text-muted-foreground">{t('settings.ai.notAuthenticated')}</div>
                           )}
                         </div>
                       </StyledDropdownMenuSubTrigger>
@@ -2246,7 +2246,7 @@ export function FreeFormInput({
                                 }}
                                 className="flex items-center justify-between px-2 py-2 rounded-lg cursor-pointer"
                               >
-                                <div className="font-medium text-sm truncate min-w-0">{modelName}</div>
+                                <div className="font-medium text-body truncate min-w-0">{modelName}</div>
                                 <div className="flex items-center gap-1 ml-3 shrink-0">
                                   {showVisionToggle && (
                                     <Tooltip>
@@ -2273,7 +2273,7 @@ export function FreeFormInput({
                                         >
                                           <ImageIcon className={cn(
                                             "h-3.5 w-3.5",
-                                            visionOn ? "text-foreground/70" : "text-foreground/30"
+                                            visionOn ? "text-foreground" : "text-text-secondary"
                                           )} />
                                         </span>
                                       </TooltipTrigger>
@@ -2302,7 +2302,7 @@ export function FreeFormInput({
                   {/* Indicator showing which connection is being used */}
                   {!isEmptySession && currentConnectionDetails && llmConnections.length > 1 && (
                     <>
-                      <div className="flex items-center gap-2 px-2 py-1.5 text-xs select-none text-muted-foreground">
+                      <div className="flex items-center gap-2 px-2 py-1.5 text-meta select-none text-muted-foreground">
                         <span>{t('chat.usingConnection', { name: currentConnectionDetails.name })}</span>
                       </div>
                       <StyledDropdownMenuSeparator className="my-1" />
@@ -2327,9 +2327,9 @@ export function FreeFormInput({
                         className="flex items-center justify-between px-2 py-2 rounded-lg cursor-pointer"
                       >
                         <div className="text-left">
-                          <div className="font-medium text-sm truncate min-w-0">{modelName}</div>
+                          <div className="font-medium text-body truncate min-w-0">{modelName}</div>
                           {description && (
-                            <div className="text-xs text-muted-foreground">{description}</div>
+                            <div className="text-meta text-muted-foreground">{description}</div>
                           )}
                         </div>
                         <div className="flex items-center gap-1 ml-3 shrink-0">
@@ -2358,7 +2358,7 @@ export function FreeFormInput({
                                 >
                                   <ImageIcon className={cn(
                                     "h-3.5 w-3.5",
-                                    visionOn ? "text-foreground/70" : "text-foreground/30"
+                                    visionOn ? "text-foreground" : "text-text-secondary"
                                   )} />
                                 </span>
                               </TooltipTrigger>
@@ -2389,8 +2389,8 @@ export function FreeFormInput({
                   <DropdownMenuSub>
                     <StyledDropdownMenuSubTrigger disabled={thinkingDisabled} className={cn("flex items-center justify-between px-2 py-2 rounded-lg", thinkingDisabled && "opacity-50 cursor-not-allowed")}>
                       <div className="text-left flex-1">
-                        <div className="font-medium text-sm">{t(getThinkingLevelNameKey(thinkingLevel))}</div>
-                        <div className="text-xs text-muted-foreground">{thinkingDisabled ? t('thinking.notSupported') : t('thinking.extendedDesc')}</div>
+                        <div className="font-medium text-body">{t(getThinkingLevelNameKey(thinkingLevel))}</div>
+                        <div className="text-meta text-muted-foreground">{thinkingDisabled ? t('thinking.notSupported') : t('thinking.extendedDesc')}</div>
                       </div>
                     </StyledDropdownMenuSubTrigger>
                     <StyledDropdownMenuSubContent className="min-w-[220px]">
@@ -2403,8 +2403,8 @@ export function FreeFormInput({
                             className="flex items-center justify-between px-2 py-2 rounded-lg cursor-pointer"
                           >
                             <div className="text-left">
-                              <div className="font-medium text-sm">{t(nameKey)}</div>
-                              <div className="text-xs text-muted-foreground">{t(descriptionKey)}</div>
+                              <div className="font-medium text-body">{t(nameKey)}</div>
+                              <div className="text-meta text-muted-foreground">{t(descriptionKey)}</div>
                             </div>
                             {isSelected && (
                               <Check className="h-3 w-3 text-foreground shrink-0 ml-3" />
@@ -2423,7 +2423,7 @@ export function FreeFormInput({
                 <>
                   <StyledDropdownMenuSeparator className="my-1" />
                   <div className="px-2 py-1.5 select-none">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <div className="flex items-center justify-between text-meta text-muted-foreground">
                       <span>{t('chat.context')}</span>
                       <span className="flex items-center gap-1.5 tabular-nums">
                         {contextStatus?.isCompacting && (
@@ -2514,8 +2514,8 @@ function WorkingDirectoryBadge({
               hasFolder ? (
                 <span className="flex flex-col gap-0.5">
                   <span className="font-medium">{t("chat.workingDirectory")}</span>
-                  <span className="text-xs opacity-70">{formatPathForDisplay(wd, homeDir)}</span>
-                  {gitBranch && <span className="text-xs opacity-70">{t("chat.onBranch", { branch: gitBranch })}</span>}
+                  <span className="text-meta opacity-70">{formatPathForDisplay(wd, homeDir)}</span>
+                  {gitBranch && <span className="text-meta opacity-70">{t("chat.onBranch", { branch: gitBranch })}</span>}
                 </span>
               ) : t("chat.chooseWorkingDirectory")
             }

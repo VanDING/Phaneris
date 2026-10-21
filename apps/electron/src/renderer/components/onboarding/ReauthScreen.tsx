@@ -53,7 +53,7 @@ export function ReauthScreen({ onLogin, onReset }: ReauthScreenProps) {
               <br />
               {t("onboarding.reauth.loginAgain")}
               <br />
-              <span className="text-muted-foreground/70 text-xs mt-2 block">
+              <span className="text-text-secondary text-meta mt-2 block">
                 {t("onboarding.reauth.preserved")}
               </span>
             </>
@@ -92,7 +92,7 @@ export function ReauthScreen({ onLogin, onReset }: ReauthScreenProps) {
         >
           {error && (
             <div className="mt-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-              <p className="text-sm text-destructive">{error}</p>
+              <p className="text-body text-destructive">{error}</p>
             </div>
           )}
         </StepFormLayout>

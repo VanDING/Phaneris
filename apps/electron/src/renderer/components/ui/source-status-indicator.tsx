@@ -123,7 +123,7 @@ export function SourceStatusIndicator({
       <TooltipContent side="top" className="max-w-xs">
         <div className="flex flex-col gap-0.5">
           <span className="font-medium">{config.label}</span>
-          <span className="text-foreground/60">{tooltipDescription}</span>
+          <span className="text-text-secondary">{tooltipDescription}</span>
         </div>
       </TooltipContent>
     </Tooltip>

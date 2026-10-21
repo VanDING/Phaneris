@@ -34,7 +34,7 @@ function TooltipContent({
         sideOffset={sideOffset}
         style={{ zIndex: layer, ...style }}
         className={cn(
-          "craft-tooltip z-tooltip overflow-hidden px-2.5 py-1.5 text-xs",
+          "craft-tooltip z-tooltip overflow-hidden px-2.5 py-1.5 text-meta",
           "border border-border/50 shadow-modal-small",
           "motion-interactive animate-in fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
           className

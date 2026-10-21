@@ -69,7 +69,7 @@ function ExpandableNameCell({ row }: { row: Row<LabelConfig> }) {
         // Spacer to keep alignment consistent with expandable rows
         <span className="w-4" />
       )}
-      <span className="text-sm truncate">{row.original.name}</span>
+      <span className="text-body truncate">{row.original.name}</span>
     </div>
   )
 }
@@ -109,7 +109,7 @@ function getColumns(t: TFunction): ColumnDef<LabelConfig>[] {
               {t(`sidebar.labelValueType.${row.original.valueType}`)}
             </Info_Badge>
           ) : (
-            <span className="text-muted-foreground/50 text-sm">—</span>
+            <span className="text-text-secondary text-body">—</span>
           )}
         </div>
       ),
@@ -147,7 +147,7 @@ export function LabelsDataTable({
         'motion-interactive p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform]',
         'opacity-0 group-hover:opacity-100',
         'bg-background/80 backdrop-blur-sm shadow-minimal',
-        'text-muted-foreground/50 hover:text-foreground',
+        'text-text-secondary hover:text-foreground',
         'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100'
       )}`}
       title={t("table.viewFullscreen")}

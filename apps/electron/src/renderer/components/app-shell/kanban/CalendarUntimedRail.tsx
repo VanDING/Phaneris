@@ -284,7 +284,7 @@ export function CalendarUntimedRail({
           </div>
         ) : (
           <button type="button" onClick={() => { setComposing(true); setDate(todayKey) }} className="craft-control pg-rail__add">
-            <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+            <Plus className="h-3.5 w-3.5" />
             {t('schedule.untimedQuickAdd')}
           </button>
         )}

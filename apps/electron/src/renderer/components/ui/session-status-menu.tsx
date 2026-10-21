@@ -99,11 +99,11 @@ export function SessionStatusMenu({
           value={filter}
           onValueChange={setFilter}
           placeholder={t("status.filterStatuses")}
-          className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/50"
+          className="w-full bg-transparent text-body outline-none placeholder:text-text-secondary"
         />
       </div>
       <CommandPrimitive.List className={MENU_LIST_STYLE}>
-        <CommandPrimitive.Empty className="py-3 text-center text-sm text-muted-foreground">
+        <CommandPrimitive.Empty className="py-3 text-center text-body text-muted-foreground">
           No status found
         </CommandPrimitive.Empty>
         {states.map((state) => {

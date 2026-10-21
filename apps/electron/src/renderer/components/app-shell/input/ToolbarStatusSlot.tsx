@@ -92,7 +92,7 @@ export function ToolbarStatusSlot({
             color: 'color-mix(in oklab, var(--info) 30%, var(--foreground))',
           } as React.CSSProperties}
         >
-          <span className="text-sm font-medium flex items-center gap-1.5">
+          <span className="text-body font-medium flex items-center gap-1.5">
             <Trans
               i18nKey="toolbar.escapeToInterrupt"
               components={{ kbd: <Kbd className="text-inherit bg-current/10" /> }}
@@ -199,7 +199,7 @@ function BrowserStatusBar({
           <Globe className="h-3.5 w-3.5" />
         )}
       </span>
-      <span className="text-sm font-medium truncate max-w-[200px]">
+      <span className="text-body font-medium truncate max-w-[200px]">
         {t('chat.usingConnection', { name: hostname })}
       </span>
     </motion.button>

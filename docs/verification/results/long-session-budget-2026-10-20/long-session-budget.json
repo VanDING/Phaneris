@@ -1,0 +1,71 @@
+{
+  "checks": [
+    {
+      "id": "LS1-initial-render-budget",
+      "passed": true
+    },
+    {
+      "id": "LS2-scroll-frame-budget",
+      "passed": true
+    },
+    {
+      "id": "LS3-append-frame-budget",
+      "passed": true
+    },
+    {
+      "id": "LS4-glass-panel-cost",
+      "passed": true
+    },
+    {
+      "id": "LS5-no-page-errors",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "id": "initial-render",
+      "firstPaintMs": 7530,
+      "turns": 200
+    },
+    {
+      "id": "scroll",
+      "frames": 62,
+      "p50": 16.699999999999818,
+      "p95": 16.700000000000728,
+      "max": 16.800000000000182
+    },
+    {
+      "id": "append",
+      "frames": 12,
+      "p50": 133.29999999999927,
+      "p95": 300,
+      "max": 300
+    },
+    {
+      "id": "glass",
+      "withoutGlass": {
+        "frames": 42,
+        "p50": 16.69999999999891,
+        "p95": 16.700000000000728,
+        "max": 16.799999999999272
+      },
+      "withGlass": {
+        "frames": 42,
+        "p50": 16.69999999999891,
+        "p95": 16.700000000000728,
+        "max": 16.80000000000109
+      },
+      "p95DeltaMs": 0,
+      "allowanceMs": 8
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.8078.4",
+  "scope": "Real SessionViewer + real host stylesheet; 200 synthetic turns (400 messages), desktop Chromium, Default palette, headless. Frame deltas sampled with requestAnimationFrame.",
+  "budgets": {
+    "scrollP95Ms": 40,
+    "appendP95TargetMs": 40,
+    "appendP50CeilingMs": 350,
+    "glassP95AllowanceMs": 8
+  }
+}

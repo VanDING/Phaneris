@@ -82,6 +82,23 @@
     outline-offset: 2px;
   }
 
+  /* Composite field: icon + input + trailing action inside one visible frame.
+     The frame owns the focus ring because a ring on the inner input would sit
+     inside the padding and read as a stray rectangle. Every composite search
+     field uses this role instead of a background-only focus cue, which was
+     invisible: `bg-muted/50` brightening to `bg-background` is 1.01:1. */
+  .craft-field-shell { position: relative; min-width: 0; }
+
+  .craft-field-shell:has(:is(input, textarea, [contenteditable="true"]):focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .craft-field-shell :is(input, textarea):focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
   .craft-field-surface:has([aria-invalid="true"]) {
     box-shadow: inset 0 0 0 1px var(--destructive);
   }
@@ -148,6 +165,10 @@
     .craft-control:not([data-slot="switch"]):not(textarea),
     .craft-touch-target { min-height: max(var(--touch-target, 44px), calc(var(--craft-control-height, 0px) * var(--ui-scale, 1))); }
     .craft-icon-button { min-width: var(--touch-target, 44px); min-height: var(--touch-target, 44px); }
+    /* A composite field is one hit target: the shell and its input both reach
+       44px, otherwise the field is a 30px strip on a phone. */
+    .craft-field-shell { min-height: var(--touch-target, 44px); }
+    .craft-field-shell > :is(input, textarea, [contenteditable="true"]) { min-height: var(--touch-target, 44px); }
     .craft-icon-button[data-slot="button"] { min-width: max(var(--touch-target, 44px), calc(var(--craft-control-height, 2.25rem) * var(--ui-scale, 1))); }
     .craft-row-actions { opacity: 1; min-width: var(--touch-target, 44px); min-height: var(--touch-target, 44px); }
     .craft-row-timestamp { visibility: hidden; }
@@ -157,7 +178,8 @@
   }
   @media (forced-colors: active) {
     .craft-control:focus-visible, .craft-focus:focus-visible, .craft-icon-button:focus-visible,
-    .craft-field-surface:has(.craft-field-input:focus-visible) { outline-color: Highlight; }
+    .craft-field-surface:has(.craft-field-input:focus-visible),
+    .craft-field-shell:has(:is(input, textarea, [contenteditable="true"]):focus-visible) { outline-color: Highlight; }
     .craft-field-input { border-color: ButtonText; }
   }
 }

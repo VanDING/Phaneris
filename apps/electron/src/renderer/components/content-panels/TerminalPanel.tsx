@@ -103,10 +103,10 @@ export function TerminalPanel() {
     return () => { disposed = true; offData(); offExit(); input.dispose(); resize.disconnect(); themeObserver.disconnect(); terminal.dispose() }
   }, [activeWorkspaceId, workspaceRootPath, remoteServer])
 
-  if (remoteServer) return <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">The integrated terminal is available for local workspaces only.</div>
+  if (remoteServer) return <div className="flex h-full items-center justify-center p-6 text-center text-body text-muted-foreground">The integrated terminal is available for local workspaces only.</div>
   return (
     <div className="flex h-full min-h-0 flex-col bg-background/40 p-2">
-      {error && <div className="p-4 text-sm text-destructive">{error}</div>}
+      {error && <div className="p-4 text-body text-destructive">{error}</div>}
       <div ref={hostRef} className="min-h-0 w-full flex-1 overflow-hidden" />
     </div>
   )

@@ -184,7 +184,7 @@ export function TaskTile({
           aria-label={t('kanban.editTask')}
           className="craft-icon-button craft-row-actions craft-focus absolute right-2 top-2 z-component-chrome grid h-6 w-6 place-items-center rounded-md bg-transparent text-text-secondary opacity-0 transition-opacity hover:bg-foreground/[0.05] hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring/50"
         >
-          <Pencil className="h-3.5 w-3.5" strokeWidth={2} />
+          <Pencil className="h-3.5 w-3.5" />
         </button>
       )}
 
@@ -205,14 +205,14 @@ export function TaskTile({
               <span />
             )}
             {task.isFlagged && (
-              <Flag className="h-3.5 w-3.5 shrink-0 fill-amber-500 text-amber-500" aria-hidden />
+              <Flag className="h-3.5 w-3.5 shrink-0 fill-info text-info-text" aria-hidden />
             )}
           </div>
         )}
 
         <div
           className={cn(
-            'text-sm font-medium leading-snug line-clamp-2',
+            'text-body font-medium leading-snug line-clamp-2',
             // Strike done/cancelled by *status* (not column — placement ≠ status).
             status?.category === 'closed' ? 'text-text-secondary line-through' : 'text-foreground'
           )}
@@ -252,7 +252,7 @@ export function TaskTile({
                 >
                   <ChevronRight
                     className={cn('h-3 w-3 shrink-0 transition-transform', expanded && 'rotate-90')}
-                    strokeWidth={2}
+
                   />
                   <SubtaskProgress subtasks={task.subtasks} total={task.subtaskTotal} accent={accent} className="min-w-0 flex-1" />
                 </button>
@@ -272,7 +272,7 @@ export function TaskTile({
                     // A disabled button that keeps pointer events swallows the click instead.
                     className="craft-control craft-focus grid h-5 w-5 shrink-0 place-items-center rounded text-text-secondary transition-colors hover:bg-foreground/10 hover:text-text-secondary disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-text-secondary"
                   >
-                    <Play className="h-3 w-3" strokeWidth={2} />
+                    <Play className="h-3 w-3" />
                   </button>
                 )}
               </div>
@@ -309,13 +309,13 @@ export function TaskTile({
             <div className="flex shrink-0 items-center gap-2 text-meta text-text-secondary">
               {relativeTime && (
                 <span className="inline-flex items-center gap-0.5 tabular-nums">
-                  <Clock className="h-3 w-3" strokeWidth={2} />
+                  <Clock className="h-3 w-3" />
                   {relativeTime}
                 </span>
               )}
               {hasMessages && (
                 <span className="inline-flex items-center gap-0.5 tabular-nums">
-                  <MessageSquare className="h-3 w-3" strokeWidth={2} />
+                  <MessageSquare className="h-3 w-3" />
                   {task.messageCount}
                 </span>
               )}
@@ -454,7 +454,7 @@ function AddSubtask({
         }}
         className="craft-control craft-focus mt-1 flex w-full items-center gap-1 text-meta font-medium text-text-secondary transition-colors hover:text-text-secondary"
       >
-        <Plus className="h-3 w-3" strokeWidth={2} />
+        <Plus className="h-3 w-3" />
         {t('kanban.addSubtask')}
       </button>
     )
@@ -489,7 +489,7 @@ function AddSubtask({
         }}
         rows={1}
         placeholder={t('kanban.describeSubtask')}
-        className="craft-field-input w-full resize-none rounded-md border border-border/60 bg-background px-2 py-1 text-xs text-foreground outline-none field-sizing-content max-h-40 focus:border-border"
+        className="craft-field-input w-full resize-none rounded-md border border-border/60 bg-background px-2 py-1 text-meta text-foreground outline-none field-sizing-content max-h-40 focus:border-border"
       />
       <div className="flex items-center justify-between gap-1.5">
         {modelGroups && modelGroups.length > 0 ? (
@@ -505,7 +505,7 @@ function AddSubtask({
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" aria-hidden />
                 )}
                 <span className="truncate">{selectedName}</span>
-                <ChevronDown className="h-3 w-3 shrink-0 text-text-secondary" strokeWidth={2} />
+                <ChevronDown className="h-3 w-3 shrink-0 text-text-secondary" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="max-w-[240px]">
@@ -524,9 +524,9 @@ function AddSubtask({
                     {group.label}
                   </DropdownMenuLabel>
                   {group.models.map(opt => (
-                    <DropdownMenuItem key={opt.id} className="text-xs" onSelect={() => setModel(opt.id)}>
+                    <DropdownMenuItem key={opt.id} className="text-meta" onSelect={() => setModel(opt.id)}>
                       <span className="truncate">{opt.name}</span>
-                      {opt.id === model && <Check className="ml-auto h-3.5 w-3.5 shrink-0" strokeWidth={2} />}
+                      {opt.id === model && <Check className="ml-auto h-3.5 w-3.5 shrink-0" />}
                     </DropdownMenuItem>
                   ))}
                 </React.Fragment>

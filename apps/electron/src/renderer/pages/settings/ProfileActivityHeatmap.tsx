@@ -60,7 +60,7 @@ export function ProfileActivityHeatmap({ calendar, locale }: { calendar: Profile
           </div>
         </div>
       </div>
-      {selected && <div className="mt-3 text-xs text-text-secondary" aria-live="polite">{dayLabel(selected)}</div>}
+      {selected && <div className="mt-3 text-meta text-text-secondary" aria-live="polite">{dayLabel(selected)}</div>}
     </div>
   )
 }

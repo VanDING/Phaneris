@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import type { CredentialRequest as CredentialRequestType, CredentialResponse } from '../../../../../shared/types'
 import { validateBasicAuthCredentials, getPasswordValue, getPasswordLabel, getPasswordPlaceholder } from '@/utils/auth-validation'
+import { useInitialFocus } from '@phaneris/ui'
 
 interface CredentialRequestProps {
   request: CredentialRequestType
@@ -24,6 +25,7 @@ interface CredentialRequestProps {
  * - query: API Key for query parameter auth
  */
 export function CredentialRequest({ request, onResponse, unstyled = false }: CredentialRequestProps) {
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [value, setValue] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -127,15 +129,15 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
             </div>
             <div className="flex-1 min-w-0 space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">
+                <span className="text-body font-medium text-foreground">
                   Authentication Required
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-meta text-muted-foreground">
                   ({request.sourceName})
                 </span>
               </div>
               {request.description && (
-                <p className="text-xs text-muted-foreground">{request.description}</p>
+                <p className="text-meta text-muted-foreground">{request.description}</p>
               )}
             </div>
           </div>
@@ -146,7 +148,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
               <>
                 {/* Username field */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="credential-username" className="text-xs">
+                  <Label htmlFor="credential-username" className="text-meta">
                     {usernameLabel}
                   </Label>
                   <div className="relative">
@@ -161,13 +163,13 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
                       onKeyDown={handleKeyDown}
                       className="pl-9"
                       placeholder={`Enter ${usernameLabel.toLowerCase()}`}
-                      autoFocus
+                      ref={initialFocusRef}
                     />
                   </div>
                 </div>
                 {/* Password field */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="credential-password" className="text-xs">
+                  <Label htmlFor="credential-password" className="text-meta">
                     {passwordLabel}
                   </Label>
                   <div className="relative">
@@ -199,7 +201,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
               <>
                 {request.headerNames.map((headerName, index) => (
                   <div key={headerName} className="space-y-1.5">
-                    <Label htmlFor={`credential-header-${index}`} className="text-xs">
+                    <Label htmlFor={`credential-header-${index}`} className="text-meta">
                       {headerName}
                     </Label>
                     <div className="relative">
@@ -217,7 +219,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
                         onKeyDown={handleKeyDown}
                         className="pl-9 pr-9"
                         placeholder={`Enter ${headerName}`}
-                        autoFocus={index === 0}
+                        ref={index === 0 ? initialFocusRef : undefined}
                       />
                       <button
                         type="button"
@@ -234,7 +236,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
             ) : (
               /* Single credential field (API key, bearer token) */
               <div className="space-y-1.5">
-                <Label htmlFor="credential-value" className="text-xs">
+                <Label htmlFor="credential-value" className="text-meta">
                   {credentialLabel}
                   {request.mode === 'header' && request.headerName && (
                     <span className="text-muted-foreground ml-1">
@@ -254,7 +256,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
                     onKeyDown={handleKeyDown}
                     className="pl-9 pr-9"
                     placeholder={`Enter ${credentialLabel.toLowerCase()}`}
-                    autoFocus
+                    ref={initialFocusRef}
                   />
                   <button
                     type="button"

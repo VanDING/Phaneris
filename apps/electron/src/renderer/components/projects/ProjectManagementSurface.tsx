@@ -62,7 +62,7 @@ export function ProjectManagementSurface({ state }: ProjectManagementSurfaceProp
             centerTitleInPanel
           />
           <div className="flex flex-1 items-center justify-center text-muted-foreground">
-            <p className="text-sm">{t('projectsList.noProjectSelected')}</p>
+            <p className="text-body">{t('projectsList.noProjectSelected')}</p>
           </div>
         </div>
       )

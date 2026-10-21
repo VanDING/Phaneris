@@ -50,7 +50,7 @@ import { Button } from "@/components/ui/button"
 import { HeaderIconButton } from "@/components/ui/HeaderIconButton"
 import { resolveInheritedFilterParams, type FilterMode } from "./inherited-filter-params"
 import { Separator } from "@/components/ui/separator"
-import { Tooltip, TooltipTrigger, TooltipContent } from "@phaneris/ui"
+import { Tooltip, TooltipTrigger, TooltipContent, activateOnKey } from "@phaneris/ui"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -211,7 +211,7 @@ function AltExcludeTooltip({ show, children }: { show: boolean; children: React.
   return (
     <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent side="right" className="text-xs">{altClickTooltipLabel}</TooltipContent>
+      <TooltipContent side="right" className="text-meta">{altClickTooltipLabel}</TooltipContent>
     </Tooltip>
   )
 }
@@ -2590,7 +2590,7 @@ function AppShellContent({
             <TooltipTrigger asChild>
               <span className="flex items-center"><LabelValueTypeIcon valueType={node.label.valueType} size={10} /></span>
             </TooltipTrigger>
-            <TooltipContent side="top" className="text-xs">
+            <TooltipContent side="top" className="text-meta">
               {t("sidebar.labelValueTypeTooltip", { valueType: t(`sidebar.labelValueType.${node.label.valueType}`) })}
             </TooltipContent>
           </Tooltip>
@@ -3018,7 +3018,7 @@ function AppShellContent({
               badge={automationFilter?.automationType === 'scheduled' ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="text-muted-foreground/50 cursor-default flex items-center titlebar-no-drag">
+                    <span className="text-text-secondary cursor-default flex items-center titlebar-no-drag">
                       <Info className="h-3 w-3" />
                     </span>
                   </TooltipTrigger>
@@ -3081,7 +3081,7 @@ function AppShellContent({
                       >
                         {/* Header with title and clear button (only clears user-added filters, never pinned) */}
                         <div className="flex items-center justify-between px-2 py-1.5">
-                          <span className="text-xs font-medium text-muted-foreground">{t("sidebar.filterChats")}</span>
+                          <span className="text-meta font-medium text-muted-foreground">{t("sidebar.filterChats")}</span>
                           {(listFilter.size > 0 || labelFilter.size > 0 || projectFilter.size > 0) && (
                             <button
                               onClick={(e) => {
@@ -3090,7 +3090,7 @@ function AppShellContent({
                                 setLabelFilter(new Map())
                                 setProjectFilter(new Map())
                               }}
-                              className="text-xs text-muted-foreground hover:text-foreground"
+                              className="text-meta text-muted-foreground hover:text-foreground"
                             >
                               Clear
                             </button>
@@ -3163,8 +3163,7 @@ function AppShellContent({
                                 }
                               }}
                               placeholder={t("sidebar.searchStatusesLabels")}
-                              className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
-                              autoFocus
+                              className="w-full bg-transparent text-body text-foreground placeholder:text-muted-foreground outline-none"
                             />
                           </div>
                         </div>
@@ -3532,7 +3531,7 @@ function AppShellContent({
                                 Shows matching statuses and labels in a single flat list.
                                 Supports keyboard navigation (ArrowUp/Down/Enter in input). */}
                             {filterDropdownResults.states.length === 0 && filterDropdownResults.labels.length === 0 ? (
-                              <div className="px-3 py-4 text-center text-xs text-muted-foreground">
+                              <div className="px-3 py-4 text-center text-meta text-muted-foreground">
                                 No matching statuses or labels
                               </div>
                             ) : (
@@ -3540,7 +3539,7 @@ function AppShellContent({
                                 {/* Matched statuses */}
                                 {filterDropdownResults.states.length > 0 && (
                                   <>
-                                    <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-muted-foreground/60 uppercase tracking-wider">
+                                    <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-text-secondary uppercase tracking-wider">
                                       Statuses
                                     </div>
                                     {filterDropdownResults.states.map((state, index) => {
@@ -3589,6 +3588,9 @@ function AppShellContent({
                                       return (
                                         <AltExcludeTooltip key={`flat-status-${state.id}`} show={filterAltHeld && !isPinned}>
                                           <div
+                                            role="menuitem"
+                                            tabIndex={-1}
+                                            onKeyDown={activateOnKey}
                                             data-filter-selected={isHighlighted}
                                             onMouseEnter={() => setFilterDropdownSelectedIdx(index)}
                                             onClick={(e) => {
@@ -3603,7 +3605,7 @@ function AppShellContent({
                                             }}
                                             className={cn(
                                               // SVG sizing matches StyledDropdownMenuSubTrigger so icons render at the same size
-                                              "flex cursor-pointer select-none items-center gap-2 rounded-shape-sm mx-1 px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
+                                              "flex cursor-pointer select-none items-center gap-2 rounded-shape-sm mx-1 px-2 py-1.5 text-body [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
                                               isHighlighted && "bg-foreground/5",
                                               isPinned && "opacity-50 pointer-events-none",
                                             )}
@@ -3628,7 +3630,7 @@ function AppShellContent({
                                 {/* Matched labels — flat list with parent breadcrumbs */}
                                 {filterDropdownResults.labels.length > 0 && (
                                   <>
-                                    <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-muted-foreground/60 uppercase tracking-wider">
+                                    <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-text-secondary uppercase tracking-wider">
                                       Labels
                                     </div>
                                     {filterDropdownResults.labels.map((item, index) => {
@@ -3679,6 +3681,9 @@ function AppShellContent({
                                       return (
                                         <AltExcludeTooltip key={`flat-label-${item.id}`} show={filterAltHeld && !isPinned}>
                                           <div
+                                            role="menuitem"
+                                            tabIndex={-1}
+                                            onKeyDown={activateOnKey}
                                             data-filter-selected={isHighlighted}
                                             onMouseEnter={() => setFilterDropdownSelectedIdx(flatIndex)}
                                             onClick={(e) => {
@@ -3693,7 +3698,7 @@ function AppShellContent({
                                             }}
                                             className={cn(
                                               // SVG sizing matches StyledDropdownMenuSubTrigger so icons render at the same size
-                                              "flex cursor-pointer select-none items-center gap-2 rounded-shape-sm mx-1 px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
+                                              "flex cursor-pointer select-none items-center gap-2 rounded-shape-sm mx-1 px-2 py-1.5 text-body [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
                                               isHighlighted && "bg-foreground/5",
                                               isPinned && "opacity-50 pointer-events-none",
                                             )}

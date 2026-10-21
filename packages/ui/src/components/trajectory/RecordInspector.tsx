@@ -8,6 +8,15 @@
  * Assistant records additionally get Usage and TTFT timing.
  */
 
+/**
+ * jsx-a11y/no-noninteractive-element-interactions and /no-noninteractive-tabindex
+ * model `role="separator"` as static. The panel's resize handle carries
+ * `aria-valuenow` and an arrow-key handler, i.e. it is the window-splitter
+ * widget those rules cannot see; both findings are registered in
+ * scripts/visual-debt-ledger.json with that reason rather than waived inline
+ * (a JSX child position cannot carry an ESLint directive).
+ */
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { FolderOpen, GitCompareArrows, MessageSquare, X } from 'lucide-react'
@@ -224,6 +233,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
         tabIndex={0}
         title="Drag to resize. Double-click to reset."
         onDoubleClick={() => setDetailsWidth(null)}
+
         onPointerDown={(event) => {
           if (event.button !== 0) return
           resizeDrag.current = {
@@ -314,7 +324,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
             </Section>
             {cell.isError ? (
               <Section title="Error">
-                <p className="text-rose-500">{cell.result}</p>
+                <p className="text-destructive-text">{cell.result}</p>
               </Section>
             ) : cell.result ? (
               <Section title="Result">

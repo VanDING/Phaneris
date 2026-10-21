@@ -92,7 +92,7 @@ function SettingsItemRow({ item, isSelected, isFirst, onSelect }: SettingsItemRo
           type="button"
           onClick={onSelect}
           className={cn(
-            'craft-control flex w-full items-start gap-2 pl-2 pr-4 py-3 text-left text-sm outline-none rounded-lg',
+            'craft-control flex w-full items-start gap-2 pl-2 pr-4 py-3 text-left text-body outline-none rounded-lg',
             // Fast hover transition (75ms vs default 150ms)
             'transition-[background-color] duration-75',
             isSelected
@@ -112,7 +112,7 @@ function SettingsItemRow({ item, isSelected, isFirst, onSelect }: SettingsItemRo
             >
               {item.label}
             </span>
-            <span className="text-xs text-text-secondary line-clamp-1">
+            <span className="text-meta text-text-secondary line-clamp-1">
               {item.description}
             </span>
           </div>

@@ -88,7 +88,7 @@ export function TrajectoryPerformance({ summary, isProcessing, onOpenTrajectory,
               {(index === 0 || index === buckets.length - 1 || (index % stride === 0 && index < buckets.length - Math.ceil(stride / 2)))
                 && <text x={x(index)} y={H - 2} textAnchor="middle" className="craft-text-caption fill-current text-text-secondary">{bucket.endSeq}</text>}
             </g>)}
-            {paths.map((path, index) => <path key={index} data-performance-line d={path} fill="none" stroke="var(--accent)" opacity=".72" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />)}
+            {paths.map((path, index) => <path key={index} data-performance-line d={path} fill="none" stroke="var(--accent)" opacity=".72" strokeLinecap="round" strokeLinejoin="round" />)}
             {selectedValue !== null && selectedBucket >= 0 && <circle cx={x(selectedBucket)} cy={y(selectedValue)} r="3" fill="var(--accent)" stroke="var(--background)" />}
           </svg> : <div className="flex min-h-[100px] items-center craft-text-caption text-text-secondary" data-performance-empty>
             {summary.legacyCount ? t('trajectory.performance.legacyEmpty', { count: summary.legacyCount }) : t('trajectory.performance.empty')}

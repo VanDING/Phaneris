@@ -57,7 +57,7 @@ export function CompactAcceptPlanDrawer({
           type="button"
           aria-label={effectiveAcceptLabel}
           className={cn(
-            'motion-interactive group/accept h-control-sm pl-2.5 pr-2 text-xs font-medium rounded-shape-md flex items-center gap-1.5 transition-[color,background-color,box-shadow,opacity,transform]',
+            'motion-interactive group/accept h-control-sm pl-2.5 pr-2 text-meta font-medium rounded-shape-md flex items-center gap-1.5 transition-[color,background-color,box-shadow,opacity,transform]',
             'bg-success/5 text-success hover:bg-success/10 shadow-tinted',
             'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             className,
@@ -84,8 +84,8 @@ export function CompactAcceptPlanDrawer({
               className="flex flex-col items-start gap-0.5 w-full px-3 py-3 rounded-lg text-left transition-colors hover:bg-foreground/5"
               onClick={() => onAccept()}
             >
-              <span className="text-sm font-medium">{effectiveAcceptOptionLabel}</span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-body font-medium">{effectiveAcceptOptionLabel}</span>
+              <span className="text-meta text-muted-foreground">
                 {t('plan.executeImmediately')}
               </span>
             </button>
@@ -97,8 +97,8 @@ export function CompactAcceptPlanDrawer({
               className="flex flex-col items-start gap-0.5 w-full px-3 py-3 rounded-lg text-left transition-colors hover:bg-foreground/5"
               onClick={() => onAcceptWithCompact()}
             >
-              <span className="text-sm font-medium">{t('plan.acceptAndCompact')}</span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-body font-medium">{t('plan.acceptAndCompact')}</span>
+              <span className="text-meta text-muted-foreground">
                 {t('plan.worksForComplex')}
               </span>
             </button>

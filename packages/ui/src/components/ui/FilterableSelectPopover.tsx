@@ -153,7 +153,10 @@ export function FilterableSelectPopover<T>({
 
   return ReactDOM.createPortal(
     <>
+      {/* Click-outside scrim: Escape closes the popover, so this element adds no
+          semantics of its own. */}
       <div
+        role="presentation"
         className="fixed inset-0 z-floating-backdrop"
         onClick={() => onOpenChange(false)}
       />
@@ -169,7 +172,7 @@ export function FilterableSelectPopover<T>({
         }}
       >
         {!hasItems ? (
-          <div className="p-3 text-xs text-muted-foreground select-none">
+          <div className="p-3 text-meta text-muted-foreground select-none">
             {emptyState ?? 'No items configured.'}
           </div>
         ) : (
@@ -181,13 +184,13 @@ export function FilterableSelectPopover<T>({
                 onChange={(e) => setFilter(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 placeholder={resolvedPlaceholder}
-                className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground placeholder:select-none"
+                className="w-full bg-transparent text-body outline-none placeholder:text-muted-foreground placeholder:select-none"
               />
             </div>
 
             <div ref={listRef} className="max-h-[240px] overflow-y-auto p-1">
               {!hasResults ? (
-                <div className="px-3 py-2 text-xs text-muted-foreground select-none">
+                <div className="px-3 py-2 text-meta text-muted-foreground select-none">
                   {noResultsState ?? 'No matching items.'}
                 </div>
               ) : (

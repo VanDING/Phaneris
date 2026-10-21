@@ -70,7 +70,7 @@ function Info_PageRoot({
       <div className={cn('h-full flex flex-col', className)}>
         {header}
         <div className="flex-1 flex items-center justify-center">
-          <Spinner className="text-lg text-muted-foreground" />
+          <Spinner className="text-title text-muted-foreground" />
         </div>
       </div>
     )
@@ -83,8 +83,8 @@ function Info_PageRoot({
         {header}
         <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground p-4">
           <AlertCircle className="h-10 w-10 text-destructive" />
-          <p className="text-sm font-medium">{t('common.errorLoadingContent')}</p>
-          <p className="text-xs text-center max-w-md">{error}</p>
+          <p className="text-body font-medium">{t('common.errorLoadingContent')}</p>
+          <p className="text-meta text-center max-w-md">{error}</p>
         </div>
       </div>
     )
@@ -96,7 +96,7 @@ function Info_PageRoot({
       <div className={cn('h-full flex flex-col', className)}>
         {header}
         <div className="flex-1 flex items-center justify-center text-muted-foreground">
-          <p className="text-sm">{empty}</p>
+          <p className="text-body">{empty}</p>
         </div>
       </div>
     )
@@ -123,12 +123,12 @@ function Info_PageHero({ avatar, title, tagline, className }: Info_PageHeroProps
       </div>
       <div className="flex-1 min-w-0">
         {title && (
-          <h2 className="text-base font-semibold text-foreground leading-tight">
+          <h2 className="text-title font-semibold text-foreground leading-tight">
             {title}
           </h2>
         )}
         {tagline && (
-          <p className={cn('text-sm text-foreground/60 leading-snug line-clamp-1', title ? 'mt-0.5' : 'mt-0')}>
+          <p className={cn('text-body text-text-secondary leading-snug line-clamp-1', title ? 'mt-0.5' : 'mt-0')}>
             {tagline}
           </p>
         )}

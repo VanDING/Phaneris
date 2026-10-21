@@ -47,8 +47,8 @@ const categoryConfig: Record<EventCategory, { icon: React.ElementType; bg: strin
   'agent-pre':  { icon: Zap,            bg: 'bg-warning/10',      text: 'text-warning' },
   'agent-post': { icon: CheckCircle2,   bg: 'bg-success/10',      text: 'text-success' },
   'agent-error':{ icon: AlertTriangle,  bg: 'bg-destructive/10',  text: 'text-destructive' },
-  session:      { icon: MessageSquare,  bg: 'bg-foreground/10',   text: 'text-foreground/70' },
-  other:        { icon: Webhook,        bg: 'bg-foreground/10',   text: 'text-foreground/70' },
+  session:      { icon: MessageSquare,  bg: 'bg-foreground/10',   text: 'text-text-secondary' },
+  other:        { icon: Webhook,        bg: 'bg-foreground/10',   text: 'text-text-secondary' },
 }
 
 // ============================================================================

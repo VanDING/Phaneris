@@ -185,10 +185,10 @@ export function HTMLPreviewOverlay({
     >
       <div className="px-6 pb-6">
         {loadingItem && !activeContent && (
-          <div className="py-12 text-center text-muted-foreground text-sm">{t('common.loading')}</div>
+          <div className="py-12 text-center text-muted-foreground text-body">{t('common.loading')}</div>
         )}
         {loadError && !activeContent && (
-          <div className="py-12 text-center text-destructive/70 text-sm">{loadError}</div>
+          <div className="py-12 text-center text-destructive-text text-body">{loadError}</div>
         )}
         {processedHtml && (
           <div

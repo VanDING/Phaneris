@@ -1,0 +1,134 @@
+{
+  "checks": [
+    {
+      "id": "DW2-type-scale-aliases-contract-tiers",
+      "passed": true
+    },
+    {
+      "id": "DW2-control-geometry-uses-tiers",
+      "passed": true
+    },
+    {
+      "id": "DW2-icon-stroke-from-one-token",
+      "passed": true
+    },
+    {
+      "id": "DW2-status-tokens-clear-aa",
+      "passed": true
+    },
+    {
+      "id": "DW2-ui-scale-110-moves-controls-and-type",
+      "passed": true
+    },
+    {
+      "id": "DW2-ui-scale-125-moves-controls-and-type",
+      "passed": true
+    },
+    {
+      "id": "DW2-no-page-errors",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "id": "DW2-type-scale",
+      "scale": "1",
+      "meta": 11,
+      "body": 13,
+      "defaultSm": 13,
+      "reading": 14.0001
+    },
+    {
+      "id": "DW2-geometry",
+      "scale": "1",
+      "button": {
+        "width": 128.63,
+        "height": 34
+      },
+      "input": {
+        "width": 460,
+        "height": 34
+      },
+      "iconButton": {
+        "width": 34,
+        "height": 34
+      }
+    },
+    {
+      "id": "DW2-icon-stroke",
+      "lucide": 1.65,
+      "inline": 1.65,
+      "token": "1.65"
+    },
+    {
+      "id": "DW2-status",
+      "success": {
+        "color": "oklab(0.3797 -0.0436961 0.0050974)",
+        "background": "rgb(233, 241, 238)",
+        "ratio": 8.528933861987992
+      },
+      "info": {
+        "color": "oklab(0.395516 0.0193901 0.0398465)",
+        "background": "rgb(244, 239, 232)",
+        "ratio": 8.346736215466137
+      },
+      "danger": {
+        "color": "oklab(0.397225 0.0739814 0.0142329)",
+        "background": "rgb(248, 235, 237)",
+        "ratio": 8.381434287129167
+      },
+      "solidAccent": {
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(84, 32, 243)",
+        "ratio": 7.297288523189019
+      }
+    },
+    {
+      "id": "DW2-ui-scale",
+      "scale": 1.1,
+      "button": {
+        "width": 128.63,
+        "height": 37.39
+      },
+      "input": {
+        "width": 460,
+        "height": 37.39
+      },
+      "iconButton": {
+        "width": 37.39,
+        "height": 37.39
+      },
+      "type": {
+        "meta": 12.1,
+        "body": 14.3,
+        "defaultSm": 14.3,
+        "reading": 14.0001
+      }
+    },
+    {
+      "id": "DW2-ui-scale",
+      "scale": 1.25,
+      "button": {
+        "width": 128.63,
+        "height": 42.5
+      },
+      "input": {
+        "width": 460,
+        "height": 42.5
+      },
+      "iconButton": {
+        "width": 42.5,
+        "height": 42.5
+      },
+      "type": {
+        "meta": 13.75,
+        "body": 16.25,
+        "defaultSm": 16.25,
+        "reading": 14.0001
+      }
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.8078.4",
+  "scope": "Real Button/Input + real host stylesheet; Default palette, light mode, interface scale 100/110/125%, synthetic surrounding page, desktop Chromium."
+}

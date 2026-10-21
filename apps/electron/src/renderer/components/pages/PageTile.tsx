@@ -116,8 +116,8 @@ export function PageTile({ page, project, onOpen, onDelete }: PageTileProps) {
                 />
               ) : (
                 <>
-                  <span className="select-none text-4xl font-semibold text-foreground/[0.08]">{monogram}</span>
-                  <KindIcon className="absolute h-6 w-6 text-foreground/25" strokeWidth={1.75} aria-hidden />
+                  <span className="select-none glyph-watermark font-semibold text-foreground/[0.08]">{monogram}</span>
+                  <KindIcon className="absolute h-6 w-6 text-text-secondary" aria-hidden />
                   <span
                     className="absolute -right-4 -top-4 h-16 w-16 rounded-full border border-foreground/[0.05]"
                     aria-hidden
@@ -137,7 +137,7 @@ export function PageTile({ page, project, onOpen, onDelete }: PageTileProps) {
             <span className="flex min-w-0 items-center gap-2">
               <PageKindBadge kind={config.kind} />
               {project && (
-                <span className="inline-flex min-w-0 items-center gap-1.5 text-meta text-foreground/50">
+                <span className="inline-flex min-w-0 items-center gap-1.5 text-meta text-text-secondary">
                   <span
                     className="h-2 w-2 shrink-0 rounded-full"
                     style={{ backgroundColor: project.color ?? 'var(--muted-foreground)' }}
@@ -149,7 +149,7 @@ export function PageTile({ page, project, onOpen, onDelete }: PageTileProps) {
               <span className="ml-auto inline-flex items-center gap-2">
                 {config.share && (
                   <span
-                    className="inline-flex items-center text-foreground/45"
+                    className="inline-flex items-center text-text-secondary"
                     role="img"
                     aria-label={t('pages.shared')}
                     title={t('pages.shared')}

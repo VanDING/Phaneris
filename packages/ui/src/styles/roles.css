@@ -58,24 +58,28 @@
   .text-title { font-size: calc(var(--type-title-size) * var(--ui-scale)); line-height: 1.45; }
   /* Display is the single headline tier: landing and empty-state invitations. */
   .text-display { font-size: calc(var(--type-display-size) * var(--ui-scale)); line-height: 1.3; }
+  /* Object-scale glyphs (monogram watermark, avatar initials). Not type tiers:
+     the object they sit in decides the size, and neither follows --ui-scale. */
+  .glyph-watermark { font-size: var(--glyph-watermark-size); line-height: 1; }
+  .glyph-avatar { font-size: var(--glyph-avatar-size); line-height: 1; }
   /* Contract control heights. Layout heights above the control band are not
      governed: they describe space, not hit targets. */
-  .h-control-2xs { height: var(--control-height-2xs); }
-  .h-control-xs { height: var(--control-height-xs); }
-  .h-control-sm { height: var(--control-height-sm); }
-  .h-control-md { height: var(--control-height-md); }
-  .h-control-lg { height: var(--control-height-lg); }
-  .h-control-xl { height: var(--control-height-xl); }
-  .size-control-2xs { width: var(--control-height-2xs); height: var(--control-height-2xs); }
-  .size-control-xs { width: var(--control-height-xs); height: var(--control-height-xs); }
-  .size-control-sm { width: var(--control-height-sm); height: var(--control-height-sm); }
-  .size-control-md { width: var(--control-height-md); height: var(--control-height-md); }
-  .size-control-lg { width: var(--control-height-lg); height: var(--control-height-lg); }
-  .size-control-xl { width: var(--control-height-xl); height: var(--control-height-xl); }
-  .craft-control[data-slot="button"] { min-height: calc(var(--craft-control-height, 2.25rem) * var(--ui-scale)); }
-  .craft-control[data-control-size="sm"] { --craft-control-height: 2rem; }
-  .craft-control[data-control-size="lg"] { --craft-control-height: 2.5rem; }
-  .craft-icon-button[data-slot="button"] { min-width: calc(var(--craft-control-height, 2.25rem) * var(--ui-scale)); }
+  .h-control-2xs { height: calc(var(--control-height-2xs) * var(--ui-scale)); }
+  .h-control-xs { height: calc(var(--control-height-xs) * var(--ui-scale)); }
+  .h-control-sm { height: calc(var(--control-height-sm) * var(--ui-scale)); }
+  .h-control-md { height: calc(var(--control-height-md) * var(--ui-scale)); }
+  .h-control-lg { height: calc(var(--control-height-lg) * var(--ui-scale)); }
+  .h-control-xl { height: calc(var(--control-height-xl) * var(--ui-scale)); }
+  .size-control-2xs { width: calc(var(--control-height-2xs) * var(--ui-scale)); height: calc(var(--control-height-2xs) * var(--ui-scale)); }
+  .size-control-xs { width: calc(var(--control-height-xs) * var(--ui-scale)); height: calc(var(--control-height-xs) * var(--ui-scale)); }
+  .size-control-sm { width: calc(var(--control-height-sm) * var(--ui-scale)); height: calc(var(--control-height-sm) * var(--ui-scale)); }
+  .size-control-md { width: calc(var(--control-height-md) * var(--ui-scale)); height: calc(var(--control-height-md) * var(--ui-scale)); }
+  .size-control-lg { width: calc(var(--control-height-lg) * var(--ui-scale)); height: calc(var(--control-height-lg) * var(--ui-scale)); }
+  .size-control-xl { width: calc(var(--control-height-xl) * var(--ui-scale)); height: calc(var(--control-height-xl) * var(--ui-scale)); }
+  .craft-control[data-slot="button"] { min-height: calc(var(--craft-control-height, var(--control-height-lg)) * var(--ui-scale)); }
+  .craft-control[data-control-size="sm"] { --craft-control-height: var(--control-height-md); }
+  .craft-control[data-control-size="lg"] { --craft-control-height: var(--control-height-xl); }
+  .craft-icon-button[data-slot="button"] { min-width: calc(var(--craft-control-height, var(--control-height-lg)) * var(--ui-scale)); }
   .craft-chat-column { max-width: var(--reading-width); width: 100%; }
   .craft-chat-gutter { padding-inline: var(--reading-gutter); }
   .craft-chat-gutter-compact { padding-inline: var(--reading-gutter-compact); }

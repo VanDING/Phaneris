@@ -230,7 +230,7 @@ export function MarkdownImageBlock({ code, className, onCreateRegionAnnotation: 
             className={cn(
               'craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute right-2 top-2 z-component-chrome p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] select-none',
               'bg-background/90 shadow-minimal',
-              'text-muted-foreground/60 hover:text-foreground',
+              'text-text-secondary hover:text-foreground',
               'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100',
               hasMultiple ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
             )}
@@ -249,13 +249,21 @@ export function MarkdownImageBlock({ code, className, onCreateRegionAnnotation: 
           )}
 
           {!hasMultiple && activeDataUrl && (
-            <img
-              src={activeDataUrl}
-              alt={safeActiveItem?.label || safeActiveItem?.src.split('/').pop() || 'Image preview'}
-              className="max-w-full max-h-full object-contain"
-              draggable={false}
+            // The image is a control, so it is a button: a click handler on an
+            // <img> is invisible to the keyboard and to the accessibility tree.
+            <button
+              type="button"
               onClick={() => setIsFullscreen(true)}
-            />
+              className="max-w-full max-h-full cursor-zoom-in rounded-shape-sm craft-focus"
+              aria-label={t('common.viewFullscreen')}
+            >
+              <img
+                src={activeDataUrl}
+                alt={safeActiveItem?.label || safeActiveItem?.src.split('/').pop() || 'Image preview'}
+                className="max-w-full max-h-full object-contain"
+                draggable={false}
+              />
+            </button>
           )}
 
           {loading && (!activeDataUrl || (hasMultiple && stackItems.length === 0)) && (
@@ -263,7 +271,7 @@ export function MarkdownImageBlock({ code, className, onCreateRegionAnnotation: 
           )}
 
           {!loading && error && (!activeDataUrl || (hasMultiple && stackItems.length === 0)) && (
-            <div className="py-6 text-center text-destructive/70 text-body">{error}</div>
+            <div className="py-6 text-center text-destructive-text text-body">{error}</div>
           )}
 
         </div>

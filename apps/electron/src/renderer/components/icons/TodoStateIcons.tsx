@@ -18,7 +18,7 @@ export function CircleDashed(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
@@ -41,7 +41,7 @@ export function CalendarClock(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
@@ -53,7 +53,7 @@ export function CalendarClock(props: SVGProps<SVGSVGElement>) {
       <path d="M3 9h14" />
       {/* Clock badge */}
       <circle cx="18" cy="17" r="4" fill="currentColor" stroke="none" />
-      <path d="M18 15v2l1 1" stroke="var(--background, white)" strokeWidth="1.5" />
+      <path d="M18 15v2l1 1" stroke="var(--background, white)" />
     </svg>
   )
 }
@@ -71,7 +71,7 @@ export function CircleEye(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
@@ -96,7 +96,7 @@ export function CircleProgress(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
@@ -132,7 +132,7 @@ export function CircleCheckFilled(props: SVGProps<SVGSVGElement>) {
         d="M8 12l3 3 5-5"
         fill="none"
         stroke="var(--background, white)"
-        strokeWidth="2"
+
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -160,7 +160,7 @@ export function CircleXFilled(props: SVGProps<SVGSVGElement>) {
         d="M9 9l6 6M15 9l-6 6"
         fill="none"
         stroke="var(--background, white)"
-        strokeWidth="2"
+
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -181,7 +181,7 @@ export function FilterLines(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}

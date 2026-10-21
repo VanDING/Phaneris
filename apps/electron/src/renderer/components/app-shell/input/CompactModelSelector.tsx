@@ -202,10 +202,10 @@ export function CompactModelSelector({
             ? t('common.unavailable')
             : `${t('common.model')}: ${currentModelDisplayName}`}
           className={cn(
-            'h-7 pl-2 pr-2 text-xs font-medium rounded-shape-md flex items-center gap-1.5 shadow-tinted outline-none select-none min-w-[64px] shrink',
+            'h-7 pl-2 pr-2 text-meta font-medium rounded-shape-md flex items-center gap-1.5 shadow-tinted outline-none select-none min-w-[64px] shrink',
             connectionUnavailable
               ? 'bg-destructive/10 text-destructive'
-              : 'bg-foreground/5 text-foreground/70',
+              : 'bg-foreground/5 text-text-secondary',
             isProcessing && 'pointer-events-none opacity-50',
           )}
           style={{ '--shadow-color': 'var(--foreground)' } as React.CSSProperties}
@@ -239,10 +239,10 @@ export function CompactModelSelector({
           {connectionUnavailable && (
             <div className="flex flex-col items-center justify-center py-6 px-4 text-center">
               <AlertCircle className="h-8 w-8 text-destructive mb-2" />
-              <div className="font-medium text-sm mb-1">
+              <div className="font-medium text-body mb-1">
                 {t('chat.connectionUnavailable')}
               </div>
-              <div className="text-xs text-muted-foreground mb-3">
+              <div className="text-meta text-muted-foreground mb-3">
                 {t('chat.connectionUnavailableDescription')}
               </div>
             </div>
@@ -254,7 +254,7 @@ export function CompactModelSelector({
                 setOpen(false)
                 navigate(routes.view.settings('ai'))
               }}
-              className="craft-control self-center text-xs underline text-foreground/70 hover:text-foreground"
+              className="craft-control self-center text-meta underline text-text-secondary hover:text-foreground"
             >
               {t('chat.modelPicker.openAiSettings')}
             </button>
@@ -289,15 +289,15 @@ export function CompactModelSelector({
                   >
                     <ConnectionIcon connection={conn} size={14} />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{conn.name}</div>
+                      <div className="text-body font-medium truncate">{conn.name}</div>
                       {!isAuthenticated && (
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-meta text-muted-foreground">
                           {t('settings.ai.notAuthenticated')}
                         </div>
                       )}
                     </div>
                     {isCurrentConnection && (
-                      <Check className="h-3 w-3 text-foreground/60 shrink-0" />
+                      <Check className="h-3 w-3 text-text-secondary shrink-0" />
                     )}
                     {isAuthenticated && (
                       <ChevronRight
@@ -331,7 +331,7 @@ export function CompactModelSelector({
                                   : 'hover:bg-foreground/5',
                               )}
                             >
-                              <span className="text-sm font-medium truncate">{modelName}</span>
+                              <span className="text-body font-medium truncate">{modelName}</span>
                               <div className="flex items-center gap-1 ml-3 shrink-0">
                                 {showVision && (
                                   <VisionToggle
@@ -344,7 +344,7 @@ export function CompactModelSelector({
                                   />
                                 )}
                                 {isSelectedModel && (
-                                  <Check className="h-3 w-3 text-foreground/60" />
+                                  <Check className="h-3 w-3 text-text-secondary" />
                                 )}
                               </div>
                             </button>
@@ -389,9 +389,9 @@ export function CompactModelSelector({
                     )}
                   >
                     <div className="min-w-0">
-                      <div className="text-sm font-medium truncate">{modelName}</div>
+                      <div className="text-body font-medium truncate">{modelName}</div>
                       {description && (
-                        <div className="text-xs text-foreground/50 truncate">
+                        <div className="text-meta text-text-secondary truncate">
                           {description}
                         </div>
                       )}
@@ -412,7 +412,7 @@ export function CompactModelSelector({
                         />
                       )}
                       {isSelected && (
-                        <Check className="h-3 w-3 text-foreground/60" />
+                        <Check className="h-3 w-3 text-text-secondary" />
                       )}
                     </div>
                   </button>
@@ -424,7 +424,7 @@ export function CompactModelSelector({
           {/* === Thinking section === */}
           {availableThinkingLevels.length > 0 && pickerMode !== 'unavailable' && (
             <>
-              <div className="px-3 pt-4 pb-1 text-xs font-medium text-foreground/60 uppercase tracking-wide select-none">
+              <div className="px-3 pt-4 pb-1 text-meta font-medium text-text-secondary uppercase tracking-wide select-none">
                 {t('chat.modelPicker.thinkingSection')}
               </div>
               {availableThinkingLevels.map(({ id, nameKey, descriptionKey }) => {
@@ -443,13 +443,13 @@ export function CompactModelSelector({
                       )}
                     >
                       <div className="min-w-0">
-                        <div className="text-sm font-medium">{t(nameKey)}</div>
-                        <div className="text-xs text-foreground/50">
+                        <div className="text-body font-medium">{t(nameKey)}</div>
+                        <div className="text-meta text-text-secondary">
                           {t(descriptionKey)}
                         </div>
                       </div>
                       {isSelected && (
-                        <Check className="h-3 w-3 text-foreground/60 shrink-0 ml-3" />
+                        <Check className="h-3 w-3 text-text-secondary shrink-0 ml-3" />
                       )}
                     </button>
                   </DrawerClose>
@@ -461,10 +461,10 @@ export function CompactModelSelector({
           {/* === Context section === */}
           {contextUsageLabel && (
             <>
-              <div className="px-3 pt-4 pb-1 text-xs font-medium text-foreground/60 uppercase tracking-wide select-none">
+              <div className="px-3 pt-4 pb-1 text-meta font-medium text-text-secondary uppercase tracking-wide select-none">
                 {t('chat.modelPicker.contextSection')}
               </div>
-              <div className="flex items-center justify-between px-3 py-2 text-xs text-foreground/60 select-none">
+              <div className="flex items-center justify-between px-3 py-2 text-meta text-text-secondary select-none">
                 <span>{t('chat.context')}</span>
                 <span className="flex items-center gap-1.5 tabular-nums">
                   {contextStatus?.isCompacting && <Spinner className="h-3 w-3" />}
@@ -497,8 +497,8 @@ function LockedSingleRow({
   return (
     <div className="flex items-center justify-between px-3 py-2 rounded-lg opacity-80 select-none">
       <div className="min-w-0">
-        <div className="text-sm font-medium truncate">{stripPiPrefixForDisplay(modelId)}</div>
-        <div className="text-xs text-foreground/50">{t('chat.connectionDefault')}</div>
+        <div className="text-body font-medium truncate">{stripPiPrefixForDisplay(modelId)}</div>
+        <div className="text-meta text-text-secondary">{t('chat.connectionDefault')}</div>
       </div>
       <div className="flex items-center gap-1 ml-3 shrink-0">
         {showVision && connection && (
@@ -511,7 +511,7 @@ function LockedSingleRow({
             }}
           />
         )}
-        <Check className="h-3 w-3 text-foreground/60" />
+        <Check className="h-3 w-3 text-text-secondary" />
       </div>
     </div>
   )
@@ -541,7 +541,10 @@ function VisionToggle({
       <ImageIcon
         className={cn(
           'h-3.5 w-3.5',
-          visionOn ? 'text-foreground/70' : 'text-foreground/30',
+          // A state toggle has to stay legible as a state: "on" carries primary
+          // ink, "off" drops to secondary text. Two dim tones would now read as
+          // identical because both sit above the 4.5:1 text floor.
+          visionOn ? 'text-foreground' : 'text-text-secondary',
         )}
       />
     </span>

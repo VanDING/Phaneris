@@ -31,7 +31,7 @@ function CurrentValueIndicator({ value }: { value: string }) {
   return (
     <svg
       viewBox="0 0 20 20"
-      className="h-5 w-5 shrink-0 text-foreground/40"
+      className="h-5 w-5 shrink-0 text-text-secondary"
       role="img"
       aria-label={value ? `Selected color ${value}` : 'No color selected'}
     >
@@ -41,7 +41,7 @@ function CurrentValueIndicator({ value }: { value: string }) {
         r="9"
         fill={value || 'none'}
         stroke="currentColor"
-        strokeWidth="1.5"
+
         strokeDasharray="2.5 2"
       />
     </svg>
@@ -93,7 +93,7 @@ export function InlineColorPickerRow({
           size="sm"
           variant="ghost"
           onClick={onClear}
-          className="text-foreground/60 hover:text-foreground"
+          className="text-text-secondary hover:text-foreground"
         >
           {clearLabel}
         </Button>

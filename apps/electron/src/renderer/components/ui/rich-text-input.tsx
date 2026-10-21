@@ -149,9 +149,9 @@ function renderBadgeHTML(
   } else {
     // Fall back to generic SVG icon based on type
     if (type === 'skill') {
-      iconHtml = `<span class="h-[12px] w-[12px] rounded-shape-xs bg-foreground/5 flex items-center justify-center text-foreground/50 shrink-0">${SKILL_ICON_SVG}</span>`
+      iconHtml = `<span class="h-[12px] w-[12px] rounded-shape-xs bg-foreground/5 flex items-center justify-center text-text-secondary shrink-0">${SKILL_ICON_SVG}</span>`
     } else if (type === 'source') {
-      iconHtml = `<span class="h-[12px] w-[12px] rounded-shape-xs bg-foreground/5 flex items-center justify-center text-foreground/50 shrink-0">${SOURCE_ICON_SVG}</span>`
+      iconHtml = `<span class="h-[12px] w-[12px] rounded-shape-xs bg-foreground/5 flex items-center justify-center text-text-secondary shrink-0">${SOURCE_ICON_SVG}</span>`
     } else if (type === 'file') {
       // Pick code file or generic file icon based on extension (no container, icon carries its own classes)
       iconHtml = isCodeFile(label) ? CODE_FILE_ICON_SVG : FILE_ICON_SVG
@@ -787,14 +787,14 @@ export const RichTextInput = React.forwardRef<RichTextInputHandle, RichTextInput
           autoCapitalize="none"
           autoCorrect="off"
           className={cn(
-            'outline-none text-sm whitespace-pre-wrap break-words',
+            'outline-none text-body whitespace-pre-wrap break-words',
             'min-h-[1.5em]',
             disabled && 'opacity-50 cursor-not-allowed',
             // Make text transparent when showing placeholder (so caret is still visible)
             showPlaceholder && 'text-transparent caret-foreground',
             className
           )}
-          // Use inline style for line-height to override text-sm's built-in line-height
+          // Use inline style for line-height to override text-body's built-in line-height
           style={{ lineHeight: 1.25 }}
           onInput={handleInput}
           onKeyDown={handleKeyDownInternal}
@@ -815,7 +815,7 @@ export const RichTextInput = React.forwardRef<RichTextInputHandle, RichTextInput
             placeholders={placeholderArray}
             intervalMs={5000}
             className={cn(
-              'absolute inset-0 text-sm text-muted-foreground pointer-events-none select-none',
+              'absolute inset-0 text-body text-muted-foreground pointer-events-none select-none',
               className
             )}
           />

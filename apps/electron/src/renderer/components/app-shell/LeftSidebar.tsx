@@ -494,6 +494,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         onClick={isOverlay ? undefined : link.onClick}
         data-tutorial={link.dataTutorial}
         aria-label={link.title}
+        aria-expanded={link.expandable ? link.expanded : undefined}
         title={undefined}
         className={cn(
           "sidebar-nav-button craft-control craft-row-focus craft-text-label group flex w-full items-center gap-2 rounded-control select-none",
@@ -515,8 +516,13 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
               <span className="absolute inset-0 flex items-center justify-center group-hover:opacity-0 transition-opacity duration-150">
                 {renderIcon(link)}
               </span>
-              {/* Toggle chevron - shown on hover. data-no-dnd prevents drag activation on click. */}
+              {/* Toggle chevron - shown on hover. data-no-dnd prevents drag
+                  activation on click. Decorative overlay: the row is already a
+                  <button>, so a nested control would be invalid markup; expansion
+                  state is exposed on the row through aria-expanded. */}
               {!isCollapsed && <span
+                role="presentation"
+                aria-hidden="true"
                 className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-pointer"
                 data-no-dnd="true"
                 data-touch-reveal="true"
@@ -546,7 +552,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         )}
         {/* Label Badge: Shows count or status on the right, revealed on section hover */}
         {!isCollapsed && link.label && (
-          <span data-touch-reveal="true" className={cn(link.afterTitle ? 'ml-0' : 'ml-auto', 'text-xs text-foreground/30 opacity-0 group-hover/section:opacity-100 group-data-[state=open]:opacity-100 group-data-[edit-active=true]:opacity-100 transition-opacity')}>
+          <span data-touch-reveal="true" className={cn(link.afterTitle ? 'ml-0' : 'ml-auto', 'text-meta text-text-secondary opacity-0 group-hover/section:opacity-100 group-data-[state=open]:opacity-100 group-data-[edit-active=true]:opacity-100 transition-opacity')}>
             {link.label}
           </span>
         )}

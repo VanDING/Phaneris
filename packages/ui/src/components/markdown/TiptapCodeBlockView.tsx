@@ -230,14 +230,14 @@ function TiptapCodeBlockView({ node, updateAttributes }: TiptapCodeBlockViewProp
               onChange={(event) => setLanguageFilter(event.target.value)}
               onKeyDown={handleLanguageFilterKeyDown}
               placeholder={t('editor.searchLanguages')}
-              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground placeholder:select-none"
+              className="w-full bg-transparent text-body outline-none placeholder:text-muted-foreground placeholder:select-none"
             />
           </div>
           <div className="h-px bg-foreground/5 -mx-1" />
 
           <div className="max-h-[240px] overflow-y-auto p-1">
             {filteredLanguageOptions.length === 0 ? (
-              <div className="px-2.5 py-2 text-xs text-foreground/50 select-none">{t('editor.noLanguagesFound')}</div>
+              <div className="px-2.5 py-2 text-meta text-text-secondary select-none">{t('editor.noLanguagesFound')}</div>
             ) : (
               filteredLanguageOptions.map((option, index) => {
                 const isActive = option.value === currentLanguage

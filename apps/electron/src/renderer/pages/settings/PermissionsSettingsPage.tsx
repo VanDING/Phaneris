@@ -219,7 +219,7 @@ export default function PermissionsSettingsPage() {
                   {/* About Section */}
                   <SettingsSection title={t("settings.permissions.aboutPermissions")}>
                     <SettingsCard className="px-4 py-3.5">
-                      <div className="text-sm text-text-secondary leading-relaxed space-y-1.5">
+                      <div className="text-body text-text-secondary leading-relaxed space-y-1.5">
                         <p>
                           {t("settings.permissions.aboutText1")}
                         </p>
@@ -268,8 +268,8 @@ export default function PermissionsSettingsPage() {
                         />
                       ) : (
                         <div className="p-8 text-center text-text-secondary">
-                          <p className="text-sm">{t("settings.permissions.noDefaultPermissions")}</p>
-                          <p className="text-xs mt-1 text-text-secondary">
+                          <p className="text-body">{t("settings.permissions.noDefaultPermissions")}</p>
+                          <p className="text-meta mt-1 text-text-secondary">
                             {t("settings.permissions.noDefaultPermissionsDesc")}
                           </p>
                         </div>
@@ -311,8 +311,8 @@ export default function PermissionsSettingsPage() {
                         />
                       ) : (
                         <div className="p-8 text-center text-text-secondary">
-                          <p className="text-sm">{t("settings.permissions.noCustomPermissions")}</p>
-                          <p className="text-xs mt-1 text-text-secondary">
+                          <p className="text-body">{t("settings.permissions.noCustomPermissions")}</p>
+                          <p className="text-meta mt-1 text-text-secondary">
                             {t("settings.permissions.noCustomPermissionsDesc")}
                           </p>
                         </div>

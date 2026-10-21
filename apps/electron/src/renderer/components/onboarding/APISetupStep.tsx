@@ -130,9 +130,9 @@ function OptionButton({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-sm">{option.name}</span>
+          <span className="font-medium text-body">{option.name}</span>
         </div>
-        <p className="mt-1 text-xs text-muted-foreground">
+        <p className="mt-1 text-meta text-muted-foreground">
           {option.description}
         </p>
       </div>
@@ -146,7 +146,7 @@ function OptionButton({
             : "border-muted-foreground/20"
         )}
       >
-        {isSelected && <Check className="size-3" strokeWidth={3} />}
+        {isSelected && <Check className="size-3" />}
       </div>
     </button>
   )
@@ -173,7 +173,7 @@ function ProviderSegmentedControl({
           key={segment}
           onClick={() => onSegmentChange(segment)}
           className={cn(
-            "motion-content flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-[color,background-color,border-color,box-shadow,opacity,transform]",
+            "motion-content flex-1 px-4 py-2 text-body font-medium rounded-lg transition-[color,background-color,border-color,box-shadow,opacity,transform]",
             activeSegment === segment
               ? "bg-background shadow-minimal text-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -282,7 +282,7 @@ export function APISetupStep({
 
       {/* Segment description */}
       <div className="bg-foreground-2 rounded-shape-lg p-4 mb-3">
-        <p className="text-sm text-muted-foreground text-center">
+        <p className="text-body text-muted-foreground text-center">
           {SEGMENT_DESCRIPTIONS[activeSegment]}
         </p>
       </div>

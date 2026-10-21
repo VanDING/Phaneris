@@ -796,7 +796,7 @@ export function SessionList({
             else if (currentFilter?.kind === 'label') params.label = currentFilter.labelId
             navigate(routes.action.newSession(Object.keys(params).length > 0 ? params : undefined))
           }}
-          className="inline-flex items-center h-7 px-3 text-xs font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors"
+          className="inline-flex items-center h-7 px-3 text-meta font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors"
         >
           {t("session.newSession")}
         </button>
@@ -870,7 +870,7 @@ export function SessionList({
               />
             )}
             {isSearchMode && matchingFilterItems.length === 0 && otherResultItems.length > 0 && (
-              <div className="px-4 py-3 text-sm text-muted-foreground">
+              <div className="px-4 py-3 text-body text-muted-foreground">
                 {t("session.noResultsInFilter")}
               </div>
             )}
@@ -879,13 +879,13 @@ export function SessionList({
         emptyState={
           isSearchMode && !isSearchingContent ? (
             <div className="flex flex-col items-center justify-center py-12 px-4">
-              <p className="text-sm text-muted-foreground">{t("session.noSessionsFound")}</p>
-              <p className="text-xs text-muted-foreground/60 mt-0.5">
+              <p className="text-body text-muted-foreground">{t("session.noSessionsFound")}</p>
+              <p className="text-meta text-text-secondary mt-0.5">
                 {t("session.noSessionsFoundDesc")}
               </p>
               <button
                 onClick={() => onSearchChange?.('')}
-                className="text-xs text-foreground hover:underline mt-2"
+                className="text-meta text-foreground hover:underline mt-2"
               >
                 {t("session.clearSearch")}
               </button>

@@ -35,16 +35,25 @@ export type ThemePreferenceMode = 'light' | 'dark' | 'system';
 export type ThemeFontPreference = 'theme' | 'inter' | 'system';
 
 /** Durable app-level theme preferences stored in config.json. */
+/** Interface scale: 1, 1.1 or 1.25. Multiplies control geometry and type tiers;
+ *  it never touches the reading column (--reading-scale is separate). */
+export type ThemeUiScale = 1 | 1.1 | 1.25
+export const UI_SCALE_VALUES: readonly ThemeUiScale[] = [1, 1.1, 1.25]
+
 export interface ThemePreferences {
   mode: ThemePreferenceMode;
   colorTheme: string;
   font: ThemeFontPreference;
+  /** Optional so every pre-existing preference literal and fixture stays valid;
+   *  normalization fills in 1. */
+  uiScale?: ThemeUiScale;
 }
 
 export const DEFAULT_THEME_PREFERENCES: ThemePreferences = {
   mode: 'system',
   colorTheme: 'default',
   font: 'theme',
+  uiScale: 1,
 };
 
 const USER_THEME_ID_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/;

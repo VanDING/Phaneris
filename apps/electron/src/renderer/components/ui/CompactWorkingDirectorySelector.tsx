@@ -102,9 +102,9 @@ export function CompactWorkingDirectorySelector({
           hasFolder ? (
             <span className="flex flex-col gap-0.5">
               <span className="font-medium">{t('chat.workingDirectory')}</span>
-              <span className="text-xs opacity-70">{formatPath(workingDirectory, homeDir)}</span>
+              <span className="text-meta opacity-70">{formatPath(workingDirectory, homeDir)}</span>
               {gitBranch && (
-                <span className="text-xs opacity-70">{t('chat.onBranch', { branch: gitBranch })}</span>
+                <span className="text-meta opacity-70">{t('chat.onBranch', { branch: gitBranch })}</span>
               )}
             </span>
           ) : (
@@ -122,13 +122,13 @@ export function CompactWorkingDirectorySelector({
           {showFilter && (
             <div className="px-4 pb-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40 pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary pointer-events-none" />
                 <input
                   type="text"
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
                   placeholder={t('chat.filterFolders')}
-                  className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-base outline-none focus:bg-foreground/[0.07] transition-colors"
+                  className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-body outline-none focus:bg-foreground/[0.07] transition-colors"
                 />
               </div>
             </div>
@@ -138,25 +138,25 @@ export function CompactWorkingDirectorySelector({
             {/* Current folder — pinned at top, non-interactive */}
             {hasFolder && (
               <div className="flex items-center gap-3 px-3 py-3 rounded-shape-xl bg-foreground/5">
-                <Icon_Folder className="h-5 w-5 shrink-0 text-foreground/60" />
+                <Icon_Folder className="h-5 w-5 shrink-0 text-text-secondary" />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{displayFolderName}</div>
-                  <div className="text-xs text-foreground/50 truncate">
+                  <div className="text-body font-medium truncate">{displayFolderName}</div>
+                  <div className="text-meta text-text-secondary truncate">
                     {formatPath(workingDirectory, homeDir)}
                   </div>
                   {gitBranch && (
-                    <div className="text-xs text-foreground/50 truncate">
+                    <div className="text-meta text-text-secondary truncate">
                       {t('chat.onBranch', { branch: gitBranch })}
                     </div>
                   )}
                 </div>
-                <Check className="h-4 w-4 shrink-0 text-foreground/60" />
+                <Check className="h-4 w-4 shrink-0 text-text-secondary" />
               </div>
             )}
 
             {/* Recent folders */}
             {filteredRecent.length === 0 && filter.trim() ? (
-              <div className="px-4 py-6 text-center text-sm text-foreground/50">
+              <div className="px-4 py-6 text-center text-body text-text-secondary">
                 {t('chat.noFoldersFound')}
               </div>
             ) : (
@@ -171,10 +171,10 @@ export function CompactWorkingDirectorySelector({
                         'flex items-center gap-3 px-3 py-3 rounded-shape-xl text-left transition-colors hover:bg-foreground/5 group/row',
                       )}
                     >
-                      <Icon_Folder className="h-5 w-5 shrink-0 text-foreground/60" />
+                      <Icon_Folder className="h-5 w-5 shrink-0 text-text-secondary" />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate">{recentFolderName}</div>
-                        <div className="text-xs text-foreground/50 truncate">
+                        <div className="text-body font-medium truncate">{recentFolderName}</div>
+                        <div className="text-meta text-text-secondary truncate">
                           {formatPath(path, homeDir)}
                         </div>
                       </div>
@@ -182,7 +182,7 @@ export function CompactWorkingDirectorySelector({
                         type="button"
                         aria-label={t('common.remove')}
                         onClick={(e) => handleRemoveRecent(e, path)}
-                        className="shrink-0 h-7 w-7 rounded-shape-md flex items-center justify-center text-foreground/30 hover:text-foreground/70 hover:bg-foreground/5 transition-colors"
+                        className="craft-icon-button shrink-0 h-7 w-7 rounded-shape-md flex items-center justify-center text-text-secondary hover:text-foreground hover:bg-foreground/5 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -198,18 +198,18 @@ export function CompactWorkingDirectorySelector({
             <button
               type="button"
               onClick={handleChooseFolder}
-              className="w-full h-12 px-3 rounded-shape-xl flex items-center gap-3 text-sm font-medium hover:bg-foreground/5 transition-colors"
+              className="w-full h-12 px-3 rounded-shape-xl flex items-center gap-3 text-body font-medium hover:bg-foreground/5 transition-colors"
             >
-              <Icon_Folder className="h-5 w-5 shrink-0 text-foreground/60" />
+              <Icon_Folder className="h-5 w-5 shrink-0 text-text-secondary" />
               <span>{t('chat.chooseFolder')}</span>
             </button>
             {showReset && (
               <button
                 type="button"
                 onClick={handleReset}
-                className="w-full h-12 px-3 rounded-shape-xl flex items-center gap-3 text-sm font-medium text-foreground/70 hover:bg-foreground/5 transition-colors"
+                className="w-full h-12 px-3 rounded-shape-xl flex items-center gap-3 text-body font-medium text-text-secondary hover:bg-foreground/5 transition-colors"
               >
-                <Icon_Home className="h-5 w-5 shrink-0 text-foreground/60" />
+                <Icon_Home className="h-5 w-5 shrink-0 text-text-secondary" />
                 <span>{t('common.reset')}</span>
               </button>
             )}

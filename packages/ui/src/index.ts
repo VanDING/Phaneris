@@ -330,6 +330,9 @@ export {
 
 // Utilities
 export { cn } from './lib/utils'
+export { useInitialFocus } from './lib/use-initial-focus'
+export { pressable, activateOnKey } from './lib/pressable'
+export { fileKind, type FileKind } from './lib/file-kind'
 export {
   MOTION_DURATION,
   MOTION_EASE,
@@ -389,6 +392,7 @@ export * from './components/chat/turn-utils'
 
 // Icons
 export {
+  FileKindIcon,
   Icon_Folder,
   Icon_Home,
   Icon_Inbox,

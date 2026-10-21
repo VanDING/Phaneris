@@ -17,6 +17,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useRegisterModal } from '@/context/ModalContext'
+import { useInitialFocus } from '@phaneris/ui'
 
 interface CreateProjectDialogProps {
   open: boolean
@@ -27,6 +28,7 @@ interface CreateProjectDialogProps {
 
 export function CreateProjectDialog({ open, onCancel, onSubmit }: CreateProjectDialogProps) {
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [name, setName] = React.useState('')
 
   // Register with modal context so X / Cmd+W closes the dialog first
@@ -58,7 +60,7 @@ export function CreateProjectDialog({ open, onCancel, onSubmit }: CreateProjectD
 
         <div className="pt-2">
           <Input
-            autoFocus
+            ref={initialFocusRef}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t('projectsList.createDialogNamePlaceholder')}

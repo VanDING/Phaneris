@@ -1,0 +1,9 @@
+{
+  "apps/electron/src/renderer/components/app-shell/SessionSearchHeader.tsx": "faa99bfb19400de97e4cad4d17de019eb3c1fa4f53868042b0ee614520efe4fa",
+  "packages/ui/src/styles/controls.css": "fa91a96aa9959c04dcee640cebfa849c0638a6cdfb7d23ff4aedcd6831cc1bc8",
+  "packages/ui/src/styles/motion.css": "f3732300522adc8b223a23ff33ed16f3e421aa7fcfc81ea325ff781004ba4562",
+  "packages/ui/src/styles/role-tokens.css": "3360c166cd1b3587699d0c31350d6f781204aa4e3df4eabdb1b682f45e4e80c3",
+  "packages/ui/src/styles/theme-tokens.css": "99fe0b82e131db52584addf8ed52ea70d251896140262418cfd8e1d75ba2a73e",
+  "scripts/verification/fixtures/design-w1.tsx": "acfb3c503f8275de1d5531d2f87cfd7ad530178bae36b28fccd6d9de92fde135",
+  "scripts/verification/design-w1-workflow.ts": "7297b443ad42b513b2ba2b92b0257d8b0e5fba06a6bdf12377e4bc4006fc7f16"
+}

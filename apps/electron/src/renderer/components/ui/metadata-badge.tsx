@@ -9,7 +9,8 @@ export interface MetadataBadgeProps extends React.ButtonHTMLAttributes<HTMLButto
   value?: string
   /** When set, the value text renders as a clickable link and calls this on click.
    *  The handler stops propagation so the chip's surrounding popover/trigger doesn't toggle. */
-  onValueClick?: (e: React.MouseEvent) => void
+  /** Zero-argument on purpose: the activation is shared by click and keyboard. */
+  onValueClick?: () => void
   /** Optional leading icon */
   icon?: React.ReactNode
   /** Optional trailing hint icon when no value is set */
@@ -52,7 +53,7 @@ export const MetadataBadge = React.forwardRef<HTMLButtonElement, MetadataBadgePr
         type={type}
         {...buttonProps}
         className={cn(
-          'h-control-md pl-3 pr-4 text-xs font-medium rounded-shape-lg flex items-center shrink-0',
+          'h-control-md pl-3 pr-4 text-meta font-medium rounded-shape-lg flex items-center shrink-0',
           'outline-none select-none transition-colors',
           shadow === 'minimal' && 'shadow-minimal',
           'bg-[color-mix(in_srgb,var(--background)_97%,var(--badge-color))]',
@@ -79,7 +80,16 @@ export const MetadataBadge = React.forwardRef<HTMLButtonElement, MetadataBadgePr
                   : 'opacity-60'
               )}
               title={onValueClick ? value : undefined}
-              onClick={onValueClick ? (e) => { e.stopPropagation(); onValueClick(e) } : undefined}
+              onClick={onValueClick ? (e) => { e.stopPropagation(); onValueClick() } : undefined}
+              role={onValueClick ? 'button' : undefined}
+              tabIndex={onValueClick ? 0 : undefined}
+              onKeyDown={onValueClick ? (e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return
+                e.preventDefault()
+                e.stopPropagation()
+                onValueClick()
+              } : undefined}
+
             >
               {value}
             </span>

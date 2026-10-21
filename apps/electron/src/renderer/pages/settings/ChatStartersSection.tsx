@@ -135,12 +135,12 @@ function WorkspaceChatStarters({ workspaceId, onSaved }: ChatStartersSectionProp
   return (
     <div className="space-y-3" data-testid="chat-starters-settings">
       {loading ? (
-        <div className="flex items-center gap-2 text-sm text-text-secondary">
+        <div className="flex items-center gap-2 text-body text-text-secondary">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
       ) : starters.length === 0 ? (
-        <p className="text-sm text-text-secondary" data-testid="chat-starters-empty">
+        <p className="text-body text-text-secondary" data-testid="chat-starters-empty">
           {t('settings.workspace.chatStartersEmpty')}
         </p>
       ) : (
@@ -152,8 +152,8 @@ function WorkspaceChatStarters({ workspaceId, onSaved }: ChatStartersSectionProp
               className="flex items-start justify-between gap-3 rounded-shape-lg bg-foreground/5 px-3 py-2"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium">{starter.label}</p>
-                <p className="truncate text-xs text-text-secondary">{starter.prompt}</p>
+                <p className="truncate text-body font-medium">{starter.label}</p>
+                <p className="truncate text-meta text-text-secondary">{starter.prompt}</p>
               </div>
               <Button
                 type="button"
@@ -189,7 +189,7 @@ function WorkspaceChatStarters({ workspaceId, onSaved }: ChatStartersSectionProp
           disabled={editDisabled}
           placeholder={t('settings.workspace.chatStartersPromptPlaceholder')}
           aria-label={t('settings.workspace.chatStartersPromptPlaceholder')}
-          className="craft-control craft-field-input min-h-16 rounded-shape-md px-3 py-2 text-sm"
+          className="craft-control craft-field-input min-h-16 rounded-shape-md px-3 py-2 text-body"
           onChange={value => setPrompt(value.slice(0, MAX_CHAT_STARTER_PROMPT_LENGTH))}
           onInput={(value, cursor) => inlineMention.handleInputChange(value, cursor)}
           data-testid="chat-starter-prompt-input"
@@ -205,7 +205,7 @@ function WorkspaceChatStarters({ workspaceId, onSaved }: ChatStartersSectionProp
           isSearching={inlineMention.isSearching}
         />
         <div className="flex items-center justify-between gap-3">
-          <p className="text-xs text-text-secondary">
+          <p className="text-meta text-text-secondary">
             {error
               ? <span className="text-destructive" data-testid="chat-starters-error">{error}</span>
               : t('settings.workspace.chatStartersHint', { count: starters.length, max: MAX_CHAT_STARTERS })}

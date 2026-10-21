@@ -1477,6 +1477,7 @@
   "settings.appearance.fontTheme": "Téma",
   "settings.appearance.iconHeader": "Ikon",
   "settings.appearance.interface": "Felület",
+  "settings.appearance.interfaceScale": "Felület méretezése",
   "settings.appearance.kanbanBoard": "Kanban tábla",
   "settings.appearance.kanbanBoardDesc": "A tábla oszlopszíneinek és animációjának testreszabása",
   "settings.appearance.kanbanColumnColor": "{{column}} színe",

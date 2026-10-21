@@ -19,7 +19,7 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        "craft-control craft-field-input flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border px-3 py-2 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 select-none data-[state=open]:ring-1 data-[state=open]:ring-foreground/30",
+        "craft-control craft-field-input flex h-control-lg w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border px-3 py-2 text-body placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 select-none data-[state=open]:ring-1 data-[state=open]:ring-foreground/30",
         className
       )}
       {...props}
@@ -116,7 +116,7 @@ function SelectLabel({
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
-      className={cn("px-2 py-1.5 text-sm font-semibold", className)}
+      className={cn("px-2 py-1.5 text-body font-semibold", className)}
       {...props}
     />
   )
@@ -131,7 +131,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "craft-menu-item relative flex w-full cursor-default select-none items-center rounded-sm py-[var(--theme-menu-item-padding-y)] pl-2 pr-8 text-sm outline-none focus:bg-foreground/5 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "craft-menu-item relative flex w-full cursor-default select-none items-center rounded-sm py-[var(--theme-menu-item-padding-y)] pl-2 pr-8 text-body outline-none focus:bg-foreground/5 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
       )}
       {...props}

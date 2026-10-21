@@ -15,7 +15,7 @@ export function ActionTooltip({ action, children }: ActionTooltipProps) {
       <TooltipTrigger asChild>{children}</TooltipTrigger>
       <TooltipContent>
         {label}
-        {hotkey && <kbd className="ml-2 text-xs opacity-60">{hotkey}</kbd>}
+        {hotkey && <kbd className="ml-2 text-meta opacity-60">{hotkey}</kbd>}
       </TooltipContent>
     </Tooltip>
   )

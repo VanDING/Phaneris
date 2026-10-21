@@ -96,7 +96,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
   // Terminal mode: raw monospace with minimal styling
   if (mode === 'terminal') {
     return (
-      <pre className={cn('font-mono text-sm whitespace-pre-wrap', className)}>
+      <pre className={cn('font-mono text-body whitespace-pre-wrap', className)}>
         <code>{code}</code>
       </pre>
     )
@@ -106,7 +106,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
   if (mode === 'minimal') {
     if (isLoading || !highlighted) {
       return (
-        <pre ref={bindElement} className={cn('font-mono text-sm whitespace-pre-wrap', className)}>
+        <pre ref={bindElement} className={cn('font-mono text-body whitespace-pre-wrap', className)}>
           <code>{code}</code>
         </pre>
       )
@@ -115,7 +115,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
     return (
       <div
         ref={bindElement}
-        className={cn('font-mono text-sm [&_pre]:!bg-transparent [&_pre]:!p-0 [&_pre]:whitespace-pre-wrap [&_pre]:break-all [&_code]:!bg-transparent', className)}
+        className={cn('font-mono text-body [&_pre]:!bg-transparent [&_pre]:!p-0 [&_pre]:whitespace-pre-wrap [&_pre]:break-all [&_code]:!bg-transparent', className)}
         dangerouslySetInnerHTML={{ __html: highlighted }}
       />
     )
@@ -125,7 +125,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
   return (
     <div ref={bindElement} className={cn('relative group rounded-card overflow-hidden border bg-muted/30', className)}>
       {/* Language label + copy button */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b text-xs">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b text-meta">
         <span className="text-muted-foreground font-medium uppercase tracking-wide">
           {resolvedLang !== 'text' ? resolvedLang : 'plain text'}
         </span>
@@ -136,11 +136,11 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
         >
           {copied ? (
             <svg className="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           ) : (
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           )}
         </button>
@@ -149,12 +149,12 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
       {/* Code content */}
       <div className="p-3 overflow-x-auto">
         {isLoading || !highlighted ? (
-          <pre className="font-mono text-sm whitespace-pre-wrap break-all">
+          <pre className="font-mono text-body whitespace-pre-wrap break-all">
             <code>{code}</code>
           </pre>
         ) : (
           <div
-            className="font-mono text-sm [&_pre]:!bg-transparent [&_pre]:!m-0 [&_pre]:!p-0 [&_pre]:whitespace-pre-wrap [&_pre]:break-all [&_code]:!bg-transparent"
+            className="font-mono text-body [&_pre]:!bg-transparent [&_pre]:!m-0 [&_pre]:!p-0 [&_pre]:whitespace-pre-wrap [&_pre]:break-all [&_code]:!bg-transparent"
             dangerouslySetInnerHTML={{ __html: highlighted }}
           />
         )}

@@ -209,6 +209,8 @@
     "--type-reading-size": "0.933333rem",
     "--type-title-size": "1.066667rem",
     "--type-display-size": "1.333333rem",
+    "--glyph-watermark-size": "2.25rem",
+    "--glyph-avatar-size": "3rem",
     "--ui-scale": "1",
     "--reading-scale": "1",
     "--ui-caption-size": ".75rem",

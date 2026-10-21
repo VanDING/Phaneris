@@ -236,15 +236,15 @@ function AllowedUsersCollapsible({
       >
         <SubRowIcon icon={Users} />
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-medium">
+          <div className="text-body font-medium">
             {t('settings.messaging.telegram.access.allowedUsersTitle')}
           </div>
-          <div className="mt-0.5 truncate text-xs text-foreground/50">{subtitle}</div>
+          <div className="mt-0.5 truncate text-meta text-text-secondary">{subtitle}</div>
         </div>
         {isExpanded ? (
-          <ChevronDown className="h-4 w-4 shrink-0 text-foreground/50" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-text-secondary" />
         ) : (
-          <ChevronRight className="h-4 w-4 shrink-0 text-foreground/50" />
+          <ChevronRight className="h-4 w-4 shrink-0 text-text-secondary" />
         )}
       </button>
 
@@ -281,7 +281,7 @@ function SubRowIcon({
       style={{ width: ROW_ICON_SIZE, height: ROW_ICON_SIZE }}
     >
       <Icon
-        className="text-foreground/50"
+        className="text-text-secondary"
         strokeWidth={strokeWidth}
         style={{ width: size, height: size }}
       />
@@ -296,10 +296,10 @@ function SectionDivider() {
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="px-4 pt-3 pb-1">
-      <div className="text-xs font-medium uppercase tracking-wide text-foreground/50">
+      <div className="text-meta font-medium uppercase tracking-wide text-text-secondary">
         {title}
       </div>
-      <div className="mt-0.5 text-xs text-foreground/50">{subtitle}</div>
+      <div className="mt-0.5 text-meta text-text-secondary">{subtitle}</div>
     </div>
   )
 }

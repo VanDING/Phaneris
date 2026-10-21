@@ -114,10 +114,10 @@ function CredentialHealthBanner({ issues, onReauthenticate }: CredentialHealthBa
       <div className="flex items-start gap-3">
         <AlertTriangle className="h-5 w-5 text-info-text flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-info-text">
+          <h4 className="text-body font-medium text-info-text">
             {t("settings.ai.credentialIssue")}
           </h4>
-          <p className="mt-1 text-sm text-info-text">
+          <p className="mt-1 text-body text-info-text">
             {getHealthIssueMessage(issues[0], t)}
           </p>
         </div>
@@ -125,7 +125,7 @@ function CredentialHealthBanner({ issues, onReauthenticate }: CredentialHealthBa
           variant="outline"
           size="sm"
           onClick={onReauthenticate}
-          className="flex-shrink-0 border-amber-500/30 text-info-text hover:bg-amber-500/10"
+          className="flex-shrink-0 border-info/30 text-info-text hover:bg-info/10"
         >
           {t("settings.ai.reAuthenticate")}
         </Button>
@@ -195,7 +195,7 @@ function ConnectionRow({ connection, usedForImages, isLastConnection, onRenameCl
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <ConnectionIcon connection={connection} size={14} />
             <span>{connection.name}</span>
-            <span className="text-xs font-normal text-text-secondary">{connection.authType === 'oauth' ? t("settings.ai.authSubscription") : t("settings.ai.authApiKey")}</span>
+            <span className="text-meta font-normal text-text-secondary">{connection.authType === 'oauth' ? t("settings.ai.authSubscription") : t("settings.ai.authApiKey")}</span>
             {connection.isDefault && (
               <span className="inline-flex items-center h-5 px-2 text-meta font-medium rounded-shape-sm bg-background shadow-minimal text-text-secondary">
                 {t("settings.ai.defaultConversationUse")}
@@ -1066,7 +1066,7 @@ export default function AiSettingsPage() {
               <div data-ai-settings-section="connections"><SettingsSection title={t("settings.ai.connections")} description={t("settings.ai.connectionsDesc")}>
                 <SettingsCard>
                   {llmConnections.length === 0 ? (
-                    <div className="px-4 py-6 text-center text-sm text-text-secondary">
+                    <div className="px-4 py-6 text-center text-body text-text-secondary">
                       {t("settings.ai.noConnections")}
                     </div>
                   ) : (
@@ -1099,7 +1099,7 @@ export default function AiSettingsPage() {
                 <div className="pt-0">
                   <button
                     onClick={() => openApiSetup()}
-                    className="craft-control inline-flex items-center h-8 px-3 text-sm rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors"
+                    className="craft-control inline-flex items-center h-8 px-3 text-body rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors"
                   >
                     {t("settings.ai.addConnection")}
                   </button>
@@ -1166,7 +1166,7 @@ export default function AiSettingsPage() {
                 <div className="space-y-3">
                   <div data-ai-advanced="images" data-image-generation-settings>
                     <SettingsDisclosure title={t("settings.ai.images.title")} summary={imageSummary} open={imageConfigurationOpen} onOpenChange={setImageConfigurationOpen}>
-                      <p className="px-4 pt-4 pb-1 text-xs text-text-secondary">{t("settings.ai.images.description")}</p>
+                      <p className="px-4 pt-4 pb-1 text-meta text-text-secondary">{t("settings.ai.images.description")}</p>
                       {imageStatus && (imageStatus.connections.length > 0 || imageStatus.settings.connectionSlug) ? <>
                         <SettingsMenuSelectRow label={t("settings.ai.connection")} value={imageStatus.settings.connectionSlug || 'automatic'} disabled={savingImages}
                           onValueChange={slug => void saveImageSettings(slug === 'automatic' ? {} : { connectionSlug: slug })}
@@ -1178,12 +1178,12 @@ export default function AiSettingsPage() {
                           options={[{ value: 'provider-default', label: t("settings.ai.useConnectionDefault"), description: imageEffective?.model },
                             ...(imageStatus.settings.model && !imageModelConnection.models.some(m => m.id === imageStatus.settings.model) ? [{ value: imageStatus.settings.model, label: imageStatus.settings.model, description: t("settings.ai.unavailableModel") }] : []),
                             ...imageModelConnection.models.map(model => ({ value: model.id, label: model.name }))]} />}
-                        {imageStatus.settings.connectionSlug && <p className="px-4 pb-4 text-xs text-text-secondary">{t("settings.ai.images.selectionNote")}</p>}
+                        {imageStatus.settings.connectionSlug && <p className="px-4 pb-4 text-meta text-text-secondary">{t("settings.ai.images.selectionNote")}</p>}
                       </> : !imageStatus && !imageSettingsError ? <SettingsRow label={t("settings.ai.images.effective")} description={t("common.loading")} /> : null}
                       {imageStatus && !imageStatus.connections.length && !imageStatus.settings.connectionSlug && <SettingsRow label={t("settings.ai.images.notConfigured")} description={t("settings.ai.images.setupGuidance")}>
                         <Button variant="outline" size="sm" onClick={openImageConnectionSetup}>{t("settings.ai.images.addConnection")}</Button>
                       </SettingsRow>}
-                      {(imageSettingsError || imageStatusError) && <div role="alert" className="px-4 pb-4 space-y-3 text-sm text-destructive-text">
+                      {(imageSettingsError || imageStatusError) && <div role="alert" className="px-4 pb-4 space-y-3 text-body text-destructive-text">
                         <p>{imageSettingsError || imageStatusError}</p>
                         <div className="flex flex-wrap gap-2">
                           {imageSettingsError && <Button variant="outline" size="sm" onClick={() => setImageRetry(n => n + 1)}>{t("common.retry")}</Button>}
@@ -1197,7 +1197,7 @@ export default function AiSettingsPage() {
                   </div>
                   <div data-ai-advanced="decisions" data-decision-settings>
                     <SettingsDisclosure title={t("settings.ai.decisions.title")} summary={decisionSummary} open={decisionConfigurationOpen} onOpenChange={setDecisionConfigurationOpen}>
-                      {decisionLoadError ? <div role="alert" className="craft-settings-padding flex flex-wrap items-center justify-between gap-3 text-sm text-destructive-text">
+                      {decisionLoadError ? <div role="alert" className="craft-settings-padding flex flex-wrap items-center justify-between gap-3 text-body text-destructive-text">
                         <span>{decisionLoadError}</span><Button variant="outline" size="sm" onClick={() => void refreshDecisionStatus(!decisionDraftsSeededRef.current)}>{t("common.retry")}</Button>
                       </div> : decisionStatus ? <>
                     <SettingsToggle
@@ -1254,7 +1254,7 @@ export default function AiSettingsPage() {
                       </SettingsRow>
                     )}
                     {decisionUsesLocalProvider && decisionPreset?.installHint && decisionProbe && !decisionProbe.reachable && (
-                      <p className="px-4 pb-3 -mt-1 text-xs text-text-secondary">
+                      <p className="px-4 pb-3 -mt-1 text-meta text-text-secondary">
                         {t("settings.ai.decisions.localServerInstallHint")}{' '}
                         <code className="font-mono text-meta text-text-secondary select-all">{decisionPreset.installHint}</code>
                       </p>
@@ -1320,11 +1320,11 @@ export default function AiSettingsPage() {
                         {decisionTesting ? t("common.checking") : t("settings.ai.decisions.testRun")}
                       </Button>
                     </SettingsRow>
-                    <p className="px-4 pb-4 -mt-1 text-xs text-text-secondary">
+                    <p className="px-4 pb-4 -mt-1 text-meta text-text-secondary">
                       {t("settings.ai.decisions.privacyNote")}
                     </p>
                       <div className="border-t border-border/50">
-                            <div className="px-4 pt-3 text-xs text-text-secondary" aria-live="polite">
+                            <div className="px-4 pt-3 text-meta text-text-secondary" aria-live="polite">
                               {t('settings.ai.decisions.runHint')}
                             </div>
                             {decisionReportedGroups.map((group, index) => (
@@ -1351,7 +1351,7 @@ export default function AiSettingsPage() {
                   </div>
                   <div data-ai-advanced="performance">
                     <SettingsDisclosure title={t("settings.ai.performance")} summary={performanceSummary} open={performanceOpen} onOpenChange={setPerformanceOpen}>
-                  <p className="px-4 pt-4 text-xs text-text-secondary">{t("settings.ai.cacheScope")}</p>
+                  <p className="px-4 pt-4 text-meta text-text-secondary">{t("settings.ai.cacheScope")}</p>
                   <SettingsToggle
                     label={t("settings.ai.extendedPromptCache")}
                     description={t("settings.ai.extendedPromptCacheDesc")}
@@ -1388,7 +1388,7 @@ export default function AiSettingsPage() {
                       <RtkUpdateDialog open={rtkUpdateOpen} onOpenChange={setRtkUpdateOpen} status={rtkStatus} onStatusChange={setRtkStatus} />
                       {!rtkStatus.outdated && rtkEnabled && rtkGain && rtkGain.totalCommands > 0 && (
                         <div className="px-4 pb-4 -mt-1">
-                          <div className="flex items-center justify-between text-xs text-text-secondary">
+                          <div className="flex items-center justify-between text-meta text-text-secondary">
                             <span>
                               {t("settings.ai.rtk.gainSummary", {
                                 saved: formatTokenCount(rtkGain.totalSaved),

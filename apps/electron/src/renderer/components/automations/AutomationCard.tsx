@@ -58,12 +58,14 @@ export function AutomationCard({
 
         {/* Name + summary */}
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-medium truncate">{automation.name}</div>
-          <div className="text-xs text-foreground/50 truncate">{automation.summary}</div>
+          <div className="text-body font-medium truncate">{automation.name}</div>
+          <div className="text-meta text-text-secondary truncate">{automation.summary}</div>
         </div>
 
-        {/* Enable toggle */}
-        <div onClick={(e) => e.stopPropagation()}>
+        {/* Enable toggle. The wrapper only stops the card's click; it carries no
+            semantics of its own, so it is presentation and the switch inside
+            keeps its name and role. */}
+        <div role="presentation" onClick={(e) => e.stopPropagation()}>
           <Switch
             checked={automation.enabled}
             onCheckedChange={(checked) => onToggleEnabled?.(checked)}
@@ -77,7 +79,7 @@ export function AutomationCard({
           {/* Trigger info */}
           <div className="space-y-1">
             <h5 className="text-micro font-medium text-muted-foreground uppercase tracking-wider">{t('automations.sectionWhen')}</h5>
-            <div className="text-xs text-foreground/70">
+            <div className="text-meta text-text-secondary">
               <span className="font-medium">{getEventDisplayName(automation.event)}</span>
               {automation.matcher && (
                 <span className="ml-2">
@@ -103,7 +105,7 @@ export function AutomationCard({
             {onTest && (
               <button
                 onClick={onTest}
-                className="px-2.5 py-1 text-xs font-medium rounded-md bg-foreground/[0.03] shadow-minimal hover:bg-foreground/[0.06] transition-colors"
+                className="px-2.5 py-1 text-meta font-medium rounded-md bg-foreground/[0.03] shadow-minimal hover:bg-foreground/[0.06] transition-colors"
               >
                 {t('automations.runTest')}
               </button>

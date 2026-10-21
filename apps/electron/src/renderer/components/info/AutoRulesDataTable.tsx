@@ -97,7 +97,7 @@ function getColumns(t: TFunction): ColumnDef<AutoRuleRow>[] {
       cell: ({ row }) => (
         <div className="p-1.5 pl-2.5 flex items-center gap-1.5">
           <LabelIcon label={row.original.label} size="xs" />
-          <span className="text-sm truncate">{row.original.label.name}</span>
+          <span className="text-body truncate">{row.original.label.name}</span>
         </div>
       ),
       minSize: 100,
@@ -112,7 +112,7 @@ function getColumns(t: TFunction): ColumnDef<AutoRuleRow>[] {
           {isSemanticAutoLabelRule(row.original.rule) ? (
             <>
               <Info_Badge color="muted" className="whitespace-nowrap shrink-0">{t("table.semanticRule")}</Info_Badge>
-              <span className="text-sm truncate" title={row.original.rule.semantic}>{row.original.rule.semantic}</span>
+              <span className="text-body truncate" title={row.original.rule.semantic}>{row.original.rule.semantic}</span>
             </>
           ) : (
             <PatternBadge pattern={row.original.rule.pattern} />
@@ -128,7 +128,7 @@ function getColumns(t: TFunction): ColumnDef<AutoRuleRow>[] {
       accessorFn: (row) => (isSemanticAutoLabelRule(row.rule) ? `≥ ${(row.rule.threshold ?? DEFAULT_SEMANTIC_RULE_THRESHOLD).toFixed(2)}` : row.rule.flags ?? 'gi'),
       cell: ({ row }) => (
         <div className="p-1.5 pl-2.5">
-          <span className="text-xs text-muted-foreground font-mono">
+          <span className="text-meta text-muted-foreground font-mono">
             {isSemanticAutoLabelRule(row.original.rule)
               ? `≥ ${(row.original.rule.threshold ?? DEFAULT_SEMANTIC_RULE_THRESHOLD).toFixed(2)}`
               : row.original.rule.flags ?? 'gi'}
@@ -151,7 +151,7 @@ function getColumns(t: TFunction): ColumnDef<AutoRuleRow>[] {
                 {text}
               </Info_Badge>
             ) : (
-              <span className="text-muted-foreground/50 text-sm">—</span>
+              <span className="text-text-secondary text-body">—</span>
             )}
           </div>
         )
@@ -164,7 +164,7 @@ function getColumns(t: TFunction): ColumnDef<AutoRuleRow>[] {
       accessorFn: (row) => row.rule.description ?? '',
       cell: ({ row }) => (
         <div className="p-1.5 pl-2.5 min-w-0">
-          <span className="truncate block text-sm">
+          <span className="truncate block text-body">
             {row.original.rule.description || '—'}
           </span>
         </div>
@@ -222,7 +222,7 @@ export function AutoRulesDataTable({
         'motion-interactive p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform]',
         'opacity-0 group-hover:opacity-100',
         'bg-background/80 backdrop-blur-sm shadow-minimal',
-        'text-muted-foreground/50 hover:text-foreground',
+        'text-text-secondary hover:text-foreground',
         'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100'
       )}`}
       title={t("table.viewFullscreen")}

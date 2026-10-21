@@ -28,7 +28,7 @@ export function MarkdownLatexBlock({ code, className }: MarkdownLatexBlockProps)
 
   if (!html) {
     return (
-      <pre className={cn('font-mono text-sm whitespace-pre-wrap text-destructive', className)}>
+      <pre className={cn('font-mono text-body whitespace-pre-wrap text-destructive', className)}>
         <code>{code}</code>
       </pre>
     )

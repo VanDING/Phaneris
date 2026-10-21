@@ -27,8 +27,10 @@ export function GradientResizeHandle({ className, headerHeight = 50 }: GradientR
     <ResizablePrimitive.Separator
       className={cn(
         // 1px visual width, touch area extends via absolute positioning
-        "relative flex w-px items-center justify-center",
+        "group relative flex w-px items-center justify-center",
         "border-0 shadow-none outline-none ring-0",
+        // The separator is keyboard-resizable, so it must show focus. A ring is
+        // unusable on a 1px strip; the divider itself takes the accent colour.
         "focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
         "after:hidden before:hidden",
         className
@@ -48,8 +50,9 @@ export function GradientResizeHandle({ className, headerHeight = 50 }: GradientR
         onMouseLeave={handlers.onMouseLeave}
         className="absolute inset-y-0 -left-1.5 -right-1.5 flex justify-center cursor-col-resize"
       >
-        {/* Static 1px separator - always visible as panel divider */}
-        <div className="w-px h-full bg-border" />
+        {/* Static 1px separator - always visible as panel divider. Focus turns
+            it accent-coloured and widens the visible band to 2px. */}
+        <div className="w-px h-full bg-border group-focus-visible:w-0.5 group-focus-visible:bg-accent" />
 
         {/* Gradient overlay - fades in on hover, positioned over the separator */}
         <div

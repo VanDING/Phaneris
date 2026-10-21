@@ -195,7 +195,7 @@ export function WorkspaceSwitcher({
             <button
               type="button"
               data-workspace-switcher="topbar"
-              className="header-icon-btn titlebar-no-drag ml-1 flex-1 min-w-0 flex items-center justify-start gap-0.5 h-control-md px-3 rounded-shape-lg border border-foreground/6 text-body text-foreground/50 hover:bg-foreground/5 hover:text-foreground transition-colors cursor-pointer data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
+              className="header-icon-btn titlebar-no-drag ml-1 flex-1 min-w-0 flex items-center justify-start gap-0.5 h-control-md px-3 rounded-shape-lg border border-foreground/6 text-body text-text-secondary hover:bg-foreground/5 hover:text-foreground transition-colors cursor-pointer data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
               aria-label={t('workspace.selectWorkspace')}
             >
               <WorkspaceAvatar
@@ -233,7 +233,7 @@ export function WorkspaceSwitcher({
               />
               {!isCollapsed && (
                 <>
-                  <FadingText className="ml-1 font-sans min-w-0 text-sm" fadeWidth={36}>
+                  <FadingText className="ml-1 font-sans min-w-0 text-body" fadeWidth={36}>
                     {selectedWorkspace?.name || 'Select workspace'}
                   </FadingText>
                   {selectedWorkspace?.remoteServer && (
@@ -281,7 +281,7 @@ export function WorkspaceSwitcher({
                     workspaceName={workspace.name}
                     src={workspaceIconMap.get(workspace.id)}
                     className="h-5 w-5 rounded-full ring-1 ring-border/50"
-                    fallbackClassName="rounded-full text-xs"
+                    fallbackClassName="rounded-full text-meta"
                   />
                   <span className="truncate">{workspace.name}</span>
                   {workspace.remoteServer && (

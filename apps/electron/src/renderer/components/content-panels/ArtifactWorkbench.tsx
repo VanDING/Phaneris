@@ -225,14 +225,14 @@ export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {
       </div>
 
       {artifact.validation && (
-        <div className={`border-b border-border/50 px-3 py-2 text-xs ${artifact.validation.valid ? 'text-emerald-700 dark:text-emerald-300' : 'text-destructive'}`}>
+        <div className={`border-b border-border/50 px-3 py-2 text-meta ${artifact.validation.valid ? 'text-success-text' : 'text-destructive'}`}>
           <span className="font-semibold">{artifact.validation.summary}</span>
           {artifact.validation.errors.map((error) => <div key={error}>{error}</div>)}
           {artifact.validation.warnings.map((warning) => <div key={warning}>{warning}</div>)}
         </div>
       )}
       {artifact.status === 'conflict' && (
-        <div className="border-b border-destructive/20 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+        <div className="border-b border-destructive/20 bg-destructive/5 px-3 py-2 text-meta text-destructive">
           {t('artifact.conflictHelp')}
         </div>
       )}
@@ -245,7 +245,7 @@ export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {
             value={draftText}
             onChange={(event) => setDraftText(event.target.value)}
             spellCheck={false}
-            className="h-full w-full resize-none bg-background p-4 font-mono text-xs leading-relaxed outline-none"
+            className="h-full w-full resize-none bg-background p-4 font-mono text-meta leading-relaxed outline-none"
           />
         ) : (renderedPreviewPath || resolved.activePath) ? (
           <FilePreviewContent

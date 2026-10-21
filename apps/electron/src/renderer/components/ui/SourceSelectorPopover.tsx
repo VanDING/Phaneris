@@ -65,7 +65,7 @@ export function SourceSelectorPopover({
               !state.selected && 'opacity-0',
             )}
           >
-            <Check className="h-2.5 w-2.5 text-white dark:text-black" strokeWidth={3} />
+            <Check className="h-2.5 w-2.5 text-white dark:text-black" />
           </div>
         </div>
       )}

@@ -1,0 +1,2331 @@
+{
+  "schemaVersion": 1,
+  "workflow": "long-session-budget",
+  "startedAt": "2026-10-20T12:49:04.713Z",
+  "finishedAt": "2026-10-20T12:50:19.795Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\long-session-budget-workflow.ts",
+    "--output-dir=E:\\Phaneris\\docs\\verification\\results\\long-session-budget-2026-10-20"
+  ],
+  "source": {
+    "headSha": "ac85d33b0ed08cd36e274ac3dcbbf5d18189438b",
+    "dirtyPaths": [
+      "M DESIGN.md",
+      " M apps/electron/resources/release-notes/next.md",
+      " M apps/electron/resources/scripts/pdf_tool.py",
+      " M apps/electron/resources/themes/ink.json",
+      " M apps/electron/src/renderer/App.tsx",
+      " M apps/electron/src/renderer/components/KeyboardShortcuts.tsx",
+      " M apps/electron/src/renderer/components/KeyboardShortcutsDialog.tsx",
+      " M apps/electron/src/renderer/components/ResetConfirmationDialog.tsx",
+      " M apps/electron/src/renderer/components/RtkUpdateDialog.tsx",
+      " M apps/electron/src/renderer/components/ServerDirectoryBrowser.tsx",
+      " M apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
+      " M apps/electron/src/renderer/components/apisetup/OAuthConnect.tsx",
+      " M apps/electron/src/renderer/components/app-menu/MobileMenuItem.tsx",
+      " M apps/electron/src/renderer/components/app-menu/MobileMenuPage.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx",
+      " M apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      " M apps/electron/src/renderer/components/app-shell/AttachmentPreview.tsx",
+      " M apps/electron/src/renderer/components/app-shell/BackgroundFinishedChip.tsx",
+      " M apps/electron/src/renderer/components/app-shell/BatchSessionMenu.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+      " M apps/electron/src/renderer/components/app-shell/CompactSessionListFilter.tsx",
+      " M apps/electron/src/renderer/components/app-shell/CompactSessionMenu.tsx",
+      " M apps/electron/src/renderer/components/app-shell/CompactWorkspaceSwitcher.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ContextWorkbenchTabs.tsx",
+      " M apps/electron/src/renderer/components/app-shell/FabNewChat.tsx",
+      " M apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ModelRecoveryReconciliationDialog.tsx",
+      " M apps/electron/src/renderer/components/app-shell/MultiSelectPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+      " M apps/electron/src/renderer/components/app-shell/PluginsListPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ProjectMultiSelectFilter.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ProjectsListPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/RecoveryReconciliationDialog.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SessionInfoPopover.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SessionItem.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SessionList.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SessionMenuParts.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SessionSearchHeader.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SessionStatusIcon.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SetupAuthBanner.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SkillsListPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SourcesListPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SurfaceErrorBoundary.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SurfaceLauncherButtons.tsx",
+      " M apps/electron/src/renderer/components/app-shell/TaskActionMenu.tsx",
+      " M apps/electron/src/renderer/components/app-shell/TopBar.tsx",
+      " M apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
+      " M apps/electron/src/renderer/components/app-shell/WorkspaceSwitcher.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/CompactPermissionModeSelector.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/ImageSupportWarningBanner.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/InputErrorBoundary.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/ToolbarStatusSlot.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/WorkingDirectorySelector.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/structured/AdminApprovalRequest.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/structured/CredentialRequest.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/structured/PermissionRequest.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/structured/QuestionPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/CalendarUntimedRail.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/CalendarView.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanBoardContainer.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/NewTaskComposer.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/SubtaskRow.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/TaskChatPreview.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/WorkItemListView.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/node-state-pill.ts",
+      " M apps/electron/src/renderer/components/artifacts/ArtifactCard.tsx",
+      " M apps/electron/src/renderer/components/automations/ActionTypeIcon.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationActionPreview.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationActionRow.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationAvatar.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationCard.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationInfoPage.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationTestPanel.tsx",
+      " M apps/electron/src/renderer/components/automations/AutomationsListPanel.tsx",
+      " M apps/electron/src/renderer/components/automations/BatchAutomationMenu.tsx",
+      " M apps/electron/src/renderer/components/automations/CronBuilder.tsx",
+      " M apps/electron/src/renderer/components/browser/BrowserTabStrip.tsx",
+      " M apps/electron/src/renderer/components/chat/AuthRequestCard.tsx",
+      " M apps/electron/src/renderer/components/chat/EmptyStateHint.tsx",
+      " M apps/electron/src/renderer/components/content-panels/ArtifactWorkbench.tsx",
+      " M apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
+      " M apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
+      " M apps/electron/src/renderer/components/content-panels/FilePreviewContent.tsx",
+      " M apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
+      " M apps/electron/src/renderer/components/content-panels/MarkdownArtifactEditor.tsx",
+      " M apps/electron/src/renderer/components/content-panels/MarkdownPopoutOverlay.tsx",
+      " M apps/electron/src/renderer/components/content-panels/OfficeFilePreview.tsx",
+      " M apps/electron/src/renderer/components/content-panels/PdfFilePreview.tsx",
+      " M apps/electron/src/renderer/components/content-panels/TerminalPanel.tsx",
+      " M apps/electron/src/renderer/components/content-panels/session-decisions/DecisionSummary.tsx",
+      " M apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
+      " M apps/electron/src/renderer/components/files/FileViewer.tsx",
+      " M apps/electron/src/renderer/components/icons/PanelLeftRounded.tsx",
+      " M apps/electron/src/renderer/components/icons/SquarePenRounded.tsx",
+      " M apps/electron/src/renderer/components/icons/TodoStateIcons.tsx",
+      " M apps/electron/src/renderer/components/info/AutoRulesDataTable.tsx",
+      " M apps/electron/src/renderer/components/info/Info_Alert.tsx",
+      " M apps/electron/src/renderer/components/info/Info_Badge.tsx",
+      " M apps/electron/src/renderer/components/info/Info_DataTable.tsx",
+      " M apps/electron/src/renderer/components/info/Info_GroupedList.tsx",
+      " M apps/electron/src/renderer/components/info/Info_Markdown.tsx",
+      " M apps/electron/src/renderer/components/info/Info_Page.tsx",
+      " M apps/electron/src/renderer/components/info/Info_Section.tsx",
+      " M apps/electron/src/renderer/components/info/Info_Table.tsx",
+      " M apps/electron/src/renderer/components/info/LabelsDataTable.tsx",
+      " M apps/electron/src/renderer/components/info/PermissionsDataTable.tsx",
+      " M apps/electron/src/renderer/components/messaging/LarkConnectDialog.tsx",
+      " M apps/electron/src/renderer/components/messaging/PairingCodeDialog.tsx",
+      " M apps/electron/src/renderer/components/messaging/TelegramConnectDialog.tsx",
+      " M apps/electron/src/renderer/components/messaging/TelegramSupergroupPairingDialog.tsx",
+      " M apps/electron/src/renderer/components/messaging/WeChatConnectDialog.tsx",
+      " M apps/electron/src/renderer/components/messaging/WeComConnectDialog.tsx",
+      " M apps/electron/src/renderer/components/messaging/WhatsAppConnectDialog.tsx",
+      " M apps/electron/src/renderer/components/messaging/access/AccessModeBanner.tsx",
+      " M apps/electron/src/renderer/components/messaging/access/BindingAllowListPopover.tsx",
+      " M apps/electron/src/renderer/components/messaging/access/OwnersListEditor.tsx",
+      " M apps/electron/src/renderer/components/messaging/access/PendingSendersList.tsx",
+      " M apps/electron/src/renderer/components/messaging/access/TelegramAccessSection.tsx",
+      " M apps/electron/src/renderer/components/onboarding/APISetupStep.tsx",
+      " M apps/electron/src/renderer/components/onboarding/CompletionStep.tsx",
+      " M apps/electron/src/renderer/components/onboarding/CredentialsStep.tsx",
+      " M apps/electron/src/renderer/components/onboarding/GitBashWarning.tsx",
+      " M apps/electron/src/renderer/components/onboarding/LocalModelStep.tsx",
+      " M apps/electron/src/renderer/components/onboarding/ProviderSelectStep.tsx",
+      " M apps/electron/src/renderer/components/onboarding/ReauthScreen.tsx",
+      " M apps/electron/src/renderer/components/onboarding/primitives.tsx",
+      " M apps/electron/src/renderer/components/pages/PageGrantRequestDialog.tsx",
+      " M apps/electron/src/renderer/components/pages/PageGrantsDialog.tsx",
+      " M apps/electron/src/renderer/components/pages/PageSourceAuthBanner.tsx",
+      " M apps/electron/src/renderer/components/pages/PageTile.tsx",
+      " M apps/electron/src/renderer/components/pages/PageView.tsx",
+      " M apps/electron/src/renderer/components/pages/PagesHome.tsx",
+      " M apps/electron/src/renderer/components/pages/SharePageDialog.tsx",
+      " M apps/electron/src/renderer/components/pages/page-visuals.tsx",
+      " M apps/electron/src/renderer/components/preview/TableOfContents.tsx",
+      " M apps/electron/src/renderer/components/projects/CreateProjectDialog.tsx",
+      " M apps/electron/src/renderer/components/projects/ProjectManagementSurface.tsx",
+      " M apps/electron/src/renderer/components/projects/ProjectSelectMenu.tsx",
+      " M apps/electron/src/renderer/components/projects/WorkItemFilterControls.tsx",
+      " M apps/electron/src/renderer/components/right-sidebar/SessionFilesSection.tsx",
+      " M apps/electron/src/renderer/components/settings/SearchableModelInput.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsDisclosure.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsMenuSelect.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsRadioGroup.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsSection.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsSegmentedControl.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsSelect.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsTextarea.tsx",
+      " M apps/electron/src/renderer/components/settings/SettingsToggle.tsx",
+      " M apps/electron/src/renderer/components/settings/WorkspaceConversationSettings.tsx",
+      " M apps/electron/src/renderer/components/ui/CompactSourceSelector.tsx",
+      " M apps/electron/src/renderer/components/ui/CompactWorkingDirectorySelector.tsx",
+      " M apps/electron/src/renderer/components/ui/EditPopover.tsx",
+      " M apps/electron/src/renderer/components/ui/HeaderIconButton.tsx",
+      " M apps/electron/src/renderer/components/ui/SkillSelectorPopover.tsx",
+      " M apps/electron/src/renderer/components/ui/SourceSelectorPopover.tsx",
+      " M apps/electron/src/renderer/components/ui/action-menu-item.tsx",
+      " M apps/electron/src/renderer/components/ui/action-tooltip.tsx",
+      " M apps/electron/src/renderer/components/ui/badge.tsx",
+      " M apps/electron/src/renderer/components/ui/button.tsx",
+      " M apps/electron/src/renderer/components/ui/calendar.tsx",
+      " M apps/electron/src/renderer/components/ui/color-picker.tsx",
+      " M apps/electron/src/renderer/components/ui/command.tsx",
+      " M apps/electron/src/renderer/components/ui/context-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/data-table.tsx",
+      " M apps/electron/src/renderer/components/ui/date-field.tsx",
+      " M apps/electron/src/renderer/components/ui/dialog.tsx",
+      " M apps/electron/src/renderer/components/ui/dropdown-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/empty.tsx",
+      " M apps/electron/src/renderer/components/ui/entity-list-badge.tsx",
+      " M apps/electron/src/renderer/components/ui/entity-list-empty.tsx",
+      " M apps/electron/src/renderer/components/ui/entity-list-label-badge.tsx",
+      " M apps/electron/src/renderer/components/ui/entity-list.tsx",
+      " M apps/electron/src/renderer/components/ui/entity-row.tsx",
+      " M apps/electron/src/renderer/components/ui/gradient-resize-handle.tsx",
+      " M apps/electron/src/renderer/components/ui/inline-color-picker-row.tsx",
+      " M apps/electron/src/renderer/components/ui/input.tsx",
+      " M apps/electron/src/renderer/components/ui/kbd.tsx",
+      " M apps/electron/src/renderer/components/ui/label-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/label-value-popover.tsx",
+      " M apps/electron/src/renderer/components/ui/label.tsx",
+      " M apps/electron/src/renderer/components/ui/mention-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/metadata-badge.tsx",
+      " M apps/electron/src/renderer/components/ui/rich-text-input.tsx",
+      " M apps/electron/src/renderer/components/ui/select.tsx",
+      " M apps/electron/src/renderer/components/ui/session-status-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/skill-mention-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/slash-command-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/source-status-indicator.tsx",
+      " M apps/electron/src/renderer/components/ui/styled-context-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/table.tsx",
+      " M apps/electron/src/renderer/components/ui/tabs.tsx",
+      " M apps/electron/src/renderer/components/ui/textarea.tsx",
+      " M apps/electron/src/renderer/components/workspace/AddWorkspaceStep_Choice.tsx",
+      " M apps/electron/src/renderer/components/workspace/AddWorkspaceStep_ConnectRemote.tsx",
+      " M apps/electron/src/renderer/components/workspace/AddWorkspaceStep_CreateNew.tsx",
+      " M apps/electron/src/renderer/components/workspace/AddWorkspaceStep_OpenFolder.tsx",
+      " M apps/electron/src/renderer/components/workspace/AddWorkspace_RadioOption.tsx",
+      " M apps/electron/src/renderer/components/workspace/WorkspacePicker.tsx",
+      " M apps/electron/src/renderer/components/workspace/primitives.tsx",
+      " M apps/electron/src/renderer/context/AppShellContext.tsx",
+      " M apps/electron/src/renderer/context/ThemeContext.tsx",
+      " M apps/electron/src/renderer/hooks/useWorkspaceChatStarters.ts",
+      " M apps/electron/src/renderer/lib/session-file-tree.tsx",
+      " M apps/electron/src/renderer/main.tsx",
+      " M apps/electron/src/renderer/pages/ChatPage.tsx",
+      " M apps/electron/src/renderer/pages/PluginInfoPage.tsx",
+      " M apps/electron/src/renderer/pages/ProjectInfoPage.tsx",
+      " M apps/electron/src/renderer/pages/ShortcutsPage.tsx",
+      " M apps/electron/src/renderer/pages/SkillInfoPage.tsx",
+      " M apps/electron/src/renderer/pages/SourceInfoPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/AppSettingsPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/ChatStartersSection.tsx",
+      " M apps/electron/src/renderer/pages/settings/LabelsSettingsPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/MessagingSettingsPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/PermissionsSettingsPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/PreferencesPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/ProfileActivityHeatmap.tsx",
+      " M apps/electron/src/renderer/pages/settings/ServerSettingsPage.tsx",
+      " M apps/electron/src/renderer/pages/settings/SettingsNavigator.tsx",
+      " M apps/electron/src/renderer/pages/settings/WorkspaceSettingsPage.tsx",
+      " M apps/electron/src/renderer/utils/session.ts",
+      " M apps/viewer/src/components/Header.tsx",
+      " M apps/viewer/src/components/SessionUpload.tsx",
+      " M apps/webui/src/App.tsx",
+      " M apps/webui/src/main.tsx",
+      " M bun.lock",
+      " M docs/README.md",
+      " M docs/dependencies/upgrade-plan-2026-10-18.md",
+      " M docs/design/theme-contract.generated.json",
+      " M docs/design/theme-contract.generated.md",
+      " M docs/verification/README.md",
+      " M docs/verification/upgrade-2026-10-18-failure-matrix.md",
+      " M docs/verification/upgrade-2026-10-18-implementation.md",
+      " M package.json",
+      " M packages/server-core/src/handlers/rpc/files.ts",
+      " M packages/server-core/src/services/heic.ts",
+      " M packages/shared/src/config/appearance.ts",
+      " M packages/shared/src/config/persisted-types.ts",
+      " M packages/shared/src/config/schemas.ts",
+      " M packages/shared/src/config/theme.ts",
+      " M packages/shared/src/config/themes/ink.json",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M packages/ui/src/components/annotations/AnnotationOverlayLayer.tsx",
+      " M packages/ui/src/components/chat/AcceptPlanDropdown.tsx",
+      " M packages/ui/src/components/chat/CompactAcceptPlanDrawer.tsx",
+      " M packages/ui/src/components/chat/InlineExecution.tsx",
+      " M packages/ui/src/components/chat/SystemMessage.tsx",
+      " M packages/ui/src/components/chat/TurnCard.tsx",
+      " M packages/ui/src/components/chat/TurnCardActionsMenu.tsx",
+      " M packages/ui/src/components/chat/UserMessageBubble.tsx",
+      " M packages/ui/src/components/code-viewer/UnifiedDiffViewer.tsx",
+      " M packages/ui/src/components/icons/Folder.tsx",
+      " M packages/ui/src/components/icons/Home.tsx",
+      " M packages/ui/src/components/icons/Inbox.tsx",
+      " M packages/ui/src/components/icons/index.ts",
+      " M packages/ui/src/components/markdown/CodeBlock.tsx",
+      " M packages/ui/src/components/markdown/CollapsibleSection.tsx",
+      " M packages/ui/src/components/markdown/Markdown.tsx",
+      " M packages/ui/src/components/markdown/MarkdownDatatableBlock.tsx",
+      " M packages/ui/src/components/markdown/MarkdownDocBlock.tsx",
+      " M packages/ui/src/components/markdown/MarkdownHtmlBlock.tsx",
+      " M packages/ui/src/components/markdown/MarkdownImageBlock.tsx",
+      " M packages/ui/src/components/markdown/MarkdownJsonBlock.tsx",
+      " M packages/ui/src/components/markdown/MarkdownLatexBlock.tsx",
+      " M packages/ui/src/components/markdown/MarkdownMermaidBlock.tsx",
+      " M packages/ui/src/components/markdown/MarkdownPdfBlock.impl.tsx",
+      " M packages/ui/src/components/markdown/MarkdownSpreadsheetBlock.tsx",
+      " M packages/ui/src/components/markdown/TiptapCodeBlockView.tsx",
+      " M packages/ui/src/components/markdown/TiptapMarkdownEditor.tsx",
+      " M packages/ui/src/components/overlay/ActivityCardsOverlay.tsx",
+      " M packages/ui/src/components/overlay/CodePreviewOverlay.tsx",
+      " M packages/ui/src/components/overlay/ContentFrame.tsx",
+      " M packages/ui/src/components/overlay/DocumentFormattedMarkdownOverlay.tsx",
+      " M packages/ui/src/components/overlay/FullscreenOverlayBaseHeader.tsx",
+      " M packages/ui/src/components/overlay/GenericOverlay.tsx",
+      " M packages/ui/src/components/overlay/HTMLPreviewOverlay.tsx",
+      " M packages/ui/src/components/overlay/ImagePreviewOverlay.tsx",
+      " M packages/ui/src/components/overlay/ItemNavigator.tsx",
+      " M packages/ui/src/components/overlay/JSONPreviewOverlay.tsx",
+      " M packages/ui/src/components/overlay/MermaidPreviewOverlay.tsx",
+      " M packages/ui/src/components/overlay/MultiDiffPreviewOverlay.tsx",
+      " M packages/ui/src/components/overlay/PDFPreviewOverlay.impl.tsx",
+      " M packages/ui/src/components/overlay/PreviewOverlay.tsx",
+      " M packages/ui/src/components/terminal/TerminalOutput.tsx",
+      " M packages/ui/src/components/tooltip.tsx",
+      " M packages/ui/src/components/trajectory/RecordInspector.tsx",
+      " M packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
+      " M packages/ui/src/components/trajectory/TrajectoryPerformance.tsx",
+      " M packages/ui/src/components/ui/BrowserControls.tsx",
+      " M packages/ui/src/components/ui/BrowserEmptyStateCard.tsx",
+      " M packages/ui/src/components/ui/FilterableSelectPopover.tsx",
+      " M packages/ui/src/components/ui/Island.tsx",
+      " M packages/ui/src/components/ui/IslandFollowUpContentView.tsx",
+      " M packages/ui/src/components/ui/LoadingIndicator.tsx",
+      " M packages/ui/src/components/ui/PreviewHeader.tsx",
+      " M packages/ui/src/components/ui/SimpleDropdown.tsx",
+      " M packages/ui/src/components/ui/StyledDropdown.tsx",
+      " M packages/ui/src/components/ui/drawer.tsx",
+      " M packages/ui/src/index.ts",
+      " M packages/ui/src/lib/theme-compiler.ts",
+      " M packages/ui/src/lib/visual-roles.ts",
+      " M packages/ui/src/styles/controls.css",
+      " M packages/ui/src/styles/motion.css",
+      " M packages/ui/src/styles/role-tokens.css",
+      " M packages/ui/src/styles/roles.css",
+      " M packages/ui/src/styles/theme-adapter.css",
+      " M scripts/check-governance.ts",
+      " M scripts/critical-scenario-policy.json",
+      " M scripts/critical-scenarios.ts",
+      " M scripts/generate-theme-contract.ts",
+      " M scripts/rpc-contract-inventory.json",
+      " M scripts/verification/fixture-bundle-host.mjs",
+      " M scripts/verification/fixture-bundle.ts",
+      " M scripts/verification/fixtures/api-key-form.tsx",
+      " M scripts/verification/fixtures/calendar-drag.tsx",
+      " M scripts/verification/fixtures/chat-starters-landing.tsx",
+      " M scripts/verification/fixtures/chat-starters.tsx",
+      " M scripts/verification/fixtures/theme-contract.tsx",
+      " M scripts/verification/fixtures/theme-foundation.tsx",
+      " M scripts/verification/fixtures/theme-roles.tsx",
+      " M scripts/verification/fixtures/upstream-015-renderer.tsx",
+      " M scripts/verification/fixtures/windows-reopen.cjs",
+      " M scripts/verification/theme-browser-host-workflow.ts",
+      " M scripts/verification/theme-contract-workflow.ts",
+      " M scripts/verification/theme-design-workflow.ts",
+      " M scripts/verification/theme-domains-workflow.ts",
+      " M scripts/verification/theme-foundation-workflow.ts",
+      " M scripts/verification/theme-login-workflow.ts",
+      " M scripts/verification/theme-roles-workflow.ts",
+      " M scripts/verification/upgrade-0153-calendar-drag-workflow.ts",
+      " M scripts/verification/upgrade-0153-chat-starters-browser-workflow.ts",
+      " M scripts/verification/upgrade-0153-chat-starters-landing-workflow.ts",
+      " M scripts/verification/upgrade-0153-editor-workflow.ts",
+      " M scripts/verification/upgrade-0153-endpoints-workflow.ts",
+      " M scripts/verification/upgrade-0153-heic-store-workflow.ts",
+      " M scripts/verification/upgrade-0153-heic-workflow.ts",
+      " M scripts/verification/upgrade-0153-model-form-workflow.ts",
+      " M scripts/verification/upgrade-0153-pdf-workflow.ts",
+      " M scripts/verification/upgrade-0153-pi-runtime-workflow.ts",
+      " M scripts/verification/upgrade-0153-results.ts",
+      " M scripts/verification/upgrade-0153-usage-ledger-workflow.ts",
+      " M scripts/verification/upgrade-0153-workspace-isolation-workflow.ts",
+      " M scripts/verification/upstream-0140-b4b5-ui.tsx",
+      " M scripts/visual-debt-ledger.json",
+      "?? apps/electron/src/renderer/components/app-shell/input/CompactSourceSelector.tsx",
+      "?? docs/dependencies/upgrade-closeout-2026-10-20.md",
+      "?? docs/verification/frontend-design-w1-failure-matrix-2026-10-20.md",
+      "?? docs/verification/frontend-design-w2-failure-matrix-2026-10-20.md",
+      "?? docs/verification/frontend-design-w34-failure-matrix-2026-10-20.md",
+      "?? docs/verification/results/a11y-audit-2026-10-20/README.md",
+      "?? docs/verification/results/a11y-audit-2026-10-20/a11y-audit.json",
+      "?? docs/verification/results/a11y-audit-2026-10-20/a11y-surface-390.png",
+      "?? docs/verification/results/a11y-audit-2026-10-20/axe-version.json",
+      "?? docs/verification/results/a11y-audit-2026-10-20/host.css",
+      "?? docs/verification/results/a11y-audit-2026-10-20/index.html",
+      "?? docs/verification/results/a11y-audit-2026-10-20/manifest.json",
+      "?? docs/verification/results/a11y-audit-2026-10-20/source-hashes.json",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/README.md",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/design-w1-dark-focus.png",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/design-w1-dark.png",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/design-w1-light-focus.png",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/design-w1-light.png",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/design-w1-reduced-motion.png",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/design-w1.json",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/host.css",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/index.html",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/manifest.json",
+      "?? docs/verification/results/frontend-design-w1-2026-10-20/source-hashes.json",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/README.md",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/design-w2-scale-100.png",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/design-w2-scale-110.png",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/design-w2-scale-125.png",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/design-w2.json",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/host.css",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/index.html",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/manifest.json",
+      "?? docs/verification/results/frontend-design-w2-2026-10-20/source-hashes.json",
+      "?? docs/verification/results/upgrade-2026-10-18.partial.json",
+      "?? docs/verification/visual-baselines/README.md",
+      "?? docs/verification/visual-baselines/cyberpunk-dark-comfortable.png",
+      "?? docs/verification/visual-baselines/default-dark-comfortable.png",
+      "?? docs/verification/visual-baselines/default-light-comfortable.png",
+      "?? docs/verification/visual-baselines/default-light-compact.png",
+      "?? docs/verification/visual-baselines/geek-dark-comfortable.png",
+      "?? docs/verification/visual-baselines/index.json",
+      "?? docs/verification/visual-baselines/ink-light-comfortable.png",
+      "?? packages/ui/src/components/icons/FileKindIcon.tsx",
+      "?? packages/ui/src/lib/file-kind.ts",
+      "?? packages/ui/src/lib/pressable.ts",
+      "?? packages/ui/src/lib/use-initial-focus.ts",
+      "?? scripts/check-contrast-floor.ts",
+      "?? scripts/check-design-drift.ts",
+      "?? scripts/design-drift-baseline.json",
+      "?? scripts/measure-design-drift.ts",
+      "?? scripts/migrate-default-type-scale.ts",
+      "?? scripts/migrate-icon-stroke.ts",
+      "?? scripts/migrate-low-contrast-text.ts",
+      "?? scripts/migrate-state-colours.ts",
+      "?? scripts/verification/a11y-audit-workflow.ts",
+      "?? scripts/verification/design-w1-workflow.ts",
+      "?? scripts/verification/design-w2-workflow.ts",
+      "?? scripts/verification/fixtures/a11y-surface.tsx",
+      "?? scripts/verification/fixtures/design-w1.tsx",
+      "?? scripts/verification/fixtures/design-w2.tsx",
+      "?? scripts/verification/fixtures/document-tools.py",
+      "?? scripts/verification/fixtures/generator-acceptance.ts",
+      "?? scripts/verification/fixtures/heic-ipma.ts",
+      "?? scripts/verification/fixtures/long-session-budget.tsx",
+      "?? scripts/verification/fixtures/native-attachments.cjs",
+      "?? scripts/verification/fixtures/theme-contract-css/electron.css",
+      "?? scripts/verification/fixtures/theme-contract-css/ui.css",
+      "?? scripts/verification/fixtures/theme-contract-css/viewer.css",
+      "?? scripts/verification/fixtures/theme-contract-css/webui.css",
+      "?? scripts/verification/fixtures/theme-foundation-css/electron.css",
+      "?? scripts/verification/fixtures/theme-foundation-css/ui.css",
+      "?? scripts/verification/fixtures/theme-foundation-css/viewer.css",
+      "?? scripts/verification/fixtures/theme-foundation-css/webui.css",
+      "?? scripts/verification/fixtures/theme-roles-css/electron.css",
+      "?? scripts/verification/fixtures/theme-roles-css/viewer.css",
+      "?? scripts/verification/fixtures/theme-roles-css/webui.css",
+      "?? scripts/verification/fixtures/undici.cjs",
+      "?? scripts/verification/fixtures/visual-baseline.tsx",
+      "?? scripts/verification/long-session-budget-workflow.ts",
+      "?? scripts/verification/upgrade-0153-document-tools-workflow.ts",
+      "?? scripts/verification/upgrade-0153-fixtures-workflow.ts",
+      "?? scripts/verification/upgrade-0153-native-attachments-workflow.ts",
+      "?? scripts/verification/upgrade-0153-packaged-workflow.ts",
+      "?? scripts/verification/upgrade-0153-pdf-fixtures-workflow.ts",
+      "?? scripts/verification/upgrade-0153-undici-workflow.ts",
+      "?? scripts/verification/visual-baseline-workflow.ts"
+    ],
+    "lockfileSha256": "e55942e8d059fbf5d798674889c1f1b8d96c654e21446099f3dee53ab61cd915",
+    "changedFiles": [
+      {
+        "path": "DESIGN.md",
+        "sha256": "467cc6e7ceccf49698c9573c1270712b95e1db477dbe43617ee72e3740a8024a"
+      },
+      {
+        "path": "apps/electron/resources/release-notes/next.md",
+        "sha256": "f243371ef5730ca86c87bae8c526e831b1c71c38540f85860b0fe017fa10a90e"
+      },
+      {
+        "path": "apps/electron/resources/scripts/pdf_tool.py",
+        "sha256": "81a27eb7ff57b9f80370adce30fe26f52c5238d30eea5c5d32e7e0f84488ca33"
+      },
+      {
+        "path": "apps/electron/resources/themes/ink.json",
+        "sha256": "155f7f225feb0e2f935ade16595fedc5323312864b573970ede14b5aad13a0c7"
+      },
+      {
+        "path": "apps/electron/src/renderer/App.tsx",
+        "sha256": "cf2bbc6eaab53dfa5b479742f2154fa1c4f3f6abdab43766d3269cc829d6a5cd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/KeyboardShortcuts.tsx",
+        "sha256": "56375c83227a5e62aa98f9f3764a7038afe58660732395a36e799b01d4fcabbd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/KeyboardShortcutsDialog.tsx",
+        "sha256": "925bb306bdbee330a92c99011480e3db0ff95813407eb1ef1c43c989f83283b8"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ResetConfirmationDialog.tsx",
+        "sha256": "023d7123c3428e891125a9b46e7fcf62685bb5824014248f517e3ef1aed67435"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/RtkUpdateDialog.tsx",
+        "sha256": "1d3f0bfa4e9513164c0b23659e44c35077848199a4e5b7bee36e8036dd2e0ca9"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ServerDirectoryBrowser.tsx",
+        "sha256": "ecbef4f2ee32df0495f8da051d938e87bf52b7f3da37c5f5007dd3c7fd17eb02"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
+        "sha256": "b696f1252a3f8fba425ab58161ba27d130c8bb96a6f5a048698955ddffb8bfe0"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/apisetup/OAuthConnect.tsx",
+        "sha256": "1b20abfdd273f849562552a6c67a49a5c6a67b323c6ea90b4f8794c7ab46eff1"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-menu/MobileMenuItem.tsx",
+        "sha256": "0bcc461d3251fbc14b56a7c595290a6848297726a1626b106618b1b5de1e1721"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-menu/MobileMenuPage.tsx",
+        "sha256": "af25eda4be58cd119161ee1c3ac690902c4a370382782d3db352c664e4d21880"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx",
+        "sha256": "3ac427473032eef23533170a522cce16ea79b8897c8cdc406caedd0b0c063699"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+        "sha256": "e6db868c5d15005cc4829466735a5fc4543832755e66c8efc4e739b30d2d71f7"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/AttachmentPreview.tsx",
+        "sha256": "2bcb64fe1fe843246b8fc721ceb098a0cb6fa99ad5ad82cc4b8b3a7671e59c41"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/BackgroundFinishedChip.tsx",
+        "sha256": "f6c449a4d6163a7cdb33ef4a45a82521e9d07fedef20aef995a2c3ae209b4453"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/BatchSessionMenu.tsx",
+        "sha256": "59c285a1a1a75033da5163bef677c5ae23eac7e56de0bc4770d69b1c76f536d1"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "sha256": "e11e0b77fb58315e6c313d84d722c04a00c61318f4d1e0082548fb72452c6531"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/CompactSessionListFilter.tsx",
+        "sha256": "4ea809a87754b4bce2f92d5e47822dd0eb1af2a24e7f66b9e75173ff7cb9a9ec"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/CompactSessionMenu.tsx",
+        "sha256": "fc7cd79dd6eaf86c0df313964adad6c8a8f3656a7cf54aaa399273074f111c22"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/CompactWorkspaceSwitcher.tsx",
+        "sha256": "f71b0b40d54a3b218e08c531d263bba573bc917f8b75f97d512e3cd502f70def"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ContextWorkbenchTabs.tsx",
+        "sha256": "f055d8e172cb3a238dade32c6bdb6263defb4b2743301b0794b956b269cc2bd9"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/FabNewChat.tsx",
+        "sha256": "60f5f10b1d1f2ece082fd2ba79364e70e020122cef6a9c2499cc4294d3cbfe56"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "sha256": "c29fc1eb57b1f70d5fe4a63e695931330c794f17c689894c1f8d6b11d0a50e6c"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ModelRecoveryReconciliationDialog.tsx",
+        "sha256": "96b78bc133e8a0ba37f06450c10526a792e504f47a8b273e976bc5375d32ae4a"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/MultiSelectPanel.tsx",
+        "sha256": "59472778b1eb9da9aa2fa954285ab64eb06a79db28d84f938a7e10b0bfef98b3"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+        "sha256": "7009d9356b6a941d90417863dbe1eb0e38b4bb37fade5bc3d9768651999ab584"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/PluginsListPanel.tsx",
+        "sha256": "8e3665c641f0973b3e386b6a381113218c5ad1d62b83095d2f6286e1bb730072"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ProjectMultiSelectFilter.tsx",
+        "sha256": "47298d845245ccbde0f171b957aaf28607adcc4f151dfb4813a348be7504327d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ProjectsListPanel.tsx",
+        "sha256": "70ea7c874f201900bac75a153e0436db56ab21bac88a0a9bf06047750e9d2855"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/RecoveryReconciliationDialog.tsx",
+        "sha256": "18f5e97097b76c3340f774d8debeec22f9ff3ddae07f22ea452f39739cafa31a"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
+        "sha256": "e1d01eb60869e12cfd3bbae2f219f02ab8888d02ba50d087bc688c78b8628386"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
+        "sha256": "d80247526be57100b770a01b7afee6b3ae2051f316b9da60cca81ad89de44ad6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SessionInfoPopover.tsx",
+        "sha256": "78a2fa226d2d5b443d6b31e6c658c6a75a30118e8fc320d0f72f053761cc4706"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SessionItem.tsx",
+        "sha256": "9231dd9413ba0e44a5734c4243ea3b6816884fd898886c253b4d37bb08309c5d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SessionList.tsx",
+        "sha256": "b9352d568b84d50c12f3b8c8fced3cb95d2480c13abebc71c33076efd57cf455"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SessionMenuParts.tsx",
+        "sha256": "b44a87f05f623559dcd74743c534a06aafd730d7d8c48796936f76381a32feb2"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SessionSearchHeader.tsx",
+        "sha256": "faa99bfb19400de97e4cad4d17de019eb3c1fa4f53868042b0ee614520efe4fa"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SessionStatusIcon.tsx",
+        "sha256": "5cb83bd3311dadde61be25d690d0f0c7a998e1678c3912f843c6bb90ed16a7e5"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SetupAuthBanner.tsx",
+        "sha256": "381cd07b00f314db73f0e6e28fea367aa7b065123b71f00ab543816402403aae"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx",
+        "sha256": "40490bdcc125a325300dcbc49065539997da873f88bde9d7c7026265fb32ac71"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SkillsListPanel.tsx",
+        "sha256": "6bf9abf0d89a3e54439a3566042ad54ea0148a8f6b8affb7ca30b004180bd0d1"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SourcesListPanel.tsx",
+        "sha256": "51fa97026c3c8e7de8a8423474d245c886e2d7b6c7d05e28c58625720a214e8b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SurfaceErrorBoundary.tsx",
+        "sha256": "b7545af1476e96fa77e71eed0bfa69709c6c51690b179cac9a58e72b67209a0c"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SurfaceLauncherButtons.tsx",
+        "sha256": "3db6275aa4cfe0cbdc6df0c49b9bca85a3226226c07b930818af425cf8e53908"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/TaskActionMenu.tsx",
+        "sha256": "1233e956a23fbe2f2626b4e3fbc22481a67365990fab82b4a4c6b7ba4326d13a"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/TopBar.tsx",
+        "sha256": "83b609024394d9d7199db3d95e5d5cc7e14e66c10da1a04a278e1dfb9016717a"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
+        "sha256": "6c64c78c9c2b5030dd6c07c854ec71a8b5ee457ccd5c14a4c8c3d2ab30d72a5e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/WorkspaceSwitcher.tsx",
+        "sha256": "55662b4f0b485272d56cd68ffd975bac469ae3a8aff60dca606a6709b4a12450"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
+        "sha256": "80f7b5aaf8c64ac8f19ac7b4761186c570ebd297c6964902a5eb0d24088e5c7b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/CompactPermissionModeSelector.tsx",
+        "sha256": "5c3cef543b4d1d40ad6ddbc6ec9c5d391c62ff2fddc44151ac5521cb9ade4ba3"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/CompactSourceSelector.tsx",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+        "sha256": "4132e139692dcd49b41a07e0072732f2ad7da9e8677b562de2d8a40fb3ffae2f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/ImageSupportWarningBanner.tsx",
+        "sha256": "e27777fb9bce5cccdf716a22e3fd54157affdcd512800dbfea0c12e791258952"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/InputErrorBoundary.tsx",
+        "sha256": "c1418a335038f22538c82e5dc890b66a37a4c20f61894be1b7e7329e69f7a46b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/ToolbarStatusSlot.tsx",
+        "sha256": "8213a86966b32f80ee642c7a6dae0e3f42b2d8b1359898c3927225a8f246ccbe"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/WorkingDirectorySelector.tsx",
+        "sha256": "ba8fc9b77a5c8ec9d7c4f66fab4c02f0ef2d367e55e2d22432312f38b538b118"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/structured/AdminApprovalRequest.tsx",
+        "sha256": "485fe62b22cc10cce9870ee10d93fc3030b4bd8b87117884b2a7df96e250493d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/structured/CredentialRequest.tsx",
+        "sha256": "d5713c0116cddcbc1b071add5a902bacb57a7817ef1f43278f3e2df44b94d844"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/structured/PermissionRequest.tsx",
+        "sha256": "5d40988868263fb5e217945ff257101eda4468cea49f2a64b71945ad90f8eeaa"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/structured/QuestionPanel.tsx",
+        "sha256": "9710e3228380bd29adaba997a63c7c94d4253b1bb42889ff22194efa545fbc51"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/CalendarUntimedRail.tsx",
+        "sha256": "f2b9c1e4cec58f069a4fcc98236e1abc70ff1344da2b15bd578fe5cd35806646"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/CalendarView.tsx",
+        "sha256": "36b1980ebc5c185869477ac8c85bd38080be17ea312aed6e44921fff0e217d2b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+        "sha256": "a79d7eb6cfcd98aa0980af5ecd59065554e168697cb94d0c4f54c666630296e8"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx",
+        "sha256": "b8162ac4e7513d22e44dd7eaa461b8808ffddc85dae6d87838fa5cb235f2eef5"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoardContainer.tsx",
+        "sha256": "1f1b46aa18162260a4ed22a4ca1c9168f6cd15beb04979549d4e8779ac58125f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+        "sha256": "6c7415ebac0230f8cbb7c9b766b6c35736a5c7e9b172898dc89284ea71524bc0"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/NewTaskComposer.tsx",
+        "sha256": "fe777a2224afddcabf0f250468785b7208b2bb55575b786d3014ff1bc8e79b31"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/SubtaskRow.tsx",
+        "sha256": "c5c28856982e646d847a7a03ef466da885cf6d5b6f3e492a2460b40bd16c0dbf"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/TaskChatPreview.tsx",
+        "sha256": "be283438790bb409852a5c59e76885d0379c6af8a778186110476b55fc639d1e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx",
+        "sha256": "c76085260cfb6246558c9f45b68364153b1a1b64f6ba10b34ae9d681c2cd3fd5"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+        "sha256": "6271733b078819a89083837df29ccff27039b55c495f92590dd4acb089b9b6a7"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/WorkItemListView.tsx",
+        "sha256": "1f5e504817fb380b1d3e93ee5f66832892c65ffa41f814f1c1a492eff4461e6f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/node-state-pill.ts",
+        "sha256": "6605c4790e4e94d239fcafa0ec7faac684316a6d8837b4a7278a75db232feca4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/artifacts/ArtifactCard.tsx",
+        "sha256": "696f15027fb29479e4c5b0d3d2b7945830310456dafb489a44e8777f5c1441fb"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/ActionTypeIcon.tsx",
+        "sha256": "fd5ffafc44a7cd99dde11687650270ac179c1df596892506354c3ac2ce9420ad"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationActionPreview.tsx",
+        "sha256": "295282566ee50414a89064c9493520e1e14d69054378ae2c736741d235b9b63e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationActionRow.tsx",
+        "sha256": "080ab5be29c06132efdf2795098b2bafdbc74cf3bca0a32a0427cf077a90b336"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationAvatar.tsx",
+        "sha256": "1e3a5ff58724e927ab779ba68adcdf94ca9a95cb5054ab61b4c161b786605fa8"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationCard.tsx",
+        "sha256": "90788faaca942f73a7bf6bf20ef30d3f852fbe45e723d728df6998ffd83ceaff"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx",
+        "sha256": "a421efc6c365d372ed8fd0437f9bb1e13ee9782cf8204e6ea68a034d6ed6bda5"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationInfoPage.tsx",
+        "sha256": "b63cc74da21686de42c1a1b529bc2353fc3167a07a739b84ac4b6c795cd35142"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationTestPanel.tsx",
+        "sha256": "d76ade2b8c152ca3009dc9e0a3c9fa887f01d4340d9a98e3fcc19bdfad2b77dd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/AutomationsListPanel.tsx",
+        "sha256": "49014ef2d069eba510a321a3f40df5f6bc790cb1b7df2ce0c82a13c3e09a5432"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/BatchAutomationMenu.tsx",
+        "sha256": "cb30fa91b2f31ff9dc97f47f480c5c5ab873815cb30f587a33831e112ada021b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/automations/CronBuilder.tsx",
+        "sha256": "d5cb7d04fb59ab8ddbe368257a51151781908956a0780472178d255495031f55"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/browser/BrowserTabStrip.tsx",
+        "sha256": "fb6af12d98c0bc5430d397d7e1ab7d3d032288a21329dc125caaeda8751f19fa"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/chat/AuthRequestCard.tsx",
+        "sha256": "a23123ad9b7a621dc5caf02ad0c8ee64f75c9e3c5949dc9dc9e6cba9b81058d9"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/chat/EmptyStateHint.tsx",
+        "sha256": "7843cbe6974aaa4141642fb33776001324378648d6fb23fff938cf582d2ec902"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/ArtifactWorkbench.tsx",
+        "sha256": "3b1b4c7326fceec6c644cb41ba832b465e867b8f516d106d8bf527d6320aeef7"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
+        "sha256": "3be87c43d602558967b2d0da002ec2a0012d7cef4d4cd46a0527f72807f69810"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
+        "sha256": "82b8ee459676a1eeb520856080bcb86438c3d87fcf77923808645d2f287eac1f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/FilePreviewContent.tsx",
+        "sha256": "52f0f0b98101c1f84046be7f7bae21067d147901edb295cfbda6d6fc96bb4ec4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
+        "sha256": "f9d948171c382ad8e07f5853f18a86fd6d74b6d0620863cec2eeee5a732ab6c5"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/MarkdownArtifactEditor.tsx",
+        "sha256": "1e0eed48d0d1c33559d786284392d1d4185849f85722db19e4ed36a54401f05d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/MarkdownPopoutOverlay.tsx",
+        "sha256": "9ce95818d7a559ecaed7a376712dc165496bc0027586db2a65e39997d2324470"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/OfficeFilePreview.tsx",
+        "sha256": "014209cc617f52a0844e58d0c67558409e4c701e32b19fa830a47bdf7aef29d6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/PdfFilePreview.tsx",
+        "sha256": "1bef176f3ced3601a66a25bfdead12c78167b50b14b8d3daa105271ad1d0d2cf"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/TerminalPanel.tsx",
+        "sha256": "d19fac82df885b3b1d1a01b75b5c2b83b6066e755c07f047143de115816fe729"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionSummary.tsx",
+        "sha256": "dd3599ce76e58161ef76d25efad2cf55b087af3d6b27c1c31422503dd0003dbd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
+        "sha256": "883ffe66d9e120db1bbf49f953c8e68ba2f227ee5b3832cf754c8cbef6b10663"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/files/FileViewer.tsx",
+        "sha256": "1d0b83cc6749875b0733938b923703d90be86ca019ba8cdbf8f48b8a26d41171"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/icons/PanelLeftRounded.tsx",
+        "sha256": "99898bd2331c88892a96bd2ebe376141f88c0f66adf61c07d9baa9f68e880150"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/icons/SquarePenRounded.tsx",
+        "sha256": "e3ab8a976349a44c876e952c4560455c5800a5a21a382d4cdb44a860d0b096d4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/icons/TodoStateIcons.tsx",
+        "sha256": "03bd7320c023e8391913ee35e4a437615143f4f18ded4d410df861aa7a24afc1"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/AutoRulesDataTable.tsx",
+        "sha256": "27f62b58c87a8d15da499d0d8321536ea0c32eea9d688f77ea1860470240fff8"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_Alert.tsx",
+        "sha256": "054110c6fbbe37cdcba83806835caa316830b1740329dd76b20fb94de1a092e9"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_Badge.tsx",
+        "sha256": "395846d25eab60900bf9bee58ad984b01486c05f8c3b4b659dc2fb730c65dfb4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_DataTable.tsx",
+        "sha256": "c9d7118c38df48e0d6cd956efbb26f930baf0830d25ee470ca864123be234d8e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_GroupedList.tsx",
+        "sha256": "bb0ece1d39c3599640a3e0b2b5d51177d5ae1f4bbb303a6ed181d06a4300abdd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_Markdown.tsx",
+        "sha256": "5ce8ea3e25ce2b82fc08c004201c721c02e0602da345cbf936cde50452177b38"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_Page.tsx",
+        "sha256": "f1c462f02530bef48479867c9ee17dbd903c9b9c779a4d5cb8bf3db32f8f3ded"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_Section.tsx",
+        "sha256": "ad1496ff38bd8275df80ce1da53c3953cd50e491f00335b49ef2a954210623d5"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/Info_Table.tsx",
+        "sha256": "0fd445dd945b9f8c4ce0da83af7948376c6a41e4de446fc3a66aca4c729485fb"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/LabelsDataTable.tsx",
+        "sha256": "b2d77018ee43c8927308eb82c07373c3d68009d9d51eeb3ac5bae45d0a5ce7db"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/info/PermissionsDataTable.tsx",
+        "sha256": "f86c6568b6bb72e29f2266cd442b7548e6d818c502f2498b40cbe8501da1b992"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/LarkConnectDialog.tsx",
+        "sha256": "56894e03c11ccef63448005d759658f9c3a8ba7fb11de08d6d7e4eeb1f80318b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/PairingCodeDialog.tsx",
+        "sha256": "0c364370896f395f694b386812401343e1dac5bd051bec7ad95aa59d35a66bd6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/TelegramConnectDialog.tsx",
+        "sha256": "b09c6b66ba7ed3f1a63017cdfd8eae1c3545a408649fe7f7b0823b4fe013f943"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/TelegramSupergroupPairingDialog.tsx",
+        "sha256": "fdc08b9850e9f99adeb6a27a6448bb6c854dee691e3c48d845e778ade37810c6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/WeChatConnectDialog.tsx",
+        "sha256": "000011bab8020813e1ef4e4272b107548687b337a4df926d9cc5001f10c474ca"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/WeComConnectDialog.tsx",
+        "sha256": "d33d1883e6baecd91d80c2e7db4ec269ace6ffb3a8c7c9e9770086f62482c092"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/WhatsAppConnectDialog.tsx",
+        "sha256": "f0a5c5dd75231a9251a27213aa652f3cbb776a0b6497d1a5a01dd0b417b5dfd6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/access/AccessModeBanner.tsx",
+        "sha256": "4bbfdfa1fd686d74e6038f121c88bf64bd5832e22301140002ac8323f51a06d9"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/access/BindingAllowListPopover.tsx",
+        "sha256": "269daafa3df09a4aa22e40c6808b008590e9cbcc0ccd3eb9ea9a6fcaf8c5f417"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/access/OwnersListEditor.tsx",
+        "sha256": "02400ba2a10fd223003ade0f07e3528453c37e70c0c5605abce5d584aa11f9bf"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/access/PendingSendersList.tsx",
+        "sha256": "40a9dd2757c8fd389a7845f2108e96e8af7d99a566a4fbc0d83ed17902c5926d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/messaging/access/TelegramAccessSection.tsx",
+        "sha256": "068cf5745cbf816b49a0c8b2be0a61499c2256c05b5dfb4417b1fb8551d51bca"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/APISetupStep.tsx",
+        "sha256": "37450d0089a017cf8ffbc339857e6de97a30ccb9731c9a9bc6a35e226dd264f2"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/CompletionStep.tsx",
+        "sha256": "cb0bfa1d7b6e8a96366aae646b2f4520b2cc6d747789631aa777db618c2e4850"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/CredentialsStep.tsx",
+        "sha256": "f66fd00821273d6370db8567211682b45a5a66a1d84368fdf677a216393434df"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/GitBashWarning.tsx",
+        "sha256": "76bffcb6db4c5c12ac73e47ae7866f8ac15a0d4745b8f4ed68c226eeaa0370bb"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/LocalModelStep.tsx",
+        "sha256": "d5c0e91cdca6eb4548768f05ce31a61018f3b922fcc13d8439078e5acdea721a"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/ProviderSelectStep.tsx",
+        "sha256": "e25fa6d5674dd4a9ceee0d21f6a977bd1b6ca1f50b3a3c299e156037b9c91b7e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/ReauthScreen.tsx",
+        "sha256": "e38a508cf0bb47fe8530a30c134bb121122afc41a78d9af6c92ff9d5780f0a4e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/onboarding/primitives.tsx",
+        "sha256": "bd09ac62bb00675fd7a90155b4dde43ec2acc83f5ccf607cc5159cfadd8654da"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PageGrantRequestDialog.tsx",
+        "sha256": "d2d80f9d0c1e14876ae30a426524a232471a2975c2409397978f55276801222b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PageGrantsDialog.tsx",
+        "sha256": "2bd7848992564e33c1ac1f0778bfff14b79be769799f63dd6963a80ef3b9887b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PageSourceAuthBanner.tsx",
+        "sha256": "ae93f32091e468f48ed4809169b458377ce20ac36c1134eabc47223b4c786248"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PageTile.tsx",
+        "sha256": "325661caeaa31ae9c860e455ce303b0a4bf206291d1da04a204a03ef6af9ad05"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PageView.tsx",
+        "sha256": "4a33db1f55a2917065484c433d73c550f8f076cd349dc86bde248428043a07ea"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
+        "sha256": "dc7d217edbf1a4e9082e9cf73a7372a3f2a84023f35e72ff29a6dca0d4ab2c4b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/SharePageDialog.tsx",
+        "sha256": "aebf2d3aa967ef8ead2fc35f82647fc96c2c295ef8d9234aeb1009f007801107"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/pages/page-visuals.tsx",
+        "sha256": "398da3c932c33d775422a0527f38234d561921e85cea9487dbe305670a65002c"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/preview/TableOfContents.tsx",
+        "sha256": "1b524e5892b2fe7c120f86b5f0c2539183f517e2f90a62eb2ad0c8c6d8aac7f6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/projects/CreateProjectDialog.tsx",
+        "sha256": "4488dd42c691d7e1affe1909d95cc0f6be846320282d84ebca27a560a45e7fd0"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/projects/ProjectManagementSurface.tsx",
+        "sha256": "3851c89d4b88e44f465571b7f846f9bb10dac557adf3c9c588eb41e474e93ca7"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/projects/ProjectSelectMenu.tsx",
+        "sha256": "cb34ec86a6c35a1a3fea54a2e422fd5dffb2879f524cdde79959d5356acbac0f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/projects/WorkItemFilterControls.tsx",
+        "sha256": "d0b3f497a1c0c2eeb979d24f8e4c9970002e1b55127d6d05f80c50220c81863d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/right-sidebar/SessionFilesSection.tsx",
+        "sha256": "df96bad166955dc72233793ecd445dd0382278078bb481ef0bae16859c447055"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SearchableModelInput.tsx",
+        "sha256": "269a61ea9dfe4597aa3372b68ee5986dc7a2452be3dff13eafac550d68ed3add"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsDisclosure.tsx",
+        "sha256": "a97acced5406930ccd1dd22610db2138767ebecb8c89d35fff3f5d9261cb4107"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsMenuSelect.tsx",
+        "sha256": "324c08f4e2b2610494d84de234edde7c6882a4e265f9220498e1031f1b402b80"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsRadioGroup.tsx",
+        "sha256": "5fcbe803e4b2b5ba23f70c5895c30e34b01cb404d121dcc59967ef89af122609"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsSection.tsx",
+        "sha256": "6f4ede98c4a6b50f56a7fd06d2c05bce95fa1df90d0e59daf9167691190cee2d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsSegmentedControl.tsx",
+        "sha256": "4132eabf7255f94073ed9db4b9e31e99d91b84996f19e37d4b8385576927624f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsSelect.tsx",
+        "sha256": "0e4b570cc15bc131bb8ec59000680f398e203d142c6a4ce33f991ffd90a8bc49"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsTextarea.tsx",
+        "sha256": "0f9cec4c9c18ccd25dcd9197d04bc2f9629f63724e9d7098fc338bc797dffe74"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/SettingsToggle.tsx",
+        "sha256": "3875d9929300cf20693fc8301808f74fd732e82f0427eba3821c62b405fc77f4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/settings/WorkspaceConversationSettings.tsx",
+        "sha256": "7d5781b78b9bb66f2f614b4bdd5b5158e75d0f67b4238ba41208f7972e3b1959"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/CompactSourceSelector.tsx",
+        "sha256": "4822d3be092159f1f801ae6f4b0e6dfd1aa5c5f2fe6acf2f4a6d7ed6545fd951"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/CompactWorkingDirectorySelector.tsx",
+        "sha256": "a618bf9524feb841fd61e8cfa671048f4d0a609c6a201be8f73602995f8e0413"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/EditPopover.tsx",
+        "sha256": "208893dbf9a3a73f70407f77b969ae661f38534a382933f0f204a3f59ce92804"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/HeaderIconButton.tsx",
+        "sha256": "cc37ed48beb80dc058595dcfbf7186ad7467eb30000b796b48fba861c749a2e5"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/SkillSelectorPopover.tsx",
+        "sha256": "9648f6be3a276c48b6cba0e769534c5303b241166af814c473b868766c985416"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/SourceSelectorPopover.tsx",
+        "sha256": "1de337aa25127d00261e75ef9181eb6df452b088006215ec17e1c2b4b40c7f1d"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/action-menu-item.tsx",
+        "sha256": "1f5ab99120b31c3f1383c64f15811d919727c9e756a312f29a67ceac90709ad4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/action-tooltip.tsx",
+        "sha256": "7897f288cfc5c1e99c0fe5ee99f884c81dbf0bfff9c918bc29ab5466a7ffe6db"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/badge.tsx",
+        "sha256": "1586549d898e110cf0b985ebadc5e00791d8b333cb8072a89e7a8608de2846ef"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/button.tsx",
+        "sha256": "6e7b720db50c68ae5b4112d3067fbabd2c90eb9639dd074744fbd6bcc885b2d6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/calendar.tsx",
+        "sha256": "bb010934cf0068dbb73a089ad12b28ddda8004f1b1affcd4e82b416222b7f3de"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/color-picker.tsx",
+        "sha256": "7e642707184e27d8db830cdb086b08b240d5fd475a22927b2071888b3d8d1197"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/command.tsx",
+        "sha256": "d1cf56cc1c1ca74cbc2d1595ee8662f42fbe76ecbf377effa537bcd1931b6e0c"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/context-menu.tsx",
+        "sha256": "6d2e9822fcceb28fe0ffe7b076be1a2ceb2fbf9f93572f7d6458d75973d32f38"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/data-table.tsx",
+        "sha256": "0fe29abebb8ea1f977f5bb93c23994405488a6c0d10d4c694eed0975f7f6534f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/date-field.tsx",
+        "sha256": "cc33fac3f9474f158818f0462c80eb101a6a582076fdbdff39473131783ce3ca"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/dialog.tsx",
+        "sha256": "761f612aba921ef5300a7d485d5a12eff0aa04bbc2863a7082e7af4dae57557b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/dropdown-menu.tsx",
+        "sha256": "23de361dc544243051670d3ee72874b4d687cfcfa90ee8377179d29664d7f4d8"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/empty.tsx",
+        "sha256": "808139fdb71eeb8c4f18e7933090d74b6cbcfc94ea38522645533cf2e3226889"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/entity-list-badge.tsx",
+        "sha256": "84035841816be702834b23ef8a348699e6f716a416bd3573d0cae488541b2cdb"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/entity-list-empty.tsx",
+        "sha256": "d80a6dceb4b40dd780fa96f4dad9bdf24f1f74fe126f898212afca1d449c49fd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/entity-list-label-badge.tsx",
+        "sha256": "262fbe2c6933ae3aba1bc03c60c6501b610d4a6d6ca2143906e5dfdb4bc9c595"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/entity-list.tsx",
+        "sha256": "b04a089abe5521de10aa6e83f8ab232c46560b8183c26c858582a79e75cf60a9"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/entity-row.tsx",
+        "sha256": "d50bd2c0a06b8f2496edd221ad2a72dce766b4db034c76897bf3aeb741deffa0"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/gradient-resize-handle.tsx",
+        "sha256": "c85dc66d88183aa0655c7bbeb7254d1aa640f11b811c0e3bc463ae9d1754d6c1"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/inline-color-picker-row.tsx",
+        "sha256": "980309eb5302d97500a6f1406ede7d0d2090c9f8e473b8fcc434c35371e4ff52"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/input.tsx",
+        "sha256": "e245605c58b5eebae43581ef4c47e1027862169883287f3c68e169b229ebd415"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/kbd.tsx",
+        "sha256": "8db6d4b9fdce30a4bfd7feeb8b07cf69882ffb061c5a34a1b63fa3578bb0e184"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/label-menu.tsx",
+        "sha256": "43d879de75e0f17cbd04a7a6004377a569c67e581d2ef564c1a9a84ffce698c3"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/label-value-popover.tsx",
+        "sha256": "13966b540d30ef98b2c352e6d2ddbcacb498c9342a99afa8638dee8571e6dc0f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/label.tsx",
+        "sha256": "7502f09c029c62036e8d7b3b0ef855cfebdcf130adbbaebab145ce4b69de0cab"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/mention-menu.tsx",
+        "sha256": "018e12a67da568732b9d132f545fe655bfb487d142ff52a64a9884489970a8cd"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/metadata-badge.tsx",
+        "sha256": "19cbdfd80ede6af4b129944822581c2e8638900237f7a782744c96d34a89f0ae"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/rich-text-input.tsx",
+        "sha256": "5b9fa7a129b6e6c7eae5dc1cb195c5e6295ebf901c4158afd7131bf9c2b64bee"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/select.tsx",
+        "sha256": "3d3fa355d86df0f1b23b30af9628428a34157faaa4995c4240f932cb59639473"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/session-status-menu.tsx",
+        "sha256": "5fdd9a4e5d485c2858f4104fa04f19db9034a5069658862cc7c8143c9251a7bf"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/skill-mention-menu.tsx",
+        "sha256": "85435b6425dcac2c09558f51c1d40b27ee42a915e287587c3ecea97e696235df"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/slash-command-menu.tsx",
+        "sha256": "2aa285214eb8c3fb138a9ba9d7c442409f67f4bdb2ad6ef4af4fb16f9f1c2cee"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/source-status-indicator.tsx",
+        "sha256": "d8262f2407cc153d1ebdfef2fc14fb100bb67638aa78853fcb51b7f9b73e5566"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/styled-context-menu.tsx",
+        "sha256": "980c0bbd8713f7a26c6fc19b0db295dc039d675f48c3de4ba40eff05e9bde5eb"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/table.tsx",
+        "sha256": "6b846e9558828a616cb91fe221ae4b91895695bac4e1bf38973fa5df466b14b4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/tabs.tsx",
+        "sha256": "e4ca78a9bb1ef6dd404bc0723889097ca33c1ea89dc642aa98a5f960cfb9bb81"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/textarea.tsx",
+        "sha256": "1098890d6754bb587d45468ae20f0029909d9bf93b661764fa8af248abcada04"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_Choice.tsx",
+        "sha256": "a65d8e3faa7141e1d9665230ceaaacb919445c3bc0a71ec92e5f8ea7b3d5d3d3"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_ConnectRemote.tsx",
+        "sha256": "49f47daa1d99b7281b37d5cda2cb4c755a164439b9dd857bff9b02e9c03279c4"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_CreateNew.tsx",
+        "sha256": "c25c4649de98761953c5b1873c5dfb78c49ccb7e330830e6372a252bb7b99827"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_OpenFolder.tsx",
+        "sha256": "8bf32d7292a5e820dac3a024052353179d69fbeb790f86a1b058913bda6d1a6b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/workspace/AddWorkspace_RadioOption.tsx",
+        "sha256": "51196492c850ca1d6df93b43a146a3d362c9c99207932cff8c14ce388d22923e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/workspace/WorkspacePicker.tsx",
+        "sha256": "5e5a82240627411e469b5a9e037db9ba174ea177c5821b9baf29b6c1f07d7652"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/workspace/primitives.tsx",
+        "sha256": "5d6505bb1bd71e002a7965e0e1ed310b596b51b5678222bfe7341bb75b8f71f2"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/AppShellContext.tsx",
+        "sha256": "f0b1f8bf3a478235238d66568e129d96cd64fa5c499819a18c17cf36b53dcb44"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/ThemeContext.tsx",
+        "sha256": "3d04b81434cc7d376f6d0a2a44b589fd3a44c7d95d9a7533fcd94a65e0ce6539"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/useWorkspaceChatStarters.ts",
+        "sha256": "ecaf3195be5f1855c45842746f454e141a108ffc6c6e4e7d4dc9e27ab2439e5a"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/session-file-tree.tsx",
+        "sha256": "1b8db8e769418b34e66d926b13d3271727e6f662fe72a2bce1f9c3a52c6e291b"
+      },
+      {
+        "path": "apps/electron/src/renderer/main.tsx",
+        "sha256": "a9b1a3c3674b272651c5d9781afa6f0c213bf6a42048e0be70186585c893c581"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/ChatPage.tsx",
+        "sha256": "90c0654b6421b8f184698761f459febc3bbb402f8e0a356ac0860b50cb79f145"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/PluginInfoPage.tsx",
+        "sha256": "68fdbf975f71298ee4235732bd6e451826f4179ca7473a0b5eb00eb0db43be28"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/ProjectInfoPage.tsx",
+        "sha256": "e6de37a2dfb7d8b228c15f59ced0beb975a6c179805c25fceb088cd55ddc71c4"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/ShortcutsPage.tsx",
+        "sha256": "ac09939162712815b28ef86120a60e6c41f108cf3ffaf069f613c1f3bf70762a"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/SkillInfoPage.tsx",
+        "sha256": "2020d80cb52219d7e7445c75dc70de79e130eba808b7fa4f95a3f59a4889c3ab"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/SourceInfoPage.tsx",
+        "sha256": "562e3ea38d9221ef16ec229b56f6aac9cee0b6b684ea9f3817444f2b4e19db48"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+        "sha256": "e5b0717a8f3fd3da4b370d5b4bf8b5564ec8918a895e4c7111ab013b00a2471d"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/AppSettingsPage.tsx",
+        "sha256": "92d7fa65f9d2e90e2021cb3aacf7004487a41fd8c6f3ce73e534b87c1d38d42f"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
+        "sha256": "d7f4f9eb8596273bb8f0722e7a11dd270efabc927a0c2027272a71866dfbea3c"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/ChatStartersSection.tsx",
+        "sha256": "252e16dc24e1ca86fafffd4eea1b382e9017ade3427f79d8f9a8fdce9c472ef4"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/LabelsSettingsPage.tsx",
+        "sha256": "0455f943a3bebe007bdfbc221b85d54bc3f9d04b402248a3f0c72f8c028d276e"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/MessagingSettingsPage.tsx",
+        "sha256": "c2fe430518d6db08713d108d6b73d6f01de2eefa5d3b86277660a23ffcbf49bb"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/PermissionsSettingsPage.tsx",
+        "sha256": "43519678d7999f6e53868a4bbc1acb6a6c60cd45488ff3e202694d0927e79962"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/PreferencesPage.tsx",
+        "sha256": "485f7284536681398f9f7f21710cf4083171c20c05191e365328370149e4a25f"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/ProfileActivityHeatmap.tsx",
+        "sha256": "796e067e5e6ed8dbc7256ce7d76049b829438920e22314b73a1d55992791e116"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/ServerSettingsPage.tsx",
+        "sha256": "3c04da48178c3b54bda0b04866f16d4c43e554fa30eb8e739ecfe69c48834ea6"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/SettingsNavigator.tsx",
+        "sha256": "eeea198261722b094a9d61fab43fb17a763992021534fb26d6318763b6421fc2"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/WorkspaceSettingsPage.tsx",
+        "sha256": "403d5e033264c6d2723dae18a74dfab6beba9e9e87d4986a8563ba1f065bc0d7"
+      },
+      {
+        "path": "apps/electron/src/renderer/utils/session.ts",
+        "sha256": "b7bed4b4e386929ce854312b5f76bf69fdb815ca5585538e035dc6a986bb93ab"
+      },
+      {
+        "path": "apps/viewer/src/components/Header.tsx",
+        "sha256": "d6b62bbae59e0893dfd2de3309db3e85d511c4df5f7b607b4d7c7449c82cbfb5"
+      },
+      {
+        "path": "apps/viewer/src/components/SessionUpload.tsx",
+        "sha256": "193797b89bc83db93f2260d1ebf825611d38f5e8cd8665ddf1ddbdab2bad93cc"
+      },
+      {
+        "path": "apps/webui/src/App.tsx",
+        "sha256": "4baffbaf66514a6f42b02856a2fa8c0114e65e517b18b9a4688d55ba69ee6eb4"
+      },
+      {
+        "path": "apps/webui/src/main.tsx",
+        "sha256": "5d6752bd963c8445fd3a7f147cc48f52fd6972c3c660df86fe9af3f9f09903ce"
+      },
+      {
+        "path": "bun.lock",
+        "sha256": "e55942e8d059fbf5d798674889c1f1b8d96c654e21446099f3dee53ab61cd915"
+      },
+      {
+        "path": "docs/README.md",
+        "sha256": "89c3efaab0ebd669ac1e4c83b67ccaebd0a7ca65e657bafc573fe49428c1eeb4"
+      },
+      {
+        "path": "docs/dependencies/upgrade-closeout-2026-10-20.md",
+        "sha256": "4ea26345acb696ec8d27686ea220ac8c38378cfce64cd46a99a9bff61ffb3d9a"
+      },
+      {
+        "path": "docs/dependencies/upgrade-plan-2026-10-18.md",
+        "sha256": "7ed35232cdfeb507a1898f699d82e4cf3d9415ae6d9b7ce97022ed703e83cc76"
+      },
+      {
+        "path": "docs/design/theme-contract.generated.json",
+        "sha256": "82235d5d56be831c187f9d2b00e7a103e969701e69e4953b0582fffeb9884cf7"
+      },
+      {
+        "path": "docs/design/theme-contract.generated.md",
+        "sha256": "d288024ffe31ca9844689961eacf1fdd6919c551653886d7691a97ec9021c54b"
+      },
+      {
+        "path": "docs/verification/README.md",
+        "sha256": "16ac4ccd91f7b24c0ea87d9d57aee9c99594ba44e02aa95b13c866eb939acd76"
+      },
+      {
+        "path": "docs/verification/frontend-design-w1-failure-matrix-2026-10-20.md",
+        "sha256": "8f660ccf1260b428cbed1650ae4f4368fd839dbf0f9caedd4286c1b1370e54fa"
+      },
+      {
+        "path": "docs/verification/frontend-design-w2-failure-matrix-2026-10-20.md",
+        "sha256": "65f6031fb935fe60633161b690c1b72b6e16ad542f298664efc62578ed6be7b1"
+      },
+      {
+        "path": "docs/verification/frontend-design-w34-failure-matrix-2026-10-20.md",
+        "sha256": "e512baa50affc8ef650d711d9cf1f99afc3f131d63e7791555ef49b19a1027dc"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/README.md",
+        "sha256": "28cc8f8f67fe2396c98361631ba44cb740d4f3fab6feca515c27d1423886a2b4"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/a11y-audit.json",
+        "sha256": "a57e2c2fd7803b5499e174abcd2ab3d6b94e2157d7675ad16579a05be73c5e4a"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/a11y-surface-390.png",
+        "sha256": "344985058cddd46bcd4036d097e699d75202ccfdfd033e9d03d773cd873cad88"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/axe-version.json",
+        "sha256": "3facdf4c358a74e0a97c96b86aebe745e83eb0b9e96521798e43bb93ae2f66d8"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/host.css",
+        "sha256": "a233e9a5f6020392e3d398401c28eee3fbcd1649e96aaf8ea9d3b14021f9378c"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/index.html",
+        "sha256": "7491e33319271df7b71e542b675212576938b08c18f794ca8d1205c4e274dae1"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/manifest.json",
+        "sha256": "9f5de69d026c8fe2e3e80de49ab948d31b7726c5de1e4b46afe65f96e97291bb"
+      },
+      {
+        "path": "docs/verification/results/a11y-audit-2026-10-20/source-hashes.json",
+        "sha256": "9173fbccea0c6cd7b52e8b5520e7309a74e3d2c1023b2a6fa63f7269a6dca3a8"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/README.md",
+        "sha256": "bfe9d764778a4dccb83fb198d3c5a7dfabc684255ae6b1cd5de0c42160a6bf95"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/design-w1-dark-focus.png",
+        "sha256": "60ccf5a0146017bd0da9ecf313be420bbe86631fa1156a8dfdc228645e94a5b1"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/design-w1-dark.png",
+        "sha256": "8dbb97254e406a6e58d56222cf52ef193306f02e9060e282f7227d58b47dd938"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/design-w1-light-focus.png",
+        "sha256": "b1e926c02a67f4733c3d5e7775af8737743a72a430eb905d6c7d84e56b45dd31"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/design-w1-light.png",
+        "sha256": "9886b6307174113684d60868543cd9cfaccb670eaec16368bc18df0fe2044a56"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/design-w1-reduced-motion.png",
+        "sha256": "2a19814e543ba14f0faed5220784adac602eec126e3bef2bb8efd88053e20389"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/design-w1.json",
+        "sha256": "918a4308bef70e926cb4e17a93b552c8ddebf76f18bbb56c3b9a550534b50b7e"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/host.css",
+        "sha256": "7ea0ec65bb65171a5b90690b4d91c890336e1bd61c0e0da9f161f30ea984ef17"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/index.html",
+        "sha256": "85cdf9d660d2309a2939be4725e0073080b17ec49d5ebe3b0e0bf681ad256832"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/manifest.json",
+        "sha256": "483917588232634445d535d0f77626c59216435466dcb602985df01bd4898443"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w1-2026-10-20/source-hashes.json",
+        "sha256": "5329b1db3a51d469df27238c3501d3b9789da5b8c2c22aadc7783ba39c772ad8"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/README.md",
+        "sha256": "0c212146bfd9a7a5eac41aaabf3aed2de430a0932cc7cf79b888c417adbe0697"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/design-w2-scale-100.png",
+        "sha256": "5de1c6a804afaab009d2d3a120f1e953633c00ac4f7dbfe029a70ade62442bc7"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/design-w2-scale-110.png",
+        "sha256": "4415dd9402f75e4cf0f82a09454f1f48963c6215237585d3a2f7212490fac15d"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/design-w2-scale-125.png",
+        "sha256": "d6c5996147f5295a13f8e5cbcf96e55f3c1a696290d8ce395d8994d2972d1600"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/design-w2.json",
+        "sha256": "81e9064ff2ce17a7952c3765499f7abcf031021cba0488921029db460333bc89"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/host.css",
+        "sha256": "2107e05b5b1407ffe0e2f3787104593dca45a77700e4c159f6cbfde8baa3d452"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/index.html",
+        "sha256": "79d6dae56aeb76f67738a8d72f1d7dd39f55481b68af8cc14dc1b5a6de848044"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/manifest.json",
+        "sha256": "3b0cb680af6681054d28d16dd75ff3b42df48e6eca3bfbc35f33839860c72432"
+      },
+      {
+        "path": "docs/verification/results/frontend-design-w2-2026-10-20/source-hashes.json",
+        "sha256": "9a7199fb6f5c330447be660bfc1c69d2a3a8b4f1813926231895ee73b9e0bc10"
+      },
+      {
+        "path": "docs/verification/results/upgrade-2026-10-18.partial.json",
+        "sha256": "2b777bcfb08d1451072f93ae9be9fca24b4d7f8c4e208e3b5934be536bc07220"
+      },
+      {
+        "path": "docs/verification/upgrade-2026-10-18-failure-matrix.md",
+        "sha256": "5a7d14a5ebb8cf36d9e2a51bbc21c14fa6c62e4d1ffb0d52577296563d1edfcf"
+      },
+      {
+        "path": "docs/verification/upgrade-2026-10-18-implementation.md",
+        "sha256": "effdced29c7e9572c7e5932469ec0abb3dfb930cc3c1d4e18cb35d186f6b7e4e"
+      },
+      {
+        "path": "docs/verification/visual-baselines/README.md",
+        "sha256": "b6e18098c8f7a4188114af7320d7c5cc9a7bf27d16249eba7ac3a9280c0eb961"
+      },
+      {
+        "path": "docs/verification/visual-baselines/cyberpunk-dark-comfortable.png",
+        "sha256": "141c1483fb5d62c84d69bda10f8db1869e5c3e4b4cba50b287897d8619501a8b"
+      },
+      {
+        "path": "docs/verification/visual-baselines/default-dark-comfortable.png",
+        "sha256": "15ac2580f2894bffee5da3f48e7f6657c0f00338794232eb871401469b5fb0b1"
+      },
+      {
+        "path": "docs/verification/visual-baselines/default-light-comfortable.png",
+        "sha256": "6b0053e4d3ece537a1b484aea5079a3c469994573415db97ba5aa42569b1ae9c"
+      },
+      {
+        "path": "docs/verification/visual-baselines/default-light-compact.png",
+        "sha256": "b1b1663eeab7c229747b24f9ba533692cb91b0040814c164757c8cf97e0ff8e4"
+      },
+      {
+        "path": "docs/verification/visual-baselines/geek-dark-comfortable.png",
+        "sha256": "4869f980024cc4d9aa6f891507450c9c450963b4285daa525074b921cfb0c8c3"
+      },
+      {
+        "path": "docs/verification/visual-baselines/index.json",
+        "sha256": "50096a2d4313af7b747caed068a6e79c02aa11580c2d982664c25b0be9ae66ce"
+      },
+      {
+        "path": "docs/verification/visual-baselines/ink-light-comfortable.png",
+        "sha256": "28586e09a379f2061f1af2f08c69a7fa1ddaab38963d7f492b0e3be8c8c7f04d"
+      },
+      {
+        "path": "package.json",
+        "sha256": "1972c66a29fa554762bb9413decf3ad75d51f1eb611528142f42085cdfc15ede"
+      },
+      {
+        "path": "packages/server-core/src/handlers/rpc/files.ts",
+        "sha256": "758f74b2d7c7b6fdc0e6d284effcf572b333c6a087b12ee951a858127fe8437e"
+      },
+      {
+        "path": "packages/server-core/src/services/heic.ts",
+        "sha256": "ee929715fe7c7bff60864a1d28b9001f99371b6e7cf7292dee07657b5e426415"
+      },
+      {
+        "path": "packages/shared/src/config/appearance.ts",
+        "sha256": "0f076fd1304adb26aa8d94bbbc43f26aa7778ed01507b83d9fe97d6074e95d5a"
+      },
+      {
+        "path": "packages/shared/src/config/persisted-types.ts",
+        "sha256": "07683dd61f470a5d393606749eeee4cd17967c5b00c3ccf6b97b84af3d0c1b22"
+      },
+      {
+        "path": "packages/shared/src/config/schemas.ts",
+        "sha256": "01f8d530433e227b7ce4075847902ae188093619a8d8932ce4a6f19ccd385a9a"
+      },
+      {
+        "path": "packages/shared/src/config/theme.ts",
+        "sha256": "eb81d11f9a2821f5443620bc762bbaf71f0b5f5e62df09fe32f3784c1751f598"
+      },
+      {
+        "path": "packages/shared/src/config/themes/ink.json",
+        "sha256": "155f7f225feb0e2f935ade16595fedc5323312864b573970ede14b5aad13a0c7"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "267a74d87b19bf11804d8920dee094fb88da4193b11571a89b59e8d169d96f3a"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "4bdca52b08ffd2b03348816a748368a12743fb49547eea0f2e652be5459738e6"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "22217f4f89edf0a6f945411461943d317b49090554838c6f63f844669b0ee98a"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "b64fb20ffed01bae6e877d378f6ee9309b5633aeaf9cbdc9af05ebb8f8d18a6f"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "61386eab4524d2361c38464259ef2830228bd123374c2a900a805f89d184c302"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "84283b47eafdd8e65a7fc1aa31d2e58293ed6f7e41a3fdba762be6046bb9a5df"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "7835d6716d6bf2b79b3222d40219c9aa38f9a0cbf07097e8542786b722f0b945"
+      },
+      {
+        "path": "packages/ui/src/components/annotations/AnnotationOverlayLayer.tsx",
+        "sha256": "2f0c29ebd6e7d8ee409acd2965850e13827edfa2976cfc744ef80aeca15b9a14"
+      },
+      {
+        "path": "packages/ui/src/components/chat/AcceptPlanDropdown.tsx",
+        "sha256": "fef887de4466bf1b6d0e5d5617d25b5c806fde536d1d861f65595a26622dd0ce"
+      },
+      {
+        "path": "packages/ui/src/components/chat/CompactAcceptPlanDrawer.tsx",
+        "sha256": "2ae0eda85317b2c7852f597507a1a579065ba91dd0a71169937e192572c90d40"
+      },
+      {
+        "path": "packages/ui/src/components/chat/InlineExecution.tsx",
+        "sha256": "6410a9a10c483c0871fce96d80d754b2c7a9b32d238d342dffd641dcdfc6aa0d"
+      },
+      {
+        "path": "packages/ui/src/components/chat/SystemMessage.tsx",
+        "sha256": "62846ed1b3b13bf3156591bb8a1391462fb89e9223707955975fa92882290942"
+      },
+      {
+        "path": "packages/ui/src/components/chat/TurnCard.tsx",
+        "sha256": "7fd431d635fcf594eead80c1f8d3a595d1ac13c2bc9336b4d54605b65da6f31a"
+      },
+      {
+        "path": "packages/ui/src/components/chat/TurnCardActionsMenu.tsx",
+        "sha256": "3afbdc72778ab204d7b74998c6f54b7b179f506291e9a099cb25caaa4fb92a09"
+      },
+      {
+        "path": "packages/ui/src/components/chat/UserMessageBubble.tsx",
+        "sha256": "e7e80b12de20ec58115d48d71494df30bc08ef0a9a5dddcf0f58acf4e4ac4f7a"
+      },
+      {
+        "path": "packages/ui/src/components/code-viewer/UnifiedDiffViewer.tsx",
+        "sha256": "72fc880fb3659e0e533faf19f35f89e2c1c0aca7d638a4340d246accf78768d5"
+      },
+      {
+        "path": "packages/ui/src/components/icons/FileKindIcon.tsx",
+        "sha256": "7bd6f307e6220835a26dde399f1f18e894a29c6f898f38693e65a42de0d56ec1"
+      },
+      {
+        "path": "packages/ui/src/components/icons/Folder.tsx",
+        "sha256": "9b313fae82225003760b7c307a23ed5ee5041419014e214ed416433ebdfe91a8"
+      },
+      {
+        "path": "packages/ui/src/components/icons/Home.tsx",
+        "sha256": "aa9d5d1cb4d20bfad35bc37bbd8cbbe8716f6e8bfafcb569866d385c5ac095ad"
+      },
+      {
+        "path": "packages/ui/src/components/icons/Inbox.tsx",
+        "sha256": "80093f98946a72b14ceac30eac4a27e010ceb34f60a951d97a8da6c6ef7389fa"
+      },
+      {
+        "path": "packages/ui/src/components/icons/index.ts",
+        "sha256": "ccbfc35d82abce943a47c9333647b15fcfb319d4563d93f25b1b5ac120d40288"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/CodeBlock.tsx",
+        "sha256": "c587e5ad451af5ca0745167c878fc5c0e4cb394b1e9ac98552479ff53c7675df"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/CollapsibleSection.tsx",
+        "sha256": "2c5e8d4a007a8ee6d9fbf3e4df26aa78f166e23410fdd2852d5c69f5af07184f"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/Markdown.tsx",
+        "sha256": "8834f63507c5be679a10ba55a52c2fa748cf6a684ae9a86cfe4f44c88b9c91ce"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownDatatableBlock.tsx",
+        "sha256": "85cee55d1f4a0b3d4e747b87359b65155a2bc5ee5518d71d83ec0f614bd6f9eb"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownDocBlock.tsx",
+        "sha256": "47680d1377a7fc00c0f58ebb269fc2f6db0391587e9474718ccaea3b07194706"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownHtmlBlock.tsx",
+        "sha256": "9490b5d8739694e12836014fe0a94a2492cabd168cfdb45d511718be0c2106f8"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownImageBlock.tsx",
+        "sha256": "e6b8bba429ee5619423be0f08970bfe609f2e4df99b37b9eb9f2bb287b8e222b"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownJsonBlock.tsx",
+        "sha256": "55d5c3c3f4c525a5092d565320e7ea2507f53d7f43c790175ec377a9d569fb34"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownLatexBlock.tsx",
+        "sha256": "0f054b05e9f86f27a3ce1ccc85cd440754933f8beda4627c58d330148a3ee4ca"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownMermaidBlock.tsx",
+        "sha256": "3ab289d0d6a7130d20ed19b83485c34c2b570a500d48ecdaee55eef93abeed6f"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownPdfBlock.impl.tsx",
+        "sha256": "3b131b03d74c1e8ad745e1aeec65ce25528340d3478cebe6a2c40721321442d1"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/MarkdownSpreadsheetBlock.tsx",
+        "sha256": "2edff176cf4c4b42e6617d6e392b91436442aae187185366ced1a96e5fa04fd8"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/TiptapCodeBlockView.tsx",
+        "sha256": "a979dfede4f7efceb889d2d9bd9254e89053f06d046ed57e0cb24593eb310e9f"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/TiptapMarkdownEditor.tsx",
+        "sha256": "09d7f44b639586eb4a72ffb8b98a1814ea68875a909dabd81c9adbea0dd04230"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/ActivityCardsOverlay.tsx",
+        "sha256": "3552577ac37edd1fa2a9212c89fff7c21753b2cd5a17573991a6190451f44fc6"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/CodePreviewOverlay.tsx",
+        "sha256": "06eb8e1095c0d17e61ab250beb4d75765668a523396db83f07204f4737d6a731"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/ContentFrame.tsx",
+        "sha256": "1537eb97719b5f04bf24106ee9abef037bd29e9ba33ba339fa2e2dd7a0efa161"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/DocumentFormattedMarkdownOverlay.tsx",
+        "sha256": "b22bd0f2677d064c27019804ebfbb691ab626a0f5ba46217075979094d36f54c"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/FullscreenOverlayBaseHeader.tsx",
+        "sha256": "12713b74d864ce12cce44c06987f6a22751b5032aae32ed937185ec469dec708"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/GenericOverlay.tsx",
+        "sha256": "1bad319b641fb4a346b40578e80be4b481a34e6237060b1fe3f12f823f697c15"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/HTMLPreviewOverlay.tsx",
+        "sha256": "0544f6ed110d153b18213b2d3a2a79aa7b3af7b73e28f7914d2e54fd32506415"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/ImagePreviewOverlay.tsx",
+        "sha256": "a56fa84b453973f1c06bf37867c6a9c6e24fea1a089be1650c298373300e22b5"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/ItemNavigator.tsx",
+        "sha256": "b95bab996df1edc06e3dda3cf4ca4910c7c23ead49efa23e6b2d89cc5b13f296"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/JSONPreviewOverlay.tsx",
+        "sha256": "b51cd31eaa53c1e46484ff653be45ff4646aefe1aa154e63e84d02321e4f2053"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/MermaidPreviewOverlay.tsx",
+        "sha256": "97248d532d26c8e52e08c8da6e7005c532279a4c119f3773033c4a4e8e8cc342"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/MultiDiffPreviewOverlay.tsx",
+        "sha256": "6ace3145b1a55e56d535b58a91d05c8887d917a976adc2864119094085f08b5a"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/PDFPreviewOverlay.impl.tsx",
+        "sha256": "74d3ba18f96164c3d48be678449c851786e63ae4155b307da16309f5d8208854"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/PreviewOverlay.tsx",
+        "sha256": "75986251ced9d92410a49989dda6ea623bfa83355e41844fd61e616afa21df04"
+      },
+      {
+        "path": "packages/ui/src/components/terminal/TerminalOutput.tsx",
+        "sha256": "262d780306f33195f77bb2e1e22383a221a8e90d33b7e3856ecf97e45f969519"
+      },
+      {
+        "path": "packages/ui/src/components/tooltip.tsx",
+        "sha256": "34d27f9fed34af92c076a14cd17ba2e1e20cc70b2b5b878eed6ca794f3b4e6ea"
+      },
+      {
+        "path": "packages/ui/src/components/trajectory/RecordInspector.tsx",
+        "sha256": "4f51b4af4f2558718297a1b2553cdd3774764760252e931302b54377f10dee44"
+      },
+      {
+        "path": "packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
+        "sha256": "fd564b02203d49a8387c92f08879889b5e28276ff34b20534b03843956b3fda0"
+      },
+      {
+        "path": "packages/ui/src/components/trajectory/TrajectoryPerformance.tsx",
+        "sha256": "675d8e5d1694eb64852e41b708f65f37eba5f5b49f91cc690b10cf7fe13839c4"
+      },
+      {
+        "path": "packages/ui/src/components/ui/BrowserControls.tsx",
+        "sha256": "95f23a2859b26b0cc02e3b3e72d8de3f5717fcdd46dc1c6556707ad4b32fb002"
+      },
+      {
+        "path": "packages/ui/src/components/ui/BrowserEmptyStateCard.tsx",
+        "sha256": "668c32b6c48fb4c4baec709cf156cbe2415f3811d209e3686a4b532088377408"
+      },
+      {
+        "path": "packages/ui/src/components/ui/FilterableSelectPopover.tsx",
+        "sha256": "e900bdba03ab2362a566299e8bb4742968b243b4b1f530773db981b1f8f1ce97"
+      },
+      {
+        "path": "packages/ui/src/components/ui/Island.tsx",
+        "sha256": "8e4fb62f07be9ae18a4789aad7fd276478145e1e91d65ecacf8c4490950c32ab"
+      },
+      {
+        "path": "packages/ui/src/components/ui/IslandFollowUpContentView.tsx",
+        "sha256": "1845b653f0d7d97e8d3c60af21d31127c72111887921b8607ee1773b736072dc"
+      },
+      {
+        "path": "packages/ui/src/components/ui/LoadingIndicator.tsx",
+        "sha256": "d15011f237d9d64c076ec1fece35e640b9933d80a66e53b5cdea94dfe1d22e3f"
+      },
+      {
+        "path": "packages/ui/src/components/ui/PreviewHeader.tsx",
+        "sha256": "119b10cdedfe4782cdddb2fbe1e8cd9308487cc264c2108f82f4f50df4cb53e5"
+      },
+      {
+        "path": "packages/ui/src/components/ui/SimpleDropdown.tsx",
+        "sha256": "9efbba14f3ab73f0eb114644255617d711b84a73d8d0d01c4d588642b22f472f"
+      },
+      {
+        "path": "packages/ui/src/components/ui/StyledDropdown.tsx",
+        "sha256": "e5af225d2eebb36d27d08a60e073895c84e35923385c7b4c3843ec704b5e907d"
+      },
+      {
+        "path": "packages/ui/src/components/ui/drawer.tsx",
+        "sha256": "249335aa56327d5fdb24f9f6665b61a26970ad26110fabf7bc48d28f76de220b"
+      },
+      {
+        "path": "packages/ui/src/index.ts",
+        "sha256": "fd1c0d6e652fdfecd96ce74ade945d59b0778cac5396996f9a0337c1fefdee45"
+      },
+      {
+        "path": "packages/ui/src/lib/file-kind.ts",
+        "sha256": "c86e5f7049ed7b85c3c38aa403f257227046e61ee0605bc3600949bb52e0611b"
+      },
+      {
+        "path": "packages/ui/src/lib/pressable.ts",
+        "sha256": "6d4538fba5a9f566d12bbf1bd609fd7e315aad5c531fe5ab2fece794ea3ca256"
+      },
+      {
+        "path": "packages/ui/src/lib/theme-compiler.ts",
+        "sha256": "6fd9074cc2d7d4418338885ce16554a4157eafa909af8873c84a73e6629bd72d"
+      },
+      {
+        "path": "packages/ui/src/lib/use-initial-focus.ts",
+        "sha256": "36d68841dc9b35e18f8fd2fa596e60e5b041079400701cb08a16b63dfb712b5c"
+      },
+      {
+        "path": "packages/ui/src/lib/visual-roles.ts",
+        "sha256": "14e547d9d637d963580b83497e9b4424134a06f76f9f3769252a73152c3300a6"
+      },
+      {
+        "path": "packages/ui/src/styles/controls.css",
+        "sha256": "fa91a96aa9959c04dcee640cebfa849c0638a6cdfb7d23ff4aedcd6831cc1bc8"
+      },
+      {
+        "path": "packages/ui/src/styles/motion.css",
+        "sha256": "f3732300522adc8b223a23ff33ed16f3e421aa7fcfc81ea325ff781004ba4562"
+      },
+      {
+        "path": "packages/ui/src/styles/role-tokens.css",
+        "sha256": "3360c166cd1b3587699d0c31350d6f781204aa4e3df4eabdb1b682f45e4e80c3"
+      },
+      {
+        "path": "packages/ui/src/styles/roles.css",
+        "sha256": "14536d471391e6015a7a66cdfea95bdd89d748a272d8bd4bbd441f5071a2a69a"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-adapter.css",
+        "sha256": "42c0cfadeedae9894b2800be243f1df55165b5f5b5d7e399a1b024b2c3912b0a"
+      },
+      {
+        "path": "scripts/check-contrast-floor.ts",
+        "sha256": "2ae118ad7ae416d7b37658d326bf99cd4803ad86e9d228aa8dcac527bcaf1b65"
+      },
+      {
+        "path": "scripts/check-design-drift.ts",
+        "sha256": "7493ca1e27be0d3259324b9483fcabee0994912d2593c545bd0cfea795b56f6a"
+      },
+      {
+        "path": "scripts/check-governance.ts",
+        "sha256": "76c32f9ba61c424dda2a681daca7f6f4a973dbdd59410ba923005e18baebb2d0"
+      },
+      {
+        "path": "scripts/critical-scenario-policy.json",
+        "sha256": "c2fe9cacb31a33659ba6c761d178603f0e7729a9ed9b9b06c8c3cfe26c6dc0d5"
+      },
+      {
+        "path": "scripts/critical-scenarios.ts",
+        "sha256": "700b9a1ad73b96b1753aa64741525ad32dfdcb852b8f454cf54374a1077eb109"
+      },
+      {
+        "path": "scripts/design-drift-baseline.json",
+        "sha256": "60c14aa6ffb33507ff28eb5a9a449ece8bdbee01f128fa326dda9cc6bb0b226e"
+      },
+      {
+        "path": "scripts/generate-theme-contract.ts",
+        "sha256": "f4a3710df26c584c335e7cbc7a526152a9f704789290048439f27259c6b8cd14"
+      },
+      {
+        "path": "scripts/measure-design-drift.ts",
+        "sha256": "6217c80ffbae65352b69aab009ab382bbfc33e1c09fc95236d169f1e9a092095"
+      },
+      {
+        "path": "scripts/migrate-default-type-scale.ts",
+        "sha256": "7349ce91a6de00f6c73313f8093d57819cb898b45fea7f0b059c94ae575e6397"
+      },
+      {
+        "path": "scripts/migrate-icon-stroke.ts",
+        "sha256": "9a0c46c742ac9c883ecc142945c1242d37daaf90a91afbd932762f464daab575"
+      },
+      {
+        "path": "scripts/migrate-low-contrast-text.ts",
+        "sha256": "c676684df1d5b21f8714d90165bdef4c02e72e21c3d432a910ddce9cf682d35a"
+      },
+      {
+        "path": "scripts/migrate-state-colours.ts",
+        "sha256": "565a3dc50cc6589c31bbb51a69b41c3229994241977fbd342032c44caccb2836"
+      },
+      {
+        "path": "scripts/rpc-contract-inventory.json",
+        "sha256": "727ecda9ce9339850588d674258e03ec24508bffff7a57350b0f153143e034ad"
+      },
+      {
+        "path": "scripts/verification/a11y-audit-workflow.ts",
+        "sha256": "80bb071d09a2e402dec4dc9bed06e363d202dad0efa9dcaf71de839e8672ab77"
+      },
+      {
+        "path": "scripts/verification/design-w1-workflow.ts",
+        "sha256": "7297b443ad42b513b2ba2b92b0257d8b0e5fba06a6bdf12377e4bc4006fc7f16"
+      },
+      {
+        "path": "scripts/verification/design-w2-workflow.ts",
+        "sha256": "4a77cf3ca33c101f83491627328182417dfdbf018a38585fb005812999913427"
+      },
+      {
+        "path": "scripts/verification/fixture-bundle-host.mjs",
+        "sha256": "1acefd06ba9effd76051d96b2113a99aa54769e482aeceb38475f0e68cd35c38"
+      },
+      {
+        "path": "scripts/verification/fixture-bundle.ts",
+        "sha256": "eab2187577dbf3ee0ac44694bdbb5641214b47dcca40d6d277fba27730e0d04a"
+      },
+      {
+        "path": "scripts/verification/fixtures/a11y-surface.tsx",
+        "sha256": "d4cfd3c6cc10c2372ae0c8b3b4ec70e8ff50b98a3278ab6f8a6ea7b2ad74d54c"
+      },
+      {
+        "path": "scripts/verification/fixtures/api-key-form.tsx",
+        "sha256": "1d6dbb227ca82fc4e48fa99f95f56b6572fe911b4f17ac522723aad00ac94da1"
+      },
+      {
+        "path": "scripts/verification/fixtures/calendar-drag.tsx",
+        "sha256": "0e60ea4def25fca0f4590bff050a33c2eea366f79780d612639bc802026be1d3"
+      },
+      {
+        "path": "scripts/verification/fixtures/chat-starters-landing.tsx",
+        "sha256": "864c1e7abe73c9521ef76b25fe9999baf67fe7dbb2ace3f16ff62d33c51b5ac8"
+      },
+      {
+        "path": "scripts/verification/fixtures/chat-starters.tsx",
+        "sha256": "9016fa08299ad5abede6fa61939f2567bf31ab6af34b7bf9f973fc6b4b3f9335"
+      },
+      {
+        "path": "scripts/verification/fixtures/design-w1.tsx",
+        "sha256": "acfb3c503f8275de1d5531d2f87cfd7ad530178bae36b28fccd6d9de92fde135"
+      },
+      {
+        "path": "scripts/verification/fixtures/design-w2.tsx",
+        "sha256": "89d2add3c18c291ad7c37a2cec7eaa2d7dc4114c8ede08e66e718e67f8162bbb"
+      },
+      {
+        "path": "scripts/verification/fixtures/document-tools.py",
+        "sha256": "920c3ecc54b60860b5d447814b1527860af2510a4d3c08f9491732a42abca8f7"
+      },
+      {
+        "path": "scripts/verification/fixtures/generator-acceptance.ts",
+        "sha256": "49b74eeaacf42b17e0b99e79749fbb00c72c2c92a5f17710045917621b91fd56"
+      },
+      {
+        "path": "scripts/verification/fixtures/heic-ipma.ts",
+        "sha256": "6c3fcd836abcc61bf9ee946c8f7458d5d96c5b9e81736f63e657674a7fe366d2"
+      },
+      {
+        "path": "scripts/verification/fixtures/long-session-budget.tsx",
+        "sha256": "fa82ecc068bf8ced8c8c88744c1c9a500e23a8b240ec830fb2328d8d9ec6eb5f"
+      },
+      {
+        "path": "scripts/verification/fixtures/native-attachments.cjs",
+        "sha256": "53b170abfa1d1d2a9c0e4b23eb7e6ed12ce1bed62d100838668741a646e0346a"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract-css/electron.css",
+        "sha256": "6fcad08b5538174505c1fdd6f70aa27749bc423fbd73c67ca7a538250cb9153d"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract-css/ui.css",
+        "sha256": "08ac4121e3cb1b30aaf4d5d606c1d9ad768cb5cd2d22ffe440bea9050971e2a8"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract-css/viewer.css",
+        "sha256": "e77c207eef271902cab51de2adb65568cabe3a48c5e0fde66c3dba0a17f9cbdd"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract-css/webui.css",
+        "sha256": "a8e7d178707a71001d202c92fdda565755d7279920f58dd9ed3774ad08f08202"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract.tsx",
+        "sha256": "829baf9fdde18bab75244145e82befbd9cb5a4a97424107ff731d3a3b596359c"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-foundation-css/electron.css",
+        "sha256": "bebbe7a9bd66d3282015463e7bf7135e383fbfde46c934df65346f710d03fe90"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-foundation-css/ui.css",
+        "sha256": "9db4859da8f2b598379f13d78c26b3e5b759871a53ba8b8df6586a813a0e9fd5"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-foundation-css/viewer.css",
+        "sha256": "2112c553420c2444ca8b57f6f137b7aa4f91034b3e94e8bf1110f48cca48ee01"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-foundation-css/webui.css",
+        "sha256": "4e3750aa44516e25ae8093c29b91da514fcbb2303e02eef4b660504cdf5d0cd7"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-foundation.tsx",
+        "sha256": "dfb2cfa1eacc555ab3495af434796be9c3bab66b2e39fd0bf7faf5b7b86454d4"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-roles-css/electron.css",
+        "sha256": "ea99cf1d324f6dd4da7a9ee18affd15b06a7454f1c0553d67349e6d35e74ee5e"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-roles-css/viewer.css",
+        "sha256": "e50dfd17f2290c9b8d2f336f4e1d392cc3cd662f5ad4bc01119f0bf8e98cc57c"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-roles-css/webui.css",
+        "sha256": "25cf0612f91dc4e401c80beb446f837bd9c5101dfa1eebcc65e83bba6bb22648"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-roles.tsx",
+        "sha256": "e794e3dce4b447e76987e497c26fa01c94ce2b80e04806e55e72a7b5a1103063"
+      },
+      {
+        "path": "scripts/verification/fixtures/undici.cjs",
+        "sha256": "c604ce6cb2bcdca538ef1d20f104126c6d98254206595375baa4355545629896"
+      },
+      {
+        "path": "scripts/verification/fixtures/upstream-015-renderer.tsx",
+        "sha256": "989694975283870fca6091f75f56a070d022c01fb202ba7cdbadf0fbbfa1a64e"
+      },
+      {
+        "path": "scripts/verification/fixtures/visual-baseline.tsx",
+        "sha256": "01682dfd50c48dddc0b690c7c224406c1fbdae33c7d3b6a3e88afb182c393d45"
+      },
+      {
+        "path": "scripts/verification/fixtures/windows-reopen.cjs",
+        "sha256": "6d152116d58918b4fbab18d239854b971dbc6cb743f0c0e9651d80b0da3530ba"
+      },
+      {
+        "path": "scripts/verification/long-session-budget-workflow.ts",
+        "sha256": "8fc2f477253b58dd538d39e2318d189846971f114a703d28480dfd63d2d5650f"
+      },
+      {
+        "path": "scripts/verification/theme-browser-host-workflow.ts",
+        "sha256": "936fd819dfe6164c909ed720eeef48ab854317d09a29e8df029b751ee0a84942"
+      },
+      {
+        "path": "scripts/verification/theme-contract-workflow.ts",
+        "sha256": "c5d086e5be167a233abaa51df68a471706fd6b1b12162bd16b9e1a20badbd516"
+      },
+      {
+        "path": "scripts/verification/theme-design-workflow.ts",
+        "sha256": "7505ca904388c7a23ff61d92ce3214040401501faa82458d790b6833c651589b"
+      },
+      {
+        "path": "scripts/verification/theme-domains-workflow.ts",
+        "sha256": "a29a62e2ca54c5ef3fde441a65774c4a69ff68b2a86244d9ef6dc375e2309681"
+      },
+      {
+        "path": "scripts/verification/theme-foundation-workflow.ts",
+        "sha256": "49b811f497f7a03d0d6184ded60e01722f53e4f3ec8dcb79fc39ba5d38285108"
+      },
+      {
+        "path": "scripts/verification/theme-login-workflow.ts",
+        "sha256": "dd1e2a77eba032ee157b522344e6968f3bb1dd8e2ad1680d68c6f982c4338081"
+      },
+      {
+        "path": "scripts/verification/theme-roles-workflow.ts",
+        "sha256": "1f52583363ce9fda756ed31482eba4aa904b374d5a9f013a2ceb5f528bd71b34"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-calendar-drag-workflow.ts",
+        "sha256": "dd30cc1ff3ef0e5c344252c462f5c78ba88941af29f4860a46202baed25ea89d"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-chat-starters-browser-workflow.ts",
+        "sha256": "01eda1d68d77f7e0e830f5461b15f6d4b0e08cb933a50b779c68ea0d0bfcbdd2"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-chat-starters-landing-workflow.ts",
+        "sha256": "a41501faea026949ec34a65b0f383106d53a3262256f8da4ba85995428e6e249"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-document-tools-workflow.ts",
+        "sha256": "fcd2c8e2f2654cf3f0c37c5d663fecab64157a5fee45ca1e40c80694089feb1a"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-editor-workflow.ts",
+        "sha256": "f220bea45f987bf2d4f35ea11248b111d7d71cdf829325f364974c3760cdb69c"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-endpoints-workflow.ts",
+        "sha256": "72c60a6593ac1b3946efc0e02835bb969a45935011a538937ebb97438021bd40"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-fixtures-workflow.ts",
+        "sha256": "05633553a86ba41173deafb73f1a6ff7c3f96330441da7d0d977831e741365d5"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-heic-store-workflow.ts",
+        "sha256": "3a083c7d80db895bc981551c1cefdd1f9d3fba560fcd6175c6490c3c65047390"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-heic-workflow.ts",
+        "sha256": "d6c07d09e07ef2e4ee17d0e2062eed89eda53a82cf2e74fb4ee0cbd9821a061b"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-model-form-workflow.ts",
+        "sha256": "fb4e885f1dcc4f17651d5b1558a71369d5ccaa6b389efeb78528667f671e3a00"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-native-attachments-workflow.ts",
+        "sha256": "12501c08a56548ff692151e00acea5c4fa7fc0561f95655cfd27d48b208d9bcb"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-packaged-workflow.ts",
+        "sha256": "02337391e0870c70ebea4ff2d6c3e4071f0692e5622e9c90d5cdfb98b13e96f6"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-pdf-fixtures-workflow.ts",
+        "sha256": "249c332d6ebf67c4c75bd51a10082d3c76a6859888ba7ca1089f1569601ec697"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-pdf-workflow.ts",
+        "sha256": "ed63a8f39e724e57323cb9883604d8499849e41b20c290aa3543695cf6345705"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-pi-runtime-workflow.ts",
+        "sha256": "2c41bbddd64d339a78eaa4e5da4e88362d5f3701deefe02421b052b737a8c302"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-results.ts",
+        "sha256": "fc47a9d86f92e7e87049b52d2a0a2ad2ec8103e22c07e5b84a2368c8ee92c509"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-undici-workflow.ts",
+        "sha256": "02b4aa718ebbcfa7734c9ccdcf9f2830c79393a5932f8748764427fb6eca81f0"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-usage-ledger-workflow.ts",
+        "sha256": "b7a71b41d33ee61b0c138dd535cc59475f6e76e266a739e3ce9bcd0e27fd3c04"
+      },
+      {
+        "path": "scripts/verification/upgrade-0153-workspace-isolation-workflow.ts",
+        "sha256": "af6fb0016752fe3ecd879d997e65778638620a61c6ec34d82c0128cb3a65a5ea"
+      },
+      {
+        "path": "scripts/verification/upstream-0140-b4b5-ui.tsx",
+        "sha256": "904352bdfef455c09168ab4e187c9847c9661894851cea376e3741dd53bba704"
+      },
+      {
+        "path": "scripts/verification/visual-baseline-workflow.ts",
+        "sha256": "459ce7dec065bcde9cb6927e6340014b072d43c2a06cbf346b63d7c367a8a7af"
+      },
+      {
+        "path": "scripts/visual-debt-ledger.json",
+        "sha256": "48ead2d25c6c13ce9858e11d58abcc932342b0c93fcc1569d477fedb10aa1924"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "LS1-initial-render-budget",
+    "LS2-scroll-frame-budget",
+    "LS3-append-frame-budget",
+    "LS4-glass-panel-cost",
+    "LS5-no-page-errors"
+  ],
+  "passed": 5,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "host.css",
+      "sha256": "e5fc8d9234647eb9923b547433d63e091e5b55ec6d0618ffaefbabc5abf6bcd1",
+      "bytes": 137
+    },
+    {
+      "path": "index.html",
+      "sha256": "10fe3a83238ecb1276efb7b282f50787ca50c3beb25e5cfc3980bc82ff798e29",
+      "bytes": 287
+    },
+    {
+      "path": "long-session-budget.json",
+      "sha256": "f0d6e996bf1f9fd06fad41ffce3e695dd7d3ed5677ca89fb74f700311e1c85bc",
+      "bytes": 1521
+    },
+    {
+      "path": "long-session-glass.png",
+      "sha256": "a4f7fd9831f3a8fc9493bf6bf012be05084c963b82d6f461d4627cc8aff6a42f",
+      "bytes": 86500
+    },
+    {
+      "path": "long-session-scrolled.png",
+      "sha256": "8667b409545450194afb75b61e3409ab045f2f8f20dc238e98e9da68951c8098",
+      "bytes": 82560
+    },
+    {
+      "path": "long-session-top.png",
+      "sha256": "1c4099b4f145593486bcc5cd32eee761f0a26bbb7bc9014903b44cc58c8eb3c4",
+      "bytes": 80876
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "3bc9263fb7c9554323596edba9314c45d71b8dc21021aed359aae33c02b5a522",
+      "bytes": 604
+    }
+  ],
+  "untested": [
+    "Physical GPU/driver variance (headless software rasterisation differs from a desktop compositor)",
+    "heavily nested tool output and image-heavy turns",
+    "Physical touch/scrolling devices",
+    "Multi-window sessions and WebSocket transport"
+  ]
+}

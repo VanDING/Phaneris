@@ -102,7 +102,15 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
   return (
     <div className="w-full max-w-xl">
       <div
+        role="button"
+        tabIndex={0}
+        aria-label="Choose a session file or drop one here"
         onClick={handleClick}
+        onKeyDown={(event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          event.preventDefault()
+          handleClick()
+        }}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -117,7 +125,7 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
       >
         <div className={`
           p-4 rounded-full
-          ${isDragging ? 'bg-accent/10 text-accent' : 'bg-foreground/5 text-foreground/50'}
+          ${isDragging ? 'bg-accent/10 text-accent' : 'bg-foreground/5 text-text-secondary'}
         `}>
           {isDragging ? (
             <FileJson className="w-8 h-8" />
@@ -127,10 +135,10 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
         </div>
 
         <div className="text-center">
-          <p className="text-lg font-medium text-foreground">
+          <p className="text-title font-medium text-foreground">
             {isDragging ? 'Drop session file here' : 'Upload session JSON'}
           </p>
-          <p className="mt-1 text-sm text-foreground/50">
+          <p className="mt-1 text-body text-text-secondary">
             Drag and drop, click to browse, or paste from clipboard
           </p>
         </div>
@@ -145,13 +153,13 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
       </div>
 
       {error && (
-        <div className="mt-4 flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+        <div className="mt-4 flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-body">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      <div className="mt-6 text-center text-xs text-foreground/30">
+      <div className="mt-6 text-center text-meta text-text-secondary">
         <p>Session files are processed locally in your browser.</p>
         <p>No data is uploaded to any server.</p>
       </div>

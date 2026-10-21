@@ -48,14 +48,14 @@ export function SettingsSection({
         <div className="space-y-0.5">
           <h3
             className={cn(
-              'text-base font-semibold',
+              'text-reading font-semibold',
               variant === 'danger' && 'text-destructive-text'
             )}
           >
             {title}
           </h3>
           {description && (
-            <p className="text-sm text-text-secondary">{description}</p>
+            <p className="text-body text-text-secondary">{description}</p>
           )}
         </div>
         {action && <div className="shrink-0">{action}</div>}
@@ -90,7 +90,7 @@ export interface SettingsGroupProps {
 export function SettingsGroup({ title, children, className }: SettingsGroupProps) {
   return (
     <div className={cn('space-y-6', className)}>
-      <h2 className="text-xs font-semibold text-text-secondary uppercase tracking-wide pb-2 border-b border-border">
+      <h2 className="text-meta font-semibold text-text-secondary uppercase tracking-wide pb-2 border-b border-border">
         {title}
       </h2>
       <div className="space-y-8">{children}</div>

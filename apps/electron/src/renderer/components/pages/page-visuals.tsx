@@ -31,13 +31,13 @@ export function PageKindBadge({ kind, className }: { kind: PageKind; className?:
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center gap-1 rounded-md border border-border/60 bg-foreground/[0.02] px-1.5 py-0.5 text-meta font-medium text-foreground/60',
-        kind === 'live' && 'text-emerald-600 dark:text-emerald-400',
-        kind === 'interactive' && 'text-sky-600 dark:text-sky-400',
+        'inline-flex shrink-0 items-center gap-1 rounded-md border border-border/60 bg-foreground/[0.02] px-1.5 py-0.5 text-meta font-medium text-text-secondary',
+        kind === 'live' && 'text-success-text',
+        kind === 'interactive' && 'text-accent-text',
         className,
       )}
     >
-      <Icon className="h-3 w-3" strokeWidth={2} aria-hidden />
+      <Icon className="h-3 w-3" aria-hidden />
       {t(`pages.kind.${kind}`)}
     </span>
   )
@@ -56,17 +56,17 @@ export function PageFreshness({ config, className }: { config: PageConfig; class
   let dotClass = 'bg-foreground/30'
   let text: string
   if (last && !last.ok) {
-    dotClass = 'bg-red-500'
+    dotClass = 'bg-destructive'
     text = t('pages.refreshFailed')
   } else if (last) {
-    dotClass = 'bg-emerald-500'
+    dotClass = 'bg-success'
     text = relativeTime(last.at)
   } else {
     text = relativeTime(config.updatedAt)
   }
 
   return (
-    <span className={cn('inline-flex min-w-0 items-center gap-1.5 text-meta text-foreground/50', className)}>
+    <span className={cn('inline-flex min-w-0 items-center gap-1.5 text-meta text-text-secondary', className)}>
       <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', dotClass)} aria-hidden />
       <span className="truncate">{text}</span>
     </span>

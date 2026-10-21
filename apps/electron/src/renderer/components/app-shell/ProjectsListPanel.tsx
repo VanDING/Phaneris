@@ -74,7 +74,7 @@ export function ProjectsListPanel({
             <button
               type="button"
               onClick={onAddProject}
-              className="inline-flex items-center gap-1 h-7 px-3 text-xs font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors"
+              className="inline-flex items-center gap-1 h-7 px-3 text-meta font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors"
             >
               <Plus className="h-3.5 w-3.5" />
               {t('projectsList.addProject')}
@@ -132,7 +132,7 @@ function ProjectRow({ project, isSelected, isFirst, onClick, onDelete, onJumpToS
             onMouseDown={(e: React.MouseEvent) => {
               if (e.button === 0) onClick()
             }}
-            icon={<FolderKanban className="h-3.5 w-3.5 text-foreground/60" />}
+            icon={<FolderKanban className="h-3.5 w-3.5 text-text-secondary" />}
             title={config.name}
             subtitle={subtitle}
           />

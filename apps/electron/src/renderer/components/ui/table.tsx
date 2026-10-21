@@ -9,7 +9,7 @@ interface TableProps extends React.ComponentProps<'table'> {
 function Table({ className, noWrapper, ...props }: TableProps) {
   const table = (
     <table
-      className={cn('w-full caption-bottom text-sm border-separate border-spacing-0', className)}
+      className={cn('w-full caption-bottom text-body border-separate border-spacing-0', className)}
       {...props}
     />
   )
@@ -95,7 +95,7 @@ function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
 function TableCaption({ className, ...props }: React.ComponentProps<'caption'>) {
   return (
     <caption
-      className={cn('mt-4 text-sm text-muted-foreground', className)}
+      className={cn('mt-4 text-body text-muted-foreground', className)}
       {...props}
     />
   )

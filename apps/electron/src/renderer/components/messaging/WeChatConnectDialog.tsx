@@ -16,7 +16,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@phaneris/ui'
+import { Spinner, useInitialFocus } from '@phaneris/ui'
 import { useActiveWorkspace } from '@/context/AppShellContext'
 import type { WeChatUiEvent } from '../../../shared/types'
 
@@ -36,6 +36,7 @@ type Phase =
 
 export function WeChatConnectDialog({ open, onOpenChange, onConnected }: WeChatConnectDialogProps) {
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const activeWorkspace = useActiveWorkspace()
   const activeWorkspaceId = activeWorkspace?.id
   const [phase, setPhase] = React.useState<Phase>({ kind: 'idle' })
@@ -117,7 +118,7 @@ export function WeChatConnectDialog({ open, onOpenChange, onConnected }: WeChatC
               <div className="rounded-lg bg-white p-4">
                 <QRCodeSVG value={phase.qr} size={240} level="M" />
               </div>
-              <p className="whitespace-pre-line text-center text-sm text-muted-foreground">
+              <p className="whitespace-pre-line text-center text-body text-muted-foreground">
                 {t('dialog.wechat.qrInstructions')}
               </p>
             </div>
@@ -125,17 +126,17 @@ export function WeChatConnectDialog({ open, onOpenChange, onConnected }: WeChatC
 
           {phase.kind === 'verify' && (
             <div className="flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">{t('dialog.wechat.verifyPrompt')}</p>
+              <p className="text-body text-muted-foreground">{t('dialog.wechat.verifyPrompt')}</p>
               <div className="flex items-center gap-2">
                 <input
-                  autoFocus
+                  ref={initialFocusRef}
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') submitCode()
                   }}
                   placeholder={t('dialog.wechat.verifyPlaceholder')}
-                  className="flex-1 rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-ring"
+                  className="flex-1 rounded-md border border-input bg-transparent px-3 py-2 text-body outline-none focus:ring-1 focus:ring-ring"
                 />
                 <Button size="sm" onClick={submitCode} disabled={!code.trim()}>
                   {t('dialog.wechat.submit')}
@@ -145,13 +146,13 @@ export function WeChatConnectDialog({ open, onOpenChange, onConnected }: WeChatC
           )}
 
           {phase.kind === 'connected' && (
-            <StatusRow icon={<Check className="h-4 w-4 text-emerald-500" />}>
+            <StatusRow icon={<Check className="h-4 w-4 text-success-text" />}>
               {t('dialog.wechat.connected')}
             </StatusRow>
           )}
 
           {phase.kind === 'error' && (
-            <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+            <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-body text-destructive">
               {phase.message}
             </div>
           )}
@@ -163,7 +164,7 @@ export function WeChatConnectDialog({ open, onOpenChange, onConnected }: WeChatC
 
 function StatusRow({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 text-sm">
+    <div className="flex items-center gap-2 text-body">
       {icon}
       <span>{children}</span>
     </div>

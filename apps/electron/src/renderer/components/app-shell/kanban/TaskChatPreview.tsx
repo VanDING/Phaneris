@@ -50,7 +50,7 @@ export function TaskChatPreview({
             aria-hidden
           />
         )}
-        <span className="truncate text-sm font-medium text-foreground">{title}</span>
+        <span className="truncate text-body font-medium text-foreground">{title}</span>
         {status && <StatusBadge status={status} className="ml-auto" />}
       </div>
 
@@ -59,20 +59,20 @@ export function TaskChatPreview({
         <div className="mx-auto flex max-w-2xl flex-col gap-4">
           {/* User message */}
           <div className="flex justify-end">
-            <div className="max-w-[80%] rounded-2xl bg-foreground/[0.06] px-3.5 py-2 text-sm text-foreground">
+            <div className="max-w-[80%] rounded-2xl bg-foreground/[0.06] px-3.5 py-2 text-body text-foreground">
               {userMessage}
             </div>
           </div>
 
           {/* Task-mode orchestrator tag */}
           <div className="flex items-center gap-2 text-meta text-text-secondary">
-            <Workflow className="h-3.5 w-3.5 shrink-0" strokeWidth={1.5} />
+            <Workflow className="h-3.5 w-3.5 shrink-0" />
             <span className="font-medium">Task mode · orchestrator</span>
             <ModelChip model={model} />
           </div>
 
           {/* Orchestrator intro */}
-          <p className="text-sm leading-relaxed text-foreground/90">{assistantIntro}</p>
+          <p className="text-body leading-relaxed text-foreground/90">{assistantIntro}</p>
 
           {/* Spawned subtasks panel */}
           {subtasks.length > 0 && (
@@ -90,7 +90,7 @@ export function TaskChatPreview({
 
           {/* Follow-up */}
           {assistantFollowUp && (
-            <p className="text-sm leading-relaxed text-foreground/90">{assistantFollowUp}</p>
+            <p className="text-body leading-relaxed text-foreground/90">{assistantFollowUp}</p>
           )}
         </div>
       </div>
@@ -99,7 +99,7 @@ export function TaskChatPreview({
       <div className="border-t border-border/50 px-4 py-3">
         <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-xl border border-border/60 bg-surface-raised px-3 py-2">
           <ModelChip model={model} className="shrink-0" />
-          <span className="flex-1 truncate text-sm text-text-secondary">Reply to this task…</span>
+          <span className="flex-1 truncate text-body text-text-secondary">Reply to this task…</span>
           <span
             className={cn(
               'grid h-7 w-7 shrink-0 place-items-center rounded-full',
@@ -107,7 +107,7 @@ export function TaskChatPreview({
             )}
             aria-hidden
           >
-            <ArrowUp className="h-4 w-4" strokeWidth={2} />
+            <ArrowUp className="h-4 w-4" />
           </span>
         </div>
       </div>

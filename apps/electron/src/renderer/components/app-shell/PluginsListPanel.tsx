@@ -236,7 +236,7 @@ export function PluginsListPanel({
         </DialogHeader>
 
         {uninstallPlan && (
-          <div className="flex flex-col gap-3 text-xs">
+          <div className="flex flex-col gap-3 text-meta">
             <section className="flex flex-col gap-1">
               <p className="font-medium">{t('pluginsList.removesNotice')}</p>
               {uninstallPlan.removes.length > 0 ? (

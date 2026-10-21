@@ -5,6 +5,7 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import { activateOnKey } from '@phaneris/ui'
 import { SkillAvatar } from '@/components/ui/skill-avatar'
 import type { LoadedSkill } from '../../../shared/types'
 
@@ -136,10 +137,14 @@ export function InlineSkillMention({
           return (
             <div
               key={skill.slug}
+              role="option"
+              aria-selected={isSelected}
+              tabIndex={-1}
               onClick={() => {
                 onSelect(skill.slug)
                 onOpenChange(false)
               }}
+              onKeyDown={activateOnKey}
               onMouseEnter={() => setSelectedIndex(index)}
               className={cn(
                 MENU_ITEM_STYLE,
@@ -152,7 +157,7 @@ export function InlineSkillMention({
               <div className="flex-1 min-w-0">
                 <div className="font-medium truncate">{skill.metadata.name}</div>
                 {skill.metadata.description && (
-                  <div className="text-meta text-foreground/50 truncate">
+                  <div className="text-meta text-text-secondary truncate">
                     {skill.metadata.description}
                   </div>
                 )}

@@ -289,17 +289,17 @@ function SessionLoadErrorScreen({
   return (
     <div className="flex h-full items-center justify-center p-6">
       <div className="max-w-lg rounded-xl border border-border/50 bg-background shadow-minimal p-6 text-center">
-        <h2 className="text-lg font-semibold text-foreground">{t("errors.failedToLoadSessions")}</h2>
-        <p className="mt-2 text-sm text-foreground/60">
+        <h2 className="text-title font-semibold text-foreground">{t("errors.failedToLoadSessions")}</h2>
+        <p className="mt-2 text-body text-text-secondary">
           {t("errors.failedToLoadSessionsDesc")}
         </p>
-        <p className="mt-3 rounded-lg bg-foreground/5 px-3 py-2 text-left text-xs text-foreground/70 break-words">
+        <p className="mt-3 rounded-lg bg-foreground/5 px-3 py-2 text-left text-meta text-text-secondary break-words">
           {message}
         </p>
         <button
           type="button"
           onClick={onRetry}
-          className="mt-4 inline-flex h-8 items-center justify-center rounded-shape-lg bg-foreground text-background px-3 text-sm font-medium hover:opacity-90 transition-opacity"
+          className="mt-4 inline-flex h-8 items-center justify-center rounded-shape-lg bg-foreground text-background px-3 text-body font-medium hover:opacity-90 transition-opacity"
         >
           {t("errors.retryLoadingSessions")}
         </button>

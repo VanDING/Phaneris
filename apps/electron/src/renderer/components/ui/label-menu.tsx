@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { activateOnKey } from '@phaneris/ui'
 import { LabelIcon } from './label-icon'
 import type { LabelConfig } from '@phaneris/shared/labels'
 import { createLabelMenuItems, filterItems, segmentScore, type LabelMenuItem } from './label-menu-utils'
@@ -201,15 +202,22 @@ export function InlineLabelMenu({
       className={cn('fixed z-dropdown', MENU_CONTAINER_STYLE, className)}
       style={{ left: Math.round(position.x) - 10, bottom: bottomPosition, minWidth: 200, maxWidth: 260 }}
     >
-      <div ref={listRef} className={MENU_LIST_STYLE}>
+      {/* A filter menu with its own ArrowUp/ArrowDown model: the rows are listbox
+          options so that keyboard model has an ARIA contract, and they stay
+          unfocusable because focus lives in the filter field. */}
+      <div ref={listRef} role="listbox" aria-label={t('sidebarMenu.editLabels')} className={MENU_LIST_STYLE}>
         {showAddLabel ? (
           /* "Add New Label" fallback row when nothing matches the filter */
           <div
+            role="option"
+            tabIndex={-1}
+            aria-selected
             data-selected="true"
             onClick={() => {
               onAddLabel?.(filter)
               onOpenChange(false)
             }}
+            onKeyDown={activateOnKey}
             className={cn(MENU_ITEM_STYLE, MENU_ITEM_SELECTED)}
           >
             <div className="shrink-0 text-muted-foreground">
@@ -223,7 +231,7 @@ export function InlineLabelMenu({
             {filteredStates_.length > 0 && (
               <>
                 {showSectionHeaders && (
-                  <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-muted-foreground/60 uppercase tracking-wider">
+                  <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-text-secondary uppercase tracking-wider">
                     States
                   </div>
                 )}
@@ -233,11 +241,15 @@ export function InlineLabelMenu({
                   return (
                     <div
                       key={`state-${state.id}`}
+                      role="option"
+                      tabIndex={-1}
+                      aria-selected={isSelected}
                       data-selected={isSelected}
                       onClick={() => {
                         onSelectState?.(state.id)
                         onOpenChange(false)
                       }}
+                      onKeyDown={activateOnKey}
                       onMouseEnter={() => setSelectedIndex(index)}
                       className={cn(
                         MENU_ITEM_STYLE,
@@ -247,7 +259,7 @@ export function InlineLabelMenu({
                     >
                       {/* State icon with resolved color */}
                       <span
-                        className="shrink-0 flex items-center w-4 h-4 [&>svg]:w-full [&>svg]:h-full [&>img]:w-full [&>img]:h-full [&>span]:text-sm"
+                        className="shrink-0 flex items-center w-4 h-4 [&>svg]:w-full [&>svg]:h-full [&>img]:w-full [&>img]:h-full [&>span]:text-body"
                         style={getStatusIconStyle(state)}
                       >
                         {state.icon}
@@ -272,7 +284,7 @@ export function InlineLabelMenu({
             {filteredItems.length > 0 && (
               <>
                 {showSectionHeaders && (
-                  <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-muted-foreground/60 uppercase tracking-wider">
+                  <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-text-secondary uppercase tracking-wider">
                     Labels
                   </div>
                 )}
@@ -283,11 +295,15 @@ export function InlineLabelMenu({
                   return (
                     <div
                       key={item.id}
+                      role="option"
+                      tabIndex={-1}
+                      aria-selected={isSelected}
                       data-selected={isSelected}
                       onClick={() => {
                         onSelect(item.id)
                         onOpenChange(false)
                       }}
+                      onKeyDown={activateOnKey}
                       onMouseEnter={() => setSelectedIndex(flatIndex)}
                       className={cn(
                         MENU_ITEM_STYLE,

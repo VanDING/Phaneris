@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { openLabelLink } from "@/lib/open-label-link"
 import { LabelValuePopover } from "./label-value-popover"
 import { LabelValueTypeIcon } from "./label-icon"
+
 import type { LabelConfig } from "@phaneris/shared/labels"
 
 interface EntityListLabelBadgeProps {
@@ -67,6 +68,17 @@ export function EntityListLabelBadge({ label, rawValue, sessionLabels, onLabelsC
               style={{ opacity: isLink ? 0.9 : 0.75 }}
               title={isLink ? rawValue : undefined}
               onClick={isLink ? (e) => { e.stopPropagation(); openLabelLink(rawValue!) } : undefined}
+              /* A nested <button> inside the row would be invalid markup, so the
+                 badge carries the role, the tab stop and Enter/Space itself. */
+              role={isLink ? 'link' : undefined}
+              tabIndex={isLink ? 0 : undefined}
+              onKeyDown={isLink ? (e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return
+                e.preventDefault()
+                e.stopPropagation()
+                openLabelLink(rawValue!)
+              } : undefined}
+
             >{displayValue}</span>
           </>
         ) : (

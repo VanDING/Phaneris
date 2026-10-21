@@ -1102,7 +1102,7 @@ export function EditPopover({
                   isDragging && "cursor-grabbing"
                 )}
               >
-                <GripHorizontal className="w-4 h-4 text-muted-foreground/30" />
+                <GripHorizontal className="w-4 h-4 text-text-secondary" />
               </div>
 
               {/* Content area - always uses compact ChatDisplay */}
@@ -1163,7 +1163,7 @@ export const EditButton = React.forwardRef<
       variant="ghost"
       size="sm"
       // Merge our base styles with any className from asChild props
-      className={cn("h-8 px-3 rounded-shape-md bg-background shadow-minimal text-foreground/70 hover:text-foreground", className)}
+      className={cn("h-8 px-3 rounded-shape-md bg-background shadow-minimal text-text-secondary hover:text-foreground", className)}
       {...props}
     >
       {t("common.edit")}

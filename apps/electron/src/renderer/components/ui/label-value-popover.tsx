@@ -211,7 +211,7 @@ export function LabelValuePopover({
                   className={cn(
                     'flex-1 h-7 px-2 text-body',
                     'bg-transparent',
-                    'text-foreground placeholder:text-foreground/30',
+                    'text-foreground placeholder:text-text-secondary',
                     'outline-none'
                   )}
                 />
@@ -228,7 +228,7 @@ export function LabelValuePopover({
                         calendarOpen && 'bg-foreground/5'
                       )}
                     >
-                      <CalendarDays className="w-3.5 h-3.5 text-foreground/50" />
+                      <CalendarDays className="w-3.5 h-3.5 text-text-secondary" />
                     </button>
                   </PopoverTrigger>
                   <PopoverContent
@@ -256,7 +256,7 @@ export function LabelValuePopover({
             </div>
             {/* Show the resolved date below the input when parsing succeeds */}
             {parsedDate && (
-              <div className="px-2 text-meta text-foreground/50">
+              <div className="px-2 text-meta text-text-secondary">
                 {format(parsedDate, 'EEE, MMM d, yyyy')}
               </div>
             )}
@@ -278,7 +278,7 @@ export function LabelValuePopover({
               className={cn(
                 'w-full h-7 px-2 text-body',
                 'bg-transparent',
-                'text-foreground placeholder:text-foreground/30',
+                'text-foreground placeholder:text-text-secondary',
                 'outline-none'
               )}
             />

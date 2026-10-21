@@ -88,6 +88,9 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
     document.addEventListener('mouseup', endDrag)
   }, [handlers, primaryWidth, setWidth, onDraggingChange])
 
+  // A focusable `role="separator"` carrying aria-valuenow and arrow-key handling
+  // is a window-splitter widget; jsx-a11y models the role as static, so the two
+  // findings are registered in scripts/visual-debt-ledger.json with that reason.
   return (
     <div
       ref={ref}

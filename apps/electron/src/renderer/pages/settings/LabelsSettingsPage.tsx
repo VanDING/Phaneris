@@ -71,7 +71,7 @@ export default function LabelsSettingsPage() {
                   {/* About Section */}
                   <SettingsSection title={t("settings.labels.aboutLabels")}>
                     <SettingsCard className="px-4 py-3.5">
-                      <div className="text-sm text-text-secondary leading-relaxed space-y-1.5">
+                      <div className="text-body text-text-secondary leading-relaxed space-y-1.5">
                         <p>
                           {t("settings.labels.aboutText1")}
                         </p>
@@ -121,8 +121,8 @@ export default function LabelsSettingsPage() {
                         />
                       ) : (
                         <div className="p-8 text-center text-text-secondary">
-                          <p className="text-sm">{t("settings.labels.noLabels")}</p>
-                          <p className="text-xs mt-1 text-text-secondary">
+                          <p className="text-body">{t("settings.labels.noLabels")}</p>
+                          <p className="text-meta mt-1 text-text-secondary">
                             {t("settings.labels.noLabelsDesc")}
                           </p>
                         </div>

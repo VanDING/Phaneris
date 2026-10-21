@@ -116,12 +116,12 @@ function CollapsibleGroupHeader({
           <div className="absolute inset-y-0.5 left-2 right-2 rounded-shape-md group-hover/header:bg-foreground/2 transition-colors pointer-events-none" />
           <ChevronRight
             className={cn(
-              "h-3 w-3 text-muted-foreground/60 transition-transform relative",
+              "h-3 w-3 text-text-secondary transition-transform relative",
               !isCollapsed && "rotate-90"
             )}
           />
           <span className="text-meta font-medium uppercase tracking-wider text-muted-foreground relative">
-            {label}{isCollapsed && <> · <span className="text-muted-foreground/50">{itemCount}</span></>}
+            {label}{isCollapsed && <> · <span className="text-text-secondary">{itemCount}</span></>}
           </span>
         </button>
       </ContextMenuTrigger>

@@ -54,7 +54,7 @@ export function AddWorkspaceStep_OpenFolder({
         onClick={onBack}
         disabled={isCreating}
         className={cn(
-          "self-start flex items-center gap-1 text-sm text-muted-foreground",
+          "self-start flex items-center gap-1 text-body text-muted-foreground",
           "hover:text-foreground transition-colors mb-4",
           isCreating && "opacity-50 cursor-not-allowed"
         )}
@@ -78,9 +78,9 @@ export function AddWorkspaceStep_OpenFolder({
         >
           <div className="flex-1 min-w-0">
             {selectedPath ? (
-              <p className="text-sm text-foreground truncate">{selectedPath}</p>
+              <p className="text-body text-foreground truncate">{selectedPath}</p>
             ) : (
-              <p className="text-sm text-muted-foreground">{t("workspace.noFolderSelected")}</p>
+              <p className="text-body text-muted-foreground">{t("workspace.noFolderSelected")}</p>
             )}
           </div>
           <AddWorkspaceSecondaryButton
@@ -94,7 +94,7 @@ export function AddWorkspaceStep_OpenFolder({
         {/* Workspace name input - shown after folder is selected */}
         {selectedPath && (
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
+            <label className="text-body font-medium text-foreground">
               {t("workspace.nameLabel")}
             </label>
             <Input

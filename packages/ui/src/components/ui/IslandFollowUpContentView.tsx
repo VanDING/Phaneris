@@ -137,7 +137,7 @@ export function IslandFollowUpContentView({
     <IslandContentView id={id} anchorX="center" anchorY="top" morphFrom={morphFrom} lockScroll={lockScroll} blockOutsideInteraction={blockOutsideInteraction}>
       <div className="w-[330px] px-3 pb-3 pt-3 space-y-2.5 select-none">
         <div className="flex items-center">
-          <div className="pl-[4px] text-sm font-medium">{title}</div>
+          <div className="pl-[4px] text-body font-medium">{title}</div>
         </div>
 
         <div className="relative rounded-shape-lg px-0 py-1">
@@ -148,7 +148,7 @@ export function IslandFollowUpContentView({
             readOnly
             rows={isViewMode ? 1 : 2}
             value={value}
-            className="pointer-events-none absolute left-0 right-0 top-1 resize-none overflow-hidden bg-transparent text-sm leading-5 opacity-0 pl-[4px]"
+            className="pointer-events-none absolute left-0 right-0 top-1 resize-none overflow-hidden bg-transparent text-body leading-5 opacity-0 pl-[4px]"
           />
 
           <textarea
@@ -196,7 +196,7 @@ export function IslandFollowUpContentView({
             placeholder={placeholder}
             rows={isViewMode ? 1 : 2}
             style={{ height: inputHeight, overflowY: inputOverflow ? 'auto' : 'hidden' }}
-            className="relative w-full resize-none bg-transparent outline-none text-sm leading-5 select-text pl-[4px]"
+            className="relative w-full resize-none bg-transparent outline-none text-body leading-5 select-text pl-[4px]"
           />
         </div>
 
@@ -206,7 +206,7 @@ export function IslandFollowUpContentView({
               <button
                 type="button"
                 onClick={onDelete}
-                className="h-8 px-3 rounded-shape-lg text-sm bg-background shadow-minimal text-red-500 inline-flex items-center cursor-pointer hover:bg-foreground/2"
+                className="h-8 px-3 rounded-shape-lg text-body bg-background shadow-minimal text-destructive-text inline-flex items-center cursor-pointer hover:bg-foreground/2"
               >
                 {deleteLabel}
               </button>
@@ -217,7 +217,7 @@ export function IslandFollowUpContentView({
             <button
               type="button"
               onClick={onCancel}
-              className="h-8 px-3 rounded-shape-lg text-sm text-foreground/75 hover:bg-foreground/5"
+              className="h-8 px-3 rounded-shape-lg text-body text-text-secondary hover:bg-foreground/5"
             >
               {t('common.cancel')}
             </button>
@@ -228,7 +228,7 @@ export function IslandFollowUpContentView({
                   type="button"
                   disabled={isEmpty}
                   onClick={() => onSubmit(value)}
-                  className="h-8 px-3 text-sm text-foreground inline-flex items-center cursor-pointer hover:bg-foreground/2 disabled:opacity-40 disabled:cursor-default disabled:hover:bg-transparent"
+                  className="h-8 px-3 text-body text-foreground inline-flex items-center cursor-pointer hover:bg-foreground/2 disabled:opacity-40 disabled:cursor-default disabled:hover:bg-transparent"
                 >
                   {submitLabel}
                 </button>
@@ -240,7 +240,7 @@ export function IslandFollowUpContentView({
                       disabled={isEmpty}
                       aria-label={t('chat.moreSubmitActions')}
                       title={t('chat.moreSubmitActions')}
-                      className="h-8 w-6 border-l border-border/40 inline-flex items-center justify-center text-foreground/70 hover:text-foreground hover:bg-foreground/2 data-[state=open]:bg-foreground/2 data-[state=open]:text-foreground disabled:opacity-40 disabled:cursor-default disabled:hover:bg-transparent disabled:hover:text-foreground/70"
+                      className="h-8 w-6 border-l border-border/40 inline-flex items-center justify-center text-text-secondary hover:text-foreground hover:bg-foreground/2 data-[state=open]:bg-foreground/2 data-[state=open]:text-foreground disabled:opacity-40 disabled:cursor-default disabled:hover:bg-transparent disabled:hover:text-text-secondary"
                     >
                       <ChevronDown className="h-3 w-3" />
                     </button>
@@ -279,7 +279,7 @@ export function IslandFollowUpContentView({
 
                   onSubmit(value)
                 }}
-                className="h-8 px-3 rounded-shape-lg text-sm bg-background shadow-minimal text-foreground inline-flex items-center cursor-pointer hover:bg-foreground/2 disabled:opacity-40 disabled:cursor-default disabled:hover:bg-transparent"
+                className="h-8 px-3 rounded-shape-lg text-body bg-background shadow-minimal text-foreground inline-flex items-center cursor-pointer hover:bg-foreground/2 disabled:opacity-40 disabled:cursor-default disabled:hover:bg-transparent"
               >
                 {isViewMode ? editLabel : submitLabel}
               </button>

@@ -81,8 +81,8 @@ export function WorkspaceConversationSettings({ workspaceId }: { workspaceId: st
               ...THINKING_LEVELS.map(l => ({ value: l.id, label: t(l.nameKey), description: t(l.descriptionKey) }))]} />
         </> : <SettingsRow label={t('settings.ai.workspaceModels')} description={loading ? t('common.loading') : t('settings.ai.workspaceLoadFailed')} />}
       </SettingsCard>
-      {settings && <p data-workspace-effective className="text-xs text-text-secondary px-1">{t('settings.ai.workspaceEffective', { value: effective })}</p>}
-      {error && <div role="alert" className="flex items-center justify-between gap-3 px-1 text-sm text-destructive-text"><span>{error}</span>
+      {settings && <p data-workspace-effective className="text-meta text-text-secondary px-1">{t('settings.ai.workspaceEffective', { value: effective })}</p>}
+      {error && <div role="alert" className="flex items-center justify-between gap-3 px-1 text-body text-destructive-text"><span>{error}</span>
         {!settings && <Button variant="outline" size="sm" onClick={() => setRetry(n => n + 1)}>{t('common.retry')}</Button>}
       </div>}
     </SettingsSection>

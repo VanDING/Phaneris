@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { StepFormLayout, BackButton, ContinueButton } from "./primitives"
+import { useInitialFocus } from '@phaneris/ui'
 
 export interface LocalModelSubmitData {
   baseUrl: string
@@ -39,6 +40,7 @@ export function LocalModelStep({
   errorMessage,
 }: LocalModelStepProps) {
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [baseUrl, setBaseUrl] = useState('http://localhost:11434')
   const [model, setModel] = useState('qwen3-coder')
   const [modelError, setModelError] = useState<string | null>(null)
@@ -100,10 +102,10 @@ export function LocalModelStep({
               placeholder={t("onboarding.localModel.endpointPlaceholder")}
               className="border-0 bg-transparent shadow-none"
               disabled={isDisabled}
-              autoFocus
+              ref={initialFocusRef}
             />
           </div>
-          <p className="text-xs text-foreground/30">
+          <p className="text-meta text-text-secondary">
             {t("onboarding.localModel.endpointHelper")}
           </p>
         </div>
@@ -112,7 +114,7 @@ export function LocalModelStep({
         <div className="space-y-2">
           <Label htmlFor="local-model">
             {t("onboarding.localModel.model")}{' '}
-            <span className="text-foreground/30">· {t("onboarding.localModel.required")}</span>
+            <span className="text-text-secondary">· {t("onboarding.localModel.required")}</span>
           </Label>
           <div className={cn(
             "rounded-md shadow-minimal transition-colors",
@@ -133,16 +135,16 @@ export function LocalModelStep({
             />
           </div>
           {modelError && (
-            <p className="text-xs text-destructive">{modelError}</p>
+            <p className="text-meta text-destructive">{modelError}</p>
           )}
-          <p className="text-xs text-foreground/30">
+          <p className="text-meta text-text-secondary">
             {t("onboarding.localModel.modelHelper")}
           </p>
         </div>
 
         {/* Error message */}
         {status === 'error' && errorMessage && (
-          <p className="text-sm text-destructive">{errorMessage}</p>
+          <p className="text-body text-destructive">{errorMessage}</p>
         )}
       </form>
     </StepFormLayout>

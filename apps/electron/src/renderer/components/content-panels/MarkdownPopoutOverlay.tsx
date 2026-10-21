@@ -52,7 +52,7 @@ export function MarkdownPopoutOverlay({
       className="bg-foreground-3"
     >
       <ContentFrame title={popout.title} maxWidth={960}>
-        <div className="px-10 py-8 text-sm">
+        <div className="px-10 py-8 text-body">
           <Markdown mode="minimal" onUrlClick={onOpenUrl} onFileClick={onOpenFile}>{popout.content}</Markdown>
         </div>
       </ContentFrame>

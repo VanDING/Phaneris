@@ -78,8 +78,8 @@ function CopyButton({ details }: { details: import('./types').WebhookDetails }) 
   return (
     <button
       className={cn(
-        'shrink-0 p-1 rounded hover:bg-foreground/10 transition-colors',
-        copied ? 'text-success' : 'text-foreground/40 hover:text-foreground/60',
+        'craft-icon-button shrink-0 p-1 rounded hover:bg-foreground/10 transition-colors',
+        copied ? 'text-success' : 'text-text-secondary hover:text-foreground',
       )}
       onClick={handleCopy}
       title={t('automations.copyPayload')}
@@ -96,7 +96,7 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
 
   if (entries.length === 0) {
     return (
-      <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+      <div className="px-4 py-6 text-center text-body text-muted-foreground">
         {t('automations.noActivityYet')}
       </div>
     )
@@ -122,7 +122,7 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
           <div key={entry.id}>
             <div
               className={cn(
-                'flex items-center gap-3 px-4 py-2.5 text-sm',
+                'flex items-center gap-3 px-4 py-2.5 text-body',
                 isWebhook && 'cursor-pointer hover:bg-foreground/[0.03] transition-colors',
               )}
               onClick={handleToggle}
@@ -134,12 +134,12 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
               <StatusIcon className={cn('h-3.5 w-3.5 shrink-0', config.classes)} />
 
               {/* Time */}
-              <span className="text-xs text-muted-foreground w-16 shrink-0 tabular-nums">
+              <span className="text-meta text-muted-foreground w-16 shrink-0 tabular-nums">
                 {formatShortRelativeTime(entry.timestamp)}
               </span>
 
               {/* Action summary — truncated prompt text */}
-              <span className="flex-1 min-w-0 truncate text-xs text-foreground/70">
+              <span className="flex-1 min-w-0 truncate text-meta text-text-secondary">
                 {entry.actionSummary || entry.error || '—'}
               </span>
 
@@ -166,7 +166,7 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
               {/* Expand chevron for webhook entries */}
               {isWebhook && (
                 <ChevronDown className={cn(
-                  'h-3 w-3 shrink-0 text-foreground/40 transition-transform duration-150',
+                  'h-3 w-3 shrink-0 text-text-secondary transition-transform duration-150',
                   isExpanded && 'rotate-180',
                 )} />
               )}
@@ -174,18 +174,18 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
 
             {/* Expanded webhook details */}
             {isExpanded && entry.webhookDetails && (
-              <div className="mx-4 mb-3 mt-0.5 rounded-md border border-border/40 bg-foreground/[0.02] px-3 py-2.5 text-xs relative">
+              <div className="mx-4 mb-3 mt-0.5 rounded-md border border-border/40 bg-foreground/[0.02] px-3 py-2.5 text-meta relative">
                 <div className="absolute top-2 right-2">
                   <CopyButton details={entry.webhookDetails} />
                 </div>
                 <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 pr-6">
-                  <span className="text-foreground/50">{t('automations.webhookMethod')}</span>
+                  <span className="text-text-secondary">{t('automations.webhookMethod')}</span>
                   <span className="font-mono text-foreground/80">{entry.webhookDetails.method}</span>
 
-                  <span className="text-foreground/50">{t('automations.webhookUrl')}</span>
+                  <span className="text-text-secondary">{t('automations.webhookUrl')}</span>
                   <span className="font-mono text-foreground/80 break-all">{entry.webhookDetails.url}</span>
 
-                  <span className="text-foreground/50">{t('automations.webhookStatus')}</span>
+                  <span className="text-text-secondary">{t('automations.webhookStatus')}</span>
                   <span className={cn(
                     'font-mono',
                     entry.webhookDetails.statusCode >= 200 && entry.webhookDetails.statusCode < 300
@@ -195,19 +195,19 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
                     {formatStatusCode(entry.webhookDetails.statusCode, t)}
                   </span>
 
-                  <span className="text-foreground/50">{t('automations.webhookDuration')}</span>
+                  <span className="text-text-secondary">{t('automations.webhookDuration')}</span>
                   <span className="font-mono text-foreground/80">{formatDuration(entry.webhookDetails.durationMs)}</span>
 
                   {entry.webhookDetails.attempts && entry.webhookDetails.attempts > 1 && (
                     <>
-                      <span className="text-foreground/50">{t('automations.webhookAttempts')}</span>
+                      <span className="text-text-secondary">{t('automations.webhookAttempts')}</span>
                       <span className="font-mono text-foreground/80">{entry.webhookDetails.attempts}</span>
                     </>
                   )}
 
                   {entry.webhookDetails.error && (
                     <>
-                      <span className="text-foreground/50">{t('automations.webhookError')}</span>
+                      <span className="text-text-secondary">{t('automations.webhookError')}</span>
                       <span className="font-mono text-destructive">{entry.webhookDetails.error}</span>
                     </>
                   )}
@@ -215,8 +215,8 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
 
                 {entry.webhookDetails.responseBody && (
                   <div className="mt-2 pt-2 border-t border-border/30">
-                    <span className="text-foreground/50">{t('automations.webhookResponse')}</span>
-                    <pre className="mt-1 max-h-24 overflow-auto rounded bg-foreground/[0.04] p-2 font-mono text-meta text-foreground/70 whitespace-pre-wrap break-all">
+                    <span className="text-text-secondary">{t('automations.webhookResponse')}</span>
+                    <pre className="mt-1 max-h-24 overflow-auto rounded bg-foreground/[0.04] p-2 font-mono text-meta text-text-secondary whitespace-pre-wrap break-all">
                       {entry.webhookDetails.responseBody}
                     </pre>
                   </div>

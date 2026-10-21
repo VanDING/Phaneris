@@ -1,0 +1,289 @@
+{
+  "checks": [
+    {
+      "id": "DW1-focus-ring-light",
+      "passed": true
+    },
+    {
+      "id": "DW1-close-button-keyboard-and-pointer-light",
+      "passed": true
+    },
+    {
+      "id": "DW1-text-contrast-light",
+      "passed": true
+    },
+    {
+      "id": "DW1-no-translucent-text-light",
+      "passed": true
+    },
+    {
+      "id": "DW1-toggle-states-distinguishable-light",
+      "passed": true
+    },
+    {
+      "id": "DW1-motion-vocabulary-light",
+      "passed": true
+    },
+    {
+      "id": "DW1-focus-ring-dark",
+      "passed": true
+    },
+    {
+      "id": "DW1-close-button-keyboard-and-pointer-dark",
+      "passed": true
+    },
+    {
+      "id": "DW1-text-contrast-dark",
+      "passed": true
+    },
+    {
+      "id": "DW1-no-translucent-text-dark",
+      "passed": true
+    },
+    {
+      "id": "DW1-toggle-states-distinguishable-dark",
+      "passed": true
+    },
+    {
+      "id": "DW1-motion-vocabulary-dark",
+      "passed": true
+    },
+    {
+      "id": "DW1-reduced-motion-collapses-entrance",
+      "passed": true
+    },
+    {
+      "id": "DW1-no-page-errors",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "id": "DW1-focus-ring",
+      "mode": "light",
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "oklch(0.488 0.275 280.3)",
+      "outlineRatio": 7.297288523189019,
+      "background": "rgb(255, 255, 255)"
+    },
+    {
+      "id": "DW1-close-button",
+      "mode": "light",
+      "phase": "keyboard",
+      "boxShadow": "rgb(255, 255, 255) 0px 0px 0px 1px inset, oklch(0.488 0.275 280.3) 0px 0px 0px 1.5px, color(srgb 0.330209 0.124198 0.954177 / 0.25) 0px 0px 6px 1px",
+      "ringRatio": 7.297288523189019,
+      "outlineStyle": "none",
+      "outlineWidth": "3px",
+      "outlineColor": "rgb(32, 35, 44)",
+      "outlineRatio": 15.692747939272312
+    },
+    {
+      "id": "DW1-close-button",
+      "mode": "light",
+      "phase": "pointer",
+      "boxShadow": "none",
+      "ringRatio": 0,
+      "outlineStyle": "none",
+      "outlineWidth": "3px",
+      "outlineColor": "rgb(32, 35, 44)",
+      "outlineRatio": 1.0250700529438594
+    },
+    {
+      "id": "DW1-text-contrast",
+      "mode": "light",
+      "secondary-on-canvas": {
+        "color": "rgb(96, 103, 117)",
+        "background": "rgb(255, 255, 255)",
+        "alpha": 1,
+        "ratio": 5.684387692114481
+      },
+      "secondary-on-muted": {
+        "color": "rgb(96, 103, 117)",
+        "background": "rgb(247, 248, 251)",
+        "alpha": 1,
+        "ratio": 5.352743994685323
+      },
+      "micro-on-muted": {
+        "color": "rgb(96, 103, 117)",
+        "background": "rgb(247, 248, 251)",
+        "alpha": 1,
+        "ratio": 5.352743994685323
+      },
+      "status-on-canvas": {
+        "color": "oklab(0.397225 0.0739814 0.0142329)",
+        "background": "rgb(255, 255, 255)",
+        "alpha": 1,
+        "ratio": 9.725678011412755
+      },
+      "disabled-on-canvas": {
+        "color": "color(srgb 0.12549 0.137255 0.172549 / 0.4)",
+        "background": "rgb(255, 255, 255)",
+        "alpha": 0.4,
+        "ratio": 15.674914220005208
+      },
+      "placeholder": {
+        "color": "rgb(96, 103, 117)",
+        "alpha": 1,
+        "ratio": 5.684387692114481
+      }
+    },
+    {
+      "id": "DW1-no-translucent-text",
+      "mode": "light",
+      "offenders": []
+    },
+    {
+      "id": "DW1-toggle-states",
+      "mode": "light",
+      "on": {
+        "color": "rgb(32, 35, 44)",
+        "background": "rgb(255, 255, 255)",
+        "alpha": 1,
+        "ratio": 15.692747939272312
+      },
+      "off": {
+        "color": "rgb(96, 103, 117)",
+        "background": "rgb(255, 255, 255)",
+        "alpha": 1,
+        "ratio": 5.684387692114481
+      }
+    },
+    {
+      "id": "DW1-motion-vocabulary",
+      "mode": "light",
+      "removedStillDeclared": [],
+      "decayDeclared": true,
+      "bubbleDeclared": true,
+      "declaredClasses": [
+        "animate-bubble-enter",
+        "animate-check-decay",
+        "animate-ping",
+        "animate-pulse",
+        "animate-shake",
+        "animate-shimmer",
+        "animate-shimmer-loading",
+        "animate-shimmer-text",
+        "animate-spin"
+      ],
+      "decayAnimation": "craft-check-decay"
+    },
+    {
+      "id": "DW1-focus-ring",
+      "mode": "dark",
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "oklch(0.626 0.221 291.7)",
+      "outlineRatio": 4.518943089174542,
+      "background": "rgb(23, 25, 30)"
+    },
+    {
+      "id": "DW1-close-button",
+      "mode": "dark",
+      "phase": "keyboard",
+      "boxShadow": "rgb(23, 25, 30) 0px 0px 0px 1px inset, oklch(0.626 0.221 291.7) 0px 0px 0px 1.5px, color(srgb 0.56057 0.388117 1.00089 / 0.25) 0px 0px 6px 1px",
+      "ringRatio": 14.849952341855836,
+      "outlineStyle": "none",
+      "outlineWidth": "3px",
+      "outlineColor": "rgb(238, 240, 246)",
+      "outlineRatio": 1.03924307867927
+    },
+    {
+      "id": "DW1-close-button",
+      "mode": "dark",
+      "phase": "pointer",
+      "boxShadow": "none",
+      "ringRatio": 0,
+      "outlineStyle": "none",
+      "outlineWidth": "3px",
+      "outlineColor": "rgb(238, 240, 246)",
+      "outlineRatio": 1.03924307867927
+    },
+    {
+      "id": "DW1-text-contrast",
+      "mode": "dark",
+      "secondary-on-canvas": {
+        "color": "rgb(170, 177, 193)",
+        "background": "rgb(23, 25, 30)",
+        "alpha": 1,
+        "ratio": 8.179416786240331
+      },
+      "secondary-on-muted": {
+        "color": "rgb(170, 177, 193)",
+        "background": "rgb(32, 36, 43)",
+        "alpha": 1,
+        "ratio": 7.242888435407241
+      },
+      "micro-on-muted": {
+        "color": "rgb(170, 177, 193)",
+        "background": "rgb(32, 36, 43)",
+        "alpha": 1,
+        "ratio": 7.242888435407241
+      },
+      "status-on-canvas": {
+        "color": "oklab(0.852852 0.0601273 0.00954619)",
+        "background": "rgb(23, 25, 30)",
+        "alpha": 1,
+        "ratio": 10.951563249556537
+      },
+      "disabled-on-canvas": {
+        "color": "color(srgb 0.933333 0.941176 0.964706 / 0.4)",
+        "background": "rgb(23, 25, 30)",
+        "alpha": 0.4,
+        "ratio": 15.393544133701203
+      },
+      "placeholder": {
+        "color": "rgb(170, 177, 193)",
+        "alpha": 1,
+        "ratio": 7.945451915838926
+      }
+    },
+    {
+      "id": "DW1-no-translucent-text",
+      "mode": "dark",
+      "offenders": []
+    },
+    {
+      "id": "DW1-toggle-states",
+      "mode": "dark",
+      "on": {
+        "color": "rgb(238, 240, 246)",
+        "background": "rgb(23, 25, 30)",
+        "alpha": 1,
+        "ratio": 15.432710189990694
+      },
+      "off": {
+        "color": "rgb(170, 177, 193)",
+        "background": "rgb(23, 25, 30)",
+        "alpha": 1,
+        "ratio": 8.179416786240331
+      }
+    },
+    {
+      "id": "DW1-motion-vocabulary",
+      "mode": "dark",
+      "removedStillDeclared": [],
+      "decayDeclared": true,
+      "bubbleDeclared": true,
+      "declaredClasses": [
+        "animate-bubble-enter",
+        "animate-check-decay",
+        "animate-ping",
+        "animate-pulse",
+        "animate-shake",
+        "animate-shimmer",
+        "animate-shimmer-loading",
+        "animate-shimmer-text",
+        "animate-spin"
+      ],
+      "decayAnimation": "craft-check-decay"
+    },
+    {
+      "id": "DW1-reduced-motion",
+      "animation": "none"
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.8078.4",
+  "scope": "Real SessionSearchHeader + real host stylesheet; synthetic surrounding page, desktop Chromium, light and dark Default palettes, keyboard and pointer focus, reduced-motion media emulation."
+}

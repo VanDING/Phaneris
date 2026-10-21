@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "policy": "Frozen drift counts. check:design-drift fails when any counter grows; lower a count with `bun run design:drift --write-baseline` after migrating a batch. Orphaned motion utilities must stay empty: delete a utility or give it a consumer.",
+  "counters": {
+    "defaultFontSize": {
+      "count": 0,
+      "files": {}
+    },
+    "translucentText": {
+      "count": 23,
+      "files": {
+        "apps/electron/src/renderer/pages/ProjectInfoPage.tsx": 1,
+        "apps/electron/src/renderer/pages/SkillInfoPage.tsx": 4,
+        "apps/electron/src/renderer/components/RtkUpdateDialog.tsx": 1,
+        "apps/electron/src/renderer/components/right-sidebar/SessionFilesSection.tsx": 1,
+        "apps/electron/src/renderer/components/content-panels/MarkdownArtifactEditor.tsx": 1,
+        "apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx": 4,
+        "apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/kanban/TaskChatPreview.tsx": 2,
+        "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/input/structured/AdminApprovalRequest.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/input/structured/PermissionRequest.tsx": 1,
+        "apps/electron/src/renderer/components/app-menu/MobileMenuPage.tsx": 2,
+        "packages/ui/src/components/ui/BrowserEmptyStateCard.tsx": 1,
+        "packages/ui/src/components/chat/InlineExecution.tsx": 1,
+        "packages/ui/src/components/annotations/AnnotationIslandMenu.tsx": 1
+      }
+    },
+    "strokeWidthLiteral": {
+      "count": 0,
+      "files": {}
+    },
+    "interactiveTitle": {
+      "count": 91,
+      "files": {
+        "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx": 1,
+        "apps/electron/src/renderer/pages/settings/PreferencesPage.tsx": 2,
+        "apps/electron/src/renderer/lib/session-file-tree.tsx": 1,
+        "apps/electron/src/renderer/components/ui/entity-list-label-badge.tsx": 1,
+        "apps/electron/src/renderer/components/pages/PageView.tsx": 1,
+        "apps/electron/src/renderer/components/messaging/PairingCodeDialog.tsx": 1,
+        "apps/electron/src/renderer/components/messaging/TelegramSupergroupPairingDialog.tsx": 1,
+        "apps/electron/src/renderer/components/info/AutoRulesDataTable.tsx": 1,
+        "apps/electron/src/renderer/components/info/Info_Markdown.tsx": 1,
+        "apps/electron/src/renderer/components/info/LabelsDataTable.tsx": 1,
+        "apps/electron/src/renderer/components/info/PermissionsDataTable.tsx": 1,
+        "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx": 4,
+        "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx": 2,
+        "apps/electron/src/renderer/components/chat/ChatStarters.tsx": 1,
+        "apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/BackgroundFinishedChip.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/SessionSearchHeader.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/TaskActionMenu.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/WorkspaceSwitcher.tsx": 2,
+        "apps/electron/src/renderer/components/app-shell/kanban/CalendarUntimedRail.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx": 2,
+        "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx": 3,
+        "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx": 2,
+        "packages/ui/src/components/ui/BrowserEmptyStateCard.tsx": 1,
+        "packages/ui/src/components/ui/IslandFollowUpContentView.tsx": 1,
+        "packages/ui/src/components/ui/PreviewHeader.tsx": 2,
+        "packages/ui/src/components/trajectory/RecordInspector.tsx": 3,
+        "packages/ui/src/components/trajectory/TrajectoryContextView.tsx": 1,
+        "packages/ui/src/components/trajectory/TrajectoryOverview.tsx": 2,
+        "packages/ui/src/components/trajectory/TrajectoryStrip.tsx": 1,
+        "packages/ui/src/components/trajectory/TrajectoryToolbar.tsx": 3,
+        "packages/ui/src/components/terminal/TerminalOutput.tsx": 2,
+        "packages/ui/src/components/overlay/CopyButton.tsx": 1,
+        "packages/ui/src/components/overlay/FullscreenOverlayBaseHeader.tsx": 2,
+        "packages/ui/src/components/overlay/ImagePreviewOverlay.tsx": 1,
+        "packages/ui/src/components/overlay/ItemNavigator.tsx": 3,
+        "packages/ui/src/components/overlay/MermaidPreviewOverlay.tsx": 1,
+        "packages/ui/src/components/overlay/PDFPreviewOverlay.impl.tsx": 1,
+        "packages/ui/src/components/overlay/ZoomControls.tsx": 4,
+        "packages/ui/src/components/markdown/MarkdownDatatableBlock.tsx": 2,
+        "packages/ui/src/components/markdown/MarkdownDocBlock.tsx": 1,
+        "packages/ui/src/components/markdown/MarkdownHtmlBlock.tsx": 1,
+        "packages/ui/src/components/markdown/MarkdownImageBlock.tsx": 1,
+        "packages/ui/src/components/markdown/MarkdownMermaidBlock.tsx": 1,
+        "packages/ui/src/components/markdown/MarkdownPdfBlock.impl.tsx": 1,
+        "packages/ui/src/components/markdown/MarkdownSpreadsheetBlock.tsx": 1,
+        "packages/ui/src/components/markdown/RichBlockShell.tsx": 1,
+        "packages/ui/src/components/markdown/TableExportDropdown.tsx": 1,
+        "packages/ui/src/components/markdown/TiptapBubbleMenus.tsx": 6,
+        "packages/ui/src/components/markdown/TiptapCodeBlockView.tsx": 2,
+        "packages/ui/src/components/code-viewer/DiffViewerControls.tsx": 2,
+        "packages/ui/src/components/chat/TurnCard.tsx": 2,
+        "apps/viewer/src/components/Header.tsx": 2
+      }
+    },
+    "focusRingSuppressed": {
+      "count": 2,
+      "files": {
+        "apps/electron/src/renderer/components/ui/gradient-resize-handle.tsx": 1,
+        "packages/ui/src/components/ui/BrowserControls.tsx": 1
+      }
+    },
+    "paletteHue": {
+      "count": 0,
+      "files": {}
+    }
+  },
+  "motion": {
+    "orphaned": []
+  }
+}

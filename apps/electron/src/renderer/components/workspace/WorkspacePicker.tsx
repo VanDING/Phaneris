@@ -56,7 +56,7 @@ export function WorkspacePicker({ onSelectWorkspace }: WorkspacePickerProps) {
       <div className="flex h-screen items-center justify-center bg-sidebar px-4">
         <AddWorkspaceContainer>
           <Spinner className="h-6 w-6" />
-          <p className="mt-3 text-sm text-muted-foreground">{t("workspace.loadingWorkspaces")}</p>
+          <p className="mt-3 text-body text-muted-foreground">{t("workspace.loadingWorkspaces")}</p>
         </AddWorkspaceContainer>
       </div>
     )
@@ -71,7 +71,7 @@ export function WorkspacePicker({ onSelectWorkspace }: WorkspacePickerProps) {
         />
 
         {error && (
-          <p className="mt-3 w-full text-center text-sm text-destructive">{error}</p>
+          <p className="mt-3 w-full text-center text-body text-destructive">{error}</p>
         )}
 
         {/* Workspace list */}
@@ -81,14 +81,14 @@ export function WorkspacePicker({ onSelectWorkspace }: WorkspacePickerProps) {
               <button
                 key={ws.id}
                 onClick={() => onSelectWorkspace(ws.id)}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-foreground/5"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-body transition-colors hover:bg-foreground/5"
               >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent text-xs font-semibold uppercase">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent text-meta font-semibold uppercase">
                   {ws.name.charAt(0)}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-medium">{ws.name}</div>
-                  <div className="truncate text-xs text-muted-foreground">{ws.slug}</div>
+                  <div className="truncate text-meta text-muted-foreground">{ws.slug}</div>
                 </div>
               </button>
             ))}
@@ -106,14 +106,14 @@ export function WorkspacePicker({ onSelectWorkspace }: WorkspacePickerProps) {
             onChange={e => setNewName(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleCreate()}
             placeholder={t("workspace.newWorkspaceName")}
-            className="w-full rounded-md border bg-transparent px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-ring"
+            className="w-full rounded-md border bg-transparent px-3 py-2 text-body outline-none focus:ring-1 focus:ring-ring"
           />
           <AddWorkspacePrimaryButton
             onClick={handleCreate}
             disabled={!newName.trim()}
             loading={creating}
             loadingText={t("workspace.creating")}
-            className="bg-accent hover:bg-accent/90 text-white dark:text-background"
+            className="bg-accent hover:bg-accent/90 text-on-accent"
           >
             <Plus className="mr-1.5 h-4 w-4" />
             {t("workspace.createWorkspace")}

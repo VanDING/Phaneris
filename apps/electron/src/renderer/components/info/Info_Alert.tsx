@@ -44,7 +44,7 @@ function Info_AlertRoot({
 }: Info_AlertProps) {
   return (
     <div className={cn(alertVariants({ variant, inline }), className)} {...props}>
-      <div className="flex items-start gap-2 text-sm">
+      <div className="flex items-start gap-2 text-body">
         {icon && (
           <span className="shrink-0 mt-0.5 text-muted-foreground">{icon}</span>
         )}
@@ -59,7 +59,7 @@ function Info_AlertTitle({ className, ...props }: React.HTMLAttributes<HTMLSpanE
 }
 
 function Info_AlertDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-foreground/60 mt-0.5', className)} {...props} />
+  return <p className={cn('text-text-secondary mt-0.5', className)} {...props} />
 }
 
 export const Info_Alert = Object.assign(Info_AlertRoot, {

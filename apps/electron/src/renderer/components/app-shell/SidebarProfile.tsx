@@ -47,7 +47,7 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
     <CrossfadeAvatar
       src={profile.avatarDataUrl || undefined}
       alt={displayName}
-      fallback={name ? getInitials(name) : <UserRound className="size-3" strokeWidth={1.5} />}
+      fallback={name ? getInitials(name) : <UserRound className="size-3" />}
       className={className}
       fallbackClassName="bg-accent/10 text-accent font-medium"
       imageClassName="object-cover"
@@ -92,16 +92,16 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
               <CrossfadeAvatar
                 src={profile.avatarDataUrl || undefined}
                 alt=""
-                fallback={name ? getInitials(name) : <UserRound className="h-16 w-16" strokeWidth={1} />}
-                className="h-full w-full rounded-none text-5xl"
-                fallbackClassName="rounded-none bg-accent/10 text-accent/50 font-medium"
+                fallback={name ? getInitials(name) : <UserRound className="h-16 w-16" />}
+                className="h-full w-full rounded-none glyph-avatar"
+                fallbackClassName="rounded-none bg-accent/10 text-accent-text font-medium"
                 imageClassName="object-cover object-center"
               />
             </div>
             <div className="px-5 pb-4 pt-0">
-              <h2 className="break-words text-xl font-semibold leading-tight tracking-tight">{displayName}</h2>
+              <h2 className="break-words text-title font-semibold leading-tight tracking-tight">{displayName}</h2>
               {(location || profile.timezone) && (
-                <div className="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground">
+                <div className="mt-3 space-y-2 text-meta leading-relaxed text-muted-foreground">
                   {location && <p className="flex items-start gap-2"><MapPin aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-60" /><span className="break-words">{location}</span></p>}
                   {profile.timezone && <p className="flex items-start gap-2"><Clock3 aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-60" /><span className="break-words">{profile.timezone}</span></p>}
                 </div>
@@ -111,7 +111,7 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
               <button
                 type="button"
                 onClick={() => { onOpenChange(false); onOpenProfile() }}
-                className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring"
+                className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-meta font-medium text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring"
               >
                 {t('sidebar.profile.view')}
                 <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
@@ -127,7 +127,7 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
                 onClick={() => { onOpenChange(false); onOpenSettings() }}
                 className="sidebar-settings-trigger craft-icon-button craft-row-focus flex shrink-0 items-center justify-center rounded-control text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
               >
-                <Settings aria-hidden="true" className="size-control-2xs" strokeWidth={1.5} />
+                <Settings aria-hidden="true" className="size-control-2xs" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="top">{t('sidebar.settings')}</TooltipContent>

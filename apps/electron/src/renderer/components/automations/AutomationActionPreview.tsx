@@ -22,9 +22,9 @@ export function AutomationActionPreview({ actions, className }: AutomationAction
   return (
     <div className={cn('space-y-1', className)}>
       {actions.map((action, i) => (
-        <div key={i} className="flex items-start gap-2 text-xs">
+        <div key={i} className="flex items-start gap-2 text-meta">
           <ActionTypeIcon type={action.type} className="h-3 w-3 mt-0.5 shrink-0" />
-          <span className="text-foreground/70 break-words line-clamp-2">
+          <span className="text-text-secondary break-words line-clamp-2">
             {action.type === 'webhook'
               ? `${action.method ?? DEFAULT_WEBHOOK_METHOD} ${action.url}`
               : action.prompt}

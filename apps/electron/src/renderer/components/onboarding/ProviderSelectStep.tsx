@@ -137,8 +137,8 @@ export function ProviderSelectStep({ onSelect, onSkip }: ProviderSelectStepProps
 
             {/* Content */}
             <div className="min-w-0">
-              <span className="block font-medium text-sm">{option.name}</span>
-              <p className="mt-1 text-xs text-muted-foreground leading-snug">
+              <span className="block font-medium text-body">{option.name}</span>
+              <p className="mt-1 text-meta text-muted-foreground leading-snug">
                 {option.description}
               </p>
             </div>
@@ -150,7 +150,7 @@ export function ProviderSelectStep({ onSelect, onSkip }: ProviderSelectStepProps
         <div className="mt-4 text-center">
           <button
             onClick={onSkip}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="text-meta text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("onboarding.providerSelect.setupLater")}
           </button>

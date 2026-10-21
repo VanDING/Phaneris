@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Spinner } from '@phaneris/ui'
+import { Spinner, useInitialFocus } from '@phaneris/ui'
 import { SourceAvatar } from '@/components/ui/source-avatar'
 import { deriveConnectionStatus } from '@/components/ui/source-status-indicator'
 import { useNavigation } from '@/contexts/NavigationContext'
@@ -119,13 +119,13 @@ export function PageSourceAuthBanner({ workspaceId, page, sources, className }: 
   if (needing.length === 0) return null
 
   return (
-    <div className={cn('flex flex-col gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 p-3', className)}>
+    <div className={cn('flex flex-col gap-2 rounded-md border border-info/30 bg-info/5 p-3', className)}>
       {needing.map(source => {
         const flavor = reconnectFlavor(source.config)
         return (
           <div key={source.config.slug} className="flex items-center gap-2.5">
             <SourceAvatar source={source} size="sm" />
-            <span className="min-w-0 flex-1 text-xs text-foreground/70">
+            <span className="min-w-0 flex-1 text-meta text-text-secondary">
               {t('pages.auth.sourceNeedsReconnect', { name: source.config.name })}
             </span>
             <Button
@@ -135,7 +135,7 @@ export function PageSourceAuthBanner({ workspaceId, page, sources, className }: 
               disabled={busySlug !== null}
               onClick={() => handleReconnect(source)}
             >
-              {busySlug === source.config.slug && <Spinner className="text-xs" />}
+              {busySlug === source.config.slug && <Spinner className="text-meta" />}
               {busySlug === source.config.slug
                 ? t('pages.auth.reconnecting')
                 : flavor === 'agent'
@@ -170,6 +170,7 @@ function ReconnectCredentialDialog({
   onClose: () => void
 }) {
   const { t } = useTranslation()
+  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [value, setValue] = React.useState('')
   const [saving, setSaving] = React.useState(false)
 
@@ -201,16 +202,16 @@ function ReconnectCredentialDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <KeyRound className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+            <KeyRound className="h-4 w-4 text-info-text" />
             {t('pages.auth.credentialTitle', { name: source?.config.name ?? '' })}
           </DialogTitle>
           <DialogDescription>{t('pages.auth.credentialDescription')}</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-1.5">
-          <span className="text-sm">
+          <span className="text-body">
             {t('pages.auth.credentialLabel')}
-            {headerName && <span className="ml-1 text-foreground/50">({headerName})</span>}
+            {headerName && <span className="ml-1 text-text-secondary">({headerName})</span>}
           </span>
           <Input
             type="password"
@@ -219,7 +220,7 @@ function ReconnectCredentialDialog({
             onChange={e => setValue(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') void handleSave() }}
             disabled={saving}
-            autoFocus
+            ref={initialFocusRef}
           />
         </div>
 
@@ -228,7 +229,7 @@ function ReconnectCredentialDialog({
             {t('common.cancel')}
           </Button>
           <Button disabled={saving || value.trim().length === 0} onClick={() => void handleSave()}>
-            {saving && <Spinner className="text-xs" />}
+            {saving && <Spinner className="text-meta" />}
             {t('pages.auth.credentialSave')}
           </Button>
         </DialogFooter>

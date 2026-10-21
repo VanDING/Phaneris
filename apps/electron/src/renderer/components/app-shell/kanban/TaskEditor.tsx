@@ -83,7 +83,7 @@ type TaskResults = Awaited<ReturnType<typeof window.electronAPI.getTaskResults>>
 // ---------------------------------------------------------------------------
 type BtnVariant = 'primary' | 'secondary' | 'ghost'
 const BTN_VARIANT: Record<BtnVariant, string> = {
-  primary: 'bg-indigo-500 text-white hover:bg-indigo-600',
+  primary: 'bg-accent text-on-accent hover:bg-accent/90',
   secondary: 'border border-border bg-surface-raised text-foreground hover:bg-foreground/[0.03]',
   ghost: 'text-text-secondary hover:bg-foreground/[0.06] hover:text-foreground',
 }
@@ -127,7 +127,7 @@ const SelectButton = React.forwardRef<
       {...rest}
     >
       {children}
-      <ChevronDown className="ml-auto h-3.5 w-3.5 shrink-0 text-text-secondary" strokeWidth={2} />
+      <ChevronDown className="ml-auto h-3.5 w-3.5 shrink-0 text-text-secondary" />
     </button>
   )
 })
@@ -159,9 +159,9 @@ function ModelSelect({
             {gi > 0 && <DropdownMenuSeparator />}
             <DropdownMenuLabel className="text-meta text-text-secondary">{g.label}</DropdownMenuLabel>
             {g.models.map((m) => (
-              <DropdownMenuItem key={m.id} className="text-xs" onSelect={() => onChange(m.id)}>
+              <DropdownMenuItem key={m.id} className="text-meta" onSelect={() => onChange(m.id)}>
                 <span className="truncate">{m.name}</span>
-                {m.id === value && <Check className="ml-auto h-3.5 w-3.5 shrink-0" strokeWidth={2} />}
+                {m.id === value && <Check className="ml-auto h-3.5 w-3.5 shrink-0" />}
               </DropdownMenuItem>
             ))}
           </React.Fragment>
@@ -250,7 +250,7 @@ function SourcesField({
         onClick={() => setOpen((prev) => !prev)}
       >
         {selected.length === 0 ? (
-          <DatabaseZap className="h-4 w-4 shrink-0 text-text-secondary" strokeWidth={2} />
+          <DatabaseZap className="h-4 w-4 shrink-0 text-text-secondary" />
         ) : (
           <AvatarStack avatars={selected.map((s) => <SourceAvatar key={s.config.slug} source={s} size="xs" />)} />
         )}
@@ -306,7 +306,7 @@ function SkillsField({
         onClick={() => setOpen((prev) => !prev)}
       >
         {selected.length === 0 ? (
-          <Zap className="h-4 w-4 shrink-0 text-text-secondary" strokeWidth={2} />
+          <Zap className="h-4 w-4 shrink-0 text-text-secondary" />
         ) : (
           <AvatarStack avatars={selected.map((s) => <SkillAvatar key={s.slug} skill={s} size="xs" workspaceId={workspaceId} />)} />
         )}
@@ -349,7 +349,7 @@ function FolderField({
       align="start"
       renderTrigger={({ hasFolder, folderName }) => (
         <SelectButton style={{ width: 168 }} title={t('tasks.workingDirectoryHint')}>
-          <Folder className="h-3.5 w-3.5 shrink-0 text-text-secondary" strokeWidth={2} />
+          <Folder className="h-3.5 w-3.5 shrink-0 text-text-secondary" />
           <span className={cn('min-w-0 flex-1 truncate text-left', !hasFolder && 'text-text-secondary')}>
             {folderName ?? t('chat.workInFolder')}
           </span>
@@ -396,7 +396,7 @@ function SubtaskCard({
   return (
     <div className="group rounded-shape-xl border border-border/70 bg-foreground/[0.015] p-3">
       <div className="flex items-start gap-2">
-        <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-indigo-500/10 text-label font-bold text-indigo-500 dark:text-indigo-300">
+        <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent/10 text-label font-bold text-accent-text">
           {index + 1}
         </div>
         <div className="min-w-0 flex-1">
@@ -404,7 +404,7 @@ function SubtaskCard({
             value={subtask.title}
             onChange={(e) => onChange({ title: e.target.value })}
             placeholder={t('tasks.subtaskTitlePlaceholder')}
-            className="craft-field-input w-full bg-transparent text-reading font-semibold text-foreground outline-none placeholder:text-foreground/30"
+            className="craft-field-input w-full bg-transparent text-body font-semibold text-foreground outline-none placeholder:text-text-secondary"
           />
           <textarea
             value={subtask.prompt}
@@ -431,9 +431,9 @@ function SubtaskCard({
                   type="button"
                   onClick={() => removeDep(depUid)}
                   aria-label={t('tasks.removeDependency')}
-                  className="craft-control grid h-4 w-4 shrink-0 place-items-center rounded text-text-secondary hover:bg-foreground/10 hover:text-red-500"
+                  className="craft-control grid h-4 w-4 shrink-0 place-items-center rounded text-text-secondary hover:bg-foreground/10 hover:text-destructive-text"
                 >
-                  <X className="h-3 w-3" strokeWidth={2.5} />
+                  <X className="h-3 w-3" />
                 </button>
               </span>
             ))}
@@ -447,7 +447,7 @@ function SubtaskCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="max-w-[240px]">
                 {candidates.map((c) => (
-                  <DropdownMenuItem key={c.uid} className="text-xs" onSelect={() => addDep(c.uid)}>
+                  <DropdownMenuItem key={c.uid} className="text-meta" onSelect={() => addDep(c.uid)}>
                     <span className="truncate">{c.title || t('tasks.untitledSubtask')}</span>
                   </DropdownMenuItem>
                 ))}
@@ -462,9 +462,9 @@ function SubtaskCard({
           type="button"
           onClick={onRemove}
           aria-label={t('tasks.removeSubtask')}
-          className="craft-row-actions craft-control motion-interactive grid h-6 w-6 shrink-0 place-items-center rounded text-text-secondary opacity-0 transition-[color,background-color,opacity,transform] hover:bg-foreground/10 hover:text-red-500 group-hover:opacity-100"
+          className="craft-row-actions craft-control motion-interactive grid h-6 w-6 shrink-0 place-items-center rounded text-text-secondary opacity-0 transition-[color,background-color,opacity,transform] hover:bg-foreground/10 hover:text-destructive-text group-hover:opacity-100"
         >
-          <Trash2 className="h-3.5 w-3.5" strokeWidth={2} />
+          <Trash2 className="h-3.5 w-3.5" />
         </button>
       </div>
     </div>
@@ -973,10 +973,10 @@ export function TaskEditor({
       {/* Header */}
       <div className="flex items-center gap-2.5 rounded-xl border border-border bg-surface-raised px-3 py-2.5 shadow-minimal">
         <Btn variant="ghost" className="px-2" onClick={onClose}>
-          <ChevronLeft className="h-4 w-4" strokeWidth={2} /> {t('contentPanel.button.kanban')}
+          <ChevronLeft className="h-4 w-4" /> {t('contentPanel.button.kanban')}
         </Btn>
-        <span className="text-foreground/25">/</span>
-        <span className="text-sm font-semibold">{isEdit ? t('tasks.editTask') : t('kanban.newTask')}</span>
+        <span className="text-text-secondary">/</span>
+        <span className="text-body font-semibold">{isEdit ? t('tasks.editTask') : t('kanban.newTask')}</span>
 
         {/* Definition / Results tabs — edit mode only (results need a backing task to read). */}
         {isEdit && (
@@ -987,7 +987,7 @@ export function TaskEditor({
                 onClick={() => setTab(tb)}
                 className={cn(
                   'craft-control rounded-shape-lg px-3 py-1 text-label font-semibold transition-colors',
-                  tab === tb ? 'bg-surface-raised text-foreground shadow-minimal' : 'text-text-secondary hover:text-text-secondary',
+                  tab === tb ? 'bg-surface-raised text-foreground shadow-minimal' : 'text-text-secondary hover:text-foreground',
                 )}
               >
                 {tb === 'definition' ? t('tasks.tabDefinition') : t('tasks.tabResults')}
@@ -999,7 +999,7 @@ export function TaskEditor({
         <div className="ml-auto flex items-center gap-2">
           {isEdit && onOpenSession && (
             <Btn variant="secondary" onClick={onOpenSession} disabled={busy}>
-              <ExternalLink className="h-3.5 w-3.5" strokeWidth={2} /> {t('tasks.openSession')}
+              <ExternalLink className="h-3.5 w-3.5" /> {t('tasks.openSession')}
             </Btn>
           )}
           {tab === 'definition' && (
@@ -1011,14 +1011,14 @@ export function TaskEditor({
                 {isEdit ? t('common.save') : t('common.create')}
               </Btn>
               <Btn variant="primary" onClick={() => submit(true)} disabled={busy || !hasAvailableModel}>
-                {busy ? <Spinner /> : <Sparkles className="h-3.5 w-3.5" strokeWidth={2.5} />}
+                {busy ? <Spinner /> : <Sparkles className="h-3.5 w-3.5" />}
                 {busy ? t('tasks.starting') : isEdit ? t('tasks.saveAndRun') : t('tasks.createAndRun')}
               </Btn>
             </>
           )}
           {tab === 'results' && (
             <Btn variant="secondary" onClick={loadResults} disabled={resultsLoading}>
-              {resultsLoading ? <Spinner /> : <RefreshCw className="h-3.5 w-3.5" strokeWidth={2} />} {t('common.refresh')}
+              {resultsLoading ? <Spinner /> : <RefreshCw className="h-3.5 w-3.5" />} {t('common.refresh')}
             </Btn>
           )}
         </div>
@@ -1044,10 +1044,10 @@ export function TaskEditor({
                 onClick={() => setMode(m)}
                 className={cn(
                   'craft-control inline-flex items-center gap-1.5 rounded-shape-lg px-3 py-1.5 text-label font-semibold transition-colors',
-                  mode === m ? 'bg-surface-raised text-foreground shadow-minimal' : 'text-text-secondary hover:text-text-secondary',
+                  mode === m ? 'bg-surface-raised text-foreground shadow-minimal' : 'text-text-secondary hover:text-foreground',
                 )}
               >
-                {m === 'generate' && <Sparkles className="h-3.5 w-3.5" strokeWidth={2.5} />}
+                {m === 'generate' && <Sparkles className="h-3.5 w-3.5" />}
                 {m === 'generate' ? t('tasks.modeGenerate') : t('tasks.modeManual')}
               </button>
             ))}
@@ -1059,14 +1059,14 @@ export function TaskEditor({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder={t('tasks.titlePlaceholder')}
-              className="craft-field-input w-full rounded-lg border border-border bg-background px-3 py-2 text-reading font-semibold outline-none focus:border-foreground/25"
+              className="craft-field-input w-full rounded-lg border border-border bg-background px-3 py-2 text-body font-semibold outline-none focus:border-foreground/25"
             />
           </div>
 
           <div>
             <div className="mb-1.5 flex items-baseline justify-between">
               <span className="text-label font-semibold text-text-secondary">{t('tasks.goal')}</span>
-              <span className="text-meta text-foreground/35">{t('tasks.goalHint')}</span>
+              <span className="text-meta text-text-secondary">{t('tasks.goalHint')}</span>
             </div>
             <textarea
               value={goal}
@@ -1080,7 +1080,7 @@ export function TaskEditor({
           <div>
             <div className="mb-1.5 flex items-baseline justify-between">
               <span className="text-label font-semibold text-text-secondary">{t('tasks.acceptanceCriteria')}</span>
-              <span className="text-meta text-foreground/35">{t('tasks.acceptanceCriteriaHint')}</span>
+              <span className="text-meta text-text-secondary">{t('tasks.acceptanceCriteriaHint')}</span>
             </div>
             <textarea
               value={acceptanceCriteria}
@@ -1119,15 +1119,15 @@ export function TaskEditor({
                       never unbinds on save, and buildSpec floors a blank pick to the existing project,
                       so showing it for a bound task would be a no-op that implies clearing works. */}
                   {!boundProjectId && (
-                    <DropdownMenuItem className="text-xs" onSelect={() => setProjectId('')}>
+                    <DropdownMenuItem className="text-meta" onSelect={() => setProjectId('')}>
                       {t('tasks.noProject')}
-                      {!projectId && <Check className="ml-auto h-3.5 w-3.5" strokeWidth={2} />}
+                      {!projectId && <Check className="ml-auto h-3.5 w-3.5" />}
                     </DropdownMenuItem>
                   )}
                   {projects.map((p) => (
-                    <DropdownMenuItem key={p.config.id} className="text-xs" onSelect={() => setProjectId(p.config.id)}>
+                    <DropdownMenuItem key={p.config.id} className="text-meta" onSelect={() => setProjectId(p.config.id)}>
                       <span className="truncate">{p.config.name}</span>
-                      {projectId === p.config.id && <Check className="ml-auto h-3.5 w-3.5 shrink-0" strokeWidth={2} />}
+                      {projectId === p.config.id && <Check className="ml-auto h-3.5 w-3.5 shrink-0" />}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -1156,9 +1156,9 @@ export function TaskEditor({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[160px]">
                   {(['allow-all', 'ask', 'safe'] as const).map((m) => (
-                    <DropdownMenuItem key={m} className="text-xs" onSelect={() => setPermissionMode(m)}>
+                    <DropdownMenuItem key={m} className="text-meta" onSelect={() => setPermissionMode(m)}>
                       <span className="truncate">{t(`mode.${m}`)}</span>
-                      {permissionMode === m && <Check className="ml-auto h-3.5 w-3.5 shrink-0" strokeWidth={2} />}
+                      {permissionMode === m && <Check className="ml-auto h-3.5 w-3.5 shrink-0" />}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -1202,7 +1202,7 @@ export function TaskEditor({
                 onChange={(e) => setMaxRepairs(e.target.value)}
                 placeholder={String(DEFAULT_REPAIR_ATTEMPTS)}
                 title={t('tasks.maxRepairsHint')}
-                className="craft-field-input h-8 w-[88px] rounded-lg border border-border bg-background px-2.5 text-right text-label tabular-nums outline-none focus:border-foreground/25 placeholder:text-foreground/30"
+                className="craft-field-input h-8 w-[88px] rounded-lg border border-border bg-background px-2.5 text-right text-label tabular-nums outline-none focus:border-foreground/25 placeholder:text-text-secondary"
               />
             </FieldRow>
           </div>
@@ -1218,7 +1218,7 @@ export function TaskEditor({
                   {subtasks.length}
                 </span>
                 <Btn variant="secondary" className="ml-auto h-7 px-2.5 text-label" onClick={addSubtask}>
-                  <Plus className="h-3.5 w-3.5" strokeWidth={2.5} /> {t('kanban.addSubtask')}
+                  <Plus className="h-3.5 w-3.5" /> {t('kanban.addSubtask')}
                 </Btn>
               </div>
 
@@ -1241,7 +1241,7 @@ export function TaskEditor({
                     onClick={addSubtask}
                     className="craft-control flex w-full items-center justify-center gap-1.5 rounded-shape-xl border border-dashed border-border py-2.5 text-label font-semibold text-text-secondary transition-colors hover:border-foreground/30 hover:text-text-secondary"
                   >
-                    <Plus className="h-3.5 w-3.5" strokeWidth={2.5} /> {t('tasks.addFirstSubtask')}
+                    <Plus className="h-3.5 w-3.5" /> {t('tasks.addFirstSubtask')}
                   </button>
                 )}
               </div>
@@ -1275,13 +1275,13 @@ export function TaskEditor({
             </div>
           ) : (
             <div className="flex min-h-full flex-col items-center justify-center gap-3 px-6 py-8 text-center">
-              <div className="grid h-12 w-12 place-items-center rounded-full bg-indigo-500/10 text-indigo-500 dark:text-indigo-300">
-                <Sparkles className="h-6 w-6" strokeWidth={2} />
+              <div className="grid h-12 w-12 place-items-center rounded-full bg-accent/10 text-accent-text">
+                <Sparkles className="h-6 w-6" />
               </div>
               <div className="text-reading font-bold">{t('tasks.generatePlan')}</div>
               <p className="max-w-[360px] text-label leading-relaxed text-text-secondary">{t('tasks.generateBody')}</p>
               <Btn variant="primary" onClick={generatePlan} disabled={busy || !hasAvailableModel}>
-                <Sparkles className="h-3.5 w-3.5" strokeWidth={2.5} /> {t('tasks.generatePlan')}
+                <Sparkles className="h-3.5 w-3.5" /> {t('tasks.generatePlan')}
               </Btn>
               <span className="text-meta text-text-secondary">{t('tasks.generateHint')}</span>
             </div>
@@ -1310,7 +1310,7 @@ function ResultsPanel({
   if (loading && !results) {
     return (
       <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-border bg-surface-raised text-text-secondary shadow-minimal">
-        <Spinner className="text-lg" />
+        <Spinner className="text-title" />
       </div>
     )
   }
@@ -1318,7 +1318,7 @@ function ResultsPanel({
   if (!results || !results.runId || results.nodes.length === 0) {
     return (
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 rounded-xl border border-border bg-surface-raised px-6 text-center text-text-secondary shadow-minimal">
-        <CircleSlash className="h-6 w-6 text-foreground/30" strokeWidth={2} />
+        <CircleSlash className="h-6 w-6 text-text-secondary" />
         <p className="text-label">{t('tasks.resultsEmpty')}</p>
       </div>
     )
@@ -1341,18 +1341,18 @@ function ResultsPanel({
           className={cn(
             'flex items-start gap-2.5 rounded-shape-xl border px-3 py-2.5',
             verdict.result === 'pass'
-              ? 'border-emerald-500/30 bg-emerald-500/[0.06]'
+              ? 'border-success/30 bg-success/[0.06]'
               : verdict.result === 'fail'
-                ? 'border-red-500/30 bg-red-500/[0.06]'
+                ? 'border-destructive/30 bg-destructive/[0.06]'
                 : 'border-border bg-foreground/[0.03]',
           )}
         >
           {verdict.result === 'pass' ? (
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" strokeWidth={2.5} />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success-text" />
           ) : verdict.result === 'fail' ? (
-            <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" strokeWidth={2.5} />
+            <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive-text" />
           ) : (
-            <CircleSlash className="mt-0.5 h-4 w-4 shrink-0 text-text-secondary" strokeWidth={2.5} />
+            <CircleSlash className="mt-0.5 h-4 w-4 shrink-0 text-text-secondary" />
           )}
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
@@ -1385,11 +1385,11 @@ function ResultsPanel({
             {verdicts.map((v, i) => (
               <div key={i} className="flex items-start gap-2 text-meta">
                 {v.result === 'pass' ? (
-                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" strokeWidth={2.5} />
+                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success-text" />
                 ) : v.result === 'fail' ? (
-                  <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-500" strokeWidth={2.5} />
+                  <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-destructive-text" />
                 ) : (
-                  <CircleSlash className="mt-0.5 h-3.5 w-3.5 shrink-0 text-text-secondary" strokeWidth={2.5} />
+                  <CircleSlash className="mt-0.5 h-3.5 w-3.5 shrink-0 text-text-secondary" />
                 )}
                 <span className="min-w-0 flex-1 text-text-secondary">
                   {v.reason || (v.result === 'pass' ? t('tasks.verdictPass') : v.result === 'fail' ? t('tasks.verdictFail') : t('tasks.verdictUnparsed'))}
@@ -1413,9 +1413,9 @@ function ResultsPanel({
               <button
                 type="button"
                 onClick={() => onOpenChildSession(node.sessionId!)}
-                className="craft-control inline-flex shrink-0 items-center gap-1 rounded text-meta font-semibold text-indigo-500 hover:underline dark:text-indigo-300"
+                className="craft-control inline-flex shrink-0 items-center gap-1 rounded text-meta font-semibold text-accent-text hover:underline"
               >
-                <ExternalLink className="h-3 w-3" strokeWidth={2.5} /> {t('tasks.openSession')}
+                <ExternalLink className="h-3 w-3" /> {t('tasks.openSession')}
               </button>
             )}
           </div>

@@ -27,7 +27,7 @@ function ModeIcon({ mode, className }: { mode: PermissionMode; className?: strin
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -43,7 +43,7 @@ function ModeIcon({ mode, className }: { mode: PermissionMode; className?: strin
 
 const MODE_STYLES: Record<PermissionMode, { className: string; shadowVar: string }> = {
   safe: {
-    className: 'bg-foreground/5 text-foreground/60',
+    className: 'bg-foreground/5 text-text-secondary',
     shadowVar: 'var(--foreground)',
   },
   ask: {
@@ -107,7 +107,7 @@ export function CompactPermissionModeSelector({
           type="button"
           aria-label={`${t('mode.permissionMode')}: ${t(MODE_LABEL_KEYS[shownMode].name)}`}
           className={cn(
-            "h-7 pl-2 pr-2.5 text-xs font-medium rounded-shape-md flex items-center gap-1.5 shadow-tinted outline-none select-none shrink-0",
+            "h-7 pl-2 pr-2.5 text-meta font-medium rounded-shape-md flex items-center gap-1.5 shadow-tinted outline-none select-none shrink-0",
             style.className,
           )}
           style={{ '--shadow-color': style.shadowVar } as React.CSSProperties}
@@ -139,11 +139,11 @@ export function CompactPermissionModeSelector({
                     <ModeIcon mode={mode} className="h-5 w-5" />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium">{t(MODE_LABEL_KEYS[mode].name)}</div>
-                    <div className="text-xs text-muted-foreground">{t(MODE_LABEL_KEYS[mode].desc)}</div>
+                    <div className="text-body font-medium">{t(MODE_LABEL_KEYS[mode].name)}</div>
+                    <div className="text-meta text-muted-foreground">{t(MODE_LABEL_KEYS[mode].desc)}</div>
                   </div>
                   {isSelected && (
-                    <Check className="h-4 w-4 shrink-0 text-foreground/60" />
+                    <Check className="h-4 w-4 shrink-0 text-text-secondary" />
                   )}
                 </button>
               </DrawerClose>

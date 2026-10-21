@@ -204,7 +204,7 @@ export function CompactSessionListFilter({
                 setListFilter(new Map())
                 setLabelFilter(new Map())
               }}
-              className="text-xs text-muted-foreground hover:text-foreground"
+              className="text-meta text-muted-foreground hover:text-foreground"
             >
               {t('common.clear')}
             </button>
@@ -212,14 +212,14 @@ export function CompactSessionListFilter({
         </DrawerHeader>
 
         <div className="px-4 pb-2">
-          <label className="bg-foreground/5 rounded-shape-lg px-3 h-10 flex items-center gap-2">
+          <label className="craft-field-shell bg-foreground/5 rounded-shape-lg px-3 h-10 flex items-center gap-2">
             <Search className="h-4 w-4 text-muted-foreground shrink-0" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('sidebar.searchStatusesLabels')}
-              className="flex-1 min-w-0 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+              className="flex-1 min-w-0 bg-transparent text-body text-foreground placeholder:text-muted-foreground outline-none"
             />
             {query && (
               <button
@@ -296,7 +296,7 @@ export function CompactSessionListFilter({
           )}
 
           {isSearching && results.states.length === 0 && results.labels.length === 0 && (
-            <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+            <div className="px-4 py-6 text-center text-body text-muted-foreground">
               No matches
             </div>
           )}
@@ -333,7 +333,7 @@ export function CompactSessionListFilter({
                   className="w-full flex items-center gap-3 px-3 py-3 rounded-shape-xl hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left"
                 >
                   <Search className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="text-sm font-medium">{t('sidebar.search')}</span>
+                  <span className="text-body font-medium">{t('sidebar.search')}</span>
                 </button>
               </DrawerClose>
             </div>
@@ -355,7 +355,7 @@ function Section({
 }) {
   return (
     <div className="pt-3">
-      <div className="px-3 pb-1 flex items-center gap-1.5 text-meta font-medium text-muted-foreground/70 uppercase tracking-wider">
+      <div className="px-3 pb-1 flex items-center gap-1.5 text-meta font-medium text-text-secondary uppercase tracking-wider">
         {icon}
         <span>{title}</span>
       </div>
@@ -403,16 +403,27 @@ function FilterRow({
   return (
     <div
       role="button"
+      tabIndex={pinned ? -1 : 0}
+      aria-pressed={pinned ? undefined : radioSelected}
       onClick={pinned ? undefined : onTap}
+      onKeyDown={(event) => {
+        // role="button" is focusable, so it must answer Enter and Space like a
+        // native button; otherwise the row is reachable but not operable.
+        if (pinned || !onTap) return
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onTap()
+        }
+      }}
       className={cn(
         'flex items-center gap-3 px-3 py-2.5 rounded-shape-xl transition-colors',
         pinned ? 'opacity-60' : 'cursor-pointer hover:bg-foreground/5 active:bg-foreground/10',
       )}
     >
       {renderedIcon}
-      <span className="flex-1 min-w-0 text-sm truncate">{label}</span>
+      <span className="flex-1 min-w-0 text-body truncate">{label}</span>
       {pinned && <Check className="h-4 w-4 text-muted-foreground shrink-0" />}
-      {!pinned && radioSelected && <Check className="h-4 w-4 text-foreground/70 shrink-0" />}
+      {!pinned && radioSelected && <Check className="h-4 w-4 text-text-secondary shrink-0" />}
       {!pinned && mode && (
         <button
           type="button"
@@ -421,7 +432,7 @@ function FilterRow({
             onModeTap?.()
           }}
           className={cn(
-            'shrink-0 h-7 px-2.5 rounded-shape-md text-xs font-medium flex items-center gap-1 shadow-tinted',
+            'shrink-0 h-7 px-2.5 rounded-shape-md text-meta font-medium flex items-center gap-1 shadow-tinted',
             mode === 'include'
               ? 'bg-background text-foreground'
               : 'bg-destructive/10 text-destructive',
@@ -487,7 +498,7 @@ function PinnedSummary({
 
 function PinnedChip({ icon, label }: { icon: React.ReactNode; label: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-1.5 h-7 pl-2 pr-2.5 rounded-shape-md bg-foreground/5 text-xs text-foreground/70">
+    <span className="inline-flex items-center gap-1.5 h-7 pl-2 pr-2.5 rounded-shape-md bg-foreground/5 text-meta text-text-secondary">
       <span className="shrink-0 inline-flex items-center justify-center">{icon}</span>
       <span className="truncate">{label}</span>
       <Check className="h-3 w-3 shrink-0 text-muted-foreground" />

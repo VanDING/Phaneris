@@ -200,7 +200,7 @@ export function UnifiedDiffViewer({
           lineHeight: 1.6,
         }}
       >
-        <pre className="text-foreground/70 whitespace-pre-wrap">{unifiedDiff || '(empty diff)'}</pre>
+        <pre className="text-text-secondary whitespace-pre-wrap">{unifiedDiff || '(empty diff)'}</pre>
       </div>
     )
   }

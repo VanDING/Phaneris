@@ -224,11 +224,11 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
           {skill.metadata.alwaysAllow && skill.metadata.alwaysAllow.length > 0 && (
             <Info_Section title={t('skillInfo.permissionModes')}>
               <div className="space-y-2 px-4 py-3">
-                <p className="text-xs text-muted-foreground mb-3">
+                <p className="text-meta text-muted-foreground mb-3">
                   {t('skillInfo.permissionModesDesc')}
                 </p>
                 <div className="rounded-shape-lg border border-border/50 overflow-hidden">
-                  <table className="w-full text-sm">
+                  <table className="w-full text-body">
                     <tbody>
                       <tr className="border-b border-border/30">
                         <td className="px-3 py-2 font-medium text-muted-foreground w-[140px]">{t('skillInfo.explore')}</td>

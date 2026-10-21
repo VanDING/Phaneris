@@ -145,7 +145,7 @@ export function WorkingDirectorySelector({
                   value={filter}
                   onValueChange={setFilter}
                   placeholder={t('chat.filterFolders')}
-                  className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/50 placeholder:select-none"
+                  className="w-full bg-transparent text-body outline-none placeholder:text-text-secondary placeholder:select-none"
                 />
               </div>
             )}
@@ -201,7 +201,7 @@ export function WorkingDirectorySelector({
 
               {/* Empty state when filtering */}
               {showFilter && (
-                <CommandPrimitive.Empty className="py-3 text-center text-sm text-muted-foreground">
+                <CommandPrimitive.Empty className="py-3 text-center text-body text-muted-foreground">
                   {t('chat.noFoldersFound')}
                 </CommandPrimitive.Empty>
               )}

@@ -191,7 +191,7 @@ export function SendToWorkspaceDialog({
         {/* Workspace list — every other workspace; locals are always selectable */}
         <div className="flex flex-col gap-1 max-h-64 overflow-y-auto py-1">
           {targetWorkspaces.length === 0 ? (
-            <p className="text-sm text-muted-foreground px-2 py-4 text-center">
+            <p className="text-body text-muted-foreground px-2 py-4 text-center">
               {t("sendToWorkspace.noRemoteWorkspaces")}
             </p>
           ) : (
@@ -209,7 +209,7 @@ export function SendToWorkspaceDialog({
                   disabled={isTransferring || isDisconnected}
                   onClick={() => setSelectedWorkspaceId(workspace.id)}
                   className={cn(
-                    'flex items-center gap-2 w-full px-2 py-2 rounded-md text-left text-sm transition-colors',
+                    'flex items-center gap-2 w-full px-2 py-2 rounded-md text-left text-body transition-colors',
                     'hover:bg-foreground/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                     isSelected && 'bg-foreground/10 ring-1 ring-foreground/15',
                     isDisconnected && 'opacity-50 cursor-not-allowed hover:bg-transparent',
@@ -226,11 +226,11 @@ export function SendToWorkspaceDialog({
                   {!isRemote ? (
                     <Laptop className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                   ) : isDisconnected ? (
-                    <CloudOff className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
+                    <CloudOff className="h-3.5 w-3.5 text-text-secondary shrink-0" />
                   ) : (
                     <Cloud className={cn(
                       'h-3.5 w-3.5 shrink-0',
-                      isChecking ? 'text-muted-foreground/30 animate-pulse' : 'text-muted-foreground',
+                      isChecking ? 'text-text-secondary animate-pulse' : 'text-muted-foreground',
                     )} />
                   )}
                 </button>
@@ -293,7 +293,7 @@ function TransferButton({ onClick, disabled, isTransferring, progress }: {
             rx="10" ry="10"
             fill="none"
             stroke="#8B5CF6"
-            strokeWidth="2"
+
             strokeDasharray={perim > 0 ? `${progress * perim} ${perim}` : '0 999'}
             style={{
               transition: 'stroke-dasharray 0.2s ease-out',

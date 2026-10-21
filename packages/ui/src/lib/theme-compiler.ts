@@ -155,8 +155,28 @@ export async function compileThemeInBrowser(theme: ThemeFile, signal?: AbortSign
         }
         const accent = rgba(values['--accent']!), accentOpaque = accent.slice(0, 3).map((value, i) => value * accent[3]! / 255 + background[i]! * (1 - accent[3]! / 255))
         authored['--on-accent'] = contrast([0, 0, 0], accentOpaque) > contrast([255, 255, 255], accentOpaque) ? '#000000' : '#FFFFFF'
-        const bodyRatio = contrast(rgba(foreground), background)
-        if (bodyRatio < 4.5) diagnostics.push({ path: `${mode}.foreground`, code: 'contrast', severity: 'warning', message: `Body contrast ${bodyRatio.toFixed(2)}:1 is below 4.5:1` })
+        // Non-blocking author feedback: the derived `--*-text` tokens are moved
+        // until they pass, but the *authored* dim-ink tokens are the author's
+        // choice. A user theme that ships 3:1 secondary text looks fine to the
+        // person who wrote it and unreadable to everyone else, so name the pair
+        // and the ratio instead of silently accepting it.
+        const dimPairs: [string, string | undefined, string][] = [
+          ['foreground', foreground, '--background'],
+          ['foreground', foreground, '--muted'],
+          ['mutedForeground', values['--muted-foreground'], '--background'],
+          ['mutedForeground', values['--muted-foreground'], '--muted'],
+          ['mutedForeground', values['--muted-foreground'], '--card'],
+          ['foregroundDimmed', values['--foreground-dimmed'], '--background'],
+        ]
+        for (const [label, foregroundValue, surfaceName] of dimPairs) {
+          const surface = values[surfaceName]
+          if (!foregroundValue || !surface) continue
+          const pairRatio = contrast(rgba(foregroundValue), rgba(surface))
+          if (pairRatio >= 4.5) continue
+          const path = `${mode}.${label} on ${surfaceName.replace(/^--/, '')}`
+          if (diagnostics.some(value => value.path === path)) continue
+          diagnostics.push({ path, code: 'contrast', severity: 'warning', message: `Contrast ${pairRatio.toFixed(2)}:1 is below 4.5:1` })
+        }
       }
       delete authored['--font-cjk']
       // Preserve the authored color space while guaranteeing alpha=1 even if a
