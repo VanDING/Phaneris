@@ -103,7 +103,7 @@ export function PageTile({ page, project, onOpen, onDelete }: PageTileProps) {
           <div className="p-3 pb-0">
             <div
               ref={thumbRef}
-              className="relative flex aspect-[16/10] items-center justify-center overflow-hidden rounded-lg bg-foreground/[0.03]"
+              className="relative flex aspect-[16/10] items-center justify-center overflow-hidden rounded-lg bg-foreground/[0.04]"
             >
               {posterUrl ? (
                 <img

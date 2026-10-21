@@ -88,20 +88,20 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-foreground/[0.012]">
+    <div className="flex h-full min-h-0 flex-col bg-foreground/[0.02]">
       <div className="flex h-11 shrink-0 items-center gap-1.5 border-b border-border/50 bg-background/75 px-2.5">
         <button type="button" disabled={selectedIndex <= 0} onClick={() => selectRequest(contexts[selectedIndex - 1]!.requestSeq)} aria-label={t('trajectory.context.previousRequest')} className="craft-control flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-secondary outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">
           <ChevronLeft className="h-3.5 w-3.5" />
         </button>
         <div ref={requestMenuRef} className="relative">
-          <button type="button" aria-haspopup="listbox" aria-expanded={requestMenuOpen} onClick={() => { setRequestFilter(''); setRequestMenuOpen(open => !open) }} className="craft-control flex h-7 min-w-36 items-center justify-between gap-2 rounded-md border border-border/60 bg-background px-2.5 text-label font-medium shadow-minimal outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-ring">
+          <button type="button" aria-haspopup="listbox" aria-expanded={requestMenuOpen} onClick={() => { setRequestFilter(''); setRequestMenuOpen(open => !open) }} className="craft-control flex h-7 min-w-36 items-center justify-between gap-2 rounded-md border border-border/70 bg-background px-2.5 text-label font-medium shadow-minimal outline-none hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-ring">
             <span>{t('trajectory.context.requestPosition', { seq: current.requestSeq, total: contexts.length })}</span>
             <ChevronsUpDown className="h-3.5 w-3.5 text-text-secondary" />
           </button>
           {requestMenuOpen && (
-            <div className="absolute left-0 top-9 z-component-panel w-72 overflow-hidden rounded-lg border border-border/60 bg-background shadow-modal-small">
+            <div className="absolute left-0 top-9 z-component-panel w-72 overflow-hidden rounded-lg border border-border/70 bg-background shadow-modal-small">
               <div className="border-b border-border/50 p-2">
-                <input ref={initialFocusRef} value={requestFilter} onChange={event => setRequestFilter(event.target.value)} onKeyDown={event => { if (event.key === 'Escape') setRequestMenuOpen(false) }} placeholder={t('trajectory.context.searchRequests')} className="craft-field-input h-7 w-full rounded-md bg-foreground/[0.035] px-2 text-label outline-none placeholder:text-text-secondary focus:ring-2 focus:ring-ring" />
+                <input ref={initialFocusRef} value={requestFilter} onChange={event => setRequestFilter(event.target.value)} onKeyDown={event => { if (event.key === 'Escape') setRequestMenuOpen(false) }} placeholder={t('trajectory.context.searchRequests')} className="craft-field-input h-7 w-full rounded-md bg-foreground/[0.04] px-2 text-label outline-none placeholder:text-text-secondary focus:ring-2 focus:ring-ring" />
               </div>
               <div className="max-h-64 overflow-y-auto p-1" role="listbox">
                 {filteredContexts.map((context) => {
@@ -125,7 +125,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
           <ChevronRight className="h-3.5 w-3.5" />
         </button>
         <button type="button" disabled={selectedIndex === contexts.length - 1} onClick={() => selectRequest(contexts.at(-1)!.requestSeq)} className="craft-control h-7 shrink-0 rounded-md px-2 text-meta font-medium text-text-secondary outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">{t('trajectory.context.latest')}</button>
-        <div className="ml-auto hidden h-7 min-w-28 max-w-72 flex-1 items-end gap-px rounded-md bg-foreground/[0.025] px-1.5 py-1 @min-[620px]/trajectory:flex" aria-label={t('trajectory.context.requestTrend')}>
+        <div className="ml-auto hidden h-7 min-w-28 max-w-72 flex-1 items-end gap-px rounded-md bg-foreground/[0.02] px-1.5 py-1 @min-[620px]/trajectory:flex" aria-label={t('trajectory.context.requestTrend')}>
           {contexts.map(context => {
             const tokens = context.inputTokens ?? context.estimatedTokens
             return <button key={context.id} type="button" onClick={() => selectRequest(context.requestSeq)} title={`${t('trajectory.context.request', { seq: context.requestSeq })} · ${formatNumber(tokens)}`} className={`craft-control min-w-px flex-1 rounded-shape-xs outline-none transition-colors focus-visible:ring-1 focus-visible:ring-ring ${context.id === current.id ? 'bg-accent' : 'bg-accent/30 hover:bg-accent/55'}`} style={{ height: `${Math.max(14, (tokens / maxRequestTokens) * 100)}%` }} />
@@ -135,7 +135,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
 
       <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 pb-8">
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-3">
-          <header className="border-b border-border/60 px-1 pb-4 pt-1">
+          <header className="border-b border-border/70 px-1 pb-4 pt-1">
             <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -177,12 +177,12 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
             </div>
           </header>
 
-          <div className="overflow-hidden rounded-lg border border-border/55 bg-background/75">
+          <div className="overflow-hidden rounded-lg border border-border/50 bg-background/75">
             {current.groups.map(group => {
               const Icon = CATEGORY_ICON[group.category]
               const isExpanded = expanded.has(group.category)
               return (
-                <section key={group.category} className="border-b border-border/45 last:border-b-0">
+                <section key={group.category} className="border-b border-border/50 last:border-b-0">
                   <button
                     type="button"
                     aria-expanded={isExpanded}
@@ -192,7 +192,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
                       else next.add(group.category)
                       return next
                     })}
-                    className="craft-control grid min-h-11 w-full grid-cols-[18px_minmax(0,1fr)_auto_16px] items-center gap-2 px-3 text-left outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                    className="craft-control grid min-h-11 w-full grid-cols-[18px_minmax(0,1fr)_auto_16px] items-center gap-2 px-3 text-left outline-none hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                   >
                     <Icon className="h-3.5 w-3.5 text-text-secondary" />
                     <span className="text-label font-semibold">{t(`trajectory.context.category.${group.category}`)}</span>
@@ -201,9 +201,9 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
                   </button>
                   <AnimatePresence initial={false}>
                     {isExpanded && (
-                      <motion.div initial={reduceMotion ? false : { height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={motionTween(reduceMotion, 'standard', 'move')} className="overflow-hidden border-t border-border/40 bg-foreground/[0.012]">
+                      <motion.div initial={reduceMotion ? false : { height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={motionTween(reduceMotion, 'standard', 'move')} className="overflow-hidden border-t border-border/50 bg-foreground/[0.02]">
                         {group.items.map(entry => (
-                          <article key={entry.id} className="border-b border-border/35 px-3 py-2.5 last:border-b-0">
+                          <article key={entry.id} className="border-b border-border/50 px-3 py-2.5 last:border-b-0">
                             <div className="flex min-w-0 items-center gap-2">
                               <span className="truncate text-meta font-medium">{entry.label}</span>
                               <span className="ml-auto shrink-0 text-meta tabular-nums text-text-secondary">{formatNumber(entry.chars)} {t('trajectory.context.characters')}</span>
@@ -214,7 +214,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
                                 <button type="button" onClick={() => onOpenFile(entry.filePath!)} className="craft-control shrink-0 text-meta font-medium text-accent-text hover:underline">{t('trajectory.context.openFile')}</button>
                               )}
                             </div>
-                            {entry.content ? <pre className="mt-1.5 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-md bg-foreground/[0.025] px-2 py-1.5 text-label leading-5 text-text-secondary">{entry.content}</pre> : null}
+                            {entry.content ? <pre className="mt-1.5 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-md bg-foreground/[0.02] px-2 py-1.5 text-label leading-5 text-text-secondary">{entry.content}</pre> : null}
                           </article>
                         ))}
                       </motion.div>

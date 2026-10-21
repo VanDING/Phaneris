@@ -62,7 +62,7 @@ export function TrajectoryPerformance({ summary, isProcessing, onOpenTrajectory,
           </button>)}
         </div>
       </div>
-      <div className="rounded-xl border border-border/55 bg-background/70 px-3 py-2" data-performance-chart>
+      <div className="rounded-xl border border-border/50 bg-background/70 px-3 py-2" data-performance-chart>
         <div ref={plotRef}>
           {validCount > 0 ? <svg viewBox={`0 0 ${W} ${H}`} className="block h-[100px] w-full cursor-crosshair" role="img"
             aria-label={t('trajectory.performance.chartLabel', { metric: t(metric === 'rate' ? 'trajectory.performance.rate' : 'trajectory.overview.ttft') })}

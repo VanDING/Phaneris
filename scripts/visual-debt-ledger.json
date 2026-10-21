@@ -104,16 +104,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/CompactSessionMenu.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "1b22a2c4cff88633858b1a764f7470120663e5e1e3c3756f7a047a85468ccd19",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/CompactWorkspaceSwitcher.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -314,16 +304,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "1e00178a7a876893956d1eab412a150cd46e4060e29763ced5aa1474352cd506",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
       "rule": "jsx-a11y/no-noninteractive-element-interactions",
       "message": "Non-interactive elements should not be assigned mouse or keyboard event listeners.",
@@ -348,16 +328,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "b04647dfc64fc654c10b847ecfae48e70575102b73a021fbf4ea083a3fbc95cd",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/artifacts/ArtifactCard.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "4c0c52f6c314643f1759405633df3d4650f8d22afa7fbe611404c06f80cf898f",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
@@ -437,27 +407,7 @@
       "file": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
-      "fingerprint": "c23afe2c6547ca66c820da8a9cd6284287658154bf9154d4950a23891381d69c",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
       "fingerprint": "6f185f91f81f53cc20fad0c46732219acbf3f353e961ff26b023e44456b6c576",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "c0e4ef5ff59827b46f1606511a7018942b091a03b61bf3e990ead80d2d6f0c2d",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
@@ -558,26 +508,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "68552aa0044c3f66d07d702d38a50a1a3691f586a7631e6b62676e7aa0bb1d1a",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/messaging/access/BindingAllowListPopover.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "f36af568e4d7de311221144c0ae06eb59c91dcd0df837f30f27d46df544a8196",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/messaging/access/BindingAllowListPopover.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "4fa6244f0bbe71bcd970b3d405511b85a677c4ffc8b818a75140797b15b12f42",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
@@ -814,26 +744,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/pages/PluginInfoPage.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "abd71316b3205c04f180d47239af5dc9205d3a6cb93181707c8946930796989e",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/PluginInfoPage.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "3e2de827428f330dd3821f361337ef964bf29259c10557d078536d4ffc16b079",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/pages/ProjectInfoPage.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -947,16 +857,6 @@
       "file": "apps/electron/src/renderer/playground/demos/messaging/AllowListPreview.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
-      "fingerprint": "8773fdc45e78101e975751a621fad691bbca1e402361a0fc370536159716e484",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/demos/messaging/AllowListPreview.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
       "fingerprint": "4a1227d25cacc5a7b8d76433f7561caba1d56ff308621420104f6c660f7d0771",
       "count": 1,
       "owner": "Electron / feature owner",
@@ -968,16 +868,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "33b685c1d4e747812f2a208abd76569aa5460c6f44948430dbd25a274e1b16cb",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/demos/messaging/MessagingTelegramReworkedPreview.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "030ed827552c4f7f6f82fa972a52fcf87b8786c4ddc71d0409f2c8645ed16001",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
@@ -1226,16 +1116,6 @@
     {
       "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
       "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "9d4aa84f7ac7aa9be7f6d17bf4d68cc52819c22d0bc346d74e0793d71bed87cf",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
-      "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "d1035359c02868178ff4d77dd13c14ce0131f6e819d34ab7b502d208e6d8355a",
       "count": 1,
@@ -1271,16 +1151,6 @@
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "419dbacfd0931e2e0dd0912680e535d60e9d541c2956eeab54aaf62354d6d395",
-      "count": 2,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
@@ -1481,16 +1351,6 @@
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "dab34f3fe813aae9abaf18f958145cef06f3f132f673fab3cf236724f34c6c30",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
@@ -1727,16 +1587,6 @@
       "file": "apps/electron/src/renderer/playground/registry/edit-popover.tsx",
       "rule": "jsx-a11y/no-static-element-interactions",
       "message": "Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element.",
-      "fingerprint": "8961e5a9c16cf207ca023cef125c0461635ac871dcc97aa737982bb3aa92b081",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/edit-popover.tsx",
-      "rule": "jsx-a11y/no-static-element-interactions",
-      "message": "Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element.",
       "fingerprint": "9231eb5c57776686cb278ae0abe33a4fc4f041622bb649761b98bea66840e3a5",
       "count": 1,
       "owner": "Electron / feature owner",
@@ -1864,26 +1714,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/playground/registry/files-panel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "1dc49bb49ef6091511d571293858e5089afa6e57ce2b5b25ba7c2463ae27c613",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/files-panel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "fbdf32993d61563deb6882e56dee3abc895f5b4c8d7ff3f8bab4518cfaa9206f",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/playground/registry/image-support.tsx",
       "rule": "jsx-a11y/click-events-have-key-events",
       "message": "Visible, non-interactive elements with click handlers must have at least one keyboard listener.",
@@ -1908,36 +1738,6 @@
       "rule": "theme-contracts/shadows",
       "message": "disallowedClass",
       "fingerprint": "9cfd52d3b24ea6893e5b01fbc391a1fbf003fe7a4f933a7249307bb4b595a1cb",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing owned shadow/material or third-party geometry. Replace with an equivalent named elevation after visual comparison.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/kanban.tsx",
-      "rule": "jsx-a11y/click-events-have-key-events",
-      "message": "Visible, non-interactive elements with click handlers must have at least one keyboard listener.",
-      "fingerprint": "8026233b0a4dd01e3d93c8d36131b58dec72c6b48c4992b3fe753db415d43bc9",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/kanban.tsx",
-      "rule": "jsx-a11y/no-static-element-interactions",
-      "message": "Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element.",
-      "fingerprint": "ccf36698711f09775361efd51a45ce70ee721627359fc7edb32f8df1b0f686d6",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/kanban.tsx",
-      "rule": "theme-contracts/shadows",
-      "message": "disallowedClass",
-      "fingerprint": "9caafa34d6d18fba0a054f7a9c2fb3c4a5add61bb62ba5ed80db71868b4acece",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing owned shadow/material or third-party geometry. Replace with an equivalent named elevation after visual comparison.",
@@ -2244,16 +2044,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/playground/registry/planner.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "d9111a1929915acc9f6429a02b666c80afa7a44726db2d620d75f4ef1c19f080",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/playground/registry/project-colors.tsx",
       "rule": "theme-contracts/roles",
       "message": "literal",
@@ -2311,16 +2101,6 @@
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/project-colors.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "0c36f847a405643ad1bfa3222398cf3d17772225e42e19abcc9e01053d898cfc",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
@@ -2426,16 +2206,6 @@
     {
       "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
       "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "ab4b1f02955f908735a02e422dea2d0af36de30490f853950138d04e9bcdd6bd",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
-      "rule": "theme-contracts/roles",
       "message": "literal",
       "fingerprint": "1584aa4b473b2058f58957762ec2158204d5dedbbf3cc05cee791c4c028c794b",
       "count": 1,
@@ -2458,16 +2228,6 @@
       "rule": "theme-contracts/roles",
       "message": "literal",
       "fingerprint": "d3786f9336d15455ded1ac99f2501f1187a75583da6db7f3f09bfde9fe599f61",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "835076d1e65fb9007e9cb18374fa759c014e348a82b847796396dd226ebc1bf8",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
@@ -2539,16 +2299,6 @@
       "message": "literal",
       "fingerprint": "3ffdd9160c53128493c7ea0cdc94b0324d299d7b24ab4e9af95f680c97bf30d1",
       "count": 3,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "9f4e7a8e95ca677b51cd65a280039dfc8310212c3616ed58fc9332fe1bed53e0",
-      "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
@@ -2687,16 +2437,6 @@
       "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
       "rule": "theme-contracts/roles",
       "message": "literal",
-      "fingerprint": "4cdc02e9e6276a56ee88b19620a714a793cc12725ab33413bb9d66f81bc74149",
-      "count": 2,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
       "fingerprint": "e6b4d925068138f7d3dd4c27825f0f81e70d374a2524c205f9b3c54b2e86d633",
       "count": 1,
       "owner": "Electron / feature owner",
@@ -2738,16 +2478,6 @@
       "rule": "theme-contracts/roles",
       "message": "literal",
       "fingerprint": "862917e785124f644875ba74e7af75180afc6ed476568d9c930dbd2e9e07ea1a",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "500090feb86b68197a88182ebfcb424eae34e9136831341d2418e988115c058a",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
@@ -3424,16 +3154,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "packages/ui/src/components/ui/BrowserEmptyStateCard.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "fd2b75c6fe66ea8466202d313c5cda9f0ea2037e37eda91ca70d168ce28755db",
-      "count": 1,
-      "owner": "shared UI",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "packages/ui/src/components/ui/PreviewHeader.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -3554,30 +3274,10 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "91e7232550ea8c009c6b9aa81466158ea333f9e8ecb0bab425ba1f620fb32618",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "56397db841733928c3c7fa039124f0ebc48841f39116d4ad590272744f4d57b9",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "2a931a4c719058d2e34eef5a67690b88d7b5f4da3da85c904b2315dc1892abf9",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -3598,26 +3298,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "9533875418f8965561424679e0d215d5708f18d8d9df216cd29a626da28fcf2b",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ui/label-value-popover.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "dba1bd67185ca69571c8e15e472af885175417e473ed42d8acbdd189b2965fb0",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ui/label-value-popover.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "ddf7cc9093b83055c927648a8435be41c2549164b819c0bb457a38392a4ee5b5",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -3708,26 +3388,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "c8a9b044dfc8e920685ca0afe7f1b5888a66b0c9de90b3db4b7baffbc264b74a",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "packages/ui/src/components/overlay/ZoomControls.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "792525e927552bbdc42481031362c2e1f580917c643a652034375f9e25b7b9cd",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "packages/ui/src/components/overlay/ZoomControls.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "8e54c3f562368a7ae94cb8337902b596c324e8f434d09cf1f513e0322be98a10",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -3854,16 +3514,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "aaa15d606083f5b3c5a133fbff25bcc31178a0d97e0ddcd1d87e534ef5fbc1d9",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/ui/CompactSourceSelector.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -3948,16 +3598,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "9b1745279edc589fc1e0bdad8beb900cf40120d6c4aa7f956c827cb4d5edeb51",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/browser/BrowserTabStrip.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "35b0624f7ca15c6c1e6b55aeb14c61436495b773f992f74160892e54b90fbc5b",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -4088,16 +3728,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "4a18dcf3189975f9e402b38bec6821262bfee8bd3f57fde497a14c8547d714e4",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "packages/ui/src/components/ui/IslandFollowUpContentView.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "06d5e64def0bb6e6a51fb4b50a19d72e8158e5fbf0b016d92997d21915cf2f30",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -4314,16 +3944,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/ProjectsListPanel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "99f8c63bd63dfb34bab56ad08e76d133cf232480fe74a4e331dd5ab4d7e82679",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -4338,16 +3958,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "dcacf287b2611693fa58650a29c6a985ff861d7cd9617af578977e794cfb1b5c",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SessionList.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "6d282d17abe5d3cd28cbe3e4dc3ddeccd1fb4753a6955d25faaaf287e1e8a612",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -4394,50 +4004,10 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/SkillsListPanel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "f95a0b296f0d756f5a62cc73b2e026204b598db716789834d21a9ea5a59b3f2e",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SourcesListPanel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "7257b40ff7cd0b3a24c41af4682df97e7e894e9c22204f220844ea4acd24be72",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/TaskActionMenu.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "780c76d5c20ec027775fba384c78afac4297aa380817d0c693a15b0f5183d86f",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/automations/AutomationCard.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "d22ed3838d81b7b4bcf5f5a930f9acbfc8852efce803801bebf65f32f368f6d3",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/automations/AutomationsListPanel.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "9701e87a4705f3a6392b44da968af6bb754c1ed341cef31a8beb31293ee1382b",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -4458,16 +4028,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "5a87c353e2ae0065be38f752562d092d2e496e61905b4364289169b46b52e0be",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/automations/CronBuilder.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "6b3c2a2ae5398e46ff025070667f97c43ddb05e6db6084021b3b7f06989aa858",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -4604,60 +4164,10 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "48da8f9c53d198b379780ae547c5da400eccbc37a4b01abbc9f3e3d0cd44690d",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "d885ba6c7c1c0d508a1f40a97ddb27a60c7bdca6fa64af5b53cf7494ec3612f4",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "456a815ede534bb134e2a90d5f724476941258eb05140ab86f77464eddabf6af",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "7b3d084b4bbafb5bb2e809840b6cc1ee5773344f8d460e6fe703464e70e9c316",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "b656547d86244467fa77e5b5711c2b33d8c84f04d1bd40cfbd5cfea75665e2ee",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "c29ce125491e6bd71ffd89b847b6cb2cbdb8c88377502c46405249212fbbd53e",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -4671,16 +4181,6 @@
       "count": 1,
       "owner": "Electron / a11y owner",
       "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/projects/ProjectSelectMenu.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "b8f4d3a12ea6ff650776868202a6651b7d4ba896dd5c021210211fba16e91e66",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
@@ -4734,26 +4234,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/ui/CompactSourceSelector.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "fa8248768262a04ab5c9931e20982906d3b7eb3a90242dcdc90d9b043230e77e",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ui/CompactWorkingDirectorySelector.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "a1f8f93c54a2b88ae6a7bb0da385e632657cb28044e931416197ab77abb23ae0",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/ui/CompactWorkingDirectorySelector.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -4768,16 +4248,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "363fba2bafa9128c0c744362957ac931c78d8212101901d58f1fd5d89d281260",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/ui/date-field.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "574669a7ce79fb0a2c3b259c860fd0116c00d90dd94870b1079c68b3061bba12",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
@@ -5048,6 +4518,536 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "b283c270cc5f0f0daa460bf9185c5de8b2feb78d10fa95150dd327cd2bb4218a",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/CompactSessionMenu.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "46099b39cc8a1595acec296a0ba03bc05e7e367f10b85a49ae8b30f1fa555f76",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "129ee29367090bde6c0f5fee1c36ec64f5c5df218c5c02848af70d20383ff77f",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ProjectsListPanel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "ef340959af69c0fe4f8acdd9d8c268b5e14f0ce79015c3187562a242be27ffbc",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SessionList.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "a6d6aa4c96ce120363be0a0ffe2cc97ec054016e43d8d5d8b87e215d938699ce",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SkillsListPanel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "5977d2f3793863715d17e0cbd8361d54763adeeebc543c7b360c4da4577bcfcf",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SourcesListPanel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "f614a4646b60d8a69f4a35e230f006072e216782d6a10350f0de7d43cf08857d",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/artifacts/ArtifactCard.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "429ec9a4953c75665de0324b4b0cf2bf884414c1a1fb3ae2485326784f9c96d7",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationCard.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "6cdf88a0e17dbe006043616387cfa50911db129938c9e84c0014c7d515b59629",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationsListPanel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "c982b4e91557f2e21046a2ceff5647699c5a39a6a97677664e2c1f42ae20d6e3",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/CronBuilder.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "3c8760808e775abdfc6a24a3b09a6dbe4883c8d08e489703e8525ee89884a8b1",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/browser/BrowserTabStrip.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "89b19f5e265bb08fe158f6288a0748ed0ab34f9b12f0ad9792642ba95409d301",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "80f13aa7d0249c8150ca4ab3022aed2f184b10a34534e26dd46ecc9e4d8208f5",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "bce072144bd4db31831bad21136d9e32f062d13b664c6c95649ad40b79e55403",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "8967de6e5390b12e7bfa8849a7ce86c81c14be61d20e8cb434591b1fbe242fa6",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "cb5ffccbfffae4568f831c443abde626a7fe2b8b2b247ac178987cb1b14410f8",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/access/BindingAllowListPopover.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "ed1507fb5b14dc6ff2731828d95d41262fe16bceaeffd5ba3a2d0be72e189ed4",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/access/BindingAllowListPopover.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "274957e3888255da3ded2ccf94e708b2eb14fc73e46a1dffea0d1d6d43cd32ab",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "8eaab71129808ca7bd8334e5befb9d73edcf7d5c49ac583dbbfc6720321ad60a",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "a5f211fa52bb49ffcf9f24dcd72986167a95583395a40992f32d0d0d277d383a",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "98cfdaa5ac1359e8a66c523198fd6ac59022e32d4034b35527fd2d7eba5af961",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "4067c750cc6d51026a03d2dd14820265e71ce601f433b44f8311884f966ed51a",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "31118028b829c19709cb1c2971b81ead53b0b75bfd6c8417b496ed20ba0d1f31",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "74018cf3ce48da6b17b082ab1e42f3bf6d8378d06625a48f961012892ec17423",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/projects/ProjectSelectMenu.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "788db0ec298a2bfb094b693ff2a6289a61994acbae354a194374bb8f2ddfae80",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/CompactSourceSelector.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "76d358e30f8bbb45b72ab1bd685d71e7ce6d072d11160237d924b47752e325d2",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/CompactWorkingDirectorySelector.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "1016fdaafab4d32b51c7d0e0472c6903617d14c004b7f459553caabc5c80ee4d",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/date-field.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "5484eff6890b8060b703f1e1fc8abc574603c0e47b9efd4a778ea3cee8cb1543",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/label-value-popover.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "858578b7382c8bbd692e20b85d5609c8a19dae4e94a7875cde43d40d1ec68aeb",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/label-value-popover.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "4a9d4b12a583931092b7e08165e5c1fb6959220cc3d859224a62a1802be96d78",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/PluginInfoPage.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "d4af420308adccd7795531f5e0e47a7613f45c1541b06a96e7e263d8cb99045f",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/PluginInfoPage.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "eb137f831bbcc147526f0e7a61b9e0746df32a6d0d4797ace14d6b0593cf6d86",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/demos/messaging/AllowListPreview.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "f49e89b6669101acac242f2cb8f1ce45b5d4c50d5b65d1cac821c4a899fc60f8",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/demos/messaging/MessagingTelegramReworkedPreview.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "6025e286097ce6ee93b98c9836aa83d4917d609508f38fe9b12790d0c7491d28",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "14b0553b221f0ed6d14ba57f17c57c4d585b8792bc2cf1245b6a532bd2bd4d1e",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "f0af1f7efed3005d7ce45f3c421f9439a3630f1956dfa0b12ec59fe62cf9884e",
+      "count": 2,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "9a42c857f57697bb0f0ad2a153032af6188bb06a70b221c654bd2805f4ec6bcc",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/edit-popover.tsx",
+      "rule": "jsx-a11y/no-static-element-interactions",
+      "message": "Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element.",
+      "fingerprint": "844ba86b23bbc06d3b1c618e2d8a773031783e5b4481130153de2c78d5504cf1",
+      "count": 1,
+      "owner": "Electron / a11y owner",
+      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/files-panel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "a9f360aeef545c9c9a1452afc7d2cde40c76cdacb2250fd86521823eeea2d357",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/files-panel.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "155cf94f16fe5e03b4a95fa7b18b27603cd90f7c9ef13cc6daf96745027af407",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/kanban.tsx",
+      "rule": "jsx-a11y/click-events-have-key-events",
+      "message": "Visible, non-interactive elements with click handlers must have at least one keyboard listener.",
+      "fingerprint": "ab068cfbeb206ef0acdbcb21dbd762fc477745ac619e7d09566462bd4132430c",
+      "count": 1,
+      "owner": "Electron / a11y owner",
+      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/kanban.tsx",
+      "rule": "jsx-a11y/no-static-element-interactions",
+      "message": "Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element.",
+      "fingerprint": "373a9c4cb11e2bcbcb963fe863917aa2d7414c7e91d68e4c82de2680e5a11cfc",
+      "count": 1,
+      "owner": "Electron / a11y owner",
+      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/kanban.tsx",
+      "rule": "theme-contracts/shadows",
+      "message": "disallowedClass",
+      "fingerprint": "a9dae7e27ea977d04708c4ab88f0016b848d47056992218f844806e68632bf79",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/planner.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "ee328a7623862713ad10dec7da92a8da87728b30d28b6bd678ae8935da4495c4",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/project-colors.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "25ce3b439229ab6737d76a654153d45d15283851261f61611d9a52e640a4878a",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "320073e04323439a1e2c678b67f990defd7d943465c3ba85e3369eabf1ae0f3b",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "9e2f743c8a20a305eb89dff2021ba94a84584050ef98e6c2004def3ceed56723",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "79c2c8e269b1ef6a62f0b3661ab4549fe071abaf26e9e789aed1ef0b785af9cb",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "179bc88e015c5576f45ec3aa87f9423246d4016b2a91e3ca74d0b9241a8bf0c7",
+      "count": 2,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "58f33284e71401b008160e92fec584b023250afc0b37ad2bf3a7c98344813b31",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "packages/ui/src/components/overlay/ZoomControls.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "1159be827fafa808eb482e95dc9fb3c092a15f880a8ab2aac686092b7186f273",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "packages/ui/src/components/overlay/ZoomControls.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "b733183283762c0bb79181532ffcdd67b15d0d252b6c3733551949cdd4b536c1",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "packages/ui/src/components/ui/BrowserEmptyStateCard.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "52664a7bf25cd38358bf1965c6db9ee3171203412534adda29496cbccdc7660a",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "packages/ui/src/components/ui/IslandFollowUpContentView.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "93044df40da332820ed09a8d59b9426b5416a64ec128776bb6ab3fcc6e0fd65f",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",

@@ -116,7 +116,7 @@ export function BindingAllowListPopover({ access, workspaceOwners, onChange }: P
                           : [...access.allowedSenderIds, owner.userId]
                         onChange({ mode: 'allow-list', allowedSenderIds: next })
                       }}
-                      className="flex w-full items-center gap-2 rounded px-1.5 py-1 text-left transition-colors hover:bg-foreground/[0.05]"
+                      className="flex w-full items-center gap-2 rounded px-1.5 py-1 text-left transition-colors hover:bg-foreground/[0.04]"
                     >
                       <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-border/70">
                         {checked && <Check className="h-3 w-3" />}
@@ -154,7 +154,7 @@ function ModeRow({
     <button
       type="button"
       onClick={onSelect}
-      className="flex w-full items-start gap-3 px-3 py-2 text-left transition-colors hover:bg-foreground/[0.05]"
+      className="flex w-full items-start gap-3 px-3 py-2 text-left transition-colors hover:bg-foreground/[0.04]"
     >
       <Icon
         className="mt-0.5 h-4 w-4 shrink-0 text-text-secondary"

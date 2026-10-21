@@ -128,7 +128,7 @@ export function CompactWorkingDirectorySelector({
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
                   placeholder={t('chat.filterFolders')}
-                  className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-body outline-none focus:bg-foreground/[0.07] transition-colors"
+                  className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-body outline-none focus:bg-foreground/[0.06] transition-colors"
                 />
               </div>
             </div>
@@ -194,7 +194,7 @@ export function CompactWorkingDirectorySelector({
           </div>
 
           {/* Bottom actions — full-width tap targets */}
-          <div className="px-2 pt-2 pb-4 border-t border-border/30 flex flex-col gap-1">
+          <div className="px-2 pt-2 pb-4 border-t border-border/50 flex flex-col gap-1">
             <button
               type="button"
               onClick={handleChooseFolder}

@@ -154,11 +154,11 @@ export function DecisionDetail({ item, onOpenChat, className }: {
         <h4 className="mb-2 text-label font-semibold">{t('trajectory.decisions.observations')}</h4>
         {item.observations.length > 0
           ? (
-            <div className="overflow-hidden rounded-lg border border-border/55 bg-background/70">
+            <div className="overflow-hidden rounded-lg border border-border/50 bg-background/70">
               {item.observations.map((observation, index) => (
                 <div
                   key={`${observation.result}-${index}`}
-                  className="flex min-h-8 items-center gap-2 border-b border-border/45 px-3 text-meta last:border-b-0"
+                  className="flex min-h-8 items-center gap-2 border-b border-border/50 px-3 text-meta last:border-b-0"
                 >
                   <CornerDownRight aria-hidden className="size-3 flex-none text-text-secondary" />
                   <span className="min-w-0">{observationLabel(observation.result, t)}</span>
@@ -184,7 +184,7 @@ export function DecisionDetail({ item, onOpenChat, className }: {
             const costSource = attempt.costSource ?? (cost === null ? 'unknown' : 'not_recorded')
             const missingCost = attempt.costUnavailableReason ?? (attempt.record?.error ? 'request_failed' : item.legacy ? 'legacy_not_recorded' : 'not_reported')
             return (
-              <div key={attempt.id} className="rounded-xl border border-border/55 bg-background/70 p-3">
+              <div key={attempt.id} className="rounded-xl border border-border/50 bg-background/70 p-3">
                 <div className="flex min-w-0 items-center gap-2">
                   <span className={cn(
                     'inline-flex h-control-2xs flex-none items-center rounded-shape-sm px-[5px] text-micro font-semibold tracking-[0.035em]',

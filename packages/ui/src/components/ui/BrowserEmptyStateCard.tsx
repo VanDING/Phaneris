@@ -30,7 +30,7 @@ export function BrowserEmptyStateCard({
       type="button"
       title={sample.full}
       onClick={() => onPromptSelect?.(sample)}
-      className="motion-interactive flex min-h-8 w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left transition-colors hover:bg-foreground/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="motion-interactive flex min-h-8 w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left transition-colors hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <span className="w-4 shrink-0 text-meta text-muted-foreground tabular-nums">{index + 1}.</span>
       <span className="text-label text-foreground/80">{sample.short}</span>
@@ -38,8 +38,8 @@ export function BrowserEmptyStateCard({
   )
   return (
     <div className="w-full h-full flex items-center justify-center p-8">
-      <div className="w-full max-w-[700px] bg-background shadow-minimal rounded-shape-lg overflow-hidden border border-border/30">
-        <div className="px-4 py-3 border-b border-border/30 flex items-center bg-muted/20 select-none">
+      <div className="w-full max-w-[700px] bg-background shadow-minimal rounded-shape-lg overflow-hidden border border-border/50">
+        <div className="px-4 py-3 border-b border-border/50 flex items-center bg-muted/20 select-none">
           <h3 className="text-body font-medium text-foreground tracking-tight">
             {title}
           </h3>
@@ -64,7 +64,7 @@ export function BrowserEmptyStateCard({
         </div>
 
         {showSafetyHint && (
-          <div className="px-4 py-2.5 border-t border-border/30 flex items-center gap-2 bg-muted/20 text-body text-text-secondary">
+          <div className="px-4 py-2.5 border-t border-border/50 flex items-center gap-2 bg-muted/20 text-body text-text-secondary">
             <p>
               {t('browser.safetyHint')}
             </p>

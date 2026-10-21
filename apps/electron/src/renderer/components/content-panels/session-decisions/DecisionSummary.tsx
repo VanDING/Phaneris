@@ -3,7 +3,7 @@
  *
  * One line of scope, four numbers, and a link into the Decisions tab. It
  * borrows the Overview's own section and card shapes (`h3` label tier,
- * font-semibold` + `mb-2` header, `rounded-xl border border-border/55
+ * font-semibold` + `mb-2` header, `rounded-xl border border-border/50
  * bg-background/70` card) so it reads as one more Overview block rather than a
  * widget bolted onto it.
  *
@@ -56,7 +56,7 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
   const report = data.report
   return (
     <div className="space-y-4">
-    {report?.reliability && <details data-runtime-reliability className="rounded-xl border border-border/55 px-3 py-2 text-meta">
+    {report?.reliability && <details data-runtime-reliability className="rounded-xl border border-border/50 px-3 py-2 text-meta">
       <summary className="cursor-pointer font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{t('trajectory.reliability.title')}</summary>
       {report.reliability.state === 'unavailable' ? <p className="mt-2 text-text-secondary">{t('trajectory.reliability.unavailable')}</p> : <div className="mt-2 space-y-2">
         <p className="text-text-secondary">{t('trajectory.reliability.scope')}</p>
@@ -99,7 +99,7 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
           <button
             type="button"
             onClick={onOpen}
-            className="craft-control flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-border/55 bg-background/70 px-3 py-3 text-left transition-colors hover:bg-foreground/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="craft-control flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-border/50 bg-background/70 px-3 py-3 text-left transition-colors hover:bg-foreground/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <SummaryCells totals={report.totals} />
             <span className="craft-text-caption w-full min-w-0 text-text-secondary">

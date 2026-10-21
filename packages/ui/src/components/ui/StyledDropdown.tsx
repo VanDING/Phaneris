@@ -156,7 +156,7 @@ export const StyledDropdownMenuItem = React.forwardRef<
       '[&_svg]:pointer-events-none [&_svg]:shrink-0',
       'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       // styled additions
-      'pr-4 rounded-sm hover:bg-foreground/[0.03] focus:bg-foreground/[0.03]',
+      'pr-4 rounded-sm hover:bg-foreground/[0.04] focus:bg-foreground/[0.04]',
       '[&>svg]:h-3.5 [&>svg]:w-3.5 [&>svg]:shrink-0',
       variant === 'destructive' && 'text-destructive focus:text-destructive hover:text-destructive [&_svg]:!text-destructive',
       className,

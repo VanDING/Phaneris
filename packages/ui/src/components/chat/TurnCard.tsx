@@ -2548,7 +2548,7 @@ export function ResponseCard({
           {isPlan && (
             <div
               className={cn(
-                "px-4 py-2 border-b border-border/30 flex items-center gap-2 bg-success/5 select-none",
+                "px-4 py-2 border-b border-border/50 flex items-center gap-2 bg-success/5 select-none",
                 SIZE_CONFIG.fontSize
               )}
             >
@@ -2596,7 +2596,7 @@ export function ResponseCard({
               Compact mode falls through to the slim Accept-Plan-only footer below. */}
           {!compactMode && (
             <div className={cn(
-              "pl-4 pr-2.5 py-2 border-t border-border/30 flex items-center justify-between bg-muted/20",
+              "pl-4 pr-2.5 py-2 border-t border-border/50 flex items-center justify-between bg-muted/20",
               SIZE_CONFIG.fontSize
             )}>
               {/* Left side - Copy, View as Markdown, Annotation hint */}
@@ -2668,7 +2668,7 @@ export function ResponseCard({
           {compactMode && isPlan && showAcceptPlan && isLastResponse && onAccept && onAcceptWithCompact && (
             <div
               className={cn(
-                "pl-3 pr-2 py-1.5 border-t border-border/30 flex items-center justify-end bg-muted/20",
+                "pl-3 pr-2 py-1.5 border-t border-border/50 flex items-center justify-end bg-muted/20",
                 SIZE_CONFIG.fontSize
               )}
             >
@@ -2746,7 +2746,7 @@ export function ResponseCard({
         {/* Desktop streaming footer; compact mode renders nothing here
             (the Accept-Plan footer only applies to completed plans). */}
         {!compactMode && (
-          <div className={cn("px-4 py-2 border-t border-border/30 flex items-center bg-muted/20", SIZE_CONFIG.fontSize)}>
+          <div className={cn("px-4 py-2 border-t border-border/50 flex items-center bg-muted/20", SIZE_CONFIG.fontSize)}>
             <div className="flex items-center gap-2 text-muted-foreground">
               <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
               <span>Streaming...</span>

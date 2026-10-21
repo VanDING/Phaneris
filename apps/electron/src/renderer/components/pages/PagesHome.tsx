@@ -144,7 +144,7 @@ export function PagesHome() {
           type="button"
           onClick={handleCreatePage}
           disabled={!activeWorkspaceId}
-          className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
+          className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.04] disabled:opacity-50"
         >
           <Plus className="h-3.5 w-3.5" /> {t('pages.newPage')}
         </button>
@@ -159,13 +159,13 @@ export function PagesHome() {
           >
             <button
               onClick={handleAskAgent}
-              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
+              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.04]"
             >
               <Sparkles className="h-3.5 w-3.5" /> {t('pages.askAgent')}
             </button>
             <button
               onClick={handleCreatePage}
-              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.05]"
+              className="inline-flex h-7 items-center gap-1.5 rounded-shape-lg bg-foreground/[0.02] px-3 text-meta font-medium shadow-minimal transition-colors hover:bg-foreground/[0.04]"
             >
               <Plus className="h-3.5 w-3.5" /> {t('pages.createBlank')}
             </button>

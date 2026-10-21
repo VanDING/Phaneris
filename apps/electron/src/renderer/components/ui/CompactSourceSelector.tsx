@@ -65,7 +65,7 @@ export function CompactSourceSelector({
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder={t('common.search')}
-                className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-body outline-none focus:bg-foreground/[0.07] transition-colors"
+                className="w-full h-11 pl-10 pr-3 rounded-shape-xl bg-foreground/5 text-body outline-none focus:bg-foreground/[0.06] transition-colors"
               />
             </div>
           </div>

@@ -233,7 +233,7 @@ export function SurfaceSlot({
         {isConversationGroup && !isFocusedPanel && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-component-header bg-foreground/[0.018]"
+            className="pointer-events-none absolute inset-0 z-component-header bg-foreground/[0.02]"
           />
         )}
         {isConversationGroup && isFocusedPanel && (

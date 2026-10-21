@@ -796,7 +796,7 @@ export function SessionList({
             else if (currentFilter?.kind === 'label') params.label = currentFilter.labelId
             navigate(routes.action.newSession(Object.keys(params).length > 0 ? params : undefined))
           }}
-          className="inline-flex items-center h-7 px-3 text-meta font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors"
+          className="inline-flex items-center h-7 px-3 text-meta font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.04] transition-colors"
         >
           {t("session.newSession")}
         </button>

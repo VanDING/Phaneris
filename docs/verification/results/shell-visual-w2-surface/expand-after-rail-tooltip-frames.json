@@ -1,0 +1,1949 @@
+[
+  {
+    "time": 0.10000002384185791,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 0.5,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 33,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 38.199999928474426,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 50.015625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 51.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 53.109375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.90625,
+      "y": 35.75,
+      "width": 28.390625,
+      "height": 28,
+      "centerX": 24.1015625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.90625,
+      "y": 0,
+      "width": 28.390625,
+      "height": 28,
+      "centerX": 24.1015625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0.685341,
+    "profile": {
+      "x": 9.90625,
+      "y": 889.296875,
+      "width": 27,
+      "height": 28,
+      "centerX": 23.40625,
+      "centerY": 903.296875
+    },
+    "settings": {
+      "x": 10.3125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.3125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 66.10000002384186,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 71.75,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.53125,
+      "y": 35.75,
+      "width": 34.453125,
+      "height": 28,
+      "centerX": 26.7578125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.53125,
+      "y": 0,
+      "width": 34.453125,
+      "height": 28,
+      "centerX": 26.7578125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0.903573,
+    "profile": {
+      "x": 9.53125,
+      "y": 895,
+      "width": 27,
+      "height": 28,
+      "centerX": 23.03125,
+      "centerY": 909
+    },
+    "settings": {
+      "x": 16.015625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 30.015625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 84.10000002384186,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 103.140625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.109375,
+      "y": 35.75,
+      "width": 54.171875,
+      "height": 28,
+      "centerX": 36.1953125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.109375,
+      "y": 0,
+      "width": 54.171875,
+      "height": 28,
+      "centerX": 36.1953125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0.97186,
+    "profile": {
+      "x": 9.109375,
+      "y": 901.28125,
+      "width": 40,
+      "height": 28,
+      "centerX": 29.109375,
+      "centerY": 915.28125
+    },
+    "settings": {
+      "x": 35.296875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 49.296875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 100.69999992847443,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 130.390625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.828125,
+      "y": 35.75,
+      "width": 78.53125,
+      "height": 28,
+      "centerX": 48.09375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.828125,
+      "y": 0,
+      "width": 78.53125,
+      "height": 28,
+      "centerX": 48.09375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0.993803,
+    "profile": {
+      "x": 8.828125,
+      "y": 905.5625,
+      "width": 59.8125,
+      "height": 28,
+      "centerX": 38.734375,
+      "centerY": 919.5625
+    },
+    "settings": {
+      "x": 59.375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 73.375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 116.89999997615814,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 147.734375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.625,
+      "y": 35.75,
+      "width": 99.0625,
+      "height": 28,
+      "centerX": 58.15625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.625,
+      "y": 0,
+      "width": 99.0625,
+      "height": 28,
+      "centerX": 58.15625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0.999399,
+    "profile": {
+      "x": 8.625,
+      "y": 908.5625,
+      "width": 77.140625,
+      "height": 28,
+      "centerX": 47.1953125,
+      "centerY": 922.5625
+    },
+    "settings": {
+      "x": 79.71875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 93.71875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 133.60000002384186,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 159.703125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.46875,
+      "y": 35.75,
+      "width": 115.828125,
+      "height": 28,
+      "centerX": 66.3828125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.46875,
+      "y": 0,
+      "width": 115.828125,
+      "height": 28,
+      "centerX": 66.3828125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.46875,
+      "y": 910.78125,
+      "width": 91.53125,
+      "height": 28,
+      "centerX": 54.234375,
+      "centerY": 924.78125
+    },
+    "settings": {
+      "x": 96.328125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 110.328125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 150.29999995231628,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 169.46875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.359375,
+      "y": 35.75,
+      "width": 130.53125,
+      "height": 28,
+      "centerX": 73.625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.359375,
+      "y": 0,
+      "width": 130.53125,
+      "height": 28,
+      "centerX": 73.625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.359375,
+      "y": 912.53125,
+      "width": 104.375,
+      "height": 28,
+      "centerX": 60.546875,
+      "centerY": 926.53125
+    },
+    "settings": {
+      "x": 110.90625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 124.90625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 166.89999997615814,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 176.609375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.265625,
+      "y": 35.75,
+      "width": 142.390625,
+      "height": 28,
+      "centerX": 79.4609375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.265625,
+      "y": 0,
+      "width": 142.390625,
+      "height": 28,
+      "centerX": 79.4609375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.265625,
+      "y": 913.890625,
+      "width": 114.78125,
+      "height": 28,
+      "centerX": 65.65625,
+      "centerY": 927.890625
+    },
+    "settings": {
+      "x": 122.6875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 136.6875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 183.29999995231628,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 182.734375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.1875,
+      "y": 35.75,
+      "width": 152.640625,
+      "height": 28,
+      "centerX": 84.5078125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.1875,
+      "y": 0,
+      "width": 152.640625,
+      "height": 28,
+      "centerX": 84.5078125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.1875,
+      "y": 914.96875,
+      "width": 123.890625,
+      "height": 28,
+      "centerX": 70.1328125,
+      "centerY": 928.96875
+    },
+    "settings": {
+      "x": 132.859375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 146.859375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 200.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 187.265625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.140625,
+      "y": 35.75,
+      "width": 160.78125,
+      "height": 28,
+      "centerX": 88.53125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.140625,
+      "y": 0,
+      "width": 160.78125,
+      "height": 28,
+      "centerX": 88.53125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.140625,
+      "y": 915.8125,
+      "width": 131.125,
+      "height": 28,
+      "centerX": 73.703125,
+      "centerY": 929.8125
+    },
+    "settings": {
+      "x": 140.9375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 154.9375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 218,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 191.140625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.09375,
+      "y": 35.75,
+      "width": 167.71875,
+      "height": 28,
+      "centerX": 91.953125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.09375,
+      "y": 0,
+      "width": 167.71875,
+      "height": 28,
+      "centerX": 91.953125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.09375,
+      "y": 916.5,
+      "width": 137.328125,
+      "height": 28,
+      "centerX": 76.7578125,
+      "centerY": 930.5
+    },
+    "settings": {
+      "x": 147.828125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 161.828125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 234.29999995231628,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 194.28125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.0625,
+      "y": 35.75,
+      "width": 173.3125,
+      "height": 28,
+      "centerX": 94.71875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.0625,
+      "y": 0,
+      "width": 173.3125,
+      "height": 28,
+      "centerX": 94.71875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.0625,
+      "y": 917.015625,
+      "width": 142.375,
+      "height": 28,
+      "centerX": 79.25,
+      "centerY": 931.015625
+    },
+    "settings": {
+      "x": 153.40625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 167.40625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 251.39999997615814,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 196.359375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.03125,
+      "y": 35.75,
+      "width": 177.34375,
+      "height": 28,
+      "centerX": 96.703125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.03125,
+      "y": 0,
+      "width": 177.34375,
+      "height": 28,
+      "centerX": 96.703125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.03125,
+      "y": 917.421875,
+      "width": 145.96875,
+      "height": 28,
+      "centerX": 81.015625,
+      "centerY": 931.421875
+    },
+    "settings": {
+      "x": 157.390625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 171.390625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 266.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 198.03125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.015625,
+      "y": 35.75,
+      "width": 180.4375,
+      "height": 28,
+      "centerX": 98.234375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.015625,
+      "y": 0,
+      "width": 180.4375,
+      "height": 28,
+      "centerX": 98.234375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.015625,
+      "y": 917.703125,
+      "width": 148.765625,
+      "height": 28,
+      "centerX": 82.3984375,
+      "centerY": 931.703125
+    },
+    "settings": {
+      "x": 160.46875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 174.46875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 284.1999999284744,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 199.03125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 182.390625,
+      "height": 28,
+      "centerX": 99.1953125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 182.390625,
+      "height": 28,
+      "centerX": 99.1953125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 917.890625,
+      "width": 150.515625,
+      "height": 28,
+      "centerX": 83.2578125,
+      "centerY": 931.890625
+    },
+    "settings": {
+      "x": 162.421875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 176.421875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 300.1999999284744,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 199.75,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 183.625,
+      "height": 28,
+      "centerX": 99.8125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 183.625,
+      "height": 28,
+      "centerX": 99.8125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 917.984375,
+      "width": 151.640625,
+      "height": 28,
+      "centerX": 83.8203125,
+      "centerY": 931.984375
+    },
+    "settings": {
+      "x": 163.640625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 177.640625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 319,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 199.984375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 183.984375,
+      "height": 28,
+      "centerX": 99.9921875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 183.984375,
+      "height": 28,
+      "centerX": 99.9921875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 151.984375,
+      "height": 28,
+      "centerX": 83.9921875,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 163.984375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 177.984375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 334.10000002384186,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 348.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 365.1999999284744,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 381.60000002384186,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 398.1999999284744,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 414.89999997615814,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 431.60000002384186,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 448.39999997615814,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 465.1999999284744,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 482.10000002384186,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 498.2999999523163,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 515.1000000238419,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  }
+]

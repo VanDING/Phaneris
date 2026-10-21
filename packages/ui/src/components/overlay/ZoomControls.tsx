@@ -79,7 +79,7 @@ function ZoomDropdown({
           <button
             type="button"
             onClick={() => { onZoomToFit(); setIsOpen(false) }}
-            className="flex items-center gap-2 w-full px-2.5 py-1.5 text-left text-body rounded-shape-sm hover:bg-foreground/[0.05] transition-colors"
+            className="flex items-center gap-2 w-full px-2.5 py-1.5 text-left text-body rounded-shape-sm hover:bg-foreground/[0.04] transition-colors"
           >
             {t('overlay.zoomToFit')}
           </button>
@@ -89,7 +89,7 @@ function ZoomDropdown({
               key={preset}
               type="button"
               onClick={() => { onZoomToPreset(preset); setIsOpen(false) }}
-              className="flex items-center gap-2 w-full px-2.5 py-1.5 text-left text-body rounded-shape-sm hover:bg-foreground/[0.05] transition-colors"
+              className="flex items-center gap-2 w-full px-2.5 py-1.5 text-left text-body rounded-shape-sm hover:bg-foreground/[0.04] transition-colors"
             >
               <span className="w-3.5 h-3.5 flex items-center justify-center shrink-0">
                 {activePreset === preset && <Check className="w-3.5 h-3.5" />}

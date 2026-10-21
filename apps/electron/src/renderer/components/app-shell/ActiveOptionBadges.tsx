@@ -597,7 +597,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
           showFilter
         />
         {!guardedAvailable && <button type="button" onClick={() => { setOpen(false); openDecisionModelSettings() }}
-          className="craft-control flex w-full items-start gap-3 border-t border-border/60 px-3 py-3 text-left hover:bg-foreground/3">
+          className="craft-control flex w-full items-start gap-3 border-t border-border/70 px-3 py-3 text-left hover:bg-foreground/3">
           <PermissionModeIcon mode="guarded" className="size-4 mt-0.5 text-muted-foreground" />
           <span><span className="block text-body">{t("mode.guarded")}</span><span className="block text-meta text-muted-foreground">{t("settings.ai.guarded.configureHint")}</span></span>
         </button>}

@@ -472,7 +472,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
 
   const renderRows = (rows: Record<string, unknown>[]) =>
     rows.map((row, i) => (
-      <tr key={i} className="border-b border-foreground/[0.03] last:border-0 hover:bg-foreground/[0.015] transition-colors">
+      <tr key={i} className="border-b border-foreground/[0.03] last:border-0 hover:bg-foreground/[0.02] transition-colors">
         {parsed.columns.map((col) => (
           <td key={col.key} className={cn('py-2 px-3 whitespace-nowrap', colAlign(col.type, col.align))}>
             {formatCell(row[col.key], col.type)}
@@ -515,7 +515,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
                 className="cursor-pointer select-none"
                 onClick={() => toggleCollapsed(group.value)}
               >
-                <td colSpan={parsed.columns.length} className="py-2 px-3 bg-foreground/[0.03] border-b border-foreground/[0.06]">
+                <td colSpan={parsed.columns.length} className="py-2 px-3 bg-foreground/[0.04] border-b border-foreground/[0.06]">
                   <span className="inline-flex items-center gap-2 text-label font-medium text-muted-foreground">
                     <ChevronRight className={cn('w-3 h-3 transition-transform', !collapsedGroups.has(group.value) && 'rotate-90')} />
                     {groupColumnLabel}: {group.value}

@@ -179,7 +179,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                     <button
                       key={skill.slug}
                       onClick={() => navigate(routes.view.skills(skill.slug))}
-                      className="w-full text-left px-3 py-2 hover:bg-foreground/[0.03] transition-colors"
+                      className="w-full text-left px-3 py-2 hover:bg-foreground/[0.04] transition-colors"
                     >
                       <div className="text-body font-medium">{skill.name}</div>
                       <div className="text-meta text-muted-foreground">{skill.description}</div>
@@ -202,7 +202,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                     <button
                       key={source.slug}
                       onClick={() => navigate(routes.view.sources({ sourceSlug: source.slug }))}
-                      className="w-full text-left px-3 py-2 hover:bg-foreground/[0.03] transition-colors flex items-center justify-between gap-3"
+                      className="w-full text-left px-3 py-2 hover:bg-foreground/[0.04] transition-colors flex items-center justify-between gap-3"
                     >
                       <span className="text-body font-medium">{source.slug}</span>
                       <span className="text-meta text-muted-foreground text-right">{source.type.toUpperCase()} · {t(`pluginsList.availability.${source.availability ?? 'configured'}`)}</span>

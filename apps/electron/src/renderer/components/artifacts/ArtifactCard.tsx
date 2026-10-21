@@ -51,7 +51,7 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
         <button
           type="button"
           onClick={onOpen}
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-lg px-1 py-1.5 text-left hover:bg-foreground/[0.025]"
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-lg px-1 py-1.5 text-left hover:bg-foreground/[0.02]"
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <ArtifactIcon kind={event.kind} />
@@ -88,7 +88,7 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
       </div>
 
       {expanded && previewPath && (
-        <div className="mt-2 overflow-hidden rounded-lg bg-foreground/[0.025]">
+        <div className="mt-2 overflow-hidden rounded-lg bg-foreground/[0.02]">
           {event.kind === 'image' ? (
             <MarkdownImageBlock
               code={previewSpec}

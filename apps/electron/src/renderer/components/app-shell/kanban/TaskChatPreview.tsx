@@ -76,7 +76,7 @@ export function TaskChatPreview({
 
           {/* Spawned subtasks panel */}
           {subtasks.length > 0 && (
-            <div className="rounded-lg border border-border/60 bg-surface-raised p-3">
+            <div className="rounded-lg border border-border/70 bg-surface-raised p-3">
               <div className="mb-1 text-meta font-medium uppercase tracking-wider text-text-secondary">
                 Spawned subtasks
               </div>
@@ -97,7 +97,7 @@ export function TaskChatPreview({
 
       {/* Input bar (presentational) */}
       <div className="border-t border-border/50 px-4 py-3">
-        <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-xl border border-border/60 bg-surface-raised px-3 py-2">
+        <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-xl border border-border/70 bg-surface-raised px-3 py-2">
           <ModelChip model={model} className="shrink-0" />
           <span className="flex-1 truncate text-body text-text-secondary">Reply to this task…</span>
           <span

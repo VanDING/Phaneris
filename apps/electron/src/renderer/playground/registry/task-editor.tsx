@@ -154,7 +154,7 @@ const BTN_VARIANT: Record<BtnVariant, string> = {
   // Solid indigo = the single commit action ("Prepare task").
   primary: 'bg-indigo-500 text-white hover:bg-indigo-600',
   // Neutral outline = quiet secondary (Save draft, Add subtask).
-  secondary: 'border border-border bg-card text-foreground hover:bg-foreground/[0.03]',
+  secondary: 'border border-border bg-card text-foreground hover:bg-foreground/[0.04]',
   // Borderless = lowest emphasis (Board back link).
   ghost: 'text-foreground/60 hover:bg-foreground/[0.06] hover:text-foreground',
 }
@@ -195,7 +195,7 @@ function SelectButton({
       type="button"
       className={cn(
         'inline-flex items-center gap-1.5 rounded-lg border border-border bg-background font-medium text-foreground',
-        'transition-colors hover:bg-foreground/[0.03] data-[state=open]:bg-foreground/[0.03]',
+        'transition-colors hover:bg-foreground/[0.04] data-[state=open]:bg-foreground/[0.04]',
         size === 'sm' ? 'h-7 px-2 text-[11.5px]' : 'h-8 px-2.5 text-[12.5px]',
         className
       )}
@@ -259,7 +259,7 @@ function SubtaskCard({
 }) {
   const depTitle = subtask.dependsOn ? earlier.find(s => s.id === subtask.dependsOn)?.title : null
   return (
-    <div className="group rounded-[10px] border border-border/70 bg-foreground/[0.015] p-3">
+    <div className="group rounded-[10px] border border-border/70 bg-foreground/[0.02] p-3">
       <div className="flex items-start gap-2">
         {/* Drag handle on the left edge — the conventional reorder affordance. */}
         <GripVertical
@@ -401,7 +401,7 @@ function TaskEditorPreview({ mode: initialMode = 'generate' }: { mode?: Mode }) 
           <div className="text-[15px] font-bold">Task definition</div>
 
           {/* mode toggle */}
-          <div className="inline-flex w-fit rounded-[9px] bg-foreground/[0.05] p-0.5">
+          <div className="inline-flex w-fit rounded-[9px] bg-foreground/[0.04] p-0.5">
             {(['generate', 'manual'] as Mode[]).map(m => (
               <button
                 key={m}
@@ -539,7 +539,7 @@ function TaskEditorPreview({ mode: initialMode = 'generate' }: { mode?: Mode }) 
                 )}
               </div>
 
-              <div className="shrink-0 border-t border-border/60 px-4 py-2.5 text-[10.5px] text-foreground/40">
+              <div className="shrink-0 border-t border-border/70 px-4 py-2.5 text-[10.5px] text-foreground/40">
                 Reorder by drag · each subtask spawns a child session (pending) · models route per-subtask
               </div>
             </>
@@ -569,7 +569,7 @@ function TaskEditorPreview({ mode: initialMode = 'generate' }: { mode?: Mode }) 
                 </div>
               </div>
 
-              <div className="shrink-0 border-t border-border/60 px-4 py-2.5 text-[10.5px] text-foreground/40">
+              <div className="shrink-0 border-t border-border/70 px-4 py-2.5 text-[10.5px] text-foreground/40">
                 Drafted on Prepare · each becomes a pending child session · models route per-subtask
               </div>
             </>
@@ -590,7 +590,7 @@ function TaskEditorPreview({ mode: initialMode = 'generate' }: { mode?: Mode }) 
             strokeWidth={2}
           />
           <span className="font-mono text-[13px] font-bold">task.yaml</span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-foreground/[0.05] px-2 py-0.5 text-[11px] font-medium text-foreground/55">
+          <span className="inline-flex items-center gap-1 rounded-full bg-foreground/[0.04] px-2 py-0.5 text-[11px] font-medium text-foreground/55">
             <Hash className="h-3 w-3" strokeWidth={2} />
             workspace/tasks/{slug}.yaml
           </span>
@@ -600,7 +600,7 @@ function TaskEditorPreview({ mode: initialMode = 'generate' }: { mode?: Mode }) 
         </button>
         {yamlOpen && (
           <div className="px-4 pb-4">
-            <div className="max-h-[210px] overflow-auto rounded-lg border border-border/60 bg-foreground/[0.025] p-3">
+            <div className="max-h-[210px] overflow-auto rounded-lg border border-border/70 bg-foreground/[0.02] p-3">
               <div className="font-mono text-[11.5px] leading-[1.55]">
                 {yaml.split('\n').map((ln, i) => (
                   <YamlLine key={i} line={ln} />

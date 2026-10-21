@@ -326,7 +326,7 @@ export function SharePageDialog({
                 )}
 
                 {/* Content revision */}
-                <div className="flex items-center justify-between gap-3 rounded-md border border-border/60 p-3">
+                <div className="flex items-center justify-between gap-3 rounded-md border border-border/70 p-3">
                   <span className="text-meta text-text-secondary">
                     {contentDrifted ? t('pages.share.contentUpdateAvailable') : t('pages.share.contentUpToDate')}
                   </span>
@@ -343,7 +343,7 @@ export function SharePageDialog({
                 </div>
 
                 {/* Password management */}
-                <div className="flex flex-col gap-2 rounded-md border border-border/60 p-3">
+                <div className="flex flex-col gap-2 rounded-md border border-border/70 p-3">
                   <span className="text-body">{t('pages.share.passwordLabel')}</span>
                   <div className="flex items-center gap-2">
                     <Input
@@ -451,7 +451,7 @@ function ScriptGrantsBlock({
         {grants.map(grant => (
           <li
             key={grant.id}
-            className="flex items-center gap-2 rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5"
+            className="flex items-center gap-2 rounded-md border border-border/70 bg-background/60 px-2.5 py-1.5"
           >
             <span className="min-w-0 flex-1 break-words text-meta font-medium">
               {describeGrantAction(grant.action, t)}

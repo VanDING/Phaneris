@@ -235,7 +235,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
       <table className="w-max min-w-full text-body">
         {/* Column letter headers */}
         <thead>
-          <tr className="border-b border-foreground/[0.08] bg-foreground/[0.03]">
+          <tr className="border-b border-foreground/[0.08] bg-foreground/[0.04]">
             <th className="text-center py-1 px-2 font-normal text-text-secondary w-10 border-r border-foreground/[0.06] text-meta" />
             {colLetters.map((letter) => (
               <th key={letter} className="text-center py-1 px-3 font-normal text-text-secondary border-r border-foreground/[0.06] last:border-0 text-meta">{letter}</th>
@@ -251,7 +251,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
         </thead>
         <tbody>
           {parsed.rows.map((row, i) => (
-            <tr key={i} className="border-b border-foreground/[0.03] last:border-0 hover:bg-foreground/[0.015] transition-colors">
+            <tr key={i} className="border-b border-foreground/[0.03] last:border-0 hover:bg-foreground/[0.02] transition-colors">
               <td className="text-center py-1.5 px-2 text-text-secondary border-r border-foreground/[0.06] text-meta font-mono">{i + 2}</td>
               {parsed.columns.map((col) => {
                 const val = row[col.key]

@@ -171,7 +171,7 @@ export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {
   return (
     <div className="flex h-full min-h-0 flex-col" data-testid="artifact-workbench">
       <PanelHeader title={artifact.title} centerTitleInPanel headingLevel={2} />
-      <div className="flex flex-wrap items-center gap-2 border-b border-border/60 px-3 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border/70 px-3 py-2">
         <span className="rounded-full bg-primary/10 px-2 py-0.5 text-meta font-semibold text-primary">
           {t(`artifact.status.${artifact.status}`)}
         </span>

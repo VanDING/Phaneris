@@ -21,7 +21,7 @@ export function TrajectoryPromptView({ prompts }: TrajectoryPromptViewProps) {
   const unchanged = previous !== undefined && previous === current
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-foreground/[0.012]">
+    <div className="flex h-full min-h-0 flex-col bg-foreground/[0.02]">
       <div className="flex h-10 shrink-0 items-center gap-1 overflow-x-auto border-b border-border/50 bg-background/75 px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {sequences.map(seq => (
           <button
@@ -29,7 +29,7 @@ export function TrajectoryPromptView({ prompts }: TrajectoryPromptViewProps) {
             type="button"
             aria-pressed={seq === effectiveSeq}
             onClick={() => setSelectedSeq(seq)}
-            className={`craft-control h-7 shrink-0 rounded-md px-2 text-meta outline-none focus-visible:ring-2 focus-visible:ring-ring ${seq === effectiveSeq ? 'border border-border/60 bg-background text-foreground shadow-minimal' : 'text-text-secondary hover:bg-foreground/[0.035]'}`}
+            className={`craft-control h-7 shrink-0 rounded-md px-2 text-meta outline-none focus-visible:ring-2 focus-visible:ring-ring ${seq === effectiveSeq ? 'border border-border/70 bg-background text-foreground shadow-minimal' : 'text-text-secondary hover:bg-foreground/[0.04]'}`}
           >
             {t('trajectory.prompt.request', { seq })}
           </button>

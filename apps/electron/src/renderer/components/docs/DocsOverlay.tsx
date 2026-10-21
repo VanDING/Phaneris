@@ -125,7 +125,7 @@ export function DocsOverlay() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('docs.searchPlaceholder')}
             aria-label={t('docs.searchPlaceholder')}
-            className="craft-field-input h-7 w-24 rounded-md border border-border/60 bg-background/60 pl-7 pr-2 text-meta outline-none placeholder:text-text-secondary sm:w-56 sm:focus:w-72"
+            className="craft-field-input h-7 w-24 rounded-md border border-border/70 bg-background/60 pl-7 pr-2 text-meta outline-none placeholder:text-text-secondary sm:w-56 sm:focus:w-72"
           />
         </div>
       }

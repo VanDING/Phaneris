@@ -802,7 +802,7 @@ function PlannerBoard() {
         className="bg-background shadow-middle rounded-[10px] overflow-hidden shrink-0 flex flex-col"
         style={{ width: navigatorWidth }}
       >
-          <div className="border-b border-border/60 px-5 py-3">
+          <div className="border-b border-border/70 px-5 py-3">
             <h3 className="mb-2 text-base font-semibold">{project.name}</h3>
             <div className="flex gap-2">
               <Input
@@ -985,7 +985,7 @@ function PlannerBoard() {
                 />
 
                 {/* Separator */}
-                <div className="border-t border-border/60 mt-5 mb-1" />
+                <div className="border-t border-border/70 mt-5 mb-1" />
 
                 {/* Attached Sessions */}
                 <div className="mb-1 text-sm font-semibold">Attached Sessions</div>
@@ -999,7 +999,7 @@ function PlannerBoard() {
                       const meta = syncMeta[link.syncState]
                       const Icon = meta.icon
                       return (
-                        <div key={link.id} className="rounded-lg border border-border/60 p-2.5 bg-foreground/[0.01]">
+                        <div key={link.id} className="rounded-lg border border-border/70 p-2.5 bg-foreground/[0.02]">
                           <div className="mb-1 flex items-center justify-between gap-2">
                             <div className="min-w-0 flex items-center gap-1.5">
                               <Link2 className="h-3.5 w-3.5 text-foreground/45" />
@@ -1019,7 +1019,7 @@ function PlannerBoard() {
                 </div>
 
                 {/* Separator */}
-                <div className="border-t border-border/60 my-5" />
+                <div className="border-t border-border/70 my-5" />
 
                 {/* Activity */}
                 <div className="mb-3 text-sm font-semibold">Activity</div>
@@ -1110,7 +1110,7 @@ function PlannerSyncStatePalette() {
           const meta = syncMeta[state]
           const Icon = meta.icon
           return (
-            <div key={state} className="rounded-[10px] border border-border/60 bg-foreground/[0.015] p-3">
+            <div key={state} className="rounded-[10px] border border-border/70 bg-foreground/[0.02] p-3">
               <div className="mb-1.5 flex items-center gap-1.5 text-sm font-medium">
                 <Icon className={cn('h-4 w-4', meta.cls.split(' ')[0])} />
                 {meta.label}

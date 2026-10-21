@@ -120,7 +120,7 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
   )
 
   return (
-    <div className="rounded-xl border border-border/70 bg-foreground/[0.015] p-3">
+    <div className="rounded-xl border border-border/70 bg-foreground/[0.02] p-3">
       <div className="mb-2 text-label font-semibold text-text-secondary">{t('tasks.planSection')}</div>
       <div className="grid gap-2.5 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-meta font-medium text-text-secondary">

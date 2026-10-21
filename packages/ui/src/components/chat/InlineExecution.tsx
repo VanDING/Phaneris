@@ -106,7 +106,7 @@ export function InlineExecution({
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-start pt-1 border-t border-border/30">
+        <div className="flex items-center justify-start pt-1 border-t border-border/50">
           <button
             type="button"
             onClick={onCancel}
@@ -142,7 +142,7 @@ export function InlineExecution({
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-end pt-1 border-t border-border/30">
+        <div className="flex items-center justify-end pt-1 border-t border-border/50">
           <button
             type="button"
             onClick={onDismiss}
@@ -178,7 +178,7 @@ export function InlineExecution({
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-end gap-2 pt-1 border-t border-border/30">
+      <div className="flex items-center justify-end gap-2 pt-1 border-t border-border/50">
         <button
           type="button"
           onClick={onDismiss}

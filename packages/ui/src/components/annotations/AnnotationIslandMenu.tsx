@@ -100,7 +100,7 @@ export function AnnotationIslandMenu({
         key={sourceKey}
         activeViewId={activeView}
         radius={12}
-        className="border-border/40 bg-background/75 backdrop-blur-xl backdrop-saturate-150 shadow-strong"
+        className="border-border/50 bg-background/75 backdrop-blur-xl backdrop-saturate-150 shadow-strong"
         onActiveViewSizeChange={setActiveViewSize}
         isVisible={isVisible}
         onExitComplete={onExitComplete}

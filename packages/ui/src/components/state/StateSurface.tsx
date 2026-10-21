@@ -48,7 +48,7 @@ export function StateSurface({
     >
       {icon && (
         <div className={cn(
-          'mb-1 flex items-center justify-center rounded-card bg-foreground/[0.035] text-text-tertiary',
+          'mb-1 flex items-center justify-center rounded-card bg-foreground/[0.04] text-text-tertiary',
           compact ? 'h-9 w-9' : 'h-12 w-12',
         )}>
           {icon}

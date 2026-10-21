@@ -52,7 +52,7 @@ export function PageGrantsDialog({ workspaceId, page, open, onOpenChange }: Page
               return (
                 <li
                   key={grant.id}
-                  className="flex items-start gap-2.5 rounded-lg border border-border/60 bg-foreground/[0.02] px-3 py-2.5"
+                  className="flex items-start gap-2.5 rounded-lg border border-border/70 bg-foreground/[0.02] px-3 py-2.5"
                 >
                   <Icon
                     className={

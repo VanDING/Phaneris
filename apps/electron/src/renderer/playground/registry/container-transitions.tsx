@@ -102,7 +102,7 @@ function IslandOptions({
         Morph from target (separate source offset): {useMorph ? 'On' : 'Off'}
       </button>
 
-      <div className="rounded-xl border border-border/40 bg-foreground/3 p-2.5 text-[11px] text-foreground/70 space-y-2">
+      <div className="rounded-xl border border-border/50 bg-foreground/3 p-2.5 text-[11px] text-foreground/70 space-y-2">
         <div className="flex items-center justify-between">
           <span>Angle</span>
           <span className="tabular-nums">{Math.round(angleDeg)}°</span>
@@ -161,11 +161,11 @@ function IslandOptions({
         Clear island
       </button>
 
-      <div className="rounded-xl border border-border/40 bg-foreground/3 p-2 text-[11px] text-foreground/65">
+      <div className="rounded-xl border border-border/50 bg-foreground/3 p-2 text-[11px] text-foreground/65">
         Backstack: {navigation.stack.join(' → ')}
       </div>
 
-      <div className="rounded-xl border border-border/40 bg-foreground/3 p-2 text-[11px] text-foreground/65">
+      <div className="rounded-xl border border-border/50 bg-foreground/3 p-2 text-[11px] text-foreground/65">
         Active view size:{' '}
         {activeViewSize
           ? `${activeViewSize.width}px × ${activeViewSize.height}px`
@@ -415,7 +415,7 @@ function ToolbarToConfirmTransitionDemo({ initialView = 'compact' }: ToolbarToCo
         />
       </div>
 
-      <div className="rounded-[10px] bg-foreground/3 border border-border/40 px-3 py-2 text-xs text-foreground/70">
+      <div className="rounded-[10px] bg-foreground/3 border border-border/50 px-3 py-2 text-xs text-foreground/70">
         {lastConfirmed ? `Last confirmed: ${lastConfirmed}` : 'No confirmation submitted yet.'}
       </div>
     </div>

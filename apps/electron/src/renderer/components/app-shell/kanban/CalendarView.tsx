@@ -550,7 +550,7 @@ export function CalendarView() {
                 </button>
               </PopoverTrigger>
               <PopoverContent align="start" className="w-80 p-0">
-                <div className="border-b border-border/60 px-3 py-2">
+                <div className="border-b border-border/70 px-3 py-2">
                   <div className="text-meta font-semibold">{t('schedule.untimedTitle')}</div>
                   <p className="pt-1 text-meta leading-snug text-text-secondary">{t('schedule.untimedHint')}</p>
                 </div>
@@ -649,7 +649,7 @@ export function CalendarView() {
       */}
       <div
         ref={calendarHostRef}
-        className="phaneris-calendar relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-xl bg-foreground/[0.012]"
+        className="phaneris-calendar relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-xl bg-foreground/[0.02]"
         data-calendar-view={mode}
       >
         {/*

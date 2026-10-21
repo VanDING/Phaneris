@@ -31,7 +31,7 @@ export function PageKindBadge({ kind, className }: { kind: PageKind; className?:
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center gap-1 rounded-md border border-border/60 bg-foreground/[0.02] px-1.5 py-0.5 text-meta font-medium text-text-secondary',
+        'inline-flex shrink-0 items-center gap-1 rounded-md border border-border/70 bg-foreground/[0.02] px-1.5 py-0.5 text-meta font-medium text-text-secondary',
         kind === 'live' && 'text-success-text',
         kind === 'interactive' && 'text-accent-text',
         className,

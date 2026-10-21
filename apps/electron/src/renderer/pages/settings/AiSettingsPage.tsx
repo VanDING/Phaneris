@@ -220,7 +220,7 @@ function ConnectionRow({ connection, usedForImages, isLastConnection, onRenameCl
       <DropdownMenu modal={false} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <button
-            className="craft-control p-1.5 rounded-md hover:bg-foreground/[0.05] data-[state=open]:bg-foreground/[0.05] transition-colors"
+            className="craft-control p-1.5 rounded-md hover:bg-foreground/[0.04] data-[state=open]:bg-foreground/[0.04] transition-colors"
             data-state={menuOpen ? 'open' : 'closed'}
           >
             <MoreHorizontal className="h-4 w-4 text-text-secondary" />
@@ -1328,7 +1328,7 @@ export default function AiSettingsPage() {
                               {t('settings.ai.decisions.runHint')}
                             </div>
                             {decisionReportedGroups.map((group, index) => (
-                              <div key={group.id} className={cn(index > 0 && 'mt-1 border-t border-border/30')}>
+                              <div key={group.id} className={cn(index > 0 && 'mt-1 border-t border-border/50')}>
                                 <div className="px-4 pt-3 pb-0.5 text-meta font-semibold uppercase tracking-wide text-text-secondary">
                                   {group.title}
                                 </div>

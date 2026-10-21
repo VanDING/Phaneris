@@ -233,7 +233,7 @@ function ImageCardStackPlayground({
         <span>Active card: {Math.min(currentIndex + 1, Math.max(parsedItems.length, 1))} / {parsedItems.length}</span>
         <span>Swipe left/right on top card</span>
       </div>
-      <div className="flex-1 min-h-0 rounded-md border border-border/60 bg-muted/20 p-4 flex items-center justify-center">
+      <div className="flex-1 min-h-0 rounded-md border border-border/70 bg-muted/20 p-4 flex items-center justify-center">
         {parsedItems.length > 0 ? (
           <div className="h-[320px] w-full">
             <ImageCardStack items={parsedItems} currentIndex={currentIndex} onIndexChange={setCurrentIndex} maxRotate={maxRotate} maxHeight={320} />

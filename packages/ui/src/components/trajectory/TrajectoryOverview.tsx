@@ -97,7 +97,7 @@ export function TrajectoryOverview({
   ]
 
   return (
-    <div className="h-full overflow-y-auto bg-foreground/[0.012] px-3 py-3 pb-8">
+    <div className="h-full overflow-y-auto bg-foreground/[0.02] px-3 py-3 pb-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
         <div className="flex min-w-0 items-center gap-2 border-b border-border/50 pb-3">
           <span className={`h-2 w-2 shrink-0 rounded-full ${isProcessing ? 'animate-pulse bg-accent' : errorRecords.length > 0 ? 'bg-destructive' : 'bg-success'}`} />
@@ -122,7 +122,7 @@ export function TrajectoryOverview({
           ].map(([Icon, label, value]) => {
             const StatIcon = Icon as typeof Activity
             return (
-              <div key={String(label)} className="min-w-0 rounded-lg bg-foreground/[0.025] px-3 py-2.5"
+              <div key={String(label)} className="min-w-0 rounded-lg bg-foreground/[0.02] px-3 py-2.5"
                 title={Icon === Clock3 ? t('trajectory.performance.ttftSummary', { p50: formatDurationMillis(performance.p50), p95: formatDurationMillis(performance.p95), valid: performance.ttftCount, total: performance.requests.length }) : undefined}>
                 <div className="flex items-center gap-1.5 text-meta font-medium text-text-secondary">
                   <StatIcon className="h-3.5 w-3.5" />{String(label)}
@@ -173,7 +173,7 @@ export function TrajectoryOverview({
           <button
             type="button"
             onClick={() => onOpenTrajectory()}
-            className="craft-control flex h-12 w-full items-center gap-1 rounded-xl border border-border/55 bg-background/70 px-3 outline-none transition-colors hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-ring"
+            className="craft-control flex h-12 w-full items-center gap-1 rounded-xl border border-border/50 bg-background/70 px-3 outline-none transition-colors hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={t('trajectory.overview.openTrajectory')}
             title={t('trajectory.performance.shapeCoverage', { events: contentRecords.length, buckets: shapeBuckets.length })}
             data-run-shape
@@ -198,7 +198,7 @@ export function TrajectoryOverview({
                 {t('trajectory.overview.openContext')}
               </button>
             </div>
-            <div className="flex h-28 min-w-0 items-end gap-px overflow-hidden rounded-xl border border-border/55 bg-background/70 px-3 pb-3 pt-5">
+            <div className="flex h-28 min-w-0 items-end gap-px overflow-hidden rounded-xl border border-border/50 bg-background/70 px-3 pb-3 pt-5">
               {contextGrowth.map((context, index) => {
                 const sequence = context.startSeq === context.endSeq
                   ? String(context.endSeq)
@@ -248,13 +248,13 @@ export function TrajectoryOverview({
               {t('trajectory.overview.viewTrajectory')}
             </button>
           </div>
-          <div className={findings.length > 0 ? "overflow-hidden rounded-lg border border-border/55 bg-background/70" : ""}>
+          <div className={findings.length > 0 ? "overflow-hidden rounded-lg border border-border/50 bg-background/70" : ""}>
             {findings.length > 0 ? findings.map(({ icon: Icon, tone, label, meta, index }) => (
               <button
                 key={`${index}-${label}`}
                 type="button"
                 onClick={() => onOpenTrajectory(index)}
-                className="craft-control grid min-h-10 w-full grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-2 border-b border-border/45 px-3 text-left text-label outline-none last:border-b-0 hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                className="craft-control grid min-h-10 w-full grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-2 border-b border-border/50 px-3 text-left text-label outline-none last:border-b-0 hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
                 <Icon className={`h-3.5 w-3.5 ${tone}`} />
                 <span className="truncate">{label}</span>
@@ -267,14 +267,14 @@ export function TrajectoryOverview({
         </section>
 
         <div className="grid gap-2 @min-[620px]/trajectory:grid-cols-2">
-          <button type="button" onClick={() => onOpenContext()} className="craft-control flex items-center gap-3 rounded-xl border border-border/55 bg-background/70 px-3 py-3 text-left outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-ring">
+          <button type="button" onClick={() => onOpenContext()} className="craft-control flex items-center gap-3 rounded-xl border border-border/50 bg-background/70 px-3 py-3 text-left outline-none hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-ring">
             <Braces className="h-4 w-4 text-text-secondary" />
             <span className="min-w-0 flex-1">
               <span className="block text-label font-semibold">{t('trajectory.overview.promptChanges')}</span>
               <span className="block truncate text-meta text-text-secondary">{t('trajectory.overview.promptChangesMeta', { requests: snapshot.prompts.size, changes: promptChanges })}</span>
             </span>
           </button>
-          <div className="flex items-center gap-3 rounded-xl border border-border/55 bg-background/70 px-3 py-3">
+          <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-background/70 px-3 py-3">
             <Coins className="h-4 w-4 text-text-secondary" />
             <span className="min-w-0 flex-1">
               <span className="block text-label font-semibold">{t('trajectory.overview.costAndCompaction')}</span>

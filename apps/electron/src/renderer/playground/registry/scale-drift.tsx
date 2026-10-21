@@ -47,7 +47,7 @@ function ScaleFamilyTable({ family, legacyOnly }: { family: Family; legacyOnly: 
                 Math.abs(entry[1] - px) < Math.abs(best[1] - px) ? entry : best)
               const isContract = contractSet.has(value)
               return (
-                <tr key={value} className="border-b border-border/60 last:border-0">
+                <tr key={value} className="border-b border-border/70 last:border-0">
                   <td className="px-3 py-1.5 font-mono tabular-nums">{value}</td>
                   <td className="px-3 py-1.5 tabular-nums">{count}</td>
                   <td className="px-3 py-1.5">

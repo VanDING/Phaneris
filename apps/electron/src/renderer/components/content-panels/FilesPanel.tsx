@@ -120,7 +120,7 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t('contentPanel.files.filterPlaceholder')}
-              className="h-control-sm rounded-md border-border/60 bg-foreground/[0.02] pl-7 text-body shadow-none focus-visible:bg-background"
+              className="h-control-sm rounded-md border-border/70 bg-foreground/[0.02] pl-7 text-body shadow-none focus-visible:bg-background"
               aria-label={t('contentPanel.files.filterPlaceholder')}
             />
           </div>
@@ -137,7 +137,7 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
 
         {view === 'browse' && (
           <div className="flex h-full min-h-0 flex-col">
-            <div className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.012] pt-1">
+            <div className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.02] pt-1">
               <BrowseTree
                 sessionId={activeSessionId}
                 workingDirectory={workingDirectory}

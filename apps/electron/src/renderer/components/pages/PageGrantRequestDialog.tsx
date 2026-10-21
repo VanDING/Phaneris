@@ -54,7 +54,7 @@ export function PageGrantRequestDialog({ pageName, requests, busy, onApprove, on
                 className={
                   isScript
                     ? 'flex items-start gap-2.5 rounded-lg border border-destructive/40 bg-destructive/[0.06] px-3 py-2.5'
-                    : 'flex items-start gap-2.5 rounded-lg border border-border/60 bg-foreground/[0.02] px-3 py-2.5'
+                    : 'flex items-start gap-2.5 rounded-lg border border-border/70 bg-foreground/[0.02] px-3 py-2.5'
                 }
               >
                 <Icon

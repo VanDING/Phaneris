@@ -245,9 +245,9 @@ export function CompactSessionMenu({
             type="button"
             className={cn(
               'flex items-center gap-1 px-2 py-1 rounded-md titlebar-no-drag min-w-0',
-              'hover:bg-foreground/[0.03] transition-colors',
+              'hover:bg-foreground/[0.04] transition-colors',
               'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-              'data-[state=open]:bg-foreground/[0.03]',
+              'data-[state=open]:bg-foreground/[0.04]',
             )}
             aria-label={title}
           >

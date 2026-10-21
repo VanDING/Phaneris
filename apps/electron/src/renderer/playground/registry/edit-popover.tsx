@@ -212,7 +212,7 @@ function CompactChatPreview({
           <div
             onMouseDown={handleDragStart}
             className={cn(
-              "flex items-center justify-center pt-2.5 pb-1.5 border-b border-border/30 cursor-grab",
+              "flex items-center justify-center pt-2.5 pb-1.5 border-b border-border/50 cursor-grab",
               isDragging && "cursor-grabbing"
             )}
           >

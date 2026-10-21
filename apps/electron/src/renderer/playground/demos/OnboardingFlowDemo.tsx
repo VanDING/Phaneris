@@ -126,7 +126,7 @@ export function OnboardingFlowDemo() {
   return (
     <div className="flex flex-col h-full">
       {/* Step indicator bar */}
-      <div className="shrink-0 flex items-center justify-between px-4 py-2 bg-foreground/[0.03] border-b border-border">
+      <div className="shrink-0 flex items-center justify-between px-4 py-2 bg-foreground/[0.04] border-b border-border">
         <div className="flex items-center gap-1 text-xs">
           {STEP_ORDER.map((s, i) => (
             <span key={s.key} className="flex items-center gap-1">

@@ -24,7 +24,7 @@ const DEFAULT_DRAWER_CONTENT_CLASS = [
   'data-[vaul-drawer-direction=bottom]:bottom-2',
   'data-[vaul-drawer-direction=bottom]:mt-0',
   'data-[vaul-drawer-direction=bottom]:max-h-[min(82vh,42rem)]',
-  'overflow-hidden rounded-shape-xl border border-border/60 bg-background shadow-modal-small',
+  'overflow-hidden rounded-shape-xl border border-border/70 bg-background shadow-modal-small',
 ].join(' ')
 
 export function SessionInfoPopover({

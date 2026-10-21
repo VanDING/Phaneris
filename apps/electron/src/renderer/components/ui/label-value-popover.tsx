@@ -297,7 +297,7 @@ export function LabelValuePopover({
               className={cn(
                 'w-full flex items-center gap-2 px-2 py-1.5 rounded-shape-sm',
                 'text-body text-foreground',
-                'hover:bg-foreground/[0.03] focus:bg-foreground/[0.03]',
+                'hover:bg-foreground/[0.04] focus:bg-foreground/[0.04]',
                 'transition-colors cursor-pointer outline-none'
               )}
             >
@@ -315,7 +315,7 @@ export function LabelValuePopover({
             className={cn(
               'w-full flex items-center gap-2 px-2 py-1.5 rounded-shape-sm',
               'text-body text-destructive',
-              'hover:bg-foreground/[0.03] focus:bg-foreground/[0.03]',
+              'hover:bg-foreground/[0.04] focus:bg-foreground/[0.04]',
               'transition-colors cursor-pointer outline-none'
             )}
           >

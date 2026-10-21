@@ -286,7 +286,7 @@ export function BrowserTabStrip({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="h-control-sm px-1.5 rounded-lg text-meta text-text-secondary bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors cursor-pointer titlebar-no-drag"
+              className="h-control-sm px-1.5 rounded-lg text-meta text-text-secondary bg-background shadow-minimal hover:bg-foreground/[0.04] transition-colors cursor-pointer titlebar-no-drag"
             >
               +{overflow.length}
             </button>

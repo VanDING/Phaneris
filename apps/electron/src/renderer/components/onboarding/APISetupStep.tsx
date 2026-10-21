@@ -167,7 +167,7 @@ function ProviderSegmentedControl({
   const segments: ProviderSegment[] = ['anthropic', 'pi']
 
   return (
-    <div className="flex rounded-xl bg-foreground/[0.03] p-1 mb-4">
+    <div className="flex rounded-xl bg-foreground/[0.04] p-1 mb-4">
       {segments.map((segment) => (
         <button
           key={segment}

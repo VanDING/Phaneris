@@ -31,7 +31,7 @@ export function DateField({ value, onChange, placeholder = 'Select date', disabl
             aria-label={ariaLabel}
             className={cn(
               'flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-background px-3 text-left text-body outline-none transition-colors',
-              'hover:bg-foreground/[0.025] focus-visible:border-ring/60 focus-visible:ring-2 focus-visible:ring-ring/15 disabled:opacity-45',
+              'hover:bg-foreground/[0.02] focus-visible:border-ring/60 focus-visible:ring-2 focus-visible:ring-ring/15 disabled:opacity-45',
               !value && 'text-text-secondary',
               className,
             )}

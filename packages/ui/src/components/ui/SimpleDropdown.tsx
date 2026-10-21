@@ -80,9 +80,9 @@ export function SimpleDropdownItem({
       onFocus={() => dropdownCtx?.setHighlightedId(itemId)}
       className={cn(
         'craft-control craft-menu-item flex items-center gap-2 w-full px-2.5 py-[var(--theme-menu-item-padding-y)] text-left text-body rounded-sm',
-        'hover:bg-foreground/[0.05] focus:bg-foreground/[0.05]',
+        'hover:bg-foreground/[0.04] focus:bg-foreground/[0.04]',
         'transition-colors',
-        isHighlighted && 'bg-foreground/[0.05]',
+        isHighlighted && 'bg-foreground/[0.04]',
         variant === 'destructive' && 'text-destructive hover:text-destructive',
         className
       )}

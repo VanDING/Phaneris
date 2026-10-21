@@ -1776,7 +1776,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                   )}
                   {!compactMode && hasUnrenderedLoadedMessages && (
                     <div className="flex h-64 items-center justify-center px-4 text-center">
-                      <div className="max-w-sm rounded-shape-lg border border-border/50 bg-foreground/[0.03] px-4 py-3">
+                      <div className="max-w-sm rounded-shape-lg border border-border/50 bg-foreground/[0.04] px-4 py-3">
                         <CircleAlert className="mx-auto mb-2 h-4 w-4 text-text-secondary" />
                         <div className="text-body font-medium text-text-secondary">Conversation loaded, but no renderable messages were found.</div>
                         <p className="mt-1 text-meta text-text-secondary">Try reloading the session. If this persists, the message history may contain an unsupported format.</p>

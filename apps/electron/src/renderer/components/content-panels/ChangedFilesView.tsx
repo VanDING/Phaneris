@@ -172,7 +172,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
         {viewerSettings.diffStyle === style && (
           <motion.span
             layoutId="changed-files-diff-style"
-            className="pointer-events-none absolute inset-0 z-component-content rounded-md border border-border/55 bg-background shadow-minimal"
+            className="pointer-events-none absolute inset-0 z-component-content rounded-md border border-border/50 bg-background shadow-minimal"
             transition={motionSpring(reduceMotion, 'responsive')}
           />
         )}
@@ -183,7 +183,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
       <div className="flex items-center gap-1.5">
         <LayoutGroup id="changed-files-diff-style">
           <div
-            className="flex items-center rounded-lg border border-border/60 bg-foreground/[0.025] p-0.5"
+            className="flex items-center rounded-lg border border-border/70 bg-foreground/[0.02] p-0.5"
             aria-disabled={!styleSwitchable}
           >
             {styleButtons}
@@ -194,14 +194,14 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
             {styleHint}
           </span>
         )}
-        <div className="border-l border-border/55 pl-1.5">
+        <div className="border-l border-border/50 pl-1.5">
           <button
             type="button"
             aria-label={t('contentPanel.diff.collapseAll')}
             title={t('contentPanel.diff.collapseAll')}
             onClick={() => setSelectedKey(null)}
             disabled={!selectedKey}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-35"
+            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-35"
           >
             <ChevronsUp className="h-3.5 w-3.5" />
           </button>
@@ -240,20 +240,20 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
           icon={<GitCompareArrows className="h-6 w-6" />}
         />
       ) : (
-        <nav className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.012] p-2.5" aria-label={t('contentPanel.files.view.changed')}>
+        <nav className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.02] p-2.5" aria-label={t('contentPanel.files.view.changed')}>
           <ul className="flex flex-col gap-2">
             {sections.map((section) => {
               const key = section.key
               const isOpen = selectedKey === key
               const kind = diffKindForSection(section)
               return (
-                <li key={key} className={cn('break-inside-avoid overflow-hidden rounded-xl border border-border/60 bg-background/60 shadow-minimal', isOpen && 'border-border/80 bg-background/80')}>
+                <li key={key} className={cn('break-inside-avoid overflow-hidden rounded-xl border border-border/70 bg-background/60 shadow-minimal', isOpen && 'border-border/70 bg-background/80')}>
                   <button
                     type="button"
                     onClick={() => setSelectedKey(isOpen ? null : key)}
                     className={cn(
-                      'flex w-full items-center gap-2 px-3 py-2.5 text-left text-body outline-none transition-colors hover:bg-foreground/[0.03] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
-                      isOpen && 'bg-foreground/[0.025]',
+                      'flex w-full items-center gap-2 px-3 py-2.5 text-left text-body outline-none transition-colors hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
+                      isOpen && 'bg-foreground/[0.02]',
                     )}
                   >
                     {isOpen ? (
@@ -279,7 +279,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
                         <div
                           key={change.id}
                           ref={(el) => setChangeRef(change.id, el)}
-                          className="overflow-hidden rounded-lg border border-border/60 bg-background"
+                          className="overflow-hidden rounded-lg border border-border/70 bg-background"
                           style={{
                             // Skip layout/highlight work for off-screen diffs;
                             // 600px intrinsic estimate keeps scrollbar stable.

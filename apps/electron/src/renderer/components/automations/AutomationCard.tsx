@@ -75,7 +75,7 @@ export function AutomationCard({
 
       {/* Expanded content */}
       {expanded && (
-        <div className="border-t border-border/30 px-4 py-3 space-y-3">
+        <div className="border-t border-border/50 px-4 py-3 space-y-3">
           {/* Trigger info */}
           <div className="space-y-1">
             <h5 className="text-micro font-medium text-muted-foreground uppercase tracking-wider">{t('automations.sectionWhen')}</h5>
@@ -105,7 +105,7 @@ export function AutomationCard({
             {onTest && (
               <button
                 onClick={onTest}
-                className="px-2.5 py-1 text-meta font-medium rounded-md bg-foreground/[0.03] shadow-minimal hover:bg-foreground/[0.06] transition-colors"
+                className="px-2.5 py-1 text-meta font-medium rounded-md bg-foreground/[0.04] shadow-minimal hover:bg-foreground/[0.06] transition-colors"
               >
                 {t('automations.runTest')}
               </button>

@@ -84,7 +84,7 @@ type TaskResults = Awaited<ReturnType<typeof window.electronAPI.getTaskResults>>
 type BtnVariant = 'primary' | 'secondary' | 'ghost'
 const BTN_VARIANT: Record<BtnVariant, string> = {
   primary: 'bg-accent text-on-accent hover:bg-accent/90',
-  secondary: 'border border-border bg-surface-raised text-foreground hover:bg-foreground/[0.03]',
+  secondary: 'border border-border bg-surface-raised text-foreground hover:bg-foreground/[0.04]',
   ghost: 'text-text-secondary hover:bg-foreground/[0.06] hover:text-foreground',
 }
 
@@ -120,7 +120,7 @@ const SelectButton = React.forwardRef<
       type="button"
       className={cn(
         'craft-control inline-flex items-center gap-1.5 rounded-lg border border-border bg-background font-medium text-foreground',
-        'transition-colors hover:bg-foreground/[0.03] data-[state=open]:bg-foreground/[0.03]',
+        'transition-colors hover:bg-foreground/[0.04] data-[state=open]:bg-foreground/[0.04]',
         size === 'sm' ? 'h-7 px-2 text-meta' : 'h-8 px-2.5 text-label',
         className,
       )}
@@ -394,7 +394,7 @@ function SubtaskCard({
     (s) => !subtask.dependsOn.includes(s.uid) && canDependOn(allSubtasks, subtask.uid, s.uid),
   )
   return (
-    <div className="group rounded-shape-xl border border-border/70 bg-foreground/[0.015] p-3">
+    <div className="group rounded-shape-xl border border-border/70 bg-foreground/[0.02] p-3">
       <div className="flex items-start gap-2">
         <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent/10 text-label font-bold text-accent-text">
           {index + 1}
@@ -411,7 +411,7 @@ function SubtaskCard({
             onChange={(e) => onChange({ prompt: e.target.value })}
             rows={2}
             placeholder={t('tasks.promptPlaceholder')}
-            className="craft-field-input mt-1.5 w-full resize-none rounded-md border border-border/60 bg-background px-2 py-1.5 text-label leading-relaxed outline-none focus:border-foreground/25 field-sizing-content max-h-40"
+            className="craft-field-input mt-1.5 w-full resize-none rounded-md border border-border/70 bg-background px-2 py-1.5 text-label leading-relaxed outline-none focus:border-foreground/25 field-sizing-content max-h-40"
           />
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             <ModelSelect
@@ -424,7 +424,7 @@ function SubtaskCard({
             {subtask.dependsOn.map((depUid) => (
               <span
                 key={depUid}
-                className="inline-flex h-7 max-w-[168px] items-center gap-1 rounded-lg border border-border bg-foreground/[0.03] pl-2 pr-1 text-meta font-medium text-text-secondary"
+                className="inline-flex h-7 max-w-[168px] items-center gap-1 rounded-lg border border-border bg-foreground/[0.04] pl-2 pr-1 text-meta font-medium text-text-secondary"
               >
                 <span className="truncate">{t('tasks.dependsOnLabel', { title: depTitle(depUid) })}</span>
                 <button
@@ -980,7 +980,7 @@ export function TaskEditor({
 
         {/* Definition / Results tabs — edit mode only (results need a backing task to read). */}
         {isEdit && (
-          <div className="ml-3 inline-flex rounded-shape-lg bg-foreground/[0.05] p-0.5">
+          <div className="ml-3 inline-flex rounded-shape-lg bg-foreground/[0.04] p-0.5">
             {(['definition', 'results'] as Tab[]).map((tb) => (
               <button
                 key={tb}
@@ -1037,7 +1037,7 @@ export function TaskEditor({
         <div className="flex min-h-0 flex-col gap-4 overflow-y-auto rounded-xl border border-border bg-surface-raised p-4 shadow-minimal">
           <div className="text-title font-bold">{t('tasks.definition')}</div>
 
-          <div className="inline-flex w-fit rounded-shape-lg bg-foreground/[0.05] p-0.5">
+          <div className="inline-flex w-fit rounded-shape-lg bg-foreground/[0.04] p-0.5">
             {(['manual', 'generate'] as Mode[]).map((m) => (
               <button
                 key={m}
@@ -1246,7 +1246,7 @@ export function TaskEditor({
                 )}
               </div>
 
-              <div className="shrink-0 border-t border-border/60 px-4 py-2.5 text-meta text-text-secondary">
+              <div className="shrink-0 border-t border-border/70 px-4 py-2.5 text-meta text-text-secondary">
                 {t('tasks.subtaskFooter')}
               </div>
             </>
@@ -1258,15 +1258,15 @@ export function TaskEditor({
               <p className="text-label leading-relaxed text-text-secondary">{t('tasks.generatingBody')}</p>
               {/* Skeleton subtask cards: the long author wait reads as "drafting nodes", not frozen. */}
               {[0, 1, 2].map((i) => (
-                <div key={i} className="animate-pulse rounded-shape-xl border border-border/70 bg-foreground/[0.015] p-3">
+                <div key={i} className="animate-pulse rounded-shape-xl border border-border/70 bg-foreground/[0.02] p-3">
                   <div className="flex items-start gap-2">
                     <div className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-foreground/[0.06]" />
                     <div className="min-w-0 flex-1 space-y-2">
                       <div className="h-3.5 w-1/2 rounded bg-foreground/[0.06]" />
                       <div className="h-8 w-full rounded bg-foreground/[0.04]" />
                       <div className="flex gap-1.5">
-                        <div className="h-7 w-[128px] rounded-lg bg-foreground/[0.05]" />
-                        <div className="h-7 w-[144px] rounded-lg bg-foreground/[0.05]" />
+                        <div className="h-7 w-[128px] rounded-lg bg-foreground/[0.04]" />
+                        <div className="h-7 w-[144px] rounded-lg bg-foreground/[0.04]" />
                       </div>
                     </div>
                   </div>
@@ -1330,7 +1330,7 @@ function ResultsPanel({
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto rounded-xl border border-border bg-surface-raised p-4 shadow-minimal">
       {results.acceptanceCriteria && (
-        <div className="rounded-shape-xl border border-border/70 bg-foreground/[0.015] px-3 py-2.5">
+        <div className="rounded-shape-xl border border-border/70 bg-foreground/[0.02] px-3 py-2.5">
           <div className="text-meta font-bold uppercase tracking-wide text-text-secondary">{t('tasks.acceptanceCriteria')}</div>
           <p className="mt-1 text-label leading-relaxed text-text-secondary">{results.acceptanceCriteria}</p>
         </div>
@@ -1344,7 +1344,7 @@ function ResultsPanel({
               ? 'border-success/30 bg-success/[0.06]'
               : verdict.result === 'fail'
                 ? 'border-destructive/30 bg-destructive/[0.06]'
-                : 'border-border bg-foreground/[0.03]',
+                : 'border-border bg-foreground/[0.04]',
           )}
         >
           {verdict.result === 'pass' ? (
@@ -1379,7 +1379,7 @@ function ResultsPanel({
       )}
 
       {verdicts.length > 1 && (
-        <div className="rounded-shape-xl border border-border/70 bg-foreground/[0.015] px-3 py-2.5">
+        <div className="rounded-shape-xl border border-border/70 bg-foreground/[0.02] px-3 py-2.5">
           <div className="mb-1.5 text-meta font-bold uppercase tracking-wide text-text-secondary">{t('tasks.verdictHistory')}</div>
           <div className="flex flex-col gap-1">
             {verdicts.map((v, i) => (
@@ -1403,7 +1403,7 @@ function ResultsPanel({
       {results.nodes.map((node) => {
         const pill = resolveNodeStatePill(node.state)
         return (
-        <div key={node.id} className="rounded-shape-xl border border-border/70 bg-foreground/[0.015] p-3">
+        <div key={node.id} className="rounded-shape-xl border border-border/70 bg-foreground/[0.02] p-3">
           <div className="flex items-center gap-2">
             <span className="min-w-0 flex-1 truncate text-body font-semibold">{node.title}</span>
             <span className={cn('shrink-0 rounded-full border px-2 py-0.5 text-meta font-bold', pill.className)}>

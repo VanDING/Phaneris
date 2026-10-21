@@ -239,8 +239,8 @@ export function SessionFilesSection({
             <div className="grid gap-1 px-2 pt-1" aria-label={t('chat.sessionFilesLoading')}>
               {[72, 56, 84, 64, 76].map((width, index) => (
                 <div key={width} className="flex h-8 animate-pulse items-center gap-2 rounded-lg px-2" style={{ paddingLeft: 8 + (index % 3) * 12 }}>
-                  <span className="h-3.5 w-3.5 rounded bg-foreground/[0.07]" />
-                  <span className="h-2.5 rounded-full bg-foreground/[0.07]" style={{ width: `${width}%` }} />
+                  <span className="h-3.5 w-3.5 rounded bg-foreground/[0.06]" />
+                  <span className="h-2.5 rounded-full bg-foreground/[0.06]" style={{ width: `${width}%` }} />
                 </div>
               ))}
             </div>

@@ -364,7 +364,7 @@ function PlatformRow({ platform, workspaceId }: { platform: Platform; workspaceI
             <DropdownMenu modal={false} open={menuOpen} onOpenChange={setMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="craft-control rounded-md p-1.5 transition-colors hover:bg-foreground/[0.05] data-[state=open]:bg-foreground/[0.05]"
+                  className="craft-control rounded-md p-1.5 transition-colors hover:bg-foreground/[0.04] data-[state=open]:bg-foreground/[0.04]"
                   data-state={menuOpen ? 'open' : 'closed'}
                   aria-label={t('common.more')}
                 >

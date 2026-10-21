@@ -34,7 +34,7 @@ export const BrowserTabBadge = forwardRef<HTMLButtonElement, BrowserTabBadgeProp
       ? (isDarkThemeColor
         ? 'text-white/90 hover:bg-white/10'
         : 'text-black/80 hover:bg-black/5')
-      : 'text-foreground hover:bg-foreground/[0.03]'
+      : 'text-foreground hover:bg-foreground/[0.04]'
 
   const [faviconFailed, setFaviconFailed] = useState(false)
 

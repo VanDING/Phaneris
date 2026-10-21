@@ -181,7 +181,7 @@ export function DecisionStatusRow({ meta, action }: {
 /* ── metric tiles ─────────────────────────────────────────────────────────── */
 
 /** TrajectoryOverview: `grid-cols-2 gap-2 @min-[760px]/trajectory:grid-cols-4`
- *  + `rounded-lg bg-foreground/[0.025] px-3 py-2.5`. All four carry the same
+ *  + `rounded-lg bg-foreground/[0.02] px-3 py-2.5`. All four carry the same
  *  weight; decision cost is last, not a hero.
  *
  *  No tile carries a derived sub-count: the report summarises the whole scope,
@@ -215,7 +215,7 @@ export function DecisionTiles({ totals }: { totals: SessionDecisionTotals }) {
   return (
     <dl className="grid grid-cols-2 gap-2 @min-[760px]/trajectory:grid-cols-4">
       {cells.map(cell => (
-        <div key={cell.key} className="min-w-0 rounded-lg bg-foreground/[0.025] px-3 py-2.5">
+        <div key={cell.key} className="min-w-0 rounded-lg bg-foreground/[0.02] px-3 py-2.5">
           <dt className="flex items-center gap-1.5 text-meta font-medium text-text-secondary">
             {cell.icon}{t(`trajectory.decisions.${cell.key}`)}
           </dt>
@@ -246,7 +246,7 @@ export function DecisionToolbar({ query, onChange, count, total, turns }: {
 }) {
   const { t } = useTranslation()
   return (
-    <div className="sticky top-0 z-component-chrome flex min-h-9 min-w-0 items-center gap-1 border-b border-border/55 bg-background px-2">
+    <div className="sticky top-0 z-component-chrome flex min-h-9 min-w-0 items-center gap-1 border-b border-border/50 bg-background px-2">
       <div className="flex min-w-0 items-center gap-0.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <button
           type="button"
@@ -332,7 +332,7 @@ export function DecisionNotice({ tone = 'neutral', icon, children }: {
   return (
     <div className={cn(
       'flex items-start gap-2 rounded-lg px-2.5 py-2 text-meta leading-5',
-      tone === 'info' ? 'bg-[color:var(--info)]/[0.12] text-[color:var(--info-text)]' : 'bg-foreground/[0.025] text-text-secondary',
+      tone === 'info' ? 'bg-[color:var(--info)]/[0.12] text-[color:var(--info-text)]' : 'bg-foreground/[0.02] text-text-secondary',
     )}>
       <span className="mt-0.5 flex-none">{icon ?? <Info className="size-3.5" />}</span>
       <span className="min-w-0">{children}</span>
@@ -355,7 +355,7 @@ export function DecisionEmpty({ title, hint, action }: { title: string; hint?: s
 
 export function DecisionSkeleton() {
   const row = (width: number, key: number) => (
-    <div key={key} className="flex items-center gap-2 border-b border-border/45 px-3 py-2.5">
+    <div key={key} className="flex items-center gap-2 border-b border-border/50 px-3 py-2.5">
       <span className="size-5 shrink-0 animate-pulse rounded-md bg-foreground/10" />
       <span className="min-w-0 flex-1">
         <span className="block h-2.5 animate-pulse rounded bg-foreground/10" style={{ width: `${width}%` }} />
@@ -370,7 +370,7 @@ export function DecisionSkeleton() {
         <span className="block h-3.5 w-2/5 animate-pulse rounded bg-foreground/10" />
         <span className="mt-2 block h-2.5 w-3/5 animate-pulse rounded bg-foreground/10" />
         <div className="mt-3.5 grid grid-cols-2 gap-2 @min-[760px]/trajectory:grid-cols-4">
-          {[0, 1, 2, 3].map(cell => <span key={cell} className="h-13 animate-pulse rounded-lg bg-foreground/[0.025]" />)}
+          {[0, 1, 2, 3].map(cell => <span key={cell} className="h-13 animate-pulse rounded-lg bg-foreground/[0.02]" />)}
         </div>
       </div>
       <div className="mt-3.5">{[86, 71, 78, 64, 80, 69].map((width, index) => row(width, index))}</div>

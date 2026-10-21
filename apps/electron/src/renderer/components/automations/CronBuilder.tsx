@@ -189,7 +189,7 @@ export function CronBuilder({
                 'px-3 py-1.5 text-meta font-medium rounded-md transition-colors',
                 rawInput === preset.cron
                   ? 'bg-foreground/10 text-foreground ring-1 ring-border/50'
-                  : 'bg-foreground/[0.03] text-text-secondary hover:bg-foreground/[0.06] shadow-minimal'
+                  : 'bg-foreground/[0.04] text-text-secondary hover:bg-foreground/[0.06] shadow-minimal'
               )}
             >
               {preset.label}

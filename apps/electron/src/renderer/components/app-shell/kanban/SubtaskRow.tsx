@@ -76,7 +76,7 @@ export function SubtaskRow({ subtask, className, onClick }: SubtaskRowProps) {
       className={cn(
         'flex items-center gap-2 py-1',
         interactive &&
-          '-mx-1 cursor-pointer rounded px-1 transition-colors hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/50',
+          '-mx-1 cursor-pointer rounded px-1 transition-colors hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/50',
         className
       )}
     >

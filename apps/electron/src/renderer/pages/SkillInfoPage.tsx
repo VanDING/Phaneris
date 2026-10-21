@@ -230,21 +230,21 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
                 <div className="rounded-shape-lg border border-border/50 overflow-hidden">
                   <table className="w-full text-body">
                     <tbody>
-                      <tr className="border-b border-border/30">
+                      <tr className="border-b border-border/50">
                         <td className="px-3 py-2 font-medium text-muted-foreground w-[140px]">{t('skillInfo.explore')}</td>
                         <td className="px-3 py-2 flex items-center gap-2">
                           <X className="h-3.5 w-3.5 text-destructive shrink-0" />
                           <span className="text-foreground/80">{t('skillInfo.exploreDesc')}</span>
                         </td>
                       </tr>
-                      <tr className="border-b border-border/30">
+                      <tr className="border-b border-border/50">
                         <td className="px-3 py-2 font-medium text-muted-foreground">{t('skillInfo.askToEdit')}</td>
                         <td className="px-3 py-2 flex items-center gap-2">
                           <Check className="h-3.5 w-3.5 text-success shrink-0" />
                           <span className="text-foreground/80">{t('skillInfo.askToEditDesc')}</span>
                         </td>
                       </tr>
-                      <tr className="border-b border-border/30">
+                      <tr className="border-b border-border/50">
                         <td className="px-3 py-2 font-medium text-muted-foreground">{t('mode.guarded')}</td>
                         <td className="px-3 py-2 flex items-center gap-2">
                           <Minus className="h-3.5 w-3.5 text-muted-foreground shrink-0" />

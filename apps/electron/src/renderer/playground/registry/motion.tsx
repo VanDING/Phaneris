@@ -75,7 +75,7 @@ function MotionSample() {
             </Button>
           </div>
         </div>
-        <div className="rounded-lg border border-border/60 bg-background p-2">
+        <div className="rounded-lg border border-border/70 bg-background p-2">
           <InlineExpand isOpen={isOpen}>
             <ul className="space-y-1 p-1 text-xs text-muted-foreground">
               {EXPAND_ROWS.map((row) => (
@@ -114,7 +114,7 @@ function MotionSample() {
         </div>
         {/* The swap pops the outgoing layer out of the flow, so the parent must
             be positioned. */}
-        <div className="relative h-[132px] rounded-lg border border-border/60 bg-background p-2">
+        <div className="relative h-[132px] rounded-lg border border-border/70 bg-background p-2">
           <ContentSwap swapKey={step} className="h-full min-h-0">
             <div className="flex h-full flex-col justify-center gap-1 px-1">
               <div className="text-sm font-medium">Step {step}</div>
@@ -157,7 +157,7 @@ function MotionSample() {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-background px-3 py-2">
+        <div className="flex items-center gap-2 rounded-lg border border-border/70 bg-background px-3 py-2">
           <ActivityStatusIcon status={status} />
           <span className={cn('text-[13px] text-muted-foreground')}>Bash · bun test</span>
         </div>
@@ -203,7 +203,7 @@ function ScrollIntentSample() {
       <div
         ref={paneRef}
         data-testid="motion-scroll-pane"
-        className="relative h-[140px] overflow-y-auto rounded-lg border border-border/60 bg-background p-2"
+        className="relative h-[140px] overflow-y-auto rounded-lg border border-border/70 bg-background p-2"
       >
         {rows.map((row) => (
           <div

@@ -40,7 +40,7 @@ export function ProjectSelectMenu({
           type="button"
           aria-label={ariaLabel}
           className={cn(
-            'inline-flex h-8 min-w-0 items-center gap-1.5 rounded-lg border border-border/60 bg-foreground/[0.02] px-2 text-meta font-medium text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground data-[state=open]:bg-foreground/5',
+            'inline-flex h-8 min-w-0 items-center gap-1.5 rounded-lg border border-border/70 bg-foreground/[0.02] px-2 text-meta font-medium text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground data-[state=open]:bg-foreground/5',
             className,
           )}
         >

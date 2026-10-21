@@ -155,7 +155,7 @@ function BotHeader({ connected }: { connected: boolean }) {
       {connected ? (
         <button
           type="button"
-          className="rounded-md p-1.5 transition-colors hover:bg-foreground/[0.05]"
+          className="rounded-md p-1.5 transition-colors hover:bg-foreground/[0.04]"
           aria-label="More"
         >
           <MoreHorizontal className="h-4 w-4 text-foreground/50" />

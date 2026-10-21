@@ -74,7 +74,7 @@ export function WorkItemListView() {
   return (
     <div className="flex h-full flex-col bg-background">
       <div
-        className="flex h-[42px] flex-none items-center justify-between gap-2 border-b border-border/60"
+        className="flex h-[42px] flex-none items-center justify-between gap-2 border-b border-border/70"
         style={{
           paddingLeft: compensateForStoplight ? 84 : 16,
           paddingRight: compensateForStoplight ? 48 : 16,
@@ -142,7 +142,7 @@ export function WorkItemListView() {
 
       <div className="min-h-0 flex-1 overflow-auto">
         <div className="min-w-0">
-          <div className="grid grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/60 bg-foreground/[0.015] px-3 py-2 text-meta font-medium text-text-secondary">
+          <div className="grid grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/70 bg-foreground/[0.02] px-3 py-2 text-meta font-medium text-text-secondary">
             <button className="craft-control" data-craft-focus="true"
               type="button"
               onClick={() => setSelectedIds(allVisibleSelected ? [] : visibleItems.map((item) => item.id))}
@@ -171,7 +171,7 @@ export function WorkItemListView() {
                   event.preventDefault()
                   openDetail(item.id)
                 }}
-                className="grid w-full grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/45 px-3 py-2.5 text-left text-meta hover:bg-foreground/[0.025]"
+                className="grid w-full grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/50 px-3 py-2.5 text-left text-meta hover:bg-foreground/[0.02]"
               >
                 <button
                   type="button"

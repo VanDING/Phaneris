@@ -292,7 +292,7 @@ function ColumnHeader({
                   setOpen(false)
                 }
               }}
-              className="craft-field-input w-full rounded-md border border-border/60 bg-background px-2 py-1 text-meta text-foreground outline-none focus:border-border"
+              className="craft-field-input w-full rounded-md border border-border/70 bg-background px-2 py-1 text-meta text-foreground outline-none focus:border-border"
             />
           </div>
         )}

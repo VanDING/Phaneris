@@ -72,7 +72,7 @@ function ArtifactRow({
   const { artifact } = resolved
   const badge = STATUS_BADGE[artifact.status]
   return (
-    <li className="overflow-hidden rounded-xl border border-border/60 bg-background/60 shadow-minimal">
+    <li className="overflow-hidden rounded-xl border border-border/70 bg-background/60 shadow-minimal">
       <div className="flex items-center gap-2 px-3 py-2">
         <button
           type="button"
@@ -98,7 +98,7 @@ function ArtifactRow({
                 onClick={onRevise}
                 aria-label={t('artifact.revise')}
                 title={t('artifact.revise')}
-                className="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+                className="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.04] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
               </button>
@@ -201,7 +201,7 @@ export function ArtifactsPanel({ sessionId }: { sessionId: string }) {
             onClick={() => setStatusFilter(filter.id)}
             className={cn(
               'h-6 rounded-md px-2 text-meta font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              statusFilter === filter.id ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-foreground/[0.035]',
+              statusFilter === filter.id ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-foreground/[0.04]',
             )}
           >
             {filter.label}
@@ -226,7 +226,7 @@ export function ArtifactsPanel({ sessionId }: { sessionId: string }) {
           icon={<Eye className="h-6 w-6" />}
         />
       ) : (
-        <nav className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.012] p-2.5" aria-label={t('contentPanel.files.view.artifacts')}>
+        <nav className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.02] p-2.5" aria-label={t('contentPanel.files.view.artifacts')}>
           <ul className="flex flex-col gap-2">
             {visible.map((resolved) => (
               <ArtifactRow

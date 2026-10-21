@@ -123,7 +123,7 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
             <div
               className={cn(
                 'flex items-center gap-3 px-4 py-2.5 text-body',
-                isWebhook && 'cursor-pointer hover:bg-foreground/[0.03] transition-colors',
+                isWebhook && 'cursor-pointer hover:bg-foreground/[0.04] transition-colors',
               )}
               onClick={handleToggle}
               onKeyDown={handleKeyDown}
@@ -174,7 +174,7 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
 
             {/* Expanded webhook details */}
             {isExpanded && entry.webhookDetails && (
-              <div className="mx-4 mb-3 mt-0.5 rounded-md border border-border/40 bg-foreground/[0.02] px-3 py-2.5 text-meta relative">
+              <div className="mx-4 mb-3 mt-0.5 rounded-md border border-border/50 bg-foreground/[0.02] px-3 py-2.5 text-meta relative">
                 <div className="absolute top-2 right-2">
                   <CopyButton details={entry.webhookDetails} />
                 </div>
@@ -214,7 +214,7 @@ export function AutomationEventTimeline({ entries, className, onReplay }: Automa
                 </div>
 
                 {entry.webhookDetails.responseBody && (
-                  <div className="mt-2 pt-2 border-t border-border/30">
+                  <div className="mt-2 pt-2 border-t border-border/50">
                     <span className="text-text-secondary">{t('automations.webhookResponse')}</span>
                     <pre className="mt-1 max-h-24 overflow-auto rounded bg-foreground/[0.04] p-2 font-mono text-meta text-text-secondary whitespace-pre-wrap break-all">
                       {entry.webhookDetails.responseBody}

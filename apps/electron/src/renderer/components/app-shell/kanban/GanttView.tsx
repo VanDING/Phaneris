@@ -1019,7 +1019,7 @@ export function GanttView() {
                 </button>
               </PopoverTrigger>
               <PopoverContent align="start" className="w-80 p-0">
-                <div className="border-b border-border/60 px-3 py-2">
+                <div className="border-b border-border/70 px-3 py-2">
                   <div className="text-meta font-semibold">{t('gantt.unscheduledTitle')}</div>
                   <p className="pt-1 text-meta leading-snug text-text-secondary">
                     {t('gantt.unscheduledHint')}
@@ -1089,7 +1089,7 @@ export function GanttView() {
               initialProjectId: projectIds.length === 1 ? projectIds[0] : undefined,
             })}
             disabled={!activeWorkspaceId}
-            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
+            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.04] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" />
             <span className="@max-[1100px]/panel:hidden">{t('kanban.newTask')}</span>

@@ -133,7 +133,7 @@ function ViewToggle({ value, onChange }: { value: KanbanView; onChange: (v: Kanb
     )
   }
   return (
-    <div className="inline-flex items-center gap-0.5 rounded-lg border border-border/60 bg-foreground/[0.02] p-0.5">
+    <div className="inline-flex items-center gap-0.5 rounded-lg border border-border/70 bg-foreground/[0.02] p-0.5">
       <Btn view="list" icon={List} label="List" />
       <Btn view="board" icon={LayoutGrid} label="Board" />
     </div>
@@ -143,7 +143,7 @@ function ViewToggle({ value, onChange }: { value: KanbanView; onChange: (v: Kanb
 function StubSessionList() {
   return (
     <div className="flex-1 overflow-y-auto p-3">
-      <div className="mx-auto max-w-md divide-y divide-border/40 overflow-hidden rounded-lg border border-border/60 bg-card">
+      <div className="mx-auto max-w-md divide-y divide-border/40 overflow-hidden rounded-lg border border-border/70 bg-card">
         {mockTasks.map(task => {
           const project = task.projectId ? mockProjectsById.get(task.projectId) : undefined
           const status = mockStatusesById.get(task.statusId)
@@ -245,10 +245,10 @@ function TaskWindowOverlay({ windowProps, onClose }: { windowProps: TaskWindowPr
     <div className="absolute inset-0 z-component-scrim flex items-center justify-center">
       <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" onClick={onClose} aria-hidden />
       <div
-        className="relative z-component-chrome flex h-[88%] w-[90%] max-w-2xl flex-col overflow-hidden rounded-xl border border-border/60 bg-background shadow-2xl"
+        className="relative z-component-chrome flex h-[88%] w-[90%] max-w-2xl flex-col overflow-hidden rounded-xl border border-border/70 bg-background shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-border/40 bg-foreground/[0.02] px-3 py-1.5">
+        <div className="flex items-center justify-between border-b border-border/50 bg-foreground/[0.02] px-3 py-1.5">
           <span className="text-[11px] font-medium text-foreground/40">Session window</span>
           <button
             type="button"

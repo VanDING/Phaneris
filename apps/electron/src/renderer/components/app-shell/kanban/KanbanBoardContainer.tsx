@@ -549,7 +549,7 @@ export function KanbanBoardContainer() {
           fullscreen overlay): left reserves the macOS traffic lights, right
           reserves the floating restore button of the expanded overlay. */}
       <div
-        className="flex h-[42px] flex-none items-center justify-between gap-2 border-b border-border/60"
+        className="flex h-[42px] flex-none items-center justify-between gap-2 border-b border-border/70"
         style={{
           paddingLeft: compensateForStoplight ? 84 : 16,
           paddingRight: compensateForStoplight ? 48 : 16,
@@ -585,7 +585,7 @@ export function KanbanBoardContainer() {
               initialProjectId: projectFilter.length === 1 ? projectFilter[0] : undefined,
             })}
             disabled={!activeWorkspaceId}
-            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
+            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.04] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" /> {t('kanban.newTask')}
           </button>

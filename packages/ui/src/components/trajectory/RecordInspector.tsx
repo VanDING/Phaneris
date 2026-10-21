@@ -95,7 +95,7 @@ function SourceBlocksView({ blocks }: { blocks: readonly TrajectorySourceBlock[]
   return (
     <div className="space-y-2">
       {blocks.map((block, i) => (
-        <div key={i} className="rounded border border-border/60 bg-foreground/[0.02] px-2 py-1.5">
+        <div key={i} className="rounded border border-border/70 bg-foreground/[0.02] px-2 py-1.5">
           <div className="text-meta uppercase tracking-wide text-text-secondary">{block.type}</div>
           {block.imageSrc !== undefined ? (
             <img src={block.imageSrc} alt={block.imageAlt ?? 'image'} className="mt-1 max-h-40 rounded" />
@@ -221,7 +221,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
 
   return (
     <aside
-      className="motion-view-enter relative flex h-full w-80 min-w-[300px] max-w-[70%] shrink-0 flex-col border-l border-border/60 bg-background @max-[760px]/trajectory:absolute @max-[760px]/trajectory:inset-0 @max-[760px]/trajectory:z-component-scrim @max-[760px]/trajectory:!w-full @max-[760px]/trajectory:min-w-0 @max-[760px]/trajectory:max-w-none @max-[760px]/trajectory:border-l-0"
+      className="motion-view-enter relative flex h-full w-80 min-w-[300px] max-w-[70%] shrink-0 flex-col border-l border-border/70 bg-background @max-[760px]/trajectory:absolute @max-[760px]/trajectory:inset-0 @max-[760px]/trajectory:z-component-scrim @max-[760px]/trajectory:!w-full @max-[760px]/trajectory:min-w-0 @max-[760px]/trajectory:max-w-none @max-[760px]/trajectory:border-l-0"
       aria-label="Event details"
       style={detailsWidth === null ? undefined : { width: detailsWidth }}
     >
@@ -262,7 +262,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
           event.preventDefault()
         }}
       />
-      <div className="flex min-h-12 items-center justify-between border-b border-border/50 bg-foreground/[0.018] px-3 py-2">
+      <div className="flex min-h-12 items-center justify-between border-b border-border/50 bg-foreground/[0.02] px-3 py-2">
         <div className="min-w-0">
           <div className="truncate text-label font-semibold">#{cell.index} {cell.kind}</div>
           <div className="truncate text-meta text-text-secondary">{cell.text}</div>
@@ -306,7 +306,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
             {tab === id && (
               <motion.span
                 layoutId="trajectory-inspector-active-tab"
-                className="absolute inset-0 z-component-recess rounded-md border border-border/55 bg-background shadow-minimal"
+                className="absolute inset-0 z-component-recess rounded-md border border-border/50 bg-background shadow-minimal"
                 transition={motionSpring(reduceMotion, 'responsive')}
               />
             )}

@@ -352,15 +352,15 @@ function FilesPanelPreview() {
 
   return (
     <ModalProvider>
-      <div className="h-[760px] w-full overflow-hidden rounded-xl border border-border/60 bg-background">
-        <div className="flex items-center gap-2 border-b border-border/60 px-3 py-2">
+      <div className="h-[760px] w-full overflow-hidden rounded-xl border border-border/70 bg-background">
+        <div className="flex items-center gap-2 border-b border-border/70 px-3 py-2">
           {(['browse', 'artifacts', 'changed'] as const).map(next => (
             <button
               key={next}
               type="button"
               data-testid={`seed-view-${next}`}
               onClick={() => setLocalView(next)}
-              className="rounded-md px-2 py-1 text-[11px] text-muted-foreground hover:bg-foreground/[0.05]"
+              className="rounded-md px-2 py-1 text-[11px] text-muted-foreground hover:bg-foreground/[0.04]"
             >
               {next}
             </button>

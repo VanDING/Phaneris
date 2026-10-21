@@ -257,14 +257,14 @@ function FilterModeSubMenuItems({
     <>
       <StyledDropdownMenuItem
         onClick={(e) => { e.preventDefault(); onChangeMode('include') }}
-        className={cn(mode === 'include' && "bg-foreground/[0.03]")}
+        className={cn(mode === 'include' && "bg-foreground/[0.04]")}
       >
         <Check className="h-3.5 w-3.5 shrink-0" />
         <span className="flex-1">{t("filter.include")}</span>
       </StyledDropdownMenuItem>
       <StyledDropdownMenuItem
         onClick={(e) => { e.preventDefault(); onChangeMode('exclude') }}
-        className={cn(mode === 'exclude' && "bg-foreground/[0.03]")}
+        className={cn(mode === 'exclude' && "bg-foreground/[0.04]")}
       >
         <X className="h-3.5 w-3.5 shrink-0" />
         <span className="flex-1">{t("filter.exclude")}</span>
@@ -3624,7 +3624,7 @@ function AppShellContent({
                                 )}
                                 {/* Separator between sections */}
                                 {filterDropdownResults.states.length > 0 && filterDropdownResults.labels.length > 0 && (
-                                  <div className="my-1 mx-2 border-t border-border/40" />
+                                  <div className="my-1 mx-2 border-t border-border/50" />
                                 )}
                                 {/* Matched labels — flat list with parent breadcrumbs */}
                                 {filterDropdownResults.labels.length > 0 && (
