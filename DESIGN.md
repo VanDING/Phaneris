@@ -436,6 +436,7 @@ rules drift.
 | A control paints its contract tier, height and label contrast | `test:ui:primitives` (6 scenes: 2 modes × 3 widths) |
 | One chrome row per panel, ≤75px to content | `test:ui:chrome` (rendered; also asserts the tablist keyboard contract) |
 | An append touches one row on a 200-turn transcript | `test:long-session-budget` (p50 ≤60ms, p95 ≤120ms; runs in `validate.yml`) |
+| A file over 1,200 lines only gets smaller | check:file-size + scripts/file-size-budget.json (each budget note says what remains and what blocks it) |
 | Evidence runs regenerate in place | --replace on a verification workflow (mkdir claims a directory atomically, so replacing is an explicit opt-in) |
 | An append or a chrome row never regresses silently | `test:ui:chrome`, `test:long-session-budget` and `test:ui:primitives` run in `validate.yml`, not only on request |
 | Warning debt never grows | `lint:workspace` + `scripts/lint-warning-baseline.json` (each warning carries an owner and a reason; a new warning and a stale allowance both fail) |
