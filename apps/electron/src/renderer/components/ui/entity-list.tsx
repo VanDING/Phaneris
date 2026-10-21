@@ -121,7 +121,9 @@ function CollapsibleGroupHeader({
             )}
           />
           <span className="text-meta font-medium uppercase tracking-wider text-muted-foreground relative">
-            {label}{isCollapsed && <> · <span className="text-text-secondary">{itemCount}</span></>}
+            {/* The count is always visible: a group header that only reports its
+                size when collapsed hides the one number that helps a scan. */}
+            {label} · <span className="text-text-secondary">{itemCount}</span>
           </span>
         </button>
       </ContextMenuTrigger>

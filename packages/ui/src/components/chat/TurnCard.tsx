@@ -869,7 +869,7 @@ export function ActivityStatusIcon({
       case 'error':
         return <XCircle className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-destructive")} />
       case 'unknown':
-        return <CircleAlert className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-warning")} />
+        return <CircleAlert className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-info-text")} />
     }
   }
 
@@ -1209,7 +1209,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
           <Tooltip>
             <TooltipTrigger asChild>
               <span
-                className="px-1.5 py-0.5 bg-warning/10 shadow-tinted rounded-shape-sm text-micro text-warning font-medium cursor-default shrink-0"
+                className="px-1.5 py-0.5 bg-info/10 shadow-tinted rounded-shape-sm text-micro text-info-text font-medium cursor-default shrink-0"
                 style={{ '--shadow-color': 'var(--warning)' } as React.CSSProperties}
               >
                 {i18n.t('turnCard.recoveryRequired')}
@@ -3186,7 +3186,7 @@ export const TurnCard = React.memo(function TurnCard({
             )}
           </button>
           {requiresRecovery && (
-            <div className="mx-2.5 mb-1.5 flex items-start gap-2 rounded-md border border-warning/20 bg-warning/10 px-2.5 py-2 text-meta text-warning">
+            <div className="mx-2.5 mb-1.5 flex items-start gap-2 rounded-md border border-info/20 bg-info/10 px-2.5 py-2 text-meta text-info-text">
               <CircleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               <div>
                 <div className="font-medium">{i18n.t('turnCard.recoveryRequired')}</div>
@@ -3198,7 +3198,8 @@ export const TurnCard = React.memo(function TurnCard({
                   return activity ? (
                     <button
                       type="button"
-                      className="mt-2 rounded-md border border-warning/30 bg-background/70 px-2 py-1 text-meta font-medium text-foreground hover:bg-background"
+                      data-control-size="xs"
+                      className="craft-control mt-2 rounded-md border border-info/30 bg-background/70 px-2 py-1 text-meta font-medium text-foreground hover:bg-background"
                       onClick={(event) => {
                         event.stopPropagation()
                         onReviewRecovery(activity)

@@ -4914,16 +4914,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "packages/ui/src/components/chat/TurnCard.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "d1ff94ac06f15fbe12af348304f4d1436481a920f311bda6e7d8108da493550c",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "packages/ui/src/components/chat/AcceptPlanDropdown.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",

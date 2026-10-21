@@ -287,8 +287,10 @@ export function SessionItem({
             )}
             {projectName && (
               <span
+                // Identity lives in the 2px stripe. Rendering the project colour
+                // as the label's text colour failed AA for 7 of 8 shipped project
+                // colours (2.15–4.47:1) and made a hovered row look like a state.
                 className="text-meta text-text-secondary whitespace-nowrap truncate max-w-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-                style={projectColor ? { color: projectColor } : undefined}
                 title={projectName}
               >
                 {projectName}
@@ -332,7 +334,7 @@ export function SessionItem({
             <div className="p-1 flex items-center justify-center">
               {handoffActive
                 ? <Spinner className="text-micro" />
-                : <ShieldAlert className="h-3.5 w-3.5 text-warning" />}
+                : <ShieldAlert className="h-3.5 w-3.5 text-info-text" />}
             </div>
           </TooltipTrigger>
           <TooltipContent>{handoffLabel}</TooltipContent>

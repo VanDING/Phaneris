@@ -21,7 +21,7 @@ import { formatShortRelativeTime } from './utils'
 const statusConfig: Record<ExecutionStatus, { icon: React.ElementType; classes: string }> = {
   success: { icon: CheckCircle2, classes: 'text-success' },
   error:   { icon: XCircle,      classes: 'text-destructive' },
-  blocked: { icon: ShieldAlert,   classes: 'text-warning' },
+  blocked: { icon: ShieldAlert,   classes: 'text-info-text' },
   skipped: { icon: CircleSlash,   classes: 'text-muted-foreground' },
   unsupported: { icon: CircleSlash, classes: 'text-muted-foreground' },
 }

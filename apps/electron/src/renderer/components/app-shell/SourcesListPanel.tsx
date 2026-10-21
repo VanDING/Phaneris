@@ -21,7 +21,7 @@ const SOURCE_TYPE_CONFIG: Record<string, { labelKey: string; colorClass: string 
 
 const SOURCE_STATUS_CONFIG: Record<string, { labelKey: string; colorClass: string } | null> = {
   connected: null,
-  needs_auth: { labelKey: 'sourcesList.statusAuthRequired', colorClass: 'bg-warning/10 text-warning' },
+  needs_auth: { labelKey: 'sourcesList.statusAuthRequired', colorClass: 'bg-info/10 text-info-text' },
   failed: { labelKey: 'sourcesList.statusDisconnected', colorClass: 'bg-destructive/10 text-destructive' },
   untested: { labelKey: 'sourcesList.statusNotTested', colorClass: 'bg-foreground/10 text-text-secondary' },
   local_disabled: { labelKey: 'sourcesList.statusDisabled', colorClass: 'bg-foreground/10 text-text-secondary' },

@@ -12,7 +12,10 @@ interface SessionProjectColorWrapperProps {
 /**
  * Wraps a SessionItem row with a project-color overlay.
  *
- * - Always renders a 3px colored stripe at the row's leading edge when a color is set.
+ * - Renders a 2px colored stripe at the row's leading edge when a color is set.
+ *   The stripe is identity, not state: 2px cannot be read as an error/success
+ *   dot next to the row's status icon (the audit found the 3px red stripe read
+ *   as "failed").
  * - Optionally adds a subtle background tint when treatment === 'stripe-tint'.
  *
  * Does NOT touch the SessionItem internals. The stripe/tint render on the wrapper
@@ -34,7 +37,7 @@ export function SessionProjectColorWrapper({
       style={showTint ? { backgroundColor: `color-mix(in srgb, ${color} 6%, transparent)` } : undefined}
     >
       <div
-        className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-sm z-component-chrome pointer-events-none"
+        className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-r-sm z-component-chrome pointer-events-none"
         style={{ backgroundColor: color }}
         aria-hidden
       />
