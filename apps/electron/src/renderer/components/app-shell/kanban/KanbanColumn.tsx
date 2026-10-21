@@ -90,6 +90,14 @@ export function KanbanColumn({
   // only ever mounted under a provider (the playground board mounts it too).
   const { setNodeRef, isOver } = useDroppable({ id: column.id })
 
+  // A finished column is an archive, not a working surface: with hundreds of
+  // done tasks it dominated the board and cost a full render on every update.
+  // It starts collapsed once it holds more than a screenful, and the header keeps
+  // the count so nothing is hidden without a number.
+  const isArchiveColumn = column.id === 'done'
+  const [collapsed, setCollapsed] = React.useState(isArchiveColumn && tasks.length > 20)
+  const showCollapsed = collapsed && tasks.length > 0
+
   return (
     <div className="flex min-w-[260px] flex-1 flex-col">
       <div className="flex items-center gap-2 px-0.5 pb-2">
@@ -107,6 +115,16 @@ export function KanbanColumn({
           onSetColor={onSetColor}
           onRemove={onRemove}
         />
+        {isArchiveColumn && tasks.length > 20 && (
+          <button
+            type="button"
+            onClick={() => setCollapsed(value => !value)}
+            className="craft-segment craft-focus shrink-0 px-1 text-meta text-text-secondary hover:text-foreground"
+            aria-expanded={!collapsed}
+          >
+            {collapsed ? t('kanban.showDone') : t('kanban.hideDone')}
+          </button>
+        )}
       </div>
 
       <div
@@ -116,9 +134,20 @@ export function KanbanColumn({
           outline: isOver && color ? `2px solid ${color.solid}` : undefined,
         }}
       >
-        {onCreateTask && <NewTaskComposer onCreate={onCreateTask} />}
+        {onCreateTask && !showCollapsed && <NewTaskComposer onCreate={onCreateTask} />}
 
-        {tasks.map(task => (
+        {tasks.length === 0 && (
+          // An empty column was a colour block with no exit: the only way to add
+          // work was to know the first column's composer. Say it where the gap is.
+          <div className="flex flex-1 flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border/70 px-3 py-6 text-center">
+            <span className="text-meta text-text-secondary">{t('kanban.workItemEmpty')}</span>
+            {onCreateTask && (
+              <span className="text-meta font-medium text-foreground">{t('kanban.newTask')}</span>
+            )}
+          </div>
+        )}
+
+        {!showCollapsed && tasks.map(task => (
           <DraggableTile key={task.id} taskId={task.id}>
             <TaskTile
               task={task}
