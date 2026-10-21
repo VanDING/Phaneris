@@ -1,0 +1,40 @@
+{
+  "threshold": 1200,
+  "files": [
+    {
+      "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      "maxLines": 3942,
+      "note": "Remaining: the sidebar nav tree and the filter dropdown, both entangled with filter state. Needs an observation point (like the chrome fixture) before the next cut."
+    },
+    {
+      "path": "packages/ui/src/components/chat/TurnCard.tsx",
+      "maxLines": 3043,
+      "note": "Two strategy modules already extracted (response buffering, tool display). The response card and the annotation layer remain."
+    },
+    {
+      "path": "apps/electron/src/renderer/App.tsx",
+      "maxLines": 2406,
+      "note": "Bootstrap + platform adapters; no cut attempted yet."
+    },
+    {
+      "path": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+      "maxLines": 2453,
+      "note": "One giant component. Its controller cannot move until the shell path/platform context is stubbed enough to mount it in a browser."
+    },
+    {
+      "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+      "maxLines": 2006,
+      "note": "Five cuts done; the search orchestration and turn refs stay with rendering on purpose."
+    },
+    {
+      "path": "apps/electron/src/renderer/context/NavigationContext.tsx",
+      "maxLines": 1331,
+      "note": "Merged from contexts/ in W4; not sliced yet."
+    },
+    {
+      "path": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+      "maxLines": 1284,
+      "note": "Five domain hooks extracted (44 -> 12 useState). Keeping above the threshold because the page still owns the API-setup overlay and validation state."
+    }
+  ]
+}
