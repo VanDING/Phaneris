@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "workflow": "long-session-budget",
+  "startedAt": "2026-10-21T06:22:15.815Z",
+  "finishedAt": "2026-10-21T06:23:18.496Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\long-session-budget-workflow.ts",
+    "--output-dir=docs/verification/results/long-session-budget-w1-ci"
+  ],
+  "source": {
+    "headSha": "af2052222a0616230b65fe6304c56882192f8645",
+    "dirtyPaths": [
+      "M .github/workflows/validate.yml",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": ".github/workflows/validate.yml",
+        "sha256": "7935d9377b67f1df6c7ec9fbf182f08b3a731da04c389918ad95c34ccf1950bf"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "LS1-initial-render-budget",
+    "LS2-scroll-frame-budget",
+    "LS3-append-frame-budget",
+    "LS4-glass-panel-cost",
+    "LS5-no-page-errors"
+  ],
+  "passed": 5,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "host.css",
+      "sha256": "e5fc8d9234647eb9923b547433d63e091e5b55ec6d0618ffaefbabc5abf6bcd1",
+      "bytes": 137
+    },
+    {
+      "path": "index.html",
+      "sha256": "10fe3a83238ecb1276efb7b282f50787ca50c3beb25e5cfc3980bc82ff798e29",
+      "bytes": 287
+    },
+    {
+      "path": "long-session-budget.json",
+      "sha256": "e8151b942fafb6b97f68e266ff46d0aa6efc28050a4ed84b01233b75510ebc97",
+      "bytes": 1568
+    },
+    {
+      "path": "long-session-glass.png",
+      "sha256": "c8ac097c3f338102818049330af9fce03872e80f975f2a710705493a89b26369",
+      "bytes": 86511
+    },
+    {
+      "path": "long-session-scrolled.png",
+      "sha256": "beeeeb7c8370f174fd975a5c865e36bc1c7814a53bdebecabf17bfba4282129f",
+      "bytes": 82571
+    },
+    {
+      "path": "long-session-top.png",
+      "sha256": "e8fb63beefc23a92eda555458675c238ff3f09e26731fb17a37412cc017f634f",
+      "bytes": 80882
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "3219c7fbc55c922ebe075da120ba7f0ca042b6837d6dcde1299a43683e2058b4",
+      "bytes": 604
+    }
+  ],
+  "untested": [
+    "Physical GPU/driver variance (headless software rasterisation differs from a desktop compositor)",
+    "heavily nested tool output and image-heavy turns",
+    "Physical touch/scrolling devices",
+    "Multi-window sessions and WebSocket transport"
+  ]
+}

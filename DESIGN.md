@@ -435,7 +435,9 @@ rules drift.
 | A class literal keeps its contract font-size tier through `cn()` | `audit:ui-merge` (part of `lint`; 0 losses over the whole tree) |
 | A control paints its contract tier, height and label contrast | `test:ui:primitives` (6 scenes: 2 modes × 3 widths) |
 | One chrome row per panel, ≤75px to content | `test:ui:chrome` (rendered; also asserts the tablist keyboard contract) |
-| An append touches one row on a 200-turn transcript | `test:long-session-budget` (p50 ≤60ms, p95 ≤120ms) |
+| An append touches one row on a 200-turn transcript | `test:long-session-budget` (p50 ≤60ms, p95 ≤120ms; runs in `validate.yml`) |
+| An append or a chrome row never regresses silently | `test:ui:chrome`, `test:long-session-budget` and `test:ui:primitives` run in `validate.yml`, not only on request |
+| Warning debt never grows | `lint:workspace` + `scripts/lint-warning-baseline.json` (each warning carries an owner and a reason; a new warning and a stale allowance both fail) |
 | Initial renderer graph stays lean | `bundle:report --check` (1.2MB raw ratchet) |
 
 Lowering a frozen count after a migration batch: `bun run design:drift`. It

@@ -91,6 +91,12 @@ jobs:
       - name: Panel chrome budget
         run: xvfb-run --auto-servernum bun run test:ui:chrome
 
+      # The transcript is the product's worst case. The append path regressed to
+      # p50 83ms / p95 200ms once already; the ceilings (60/120ms) only exist if
+      # something runs them on every change.
+      - name: Long-session draw budget
+        run: xvfb-run --auto-servernum bun run test:long-session-budget
+
       - name: Production bundle and server distribution smoke
         if: github.event_name == 'pull_request'
         run: bun run build:smoke

@@ -1,0 +1,7 @@
+{
+  "scripts/verification/fixtures/long-session-budget.tsx": "fa82ecc068bf8ced8c8c88744c1c9a500e23a8b240ec830fb2328d8d9ec6eb5f",
+  "scripts/verification/long-session-budget-workflow.ts": "6c1e8196cbd5b6ce23015aad25195a9325f5721bc33f1da720ee071a0118d584",
+  "packages/ui/src/components/chat/SessionViewer.tsx": "c2cce1af4865ddb419bb481786ca78d50e51711dd672109c68f51f381d34531d",
+  "packages/ui/src/components/chat/TurnCard.tsx": "e5b47f263dd0894bb8305e809106c098841c6750e89c6870c685150e47dbb005",
+  "packages/ui/src/styles/motion.css": "f3732300522adc8b223a23ff33ed16f3e421aa7fcfc81ea325ff781004ba4562"
+}
