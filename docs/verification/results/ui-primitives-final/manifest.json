@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "workflow": "ui-primitives",
+  "startedAt": "2026-10-21T08:38:08.283Z",
+  "finishedAt": "2026-10-21T08:38:58.153Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\ui-primitives-workflow.ts",
+    "--output-dir=docs/verification/results/ui-primitives-final"
+  ],
+  "source": {
+    "headSha": "c6af24d4c2886d493b0e849053c3105b03d8a7f0",
+    "dirtyPaths": [
+      "M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json"
+    ],
+    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "changedFiles": [
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "1045f80987a005ab136cd16e479fe8ff1f1c4dfa02d53526a097300a03048fa5"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "04a187bfe38bce762bce4e83db21eab35d31fb955a2b76b888946954f8c42de5"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "ui-primitives-light-1280",
+    "ui-primitives-light-1536",
+    "ui-primitives-light-1920",
+    "ui-primitives-dark-1280",
+    "ui-primitives-dark-1536",
+    "ui-primitives-dark-1920"
+  ],
+  "passed": 6,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "host.css",
+      "sha256": "5a05551e9cfc0d605e08462cb55074f127df8875f3b16193590100cc3ddd9f73",
+      "bytes": 131
+    },
+    {
+      "path": "index.html",
+      "sha256": "2dabaddb9436756e8052cfdd137e0e9c41efe837e7b1adf0d4c9881ac1500ca0",
+      "bytes": 281
+    },
+    {
+      "path": "ui-primitives-dark.png",
+      "sha256": "6fd849c6b0ee96dbb7fa3b0df6ceeb7a6630853f67fd99ecbb066fce6ea1a227",
+      "bytes": 24786
+    },
+    {
+      "path": "ui-primitives-light.png",
+      "sha256": "960be59bc65ab92c30d74931e4040b9f777b2d1ef92ba19cca7f8f7dcc932363",
+      "bytes": 25012
+    },
+    {
+      "path": "ui-primitives.json",
+      "sha256": "2261a6d1f9738b02548f18b8b1c9518a05d3082d5071a2acc19d508d6a182c49",
+      "bytes": 37773
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

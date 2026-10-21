@@ -213,9 +213,9 @@ describe('user theme storage', () => {
       });
       console.log(JSON.stringify({ initial, persisted, reloaded: getThemePreferences() }));
     `) as {
-      initial: { mode: string; colorTheme: string; font: string };
-      persisted: { mode: string; colorTheme: string; font: string };
-      reloaded: { mode: string; colorTheme: string; font: string };
+      initial: { mode: string; colorTheme: string; font: string; uiScale: number };
+      persisted: { mode: string; colorTheme: string; font: string; uiScale: number };
+      reloaded: { mode: string; colorTheme: string; font: string; uiScale: number };
     };
 
     // `uiScale` is part of the theme preference shape (normalized to 1 when a

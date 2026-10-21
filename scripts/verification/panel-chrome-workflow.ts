@@ -335,6 +335,11 @@ await verificationWorkflow('panel-chrome', async run => {
         withActive: { passive: number; active: number }
         withoutActive: { passive: number; active: number }
         cleared: { passive: number; active: number }
+        next: number[]
+        prev: number[]
+        chip: [string, string, number]
+        shuffle: [string, string, number]
+        cmdKey: boolean
       }
       assert.equal(probe.matches, 2, `expected two matches (the excluded cell is skipped), got ${probe.matches}`)
       assert.equal(probe.crossNode, 2, 'both matches span element boundaries')
