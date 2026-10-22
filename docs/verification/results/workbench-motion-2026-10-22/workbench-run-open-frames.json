@@ -1,0 +1,235 @@
+[
+  {
+    "time": 0.20000004768371582,
+    "workbench": 0,
+    "primary": 440,
+    "mounted": false,
+    "row": 1128,
+    "opacity": 0
+  },
+  {
+    "time": 93.5,
+    "workbench": 312.25,
+    "primary": 931.359375,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 105.10000002384186,
+    "workbench": 460.15625,
+    "primary": 741.59375,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 120.60000002384186,
+    "workbench": 521.625,
+    "primary": 662.71875,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 135.30000007152557,
+    "workbench": 535.546875,
+    "primary": 644.859375,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 151.90000009536743,
+    "workbench": 580.296875,
+    "primary": 587.4375,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 168.70000004768372,
+    "workbench": 620.09375,
+    "primary": 536.390625,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 185.30000007152557,
+    "workbench": 651.1875,
+    "primary": 496.484375,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 202.90000009536743,
+    "workbench": 675,
+    "primary": 465.9375,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 286.2000000476837,
+    "workbench": 729.8125,
+    "primary": 395.625,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 299.8000000715256,
+    "workbench": 740.203125,
+    "primary": 382.28125,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 318.60000002384186,
+    "workbench": 741.71875,
+    "primary": 380.328125,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 345.40000009536743,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 363.60000002384186,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 369.5,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 385.3000000715256,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 401.60000002384186,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 418.40000009536743,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 435,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 451.60000002384186,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 468.3000000715256,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 485.2000000476837,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 501.5,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 518.2000000476837,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 534.9000000953674,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  },
+  {
+    "time": 551.5,
+    "workbench": 742,
+    "primary": 380,
+    "mounted": true,
+    "row": 1128,
+    "opacity": "1",
+    "sash": "380"
+  }
+]

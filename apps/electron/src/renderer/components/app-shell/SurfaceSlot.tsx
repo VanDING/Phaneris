@@ -11,8 +11,6 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSetAtom } from 'jotai'
-import { motion, useReducedMotionConfig } from 'motion/react'
-import { motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import { X, ChevronLeft } from 'lucide-react'
 import { parseRouteToNavigationState } from '../../../shared/route-parser'
@@ -26,8 +24,7 @@ import { useAppShellContext, AppShellProvider } from '@/context/AppShellContext'
 import { PanelHeaderCenterButton } from '@/components/ui/PanelHeaderCenterButton'
 import { MainContentPanel } from './MainContentPanel'
 import { BoundPanelContent, isBoundPanelType } from '@/components/content-panels/bound-panel-content'
-import { MIN_COMPANION_PRIMARY_WIDTH, MIN_WORKBENCH_WIDTH } from '@/atoms/workbench'
-import { PANEL_MIN_WIDTH, RADIUS_EDGE, RADIUS_INNER } from './panel-constants'
+import { RADIUS_EDGE, RADIUS_INNER } from './panel-constants'
 
 interface SurfaceSlotProps {
   entry: SurfaceRenderEntry
@@ -36,9 +33,6 @@ interface SurfaceSlotProps {
   isFocusedPanel: boolean
   /** True when two or more conversations are presented side by side. */
   isConversationGroup?: boolean
-  /** True for the single Primary conversation beside an open Workbench. */
-  isWorkbenchCompanion?: boolean
-  companionPrimaryWidth?: number
   isSidebarAndNavigatorHidden: boolean
   /** Whether this panel's left corners touch the window edge (no sidebar/navigator before it) */
   isAtLeftEdge: boolean
@@ -51,66 +45,8 @@ interface SurfaceSlotProps {
   /** Compact (mobile) mode — shows back button in panel header */
   isCompact?: boolean
   hidden?: boolean
-  /** A pointer drag owns the panel width right now — never ease it. */
-  isResizing?: boolean
   /** Compact replacement-mode back behavior. */
   onCompactBack?: () => void
-}
-
-/**
- * How a panel takes its share of the layout row.
- *
- * Every state declares the same properties so the row can interpolate between
- * them: opening or closing the workbench moves the Primary's share of the free
- * space, and that share is the only geometry that changes. The Workbench keeps
- * `flex-grow: 1`, so it takes whatever the Primary leaves and the two panels
- * never animate against each other. `min-width` moves with `flex-basis` so the
- * minimum can never freeze the panel mid-transition.
- */
-function panelShareStyle({
-  isCompact,
-  isOnly,
-  isWorkbench,
-  isWorkbenchCompanion,
-  companionPrimaryWidth,
-}: Pick<SurfaceSlotProps, 'isCompact' | 'isOnly' | 'isWorkbenchCompanion'> & {
-  isWorkbench: boolean
-  companionPrimaryWidth: number
-}): React.CSSProperties {
-  if (isCompact || isOnly) {
-    // Alone, the surface takes the row with a full basis rather than by growing.
-    // Growing is what made the open animation start at half: the primary's
-    // `flex-grow` eased 1 → 0 while its basis eased 0 → 600px, so for the first
-    // frames both panels grew from zero and the workbench appeared at half the
-    // row before shrinking to its share. With a 100% basis the two panels stay
-    // complementary for every frame — the primary shrinks from the full row to
-    // its width and the workbench grows from nothing into the remainder.
-    return { flexGrow: 0, flexShrink: 1, flexBasis: '100%', minWidth: '0px' }
-  }
-  if (isWorkbench) {
-    // The workbench takes exactly what the Primary leaves. It must not carry a
-    // `max-width`: capping the panel at half the row made the opening animation
-    // start there and then shrink to the primary's basis, and it made the sash
-    // value disagree with the rendered boundary.
-    return {
-      flexGrow: 1,
-      flexShrink: 1,
-      flexBasis: '0px',
-      minWidth: `${MIN_WORKBENCH_WIDTH}px`,
-    }
-  }
-  if (isWorkbenchCompanion) {
-    // Companion primary: a fixed basis, floored at a reading minimum rather than
-    // at the saved width — deriving the floor from `companionPrimaryWidth` made
-    // the transcript impossible to narrow past whatever it was set to last.
-    return {
-      flexGrow: 0,
-      flexShrink: 1,
-      flexBasis: `${companionPrimaryWidth}px`,
-      minWidth: `${MIN_COMPANION_PRIMARY_WIDTH}px`,
-    }
-  }
-  return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: `${PANEL_MIN_WIDTH}px` }
 }
 
 export function SurfaceSlot({
@@ -118,8 +54,6 @@ export function SurfaceSlot({
   isOnly,
   isFocusedPanel,
   isConversationGroup = false,
-  isWorkbenchCompanion = false,
-  companionPrimaryWidth,
   isSidebarAndNavigatorHidden,
   isAtLeftEdge,
   isAtRightEdge,
@@ -127,7 +61,6 @@ export function SurfaceSlot({
   sash,
   isCompact,
   hidden = false,
-  isResizing = false,
   onCompactBack,
 }: SurfaceSlotProps) {
   const { t } = useTranslation()
@@ -135,9 +68,7 @@ export function SurfaceSlot({
   const removeForegroundSession = useSetAtom(removeForegroundSessionAtom)
   const setFocusedSurface = useSetAtom(focusedSurfaceEntryIdAtom)
   const parentContext = useAppShellContext()
-  const reduceMotion = useReducedMotionConfig()
   const navState = parseRouteToNavigationState(entry.route)
-  const isWorkbench = entry.surfaceRole === 'workbench'
 
   // Build close button for PanelHeader (via context override)
   const closeButton = useMemo(() => {
@@ -219,22 +150,8 @@ export function SurfaceSlot({
           borderBottomLeftRadius: isCompact ? 0 : (isAtLeftEdge ? RADIUS_EDGE : RADIUS_INNER),
           borderTopRightRadius: RADIUS_INNER,
           borderBottomRightRadius: isCompact ? 0 : (isAtRightEdge ? RADIUS_EDGE : RADIUS_INNER),
-          ...panelShareStyle({
-            isCompact,
-            isOnly,
-            isWorkbench,
-            isWorkbenchCompanion,
-            companionPrimaryWidth: companionPrimaryWidth ?? PANEL_MIN_WIDTH,
-          }),
-          // Opening or closing the workbench changes this panel's basis, and the
-          // basis is the only geometry that moves: `flex-grow` is 0 in every
-          // state, so it is not in the transition list (easing it alongside the
-          // basis is what produced a half-width first frame). A pointer drag owns
-          // the width directly and must not be eased; the global reduced-motion
-          // rule collapses these durations to 1ms.
-          transitionProperty: 'flex-basis, min-width',
-          transitionDuration: isResizing ? '0s' : 'var(--motion-duration-spatial)',
-          transitionTimingFunction: 'var(--motion-ease-move)',
+          flex: '1 1 0px',
+          minWidth: 0,
         }}
       >
         {isConversationGroup && !isFocusedPanel && (
@@ -254,25 +171,7 @@ export function SurfaceSlot({
           <div className="min-h-0 flex-1">
             <AppShellProvider value={contextOverride}>
               {isBoundPanelType(entry.panelType) ? (
-              /* Bound workbench panels are dispatched by panelType (never by the
-                 parsed nav state) so a stale/unparseable route can neither render
-                 the wrong content nor fall through to the global navigation.
-                 Light opacity fade on open; reduced motion renders instantly.
-                 Opacity only: the panel's width is already easing, and sliding the
-                 content 8px while it grows reads as a flicker rather than one
-                 movement. */
-              reduceMotion ? (
                 <BoundPanelContent entry={entry} />
-              ) : (
-                <motion.div
-                  className="h-full min-h-0"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={motionTween(reduceMotion, 'standard', 'enter')}
-                >
-                  <BoundPanelContent entry={entry} />
-                </motion.div>
-              )
               ) : (
                 <MainContentPanel
                   navStateOverride={navState}

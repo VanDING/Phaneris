@@ -10,7 +10,7 @@ import {
 import { useResizeGradient } from '@/hooks/useResizeGradient'
 import {
   PANEL_SASH_DEAD_ZONE,
-  PANEL_SASH_FLEX_MARGIN,
+  PANEL_GAP,
   PANEL_SASH_HALF_HIT_WIDTH,
   PANEL_SASH_LINE_WIDTH,
   PANEL_STACK_VERTICAL_OVERFLOW,
@@ -37,7 +37,9 @@ interface WorkbenchResizeSashProps {
 export function WorkbenchResizeSash({ primaryWidth, maxWidth, onDraggingChange }: WorkbenchResizeSashProps) {
   const ceiling = Math.max(MIN_COMPANION_PRIMARY_WIDTH, maxWidth ?? MAX_COMPANION_PRIMARY_WIDTH)
   const { t } = useTranslation()
-  const setWidth = useSetAtom(setCompanionPrimaryWidthAtom)
+  const setPrimaryWidth = useSetAtom(setCompanionPrimaryWidthAtom)
+  // The measured row is authoritative even beyond the legacy fallback ceiling.
+  const setWidth = useCallback((width: number) => setPrimaryWidth(width, ceiling), [setPrimaryWidth, ceiling])
   const { ref, handlers, gradientStyle } = useResizeGradient()
   const startXRef = useRef(0)
   const startWidthRef = useRef(0)
@@ -102,8 +104,8 @@ export function WorkbenchResizeSash({ primaryWidth, maxWidth, onDraggingChange }
   return (
     <div
       ref={ref}
-      className="relative h-full w-0 shrink-0 cursor-col-resize"
-      style={{ margin: `0 ${PANEL_SASH_FLEX_MARGIN}px` }}
+      className="absolute h-full w-0 cursor-col-resize"
+      style={{ left: -PANEL_GAP / 2 }}
       role="separator"
       aria-orientation="vertical"
       aria-label={t('contentPanel.resize')}

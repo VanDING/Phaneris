@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "workflow": "workbench-motion",
+  "startedAt": "2026-10-22T03:44:25.717Z",
+  "finishedAt": "2026-10-22T03:44:51.912Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\workbench-motion-workflow.ts",
+    "--output-dir=docs/verification/results/workbench-motion-2026-10-22",
+    "--replace"
+  ],
+  "source": {
+    "headSha": "b367293244f9a29fa16a771d06a88fe00918c387",
+    "dirtyPaths": [
+      "M DESIGN.md",
+      " M apps/electron/src/renderer/atoms/workbench.ts",
+      " M apps/electron/src/renderer/components/app-shell/SurfaceContainer.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SurfaceSlot.tsx",
+      " M apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
+      " M scripts/verification/fixtures/shell-visual.cjs",
+      " M scripts/visual-debt-ledger.json",
+      "?? apps/electron/src/renderer/components/app-shell/WorkbenchLayout.tsx",
+      "?? docs/verification/results/workbench-motion-2026-10-22/fixture.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/manifest.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/process.log",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-2-companion.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-2-conversations.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-2-open-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-3-companion.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-3-conversations.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-3-open-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-buttons.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-close-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-closed.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-compact.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-full-width.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-labels.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-motion.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-open-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-open.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-reduced-close-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-reduced-open-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-resized.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-run-open-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-sash-maximum.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-terminal-open-frames.json",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-wide-window.png",
+      "?? docs/verification/results/workbench-motion-2026-10-22/workbench-window-resize-frames.json",
+      "?? docs/verification/workbench-motion-2026-10-22.md",
+      "?? scripts/verification/fixtures/workbench-motion.cjs",
+      "?? scripts/verification/workbench-motion-workflow.ts"
+    ],
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
+    "changedFiles": [
+      {
+        "path": "DESIGN.md",
+        "sha256": "72011612565720c19b36b79d89261cb96684bc94bc1cec3caa42f2bf68080c28"
+      },
+      {
+        "path": "apps/electron/src/renderer/atoms/workbench.ts",
+        "sha256": "2af134ed2979b73d23a34346f0d71000595483def7fb5ed194c6ea6690528121"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SurfaceContainer.tsx",
+        "sha256": "48f1140ca3f79e36e0a68f5f23b233ca08b18697f58385d01eda766764634f82"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SurfaceSlot.tsx",
+        "sha256": "be930b6fce808a404305dae57f6d1e168835cd20d724a6cf8ea1f4b13042c664"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/WorkbenchLayout.tsx",
+        "sha256": "7fcbfb1ae3efef5d7e15121caf1e3caa530339a3f435b5eff9b6e5cd2ec609c0"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
+        "sha256": "11c0a33e4faa1204ca6d389d7ad15f3753b3cb3602478e015b7bf480224e1743"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/fixture.json",
+        "sha256": "53dfdb01414b8198afc11f4bd98f2c8793d30b41a083e9db7d11231215ee112e"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/manifest.json",
+        "sha256": "7463835311dfe1e5696aed220ad08cd4af9e1279dcdc298ca26174e910e73dcb"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/process.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-2-companion.png",
+        "sha256": "91c7abf01c479e35e77786bf2f627ab878f769c89d50421b3ab05ce110d6bc40"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-2-conversations.png",
+        "sha256": "357c8f454916889e4260599b442ba2a4b5c3aacf2c038fdbb1a728cce2a82ca7"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-2-open-frames.json",
+        "sha256": "7a7f6303a0c528177be2f6ee4b165a78f8a5c6d9546ad8ee17be034b92e2acca"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-3-companion.png",
+        "sha256": "db2a1430de2456a1e0199b0f60a5328b2bdbde89e6a7d142ce712d377aa0a8f2"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-3-conversations.png",
+        "sha256": "203b3bf9f4ba7ce314094b53888c0130a2fb53a4743401a1414a5903e9359b21"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-3-open-frames.json",
+        "sha256": "76cc67ca843bbddaedb90c863d56a432a6eef1f1d8a2c9d0fd75bcbb28fad1d1"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-buttons.json",
+        "sha256": "592b3437fe610edcb28453c78ec1274342a7b0e92cdfc6d18ee478e92b1a256b"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-close-frames.json",
+        "sha256": "602b7a61b67194e8f4dfd34b222a7844fbf8ac53b108ea0c540f1bee12631da8"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-closed.png",
+        "sha256": "5629d73ad31d1e5b270d1df6c7488ba8a0fba76f8a78a31bd8aaaf965dafded3"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-compact.png",
+        "sha256": "86e5e238282aa5220cd3587af4264fe2fbd8be97a0850e82e4feb770a3c0c242"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-full-width.png",
+        "sha256": "89ed184df4fbf1bfab5b59ec6d745b01cd711b57b781dafca7945172212be40f"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-labels.json",
+        "sha256": "44bf94b55762b609dc31ada4f99280182466a9c34a5c76b4fd70ea67620a8ed7"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-motion.json",
+        "sha256": "6e2cfd7ab98a3c7263b129f4605cb1d3e952098a081de15a3e84381c6a14e2d0"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-open-frames.json",
+        "sha256": "04dcdd6647d77c4a18a4cce21fd9bb3c7d4eec5ff5f3f7c75de6947332aecfee"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-open.png",
+        "sha256": "512ca8ea20e8377fc5038465bc9188f67291f734f7c77772d4d673850f17e531"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-reduced-close-frames.json",
+        "sha256": "0610466cae43dbd831500c10fb385fcdcfc50eaeafaae3889666d41559d6fd5e"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-reduced-open-frames.json",
+        "sha256": "d2379eb930f3ea02494e2c736a2ad69ade2eac9c6bcd2fb0d9816d31cb287137"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-resized.png",
+        "sha256": "6873028baa56f107762a7db736bb0b131ace9a3e0b28e9ef6f2f0ddf001de0d8"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-run-open-frames.json",
+        "sha256": "5690033739c205384a597ad624e962c824e0461b0bd71ccf35ed534a661c38ab"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-sash-maximum.png",
+        "sha256": "e6d59b0911244698722827d16b4e2895c0c327694c252cc8ac94ca044f220faa"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-terminal-open-frames.json",
+        "sha256": "851dbed83c4808eda3ee5b040ced7cedb828a0b3f8484506046f433115909036"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-wide-window.png",
+        "sha256": "0f6d46e9a8cbf1b3e0af6424ac4ba31f6cee16885d52ae2ea977134491623cb5"
+      },
+      {
+        "path": "docs/verification/results/workbench-motion-2026-10-22/workbench-window-resize-frames.json",
+        "sha256": "4b14a0d9f7e4771f35ae7ffb2d4204b88117736acddc7cb4ccf7ffa28cdd0cb8"
+      },
+      {
+        "path": "docs/verification/workbench-motion-2026-10-22.md",
+        "sha256": "a3d71cf79777e599071974dba9b75e03824a4b9338e4f3df89fe7c0fc56999cf"
+      },
+      {
+        "path": "scripts/verification/fixtures/shell-visual.cjs",
+        "sha256": "a9ed3f167d5db639116f5b037b7ac039cca221da4cfd9d03f01e322ea59d0fb6"
+      },
+      {
+        "path": "scripts/verification/fixtures/workbench-motion.cjs",
+        "sha256": "0ab6cdc093526983bffa77569df5014406260a5cbaecb69f95e76714707377d5"
+      },
+      {
+        "path": "scripts/verification/workbench-motion-workflow.ts",
+        "sha256": "3b0a6115c772d3b7dcc0a83131f364adc077f80dc0c3f38b76235d162dcbc930"
+      },
+      {
+        "path": "scripts/visual-debt-ledger.json",
+        "sha256": "26e0aed0d2881762615cc6faf4fdb3e52a8ac12f029f2f5967b07932f717d80d"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "open has intermediate painted widths",
+    "open width never decreases",
+    "open mounts at zero width",
+    "open never pauses at the Workbench floor",
+    "open keeps both widths complementary",
+    "panel content has no entrance opacity or transform",
+    "close has intermediate painted widths",
+    "close width never increases",
+    "close removes Workbench",
+    "keyboard Home reaches transcript floor",
+    "keyboard End reaches row ceiling and Workbench floor",
+    "transcript can exceed half the content row",
+    "keyboard arrows use the rendered boundary",
+    "drag snaps to each pointer position without easing",
+    "wide-window sash reaches its measured ceiling",
+    "window resize snaps without a tween tail",
+    "expanded Workbench fills the content row",
+    "Escape restores the companion layout",
+    "2 foreground conversations share the row",
+    "2 conversation Workbench opens monotonically",
+    "2 conversations return after collapse",
+    "3 foreground conversations share the row",
+    "3 conversation Workbench opens monotonically",
+    "3 conversations return after collapse",
+    "运行 opens monotonically",
+    "终端 opens monotonically",
+    "compact keeps replacement layers at full width",
+    "compact uses no row-derived dock",
+    "reduced motion opens instantly",
+    "reduced motion closes instantly"
+  ],
+  "passed": 30,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "780e13a19d0dfcfd4b6401eb29cc9fc843d3ee2e8d4bcc8568c2b8f3f1916383",
+      "bytes": 330
+    },
+    {
+      "path": "fixture.json",
+      "sha256": "a99751dc20ef9d068fa2f20c83705626fd7f3cfb46a9c1f362ed37a8901c9194",
+      "bytes": 278
+    },
+    {
+      "path": "process.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "workbench-2-companion.png",
+      "sha256": "177c1c79b82e31390ccea7504ceb8b5627ba57a3677268a276ebe5e579b543d6",
+      "bytes": 117481
+    },
+    {
+      "path": "workbench-2-conversations.png",
+      "sha256": "a287ac8d930a4144f228f7330402486adc617770fa2e7ea3b8f665959f1a1c8e",
+      "bytes": 121625
+    },
+    {
+      "path": "workbench-2-open-frames.json",
+      "sha256": "70d569c43b2984c7c978af9fae5e6f3272e9c40d2c1c3494f0aa9970389cf36a",
+      "bytes": 5630
+    },
+    {
+      "path": "workbench-3-companion.png",
+      "sha256": "db2a1430de2456a1e0199b0f60a5328b2bdbde89e6a7d142ce712d377aa0a8f2",
+      "bytes": 116882
+    },
+    {
+      "path": "workbench-3-conversations.png",
+      "sha256": "f25f0fc7880f6493068039608d76cfcd130ea42f6e62ac5ca724b13074a05fb8",
+      "bytes": 122486
+    },
+    {
+      "path": "workbench-3-open-frames.json",
+      "sha256": "12c12bb21b51701792897f67f3e0eda67f0533f36b7ce5979cb2ff85f065d078",
+      "bytes": 5482
+    },
+    {
+      "path": "workbench-buttons.json",
+      "sha256": "592b3437fe610edcb28453c78ec1274342a7b0e92cdfc6d18ee478e92b1a256b",
+      "bytes": 87
+    },
+    {
+      "path": "workbench-close-frames.json",
+      "sha256": "6aef2f69c8388a405e75ccbd5b920a6d59d3fd3ccc5de87ad8e820c8d6e0d39d",
+      "bytes": 5133
+    },
+    {
+      "path": "workbench-closed.png",
+      "sha256": "5629d73ad31d1e5b270d1df6c7488ba8a0fba76f8a78a31bd8aaaf965dafded3",
+      "bytes": 100796
+    },
+    {
+      "path": "workbench-compact.png",
+      "sha256": "86e5e238282aa5220cd3587af4264fe2fbd8be97a0850e82e4feb770a3c0c242",
+      "bytes": 18306
+    },
+    {
+      "path": "workbench-full-width.png",
+      "sha256": "9c9d6bec18a2256e026a27d0267e3750376b53b9eb28a1ebcd65cd51a8278513",
+      "bytes": 72365
+    },
+    {
+      "path": "workbench-labels.json",
+      "sha256": "44bf94b55762b609dc31ada4f99280182466a9c34a5c76b4fd70ea67620a8ed7",
+      "bytes": 822
+    },
+    {
+      "path": "workbench-motion.json",
+      "sha256": "e97835e6ba1121c5f49f0418bc19fde97b18203926ec3acae6507150ff156e78",
+      "bytes": 35632
+    },
+    {
+      "path": "workbench-open-frames.json",
+      "sha256": "a300964939915f6d802f304e9bfd5ce8ead95544832e43f948d49f89f10e7585",
+      "bytes": 5302
+    },
+    {
+      "path": "workbench-open.png",
+      "sha256": "512ca8ea20e8377fc5038465bc9188f67291f734f7c77772d4d673850f17e531",
+      "bytes": 113044
+    },
+    {
+      "path": "workbench-reduced-close-frames.json",
+      "sha256": "35b6f57ae488882c0e14d6fde4ac419a61712795a95e8c9d0c51e9714bf6895c",
+      "bytes": 4338
+    },
+    {
+      "path": "workbench-reduced-open-frames.json",
+      "sha256": "0c08e9ff1406c65e543c90f437deb0bb2983e10b216d1e8a7fb78325737bcb7b",
+      "bytes": 4643
+    },
+    {
+      "path": "workbench-resized.png",
+      "sha256": "78d93292098ef7ff57904b9709078184a8a04ecb28d05d64bfef8a72cd560b39",
+      "bytes": 117143
+    },
+    {
+      "path": "workbench-run-open-frames.json",
+      "sha256": "e4403a0813ae297406c3737bf40de09f53aec30d28af388f547b75ceb186c206",
+      "bytes": 4163
+    },
+    {
+      "path": "workbench-sash-maximum.png",
+      "sha256": "f1e5a159bdf69bc0ed71de93fa81ba0528650cc0a2d434b191a9d6ab2df65ce9",
+      "bytes": 112880
+    },
+    {
+      "path": "workbench-terminal-open-frames.json",
+      "sha256": "7a38bf11a8a4241b5762db7f257123e92b041474b21e4b46f89389406ac1eaba",
+      "bytes": 4373
+    },
+    {
+      "path": "workbench-wide-window.png",
+      "sha256": "0f6d46e9a8cbf1b3e0af6424ac4ba31f6cee16885d52ae2ea977134491623cb5",
+      "bytes": 120281
+    },
+    {
+      "path": "workbench-window-resize-frames.json",
+      "sha256": "f5e253e9beca74f2261f189800b4533513aae205287362ef29b0936680d05fdd",
+      "bytes": 1892
+    }
+  ],
+  "untested": [
+    "Physical touch hardware",
+    "macOS/Linux native compositor"
+  ]
+}

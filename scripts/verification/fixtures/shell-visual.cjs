@@ -124,6 +124,7 @@ const { _electron } = require('playwright')
     const nativeRadius = process.platform === 'darwin' ? 10 : 6
     target('native default panel radius', Math.abs(parseFloat(initial.navigator.radius[0]) - nativeRadius) < .01, initial.navigator.radius)
     target('native default edge radius', Math.abs(parseFloat(initial.content.radius[2]) - (process.platform === 'darwin' ? 8 : 6)) < .01, initial.content.radius)
+    checks.push(...await require('./workbench-motion.cjs').verifyWorkbenchMotion(page, nativeWindow, { ...fixture, quick: true }))
     const dragSash = async (name, delta) => {
       const sash = page.getByRole('slider', { name, exact: true })
       const rect = await sash.boundingBox()
