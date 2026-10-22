@@ -10,8 +10,9 @@ import type { ToolResult, TextContent } from './types.ts';
 /**
  * Create a successful text response
  */
-export function successResponse(text: string): ToolResult {
+export function successResponse(text: string, continuation?: ToolResult['continuation']): ToolResult {
   return {
+    ...(continuation ? { continuation } : {}),
     content: [{ type: 'text', text }],
     structuredContent: {},
     isError: false,

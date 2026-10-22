@@ -250,6 +250,8 @@ export interface TextContent {
  * Standard tool result type compatible with both SDK and MCP patterns
  */
 export interface ToolResult {
+  /** Host-confirmed lifecycle outcome; absence means normal continuation. */
+  continuation?: 'continue' | 'await_user';
   content: TextContent[];
   /**
    * Optional structured payload for MCP clients.

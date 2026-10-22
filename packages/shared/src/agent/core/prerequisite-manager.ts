@@ -215,7 +215,10 @@ export class PrerequisiteManager {
    * normalizes it, and adds to the read set.
    * Also clears matching pending skill paths.
    */
-  trackReadTool(toolInput: Record<string, unknown>): void {
+  trackReadTool(toolInput: Record<string, unknown>, resultText?: string): void {
+    // A bounded or ranged read does not establish that the instructions were loaded.
+    if (toolInput.limit !== undefined || (typeof toolInput.offset === 'number' && toolInput.offset > 1)) return;
+    if (resultText && /\[[^\]\n]*(?:Use offset=\d+ to continue|exceeds[^\]\n]*limit)[^\]\n]*\]/i.test(resultText)) return;
     const filePath = (toolInput.file_path as string) || (toolInput.path as string);
     if (!filePath) return;
 

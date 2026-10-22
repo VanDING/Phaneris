@@ -9,6 +9,7 @@
 export interface PendingPlanExecution {
   planPath: string
   draftInputSnapshot?: string
+  approvalMessageSnapshot?: string
   awaitingCompaction: boolean
   executionDispatched: boolean
 }

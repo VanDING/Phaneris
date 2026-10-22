@@ -82,7 +82,7 @@ import { type ThinkingLevel, getThinkingLevelNameKey, getThinkingLevelsForModel 
 import { useEscapeInterrupt } from '@/context/EscapeInterruptContext'
 import { hasOpenOverlay } from '@/lib/overlay-detection'
 import { ToolbarStatusSlot } from './ToolbarStatusSlot'
-import { buildPlanApprovalMessage } from '../plan-approval-message'
+import { buildPlanApprovalMessage, type PlanApprovalEventDetail } from '../plan-approval-message'
 import { createPendingPlanDispatcher } from './pending-plan-dispatch'
 import { isImeSubmitBlocked, shouldHandleScopedInputEvent, shouldRecallPromptOnArrowUp } from './input-event-guards'
 import { clearPendingFocusForSession, consumePendingFocusForSession } from './focus-input-events'
@@ -620,13 +620,6 @@ export function FreeFormInput({
 
   const handleToggleModelVision = useModelVisionToggle()
 
-  type PlanApprovalEventDetail = {
-    sessionId?: string
-    planPath?: string
-    includeDraftInput?: boolean
-    source?: string
-  }
-
   // Listen for craft:approve-plan events (used by ResponseCard's Accept Plan button)
   // This disables safe mode AND submits the message in one action
   // Only process events for this session (sessionId must match)
@@ -641,6 +634,7 @@ export function FreeFormInput({
       const draftInput = shouldIncludeDraft ? consumeInputDraftSnapshot() : ''
       const text = buildPlanApprovalMessage({
         planPath: e.detail?.planPath,
+        planSnapshot: e.detail?.planSnapshot,
         draftInput,
       })
 
@@ -682,6 +676,7 @@ export function FreeFormInput({
         await window.electronAPI.sessionCommand(sessionId, {
           type: 'setPendingPlanExecution',
           planPath: planPath ?? '',
+          planMessageId: e.detail?.planSnapshot?.id,
           draftInputSnapshot,
         })
       }
@@ -715,6 +710,7 @@ export function FreeFormInput({
       claim: () => window.electronAPI.sessionCommand(sessionId, { type: 'markPendingPlanExecutionDispatched' }),
       submit: pending => onSubmit(buildPlanApprovalMessage({
         planPath: pending.planPath,
+        approvalMessageSnapshot: pending.approvalMessageSnapshot,
         draftInput: pending.draftInputSnapshot,
       }), undefined),
       clear: () => window.electronAPI.sessionCommand(sessionId, { type: 'clearPendingPlanExecution' }),

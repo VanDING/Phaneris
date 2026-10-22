@@ -875,6 +875,7 @@ export class ConfigWatcher {
    */
   private handleSkillChange(slug: string): void {
     debug('[ConfigWatcher] Skill changed:', slug);
+    invalidateSkillsCache();
 
     const skill = loadSkill(this.workspaceDir, slug);
     this.callbacks.onSkillChange?.(slug, skill);

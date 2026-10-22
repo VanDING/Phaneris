@@ -21,6 +21,7 @@ import { CONFIG_DIR } from '../config/paths.ts';
 import { DATA_DIR_NAME, LEGACY_IDENTITY } from '../identity.generated.ts';
 import { getSessionSafeAllowedToolNames } from '@phaneris/session-tools-core';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
+import { PI_TOOL_NAME_MAP } from './backend/pi/constants.ts';
 import { isBrowserToolNameOrAlias } from './browser-tool-names.ts';
 import type { PermissionsContext, MergedPermissionsConfig } from './permissions-config.ts';
 import {
@@ -1910,7 +1911,7 @@ export function isApiEndpointAllowed(
  * Tools that are always allowed in any mode (read-only by nature)
  */
 const ALWAYS_ALLOWED_TOOLS = new Set([
-  'Read', 'Glob', 'Grep',           // File reading
+  'Read', 'Glob', 'Grep', 'Find', 'Ls', // File reading
   'Task', 'TaskOutput',             // Agent orchestration
   'WebFetch', 'WebSearch',          // Web research
   'TodoWrite',                      // Task tracking
@@ -1947,6 +1948,7 @@ export function shouldAllowToolInMode(
     permissionsContext?: PermissionsContext;
   }
 ): ToolCheckResult {
+  toolName = PI_TOOL_NAME_MAP[toolName] ?? toolName;
   // Get config: merged custom if context provided, otherwise defaults
   let config: ToolCheckConfig;
 
@@ -1976,16 +1978,9 @@ export function shouldAllowToolInMode(
     return { allowed: true };
   }
 
-  // Check if tool name ends with an always-allowed tool (for MCP variants like mcp__plan__SubmitPlan)
-  for (const allowedTool of ALWAYS_ALLOWED_TOOLS) {
-    if (toolName.endsWith(`__${allowedTool}`)) {
-      return { allowed: true };
-    }
-  }
-
   // Browser tool aliases (legacy browser_open/browser_snapshot/...)
   // are normalized centrally to avoid drift across permission checks.
-  if (isBrowserToolNameOrAlias(toolName)) {
+  if (isBrowserToolNameOrAlias(toolName) && (!toolName.includes('__') || toolName.startsWith('mcp__session__') || toolName.startsWith('session__'))) {
     return { allowed: true };
   }
 
@@ -2159,7 +2154,7 @@ export function shouldAllowToolInMode(
       // Write/auth/admin session tools - blocked in Explore mode
       return {
         allowed: false,
-        reason: `Session configuration changes are blocked in ${config.displayName}. Switch to Ask or Allow All mode (${config.shortcutHint}) to create, update, or delete sources and agents.`
+        reason: `${toolName} is not available in ${config.displayName}: this operation can change state or require authorization. Use Ask or an authorized execution mode (${config.shortcutHint}) to proceed.`
       };
     }
 
@@ -2201,8 +2196,7 @@ export function shouldAllowToolInMode(
     };
   }
 
-  // Default: allow other tools not explicitly handled
-  return { allowed: true };
+  return { allowed: false, reason: `Unclassified tool '${toolName}' is unavailable in ${config.displayName}. Use a registered capability or switch to Ask for review.` };
 }
 
 /**
@@ -2276,8 +2270,10 @@ export function formatSessionState(
   const diagnostics = getPermissionModeDiagnostics(sessionId);
 
   // Use canonical user-facing mode tokens to avoid terminology drift.
-  const modeName = toCanonicalPermissionMode(diagnostics.permissionMode);
+  const effectiveMode = resolveEffectivePermissionMode(diagnostics.permissionMode);
+  const modeName = toCanonicalPermissionMode(effectiveMode);
   let result = `<session_state>\nsessionId: ${sessionId}\npermissionMode: ${modeName}`;
+  if (effectiveMode !== diagnostics.permissionMode) result += `\nrequestedPermissionMode: ${toCanonicalPermissionMode(diagnostics.permissionMode)}`;
 
   if (diagnostics.transitionDisplay) {
     result += `\nmodeTransition: ${diagnostics.transitionDisplay}`;

@@ -50,14 +50,14 @@ export interface SessionToolCallbacks {
    * Claude: calls onPlanSubmitted callback
    * Codex: sends __CALLBACK__ message to stderr
    */
-  onPlanSubmitted(planPath: string): void;
+  onPlanSubmitted(planPath: string): void | Promise<void>;
 
   /**
    * Called when authentication is requested.
    * Claude: calls onAuthRequest callback + forceAbort
    * Codex: sends __CALLBACK__ message to stderr
    */
-  onAuthRequest(request: AuthRequest): void;
+  onAuthRequest(request: AuthRequest): void | Promise<void>;
 
   /**
    * Called when the agent asks the user a question.

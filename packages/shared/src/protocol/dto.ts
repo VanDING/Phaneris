@@ -570,7 +570,7 @@ export type SessionCommand =
   | { type: 'revokeShare' }
   | { type: 'refreshTitle' }
   | { type: 'setConnection'; connectionSlug: string }
-  | { type: 'setPendingPlanExecution'; planPath: string; draftInputSnapshot?: string }
+  | { type: 'setPendingPlanExecution'; planPath: string; draftInputSnapshot?: string; planMessageId?: string }
   | { type: 'markCompactionComplete' }
   | { type: 'markPendingPlanExecutionDispatched' }
   | { type: 'clearPendingPlanExecution' }

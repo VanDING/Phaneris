@@ -1,5 +1,6 @@
 import { mkdirSync } from 'node:fs';
-import { DefaultResourceLoader, createCodemodeExtension, createToolSearchExtension, type ToolDefinition } from '@earendil-works/pi-coding-agent';
+import { DefaultResourceLoader, createCodemodeExtension, type ToolDefinition } from '@earendil-works/pi-coding-agent';
+import { createPhanerisToolSearch } from './tool-discovery.ts';
 import { registerNativeLifecycle, type ObserveLifecycle } from './native-lifecycle-observation.ts';
 import { createPhanerisSettingsManager } from './session-settings.ts';
 import type { SettingsManager, ExtensionAPI } from '@earendil-works/pi-coding-agent';
@@ -73,8 +74,8 @@ export async function createPhanerisResourceLoader(options: {
         { name: 'phaneris-codemode', factory: (pi: Parameters<ReturnType<typeof createCodemodeExtension>>[0]) => {
           createCodemodeExtension({ models: false })({ ...pi, registerTool: tool => pi.registerTool(options.wrapOrchestrationTool!(tool)) });
         } },
-        { name: 'phaneris-tool-search', factory: (pi: Parameters<ReturnType<typeof createToolSearchExtension>>[0]) => {
-          createToolSearchExtension()({ ...pi, registerTool: tool => pi.registerTool(options.wrapOrchestrationTool!(tool)) });
+        { name: 'phaneris-tool-search', factory: (pi: ExtensionAPI) => {
+          pi.registerTool(options.wrapOrchestrationTool!(createPhanerisToolSearch(pi)));
         } },
       ] : []),
       {

@@ -107,10 +107,10 @@ export async function handleSourceOAuthTrigger(
   };
 
   // Trigger auth request (will cause forceAbort)
-  ctx.callbacks.onAuthRequest(authRequest);
+  await ctx.callbacks.onAuthRequest(authRequest);
 
   return successResponse(
-    `OAuth authentication requested for '${source.name}'. Opening browser for authentication.`
+    `OAuth authentication requested for '${source.name}'. Opening browser for authentication.`, 'await_user'
   );
 }
 
@@ -200,10 +200,10 @@ export GOOGLE_OAUTH_CLIENT_SECRET="YOUR_CLIENT_SECRET"
   };
 
   // Trigger auth request
-  ctx.callbacks.onAuthRequest(authRequest);
+  await ctx.callbacks.onAuthRequest(authRequest);
 
   return successResponse(
-    `Google OAuth requested for '${source.name}'. Opening browser for authentication.`
+    `Google OAuth requested for '${source.name}'. Opening browser for authentication.`, 'await_user'
   );
 }
 
@@ -277,10 +277,10 @@ export async function handleSlackOAuthTrigger(
   };
 
   // Trigger auth request
-  ctx.callbacks.onAuthRequest(authRequest);
+  await ctx.callbacks.onAuthRequest(authRequest);
 
   return successResponse(
-    `Slack OAuth requested for '${source.name}'. Opening browser for authentication.`
+    `Slack OAuth requested for '${source.name}'. Opening browser for authentication.`, 'await_user'
   );
 }
 
@@ -348,9 +348,9 @@ export async function handleMicrosoftOAuthTrigger(
   };
 
   // Trigger auth request
-  ctx.callbacks.onAuthRequest(authRequest);
+  await ctx.callbacks.onAuthRequest(authRequest);
 
   return successResponse(
-    `Microsoft OAuth requested for '${source.name}'. Opening browser for authentication.`
+    `Microsoft OAuth requested for '${source.name}'. Opening browser for authentication.`, 'await_user'
   );
 }

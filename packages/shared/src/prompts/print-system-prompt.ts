@@ -228,8 +228,8 @@ ${colors.bgMagenta}${colors.bold}                              SUMMARY          
 ${colors.bgMagenta}${colors.bold}                                                                                ${colors.reset}
 
 ${colors.bold}SDK Configuration:${colors.reset}
-  systemPrompt.preset: 'claude_code'     ${colors.dim}// Claude Code's base system prompt${colors.reset}
-  systemPrompt.append: getSystemPrompt() ${colors.dim}// Phaneris additions (static, cacheable)${colors.reset}
+  systemPrompt.override: getSystemPrompt() ${colors.dim}// Phaneris owns the complete Pi system prompt${colors.reset}
+  systemPrompt.stable: workspace context  ${colors.dim}// PiAgent appends stable capability/directory blocks${colors.reset}
 
 ${colors.bold}Static System Prompt Components:${colors.reset}
   1. User Preferences (if set)           ${colors.dim}// formatPreferencesForPrompt()${colors.reset}

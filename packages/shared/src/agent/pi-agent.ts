@@ -461,6 +461,14 @@ export class PiAgent extends BaseAgent {
   private pendingHostToolRequests = new Map<string, AbortController>();
   private pendingLargeResultFilters = new Map<string, AbortController>();
   private pendingBashReads = new Map<string, string>();
+  private pendingFileReads = new Map<string, Record<string, unknown>>();
+  private pendingSourceDelivery: (() => void) | null = null;
+
+  private clearPendingReads(): void {
+    this.pendingBashReads.clear();
+    this.pendingFileReads.clear();
+    this.pendingSourceDelivery = null;
+  }
 
   private preToolMetadataByCallId: Map<string, {
     intent?: string;
@@ -1488,22 +1496,29 @@ export class PiAgent extends BaseAgent {
     // The event adapter expects typed PiAgentEvent/AgentSessionEvent objects,
     // but since we're receiving plain JSON, we cast through unknown.
     for (const agentEvent of this.adapter.adaptEvent(adaptedEvent as any)) {
+      if (this.pendingSourceDelivery && (agentEvent.type === 'text_delta' || agentEvent.type === 'tool_start' || agentEvent.type === 'text_complete')) {
+        this.pendingSourceDelivery();
+        this.pendingSourceDelivery = null;
+      }
       if (agentEvent.type === 'tool_start' && agentEvent.toolName === 'Bash') {
         const command = (agentEvent.input as Record<string, unknown>)?.command;
         if (typeof command === 'string') this.pendingBashReads.set(agentEvent.toolUseId, command);
       }
       // Track Read tool calls for prerequisite checking
       if (agentEvent.type === 'tool_start' && agentEvent.toolName === 'Read') {
-        this.prerequisiteManager.trackReadTool(agentEvent.input as Record<string, unknown>);
+        this.pendingFileReads.set(agentEvent.toolUseId, agentEvent.input as Record<string, unknown>);
       }
       // Reset prerequisite state on compaction (LLM loses guide content)
       if (agentEvent.type === 'info' && typeof agentEvent.message === 'string' && agentEvent.message.startsWith('Compacted')) {
         this.resetPrerequisiteState();
-        this.pendingBashReads.clear();
+        this.clearPendingReads();
       }
 
       // Fire PostToolUse / PostToolUseFailure hook events (fire-and-forget)
       if (agentEvent.type === 'tool_result') {
+        const fileRead = this.pendingFileReads.get(agentEvent.toolUseId);
+        this.pendingFileReads.delete(agentEvent.toolUseId);
+        if (!agentEvent.isError && fileRead) this.prerequisiteManager.trackReadTool(fileRead, typeof agentEvent.result === 'string' ? agentEvent.result : undefined);
         const command = this.pendingBashReads.get(agentEvent.toolUseId);
         this.pendingBashReads.delete(agentEvent.toolUseId);
         if (!agentEvent.isError && command) this.prerequisiteManager.trackSuccessfulBashRead(command);
@@ -1986,12 +2001,14 @@ export class PiAgent extends BaseAgent {
       sessionId,
       workspacePath,
       workspaceId,
-      onPlanSubmitted: (planPath: string) => {
+      onPlanSubmitted: async (planPath: string) => {
+        if (!this.onPlanSubmitted) throw new Error('Plan review is unavailable in this session.');
+        await this.onPlanSubmitted(planPath);
         setLastPlanFilePath(sessionId, planPath);
-        this.onPlanSubmitted?.(planPath);
       },
       onAuthRequest: (request: unknown) => {
-        this.onAuthRequest?.(request as any);
+        if (!this.onAuthRequest) throw new Error('Authentication UI is unavailable in this session.');
+        return this.onAuthRequest(request as any);
       },
       onAskUser: (requestId: string, questions: AskUserQuestion[]) => this.awaitUserAnswer(requestId, questions),
     });
@@ -2011,7 +2028,7 @@ export class PiAgent extends BaseAgent {
     args: Record<string, unknown>,
     signal?: AbortSignal,
     durableTool?: DurableToolExecutionIdentity,
-  ): Promise<{ content: string; isError: boolean }> {
+  ): Promise<PiProxyToolResult> {
     try {
       // call_llm uses the shared pre-execution pipeline from BaseAgent
       if (toolName === 'call_llm') {
@@ -2113,7 +2130,7 @@ export class PiAgent extends BaseAgent {
 
       // Convert ToolResult to subprocess response format
       const text = result.content.map(c => c.text).join('\n');
-      return { content: text, isError: !!result.isError };
+      return { content: text, isError: !!result.isError, structuredContent: result.structuredContent, continuation: result.continuation };
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       this.debug(`Session tool ${toolName} failed: ${msg}`);
@@ -2382,7 +2399,7 @@ export class PiAgent extends BaseAgent {
     // Drop any cached pre-tool metadata for the dead subprocess.
     this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
-    this.pendingBashReads.clear();
+    this.clearPendingReads();
     this.bufferedDurableToolStarts.clear();
   }
 
@@ -2655,7 +2672,7 @@ export class PiAgent extends BaseAgent {
         // The queue never saw this compaction (it is RPC-driven), so the
         // prerequisite reset the queue path would have triggered happens here.
         this.resetPrerequisiteState();
-        this.pendingBashReads.clear();
+        this.clearPendingReads();
         yield* this.adapter.adaptContextUsage(compactResult, true, compactResult.estimatedTokensAfter);
         // A consumer can stop between yielded occupancy and success.
         if (compactEpoch !== this.compactionEpoch) throw new Error('Compaction aborted');
@@ -2680,7 +2697,9 @@ export class PiAgent extends BaseAgent {
       );
 
       // Build context from sources
-      const sourceContext = this.sourceManager.formatSourceState();
+      const sourceDelivery = this.sourceManager.prepareSourceState();
+      const sourceContext = sourceDelivery.content;
+      this.pendingSourceDelivery = sourceDelivery.acknowledge;
 
       const promptModeDiagnostics = getPermissionModeDiagnostics(this._sessionId)
       this.debug(
@@ -3083,7 +3102,7 @@ export class PiAgent extends BaseAgent {
     // Clear bridge cache for this interrupted turn.
     this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
-    this.pendingBashReads.clear();
+    this.clearPendingReads();
     this.bufferedDurableToolStarts.clear();
   }
 
@@ -3160,7 +3179,7 @@ export class PiAgent extends BaseAgent {
     // Clear bridge cache for aborted turn.
     this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
-    this.pendingBashReads.clear();
+    this.clearPendingReads();
     this.bufferedDurableToolStarts.clear();
 
     // For PlanSubmitted and AuthRequest, just interrupt the turn
@@ -3369,7 +3388,7 @@ export class PiAgent extends BaseAgent {
     this.callbackPort = 0;
     this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
-    this.pendingBashReads.clear();
+    this.clearPendingReads();
     this.bufferedDurableToolStarts.clear();
     this.adapter.resetRecoveryState();
 
@@ -3429,7 +3448,7 @@ export class PiAgent extends BaseAgent {
     this.callbackPort = 0;
     this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
-    this.pendingBashReads.clear();
+    this.clearPendingReads();
     this.bufferedDurableToolStarts.clear();
 
     // Clear any in-flight overflow/auto-retry recovery state so a stale

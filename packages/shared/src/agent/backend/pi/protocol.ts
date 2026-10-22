@@ -25,6 +25,7 @@ export interface PiProxyToolDefinition {
 }
 
 export interface PiProxyToolResult {
+  continuation?: 'continue' | 'await_user';
   content: string;
   isError: boolean;
   /** The unabridged MCP blocks; preview text is independently bounded. */

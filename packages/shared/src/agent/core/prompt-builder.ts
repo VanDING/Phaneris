@@ -273,7 +273,7 @@ export class PromptBuilder {
     const formattedMessages = messages.map((m) => {
       const role = m.type === 'user' ? 'User' : 'Assistant';
       // Truncate very long messages to avoid bloating context
-      const content = m.content.length > 1000
+      const content = !m.preserveContent && m.content.length > 1000
         ? m.content.slice(0, 1000) + '...[truncated]'
         : m.content;
       return `[${role}]: ${content}`;

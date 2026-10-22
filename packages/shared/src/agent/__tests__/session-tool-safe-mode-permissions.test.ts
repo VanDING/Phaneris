@@ -39,7 +39,8 @@ describe('session tool safe-mode classification', () => {
       const result = shouldAllowToolInMode(toolName, {}, 'safe');
       expect(result.allowed).toBe(false);
       if (!result.allowed) {
-        expect(result.reason).toContain('Session configuration changes are blocked in');
+        expect(result.reason).toContain(toolName);
+        expect(result.reason).toContain('not available in Explore');
       }
     }
   });

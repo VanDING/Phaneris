@@ -774,7 +774,7 @@ export abstract class BaseAgent implements AgentBackend {
         const role = m.type === 'user' ? 'User' : 'Assistant';
         // Truncate very long messages to avoid bloating context (max ~1000 chars each)
         const content =
-          m.content.length > 1000
+          !m.preserveContent && m.content.length > 1000
             ? m.content.slice(0, 1000) + '...[truncated]'
             : m.content;
         return `[${role}]: ${content}`;
@@ -979,7 +979,7 @@ ${formattedMessages}
     const pathList = [...skillPaths.entries()]
       .map(([slug, path]) => `- ${path} (skill: ${slug})`)
       .join('\n');
-    return `Before proceeding with the user's request, you MUST read the following skill instruction files using the Read tool or \`cat\` via Bash:\n${pathList}\n\nDo not take any other action until you have read these files.`;
+    return `Read the following skill instruction files before performing the specialized work they govern, using the exposed file reader or shell:\n${pathList}\n\nClarifications, status updates and recovery from a failed read may proceed. A failed or partial read does not establish that the skill instructions were loaded.`;
   }
 
   // ============================================================
@@ -1029,10 +1029,9 @@ ${formattedMessages}
     const messageParts = [branchSeedContext, transferredSessionContext, directive, cleanMessage, options?.turnContext].filter(Boolean);
     const effectiveMessage = messageParts.join('\n\n');
 
-    // Capture the raw user message for source-activation auto-retry. `cleanMessage`
-    // has skill paths stripped but otherwise matches what the user typed — exactly
-    // what we want to resend when an activation forces a turn restart.
-    this.setCurrentTurnUserMessage(cleanMessage);
+    // Replay the original input through mention resolution, retaining explicit
+    // skill/source selections without duplicating stale generated context.
+    this.setCurrentTurnUserMessage(message);
     try {
       yield* this.chatImpl(effectiveMessage, attachments, options);
     } finally {

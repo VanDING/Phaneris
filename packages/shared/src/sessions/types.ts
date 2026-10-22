@@ -203,6 +203,8 @@ export interface SessionConfig extends SessionPlanningFields {
     planPath: string;
     /** Optional snapshot of draft input captured at accept time */
     draftInputSnapshot?: string;
+    /** Exact host-captured approval, retained across compaction/reload. */
+    approvalMessageSnapshot?: string;
     /** Whether we're still waiting for compaction to complete */
     awaitingCompaction: boolean;
     /** Whether execution has already been dispatched from the UI. */
@@ -343,6 +345,8 @@ export interface SessionHeader extends SessionPlanningFields {
     planPath: string;
     /** Optional snapshot of draft input captured at accept time */
     draftInputSnapshot?: string;
+    /** Exact host-captured approval, retained across compaction/reload. */
+    approvalMessageSnapshot?: string;
     /** Whether we're still waiting for compaction to complete */
     awaitingCompaction: boolean;
     /** Whether execution has already been dispatched from the UI. */

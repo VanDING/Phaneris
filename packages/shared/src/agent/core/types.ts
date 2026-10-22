@@ -38,6 +38,8 @@ export type { ToolCheckResult } from '../mode-manager.ts';
 export interface RecoveryMessage {
   type: 'user' | 'assistant';
   content: string;
+  /** Original user goal or accepted scope; do not clip its meaning during recovery. */
+  preserveContent?: boolean;
 }
 
 /**

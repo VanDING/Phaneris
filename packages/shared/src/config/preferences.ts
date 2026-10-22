@@ -3,7 +3,7 @@ import { join } from 'path';
 import { ensureConfigDir } from './repository.ts';
 import { CONFIG_DIR } from './paths.ts';
 import { readJsonFileSync } from '../utils/files.ts';
-import { i18n, SUPPORTED_LANGUAGE_CODES } from '../i18n/index.ts';
+import { SUPPORTED_LANGUAGE_CODES } from '../i18n/index.ts';
 import { LOCALE_REGISTRY, type LanguageCode } from '../i18n/registry.ts';
 import { sanitizePromptBody, sanitizePromptLine } from '../prompts/prompt-sanitize.ts';
 
@@ -142,7 +142,7 @@ export function formatPreferencesForPrompt(): string {
   const prefs = loadPreferences();
 
   // Derive language from the app's i18n setting (Appearance > Language).
-  const langCode = (i18n.resolvedLanguage ?? 'en') as LanguageCode;
+  const langCode = getPersistedUiLanguage() ?? 'en';
   const langEntry = LOCALE_REGISTRY[langCode];
   const langName = langEntry?.nativeName ?? 'English';
 
@@ -218,7 +218,7 @@ export function formatPreferencesDisplay(): string {
       lines.push('- Location: (not set)');
     }
 
-    const displayLangCode = (i18n.resolvedLanguage ?? 'en') as LanguageCode;
+    const displayLangCode = getPersistedUiLanguage() ?? 'en';
     const displayLangEntry = LOCALE_REGISTRY[displayLangCode];
     lines.push(`- Language: ${displayLangEntry?.nativeName ?? 'English'} (via Appearance settings)`);
 

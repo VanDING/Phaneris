@@ -1792,12 +1792,12 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                         onSaveAndSendFollowUp={handleSaveAndSendFollowUp}
                         onAcceptPlan={() => {
                           const planMessage = session?.messages.findLast(m => m.role === 'plan')
-                          const planPath = planMessage?.planPath
 
                           window.dispatchEvent(new CustomEvent('craft:approve-plan', {
                             detail: {
                               sessionId: session?.id,
-                              planPath,
+                              planPath: planMessage?.planPath,
+                              planSnapshot: planMessage ? { id: planMessage.id, content: planMessage.content } : undefined,
                               includeDraftInput: true,
                               source: 'plan-card',
                             },
@@ -1805,12 +1805,12 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                         }}
                         onAcceptPlanWithCompact={() => {
                           const planMessage = session?.messages.findLast(m => m.role === 'plan')
-                          const planPath = planMessage?.planPath
 
                           window.dispatchEvent(new CustomEvent('craft:approve-plan-with-compact', {
                             detail: {
                               sessionId: session?.id,
-                              planPath,
+                              planPath: planMessage?.planPath,
+                              planSnapshot: planMessage ? { id: planMessage.id, content: planMessage.content } : undefined,
                               includeDraftInput: true,
                               source: 'plan-card',
                             },

@@ -1,5 +1,6 @@
 import { getContextPolicy, getCompactionThreshold } from '@phaneris/shared/config/appearance';
 import { assembleSessionAgent } from './agent-assembly'
+import { buildPlanApproval } from './plan-approval'
 import { buildAgentSessionSnapshot } from './agent-product-context'
 import { createSessionAgentCallbacks } from './agent-product-callbacks'
 import { prepareSessionSourceResources, type SessionSourceResources } from './source-resources'
@@ -236,14 +237,6 @@ const MAX_ANNOTATION_JSON_BYTES = 32 * 1024
 // are ignored, so the watcher does not roll back the in-memory mutation we
 // just persisted. See onSessionMetadataChange.
 const METADATA_WRITE_GUARD_MS = 5000
-
-/**
- * Text sent to the session when a plan is approved from outside the desktop
- * UI (e.g. Telegram button). Mirrors the English `plan.approved` i18n key
- * used by the desktop flow at `plan-approval-message.ts`. Not localized —
- * the agent reads this, not the end user.
- */
-const PLAN_APPROVAL_MESSAGE = 'Plan approved, please execute.'
 
 // validateSpawnAttachmentPath removed — use shared validateFilePath from @phaneris/server-core/handlers
 
@@ -5021,6 +5014,7 @@ initialSources: {
           }
         } catch (error) {
           sessionLog.error(`Failed to read plan file:`, error)
+          throw error
         }
       }
 
@@ -5919,10 +5913,11 @@ initialSources: {
    * Called when user clicks "Accept & Compact" to persist the plan path
    * so execution can resume after compaction (even if page reloads).
    */
-  async setPendingPlanExecution(sessionId: string, planPath: string, draftInputSnapshot?: string): Promise<void> {
+  async setPendingPlanExecution(sessionId: string, planPath: string, draftInputSnapshot?: string, planMessageId?: string): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (managed) {
-      await setStoredPendingPlanExecution(managed.workspace.rootPath, sessionId, planPath, draftInputSnapshot)
+      const approvalSnapshot = buildPlanApproval(managed.messages, planPath, planMessageId)
+      await setStoredPendingPlanExecution(managed.workspace.rootPath, sessionId, planPath, draftInputSnapshot, approvalSnapshot)
       sessionLog.info(`Session ${sessionId}: set pending plan execution for ${planPath}`)
     }
   }
@@ -5979,7 +5974,7 @@ initialSources: {
    * Get pending plan execution state for a session.
    * Used on reload/init to check if we need to resume plan execution.
    */
-  getPendingPlanExecution(sessionId: string): { planPath: string; draftInputSnapshot?: string; awaitingCompaction: boolean; executionDispatched: boolean } | null {
+  getPendingPlanExecution(sessionId: string): { planPath: string; draftInputSnapshot?: string; approvalMessageSnapshot?: string; awaitingCompaction: boolean; executionDispatched: boolean } | null {
     const managed = this.sessions.get(sessionId)
     if (!managed) return null
     return getStoredPendingPlanExecution(managed.workspace.rootPath, sessionId)
@@ -5992,18 +5987,19 @@ initialSources: {
    * message through the normal sendMessage
    * path.
    */
-  async acceptPlan(sessionId: string, _planPath?: string): Promise<void> {
+  async acceptPlan(sessionId: string, planPath?: string): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       sessionLog.warn(`acceptPlan: session ${sessionId} not found`)
       return
     }
 
+    const approval = buildPlanApproval(managed.messages, planPath)
     if (managed.permissionMode === 'safe') {
       this.setSessionPermissionMode(sessionId, planExecutionMode(managed.previousPermissionMode))
     }
 
-    await this.sendMessage(sessionId, PLAN_APPROVAL_MESSAGE)
+    await this.sendMessage(sessionId, approval)
   }
 
   // ============================================

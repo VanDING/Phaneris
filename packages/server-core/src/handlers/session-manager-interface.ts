@@ -212,11 +212,11 @@ export interface ISessionManager {
   // Plans
   // ---------------------------------------------------------------------------
 
-  setPendingPlanExecution(sessionId: string, planPath: string, draftInputSnapshot?: string): Promise<void>
+  setPendingPlanExecution(sessionId: string, planPath: string, draftInputSnapshot?: string, planMessageId?: string): Promise<void>
   /** Atomic claim: resolves true only for the caller that owns the dispatch. */
   markPendingPlanExecutionDispatched(sessionId: string): Promise<boolean>
   clearPendingPlanExecution(sessionId: string): Promise<void>
-  getPendingPlanExecution(sessionId: string): { planPath: string; draftInputSnapshot?: string; awaitingCompaction: boolean; executionDispatched: boolean } | null
+  getPendingPlanExecution(sessionId: string): { planPath: string; draftInputSnapshot?: string; approvalMessageSnapshot?: string; awaitingCompaction: boolean; executionDispatched: boolean } | null
   markCompactionComplete(sessionId: string): Promise<void>
 
   /**

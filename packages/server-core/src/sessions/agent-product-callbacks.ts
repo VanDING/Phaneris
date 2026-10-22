@@ -65,7 +65,14 @@ export function createSessionAgentCallbacks(ports: AgentProductPorts): Omit<Sess
       ports.thinkingChanged(effectiveLevel)
       ports.log(`Session ${ports.read().id}: Pi clamped thinking level to ${effectiveLevel}`)
     },
-    getRecoveryMessages: () => messages(ports.read()).slice(-6),
+    getRecoveryMessages: () => {
+      const all = messages(ports.read())
+      const goal = all.find(message => message.type === 'user')
+      const accepted = all.findLast(message => message.type === 'user' && message.content.includes('Accepted plan message:') && /Content (?:sha256|revision):/.test(message.content))
+      const selected = new Set([goal, accepted, ...all.slice(-6)])
+      return all.filter(message => selected.has(message)).map(message => ({ ...message,
+        ...((message === goal || message === accepted) ? { preserveContent: true } : {}) }))
+    },
     getBranchFallbackMessages() {
       const view = ports.read()
       return view.branchFromMessageId ? messages(view) : []

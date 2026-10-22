@@ -163,8 +163,6 @@ export const CallLlmSchema = z.object({
   systemPrompt: z.string().optional().describe('Optional system prompt'),
   maxTokens: z.number().optional().describe('Max output tokens (1-64000). Defaults to 4096'),
   temperature: z.number().optional().describe('Sampling temperature 0-1'),
-  thinking: z.boolean().optional().describe('Enable extended thinking. Incompatible with outputFormat/outputSchema'),
-  thinkingBudget: z.number().optional().describe('Token budget for thinking (1024-100000). Defaults to 10000'),
   outputFormat: z.enum(['summary', 'classification', 'extraction', 'analysis', 'comparison', 'validation']).optional()
     .describe('Predefined output format'),
   outputSchema: z.object({

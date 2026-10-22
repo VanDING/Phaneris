@@ -74,9 +74,9 @@ export async function handleCredentialPrompt(
   };
 
   // Trigger auth request (will cause forceAbort)
-  ctx.callbacks.onAuthRequest(authRequest);
+  await ctx.callbacks.onAuthRequest(authRequest);
 
   return successResponse(
-    `Authentication requested for '${source.name}'. Waiting for user input.`
+    `Authentication requested for '${source.name}'. Waiting for user input.`, 'await_user'
   );
 }

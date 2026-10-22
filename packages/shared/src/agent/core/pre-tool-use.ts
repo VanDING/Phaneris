@@ -18,6 +18,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { expandPath } from '../../utils/paths.ts';
+import { PI_TOOL_NAME_MAP } from '../backend/pi/constants.ts';
 import {
   detectConfigFileType,
   detectAppConfigFileType,
@@ -1037,6 +1038,7 @@ export function shouldPromptInAskMode(
   plansFolderPath?: string,
   onDebug?: (message: string) => void,
 ): PromptInfo | null {
+  toolName = PI_TOOL_NAME_MAP[toolName] ?? toolName;
 
   // --- File writes ---
   if (FILE_WRITE_TOOLS.has(toolName)) {

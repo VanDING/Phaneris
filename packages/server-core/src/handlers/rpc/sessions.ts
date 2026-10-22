@@ -527,7 +527,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
         return sessionManager.setSessionConnection(sessionId, command.connectionSlug)
       // Pending plan execution (Accept & Compact flow)
       case 'setPendingPlanExecution':
-        return sessionManager.setPendingPlanExecution(sessionId, command.planPath, command.draftInputSnapshot)
+        return sessionManager.setPendingPlanExecution(sessionId, command.planPath, command.draftInputSnapshot, command.planMessageId)
       case 'markCompactionComplete':
         return sessionManager.markCompactionComplete(sessionId)
       case 'markPendingPlanExecutionDispatched':

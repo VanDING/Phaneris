@@ -46,6 +46,8 @@ export const PI_TOOL_NAME_MAP: Record<string, string> = {
   multi_edit: 'MultiEdit',
   web_fetch: 'WebFetch',
   web_search: 'WebSearch',
+  mcp__session__web_search: 'WebSearch',
+  mcp__session__web_fetch: 'WebFetch',
   notebook_edit: 'NotebookEdit',
   glob: 'Glob',
   task: 'Task',

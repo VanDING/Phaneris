@@ -643,6 +643,7 @@ export async function setPendingPlanExecution(
   sessionId: string,
   planPath: string,
   draftInputSnapshot?: string,
+  approvalMessageSnapshot?: string,
 ): Promise<void> {
   const session = loadSession(workspaceRootPath, sessionId);
   if (!session) return;
@@ -650,6 +651,7 @@ export async function setPendingPlanExecution(
   session.pendingPlanExecution = {
     planPath,
     draftInputSnapshot,
+    approvalMessageSnapshot,
     awaitingCompaction: true,
     executionDispatched: false,
   };
@@ -724,7 +726,7 @@ export async function clearPendingPlanExecution(
 export function getPendingPlanExecution(
   workspaceRootPath: string,
   sessionId: string
-): { planPath: string; draftInputSnapshot?: string; awaitingCompaction: boolean; executionDispatched: boolean } | null {
+): { planPath: string; draftInputSnapshot?: string; approvalMessageSnapshot?: string; awaitingCompaction: boolean; executionDispatched: boolean } | null {
   const session = loadSession(workspaceRootPath, sessionId);
   if (!session?.pendingPlanExecution) return null;
   return {

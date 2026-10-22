@@ -20,6 +20,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
+Harness 实施：[2026-10-22 模型交互系统实施记录](process/model-harness-implementation-2026-10-22.md) — 新分支已完成首批调用契约、发现与连续性修复；后续范围和真实模型验证限制见记录。
+
 本次专项：[防御逻辑与测试精简治理](process/defensive-code-test-cleanup-2026-10-17.md)。
 
 本轮维护：[2026-10-16 全量依赖升级评估](dependencies/dependency-audit-2026-10-16.md)；[CI 修复失败矩阵](verification/ci-repair-failure-matrix-2026-10-16.md)；[CI 修复验证记录](verification/ci-repair-2026-10-16.md)。

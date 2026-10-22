@@ -194,11 +194,8 @@ export class SourceManager {
     // Check if this is the first message (no sources known yet)
     const isFirstMessage = this.knownSlugs.size === 0;
 
-    // Mark all current sources as known for next message
-    this.allSources.forEach((s) => this.knownSlugs.add(s.config.slug));
-
     // Build output parts
-    const parts: string[] = [];
+    const parts: string[] = ['Current snapshot: this latest sources block supersedes source states in earlier messages.'];
 
     // Active sources line - include warning for sources with failed builds
     if (activeSlugs.length > 0) {
@@ -229,7 +226,7 @@ export class SourceManager {
       (s) => s.guide?.raw && !GUIDE_EXEMPT_SLUGS.has(s.config.slug)
     );
     if (activeSourcesWithGuides.length > 0) {
-      parts.push('Read each source\'s guide.md before first tool use — calls are blocked until guide is read.');
+      parts.push('Read the relevant source guide before nontrivial use. A failed read is not a successful activation; use the live schema when sufficient to recover.');
     }
 
     // What connected MCP sources offer beyond tools, shown once per source (this
@@ -242,7 +239,6 @@ export class SourceManager {
       const lines = this.formatSourceFeatures(slug);
       if (lines.length === 0) continue;
       pendingFeatures.set(slug, lines);
-      this.featuresShownSlugs.add(slug);
     }
 
     // Source descriptions (shown once per session when first introduced)
@@ -264,7 +260,7 @@ export class SourceManager {
       }
       if (hasGuides) {
         parts.push('');
-        parts.push('IMPORTANT: You MUST read a source\'s guide with the Read tool BEFORE using any of its tools. Tool calls WILL BE REJECTED if the guide has not been read first.');
+        parts.push('Use the guides for source-specific semantics; load only the sources relevant to the task.');
       }
     }
 
@@ -302,6 +298,16 @@ export class SourceManager {
     }
 
     return output;
+  }
+
+  /** Formatting is observational. Commit only after a model response proves delivery. */
+  prepareSourceState(): { content: string; acknowledge: () => void } {
+    const slugs = this.allSources.map(source => source.config.slug);
+    const features = [...this.activeSlugs].filter(slug => this.formatSourceFeatures(slug).length > 0);
+    return { content: this.formatSourceState(), acknowledge: () => {
+      slugs.forEach(slug => this.knownSlugs.add(slug));
+      features.forEach(slug => this.featuresShownSlugs.add(slug));
+    } };
   }
 
   /**

@@ -43,8 +43,10 @@ export async function handleSubmitPlan(
     );
   }
 
-  // Notify via callback (will trigger forceAbort in session manager)
-  ctx.callbacks.onPlanSubmitted(planPath);
-
-  return successResponse('Plan submitted for review. Waiting for user feedback.');
+  try {
+    await ctx.callbacks.onPlanSubmitted(planPath);
+    return successResponse('Plan submitted for review. Waiting for user feedback.', 'await_user');
+  } catch (error) {
+    return errorResponse(`Plan could not be submitted: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }

@@ -1184,7 +1184,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     );
     // Handoff is a successful tool boundary. Keep T2 before SDK abort, and
     // abort synchronously so no follow-up model request outruns the UI pause.
-    if (handsControlToUI(sdkToolName)) sessionLifecycle.current?.agent.abort();
+    if (handsControlToUI(sdkToolName) && result.details?.continuation === 'await_user') sessionLifecycle.current?.agent.abort();
     return result;
   };
 
@@ -1209,9 +1209,8 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
       .replace(/_/g, ' ')
       .replace(/([a-z])([A-Z])/g, '$1 $2'),
     description: def.description,
-    // Pi SDK omits tools without promptSnippet from the system prompt's
-    // "Available tools" section, making them invisible to the LLM.
-    // Derive a snippet from the description so proxy tools are listed.
+    // SDK prompt metadata; model-call schemas carry the full tool definition.
+    // Phaneris independently owns the system prompt through its resource loader.
     promptSnippet: def.description.length > 200
       ? def.description.slice(0, 197) + '...'
       : def.description,
@@ -1286,7 +1285,7 @@ function proxyResultToSdk(def: ProxyToolDef, result: PiProxyToolResult): AgentTo
   } : result.structuredContent;
   return {
     content: [{ type: 'text', text: result.content }],
-    details: undefined,
+    details: result.continuation ? { continuation: result.continuation } : undefined,
     // The JSONL transport has already validated JSON serializability.
     ...(structured !== undefined ? { structuredContent: structured as AgentToolResult<any>['structuredContent'] } : {}),
   };
