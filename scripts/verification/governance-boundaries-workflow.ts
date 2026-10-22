@@ -18,6 +18,8 @@ await verificationWorkflow('governance-boundaries', async run => {
   put('packages/shared/src/config/connection-normalize.ts', 'export const normalize = 1\n')
   put('packages/shared/src/config/persisted-types.ts', "import type { Value } from '../../../core/src/types.ts'; export type Config = Value\n")
   put('packages/shared/src/agent/permissions-validation.ts', 'export const permissions = true\n')
+  put('packages/shared/src/agent/mcp-tool-names.ts', 'export const readOnlyName = true\n')
+  put('packages/shared/src/agent/browser-tool-effects.ts', 'export const browserEffect = true\n')
   put('packages/shared/src/config/repository.ts', "declare function atomicWriteFileSync(path: string): void; const CONFIG_FILE='config.json'; atomicWriteFileSync(CONFIG_FILE)\n")
   put('packages/shared/src/config/paths.ts', "export const CONFIG_FILE='config.json'; export const CONFIG_DIR='/fixture'; export const getConfigPath=()=>CONFIG_FILE\n")
   put('packages/server-core/package.json', JSON.stringify({ name: '@phaneris/server-core' }))

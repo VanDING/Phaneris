@@ -20,7 +20,9 @@ const typedBoundaries = /^(?:apps\/cli\/src\/(?:client|index)\.ts|apps\/electron
 const piValuePorts = new Set(['agent/context-policy', 'agent/compaction-threshold', 'config/pi-provider-compat', 'utils/large-response', 'sessions/paths',
   'agent/llm-tool', 'agent/backend/pi/constants', 'config/models', 'config/llm-connections', 'decisions/types',
   // Dependency-free sanitizer shared by the SDK journal and immutable host facts.
-  'utils/browser-input-privacy'])
+  'utils/browser-input-privacy',
+  // Pure name/effect classifiers used for ordering only; transitive purity is checked below.
+  'agent/mcp-tool-names', 'agent/browser-tool-effects'])
 const definitions = new Map<string, Map<string, Node>>()
 const importedNames = new Map<string, Map<string, string>>()
 const calls: { file: string; node: Extract<Node, { type: 'CallExpression' }> }[] = []
@@ -109,7 +111,8 @@ for (const { file, node } of calls) {
 }
 const writes = new Set(mutations.filter(row => /write|append/i.test(row.operation)).map(row => row.file)).size
 const pure = ['schemas', 'persisted-types', 'connection-normalize', 'source-validation'].map(domain => `packages/shared/src/config/${domain}.ts`)
-const roots = [...pure, 'packages/shared/src/protocol/index.ts', 'packages/shared/src/agent/permissions-validation.ts']
+const roots = [...pure, 'packages/shared/src/protocol/index.ts', 'packages/shared/src/agent/permissions-validation.ts',
+  'packages/shared/src/agent/mcp-tool-names.ts', 'packages/shared/src/agent/browser-tool-effects.ts']
 const closures: Record<string, string[]> = {}
 for (const root of roots) {
   if (!existsSync(join(repository, root))) { failures.push(`Missing required pure entry ${root}`); continue }

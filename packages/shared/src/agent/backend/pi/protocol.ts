@@ -15,6 +15,8 @@ export interface PiInputReception {
 
 /** Host-owned metadata; annotations are descriptive hints and never confer permission. */
 export interface PiProxyToolDefinition {
+  /** Canonical host-owned session metadata, never derived from server annotations. */
+  readOnly?: boolean;
   name: string;
   description: string;
   inputSchema: Record<string, unknown>;

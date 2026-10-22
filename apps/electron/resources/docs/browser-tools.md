@@ -216,7 +216,9 @@ Output is deterministic JSON (`href`, `protocol`, `host`, `hostname`, `pathname`
 
 ## Authorization and permission modes
 
-The runtime allows the browser tool in Explore/Safe mode and does not classify every browser command as read-only or mutating. Tool availability is not authorization to change a website. In Explore or an analysis-only task, inspect only: do not use clicks, typing, paste, uploads, or JavaScript to edit external records, send messages, or submit forms that create a commitment. Navigation and inspection controls are permitted within the task scope.
+The runtime blocks file uploads, clipboard writes/paste, and arbitrary JavaScript in Explore. Ask and Guarded require confirmation for these effects. A small set of explicit read expressions (such as `document.title` and `document.body.innerText`) remains available. String batches and argument-array commands use the same classification.
+
+Clicks, navigation and ordinary input remain available within the task scope: the command name alone cannot distinguish expanding a section from sending a message. Availability is not authorization to change a website. In Explore or an analysis-only task, do not use these interactions to edit records, send messages or submit forms that create a commitment. Execute retains the user's authorized scope without ordinary per-tool prompts.
 
 In execution modes, perform external mutations only within the user's authorized scope. Before an unapproved send, purchase, publication, deletion, or other consequential action, present the concrete target and effect for confirmation. Do not ask again for the same already-authorized action, except where a product flow explicitly reserves acceptance to the user. If a mutation times out, inspect its outcome before retrying to avoid duplicate submissions.
 

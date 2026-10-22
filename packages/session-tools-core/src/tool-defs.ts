@@ -1115,6 +1115,8 @@ export interface JsonSchemaToolDef {
   name: string;
   description: string;
   inputSchema: Record<string, unknown>;
+  /** Host scheduling hint; not a provider argument or an authorization grant. */
+  readOnly?: boolean;
 }
 
 /**
@@ -1142,6 +1144,7 @@ export function getToolDefsAsJsonSchema(opts?: {
       name: prefix + def.name,
       description: def.description,
       inputSchema: jsonSchema,
+      ...(def.readOnly !== undefined ? { readOnly: def.readOnly } : {}),
     };
   });
 }

@@ -7,6 +7,7 @@ import { SessionLifecycle } from './session-lifecycle.ts';
 import { PendingReplies } from './pending-replies.ts';
 import { createJsonlTransport } from './jsonl-transport.ts';
 import { composeToolCatalog, handsControlToUI } from './tool-composition.ts';
+import { ToolExecutionScheduler, toolExecutionResources } from './tool-execution-scheduler.ts';
 import { createContextPolicyStream, type HandoffSignal } from './context-policy-stream'
 import { isContextPolicy, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import { prepareRequestDiagnostics } from './request-diagnostics.ts';
@@ -260,6 +261,7 @@ const pendingDurableToolOutcomes = new PendingReplies<{ ok: boolean; committedSe
 const pendingDurableModelPrepares = new PendingReplies<{ ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }>();
 const pendingDurableModelOutcomes = new PendingReplies<{ ok: boolean; committedSeq?: number; reason?: string }>();
 const durableToolAccounting = new DurableToolAccounting();
+const toolExecutionScheduler = new ToolExecutionScheduler();
 
 function rememberDurableToolBatch(message: AssistantMessage, toolBatchId: string): void {
   durableToolAccounting.rememberBatch(message.content.filter(part => part.type === 'toolCall'), toolBatchId);
@@ -1058,139 +1060,147 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     ctx,
   ) => {
     const sdkToolName = PI_TOOL_NAME_MAP[tool.name] || tool.name;
-    let inputObj: Record<string, unknown> = { ...(params as Record<string, unknown>) };
+    const resources = toolExecutionResources(tool.name, params as Record<string, unknown>,
+      initConfig?.workingDirectory || initConfig?.workspaceRootPath || process.cwd(),
+      tool.name.startsWith('mcp__session__') && proxyToolDefs.some(def => def.name === tool.name && def.readOnly === true));
+    return toolExecutionScheduler.run(resources, signal, async () => {
+      let inputObj: Record<string, unknown> = { ...(params as Record<string, unknown>) };
 
-    // Extract intent before main process strips metadata (used for summarization)
-    const intent = typeof inputObj._intent === 'string' ? inputObj._intent : undefined;
+      // Extract intent before main process strips metadata (used for summarization)
+      const intent = typeof inputObj._intent === 'string' ? inputObj._intent : undefined;
 
-    // Normalize Pi SDK parameter names: path → file_path
-    if ((sdkToolName === 'Write' || sdkToolName === 'Edit' || sdkToolName === 'MultiEdit' || sdkToolName === 'NotebookEdit')
-        && typeof inputObj.path === 'string' && !inputObj.file_path) {
-      inputObj = { ...inputObj, file_path: inputObj.path };
-    }
+      // Normalize Pi SDK parameter names: path → file_path
+      if ((sdkToolName === 'Write' || sdkToolName === 'Edit' || sdkToolName === 'MultiEdit' || sdkToolName === 'NotebookEdit')
+          && typeof inputObj.path === 'string' && !inputObj.file_path) {
+        inputObj = { ...inputObj, file_path: inputObj.path };
+      }
 
-    // Send to main process for permission checking + transforms
-    // Orchestration has no ambient effects. Its nested tools take the ordinary
-    // permission path individually; author-supplied annotations cannot skip it.
-    if (sdkToolName !== 'codemode' && sdkToolName !== 'tool_search') {
-      inputObj = await requestPreToolUseApproval(sdkToolName, inputObj, toolCallId);
-    }
+      // Send to main process for permission checking + transforms
+      // Orchestration has no ambient effects. Its nested tools take the ordinary
+      // permission path individually; author-supplied annotations cannot skip it.
+      if (sdkToolName !== 'codemode' && sdkToolName !== 'tool_search') {
+        inputObj = await requestPreToolUseApproval(sdkToolName, inputObj, toolCallId);
+      }
 
-    // Metadata is for the Phaneris UI only. Keep a final defensive strip here so the
-    // upstream Pi tool implementation always receives clean executable args,
-    // even if a future pre-tool-use path returns `allow` without modification.
-    inputObj = stripPhanerisMetadata(inputObj);
-    signal?.throwIfAborted();
-
-    // T1 must commit after preflight and before the implementation is allowed to run.
-    const durable = await requestDurableToolPrepare(sdkToolName, inputObj, toolCallId);
-
-    // Execute original tool with (potentially modified) input. T2 commits before
-    // the result is returned to Pi, so the next model request cannot outrun durability.
-    let result: AgentToolResult<any>;
-    try {
-      const durableTool: DurableToolExecutionIdentity = {
-        operationId: durable.operationId,
-        runOperationId: currentDurableRunOperationId!,
-        idempotencyKey: durable.idempotencyKey,
-        canonicalArgsHash: durable.canonicalArgsHash,
-        recoveryMode: durable.recoveryMode,
-        toolBatchId: durable.toolBatchId,
-        toolBatchOrdinal: durable.toolBatchOrdinal,
-      };
-      const executionContext = attachDurableToolContext(ctx, durableTool) as typeof ctx;
+      // Metadata is for the Phaneris UI only. Keep a final defensive strip here so the
+      // upstream Pi tool implementation always receives clean executable args,
+      // even if a future pre-tool-use path returns `allow` without modification.
+      inputObj = stripPhanerisMetadata(inputObj);
       signal?.throwIfAborted();
-      result = await originalExecute(toolCallId, inputObj, signal, onUpdate, executionContext);
-    } catch (error) {
-      // An aborted proxy may still be executing in the host/provider. Leave T1
-      // pending for reconciliation rather than assert an unobserved T2 failure.
-      if (signal?.aborted) throw error;
-      await requestDurableToolOutcome(
-        durable,
-        sdkToolName,
-        toolCallId,
-        { error: error instanceof Error ? error.message : String(error) },
-        true,
-      );
-      throw error;
-    }
-    // --- Post-execute: large response summarization ---
 
-    const resultText = result.content
-      .filter((c): c is PiTextContent => c.type === 'text')
-      .map(c => c.text)
-      .join('');
+      // T1 must commit after preflight and before the implementation is allowed to run.
+      const durable = await requestDurableToolPrepare(sdkToolName, inputObj, toolCallId);
 
-    // Compatibility guard for legacy/custom tools that encode failure in
-    // details instead of throwing. Pi only sets toolResult.isError for thrown
-    // executions, so commit the durable outcome and convert it here.
-    if (result.details?.isError === true) {
+      // Execute original tool with (potentially modified) input. T2 commits before
+      // the result is returned to Pi, so the next model request cannot outrun durability.
+      let result: AgentToolResult<any>;
+      try {
+        const durableTool: DurableToolExecutionIdentity = {
+          operationId: durable.operationId,
+          runOperationId: currentDurableRunOperationId!,
+          idempotencyKey: durable.idempotencyKey,
+          canonicalArgsHash: durable.canonicalArgsHash,
+          recoveryMode: durable.recoveryMode,
+          toolBatchId: durable.toolBatchId,
+          toolBatchOrdinal: durable.toolBatchOrdinal,
+        };
+        const executionContext = attachDurableToolContext(ctx, durableTool) as typeof ctx;
+        signal?.throwIfAborted();
+        result = await originalExecute(toolCallId, inputObj, signal, onUpdate, executionContext);
+      } catch (error) {
+        // An aborted proxy may still be executing in the host/provider. Leave T1
+        // pending for reconciliation rather than assert an unobserved T2 failure.
+        if (signal?.aborted) throw error;
+        await requestDurableToolOutcome(
+          durable,
+          sdkToolName,
+          toolCallId,
+          { error: error instanceof Error ? error.message : String(error) },
+          true,
+        );
+        throw error;
+      }
+      // --- Post-execute: large response summarization ---
+
+      const resultText = result.content
+        .filter((c): c is PiTextContent => c.type === 'text')
+        .map(c => c.text)
+        .join('');
+
+      // Compatibility guard for legacy/custom tools that encode failure in
+      // details instead of throwing. Pi only sets toolResult.isError for thrown
+      // executions, so commit the durable outcome and convert it here.
+      if (result.details?.isError === true) {
+        await requestDurableToolOutcome(
+          durable,
+          sdkToolName,
+          toolCallId,
+          result,
+          true,
+        );
+        throw new Error(resultText || `${sdkToolName} failed`);
+      }
+
+      // Source the active model's contextWindow each call so the threshold
+      // tracks set_model mid-session, not the model that was active at session
+      // creation. Falls back to the fixed default when the model isn't set yet.
+      const modelContextWindow = sessionLifecycle.current?.agent.state.model?.contextWindow;
+      if (estimateTokens(resultText) > tokenLimitFor(modelContextWindow) && initConfig) {
+        try {
+          const sessionPath = getSessionPath(
+            initConfig.workspaceRootPath,
+            initConfig.sessionId,
+          );
+
+          const largeResult = await handleLargeResponse({
+            text: resultText,
+            sessionPath,
+            context: {
+              toolName: sdkToolName,
+              input: inputObj,
+              intent,
+              userRequest: currentUserMessage,
+            },
+            summarize: runMiniCompletion,
+            contextWindow: modelContextWindow,
+            signal,
+          });
+
+          if (largeResult) {
+            result = {
+              ...result,
+              content: [{ type: 'text', text: largeResult.message }],
+              details: result.details,
+            };
+          }
+        } catch (error) {
+          debugLog(
+            `Large response handling failed: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        }
+      }
+
+      // Commit exactly the representation Pi will append to model context.
       await requestDurableToolOutcome(
         durable,
         sdkToolName,
         toolCallId,
         result,
-        true,
+        false,
       );
-      throw new Error(resultText || `${sdkToolName} failed`);
-    }
-
-    // Source the active model's contextWindow each call so the threshold
-    // tracks set_model mid-session, not the model that was active at session
-    // creation. Falls back to the fixed default when the model isn't set yet.
-    const modelContextWindow = sessionLifecycle.current?.agent.state.model?.contextWindow;
-    if (estimateTokens(resultText) > tokenLimitFor(modelContextWindow) && initConfig) {
-      try {
-        const sessionPath = getSessionPath(
-          initConfig.workspaceRootPath,
-          initConfig.sessionId,
-        );
-
-        const largeResult = await handleLargeResponse({
-          text: resultText,
-          sessionPath,
-          context: {
-            toolName: sdkToolName,
-            input: inputObj,
-            intent,
-            userRequest: currentUserMessage,
-          },
-          summarize: runMiniCompletion,
-          contextWindow: modelContextWindow,
-          signal,
-        });
-
-        if (largeResult) {
-          result = {
-            ...result,
-            content: [{ type: 'text', text: largeResult.message }],
-            details: result.details,
-          };
-        }
-      } catch (error) {
-        debugLog(
-          `Large response handling failed: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
-    }
-
-    // Commit exactly the representation Pi will append to model context.
-    await requestDurableToolOutcome(
-      durable,
-      sdkToolName,
-      toolCallId,
-      result,
-      false,
-    );
-    // Handoff is a successful tool boundary. Keep T2 before SDK abort, and
-    // abort synchronously so no follow-up model request outruns the UI pause.
-    if (handsControlToUI(sdkToolName) && result.details?.continuation === 'await_user') sessionLifecycle.current?.agent.abort();
-    return result;
+      // Handoff is a successful tool boundary. Keep T2 before SDK abort, and
+      // abort synchronously so no follow-up model request outruns the UI pause.
+      if (handsControlToUI(sdkToolName) && result.details?.continuation === 'await_user') sessionLifecycle.current?.agent.abort();
+      return result;
+    });
   };
 
   return {
     ...tool,
     parameters,
+    // The SDK makes a batch containing a potential UI handoff sequential. Its
+    // loop stops after a confirmed wait, before later calls acquire T1.
+    executionMode: handsControlToUI(tool.name) ? 'sequential' : tool.executionMode,
     execute: wrappedExecute,
   };
 }

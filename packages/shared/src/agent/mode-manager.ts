@@ -22,7 +22,7 @@ import { DATA_DIR_NAME, LEGACY_IDENTITY } from '../identity.generated.ts';
 import { getSessionSafeAllowedToolNames } from '@phaneris/session-tools-core';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
 import { PI_TOOL_NAME_MAP } from './backend/pi/constants.ts';
-import { isBrowserToolNameOrAlias } from './browser-tool-names.ts';
+import { browserEffectRequiresApproval, getBrowserToolEffect, isSessionBrowserTool } from './browser-tool-effects.ts';
 import type { PermissionsContext, MergedPermissionsConfig } from './permissions-config.ts';
 import {
   validateBashCommand,
@@ -1917,8 +1917,6 @@ const ALWAYS_ALLOWED_TOOLS = new Set([
   'TodoWrite',                      // Task tracking
   'SubmitPlan',                     // Plan submission
   'LSP',                            // Language server (read-only)
-  // Browser automation tool (canonical wrapper)
-  'browser_tool',
 ]);
 
 /**
@@ -1980,7 +1978,11 @@ export function shouldAllowToolInMode(
 
   // Browser tool aliases (legacy browser_open/browser_snapshot/...)
   // are normalized centrally to avoid drift across permission checks.
-  if (isBrowserToolNameOrAlias(toolName) && (!toolName.includes('__') || toolName.startsWith('mcp__session__') || toolName.startsWith('session__'))) {
+  if (isSessionBrowserTool(toolName)) {
+    const effect = getBrowserToolEffect(toolName, (toolInput ?? {}) as Record<string, unknown>);
+    if (effect?.kind === 'invalid') return { allowed: false, reason: effect.description };
+    if (browserEffectRequiresApproval(effect)) return { allowed: false,
+      reason: `${effect!.description} is unavailable in ${config.displayName}. Use Ask or an authorized execution mode for this action.` };
     return { allowed: true };
   }
 

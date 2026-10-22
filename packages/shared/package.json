@@ -136,6 +136,8 @@
     "./utils/json": "./src/utils/json.ts",
     "./durable-runtime/types": "./src/durable-runtime/types.ts",
     "./agent/backend/pi/constants": "./src/agent/backend/pi/constants.ts",
+    "./agent/mcp-tool-names": "./src/agent/mcp-tool-names.ts",
+    "./agent/browser-tool-effects": "./src/agent/browser-tool-effects.ts",
     "./agent/backend/pi/protocol": "./src/agent/backend/pi/protocol.ts",
     "./agent/llm-tool": "./src/agent/llm-tool.ts",
     "./config/pi-provider-compat": "./src/config/pi-provider-compat.ts",

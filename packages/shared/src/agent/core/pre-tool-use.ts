@@ -19,6 +19,7 @@ import { createHash } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { expandPath } from '../../utils/paths.ts';
 import { PI_TOOL_NAME_MAP } from '../backend/pi/constants.ts';
+import { browserEffectRequiresApproval, getBrowserToolEffect } from '../browser-tool-effects.ts';
 import {
   detectConfigFileType,
   detectAppConfigFileType,
@@ -1039,6 +1040,12 @@ export function shouldPromptInAskMode(
   onDebug?: (message: string) => void,
 ): PromptInfo | null {
   toolName = PI_TOOL_NAME_MAP[toolName] ?? toolName;
+  const browserEffect = getBrowserToolEffect(toolName, input);
+  if (browserEffect?.kind === 'invalid') return null; // The executor reports syntax errors before any browser effect.
+  if (browserEffectRequiresApproval(browserEffect)) return {
+    promptType: 'mcp_mutation', description: browserEffect!.description,
+    command: `browser_tool ${browserEffect!.command}`,
+  };
 
   // --- File writes ---
   if (FILE_WRITE_TOOLS.has(toolName)) {

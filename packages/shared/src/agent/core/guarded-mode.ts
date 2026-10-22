@@ -25,6 +25,7 @@ import { getPermissionModeDiagnostics, resolveEffectivePermissionMode, isReadOnl
 import { permissionsConfigCache, type PermissionsContext } from '../permissions-config.ts';
 import { evaluateApiEndpointPolicy } from '../source-policy.ts';
 import { runPreToolUseChecks, type PreToolUseCheckResult, type PreToolUseInput } from './pre-tool-use.ts';
+import { browserEffectRequiresApproval, getBrowserToolEffect, isSessionBrowserTool } from '../browser-tool-effects.ts';
 
 export type GuardedModeRisk = 'irreversible' | 'outside_workspace' | 'external';
 
@@ -73,9 +74,6 @@ const RISK_LABELS: Record<GuardedModeRisk, string> = {
 
 const FILE_WRITE_TOOLS = new Set(['Write', 'Edit', 'MultiEdit', 'NotebookEdit']);
 
-/** Session bookkeeping the agent does constantly; not worth a model call in Guarded mode. */
-const BOOKKEEPING_SESSION_TOOLS = new Set(['mcp__session__set_session_status', 'mcp__session__set_session_labels']);
-
 // Resolve existing ancestors too: a new file below a junction/symlink can still leave the project.
 function physicalPath(path: string): string | null {
   let ancestor = resolve(path);
@@ -120,6 +118,13 @@ export function getGuardedModeCall(
   const permissionsContext: PermissionsContext = { workspaceRootPath: ctx.workspaceRootPath, activeSourceSlugs: ctx.activeSourceSlugs };
   // Without a session working directory the agent runs in the workspace root.
   const workingDirectory = ctx.workingDirectory ?? ctx.workspaceRootPath;
+  const effect = getBrowserToolEffect(toolName, input);
+  if (effect?.kind === 'invalid') return null;
+  if (browserEffectRequiresApproval(effect)) return {
+    toolName, promptType: 'mcp_mutation', description: effect!.description,
+    command: `browser_tool ${effect!.command}`, workingDirectory,
+    alwaysAsk: effect!.kind === 'clipboard_write' ? 'outside_workspace' : 'external',
+  };
 
   if (FILE_WRITE_TOOLS.has(toolName)) {
     const target = writeTarget(input, workingDirectory);
@@ -135,12 +140,14 @@ export function getGuardedModeCall(
     return { toolName, promptType: 'bash', description: `Execute: ${command}`, command, workingDirectory };
   }
 
-  if (toolName.startsWith('mcp__') && !BOOKKEEPING_SESSION_TOOLS.has(toolName)) {
+  if (toolName.startsWith('mcp__')) {
     // Read-only by the same rules as Explore mode, including the workspace and source patterns
     // (built-in session tools too: pages, agent messages and the like are what Explore blocks).
     if (shouldAllowToolInMode(toolName, input, 'safe', { plansFolderPath: ctx.plansFolderPath, dataFolderPath: ctx.dataFolderPath, permissionsContext }).allowed) return null;
     const serverAndTool = toolName.replace('mcp__', '').replace(/__/g, '/');
-    return { toolName, promptType: 'mcp_mutation', description: `MCP: ${serverAndTool}`, command: toolName, arguments: input, workingDirectory };
+    const automation = toolName === 'mcp__session__set_session_labels' ? ' (may trigger LabelAdd/LabelRemove automations)'
+      : toolName === 'mcp__session__set_session_status' ? ' (may trigger SessionStatusChange automations)' : '';
+    return { toolName, promptType: 'mcp_mutation', description: `MCP: ${serverAndTool}${automation}`, command: toolName, arguments: input, workingDirectory };
   }
 
   if (toolName.startsWith('api_')) {
@@ -157,6 +164,7 @@ export function getGuardedModeCall(
 /** Tools the check can judge at all (cheap name check before anything else). */
 function isGuardableTool(toolName: string): boolean {
   return toolName === 'Bash'
+    || isSessionBrowserTool(toolName)
     || FILE_WRITE_TOOLS.has(toolName)
     || toolName.startsWith('mcp__')
     || toolName.startsWith('api_');
