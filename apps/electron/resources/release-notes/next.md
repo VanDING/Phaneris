@@ -11,6 +11,8 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
+- **Sending clears immediately** — The composer used to keep the text until the send was acknowledged, so an already-sent message sat in the field for about half a second (longer with attachments, which store before the send). The field now clears when you send and the draft comes back only if the send is refused.
+
 - **Injected context colour** — The Run context bar and its legend drew "Injected context" with a colour that produced no CSS at all, so both the segment and its dot were invisible. It now uses a registered colour and stays visible in light and dark.
 - **Column header contrast** — A user-chosen column colour picked its text colour from the fill's luminance instead of assuming white, so an amber column no longer renders white text at 2.15:1.
 
