@@ -78,7 +78,14 @@ function panelShareStyle({
   companionPrimaryWidth: number
 }): React.CSSProperties {
   if (isCompact || isOnly) {
-    return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: '0px' }
+    // Alone, the surface takes the row with a full basis rather than by growing.
+    // Growing is what made the open animation start at half: the primary's
+    // `flex-grow` eased 1 → 0 while its basis eased 0 → 600px, so for the first
+    // frames both panels grew from zero and the workbench appeared at half the
+    // row before shrinking to its share. With a 100% basis the two panels stay
+    // complementary for every frame — the primary shrinks from the full row to
+    // its width and the workbench grows from nothing into the remainder.
+    return { flexGrow: 0, flexShrink: 1, flexBasis: '100%', minWidth: '0px' }
   }
   if (isWorkbench) {
     // The workbench takes exactly what the Primary leaves. It must not carry a
@@ -219,13 +226,13 @@ export function SurfaceSlot({
             isWorkbenchCompanion,
             companionPrimaryWidth: companionPrimaryWidth ?? PANEL_MIN_WIDTH,
           }),
-          // Layout process for the panel set: opening or closing the Workbench
-          // changes this panel's share of the row, and the share is the only
-          // geometry that moves. Content above it animates through the shared
-          // tokens, so a panel never fades out and back in to hide a reflow.
-          // A pointer drag owns the width directly and must not be eased; the
-          // global reduced-motion rule collapses these durations to 1ms.
-          transitionProperty: 'flex-grow, flex-basis, min-width',
+          // Opening or closing the workbench changes this panel's basis, and the
+          // basis is the only geometry that moves: `flex-grow` is 0 in every
+          // state, so it is not in the transition list (easing it alongside the
+          // basis is what produced a half-width first frame). A pointer drag owns
+          // the width directly and must not be eased; the global reduced-motion
+          // rule collapses these durations to 1ms.
+          transitionProperty: 'flex-basis, min-width',
           transitionDuration: isResizing ? '0s' : 'var(--motion-duration-spatial)',
           transitionTimingFunction: 'var(--motion-ease-move)',
         }}
@@ -250,14 +257,17 @@ export function SurfaceSlot({
               /* Bound workbench panels are dispatched by panelType (never by the
                  parsed nav state) so a stale/unparseable route can neither render
                  the wrong content nor fall through to the global navigation.
-                 Light opacity fade on open; reduced motion renders instantly. */
+                 Light opacity fade on open; reduced motion renders instantly.
+                 Opacity only: the panel's width is already easing, and sliding the
+                 content 8px while it grows reads as a flicker rather than one
+                 movement. */
               reduceMotion ? (
                 <BoundPanelContent entry={entry} />
               ) : (
                 <motion.div
                   className="h-full min-h-0"
-                  initial={{ opacity: 0, x: 8, scale: 0.997 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   transition={motionTween(reduceMotion, 'standard', 'enter')}
                 >
                   <BoundPanelContent entry={entry} />
