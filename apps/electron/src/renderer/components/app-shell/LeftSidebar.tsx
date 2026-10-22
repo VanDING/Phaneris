@@ -64,7 +64,13 @@ export interface LinkItem {
   id: string            // Unique ID for navigation (e.g., 'nav:allSessions')
   title: string
   label?: string        // Optional badge (e.g., count)
-  icon: LucideIcon | React.ReactNode  // LucideIcon or custom React element
+  /**
+   * A Lucide icon, any other SVG component (e.g. the MCP brand mark), or an
+   * already-built element. Components are preferred: the row sizes them through
+   * one 16px slot, so a hand-rolled `h-3.5 w-3.5` element cannot introduce a
+   * second icon size.
+   */
+  icon: LucideIcon | React.ComponentType<{ className?: string; style?: React.CSSProperties }> | React.ReactNode
   iconColor?: string    // Optional color class for the icon
   /** Whether the icon responds to color (uses currentColor). Default true for Lucide icons. */
   iconColorable?: boolean
@@ -509,7 +515,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         )}
       >
         {/* Icon container with hover toggle for expandable items */}
-        <span className="navigation-icon relative size-4 shrink-0 flex items-center justify-center">
+        <span className="navigation-icon relative size-4 shrink-0 flex items-center justify-center [&_svg]:size-4!">
           {link.expandable && !isOverlay ? (
             <>
               {/* Main icon - hidden on hover */}

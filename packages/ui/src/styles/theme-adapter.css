@@ -153,10 +153,12 @@
   /* A hand-written product glyph that strokes with `currentColor` inherits the
      theme's optical weight, exactly like a Lucide icon. Scoped by attribute, not
      by tag: injected/third-party SVG (Mermaid, Shiki, PDF) brings its own stroke
-     intent, and brand marks drawn in viewBox units (the MCP glyph is 12 units in
-     a 150x170 box) keep their authored value. Same shape as the existing
-     `.menu-icon svg[viewBox]` rule in the renderer stylesheet. */
-  svg[stroke="currentColor"] { stroke-width: var(--icon-stroke-width); }
+     intent, and brand marks drawn in viewBox units opt out with
+     `data-brand-glyph` — their authored value already equals the same optical
+     weight in their own coordinate system (the MCP mark is 12 units in a 150x170
+     box: 12 × 16/170 ≈ 1.13px against Lucide's 1.65 × 16/24 ≈ 1.1px). Applying
+     the Lucide number to that box instead rendered it at ~0.16px. */
+  svg[stroke="currentColor"]:not([data-brand-glyph]) { stroke-width: var(--icon-stroke-width); }
   body { line-height: var(--line-height-base); letter-spacing: var(--tracking-normal); }
 }
 

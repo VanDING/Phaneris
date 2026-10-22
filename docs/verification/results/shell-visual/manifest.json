@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "workflow": "shell-visual",
-  "startedAt": "2026-10-21T09:48:22.495Z",
-  "finishedAt": "2026-10-21T09:49:16.823Z",
+  "startedAt": "2026-10-22T00:14:35.747Z",
+  "finishedAt": "2026-10-22T00:15:27.100Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\shell-visual-workflow.ts",
@@ -10,11 +10,43 @@
     "--replace"
   ],
   "source": {
-    "headSha": "de4972269bac6a783329fc7f50f3e4a3b9100787",
-    "dirtyPaths": [],
+    "headSha": "9b8bbfb7de87cd56e17824d20b4d0f42d2c11562",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      " M apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      " M apps/electron/src/renderer/components/icons/McpIcon.tsx",
+      " M packages/shared/src/statuses/default-icons.ts",
+      " M packages/shared/src/statuses/storage.ts",
+      " M packages/ui/src/styles/theme-adapter.css"
+    ],
     "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
-    "changedFiles": [],
-    "dirty": false
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+        "sha256": "fb9c296f7b406de54940eb33cab7c9790b5a86befc260123a9e5a689dc1bb51f"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "sha256": "3cdfd05b8017cfa67609936cefba992a2f61b13b6b824219ef6b6ab30f14b83e"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/icons/McpIcon.tsx",
+        "sha256": "715e63a51131209d51a5918b8fa4f4acf464097b228245e24161c8dc50239ef4"
+      },
+      {
+        "path": "packages/shared/src/statuses/default-icons.ts",
+        "sha256": "20b1163dd1e2d6aa5d6d9da545e6ec1da18d550d2da117081c408dfe82523c40"
+      },
+      {
+        "path": "packages/shared/src/statuses/storage.ts",
+        "sha256": "0048d3c6cd0abe566a3bc3ebf2828a8306e388962ccfb1079b7010a426b02c15"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-adapter.css",
+        "sha256": "a39d5ae728fb2035312713494174b2a6e712bbe3bf4c1347c315dbe26cc8ec88"
+      }
+    ],
+    "dirty": true
   },
   "runtime": {
     "bun": "1.4.2",
@@ -100,78 +132,78 @@
   "artifacts": [
     {
       "path": "build-hashes.json",
-      "sha256": "4fb2ff4c49f55dcb02ec56b0cb1005483b528285004a4553601da316fd0ad524",
+      "sha256": "eb6cee3fa3f43ac37a05f75dcaa870819b9ad686562ada46f63120bdea41254a",
       "bytes": 330
     },
     {
       "path": "collapse-after-expanded-hover-focus-frames.json",
-      "sha256": "65115ee35e9811dfbcc6e4f950d0fd04e7b52d607403eeeee88d5e5625922089",
-      "bytes": 35232
+      "sha256": "25065ed7d97cd9f960dfe39ebb440eabf4664379cb1f37330d4b155c14f6fc5d",
+      "bytes": 35172
     },
     {
       "path": "collapse-frames.json",
-      "sha256": "7cae2df83493ad672678b878b374e89a840f1c02aada780994c566b14e37fc81",
-      "bytes": 30768
+      "sha256": "fc1726214dafb10fbd3c861793ce38e94636b7cae7047e64b43306ee1026e6f0",
+      "bytes": 35432
     },
     {
       "path": "cyberpunk-2077-expanded.png",
-      "sha256": "4762f7dee82989b3f6fe1fad423b1f0ea09eef5a902fe44384aa5011587da392",
-      "bytes": 89085
+      "sha256": "541faa056c57f7edaf3cf8a9a59cecfe7f264287c57ac8420b8a1f016eaaeaa7",
+      "bytes": 88099
     },
     {
       "path": "default-dark-expanded.png",
-      "sha256": "dae138c12808dbe6f644cecf9d8d4a481570821b549098518ba62c25740df5c7",
-      "bytes": 82587
+      "sha256": "a16b200b42281aba0c739863fa91a16f3c47e76103fed7588e39ef28d183df82",
+      "bytes": 81444
     },
     {
       "path": "default-light-collapsed.png",
-      "sha256": "cf8b41f744d724d7228a2d4b7c1ee2c8e941bae647862236e691bf621562453e",
-      "bytes": 67962
+      "sha256": "7212e6c4fd97ae3fde8702b85558e3bc61595aec56628acd1d3e745572b55ae2",
+      "bytes": 68305
     },
     {
       "path": "default-light-expanded.png",
-      "sha256": "d4c3265d8223be122d811ec85c0dcd7d1855e57c71dfdd010e94700f1187819e",
-      "bytes": 94024
+      "sha256": "6fdd2105cd88df87f8b21460ffbd4f96d2ffbd1c7e7667e908673e5cff438995",
+      "bytes": 94230
     },
     {
       "path": "expand-after-rail-tooltip-frames.json",
-      "sha256": "19185a8139c680df52340067d2724b080f0d2833beb29eabb5907bb41abe49cb",
-      "bytes": 36297
+      "sha256": "d86ebb46c76883f63a38ddeef22047c95fb6bf8d35e410ca64bdecbdb03ca3d5",
+      "bytes": 36419
     },
     {
       "path": "expand-frames.json",
-      "sha256": "b9a01d7f85bb3ec9109329a6aa5250cd515a5e8c5bd680f3670dbb0b02563071",
-      "bytes": 33286
+      "sha256": "b5c6e47d56d0f4fa6bf83323ab9383d94a3a4c02c122e4e6d06000eb96fc0a05",
+      "bytes": 35567
     },
     {
       "path": "fixture.json",
-      "sha256": "0db74c7962c7cefe3558437daae345ca415366c024e5510b02b95504bd94e72a",
+      "sha256": "794e27e2e2fa5c6ca4666df6b898b216e1aebcff1e257426beede9f3b8f25eaa",
       "bytes": 224
     },
     {
       "path": "geek-expanded.png",
-      "sha256": "20bea5666f0b1962aaa84f74d840c6a22cb871b9fd0b0dd8949c4393d043e607",
-      "bytes": 89150
+      "sha256": "ef53522fb48beb2d542fb35c736f972b8aa78bc7e9915efa328d813dd483af4d",
+      "bytes": 88281
     },
     {
       "path": "ink-expanded.png",
-      "sha256": "2c526b62a0cfcc49d24ff5ef6d83ece53c035f170b7b131a518e958950f1531a",
-      "bytes": 101558
+      "sha256": "4e8b7489533aa84c6ab6c3c2feea8dc00c3aa63cd7c5f42b231cec7b768d7864",
+      "bytes": 101247
     },
     {
       "path": "large-text-collapsed.png",
-      "sha256": "0e31366f2f2fa6a2b2f4dd978c99a0ad619afbf551b26f2eac1710c24da8b38b",
-      "bytes": 129509
+      "sha256": "fb5682c40eaf0b2686bf3bd94ab05e608e4f8c48a18fffd4c6b117cf5a2c5dcd",
+      "bytes": 131338
     },
     {
       "path": "large-text.png",
-      "sha256": "d19e14ee1f8145ee604330659a81c77aac979cb184db51b7ed85f8b390c4df95",
-      "bytes": 172265
+      "sha256": "efe55722a6a4142708e8ab2eb8e7aee9fbd83b62481630f4ae03c6a014fe1038",
+      "bytes": 179058
     },
     {
       "path": "native-zoom-200.png",
-      "sha256": "9cef9888324d99cd079f5d8e3c40f74c65e7f49ade1db712cb4a5a899563e742",
-      "bytes": 95241
+      "sha256": "5ac280df7d4d42acf026da1ce13b5e7be8c705b2110600cb0894550f1bb181d9",
+      "bytes": 96088
     },
     {
       "path": "process.log",
@@ -180,58 +212,58 @@
     },
     {
       "path": "reduced-motion-collapsed.png",
-      "sha256": "613c7a9d5d60b57a53ecad45ff280dcc18ed06feeebe6fe504c0223aa1b2e81c",
-      "bytes": 69576
+      "sha256": "f9da9f74b09b55d95f75b96bd9b69b69bf7867d678ee6cb0cc33eacbcd8ac90a",
+      "bytes": 68338
     },
     {
       "path": "reduced-motion-frames.json",
-      "sha256": "b1ee7f7eaeec3cb68eda7636581e8182a45a4c7e7d7b294a356d9cb98141f233",
-      "bytes": 18792
+      "sha256": "5884b5e44de3cd6872aa3d590b5161059c4669e65dc582b3850c3ea81f6a6b97",
+      "bytes": 17729
     },
     {
       "path": "reverse-frames.json",
-      "sha256": "b668029bb3aad36de7fbed7042348955a72a1449050371a02dac5e2b8838554c",
-      "bytes": 40637
+      "sha256": "4b0d639cc72f0002af5d16c69e5fa5c742141cffaf894a0f6ac92da0add1fd8c",
+      "bytes": 47387
     },
     {
       "path": "shell-recording.webm",
-      "sha256": "1fe00ef50da4baa9ba7c90cc929822c34639fb0168c0197a2e16609b5b3252d9",
-      "bytes": 7686893
+      "sha256": "a4ccda3b86a159daa417b1164396dbcf64a14c28c2e01948432ab919c96792d0",
+      "bytes": 7852430
     },
     {
       "path": "shell-visual.json",
-      "sha256": "8b256264acdbda6523db44118fbeff98219d7accb933cb7520ef3fa5897c119a",
-      "bytes": 867329
+      "sha256": "39e26289169a03bd5f00fd449801dbdda0cdf95474dcdfd114175e86f909b509",
+      "bytes": 913639
     },
     {
       "path": "short-window.png",
-      "sha256": "2122fab29a2f5abca9becb8ff3800c4ea106771ed341c679bb141255d58a4cfd",
-      "bytes": 76885
+      "sha256": "f2961cea3ae918e07c86c475334af3b4cb326438de8140834d01e354561953f7",
+      "bytes": 76033
     },
     {
       "path": "startup-frames.json",
-      "sha256": "0daf8c544e8b65d943db1eaff17821ca6c47ddd293aa3205010d6419dc639aec",
-      "bytes": 17846
+      "sha256": "e42204799f0667538c105cec6542478bd43f948fed0df695f78046c0555101d1",
+      "bytes": 17848
     },
     {
       "path": "startup-settled.png",
-      "sha256": "2d17c2384fed7e9041c7647d303a64f84006d0597e248f848b3fc93076f99f4a",
-      "bytes": 86962
+      "sha256": "ec7985c3bc0b5ba5cfe39cfc8eece707f1e27a237f3352e262c8100f637e99ab",
+      "bytes": 85268
     },
     {
       "path": "touch-collapsed.png",
-      "sha256": "138831485aa1779b15717923d419e687d00c31ef2d5558ca3de76e28ac85e484",
-      "bytes": 68885
+      "sha256": "8a82e1ad5f78b5110ac61994da9e0bfc36be21872166a540f4433fd5854843fb",
+      "bytes": 67778
     },
     {
       "path": "trace.zip",
-      "sha256": "ff2f5503f8bc7323b56896b1d42094d3d6bbcf134d854d9e5f92f38f79a692e3",
-      "bytes": 47783893
+      "sha256": "bf14590297db29ecf89d0822af1e6f18ea605991fa01776eb52e0efd83bd5f71",
+      "bytes": 45330577
     },
     {
       "path": "windows-policy.png",
-      "sha256": "f43451cbb1a9fdec8e5ce9429abc365049e8a8692836294acbc180e2c08b1f55",
-      "bytes": 95672
+      "sha256": "728a9f4eabcd54c878492e83d5ead884ba7fbcfe35ea615b583e82ca41e91d00",
+      "bytes": 95368
     }
   ],
   "untested": [

@@ -14,7 +14,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import type { WorkspaceStatusConfig, StatusConfig, StatusCategory } from './types.ts';
 import { readJsonFileSync } from '../utils/files.ts';
-import { DEFAULT_ICON_SVGS } from './default-icons.ts';
+import { DEFAULT_ICON_SVGS, LEGACY_FILLED_ICON_IDS, isLegacyFilledDefault } from './default-icons.ts';
 import {
   validateIconValue,
   downloadIcon,
@@ -102,16 +102,21 @@ export function ensureDefaultIconFiles(workspaceRootPath: string): void {
     mkdirSync(iconsDir, { recursive: true });
   }
 
-  // Write each default icon file if missing
+  // Write each default icon file if missing, and upgrade one that is still the
+  // previous default. A user-chosen icon never matches the legacy signature, so
+  // this rewrites our own artwork and nothing else.
   for (const [statusId, svgContent] of Object.entries(DEFAULT_ICON_SVGS)) {
     const iconPath = join(iconsDir, `${statusId}.svg`);
 
-    if (!existsSync(iconPath)) {
-      try {
+    try {
+      if (!existsSync(iconPath)) {
         writeFileSync(iconPath, svgContent, 'utf-8');
-      } catch (error) {
-        console.error(`[ensureDefaultIconFiles] Failed to write ${statusId}.svg:`, error);
+      } else if (statusId in LEGACY_FILLED_ICON_IDS) {
+        const current = readFileSync(iconPath, 'utf-8');
+        if (isLegacyFilledDefault(current)) writeFileSync(iconPath, svgContent, 'utf-8');
       }
+    } catch (error) {
+      console.error(`[ensureDefaultIconFiles] Failed to write ${statusId}.svg:`, error);
     }
   }
 }

@@ -1,6 +1,6 @@
 [
   {
-    "time": 0.09999990463256836,
+    "time": 0,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -59,7 +59,7 @@
     }
   },
   {
-    "time": 0.8999999761581421,
+    "time": 5.5,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -118,7 +118,7 @@
     }
   },
   {
-    "time": 7,
+    "time": 23.600000023841858,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -177,7 +177,7 @@
     }
   },
   {
-    "time": 21.799999952316284,
+    "time": 38.700000047683716,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -236,66 +236,7 @@
     }
   },
   {
-    "time": 40.09999990463257,
-    "collapsed": false,
-    "tooltips": 0,
-    "tooltipTexts": [],
-    "focusLabel": "BODY",
-    "sidebarWidth": 200,
-    "rowStable": true,
-    "buttonStable": true,
-    "row": {
-      "x": 8,
-      "y": 35.75,
-      "width": 184,
-      "height": 28,
-      "centerX": 100,
-      "centerY": 49.75
-    },
-    "button": {
-      "x": 8,
-      "y": 0,
-      "width": 184,
-      "height": 28,
-      "centerX": 100,
-      "centerY": 14
-    },
-    "rowIcon": {
-      "x": 16,
-      "y": 41.75,
-      "width": 16,
-      "height": 16,
-      "centerX": 24,
-      "centerY": 49.75
-    },
-    "newIcon": {
-      "x": 16,
-      "y": 6,
-      "width": 16,
-      "height": 16,
-      "centerX": 24,
-      "centerY": 14
-    },
-    "labelOpacity": 1,
-    "profile": {
-      "x": 8,
-      "y": 918,
-      "width": 152,
-      "height": 28,
-      "centerX": 84,
-      "centerY": 932
-    },
-    "settings": {
-      "x": 164,
-      "y": 918,
-      "width": 28,
-      "height": 28,
-      "centerX": 178,
-      "centerY": 932
-    }
-  },
-  {
-    "time": 71.09999990463257,
+    "time": 72.5,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -354,7 +295,7 @@
     }
   },
   {
-    "time": 78.79999995231628,
+    "time": 77,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -413,7 +354,7 @@
     }
   },
   {
-    "time": 91.19999992847443,
+    "time": 93.10000002384186,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -472,7 +413,7 @@
     }
   },
   {
-    "time": 106.5,
+    "time": 106.60000002384186,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -531,7 +472,7 @@
     }
   },
   {
-    "time": 123.5,
+    "time": 123,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -590,7 +531,7 @@
     }
   },
   {
-    "time": 140.29999995231628,
+    "time": 139.79999995231628,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -649,7 +590,7 @@
     }
   },
   {
-    "time": 157.09999990463257,
+    "time": 156.39999997615814,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -708,7 +649,7 @@
     }
   },
   {
-    "time": 174,
+    "time": 173.29999995231628,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -826,7 +767,7 @@
     }
   },
   {
-    "time": 207,
+    "time": 206.5,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -885,7 +826,7 @@
     }
   },
   {
-    "time": 223.5,
+    "time": 222.79999995231628,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -944,7 +885,7 @@
     }
   },
   {
-    "time": 240.29999995231628,
+    "time": 239.5,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1003,7 +944,7 @@
     }
   },
   {
-    "time": 257.5,
+    "time": 256.5,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],

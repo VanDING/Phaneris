@@ -31,7 +31,7 @@ export const DEFAULT_ICON_SVGS: Record<string, string> = {
    */
   'in-progress': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="12" r="9" />
-  <path d="M12 3a9 9 0 0 0 0 18" fill="currentColor" stroke="none" />
+  <path d="M12 3a9 9 0 0 1 0 18" />
 </svg>`,
 
   /**
@@ -47,20 +47,33 @@ export const DEFAULT_ICON_SVGS: Record<string, string> = {
    * Done - CircleCheckFilled
    * Filled circle with checkmark
    */
-  'done': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-  <circle cx="12" cy="12" r="10" />
-  <path d="M8 12l3 3 5-5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  'done': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9" />
+  <path d="M8.5 12.5l2.5 2.5 4.5-5" />
 </svg>`,
 
   /**
    * Cancelled - CircleXFilled
    * Filled circle with X mark
    */
-  'cancelled': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-  <circle cx="12" cy="12" r="10" />
-  <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  'cancelled': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9" />
+  <path d="M9.5 9.5l5 5M14.5 9.5l-5 5" />
 </svg>`,
 };
+
+const LEGACY_FILLED_ICON_IDS = new Set(['done', 'cancelled', 'in-progress'])
+
+/**
+ * True when the file content is one of the previous filled defaults. Those were
+ * authored as `fill="currentColor" stroke="none"` around a 10-unit disc, which no
+ * user-chosen icon reproduces, so a match is safe to upgrade in place.
+ */
+export function isLegacyFilledDefault(content: string): boolean {
+  return content.includes('fill="currentColor" stroke="none"') && content.includes('r="10"');
+}
+
+export { LEGACY_FILLED_ICON_IDS };
 
 /**
  * Get default icon SVG by status ID

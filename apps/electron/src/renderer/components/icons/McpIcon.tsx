@@ -3,6 +3,12 @@ import type { SVGProps } from "react"
 /**
  * MCP (Model Context Protocol) logo icon
  * Official logo from https://github.com/modelcontextprotocol/docs
+ *
+ * Authored in the logo's own 150×170 viewBox, so it opts out of the theme's
+ * `svg[stroke="currentColor"]` rule with `data-brand-glyph`. Its authored
+ * `strokeWidth=12` is 12 × 16/170 ≈ 1.13px at 16px — the same optical weight as
+ * a Lucide icon (1.65 × 16/24 ≈ 1.1px). Under the theme rule the 1.65 user units
+ * meant 1.65 × 16/170 ≈ 0.16px, which is why the mark looked disabled.
  */
 export function McpIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -15,6 +21,7 @@ export function McpIcon(props: SVGProps<SVGSVGElement>) {
       stroke="currentColor"
       strokeWidth="12"
       strokeLinecap="round"
+      data-brand-glyph=""
       {...props}
     >
       <path d="M25 97.8528L92.8823 29.9706C102.255 20.598 117.451 20.598 126.823 29.9706V29.9706C136.196 39.3431 136.196 54.5391 126.823 63.9117L75.5581 115.177" />

@@ -2484,7 +2484,7 @@ function AppShellContent({
                           id: "nav:flagged",
                           title: t("sidebar.flagged"),
                           label: String(flaggedCount),
-                          icon: <Flag className="h-3.5 w-3.5" />,
+                          icon: Flag,
                           variant: (sessionFilter?.kind === 'flagged' ? "default" : "ghost") as "default" | "ghost",
                           onClick: handleFlaggedClick,
                         },
@@ -2554,7 +2554,7 @@ function AppShellContent({
                           id: "nav:sources:mcp",
                           title: t("sidebar.mcps"),
                           label: String(sourceTypeCounts.mcp),
-                          icon: <McpIcon className="h-3.5 w-3.5" />,
+                          icon: McpIcon,
                           variant: (sourceFilter?.kind === 'type' && sourceFilter.sourceType === 'mcp') ? "default" : "ghost",
                           onClick: handleSourcesMcpClick,
                           contextMenu: {

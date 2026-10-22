@@ -1,6 +1,6 @@
 [
   {
-    "time": 0.10000002384185791,
+    "time": 0.20000004768371582,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -59,7 +59,7 @@
     }
   },
   {
-    "time": 8.899999976158142,
+    "time": 13.900000095367432,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -118,7 +118,7 @@
     }
   },
   {
-    "time": 25.700000047683716,
+    "time": 29.700000047683716,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -177,7 +177,7 @@
     }
   },
   {
-    "time": 42.10000002384186,
+    "time": 42.60000002384186,
     "collapsed": false,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -236,7 +236,125 @@
     }
   },
   {
-    "time": 84.10000002384186,
+    "time": 59.40000009536743,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "DIV",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 76.20000004768372,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "DIV",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 102.40000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -295,28 +413,28 @@
     }
   },
   {
-    "time": 95,
+    "time": 110.20000004768372,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 194.0625,
+    "sidebarWidth": 197.5,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8,
       "y": 35.75,
-      "width": 178.0625,
+      "width": 181.5,
       "height": 28,
-      "centerX": 97.03125,
+      "centerX": 98.75,
       "centerY": 49.75
     },
     "button": {
       "x": 8,
       "y": 0,
-      "width": 178.0625,
+      "width": 181.5,
       "height": 28,
-      "centerX": 97.03125,
+      "centerX": 98.75,
       "centerY": 14
     },
     "rowIcon": {
@@ -339,43 +457,43 @@
     "profile": {
       "x": 8,
       "y": 918,
-      "width": 146.0625,
+      "width": 149.5,
       "height": 28,
-      "centerX": 81.03125,
+      "centerX": 82.75,
       "centerY": 932
     },
     "settings": {
-      "x": 158.0625,
+      "x": 161.5,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 172.0625,
+      "centerX": 175.5,
       "centerY": 932
     }
   },
   {
-    "time": 117.70000004768372,
+    "time": 132.70000004768372,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 178.25,
+    "sidebarWidth": 190.90625,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.078125,
       "y": 35.75,
-      "width": 156.484375,
+      "width": 168.6875,
       "height": 28,
-      "centerX": 86.3203125,
+      "centerX": 92.421875,
       "centerY": 49.75
     },
     "button": {
       "x": 8.078125,
       "y": 0,
-      "width": 156.484375,
+      "width": 168.6875,
       "height": 28,
-      "centerX": 86.3203125,
+      "centerX": 92.421875,
       "centerY": 14
     },
     "rowIcon": {
@@ -394,47 +512,47 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 0.315085,
+    "labelOpacity": 0.317381,
     "profile": {
       "x": 8.078125,
-      "y": 916.71875,
-      "width": 125.859375,
+      "y": 916.734375,
+      "width": 138.046875,
       "height": 28,
-      "centerX": 71.0078125,
-      "centerY": 930.71875
+      "centerX": 77.1015625,
+      "centerY": 930.734375
     },
     "settings": {
-      "x": 136.578125,
+      "x": 148.78125,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 150.578125,
+      "centerX": 162.78125,
       "centerY": 932
     }
   },
   {
-    "time": 142.5,
+    "time": 144.90000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 132.71875,
+    "sidebarWidth": 146.671875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 8.453125,
       "y": 35.75,
-      "width": 96.1875,
+      "width": 107.0625,
       "height": 28,
-      "centerX": 56.546875,
+      "centerX": 61.984375,
       "centerY": 49.75
     },
     "button": {
       "x": 8.453125,
       "y": 0,
-      "width": 96.1875,
+      "width": 107.0625,
       "height": 28,
-      "centerX": 56.546875,
+      "centerX": 61.984375,
       "centerY": 14
     },
     "rowIcon": {
@@ -453,47 +571,47 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 0.0972419,
+    "labelOpacity": 0.0979455,
     "profile": {
       "x": 8.453125,
-      "y": 911.0625,
-      "width": 71.59375,
+      "y": 911.109375,
+      "width": 82.421875,
       "height": 28,
-      "centerX": 44.25,
-      "centerY": 925.0625
+      "centerX": 49.6640625,
+      "centerY": 925.109375
     },
     "settings": {
-      "x": 76.671875,
+      "x": 87.546875,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 90.671875,
+      "centerX": 101.546875,
       "centerY": 932
     }
   },
   {
-    "time": 166.20000004768372,
+    "time": 161.90000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 102.921875,
+    "sidebarWidth": 126.71875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
-      "x": 9.15625,
+      "x": 8.875,
       "y": 35.75,
-      "width": 52.5,
+      "width": 74.203125,
       "height": 28,
-      "centerX": 35.40625,
+      "centerX": 45.9765625,
       "centerY": 49.75
     },
     "button": {
-      "x": 9.15625,
+      "x": 8.875,
       "y": 0,
-      "width": 52.5,
+      "width": 74.203125,
       "height": 28,
-      "centerX": 35.40625,
+      "centerX": 45.9765625,
       "centerY": 14
     },
     "rowIcon": {
@@ -512,47 +630,47 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 0.00627545,
+    "labelOpacity": 0.0284123,
     "profile": {
-      "x": 9.15625,
-      "y": 900.484375,
-      "width": 39.1875,
+      "x": 8.875,
+      "y": 904.765625,
+      "width": 56.328125,
       "height": 28,
-      "centerX": 28.75,
-      "centerY": 914.484375
+      "centerX": 37.0390625,
+      "centerY": 918.765625
     },
     "settings": {
-      "x": 33.671875,
+      "x": 55.09375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 47.671875,
+      "centerX": 69.09375,
       "centerY": 932
     }
   },
   {
-    "time": 196.70000004768372,
+    "time": 181.60000002384186,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 85.8125,
+    "sidebarWidth": 106.703125,
     "rowStable": true,
     "buttonStable": true,
     "row": {
-      "x": 9.515625,
+      "x": 9.15625,
       "y": 35.75,
-      "width": 38.0625,
+      "width": 54.109375,
       "height": 28,
-      "centerX": 28.546875,
+      "centerX": 36.2109375,
       "centerY": 49.75
     },
     "button": {
-      "x": 9.515625,
+      "x": 9.15625,
       "y": 0,
-      "width": 38.0625,
+      "width": 54.109375,
       "height": 28,
-      "centerX": 28.546875,
+      "centerX": 36.2109375,
       "centerY": 14
     },
     "rowIcon": {
@@ -571,47 +689,165 @@
       "centerX": 23.984375,
       "centerY": 14
     },
-    "labelOpacity": 6.17998e-11,
+    "labelOpacity": 0.00634336,
     "profile": {
-      "x": 9.515625,
-      "y": 895.234375,
-      "width": 30.359375,
+      "x": 9.15625,
+      "y": 900.5,
+      "width": 40.78125,
       "height": 28,
-      "centerX": 24.6953125,
-      "centerY": 909.234375
+      "centerX": 29.546875,
+      "centerY": 914.5
     },
     "settings": {
-      "x": 19.59375,
+      "x": 35.296875,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 33.59375,
+      "centerX": 49.296875,
       "centerY": 932
     }
   },
   {
-    "time": 226.60000002384186,
+    "time": 203.10000002384186,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 70.546875,
+    "sidebarWidth": 90.28125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.359375,
+      "y": 35.75,
+      "width": 42.609375,
+      "height": 28,
+      "centerX": 30.6640625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.359375,
+      "y": 0,
+      "width": 42.609375,
+      "height": 28,
+      "centerX": 30.6640625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0.000627658,
+    "profile": {
+      "x": 9.359375,
+      "y": 897.484375,
+      "width": 32.5,
+      "height": 28,
+      "centerX": 25.609375,
+      "centerY": 911.484375
+    },
+    "settings": {
+      "x": 24,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 38,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 227.30000007152557,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "切换侧栏",
+    "sidebarWidth": 78.0625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.515625,
+      "y": 35.75,
+      "width": 36.21875,
+      "height": 28,
+      "centerX": 27.625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.515625,
+      "y": 0,
+      "width": 36.21875,
+      "height": 28,
+      "centerX": 27.625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 6.85125e-10,
+    "profile": {
+      "x": 9.515625,
+      "y": 895.25,
+      "width": 28.484375,
+      "height": 28,
+      "centerX": 23.7578125,
+      "centerY": 909.25
+    },
+    "settings": {
+      "x": 17.75,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 31.75,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 245.10000002384186,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "切换侧栏",
+    "sidebarWidth": 67.90625,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 9.625,
       "y": 35.75,
-      "width": 32.859375,
+      "width": 32.375,
       "height": 28,
-      "centerX": 26.0546875,
+      "centerX": 25.8125,
       "centerY": 49.75
     },
     "button": {
       "x": 9.625,
       "y": 0,
-      "width": 32.859375,
+      "width": 32.375,
       "height": 28,
-      "centerX": 26.0546875,
+      "centerX": 25.8125,
       "centerY": 14
     },
     "rowIcon": {
@@ -633,44 +869,44 @@
     "labelOpacity": 0,
     "profile": {
       "x": 9.625,
-      "y": 893.5,
-      "width": 27,
+      "y": 893.515625,
+      "width": 26.5,
       "height": 28,
-      "centerX": 23.125,
-      "centerY": 907.5
+      "centerX": 22.875,
+      "centerY": 907.515625
     },
     "settings": {
-      "x": 14.5,
+      "x": 14.03125,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 28.5,
+      "centerX": 28.03125,
       "centerY": 932
     }
   },
   {
-    "time": 244.70000004768372,
+    "time": 256.60000002384186,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 60.984375,
+    "sidebarWidth": 62.25,
     "rowStable": true,
     "buttonStable": true,
     "row": {
-      "x": 9.796875,
+      "x": 9.71875,
       "y": 35.75,
-      "width": 29.71875,
+      "width": 30.515625,
       "height": 28,
-      "centerX": 24.65625,
+      "centerX": 24.9765625,
       "centerY": 49.75
     },
     "button": {
-      "x": 9.796875,
+      "x": 9.71875,
       "y": 0,
-      "width": 29.71875,
+      "width": 30.515625,
       "height": 28,
-      "centerX": 24.65625,
+      "centerX": 24.9765625,
       "centerY": 14
     },
     "rowIcon": {
@@ -691,45 +927,104 @@
     },
     "labelOpacity": 0,
     "profile": {
-      "x": 9.796875,
-      "y": 891.046875,
-      "width": 26.46875,
+      "x": 9.71875,
+      "y": 892.140625,
+      "width": 26.09375,
       "height": 28,
-      "centerX": 23.03125,
-      "centerY": 905.046875
+      "centerX": 22.765625,
+      "centerY": 906.140625
     },
     "settings": {
-      "x": 11.53125,
+      "x": 12.25,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 25.53125,
+      "centerX": 26.25,
       "centerY": 932
     }
   },
   {
-    "time": 263.5,
+    "time": 268.5,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 56.84375,
+    "sidebarWidth": 59.265625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.78125,
+      "y": 35.75,
+      "width": 29.546875,
+      "height": 28,
+      "centerX": 24.5546875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.78125,
+      "y": 0,
+      "width": 29.546875,
+      "height": 28,
+      "centerX": 24.5546875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.984375,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.984375,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.984375,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.78125,
+      "y": 891.0625,
+      "width": 26.28125,
+      "height": 28,
+      "centerX": 22.921875,
+      "centerY": 905.0625
+    },
+    "settings": {
+      "x": 11.359375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 25.359375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 282.2000000476837,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "切换侧栏",
+    "sidebarWidth": 56.6875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 9.84375,
       "y": 35.75,
-      "width": 28.9375,
+      "width": 28.921875,
       "height": 28,
-      "centerX": 24.3125,
+      "centerX": 24.3046875,
       "centerY": 49.75
     },
     "button": {
       "x": 9.84375,
       "y": 0,
-      "width": 28.9375,
+      "width": 28.921875,
       "height": 28,
-      "centerX": 24.3125,
+      "centerX": 24.3046875,
       "centerY": 14
     },
     "rowIcon": {
@@ -752,9 +1047,9 @@
     "profile": {
       "x": 9.84375,
       "y": 890.203125,
-      "width": 26.59375,
+      "width": 26.578125,
       "height": 28,
-      "centerX": 23.140625,
+      "centerX": 23.1328125,
       "centerY": 904.203125
     },
     "settings": {
@@ -767,28 +1062,28 @@
     }
   },
   {
-    "time": 279.8000000715256,
+    "time": 294.7000000476837,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 53.5625,
+    "sidebarWidth": 54.359375,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 9.890625,
       "y": 35.75,
-      "width": 28.46875,
+      "width": 28.515625,
       "height": 28,
-      "centerX": 24.125,
+      "centerX": 24.1484375,
       "centerY": 49.75
     },
     "button": {
       "x": 9.890625,
       "y": 0,
-      "width": 28.46875,
+      "width": 28.515625,
       "height": 28,
-      "centerX": 24.125,
+      "centerX": 24.1484375,
       "centerY": 14
     },
     "rowIcon": {
@@ -810,44 +1105,44 @@
     "labelOpacity": 0,
     "profile": {
       "x": 9.890625,
-      "y": 889.515625,
-      "width": 26.859375,
+      "y": 889.53125,
+      "width": 26.90625,
       "height": 28,
-      "centerX": 23.3203125,
-      "centerY": 903.515625
+      "centerX": 23.34375,
+      "centerY": 903.53125
     },
     "settings": {
-      "x": 10.390625,
+      "x": 10.4375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 24.390625,
+      "centerX": 24.4375,
       "centerY": 932
     }
   },
   {
-    "time": 303.5,
+    "time": 311.40000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 51.5,
+    "sidebarWidth": 52.4375,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 9.921875,
       "y": 35.75,
-      "width": 28.234375,
+      "width": 28.265625,
       "height": 28,
-      "centerX": 24.0390625,
+      "centerX": 24.0546875,
       "centerY": 49.75
     },
     "button": {
       "x": 9.921875,
       "y": 0,
-      "width": 28.234375,
+      "width": 28.265625,
       "height": 28,
-      "centerX": 24.0390625,
+      "centerX": 24.0546875,
       "centerY": 14
     },
     "rowIcon": {
@@ -870,43 +1165,43 @@
     "profile": {
       "x": 9.921875,
       "y": 889,
-      "width": 27.1875,
+      "width": 27.21875,
       "height": 28,
-      "centerX": 23.515625,
+      "centerX": 23.53125,
       "centerY": 903
     },
     "settings": {
-      "x": 10.1875,
+      "x": 10.21875,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 24.1875,
+      "centerX": 24.21875,
       "centerY": 932
     }
   },
   {
-    "time": 318.5,
+    "time": 328.2000000476837,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 49.359375,
+    "sidebarWidth": 50.640625,
     "rowStable": true,
     "buttonStable": true,
     "row": {
       "x": 9.953125,
       "y": 35.75,
-      "width": 28.09375,
+      "width": 28.125,
       "height": 28,
-      "centerX": 24,
+      "centerX": 24.015625,
       "centerY": 49.75
     },
     "button": {
       "x": 9.953125,
       "y": 0,
-      "width": 28.09375,
+      "width": 28.125,
       "height": 28,
-      "centerX": 24,
+      "centerX": 24.015625,
       "centerY": 14
     },
     "rowIcon": {
@@ -928,28 +1223,28 @@
     "labelOpacity": 0,
     "profile": {
       "x": 9.953125,
-      "y": 888.59375,
-      "width": 27.46875,
+      "y": 888.609375,
+      "width": 27.484375,
       "height": 28,
-      "centerX": 23.6875,
-      "centerY": 902.59375
+      "centerX": 23.6953125,
+      "centerY": 902.609375
     },
     "settings": {
-      "x": 10.078125,
+      "x": 10.09375,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 24.078125,
+      "centerX": 24.09375,
       "centerY": 932
     }
   },
   {
-    "time": 333.89999997615814,
+    "time": 345.7000000476837,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 48.5625,
+    "sidebarWidth": 49.3125,
     "rowStable": true,
     "buttonStable": true,
     "row": {
@@ -988,27 +1283,27 @@
     "profile": {
       "x": 9.96875,
       "y": 888.3125,
-      "width": 27.703125,
+      "width": 27.71875,
       "height": 28,
-      "centerX": 23.8203125,
+      "centerX": 23.828125,
       "centerY": 902.3125
     },
     "settings": {
-      "x": 10.03125,
+      "x": 10.046875,
       "y": 918,
       "width": 28,
       "height": 28,
-      "centerX": 24.03125,
+      "centerX": 24.046875,
       "centerY": 932
     }
   },
   {
-    "time": 351,
+    "time": 360.90000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 48.125,
+    "sidebarWidth": 48.421875,
     "rowStable": true,
     "buttonStable": true,
     "row": {
@@ -1062,12 +1357,12 @@
     }
   },
   {
-    "time": 366.3000000715256,
+    "time": 378.10000002384186,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
     "focusLabel": "切换侧栏",
-    "sidebarWidth": 48,
+    "sidebarWidth": 48.0625,
     "rowStable": true,
     "buttonStable": true,
     "row": {
@@ -1121,7 +1416,7 @@
     }
   },
   {
-    "time": 383.2000000476837,
+    "time": 397.7000000476837,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1180,7 +1475,7 @@
     }
   },
   {
-    "time": 394.2000000476837,
+    "time": 410.40000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1239,7 +1534,7 @@
     }
   },
   {
-    "time": 409.10000002384186,
+    "time": 426.40000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1298,7 +1593,7 @@
     }
   },
   {
-    "time": 425.7000000476837,
+    "time": 442.60000002384186,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1357,7 +1652,7 @@
     }
   },
   {
-    "time": 442.10000002384186,
+    "time": 459.2000000476837,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1416,7 +1711,7 @@
     }
   },
   {
-    "time": 459,
+    "time": 475.90000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1475,7 +1770,7 @@
     }
   },
   {
-    "time": 475.5,
+    "time": 492.40000009536743,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],
@@ -1534,66 +1829,7 @@
     }
   },
   {
-    "time": 492.2000000476837,
-    "collapsed": true,
-    "tooltips": 0,
-    "tooltipTexts": [],
-    "focusLabel": "切换侧栏",
-    "sidebarWidth": 48,
-    "rowStable": true,
-    "buttonStable": true,
-    "row": {
-      "x": 10,
-      "y": 35.75,
-      "width": 28,
-      "height": 28,
-      "centerX": 24,
-      "centerY": 49.75
-    },
-    "button": {
-      "x": 10,
-      "y": 0,
-      "width": 28,
-      "height": 28,
-      "centerX": 24,
-      "centerY": 14
-    },
-    "rowIcon": {
-      "x": 16,
-      "y": 41.75,
-      "width": 16,
-      "height": 16,
-      "centerX": 24,
-      "centerY": 49.75
-    },
-    "newIcon": {
-      "x": 16,
-      "y": 6,
-      "width": 16,
-      "height": 16,
-      "centerX": 24,
-      "centerY": 14
-    },
-    "labelOpacity": 0,
-    "profile": {
-      "x": 10,
-      "y": 888,
-      "width": 28,
-      "height": 28,
-      "centerX": 24,
-      "centerY": 902
-    },
-    "settings": {
-      "x": 10,
-      "y": 918,
-      "width": 28,
-      "height": 28,
-      "centerX": 24,
-      "centerY": 932
-    }
-  },
-  {
-    "time": 509.2000000476837,
+    "time": 509.3000000715256,
     "collapsed": true,
     "tooltips": 0,
     "tooltipTexts": [],

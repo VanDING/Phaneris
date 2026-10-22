@@ -1,5 +1,5 @@
 {
-  "apps/electron/dist/main.cjs": "b43c3a786b11e0221a6da670d8568e4309628c54b349c7e82cdeb99ab154554e",
+  "apps/electron/dist/main.cjs": "0f43635f147c22b9a960b6fbb1bac4b4caa011de49f730b26f646c0720885410",
   "apps/electron/dist/bootstrap-preload.cjs": "248d0005708f1c67d26166310b27a1f574f394266d66c765cbb38ac24952cc8b",
-  "apps/electron/dist/renderer/index.html": "8fbda69318d9327211b6d605067bba7c4857fa67f904c34f838af62bd9a4e2d2"
+  "apps/electron/dist/renderer/index.html": "f9ffaa06fe1a5eb63be2b26e0108a0ab5101942d997db81116e8cfef3244a0ba"
 }
