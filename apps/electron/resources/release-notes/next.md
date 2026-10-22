@@ -8,6 +8,4 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
-- Make Workbench panels open and close smoothly with the sidebar's motion rhythm, while keeping divider drags and window resizing immediate.
-
 ## Breaking Changes
