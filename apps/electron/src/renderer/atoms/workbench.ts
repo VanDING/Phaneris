@@ -93,9 +93,9 @@ function generateWorkbenchItemId(): string {
   return `workbench-${++nextWorkbenchItemId}-${Date.now()}`
 }
 
-export function clampCompanionPrimaryWidth(width: number): number {
+export function clampCompanionPrimaryWidth(width: number, maximum = MAX_COMPANION_PRIMARY_WIDTH): number {
   if (!Number.isFinite(width)) return DEFAULT_COMPANION_PRIMARY_WIDTH
-  return Math.min(MAX_COMPANION_PRIMARY_WIDTH, Math.max(MIN_COMPANION_PRIMARY_WIDTH, Math.round(width)))
+  return Math.min(Math.max(MIN_COMPANION_PRIMARY_WIDTH, maximum), Math.max(MIN_COMPANION_PRIMARY_WIDTH, Math.round(width)))
 }
 
 export function classifySurfaceRoute(route: ViewRoute): SurfaceRouteClassification | null {
@@ -609,9 +609,9 @@ export const toggleWorkbenchAtom = atom(
 
 export const setCompanionPrimaryWidthAtom = atom(
   null,
-  (get, set, width: number) => {
+  (get, set, width: number, maximum: number = MAX_COMPANION_PRIMARY_WIDTH) => {
     const current = get(workbenchStateAtom)
-    const nextWidth = clampCompanionPrimaryWidth(width)
+    const nextWidth = clampCompanionPrimaryWidth(width, maximum)
     if (current.primaryWidth === nextWidth) return false
     set(workbenchStateAtom, { ...current, primaryWidth: nextWidth })
     return true

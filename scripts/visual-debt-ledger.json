@@ -5037,7 +5037,7 @@
       "file": "apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
       "rule": "jsx-a11y/no-noninteractive-element-interactions",
       "message": "Non-interactive elements should not be assigned mouse or keyboard event listeners.",
-      "fingerprint": "d252e5c9afdfb647cf5a3a624e2e4cb7611ddf274728faf29855cf2d9614e9ec",
+      "fingerprint": "52398819b8590d6d3fc133fb4fc3e0b9e6af520525b27bc2ee648bef8a13ec15",
       "count": 1,
       "owner": "Electron / a11y owner",
       "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",

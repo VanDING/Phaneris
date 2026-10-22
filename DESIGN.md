@@ -294,16 +294,18 @@ Rules:
 
 ## Layout
 
-- Shell topology is content-driven, not percentage-driven: the navigator panel is
-  resizable, the primary surface takes the remaining width, and beside an open
-  workbench the primary keeps a **fixed basis** (600px by default, dragged through
-  the sash) with a **380px** reading floor while the workbench takes everything
-  left, floored at 360px. The primary must not `flex-grow`: sharing the free space
-  makes the rendered boundary disagree with the sash value *and* makes the opening
-  animation start from half the row and shrink into place. The workbench carries
-  no `max-width` for the same reason — the drag's ceiling is measured from the row
-  (`rowWidth − 360`), not baked into the layout. There is no `defaultLayout` array
-  — the old `[20, 32, 48]` prop was passed and never read.
+- Shell topology is content-driven: the sidebar and navigator are resizable;
+  the remaining content row is shared by foreground conversations and Workbench.
+  Beside an open workbench the transcript defaults to **600px**, with a **380px**
+  reading floor, while Workbench takes the remainder with a **360px** floor.
+  The sash uses the actual content row, excluding navigation and the **6px** seam,
+  for its ceiling; the transcript may grow beyond half the row.
+- Desktop Workbench opens and closes through complementary pixel widths using
+  the sidebar's spatial/move tween. Its dock stays mounted through the closing
+  animation. Dragging, content-row resizing and reduced motion snap immediately.
+  Foreground conversations share equal widths; opening Workbench presents the
+  active conversation and collapsing it restores the group. Compact layouts use
+  full-width replacement layers. Expanded Workbench fills the content row.
 - Chat reading column is `--reading-width: 840px` with `--reading-gutter`.
 - Panel-relative responsiveness uses container queries, not viewport queries:
   `@panel-compact` (448px), `@panel-medium` (640px), `@mobile` (768px).

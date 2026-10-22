@@ -1,0 +1,5 @@
+{
+  "apps/electron/dist/main.cjs": "aabc1a7d1e33d24c1d5df90fa5bb886293765c7b85d361f6592e23258900b739",
+  "apps/electron/dist/bootstrap-preload.cjs": "e3aaa9ecdc5e679c9a476645f64af1e799a5789d4a9d09632a48d0cc977b3310",
+  "apps/electron/dist/renderer/index.html": "3109d27bb0c83262bf0c658f04e36726c8a020fd8afb715eb36fb8411c7a8691"
+}
