@@ -11,7 +11,7 @@ describe('resolveNodeStatePill', () => {
 
     // Color distinction: a failed node must not look like a done node. The pill
     // speaks in theme roles, not raw palette names — `emerald`/`red` were the
-    // pre-migration strings and are emitted by nothing now.
+    // pre-role strings and are emitted by nothing now.
     expect(done.className).not.toBe(failed.className)
     expect(done.className).toContain('text-success-text')
     expect(failed.className).toContain('text-destructive-text')

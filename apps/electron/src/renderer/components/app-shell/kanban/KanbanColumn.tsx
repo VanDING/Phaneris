@@ -15,7 +15,6 @@ import type {
   KanbanProject,
   KanbanTask,
 } from './types'
-import { useInitialFocus } from '@phaneris/ui'
 
 interface KanbanColumnProps {
   column: KanbanColumnMeta
@@ -54,13 +53,7 @@ interface KanbanColumnProps {
   onSetColor?: (color: string) => void
   /** Remove this (custom) column. Absent for the last remaining column (the board keeps one). */
   onRemove?: () => void
-  /** All board columns, so a tile can offer "Move to column" without dragging. */
-  columns?: ReadonlyArray<KanbanColumnMeta>
-  /** Move a task to another column (the same action a drop performs). */
-  onMoveTask?: (taskId: string, columnId: string) => void
 }
-
-const TASK_RENDER_LIMIT = 60
 
 export function KanbanColumn({
   column,
@@ -86,22 +79,8 @@ export function KanbanColumn({
   onRename,
   onSetColor,
   onRemove,
-  columns,
-  onMoveTask,
 }: KanbanColumnProps) {
   const { t } = useTranslation()
-  // Menu labels for "Move to column": built-ins resolve through their i18n key,
-  // custom columns carry a verbatim name, and the column a task already sits in
-  // is excluded.
-  const moveTargets = React.useMemo(() => {
-    if (!columns || !onMoveTask) return undefined
-    return columns
-      .filter(candidate => candidate.id !== column.id)
-      .map(candidate => ({
-        id: candidate.id,
-        label: candidate.labelKey ? t(candidate.labelKey) : candidate.name ?? candidate.id,
-      }))
-  }, [columns, column.id, onMoveTask, t])
   // Built-in columns carry an i18n key; custom (per-project) columns a verbatim name.
   const label = column.labelKey ? t(column.labelKey) : (column.name ?? '')
   const editable = !!onRename || !!onSetColor || !!onRemove
@@ -109,21 +88,6 @@ export function KanbanColumn({
   // tile is dragged over. The DndContext lives in KanbanBoard, so these hooks are
   // only ever mounted under a provider (the playground board mounts it too).
   const { setNodeRef, isOver } = useDroppable({ id: column.id })
-
-  // A finished column is an archive, not a working surface: with hundreds of
-  // done tasks it dominated the board and cost a full render on every update.
-  // It starts collapsed once it holds more than a screenful, and the header keeps
-  // the count so nothing is hidden without a number.
-  const isArchiveColumn = column.id === 'done'
-  const [collapsed, setCollapsed] = React.useState(isArchiveColumn && tasks.length > 20)
-  // A column that holds hundreds of cards renders hundreds of tiles, and every
-  // one mounts a menu tree. Cap the initial render; the count is never hidden.
-  const [showAllTasks, setShowAllTasks] = React.useState(false)
-  const showCollapsed = collapsed && tasks.length > 0
-  // 60 tiles is a couple of screenfuls: past that the column renders a slice and
-  // says how many it is holding back. The count lives in the header either way.
-  const renderedTasks = showAllTasks ? tasks : tasks.slice(0, TASK_RENDER_LIMIT)
-  const hiddenTaskCount = tasks.length - renderedTasks.length
 
   return (
     <div className="flex min-w-[260px] flex-1 flex-col">
@@ -142,16 +106,6 @@ export function KanbanColumn({
           onSetColor={onSetColor}
           onRemove={onRemove}
         />
-        {isArchiveColumn && tasks.length > 20 && (
-          <button
-            type="button"
-            onClick={() => setCollapsed(value => !value)}
-            className="craft-segment craft-touch-target craft-focus shrink-0 px-1 text-meta text-text-secondary hover:text-foreground"
-            aria-expanded={!collapsed}
-          >
-            {collapsed ? t('kanban.showDone') : t('kanban.hideDone')}
-          </button>
-        )}
       </div>
 
       <div
@@ -162,20 +116,9 @@ export function KanbanColumn({
           outline: isOver && color ? `2px solid ${color.solid}` : undefined,
         }}
       >
-        {onCreateTask && !showCollapsed && <NewTaskComposer onCreate={onCreateTask} />}
+        {onCreateTask && <NewTaskComposer onCreate={onCreateTask} />}
 
-        {tasks.length === 0 && (
-          // An empty column was a colour block with no exit: the only way to add
-          // work was to know the first column's composer. Say it where the gap is.
-          <div className="flex flex-1 flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border/70 px-3 py-6 text-center">
-            <span className="text-meta text-text-secondary">{t('kanban.workItemEmpty')}</span>
-            {onCreateTask && (
-              <span className="text-meta font-medium text-foreground">{t('kanban.newTask')}</span>
-            )}
-          </div>
-        )}
-
-        {!showCollapsed && renderedTasks.map(task => (
+        {tasks.map(task => (
           <DraggableTile key={task.id} taskId={task.id}>
             <TaskTile
               task={task}
@@ -193,21 +136,9 @@ export function KanbanColumn({
               onRunSubtasks={onRunSubtasks ? () => onRunSubtasks(task.id) : undefined}
               subtaskModelGroups={subtaskModelGroups}
               defaultSubtaskModel={defaultSubtaskModel}
-              moveTargets={moveTargets}
-              onMoveToColumn={onMoveTask ? columnId => onMoveTask(task.id, columnId) : undefined}
             />
           </DraggableTile>
         ))}
-
-        {!showCollapsed && hiddenTaskCount > 0 && (
-          <button
-            type="button"
-            onClick={() => setShowAllTasks(true)}
-            className="craft-segment craft-touch-target craft-focus w-full shrink-0 justify-center text-meta text-text-secondary hover:text-foreground"
-          >
-            {t('kanban.showMoreTasks', { count: hiddenTaskCount })}
-          </button>
-        )}
       </div>
     </div>
   )
@@ -245,16 +176,8 @@ function ColumnHeader({
   onRemove?: () => void
 }) {
   const { t } = useTranslation()
-  // The rename field only exists after the user chooses "rename", so focusing it
-  // continues that action instead of surprising anyone at page load.
-  const initialFocusRef = useInitialFocus<HTMLInputElement>()
   const [open, setOpen] = React.useState(false)
 
-  // The column's identity is its colour: the pill carries the solid fill and the
-  // fill's computed onAccent (>=4.5:1 for every palette entry, asserted by the
-  // chrome workflow), and the body carries the matching tint. The neutral repaint
-  // this replaces existed only because a hard-coded white onAccent measured
-  // 2.15:1 — that cause is gone now that the contrast is derived.
   const pillStyle = color ? { backgroundColor: color.solid, color: color.onAccent } : undefined
   const inner = (
     <>
@@ -346,7 +269,11 @@ function ColumnHeader({
             <input
               type="text"
               defaultValue={label}
-              ref={initialFocusRef}
+              // The rule guards against stealing focus on load; this field only exists
+              // after the user chooses to rename the column, so focusing it is the
+              // expected continuation of that action rather than a surprise.
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
               onBlur={e => {
                 const next = e.target.value.trim()
                 if (next && next !== label) onRename(next)
@@ -361,7 +288,7 @@ function ColumnHeader({
                   setOpen(false)
                 }
               }}
-              className="craft-field-input w-full rounded-md border border-border/70 bg-background px-2 py-1 text-meta text-foreground outline-none focus:border-border"
+              className="craft-field-input w-full rounded-md border border-border/60 bg-background px-2 py-1 text-meta text-foreground outline-none focus:border-border"
             />
           </div>
         )}
@@ -379,7 +306,7 @@ function ColumnHeader({
                   className="craft-control craft-focus grid h-5 w-5 place-items-center rounded-full ring-1 ring-border/40 transition-transform hover:scale-110"
                   style={{ backgroundColor: hex }}
                 >
-                  {color?.solid === hex && <Check className="h-3 w-3 text-white" />}
+                  {color?.solid === hex && <Check className="h-3 w-3text-on-accent" />}
                 </button>
               ))}
             </div>

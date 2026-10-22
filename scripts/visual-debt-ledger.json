@@ -305,16 +305,6 @@
     },
     {
       "file": "apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
-      "rule": "jsx-a11y/no-noninteractive-element-interactions",
-      "message": "Non-interactive elements should not be assigned mouse or keyboard event listeners.",
-      "fingerprint": "07936e0e30bedc367f41a853e3e375411631862c1723f5970d2952c7220c9a3d",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
       "rule": "jsx-a11y/no-noninteractive-tabindex",
       "message": "`tabIndex` should only be declared on interactive elements.",
       "fingerprint": "d2f96ff3e3039980c1009507754b4757f3dd05b4fd036be1c71d7ba687fc9a8c",
@@ -5011,6 +5001,46 @@
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      "rule": "jsx-a11y/no-autofocus",
+      "message": "The autoFocus prop should not be used, as it can reduce usability and accessibility for users.",
+      "fingerprint": "995c4217befacaabb537a6ed81814fd003192b21ed3c71edb58851fd0af5aaea",
+      "count": 1,
+      "owner": "Electron / a11y owner",
+      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "2f2e11e7cd70eb8041e835169ae3fe2f1fa560a2ad9f335405ccabcf4ab31078",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "literal",
+      "fingerprint": "b68c87c38cd5cc035fc7e6639339640e6afd4e5b34bffea523bf91ba58f094e1",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/WorkbenchResizeSash.tsx",
+      "rule": "jsx-a11y/no-noninteractive-element-interactions",
+      "message": "Non-interactive elements should not be assigned mouse or keyboard event listeners.",
+      "fingerprint": "d252e5c9afdfb647cf5a3a624e2e4cb7611ddf274728faf29855cf2d9614e9ec",
+      "count": 1,
+      "owner": "Electron / a11y owner",
+      "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     }
   ]

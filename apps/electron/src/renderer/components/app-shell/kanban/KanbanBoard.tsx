@@ -185,8 +185,6 @@ export function KanbanBoard({
             onSetColor={onUpdateColumn ? color => onUpdateColumn(column.id, { color }) : undefined}
             // Guard against removing the last column — the board must always keep one.
             onRemove={onRemoveColumn && columns.length > 1 ? () => onRemoveColumn(column.id) : undefined}
-            columns={columns}
-            onMoveTask={onMoveTask}
           />
         ))}
         {onAddColumn && (
@@ -194,7 +192,7 @@ export function KanbanBoard({
             type="button"
             onClick={onAddColumn}
             title={t('kanban.column.add')}
-            className="craft-control flex h-9 w-9 shrink-0 items-center justify-center self-start rounded-lg border border-dashed border-border text-text-secondary transition-colors hover:border-border/70 hover:bg-foreground/[0.04] hover:text-text-secondary"
+            className="craft-control flex h-9 w-9 shrink-0 items-center justify-center self-start rounded-lg border border-dashed border-border text-text-secondary transition-colors hover:border-border/80 hover:bg-foreground/[0.03] hover:text-text-secondary"
           >
             <Plus className="h-4 w-4" />
           </button>

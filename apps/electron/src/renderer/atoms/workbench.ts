@@ -20,8 +20,8 @@ export const PRIMARY_SURFACE_ID = 'primary-surface'
 
 export const MIN_WORKBENCH_WIDTH = 360
 export const DEFAULT_COMPANION_PRIMARY_WIDTH = 600
-export const MIN_COMPANION_PRIMARY_WIDTH = 360
-export const MAX_COMPANION_PRIMARY_WIDTH = 600
+export const MIN_COMPANION_PRIMARY_WIDTH = 380
+export const MAX_COMPANION_PRIMARY_WIDTH = 1600
 export const MAX_FOREGROUND_CONVERSATIONS = 3
 
 export type PrimarySurfaceKind = 'session' | 'project-management' | 'management'

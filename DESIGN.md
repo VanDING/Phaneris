@@ -295,10 +295,15 @@ Rules:
 ## Layout
 
 - Shell topology is content-driven, not percentage-driven: the navigator panel is
-  resizable, the primary surface takes the remaining width, and the workbench
-  companion is capped at **50% of the row** (`max-width: 50%`) with a 360px
-  floor; the primary keeps `min(600px, 55%)`. There is no `defaultLayout` array —
-  the old `[20, 32, 48]` prop was passed and never read.
+  resizable, the primary surface takes the remaining width, and beside an open
+  workbench the primary keeps a **fixed basis** (600px by default, dragged through
+  the sash) with a **380px** reading floor while the workbench takes everything
+  left, floored at 360px. The primary must not `flex-grow`: sharing the free space
+  makes the rendered boundary disagree with the sash value *and* makes the opening
+  animation start from half the row and shrink into place. The workbench carries
+  no `max-width` for the same reason — the drag's ceiling is measured from the row
+  (`rowWidth − 360`), not baked into the layout. There is no `defaultLayout` array
+  — the old `[20, 32, 48]` prop was passed and never read.
 - Chat reading column is `--reading-width: 840px` with `--reading-gutter`.
 - Panel-relative responsiveness uses container queries, not viewport queries:
   `@panel-compact` (448px), `@panel-medium` (640px), `@mobile` (768px).

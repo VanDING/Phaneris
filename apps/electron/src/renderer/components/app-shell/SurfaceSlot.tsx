@@ -26,7 +26,7 @@ import { useAppShellContext, AppShellProvider } from '@/context/AppShellContext'
 import { PanelHeaderCenterButton } from '@/components/ui/PanelHeaderCenterButton'
 import { MainContentPanel } from './MainContentPanel'
 import { BoundPanelContent, isBoundPanelType } from '@/components/content-panels/bound-panel-content'
-import { MIN_WORKBENCH_WIDTH } from '@/atoms/workbench'
+import { MIN_COMPANION_PRIMARY_WIDTH, MIN_WORKBENCH_WIDTH } from '@/atoms/workbench'
 import { PANEL_MIN_WIDTH, RADIUS_EDGE, RADIUS_INNER } from './panel-constants'
 
 interface SurfaceSlotProps {
@@ -81,26 +81,26 @@ function panelShareStyle({
     return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: '0px' }
   }
   if (isWorkbench) {
-    // The workbench may take at most half the row. It used to `flexGrow: 1`
-    // against a fixed 600px primary, so an empty panel could reach 961px on a
-    // 1920 screen while the transcript stayed at 606px (below the 840px reading
-    // column). 50% caps that; the primary grows into the rest.
+    // The workbench takes exactly what the Primary leaves. It must not carry a
+    // `max-width`: capping the panel at half the row made the opening animation
+    // start there and then shrink to the primary's basis, and it made the sash
+    // value disagree with the rendered boundary.
     return {
       flexGrow: 1,
       flexShrink: 1,
       flexBasis: '0px',
       minWidth: `${MIN_WORKBENCH_WIDTH}px`,
-      maxWidth: '50%',
     }
   }
   if (isWorkbenchCompanion) {
-    // Companion primary: grow with the row instead of staying pinned at its
-    // basis, but never below the reading column when the row can afford it.
+    // Companion primary: a fixed basis, floored at a reading minimum rather than
+    // at the saved width — deriving the floor from `companionPrimaryWidth` made
+    // the transcript impossible to narrow past whatever it was set to last.
     return {
-      flexGrow: 1,
+      flexGrow: 0,
       flexShrink: 1,
       flexBasis: `${companionPrimaryWidth}px`,
-      minWidth: `min(${companionPrimaryWidth}px, 55%)`,
+      minWidth: `${MIN_COMPANION_PRIMARY_WIDTH}px`,
     }
   }
   return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: `${PANEL_MIN_WIDTH}px` }

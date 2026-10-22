@@ -15,6 +15,8 @@ import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionSpring, motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import {
+  MIN_COMPANION_PRIMARY_WIDTH,
+  MIN_WORKBENCH_WIDTH,
   collapseWorkbenchAtom,
   focusedSurfaceEntryIdAtom,
   primarySurfaceAtom,
@@ -76,6 +78,23 @@ export function SurfaceContainer({
   // layout transition has to be off for as long as the pointer owns it.
   const [isSashDragging, setIsSashDragging] = useState(false)
   const panelsResizing = isResizing || isSashDragging
+  // The row is the budget both panels share, so the sash ceiling is measured
+  // rather than fixed: on a wide window the transcript may be widened past half,
+  // and on a narrow one the drag must stop before the Workbench hits its floor.
+  const [rowWidth, setRowWidth] = useState(0)
+  useEffect(() => {
+    const element = containerRef.current
+    if (!element || typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(entries => {
+      const width = entries[0]?.contentRect.width ?? 0
+      setRowWidth(previous => (Math.abs(previous - width) < 1 ? previous : width))
+    })
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+  const maxCompanionPrimaryWidth = rowWidth > 0
+    ? Math.max(MIN_COMPANION_PRIMARY_WIDTH, Math.round(rowWidth - MIN_WORKBENCH_WIDTH))
+    : undefined
 
   useEffect(() => {
     if (!fullWidth) return
@@ -298,6 +317,7 @@ export function SurfaceContainer({
             sash={fullWidth ? undefined : (
               <WorkbenchResizeSash
                 primaryWidth={workbench.primaryWidth}
+                maxWidth={maxCompanionPrimaryWidth}
                 onDraggingChange={setIsSashDragging}
               />
             )}

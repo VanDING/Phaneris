@@ -25,10 +25,6 @@ import {
   ContextMenuTrigger,
   StyledContextMenuContent,
   StyledContextMenuItem,
-  StyledContextMenuSeparator,
-  StyledContextMenuSub,
-  StyledContextMenuSubContent,
-  StyledContextMenuSubTrigger,
 } from '@/components/ui/styled-context-menu'
 import { SessionStatusMenu } from '@/components/ui/session-status-menu'
 import { StatusBadge } from './StatusBadge'
@@ -77,16 +73,6 @@ interface TaskTileProps {
   subtaskModelGroups?: KanbanModelProviderGroup[]
   /** Model id pre-selected in the composer (defaults to the first catalog model). */
   defaultSubtaskModel?: string
-  /**
-   * Other columns this task can move to, labelled for the context menu.
-   *
-   * Dragging was the only way to move a task, which made a core board action
-   * pointer-only. The same move is now a menu item, reachable by keyboard
-   * (Menu key / Shift+F10, then Right arrow into the submenu).
-   */
-  moveTargets?: ReadonlyArray<{ id: string; label: string }>
-  /** Move this task to another column. */
-  onMoveToColumn?: (columnId: string) => void
 }
 
 /**
@@ -113,8 +99,6 @@ export function TaskTile({
   onRunSubtasks,
   subtaskModelGroups,
   defaultSubtaskModel,
-  moveTargets,
-  onMoveToColumn,
 }: TaskTileProps) {
   const { t } = useTranslation()
   const livePulseEnabled = useAtomValue(kanbanLivePulseAtom)
@@ -150,8 +134,6 @@ export function TaskTile({
     <div
       role="button"
       tabIndex={0}
-      data-task-tile={task.id}
-      data-task-column={task.column}
       onClick={onClick}
       onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -160,7 +142,7 @@ export function TaskTile({
         }
       }}
       className={cn(
-        'group relative overflow-hidden rounded-lg border border-border/70 bg-surface-raised shadow-minimal',
+        'group relative overflow-hidden rounded-lg border border-border/60 bg-surface-raised shadow-minimal',
         isLive && 'shadow-tinted',
         'cursor-pointer transition-colors hover:border-border focus-visible:outline-none',
         'focus-visible:ring-2 focus-visible:ring-ring/50'
@@ -200,22 +182,16 @@ export function TaskTile({
           onKeyDown={e => e.stopPropagation()}
           title={t('kanban.editTask')}
           aria-label={t('kanban.editTask')}
-          className="craft-icon-button craft-row-actions craft-focus absolute right-2 top-2 z-component-chrome grid h-6 w-6 place-items-center rounded-md bg-transparent text-text-secondary opacity-0 transition-opacity hover:bg-foreground/[0.04] hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="craft-icon-button craft-row-actions craft-focus absolute right-2 top-2 z-component-chrome grid h-6 w-6 place-items-center rounded-md border border-border/60 bg-surface-raised text-text-secondary opacity-0 shadow-minimal transition-opacity hover:bg-foreground/[0.05] hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring/50"
         >
           <Pencil className="h-3.5 w-3.5" />
         </button>
       )}
 
       <div className="relative p-3 pl-3.5">
-        {(project || task.isFlagged || status) && (
-          // One meta row carries identity (project dot + name), state (status
-          // badge) and attention (flag). Status used to sit on its own line under
-          // the title, which made a resting card four rows of chrome before any
-          // content.
-          <div
-            data-tile-row
-            className={cn('mb-1.5 flex min-w-0 items-center gap-2', onEdit && task.isFlagged && 'pr-7')}
-          >
+        {(project || task.isFlagged) && (
+          // Right padding keeps the flag clear of the hover-revealed corner pencil.
+          <div className={cn('mb-1.5 flex items-center justify-between gap-2', onEdit && task.isFlagged && 'pr-7')}>
             {project ? (
               <span className="inline-flex min-w-0 items-center gap-1 text-meta font-medium text-text-secondary">
                 <span
@@ -226,20 +202,7 @@ export function TaskTile({
                 <span className="truncate">{project.name}</span>
               </span>
             ) : (
-              <span className="min-w-0 flex-1" />
-            )}
-            {status && (
-              onStatusChange && statuses && statuses.length > 0 ? (
-                <StatusPicker
-                  status={status}
-                  statuses={statuses}
-                  activeStateId={task.statusId}
-                  live={isLive}
-                  onSelect={onStatusChange}
-                />
-              ) : (
-                <StatusBadge status={status} live={isLive} />
-              )
+              <span />
             )}
             {task.isFlagged && (
               <Flag className="h-3.5 w-3.5 shrink-0 fill-info text-info-text" aria-hidden />
@@ -248,7 +211,6 @@ export function TaskTile({
         )}
 
         <div
-          data-tile-row
           className={cn(
             'text-body font-medium leading-snug line-clamp-2',
             // Strike done/cancelled by *status* (not column — placement ≠ status).
@@ -258,8 +220,23 @@ export function TaskTile({
           {task.title}
         </div>
 
+        <div className="mt-2">
+          {status &&
+            (onStatusChange && statuses && statuses.length > 0 ? (
+              <StatusPicker
+                status={status}
+                statuses={statuses}
+                activeStateId={task.statusId}
+                live={isLive}
+                onSelect={onStatusChange}
+              />
+            ) : (
+              <StatusBadge status={status} live={isLive} />
+            ))}
+        </div>
+
         {(subtaskCount > 0 || onAddSubtask) && (
-          <div className="mt-2.5 border-t border-border/50 pt-2">
+          <div className="mt-2.5 border-t border-border/40 pt-2">
             {subtaskCount > 0 && (
               <div className="flex items-center gap-1.5">
                 <button
@@ -275,7 +252,7 @@ export function TaskTile({
                 >
                   <ChevronRight
                     className={cn('h-3 w-3 shrink-0 transition-transform', expanded && 'rotate-90')}
-
+                   
                   />
                   <SubtaskProgress subtasks={task.subtasks} total={task.subtaskTotal} accent={accent} className="min-w-0 flex-1" />
                 </button>
@@ -326,7 +303,7 @@ export function TaskTile({
           </div>
         )}
 
-        <div data-tile-row className="mt-2.5 flex items-center justify-between gap-2 border-t border-border/50 pt-2 text-meta">
+        <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-border/40 pt-2">
           {task.model ? <ModelChip model={task.model} /> : <span />}
           {(relativeTime || hasMessages) && (
             <div className="flex shrink-0 items-center gap-2 text-meta text-text-secondary">
@@ -349,32 +326,16 @@ export function TaskTile({
     </div>
   )
 
-  const canMove = Boolean(moveTargets?.length && onMoveToColumn)
-  if (!onEdit && !canMove) return card
+  if (!onEdit) return card
 
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>{card}</ContextMenuTrigger>
       <StyledContextMenuContent>
-        {onEdit && (
-          <StyledContextMenuItem onSelect={onEdit}>
-            <Pencil className="h-4 w-4" />
-            {t('kanban.editTask')}
-          </StyledContextMenuItem>
-        )}
-        {onEdit && canMove && <StyledContextMenuSeparator />}
-        {canMove && (
-          <StyledContextMenuSub>
-            <StyledContextMenuSubTrigger>{t('kanban.moveToColumn')}</StyledContextMenuSubTrigger>
-            <StyledContextMenuSubContent>
-              {moveTargets!.map(target => (
-                <StyledContextMenuItem key={target.id} onSelect={() => onMoveToColumn!(target.id)}>
-                  {target.label}
-                </StyledContextMenuItem>
-              ))}
-            </StyledContextMenuSubContent>
-          </StyledContextMenuSub>
-        )}
+        <StyledContextMenuItem onSelect={onEdit}>
+          <Pencil className="h-4 w-4" />
+          {t('kanban.editTask')}
+        </StyledContextMenuItem>
       </StyledContextMenuContent>
     </ContextMenu>
   )
@@ -528,7 +489,7 @@ function AddSubtask({
         }}
         rows={1}
         placeholder={t('kanban.describeSubtask')}
-        className="craft-field-input w-full resize-none rounded-md border border-border/70 bg-background px-2 py-1 text-meta text-foreground outline-none field-sizing-content max-h-40 focus:border-border"
+        className="craft-field-input w-full resize-none rounded-md border border-border/60 bg-background px-2 py-1 text-meta text-foreground outline-none field-sizing-content max-h-40 focus:border-border"
       />
       <div className="flex items-center justify-between gap-1.5">
         {modelGroups && modelGroups.length > 0 ? (
@@ -536,10 +497,10 @@ function AddSubtask({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="craft-control craft-focus inline-flex min-w-0 items-center gap-1 rounded-md border border-border/70 bg-background px-1.5 py-1 text-meta font-medium text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground"
+                className="craft-control craft-focus inline-flex min-w-0 items-center gap-1 rounded-md border border-border/60 bg-background px-1.5 py-1 text-meta font-medium text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground"
               >
                 {selectedIcon ? (
-                  <img src={selectedIcon} alt="" className={cn('h-3 w-3 shrink-0 rounded-shape-xs', isMonochromeProviderIcon(selectedIcon) && 'provider-icon-monochrome')} aria-hidden />
+                  <img src={selectedIcon} alt="" className={cn('h-3 w-3 shrink-0 rounded-[2px]', isMonochromeProviderIcon(selectedIcon) && 'provider-icon-monochrome')} aria-hidden />
                 ) : (
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" aria-hidden />
                 )}
@@ -556,7 +517,7 @@ function AddSubtask({
                       <img
                         src={resolveProviderIcon(group.provider)!}
                         alt=""
-                        className={cn('h-3 w-3 rounded-shape-xs', isMonochromeProviderIcon(resolveProviderIcon(group.provider)) && 'provider-icon-monochrome')}
+                        className={cn('h-3 w-3 rounded-[2px]', isMonochromeProviderIcon(resolveProviderIcon(group.provider)) && 'provider-icon-monochrome')}
                         aria-hidden
                       />
                     )}

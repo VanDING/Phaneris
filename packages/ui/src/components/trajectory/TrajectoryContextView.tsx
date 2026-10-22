@@ -33,7 +33,10 @@ const CATEGORY_TONE: Record<TrajectoryContextCategory, string> = {
   assistant: 'bg-success',
   tools: 'bg-info',
   attachments: 'bg-accent/80',
-  injected: 'bg-foreground-dimmed',
+  // `foreground-dimmed` is a CSS variable but not a Tailwind color utility, so
+  // naming it here emitted no rule at all and the bar segment was invisible.
+  // A registered colour plus an opacity step stays visible on both canvases.
+  injected: 'bg-foreground/45',
 }
 
 function formatNumber(value: number): string {

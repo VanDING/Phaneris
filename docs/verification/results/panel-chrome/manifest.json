@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "workflow": "panel-chrome",
-  "startedAt": "2026-10-21T09:41:13.897Z",
-  "finishedAt": "2026-10-21T09:42:28.347Z",
+  "startedAt": "2026-10-22T01:32:32.525Z",
+  "finishedAt": "2026-10-22T01:33:35.336Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
@@ -10,100 +10,90 @@
     "--replace"
   ],
   "source": {
-    "headSha": "1165f632a281f57599ef72db0e1f67d2c9a02b77",
+    "headSha": "0285a05247686b010be65f0fa801667efb39ee04",
     "dirtyPaths": [
-      "M apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
-      " M apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
-      " M apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
-      " M apps/electron/src/renderer/context/ThemeContext.tsx",
-      " M apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
-      " M packages/shared/src/config/__tests__/theme-storage.test.ts",
-      " M packages/shared/src/config/appearance.ts",
-      " M packages/shared/src/config/persisted-types.ts",
-      " M packages/shared/src/config/schemas.ts",
-      " M packages/shared/src/config/theme.ts",
-      " M packages/shared/src/i18n/locales/de.json",
-      " M packages/shared/src/i18n/locales/en.json",
-      " M packages/shared/src/i18n/locales/es.json",
-      " M packages/shared/src/i18n/locales/hu.json",
-      " M packages/shared/src/i18n/locales/ja.json",
-      " M packages/shared/src/i18n/locales/pl.json",
-      " M packages/shared/src/i18n/locales/zh-Hans.json",
-      " M packages/ui/src/components/trajectory/TrajectoryContextView.tsx"
+      "M  apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx",
+      "M  apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      "M  apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+      "M  apps/electron/src/renderer/components/app-shell/kanban/__tests__/node-state-pill.test.ts",
+      "M  apps/electron/src/renderer/components/app-shell/kanban/kanban-colors.ts",
+      "M  apps/electron/src/renderer/components/app-shell/kanban/node-state-pill.ts",
+      "MM apps/electron/src/renderer/hooks/useKanbanColumnColors.ts",
+      " D docs/verification/results/panel-chrome/card-density.json",
+      " D docs/verification/results/panel-chrome/files-panel-chrome-dark.png",
+      " D docs/verification/results/panel-chrome/files-panel-chrome-light.png",
+      " M docs/verification/results/panel-chrome/manifest.json",
+      " M docs/verification/results/panel-chrome/panel-chrome.json",
+      " M packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
+      " M scripts/verification/fixtures/panel-chrome.tsx",
+      " M scripts/verification/panel-chrome-workflow.ts",
+      "?? docs/verification/results/panel-chrome/failure.json"
     ],
-    "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
     "changedFiles": [
       {
-        "path": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
-        "sha256": "ac91c0af915f58a63fae5e688bb6280dc68e7b459f7446b9b6fb1677d3dffe74"
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx",
+        "sha256": "aa4d89c929438cd289ceb46f50daa14e77dacbfc5eff654ac6d54e9fff4dca7a"
       },
       {
         "path": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
-        "sha256": "7dab205d94d8b60d7b59ac66eaca5530c350cbe93702dd3b91344ceba789bd32"
+        "sha256": "49342f9f4c1f9d077f2bfdd8189abf3329b671131afd538bfb98055eb3e64908"
       },
       {
         "path": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
-        "sha256": "e176a09e34ca639fc96c8f61cbb38b4b780183892cb81c09e3bd17fd8067520c"
+        "sha256": "e54b2e068a047863f26a8a8afc1fe9b2fe13472231f7fb5d755ad3a28a31b43c"
       },
       {
-        "path": "apps/electron/src/renderer/context/ThemeContext.tsx",
-        "sha256": "804d673f1b35f1411c7298a5d9ec0f4e7d64243a73c1f82a6a78e2c266d76b37"
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/__tests__/node-state-pill.test.ts",
+        "sha256": "cd7d4d5245d87cb8467f8de416fd228f8df3e618e25645107080d2e04fea7d18"
       },
       {
-        "path": "apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
-        "sha256": "7226e6e4e5a652e1ff53fa5df2cdd28114448959212be9d3c00698e3152549df"
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/kanban-colors.ts",
+        "sha256": "7acc73c389db09b7cc2e5717ba5d167ca77e4967d15186162c88c3987bea2b89"
       },
       {
-        "path": "packages/shared/src/config/__tests__/theme-storage.test.ts",
-        "sha256": "2ac5b59c5142f3b696fa91ffc454a205490c3cbdaa6c1e23b487e9e7044a126a"
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/node-state-pill.ts",
+        "sha256": "50ee930822e551fb11e77e0444b37d30a767a0ba1a2f37d02ec8126d8e1faddc"
       },
       {
-        "path": "packages/shared/src/config/appearance.ts",
-        "sha256": "d28be8ce4666ea57f16bf92835b5ac919ba3f8152a01ae993d746239bed16bb1"
+        "path": "apps/electron/src/renderer/hooks/useKanbanColumnColors.ts",
+        "sha256": "95ffcf5bd9ba539616b49f37f5e665741c869aff1858a02c3d94fc8d0ab7b520"
       },
       {
-        "path": "packages/shared/src/config/persisted-types.ts",
-        "sha256": "5f0b1363cf4a7d50fd953a2b1e9e0c7cdd5ee258b3dcc95d8d5a62ce4f680014"
+        "path": "docs/verification/results/panel-chrome/card-density.json",
+        "sha256": null
       },
       {
-        "path": "packages/shared/src/config/schemas.ts",
-        "sha256": "09259207f0dc11744b6b269985568c19dd1c460dc729a3728ebe5fa0097bd35c"
+        "path": "docs/verification/results/panel-chrome/failure.json",
+        "sha256": "afeb7f62d631b3adec3a5c264f89df866c2dbd83de53dc43b619fa5ce2666ac9"
       },
       {
-        "path": "packages/shared/src/config/theme.ts",
-        "sha256": "40469db1c756aafcba1f67440541a1ad1e7951f4010723a426094dd57b1eadeb"
+        "path": "docs/verification/results/panel-chrome/files-panel-chrome-dark.png",
+        "sha256": null
       },
       {
-        "path": "packages/shared/src/i18n/locales/de.json",
-        "sha256": "1b91e3944e0ee7215fc55934196e7443f5a436cd08edf8d680a5f413eb41cc2b"
+        "path": "docs/verification/results/panel-chrome/files-panel-chrome-light.png",
+        "sha256": null
       },
       {
-        "path": "packages/shared/src/i18n/locales/en.json",
-        "sha256": "00dbf96f09d605295a5c24451074b1916716cc371a743d05891eae741054a4bf"
+        "path": "docs/verification/results/panel-chrome/manifest.json",
+        "sha256": "37b8264bfe67ab3f0892dd21beb0a3c48109411a837032a04e8ec402fdfda9c1"
       },
       {
-        "path": "packages/shared/src/i18n/locales/es.json",
-        "sha256": "3b513868db48f2974c94a106081a2ba597fcbeea1f805297f8e988302c1db96a"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/hu.json",
-        "sha256": "ec50016d303a617fe78c6b84ec097b8ffa42a4810d3e2b6658c5a1fdd5d73c1f"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/ja.json",
-        "sha256": "5bcd6dfb010ec79bf4342a900e132e1f76f7fd44b35aed6fd7e564fe606ecc2d"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/pl.json",
-        "sha256": "d11c4e720e645856e7c2fa0be2c22a908cfe50efc3d33d7927374c95569fb9e2"
-      },
-      {
-        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
-        "sha256": "0f160e30abaa8720ea6046393708b30f8a77618bf87b5a06fbb6679a1a75adcc"
+        "path": "docs/verification/results/panel-chrome/panel-chrome.json",
+        "sha256": "88bda405fbf3546a05620a9196adcd4f6cd96ce8a5538c3d9ecd3e471820c72b"
       },
       {
         "path": "packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
-        "sha256": "4bad838889d7149625d6edae5f856886d7e42023ee4ac46a367de2c88c220653"
+        "sha256": "415d31cfd1109a570529cbc4848a1de7545decb6dd23f1d536c98eeb16d66f88"
+      },
+      {
+        "path": "scripts/verification/fixtures/panel-chrome.tsx",
+        "sha256": "ad3224af82d61eab5bc4b2fb8dff5fb03da995d70ce841f3b39cb5edbedab5fc"
+      },
+      {
+        "path": "scripts/verification/panel-chrome-workflow.ts",
+        "sha256": "1e08cabe28718ca8bfb9a42a449b3f4fa401d6909e628eb3e241d145e9a550c6"
       }
     ],
     "dirty": true
@@ -124,33 +114,22 @@
     "pc4-content-follows-the-row",
     "pc5-total-chrome-budget",
     "pc6-tabs-are-keyboard-navigable",
-    "pc7-done-column-starts-collapsed",
-    "pc8-empty-column-offers-an-exit",
-    "pc9-task-moves-by-keyboard",
-    "pc10-card-is-three-rows",
     "pc11-artifacts-view-adds-no-second-row",
-    "pc12-touch-targets-on-a-coarse-pointer",
     "pc13-project-colours-stay-readable",
-    "pc14-transcript-highlights-match-across-elements",
-    "pc15-a-long-column-renders-a-slice"
+    "pc14-transcript-highlights-match-across-elements"
   ],
-  "passed": 15,
+  "passed": 9,
   "exitCode": 0,
   "artifacts": [
     {
-      "path": "card-density.json",
-      "sha256": "706e2f82c4c1187152d057067fabc424607a71da64f5fc25bd54a695a0a58ad1",
-      "bytes": 146
-    },
-    {
       "path": "files-panel-chrome-dark.png",
-      "sha256": "b7c37e24e5421ffde2b40b2c6109c49009edf7a218fc70ae3210b24c411af478",
-      "bytes": 25251
+      "sha256": "2cefdb62411a30f15c6f438946b78667780996a24bae617e9512e11ea1ba1759",
+      "bytes": 24991
     },
     {
       "path": "files-panel-chrome-light.png",
-      "sha256": "5b9472e715aba7e01a71d2c512a3e508b1536cad34b7e32562f69b3f6791a1f5",
-      "bytes": 27956
+      "sha256": "a9d1c9a584a4ac6730b9c68e8f3ca881dfa3b2de2c5c0b5dc0e9cb75e53eac61",
+      "bytes": 25015
     },
     {
       "path": "host.css",
@@ -164,7 +143,7 @@
     },
     {
       "path": "panel-chrome.json",
-      "sha256": "6a19be9a44e592a944ee4859a2cd9ca9002c5fe4382e8fea7e64a8e5d7d6f43d",
+      "sha256": "e0e4ed6c264b5052c86cfcf4174793c1fe06a251ab596ce02c7bab8f1a27f562",
       "bytes": 341
     }
   ],

@@ -19,6 +19,13 @@ import {
 interface WorkbenchResizeSashProps {
   primaryWidth: number
   /**
+   * Row-aware ceiling: the widest the Primary may become without pushing the
+   * Workbench below its own minimum. The constant is only a fallback, because a
+   * fixed maximum either forbids widening the transcript on a large window or
+   * lets the drag pass the point where the Workbench can no longer shrink.
+   */
+  maxWidth?: number
+  /**
    * Reports an in-progress pointer drag. The panel follows the cursor directly,
    * so the layout transition has to be off for the duration: easing a value that
    * changes every frame reads as the panel lagging behind the pointer.
@@ -27,7 +34,8 @@ interface WorkbenchResizeSashProps {
 }
 
 /** Divider between the reading-width Primary Surface and flexible Workbench. */
-export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: WorkbenchResizeSashProps) {
+export function WorkbenchResizeSash({ primaryWidth, maxWidth, onDraggingChange }: WorkbenchResizeSashProps) {
+  const ceiling = Math.max(MIN_COMPANION_PRIMARY_WIDTH, maxWidth ?? MAX_COMPANION_PRIMARY_WIDTH)
   const { t } = useTranslation()
   const setWidth = useSetAtom(setCompanionPrimaryWidthAtom)
   const { ref, handlers, gradientStyle } = useResizeGradient()
@@ -65,7 +73,7 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
       if (!armed && Math.abs(delta) < PANEL_SASH_DEAD_ZONE) return
       armed = true
       const adjusted = Math.abs(delta) - PANEL_SASH_DEAD_ZONE
-      pendingWidthRef.current = startWidthRef.current + Math.sign(delta) * Math.max(0, adjusted)
+      pendingWidthRef.current = Math.min(ceiling, Math.max(MIN_COMPANION_PRIMARY_WIDTH, startWidthRef.current + Math.sign(delta) * Math.max(0, adjusted)))
       if (!resizeRafRef.current) resizeRafRef.current = requestAnimationFrame(flush)
     }
 
@@ -86,7 +94,7 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
     document.body.style.cursor = 'col-resize'
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', endDrag)
-  }, [handlers, primaryWidth, setWidth, onDraggingChange])
+  }, [ceiling, handlers, primaryWidth, setWidth, onDraggingChange])
 
   // A focusable `role="separator"` carrying aria-valuenow and arrow-key handling
   // is a window-splitter widget; jsx-a11y models the role as static, so the two
@@ -100,7 +108,7 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
       aria-orientation="vertical"
       aria-label={t('contentPanel.resize')}
       aria-valuemin={MIN_COMPANION_PRIMARY_WIDTH}
-      aria-valuemax={MAX_COMPANION_PRIMARY_WIDTH}
+      aria-valuemax={ceiling}
       aria-valuenow={primaryWidth}
       tabIndex={0}
       onMouseDown={handleMouseDown}
@@ -111,7 +119,7 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
         if (event.key === 'ArrowLeft') setWidth(primaryWidth - 16)
         else if (event.key === 'ArrowRight') setWidth(primaryWidth + 16)
         else if (event.key === 'Home') setWidth(MIN_COMPANION_PRIMARY_WIDTH)
-        else if (event.key === 'End') setWidth(MAX_COMPANION_PRIMARY_WIDTH)
+        else if (event.key === 'End') setWidth(ceiling)
         else return
         event.preventDefault()
       }}

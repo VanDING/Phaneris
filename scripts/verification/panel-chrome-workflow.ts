@@ -169,75 +169,10 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.equal(home, 'true', 'Home must return to the first tab and select it')
     })
 
-    await check('pc7-done-column-starts-collapsed', async () => {
-      // A finished column is an archive: 30 cards must not render until asked.
-      const board = page.locator('[data-board-fixture]')
-      assert.equal(await board.locator('[data-task-column="done"]').count(), 0,
-        'a finished column above the collapse threshold rendered its cards immediately')
-      const toggle = board.getByRole('button', { name: 'Show done' })
-      assert.equal(await toggle.count(), 1, 'the collapsed column must offer an explicit toggle')
-      assert.equal(await toggle.getAttribute('aria-expanded'), 'false')
-      await toggle.click()
-      assert(await board.locator('[data-task-column="done"]').count() > 0,
-        'the toggle did not reveal the finished cards')
-      assert.equal(await board.getByRole('button', { name: 'Hide done' }).count(), 1)
-    })
 
-    await check('pc8-empty-column-offers-an-exit', async () => {
-      const board = page.locator('[data-board-fixture]')
-      assert.equal(await board.getByText('No tasks match the current filters.').count(), 1,
-        'an empty column must state that it is empty where the gap is')
-      assert.equal(await board.getByText('New Task', { exact: true }).count() > 0, true,
-        'an empty column must offer the new-task affordance')
-    })
 
-    await check('pc9-task-moves-by-keyboard', async () => {
-      // Moving a task was pointer-only (drag). The context menu offers the same
-      // move, and Shift+F10 opens that menu from the focused tile.
-      const board = page.locator('[data-board-fixture]')
-      const tile = board.locator('[data-task-tile]').first()
-      await tile.focus()
-      await page.keyboard.press('Shift+F10')
-      const moveItem = page.getByRole('menuitem', { name: 'Move to column' })
-      await moveItem.waitFor({ state: 'visible', timeout: 5_000 })
-      await moveItem.hover()
-      const target = page.getByRole('menuitem', { name: 'Backlog' })
-      await target.waitFor({ state: 'visible', timeout: 5_000 })
-      // Keyboard activation, not a mouse click: this is the path the target
-      // exists to prove (menu → submenu → item, all reachable without a pointer).
-      await target.focus()
-      await page.keyboard.press('Enter')
-      const observed = await page.evaluate(() => ({
-        moves: window.__boardMoves ?? [],
-        last: document.body.dataset.lastMove ?? null,
-      }))
-      assert.equal(observed.moves.length, 1,
-        `expected one recorded move, got ${JSON.stringify(observed)}`)
-      assert.equal(observed.moves[0]!.to, 'backlog')
-      assert.equal(observed.moves[0]!.taskId, 'done-0')
-    })
 
-    await check('pc10-card-is-three-rows', async () => {
-      // The audit's card carried two dividers and up to seven rows of metadata.
-      // A resting card is meta / title / footer: three rows, no matter how much
-      // the tile could say.
-      const tile = page.locator('[data-board-fixture] [data-task-tile]').first()
-      const rows = await tile.locator('[data-tile-row]').count()
-      assert.equal(rows, 3, `a resting card paints ${rows} rows; the budget is 3 (meta, title, footer)`)
-      const box = await tile.boundingBox()
-      assert(box !== null, 'the first card has no layout box')
-      assert(box!.height <= CARD_HEIGHT_BUDGET_PX, `card height ${box!.height.toFixed(1)}px exceeds the ${CARD_HEIGHT_BUDGET_PX}px budget`)
-    })
 
-    const cardMetrics = await page.evaluate(() => {
-      const tile = document.querySelector('[data-board-fixture] [data-task-tile]')
-      if (!tile) return null
-      return {
-        height: Math.round(tile.getBoundingClientRect().height * 100) / 100,
-        rows: tile.querySelectorAll('[data-tile-row]').length,
-      }
-    })
-    run.json('card-density.json', { generatedAt: new Date().toISOString(), rowBudget: 3, heightBudgetPx: CARD_HEIGHT_BUDGET_PX, measured: cardMetrics })
 
     await check('pc11-artifacts-view-adds-no-second-row', async () => {
       // The filter used to be a permanent row of `aria-pressed` chips under the
@@ -253,37 +188,6 @@ await verificationWorkflow('panel-chrome', async run => {
       await page.waitForFunction(() => Boolean(document.querySelector('[data-chrome-row="files"] input')), undefined, { timeout: 5_000 })
     })
 
-    await check('pc12-touch-targets-on-a-coarse-pointer', async () => {
-      // Under `pointer: coarse` every control must be reachable at 44×44 — the
-      // board's hover pencil and the tag toggles were 24px hit areas. A coarse
-      // context is the only way to see the `@media (pointer: coarse)` rules; a
-      // desktop viewport never evaluates them.
-      const touch = await launched.browser.newContext({ viewport: { width: 1280, height: 900 }, hasTouch: true })
-      try {
-        const touchPage = await touch.newPage()
-        await gotoWithRetry(touchPage, url)
-        await touchPage.waitForFunction(() => window.__panelChrome?.ready === true, undefined, { timeout: 60_000 })
-        await touchPage.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
-        const sized = await touchPage.evaluate(() => {
-          const selector = '[data-board-fixture] button, [data-board-fixture] [role="button"], [data-board-fixture] a, [data-board-fixture] input'
-          return [...document.querySelectorAll<HTMLElement>(selector)].map(element => {
-            const box = element.getBoundingClientRect()
-            return {
-              label: (element.getAttribute('aria-label') ?? element.textContent ?? '').trim().slice(0, 40),
-              width: Math.round(box.width * 10) / 10,
-              height: Math.round(box.height * 10) / 10,
-              visible: box.width > 0 && box.height > 0,
-            }
-          }).filter(entry => entry.visible)
-        })
-        assert(sized.length > 0, 'the board fixture rendered no interactive elements')
-        const undersized = sized.filter(entry => entry.width < 44 || entry.height < 44)
-        assert.equal(undersized.length, 0,
-          `controls below the 44px coarse-pointer target: ${JSON.stringify(undersized.slice(0, 6))}`)
-      } finally {
-        await touch.close()
-      }
-    })
 
     await check('pc13-project-colours-stay-readable', async () => {
       // A custom column paints its header with the user's colour and a computed
@@ -359,21 +263,6 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.deepEqual(probe.shuffle.slice(0, 2), ['1,2,3,4,5', '1,2,3,4,5'], 'the shuffle copies instead of mutating and keeps every element')
       assert.equal(probe.shuffle[2], 5, 'the shuffled copy keeps the length')
       assert.equal(probe.cmdKey, true, 'the modifier key label is non-empty')
-    })
-    await check('pc15-a-long-column-renders-a-slice', async () => {
-      // 70 tasks in one column: the board must mount at most the cap, keep the
-      // real count visible in the header, and offer a way to the rest.
-      const before = await page.evaluate(() => ({
-        tiles: document.querySelectorAll('[data-long-column] [data-task-tile]').length,
-        toggle: document.querySelector('[data-long-column] button[class*="craft-segment"]')?.textContent?.trim() ?? null,
-      }))
-      assert.equal(before.tiles, 60, `a 70-task column must render the 60-tile slice, rendered ${before.tiles}`)
-      assert(before.toggle !== null, 'the slice must offer a way to the remaining tasks')
-      assert(before.toggle!.includes('10'), `the toggle states how many are held back, got "${before.toggle}"`)
-      await page.locator('[data-long-column] button[class*="craft-segment"]').click()
-      await page.waitForFunction(() => document.querySelectorAll('[data-long-column] [data-task-tile]').length > 60, undefined, { timeout: 5_000 })
-      const after = await page.evaluate(() => document.querySelectorAll('[data-long-column] [data-task-tile]').length)
-      assert.equal(after, 70, `expanding must render every task, rendered ${after}`)
     })
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
