@@ -265,6 +265,9 @@ export interface CoreBackendConfig {
   /** Callback to get recent messages for recovery context */
   getRecoveryMessages?: () => RecoveryMessage[];
 
+  /** Live product task projection. This port supplies data, never runtime authority. */
+  getSessionTaskContext?: () => import('../../sessions/types.ts').SessionTaskContext | undefined;
+
   /**
    * Get ALL parent messages for branch fork fallback (not limited to 6).
    * Called when SDK-level branch fork fails and we need to summarize

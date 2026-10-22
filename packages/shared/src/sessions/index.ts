@@ -19,6 +19,7 @@ export type {
   SessionHeader,
   SessionPersistentField,
   SessionPlanningFields,
+  SessionTaskContext,
 } from './types.ts';
 
 // Field constants

@@ -294,6 +294,7 @@ export abstract class BaseAgent implements AgentBackend {
     this.promptBuilder = new PromptBuilder({
       workspace: config.workspace,
       session: config.session,
+      getSessionTaskContext: config.getSessionTaskContext,
       debugMode: config.debugMode,
       systemPromptPreset: config.systemPromptPreset,
       isHeadless: config.isHeadless,

@@ -71,6 +71,8 @@ export interface PromptBuilderConfig {
   workspace: Workspace;
   /** Session configuration */
   session?: SessionConfig;
+  /** Read current task metadata once per turn, outside the stable system prefix. */
+  getSessionTaskContext?: () => import('../../sessions/types.ts').SessionTaskContext | undefined;
   /** Whether debug mode is enabled */
   debugMode?: {
     enabled: boolean;

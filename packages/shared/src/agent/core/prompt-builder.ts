@@ -16,6 +16,7 @@ import { isLocalMcpEnabled } from '../../workspaces/storage.ts';
 import { formatPreferencesForPrompt } from '../../config/preferences.ts';
 import { formatSessionState } from '../mode-manager.ts';
 import { getDateTimeContext, getWorkingDirectoryContext } from '../../prompts/system.ts';
+import { formatTaskContext } from '../../prompts/task-context.ts';
 import {
   formatStableGitDeveloperContext,
   formatVolatileGitDeveloperContext,
@@ -66,8 +67,7 @@ export class PromptBuilder {
    * user message.
    *
    * This composes {@link buildVolatileContextParts} and
-   * {@link buildStableContextParts} so the output is byte-identical to the
-   * pre-split version (same 5 blocks, same order) AND the one-shot mode-change
+   * {@link buildStableContextParts}; the one-shot mode-change
    * signal is consumed exactly once per turn (only the volatile builder consumes
    * it). Callers that place volatile vs stable context in different locations
    * (to preserve prompt caching — issue #862) should call
@@ -99,8 +99,10 @@ export class PromptBuilder {
    *  2. session_state (permission mode + plans/data paths; carries
    *     modeChangedAt/modeVersion and **consumes** the one-shot mode-change user
    *     signal — see {@link formatSessionState})
-   *  3. source state (auth/connection status), when provided
-   *  4. active plugin context (prompt fragment + skill roster), when provided
+   *  3. current product task metadata, when supplied
+   *  4. source state (auth/connection status), when provided
+   *  5. volatile repository state, when available
+   *  6. active plugin context (prompt fragment + skill roster), when provided
    *
    * MUST be called exactly once per turn, because it consumes one-shot mode
    * state. Never call it a second time to compute a cache-debug hash — hash the
@@ -134,6 +136,13 @@ export class PromptBuilder {
       dataFolderPath,
       consumeModeChangeUserSignal: true,
     }));
+
+    // Read live product data each turn so board edits survive history compaction
+    // and do not invalidate the cached system prefix. Legacy/headless agents can
+    // supply the same existing fields through their session configuration.
+    const taskContext = formatTaskContext(this.config.getSessionTaskContext
+      ? this.config.getSessionTaskContext() : this.config.session, !!this.config.getSessionTaskContext);
+    if (taskContext) parts.push(taskContext);
 
     // Source state if provided
     if (sourceStateBlock) {

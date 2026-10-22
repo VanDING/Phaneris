@@ -1,263 +1,63 @@
 #!/usr/bin/env bun
-/**
- * Debug script to print the full Phaneris system prompt with annotations.
- * Shows both the static system prompt and dynamic user message context components.
- *
- * Run with: bun run print:system-prompt
- */
-
-import { getSystemPrompt, getDateTimeContext, getWorkingDirectoryContext } from './system.ts';
+/** Inspect exact assembled sections. Examples are not captured provider requests. */
+import { compileSystemPrompt, getDateTimeContext, getWorkingDirectoryContext } from './system.ts';
 import { formatSessionState } from '../agent/mode-manager.ts';
+import { formatTaskContext } from './task-context.ts';
+import { createHash } from 'node:crypto';
 
-// ANSI color codes for terminal output
-const colors = {
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-  dim: '\x1b[2m',
-  yellow: '\x1b[33m',
-  green: '\x1b[32m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m',
-  bgBlue: '\x1b[44m',
-  bgMagenta: '\x1b[45m',
+const args = process.argv.slice(2);
+if (args.some(arg => !['--json', '--include-content'].includes(arg)) || (args.includes('--include-content') && !args.includes('--json'))) {
+  throw new Error('Usage: bun run print:system-prompt [--json [--include-content]]');
+}
+const workspace = '/Users/example/.phaneris/workspaces/abc123';
+const sessionId = 'example-session';
+const compiled = compileSystemPrompt({ debugMode: { enabled: false }, workspaceRootPath: workspace });
+const sha256 = (content: string) => createHash('sha256').update(content).digest('hex');
+const includeContent = args.includes('--include-content');
+const scope = 'Example system prefix; not a captured provider request. Counts are characters/UTF-8 bytes, not billed tokens.';
+const summary = {
+  schemaVersion: 1, scope, sha256: sha256(compiled.text), characters: compiled.text.length, bytes: Buffer.byteLength(compiled.text),
+  ...(includeContent ? { text: compiled.text } : {}),
+  sections: compiled.sections.map(section => ({ id: section.id, source: section.source,
+    characters: section.content.length, bytes: Buffer.byteLength(section.content), sha256: sha256(section.content),
+    ...(includeContent ? { content: section.content } : {}) })),
 };
-
-function printHeader(title: string, bgColor: string = colors.bgBlue) {
-  const padding = ' '.repeat(Math.max(0, 78 - title.length));
-  console.log(`\n${bgColor}${colors.bold} ${title}${padding} ${colors.reset}`);
+if (args.includes('--json')) {
+  console.log(JSON.stringify(summary, null, 2));
+  process.exit(0);
 }
 
-function printSection(title: string, content: string, color: string = colors.cyan) {
-  console.log('\n' + '─'.repeat(80));
-  console.log(`${color}${colors.bold}▶ ${title}${colors.reset}`);
-  console.log('─'.repeat(80));
-  console.log(content);
-}
+const section = (title: string, content: string) => console.log('\n' + '='.repeat(80) + '\n' + title + '\n' + '='.repeat(80) + '\n' + content);
+console.log(scope);
+section('ASSEMBLED SYSTEM PREFIX', compiled.text);
+section('SECTION PROVENANCE AND BUDGET', summary.sections.map(part =>
+  part.id + ' | ' + part.source + ' | ' + part.characters + ' characters | ' + part.bytes + ' bytes | ' + part.sha256).join('\n'));
 
-function printAnnotation(text: string) {
-  console.log(`${colors.dim}${colors.yellow}// ${text}${colors.reset}`);
-}
+section('STABLE ADDITIONS IN Pi', [
+  'PiAgent appends workspace capabilities, working directory and stable repository identity to the system prefix.',
+  'The following working-directory example belongs there, not in the user-message tail:',
+  getWorkingDirectoryContext('/Users/example/projects/my-app', false) ?? '(none)',
+].join('\n\n'));
 
-// ============================================================
-// MAIN OUTPUT
-// ============================================================
+section('VOLATILE USER TAIL EXAMPLES', [
+  'These use example IDs and paths. They are not the state of an active user session.',
+  getDateTimeContext(),
+  formatSessionState(sessionId, {
+    plansFolderPath: workspace + '/sessions/' + sessionId + '/plans',
+    dataFolderPath: workspace + '/sessions/' + sessionId + '/data',
+    consumeModeChangeUserSignal: false,
+  }),
+  formatTaskContext({ id: sessionId, name: 'Example report', description: 'Produce the requested report',
+    acceptanceCriteria: 'References are verifiable', progress: 20 }),
+  'Actual source state, volatile git status and an explicitly selected plugin also ride this tail when present.',
+  'Attachments and the actual user message follow. Skill directives appear only after explicit invocation.',
+].filter(Boolean).join('\n\n'));
 
-console.log(`
-${colors.bgMagenta}${colors.bold}                                                                                ${colors.reset}
-${colors.bgMagenta}${colors.bold}                    PHANERIS SYSTEM PROMPT BREAKDOWN                            ${colors.reset}
-${colors.bgMagenta}${colors.bold}                                                                                ${colors.reset}
-`);
-
-// ------------------------------------------------------------
-// PART 1: STATIC SYSTEM PROMPT
-// ------------------------------------------------------------
-
-printHeader('PART 1: SYSTEM PROMPT TEMPLATE');
-printAnnotation('Rebuilt for each user turn; stable content stays in the system prefix.');
-printAnnotation('Pi uses Phaneris instructions through its resource-loader override, not a Claude Code preset.');
-printAnnotation('This example is not a captured model request: paths, flags and project state may differ.');
-printAnnotation('Composed of:');
-printAnnotation('  1. Environment marker and execution/permission/recovery contracts');
-printAnnotation('  2. Capability routing and on-demand documentation index');
-printAnnotation('  3. Product workflows: sources, skills, files, Pages and session management');
-printAnnotation('  4. User preferences and bound project context, when supplied');
-printAnnotation('  5. Debug context and project instruction file index, when supplied');
-
-const systemPrompt = getSystemPrompt(
-  undefined, // No pinned preferences (use current from disk)
-  { enabled: false }, // Debug mode disabled for cleaner output
-  '/Users/example/.phaneris/workspaces/abc123' // Example workspace path
-);
-
-printSection('FULL STATIC SYSTEM PROMPT', systemPrompt, colors.green);
-
-console.log(`\n${colors.bold}Static System Prompt Length: ${systemPrompt.length.toLocaleString()} characters${colors.reset}`);
-
-// Show with debug mode enabled
-const systemPromptWithDebug = getSystemPrompt(
-  undefined,
-  { enabled: true, logFilePath: '~/Library/Logs/@phaneris/electron/main.log' },
-  '/Users/example/.phaneris/workspaces/abc123'
-);
-console.log(`${colors.dim}With debug mode: ${systemPromptWithDebug.length.toLocaleString()} characters (+${(systemPromptWithDebug.length - systemPrompt.length).toLocaleString()})${colors.reset}`);
-
-// ------------------------------------------------------------
-// PART 2: DYNAMIC USER MESSAGE CONTEXT
-// ------------------------------------------------------------
-
-printHeader('PART 2: CONTEXT PLACEMENT (volatile user tail / stable system prefix)');
-printAnnotation('Blocks 1-3 are prepended to the user message; blocks 4-5 append to the system prompt.');
-printAnnotation('');
-printAnnotation('Volatile vs stable (issue #862): date/time, session_state, sources, and volatile');
-printAnnotation('git status change per turn. Workspace capabilities, working directory, and stable');
-printAnnotation('git repository metadata are STABLE for the session.');
-printAnnotation('  - Pi: STABLE blocks fold into the system prefix, VOLATILE blocks ride the');
-printAnnotation('    user tail — so the cached prefix is not re-stamped every turn.');
-
-// 1. Date/Time
-printSection('1. DATE/TIME CONTEXT - getDateTimeContext()', getDateTimeContext(), colors.magenta);
-printAnnotation('Added first to user message for prompt caching optimization');
-
-// 2. Session State
-const sessionState = formatSessionState('260121-example-session', {
-  plansFolderPath:
-    '/Users/example/.phaneris/workspaces/abc123/sessions/260121-example-session/plans',
-  dataFolderPath:
-    '/Users/example/.phaneris/workspaces/abc123/sessions/260121-example-session/data',
-});
-printSection('2. SESSION STATE - formatSessionState()', sessionState, colors.magenta);
-printAnnotation('Contains: sessionId, permissionMode, modeTransition/modeChangedBy/modeChangedAt/modeVersion (when available), plansFolderPath, dataFolderPath');
-
-// 3. Source State (example - can't call formatSourceState without agent instance)
-const exampleSourceState = `<sources>
-Active: linear, github
-Inactive: slack (inactive), notion (needs auth)
-
-New:
-- linear: Project and issue tracking for software teams
-
-<source_issue source="notion">
-Authentication required. Use the source_oauth_trigger tool to authenticate.
-</source_issue>
-</sources>`;
-printSection('3. SOURCE STATE - formatSourceState() [example]', exampleSourceState, colors.magenta);
-printAnnotation('Generated by SourceManager.formatSourceState() - requires runtime source state');
-printAnnotation('Tracks: active sources, inactive sources, new sources (first time seen), auth issues');
-
-// 4. Workspace Capabilities
-const exampleCapabilities = `<workspace_capabilities>
-local-mcp: enabled (stdio subprocess servers supported)
-</workspace_capabilities>`;
-printSection(
-  '4. WORKSPACE CAPABILITIES - formatWorkspaceCapabilities()',
-  exampleCapabilities,
-  colors.magenta
-);
-printAnnotation('Shows whether local MCP stdio servers are enabled for the workspace');
-
-// 5. Working Directory Context
-const workingDirContext = getWorkingDirectoryContext(
-  '/Users/example/projects/my-app',
-  false, // Not session root
-  undefined // No bash cwd mismatch
-);
-printSection(
-  '5. WORKING DIRECTORY - getWorkingDirectoryContext()',
-  workingDirContext || '(empty - no working directory)',
-  colors.magenta
-);
-printAnnotation('Contains: working_directory path and explanation. Context-file manifests are');
-printAnnotation('listed separately in <project_context_files>, relative to context_root (the git');
-printAnnotation('repository root when the selected directory is inside one).');
-
-// 6. Recovery Context (example)
-const exampleRecoveryContext = `<recovery_context>
-This session was interrupted and is being recovered. Here's a summary of the previous conversation:
-[Summary of previous messages would appear here]
-</recovery_context>`;
-printSection(
-  '6. RECOVERY CONTEXT - buildRecoveryContext() [only on resume]',
-  exampleRecoveryContext,
-  colors.magenta
-);
-printAnnotation('Only added when resuming a session after SDK resume fails');
-printAnnotation('Contains summary of previous conversation for context continuity');
-
-// ------------------------------------------------------------
-// PART 3: COMPLETE USER MESSAGE STRUCTURE
-// ------------------------------------------------------------
-
-printHeader('PART 3: COMPLETE USER MESSAGE STRUCTURE');
-printAnnotation('How a user message looks after all context is injected');
-
-const completeUserMessage = `${getDateTimeContext()}
-
-${sessionState}
-
-<sources>
-Active: linear
-Inactive: slack (inactive)
-</sources>
-
-<workspace_capabilities>
-local-mcp: enabled (stdio subprocess servers supported)
-</workspace_capabilities>
-
-<working_directory>/Users/example/projects/my-app</working_directory>
-
-<working_directory_context>The user explicitly selected this as the working directory for this session.</working_directory_context>
-
-<developer_context kind="git_repository" scope="stable">
-repoRoot: /Users/example/projects/my-app
-repoParent: /Users/example/projects
-selectedWorkingDirectory: /Users/example/projects/my-app
-selectedPathWithinRepo: .
-origin: https://github.com/example/my-app.git
-defaultBranch: main
-
-Guidance:
-- Treat uncommitted changes as user work; inspect before overwriting.
-- Prefer minimal, reviewable diffs.
-</developer_context>
-
-<developer_context kind="git_repository" scope="volatile">
-branch: main
-worktreeState: dirty
-stagedFiles: 0
-unstagedFiles: 1
-untrackedFiles: 2
-changedFilesSample:
-- src/index.ts
-</developer_context>
-
-<project_context_files working_directory="/Users/example/projects/my-app" context_root="/Users/example/projects/my-app">
-- AGENTS.md (root)
-</project_context_files>
-
-What files are in the src directory?`;
-
-printSection('COMPLETE USER MESSAGE (example)', completeUserMessage, colors.green);
-
-// ------------------------------------------------------------
-// SUMMARY
-// ------------------------------------------------------------
-
-console.log(`
-${colors.bgMagenta}${colors.bold}                                                                                ${colors.reset}
-${colors.bgMagenta}${colors.bold}                              SUMMARY                                           ${colors.reset}
-${colors.bgMagenta}${colors.bold}                                                                                ${colors.reset}
-
-${colors.bold}SDK Configuration:${colors.reset}
-  systemPrompt.override: getSystemPrompt() ${colors.dim}// Phaneris owns the complete Pi system prompt${colors.reset}
-  systemPrompt.stable: workspace context  ${colors.dim}// PiAgent appends stable capability/directory blocks${colors.reset}
-
-${colors.bold}Static System Prompt Components:${colors.reset}
-  1. User Preferences (if set)           ${colors.dim}// formatPreferencesForPrompt()${colors.reset}
-  2. Phaneris Environment Marker      ${colors.dim}// Version, platform, arch${colors.reset}
-  3. Core Instructions                   ${colors.dim}// Capabilities, sources, guidelines${colors.reset}
-  4. Configuration Documentation Refs    ${colors.dim}// Permissions, skills, themes, statuses${colors.reset}
-  5. Permission Modes Documentation      ${colors.dim}// Inlined in system prompt${colors.reset}
-  6. Error Handling & Tool Metadata      ${colors.dim}// Guidelines for tool usage${colors.reset}
-  7. Debug Mode Context (if enabled)     ${colors.dim}// formatDebugModeContext()${colors.reset}
-
-${colors.bold}Dynamic User Message Components (per message):${colors.reset}
-  1. Date/Time Context                   ${colors.dim}// getDateTimeContext()         [VOLATILE]${colors.reset}
-  2. Session State                       ${colors.dim}// formatSessionState()         [VOLATILE]${colors.reset}
-  3. Source State                        ${colors.dim}// formatSourceState()          [VOLATILE]${colors.reset}
-  4. Workspace Capabilities              ${colors.dim}// formatWorkspaceCapabilities()  [STABLE]${colors.reset}
-  5. Working Directory                   ${colors.dim}// getWorkingDirectoryContext()  [STABLE]${colors.reset}
-  6. Git Repository Identity             ${colors.dim}// formatStableGitDeveloperContext()  [STABLE]${colors.reset}
-  7. Recovery Context (on resume only)   ${colors.dim}// buildRecoveryContext()${colors.reset}
-  8. File Attachments                    ${colors.dim}// Inline paths or base64${colors.reset}
-  9. User Message Text                   ${colors.dim}// The actual user input${colors.reset}
-
-  ${colors.dim}Claude: 1-6 ride the user tail. Pi (#862): STABLE 4-6 -> system prefix, VOLATILE 1-3 -> user tail.${colors.reset}
-  ${colors.dim}Volatile git status (formatVolatileGitDeveloperContext()) rides the tail with the other per-turn blocks.${colors.reset}
-  ${colors.dim}Builders: PromptBuilder.buildVolatileContextParts() / buildStableContextParts() (composed by buildContextParts())${colors.reset}
-
-${colors.bold}Key Files:${colors.reset}
-  packages/shared/src/prompts/system.ts          ${colors.dim}// Main prompt assembly${colors.reset}
-  packages/shared/src/agent/core/prompt-builder.ts ${colors.dim}// User message building${colors.reset}
-  packages/shared/src/agent/mode-manager.ts      ${colors.dim}// Permission modes${colors.reset}
-  packages/shared/src/config/preferences.ts      ${colors.dim}// User preferences${colors.reset}
-`);
+section('OWNERSHIP', [
+  'prompts/assistant-contract.ts: identity, execution, permissions and completion.',
+  'prompts/capability-guidance.ts: capability routing and product workflows.',
+  'prompts/system.ts: host facts, preferences, project/debug blocks, environment and ordered assembly.',
+  'agent/core/prompt-builder.ts: stable/volatile context placement; consumes the one-shot mode signal only on the real turn path.',
+  'agent/pi-agent.ts: actual system prompt, user tail and provider request path.',
+  'For real request evidence, run bun run verify:model-harness and inspect its verification artifacts.',
+].join('\n'));

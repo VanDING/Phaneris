@@ -1,7 +1,7 @@
 import { getContextPolicy, getCompactionThreshold } from '@phaneris/shared/config/appearance';
 import { assembleSessionAgent } from './agent-assembly'
 import { buildPlanApproval } from './plan-approval'
-import { buildAgentSessionSnapshot } from './agent-product-context'
+import { buildAgentSessionSnapshot, buildSessionTaskContext } from './agent-product-context'
 import { createSessionAgentCallbacks } from './agent-product-callbacks'
 import { prepareSessionSourceResources, type SessionSourceResources } from './source-resources'
 import { SessionProductRepository } from './product-repository'
@@ -4319,7 +4319,7 @@ export class SessionManager implements ISessionManager {
       // ============================================================
 
       const sessionConfig = buildAgentSessionSnapshot({
-        id: managed.id,
+        ...buildSessionTaskContext(managed),
         workspaceRootPath: managed.workspace.rootPath,
         sdkSessionId: managed.sdkSessionId,
         branchContextStrategy: managed.branchContextStrategy,
@@ -4343,7 +4343,7 @@ export class SessionManager implements ISessionManager {
       })
 
       const productCallbacks = createSessionAgentCallbacks({
-        read: () => ({ id: managed.id, sdkSessionId: managed.sdkSessionId,
+        read: () => ({ ...buildSessionTaskContext(managed), sdkSessionId: managed.sdkSessionId,
           branchFromSdkSessionId: managed.branchFromSdkSessionId, branchFromSdkCwd: managed.branchFromSdkCwd,
           branchFromSdkTurnId: managed.branchFromSdkTurnId, branchFromMessageId: managed.branchFromMessageId,
           branchContextStrategy: managed.branchContextStrategy, branchSeedApplied: managed.branchSeedApplied,

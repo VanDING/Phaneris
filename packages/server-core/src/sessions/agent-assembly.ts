@@ -5,7 +5,7 @@ import type { AgentBackend, BackendHostRuntimeContext, CoreBackendConfig } from 
 type CallbackKey = 'onSdkSessionIdUpdate' | 'onSdkSessionIdCleared' | 'onBranchForkInvalidated'
   | 'onThinkingLevelStateUpdate' | 'getRecoveryMessages' | 'getBranchFallbackMessages'
   | 'getBranchSeedMessages' | 'markBranchSeedApplied' | 'getTransferredSessionSummary'
-  | 'markTransferredSessionSummaryApplied' | 'onImageResize'
+  | 'markTransferredSessionSummaryApplied' | 'getSessionTaskContext' | 'onImageResize'
 type ResourceKey = 'mcpPool' | 'poolServerUrl' | 'automationSystem' | 'initialSources'
   | 'durableToolBoundary' | 'durableModelBoundary' | 'getCanonicalModelContext'
   | 'beginDurableUtilityRun' | 'completeDurableUtilityRun'

@@ -20,7 +20,7 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
-Harness 实施：[2026-10-22 模型交互系统实施记录](process/model-harness-implementation-2026-10-22.md) — 新分支已完成首批调用契约、发现与连续性修复；后续范围和真实模型验证限制见记录。
+Harness 审查与实施：[系统职责及审查结论](architecture/model-facing-harness.md)、[2026-10-22 实施记录](process/model-harness-implementation-2026-10-22.md) — 新分支覆盖调用契约、检索、效果排序、任务连续性和 prompt 组装；保留 skill 显式选用设计，真实模型及原生环境验证限制见记录。
 
 本次专项：[防御逻辑与测试精简治理](process/defensive-code-test-cleanup-2026-10-17.md)。
 
@@ -55,6 +55,7 @@ Current upstream work: [0.15.0 / 0.15.1 non-UI implementation](verification/upst
 | --- | --- | --- |
 | [Chat popout card failure matrix](verification/markdown-popout-card-failure-matrix-2026-10-12.md) | Written before implementation; browser verified | Restore centered cards and Markdown source mode; 18 browser scenes and archived before/after evidence. [Results](verification/results/markdown-popout-card-2026-10-12/README.md). |
 | [Governance domain ownership](architecture/governance-domain-ownership.md) | Accepted | Configuration, protocol, Pi and product assembly ownership. |
+| [Model-facing harness](architecture/model-facing-harness.md) | Implemented on branch; local verification | Prompt compilation, tool contracts/discovery/effects, task continuity, explicit skills and source/plugin boundaries; evidence limits are explicit. |
 | [Architecture overview](architecture/overview.md) | Current baseline | Structural map; §10 lists the known drift and tech debt without owners. |
 | [Durable Agent Runtime ADR](architecture/durable-agent-runtime.md) | Accepted, implemented baseline | Runtime Host authority, T1/T2 effects, recovery and projections. Compatibility storage remains; target expansions and read-model retirement are governed by the value register. |
 | [Authentication and process lifecycle](architecture/authentication-process-lifecycle.md) | Accepted, implemented | Persistent cookie revocation scope, exact Origin/proxy trust, fail-closed storage and bounded global-failure shutdown. Native-platform limits are explicit. |

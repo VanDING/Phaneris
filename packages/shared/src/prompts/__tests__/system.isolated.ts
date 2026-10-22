@@ -54,7 +54,9 @@ describe('system prompt guidance', () => {
       '/tmp/workspace'
     )
 
-    expect(prompt).toContain('Use Bash with `rg`/`grep` to search logs efficiently:')
+    expect(prompt).toContain(process.platform === 'win32'
+      ? 'Use powershell with `rg` to search logs efficiently:'
+      : 'Use Bash with `rg`/`grep` to search logs efficiently:')
     expect(prompt).toContain('rg -n "session" "/tmp/main.log"')
     expect(prompt).not.toContain('Use the Grep tool (if available)')
     expect(prompt).not.toContain('Grep pattern=')

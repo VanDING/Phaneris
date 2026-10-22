@@ -1,0 +1,438 @@
+{
+  "sourceCommit": "df483fd84",
+  "scope": "Byte identity of product prompt across platform and feature combinations; captured before modular assembly",
+  "cases": [
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": false,
+      "feedback": false,
+      "decide": false,
+      "sha256": "3430d9763b9377543de96a25a2642d80f7402f8bdedc5d3c0fbd48c8111f91ca",
+      "characters": 22986
+    },
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": false,
+      "feedback": false,
+      "decide": true,
+      "sha256": "946c73060c8a36478d5a273ce6a99750e2ec391a9a7763537aee1e09f02f5a80",
+      "characters": 24409
+    },
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": false,
+      "feedback": true,
+      "decide": false,
+      "sha256": "9a7f40ff412f31714da71266ac15fd7e91bf2f397cf9d64735aa254df45aeaf3",
+      "characters": 23283
+    },
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": false,
+      "feedback": true,
+      "decide": true,
+      "sha256": "035b8699a965bc3cbc01b7bbe9f08fcafeadd14f7a4c1167c15fc7b6abad0197",
+      "characters": 24706
+    },
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": true,
+      "feedback": false,
+      "decide": false,
+      "sha256": "3669dfa6d62252dfd649775d2403448dd48740cbd8a60b6178fe6733610efff9",
+      "characters": 23521
+    },
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": true,
+      "feedback": false,
+      "decide": true,
+      "sha256": "66773c8b17825f455495588338f48f6f3f4d5a37b9f393da8580ae5d73038793",
+      "characters": 24944
+    },
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": true,
+      "feedback": true,
+      "decide": false,
+      "sha256": "727b04762a04c2bd9f48c9b5a4339ecb659bca3a53b470ff9fbaa6c9f824c144",
+      "characters": 23818
+    },
+    {
+      "platform": "win32",
+      "browser": false,
+      "cli": true,
+      "feedback": true,
+      "decide": true,
+      "sha256": "3c1bf178866594dbcb5a4456f613d39ff6d88c9ff536a4b4b1882e42c8ced8eb",
+      "characters": 25241
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": false,
+      "feedback": false,
+      "decide": false,
+      "sha256": "652ed6c17206ccab8f591be33761c9fc16db678a3af17b775198b33ceac48efa",
+      "characters": 23953
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": false,
+      "feedback": false,
+      "decide": true,
+      "sha256": "64bb8d872a3ec35baecdf6a1386845f2ad9a85af9debd5a6391d49fc3b40d58c",
+      "characters": 25376
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": false,
+      "feedback": true,
+      "decide": false,
+      "sha256": "115ecb467fca70d44fc59685ed0dc48d8c96c67e1daa7e169401e8054d2553c0",
+      "characters": 24250
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": false,
+      "feedback": true,
+      "decide": true,
+      "sha256": "bbba8d946ba62daad68f8b09741126e9f7111c6aa7c634ef93d92817e6fd219c",
+      "characters": 25673
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": true,
+      "feedback": false,
+      "decide": false,
+      "sha256": "e0b376cb9b6bf8cadd3fb09aeebb2b5404b8e0c40ca880e19e0c9ecfbc2f5cd5",
+      "characters": 24488
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": true,
+      "feedback": false,
+      "decide": true,
+      "sha256": "9181810a3dcb52fb64e678dd465d25a88873abb9f62592a02ebb667f164021d7",
+      "characters": 25911
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": true,
+      "feedback": true,
+      "decide": false,
+      "sha256": "2aa0b99a842b969ce15b052a3c5bbc097cc825719609551ee5ae4068bc145e5c",
+      "characters": 24785
+    },
+    {
+      "platform": "win32",
+      "browser": true,
+      "cli": true,
+      "feedback": true,
+      "decide": true,
+      "sha256": "894e677cf653700db567e3348c7927d15b21e8e69659df5832a0d852859cd5e5",
+      "characters": 26208
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": false,
+      "feedback": false,
+      "decide": false,
+      "sha256": "c77d0b2a7bb96d42726aec194b97e5e1e76bbb295680117b726814185d93294d",
+      "characters": 22743
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": false,
+      "feedback": false,
+      "decide": true,
+      "sha256": "13dde461d0b0ca9947245e3d86add10608a9e2207a0e472ea6a44214c66f4a63",
+      "characters": 24166
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": false,
+      "feedback": true,
+      "decide": false,
+      "sha256": "46b1d1d29a2eee30cddb0d94db9235813a9c6e1280ed72628a6999b75d0fec5b",
+      "characters": 23040
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": false,
+      "feedback": true,
+      "decide": true,
+      "sha256": "b5041a380dbbb1e6fbfebdbc93f6b8443edd197306ffb6c309a55599da2185dc",
+      "characters": 24463
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": true,
+      "feedback": false,
+      "decide": false,
+      "sha256": "c570f2fc1dc23c49808dd3167ed9c19dcdd4ba487f8953c5ec1f6b5f604713ad",
+      "characters": 23278
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": true,
+      "feedback": false,
+      "decide": true,
+      "sha256": "86a3c46bb8dbed56aab1577b578f12fc8e540bd01d94f990722f6f09bd4c122b",
+      "characters": 24701
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": true,
+      "feedback": true,
+      "decide": false,
+      "sha256": "f69c231b3c6ecec073c1af219697516be547eb7fe7440134a2dd133b9ae4f80c",
+      "characters": 23575
+    },
+    {
+      "platform": "linux",
+      "browser": false,
+      "cli": true,
+      "feedback": true,
+      "decide": true,
+      "sha256": "32fbe4669068449048d5c5396c7021f90832b65d73bda7cea79ba361b95950c0",
+      "characters": 24998
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": false,
+      "feedback": false,
+      "decide": false,
+      "sha256": "0695d56c5a1c541eeeb3d28ac2aa683f653cccdc001840bb937dc74973dccb15",
+      "characters": 23710
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": false,
+      "feedback": false,
+      "decide": true,
+      "sha256": "667e8709587209324aca64d145cc48e3a5edb8a3b87a22e087c41d5680b13d04",
+      "characters": 25133
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": false,
+      "feedback": true,
+      "decide": false,
+      "sha256": "7c134baeefe3a646e3c9926751f2c193b6f568102fe9d5a02b199cacfa84a3b7",
+      "characters": 24007
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": false,
+      "feedback": true,
+      "decide": true,
+      "sha256": "7f932995dcbae6b9cf12dc186d603237365ca6d3fae2c9c4170447bb22c4a954",
+      "characters": 25430
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": true,
+      "feedback": false,
+      "decide": false,
+      "sha256": "9f9b7799e91e89175ebc24e074b1700c1aca3e40b51048f0cf22655634625f06",
+      "characters": 24245
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": true,
+      "feedback": false,
+      "decide": true,
+      "sha256": "68f127461be7d867ecb645aff4fbcdfa57564d53cde9cffb56e84b1e0369cc53",
+      "characters": 25668
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": true,
+      "feedback": true,
+      "decide": false,
+      "sha256": "80ba6558d06b13e20ba0879d34bb69b227ca8e3aa3836603f8e70ad639990fdf",
+      "characters": 24542
+    },
+    {
+      "platform": "linux",
+      "browser": true,
+      "cli": true,
+      "feedback": true,
+      "decide": true,
+      "sha256": "f0ac4a8a03bac921e1ebc104f6d452b011c071e3b8865e3e020391440b254fe3",
+      "characters": 25965
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": false,
+      "feedback": false,
+      "decide": false,
+      "sha256": "c77d0b2a7bb96d42726aec194b97e5e1e76bbb295680117b726814185d93294d",
+      "characters": 22743
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": false,
+      "feedback": false,
+      "decide": true,
+      "sha256": "13dde461d0b0ca9947245e3d86add10608a9e2207a0e472ea6a44214c66f4a63",
+      "characters": 24166
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": false,
+      "feedback": true,
+      "decide": false,
+      "sha256": "46b1d1d29a2eee30cddb0d94db9235813a9c6e1280ed72628a6999b75d0fec5b",
+      "characters": 23040
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": false,
+      "feedback": true,
+      "decide": true,
+      "sha256": "b5041a380dbbb1e6fbfebdbc93f6b8443edd197306ffb6c309a55599da2185dc",
+      "characters": 24463
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": true,
+      "feedback": false,
+      "decide": false,
+      "sha256": "c570f2fc1dc23c49808dd3167ed9c19dcdd4ba487f8953c5ec1f6b5f604713ad",
+      "characters": 23278
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": true,
+      "feedback": false,
+      "decide": true,
+      "sha256": "86a3c46bb8dbed56aab1577b578f12fc8e540bd01d94f990722f6f09bd4c122b",
+      "characters": 24701
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": true,
+      "feedback": true,
+      "decide": false,
+      "sha256": "f69c231b3c6ecec073c1af219697516be547eb7fe7440134a2dd133b9ae4f80c",
+      "characters": 23575
+    },
+    {
+      "platform": "darwin",
+      "browser": false,
+      "cli": true,
+      "feedback": true,
+      "decide": true,
+      "sha256": "32fbe4669068449048d5c5396c7021f90832b65d73bda7cea79ba361b95950c0",
+      "characters": 24998
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": false,
+      "feedback": false,
+      "decide": false,
+      "sha256": "0695d56c5a1c541eeeb3d28ac2aa683f653cccdc001840bb937dc74973dccb15",
+      "characters": 23710
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": false,
+      "feedback": false,
+      "decide": true,
+      "sha256": "667e8709587209324aca64d145cc48e3a5edb8a3b87a22e087c41d5680b13d04",
+      "characters": 25133
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": false,
+      "feedback": true,
+      "decide": false,
+      "sha256": "7c134baeefe3a646e3c9926751f2c193b6f568102fe9d5a02b199cacfa84a3b7",
+      "characters": 24007
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": false,
+      "feedback": true,
+      "decide": true,
+      "sha256": "7f932995dcbae6b9cf12dc186d603237365ca6d3fae2c9c4170447bb22c4a954",
+      "characters": 25430
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": true,
+      "feedback": false,
+      "decide": false,
+      "sha256": "9f9b7799e91e89175ebc24e074b1700c1aca3e40b51048f0cf22655634625f06",
+      "characters": 24245
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": true,
+      "feedback": false,
+      "decide": true,
+      "sha256": "68f127461be7d867ecb645aff4fbcdfa57564d53cde9cffb56e84b1e0369cc53",
+      "characters": 25668
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": true,
+      "feedback": true,
+      "decide": false,
+      "sha256": "80ba6558d06b13e20ba0879d34bb69b227ca8e3aa3836603f8e70ad639990fdf",
+      "characters": 24542
+    },
+    {
+      "platform": "darwin",
+      "browser": true,
+      "cli": true,
+      "feedback": true,
+      "decide": true,
+      "sha256": "f0ac4a8a03bac921e1ebc104f6d452b011c071e3b8865e3e020391440b254fe3",
+      "characters": 25965
+    }
+  ]
+}

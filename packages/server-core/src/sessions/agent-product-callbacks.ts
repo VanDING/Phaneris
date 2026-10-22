@@ -1,8 +1,10 @@
 /** Product state transitions behind finite ports; no Manager or Host execution access. */
 import type { ThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
 import type { SessionAgentCallbacks } from './agent-assembly'
+import type { SessionTaskContext } from '@phaneris/shared/sessions'
+import { buildSessionTaskContext } from './agent-product-context'
 
-export interface AgentProductView {
+export interface AgentProductView extends SessionTaskContext {
   readonly id: string
   readonly sdkSessionId?: string
   readonly branchFromSdkSessionId?: string
@@ -37,6 +39,7 @@ export function createSessionAgentCallbacks(ports: AgentProductPorts): Omit<Sess
     .filter(message => (message.role === 'user' || message.role === 'assistant') && !message.isIntermediate)
     .map(message => ({ type: message.role as 'user' | 'assistant', content: message.content }))
   return {
+    getSessionTaskContext: () => buildSessionTaskContext(ports.read()),
     onSdkSessionIdUpdate(sdkSessionId) {
       const view = ports.read()
       ports.patch({ sdkSessionId, ...(view.branchFromSdkSessionId ? {

@@ -104,6 +104,10 @@ export interface SessionPlanningFields {
   isMilestone?: boolean;
 }
 
+/** Product task metadata for model context; never an execution or approval record. */
+export type SessionTaskContext = Pick<SessionConfig, 'id' | 'name' | 'description' | 'acceptanceCriteria'
+  | 'progress' | 'startAt' | 'dueAt' | 'dependencySessionIds' | 'parentSessionId' | 'sessionStatus'>;
+
 /**
  * Session token usage tracking
  */
