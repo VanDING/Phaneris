@@ -99,6 +99,7 @@ import {
 } from './model-picker-helpers'
 import { useModelVisionToggle } from './useModelVisionToggle'
 import { WorkingDirectoryBadge, cmdKey, formatFollowUpChipText, shuffleArray } from './composer-badges'
+import { restoreRejectedDraft } from './submit-draft'
 
 
 export interface FollowUpInputItem {
@@ -1246,23 +1247,42 @@ export function FreeFormInput({
     }
 
     const attachmentSnapshot = attachments
+    const submittedText = input
 
     const submittedSession = sessionId
     submissionRef.current = true
+    // Clear before awaiting: `onSubmit` resolves only after the IPC round trip (and
+    // every attachment store), so clearing on acknowledgement left the sent text
+    // in the field for ~0.5s. A refused send restores it below.
+    if (inputRef.current === submittedText) clearInputDraft()
+    if (attachmentSnapshot.length > 0) {
+      setAttachments([])
+      onAttachmentsChange?.([])
+    }
+    const restore = () => restoreRejectedDraft({
+      text: submittedText,
+      attachments: attachmentSnapshot,
+      submittedSession,
+      currentSession: draftSessionRef.current,
+      currentInput: inputRef.current,
+      currentAttachments: attachmentsRef.current,
+      setInput,
+      syncToParent,
+      setAttachments,
+      onAttachmentsChange,
+    })
     try {
       const accepted = await onSubmit(
-        input.trim(),
+        submittedText.trim(),
         attachmentSnapshot.length > 0 ? attachmentSnapshot : undefined,
         mentions.skills.length > 0 ? mentions.skills : undefined
       )
-      if (accepted === false || draftSessionRef.current !== submittedSession) return false
-      // Acknowledgement can arrive after further typing or a workspace switch.
-      // Consume only the submitted snapshot, preserving later edits/attachments.
-      if (inputRef.current === input) clearInputDraft()
-      const remaining = attachmentsRef.current.filter(item => !attachmentSnapshot.includes(item))
-      setAttachments(remaining)
-      onAttachmentsChange?.(remaining)
+      if (accepted === false || draftSessionRef.current !== submittedSession) {
+        if (accepted === false) restore()
+        return false
+      }
     } catch (error) {
+      restore()
       toast.error(error instanceof Error ? error.message : String(error))
       return false
     } finally {
@@ -1275,7 +1295,7 @@ export function FreeFormInput({
     })
 
     return true
-  }, [input, attachments, followUpItems, disabled, disableSend, showAttachmentSizeProblem, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, richInputRef, inputRef, clearInputDraft, sessionId])
+  }, [input, attachments, followUpItems, disabled, disableSend, showAttachmentSizeProblem, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, richInputRef, inputRef, clearInputDraft, setInput, syncToParent, sessionId])
 
   // Listen for craft:submit-input events (simulate pressing the Send button)
   React.useEffect(() => {

@@ -18,8 +18,8 @@
     },
     {
       "path": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
-      "maxLines": 2453,
-      "note": "One giant component. Its controller cannot move until the shell path/platform context is stubbed enough to mount it in a browser."
+      "maxLines": 2473,
+      "note": "One giant component. Its controller cannot move until the shell path/platform context is stubbed enough to mount it in a browser. +20 lines from the optimistic send: the field now clears before the IPC acknowledgement and restores only on refusal (the rule itself lives in submit-draft.ts)."
     },
     {
       "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
