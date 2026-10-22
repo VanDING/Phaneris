@@ -4,8 +4,8 @@
 
 ## 当前基线
 
-- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` 及其 Pi 家族依赖统一固定 **1.2.0**。
-- 包管理器与打包运行时：Bun **1.4.2**；版本由 `package.json`、CI 和打包脚本共同固定。
+- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` 及其 Pi 家族依赖统一固定 **1.3.0**。
+- 包管理器与打包运行时：Bun **1.4.3**；版本由 `package.json`、CI 和打包脚本共同固定。
 - 后台：只有 `PiAgent`。仓库不直接依赖 Claude Agent SDK，也不打包 Claude 原生二进制。
 - Anthropic/Claude 模型、OAuth 连接名以及 `CLAUDE.md` 项目上下文属于提供商或文件格式兼容，不代表存在第二套 agent 后台。
 
@@ -18,7 +18,7 @@ packages/server-core (SessionManager)
           │ AgentBackend + JSONL
 packages/shared (PiAgent + event adapter + permissions)
           │ stdio
-packages/pi-agent-server (Pi 1.2.0)
+packages/pi-agent-server (Pi 1.3.0)
           │ provider API / local tools / proxied session tools
 ```
 
