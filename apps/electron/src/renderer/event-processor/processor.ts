@@ -14,6 +14,7 @@
 
 import type { SessionState, AgentEvent, ProcessResult } from './types'
 import { handleTextDelta, handleTextComplete, handleTextDiscard } from './handlers/text'
+import { handleThinkingDelta } from './handlers/thinking'
 import { handleToolStart, handleToolResult, handleTaskBackgrounded, handleShellBackgrounded, handleTaskProgress, handleTaskCompleted } from './handlers/tool'
 import {
   handleComplete,
@@ -72,6 +73,8 @@ export function processEvent(
   event: AgentEvent
 ): ProcessResult {
   switch (event.type) {
+    case 'thinking_delta':
+      return { state: handleThinkingDelta(state, event), effects: [] }
     case 'text_discard':
       return { state: handleTextDiscard(state, event), effects: [] }
 

@@ -1,4 +1,5 @@
 import { decodeEscapes, splitBatchCommands, tokenizeCommand } from './browser-command-parser.ts';
+import { boundedBrowserCaptures } from './browser-read-deadline.ts';
 export { splitBatchCommands, tokenizeCommand } from './browser-command-parser.ts';
 
 import type {
@@ -609,7 +610,11 @@ export async function executeBrowserToolCommand(args: {
   fns: BrowserPaneFns;
   sessionId: string;
   platform?: NodeJS.Platform;
+  signal?: AbortSignal;
+  readTimeoutMs?: number;
 }): Promise<BrowserCommandResult> {
+  args.signal?.throwIfAborted();
+  args = { ...args, fns: boundedBrowserCaptures(args.fns, args.signal, args.readTimeoutMs) };
   // Array mode: no batch splitting, pass directly to single command execution
   if (Array.isArray(args.command)) {
     if (args.command.length === 0) {
@@ -641,12 +646,14 @@ async function executeBatchCommands(args: {
   fns: BrowserPaneFns;
   sessionId: string;
   platform?: NodeJS.Platform;
+  signal?: AbortSignal;
 }): Promise<BrowserCommandResult> {
   const outputs: string[] = [];
   let lastImage: BrowserCommandImage | undefined;
   let appendReleaseHint = false;
 
   for (let i = 0; i < args.commands.length; i++) {
+    args.signal?.throwIfAborted();
     const command = args.commands[i]!;
     let result: BrowserCommandResult;
     try {

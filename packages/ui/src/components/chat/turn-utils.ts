@@ -9,6 +9,7 @@ import { getMessageTextUpdate } from '@phaneris/core/utils'
 import type { Message, StoredMessage, MessageRole } from '@phaneris/core'
 import { isParentTaskTool } from '@phaneris/shared/utils/toolNames'
 import { storedToMessage as convertStoredMessage } from '@phaneris/core'
+import { thinkingActivities } from './thinking-activity'
 
 /**
  * Identity-preserving `storedToMessage`.
@@ -456,6 +457,15 @@ function updateStreamingTurns(messages: Message[], processing: boolean | undefin
   if (!message || message.hidden || !message.isPending || !message.isStreaming) return
   const last = cached.turns.at(-1)
   if (!last || last.type !== 'assistant' || last.isComplete) return
+  if (message.outputBlocks?.some(block => block.type === 'thinking')) {
+    const owned = (activity: ActivityItem) => activity.id === message.id || (activity.type === 'thinking' && activity.messageId === message.id)
+    const first = last.activities.findIndex(owned)
+    if (first < 0) return
+    const replacements = thinkingActivities(message)
+    if (message.content.trim()) replacements.push({ id: message.id, type: 'intermediate', status: 'running', content: message.content, timestamp: message.timestamp, parentId: message.parentToolUseId })
+    const activities = [...last.activities.slice(0, first), ...replacements, ...last.activities.slice(first).filter(activity => !owned(activity))]
+    return [...cached.turns.slice(0, -1), { ...last, activities }]
+  }
   const index = last.activities.findIndex(activity => activity.id === message.id && activity.type === 'intermediate')
   if (index < 0) return
   const activities = last.activities.slice()
@@ -706,23 +716,16 @@ export function groupMessagesByTurn(messages: Message[], options: GroupTurnsOpti
 
     // Assistant messages are the response part of a turn
     if (message.role === 'assistant') {
+      if (!currentTurn) currentTurn = {
+        type: 'assistant', turnId: message.turnId || message.id, activities: [], response: undefined, intent: undefined,
+        isStreaming: !!message.isStreaming, isComplete: false, timestamp: message.timestamp,
+      }
+      const thoughts = thinkingActivities(message)
+      currentTurn.activities.push(...thoughts)
       // Intermediate messages OR pending messages (don't know yet) are activities, not responses
       // Pending: streaming text where we don't yet know if it's intermediate - treat as intermediate
       // until text_complete arrives with the definitive isIntermediate flag
       if (message.isIntermediate || message.isPending) {
-        if (!currentTurn) {
-          // Start a new turn for this intermediate message
-          currentTurn = {
-            type: 'assistant',
-            turnId: message.turnId || message.id,
-            activities: [],
-            response: undefined,
-            intent: undefined,
-            isStreaming: !!message.isPending,
-            isComplete: false,
-            timestamp: message.timestamp,
-          }
-        }
         // Always add to current turn as activity (ignoring turnId differences)
         // Pending messages show as 'running' until we know they're complete
         // Include parentId for intermediate messages to support nesting within subagents
@@ -741,7 +744,7 @@ export function groupMessagesByTurn(messages: Message[], options: GroupTurnsOpti
         } else {
           intermediateActivity.depth = 0
         }
-        currentTurn.activities.push(intermediateActivity)
+        if (message.content.trim() || !thoughts.length) currentTurn.activities.push(intermediateActivity)
 
         // Update turn streaming state based on this message
         // If message is no longer pending/streaming, update turn state accordingly
@@ -752,19 +755,6 @@ export function groupMessagesByTurn(messages: Message[], options: GroupTurnsOpti
       }
 
       // Non-intermediate assistant message = final response
-      if (!currentTurn) {
-        // This is a response-only turn (no tools)
-        currentTurn = {
-          type: 'assistant',
-          turnId: message.turnId || message.id,
-          activities: [],
-          response: undefined,
-          intent: undefined,
-          isStreaming: !!message.isStreaming,
-          isComplete: !message.isStreaming,
-          timestamp: message.timestamp,
-        }
-      }
 
       // Set as response on current turn (ignoring turnId differences)
       currentTurn.response = {
@@ -877,9 +867,9 @@ export function formatTurnAsMarkdown(turn: AssistantTurn): string {
     lines.push('')
 
     for (const activity of turn.activities) {
-      if (activity.type === 'intermediate') {
-        // Intermediate text (thinking/commentary)
-        lines.push(`### 💭 Commentary`)
+      if (activity.type === 'intermediate' || activity.type === 'thinking') {
+        // Model reasoning and commentary retain their activity order in exports.
+        lines.push(activity.type === 'thinking' ? '### Thinking' : '### 💭 Commentary')
         lines.push('')
         if (activity.content) {
           lines.push(activity.content)
@@ -964,9 +954,8 @@ export function formatTurnAsMarkdown(turn: AssistantTurn): string {
 export function formatActivityAsMarkdown(activity: ActivityItem): string {
   const lines: string[] = []
 
-  if (activity.type === 'intermediate') {
-    // Commentary/thinking
-    lines.push('# Commentary')
+  if (activity.type === 'intermediate' || activity.type === 'thinking') {
+    lines.push(activity.type === 'thinking' ? '# Thinking' : '# Commentary')
     lines.push('')
     if (activity.content) {
       lines.push(activity.content)

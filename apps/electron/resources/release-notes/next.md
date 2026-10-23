@@ -6,6 +6,12 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+
+- **Thinking activities** — Model thinking appears in chronological order alongside tool activities as a single line. Click it to read the full content in the existing full-screen viewer.
+
 ## Bug Fixes
+
+- **Conversation feedback** — Forward thinking updates while a model is reasoning, retain received thinking when a response is stopped, and release short paused responses after the display buffer deadline.
+- **Browser cancellation** — Stop waiting indefinitely for browser captures, preserve completed batch output on cancellation, and settle observed tool errors returned after a stop.
 
 ## Breaking Changes

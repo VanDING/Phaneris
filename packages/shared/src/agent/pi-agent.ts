@@ -1794,7 +1794,7 @@ export class PiAgent extends BaseAgent {
     const isQuestion = request.toolName === 'ask_user' || request.toolName === 'mcp__session__ask_user';
     try {
       const result = await this.routeToolCall(request.toolName, request.args, request.durableTool, intent, abort.signal);
-      if (!result.isError && request.durableTool && request.toolCallId) this.knownHostToolOutcomes.set(request.requestId, { request, result });
+      if (request.durableTool && request.toolCallId) this.knownHostToolOutcomes.set(request.requestId, { request, result });
       // Stop resolves an open question as a dismissal. Deliver that pure result
       // so the live child can drain its wait; cancelled external effects stay unknown.
       if (epoch !== this.subprocessEpoch || (abort.signal.aborted && !isQuestion)) {
@@ -1838,7 +1838,7 @@ export class PiAgent extends BaseAgent {
         toolBatchId: identity.toolBatchId, toolBatchOrdinal: identity.toolBatchOrdinal,
         result: { content: result.contentBlocks ?? [{ type: 'text', text: result.content }],
           ...(result.structuredContent !== undefined ? { structuredContent: result.structuredContent } : {}) },
-        isError: false,
+        isError: result.isError,
       });
     } catch (error) { this.debug(`Known late tool outcome could not be committed: ${String(error)}`); }
   }
@@ -2065,6 +2065,7 @@ export class PiAgent extends BaseAgent {
             command: (args.command as string | string[]) ?? '',
             fns: browserFns,
             sessionId: this._sessionId,
+            signal,
           });
 
           let content = result.output;

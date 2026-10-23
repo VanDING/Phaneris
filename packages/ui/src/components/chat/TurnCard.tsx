@@ -40,12 +40,12 @@ import {
 } from './tool-display'
 import {
   BUFFER_CONFIG,
-  isResponseBuffering,
-  shouldShowContent,
   stripMarkdown,
 } from './response-buffering'
 
 import { ThinkingIndicator } from '../ui/LoadingIndicator'
+import { ThinkingActivityRow } from './thinking-activity'
+import { useResponseBuffer } from './use-response-buffer'
 import { type IslandTransitionConfig } from '../ui'
 import { AnnotationIslandMenu } from '../annotations/AnnotationIslandMenu'
 import {
@@ -514,12 +514,13 @@ function TreeViewConnector({ depth }: { depth: number; isLastChild?: boolean }) 
 /** Single activity row in expanded view */
 function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, displayMode = 'detailed' }: ActivityRowProps) {
   const depth = activity.depth || 0
+  if (activity.type === 'thinking') return <ThinkingActivityRow activity={activity} onOpenDetails={onOpenDetails} />
 
   // Intermediate messages (LLM commentary) - render with dashed circle icon
   // Show "Thinking" while streaming, stripped markdown content when complete
   if (activity.type === 'intermediate') {
     const isThinking = activity.status === 'running'
-    const displayContent = isThinking ? 'Thinking...' : stripMarkdown(activity.content || '')
+    const displayContent = stripMarkdown(activity.content || '') || i18n.t('turnCard.responding')
     const isComplete = activity.status === 'completed'
     return (
       <div className="flex items-stretch">
@@ -597,8 +598,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
   // - Intent: For MCP tools (activity.intent), for Bash (toolInput.description)
   // - Params: Remaining tool input summary
   const toolDisplay = formatToolDisplay(activity)
-  const fullDisplayName = toolDisplay.name
-    || (activity.type === 'thinking' ? 'Thinking' : 'Processing')
+  const fullDisplayName = toolDisplay.name || 'Processing'
 
   // Detect MCP/API tools (toolName starts with "mcp__")
   const isMcpOrApiTool = activity.toolName?.startsWith('mcp__') ?? false
@@ -2074,9 +2074,7 @@ export function ResponseCard({
   }, [text, isStreaming])
 
   // Calculate buffering decision based on current text (not displayed text)
-  const bufferDecision = useMemo(() => {
-    return shouldShowContent(text, isStreaming, streamStartTime)
-  }, [text, isStreaming, streamStartTime])
+  const bufferDecision = useResponseBuffer(text, isStreaming, streamStartTime)
 
   const isCompleted = !isStreaming
   const isBuffering = isStreaming && !bufferDecision.shouldShow
@@ -2598,12 +2596,8 @@ export const TurnCard = React.memo(function TurnCard({
   const expandedActivityGroups = externalExpandedActivityGroups ?? localExpandedActivityGroups
   const handleExpandedActivityGroupsChange = onExpandedActivityGroupsChange ?? setLocalExpandedActivityGroups
 
-  // Check if response is in buffering state
-  // No polling needed - parent updates trigger re-evaluation naturally
-  const isBuffering = useMemo(
-    () => isResponseBuffering(response),
-    [response]
-  )
+  const responseBuffer = useResponseBuffer(response?.text ?? '', !!response?.isStreaming, response?.streamStartTime)
+  const isBuffering = !!response?.isStreaming && !responseBuffer.shouldShow
 
 
   // Compute preview text with cross-fade animation
@@ -2670,7 +2664,7 @@ export const TurnCard = React.memo(function TurnCard({
       // Tool activities must be errors (interrupted/failed)
       if (a.type === 'tool') return a.status === 'error'
       // Intermediate activities must have no meaningful content
-      if (a.type === 'intermediate') return !a.content?.trim()
+      if (a.type === 'intermediate' || a.type === 'thinking') return !a.content?.trim()
       // Plan activities are meaningful work
       if (a.type === 'plan') return false
       // Other activity types - consider as no meaningful work

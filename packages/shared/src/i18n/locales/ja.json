@@ -2637,6 +2637,8 @@
   "turnCard.reviewRecovery": "復旧を確認",
   "turnCard.starting": "開始中...",
   "turnCard.stepsCompleted": "ステップ完了",
+  "turnCard.thinking": "思考",
+  "turnCard.viewThinking": "思考の詳細を表示",
   "viewer.clearSession": "セッションをクリア",
   "webui.connectingToServer": "サーバーに接続中...",
   "webui.connectionFailed": "接続に失敗しました",

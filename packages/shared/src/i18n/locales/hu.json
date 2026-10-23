@@ -2637,6 +2637,8 @@
   "turnCard.reviewRecovery": "Helyreállítás ellenőrzése",
   "turnCard.starting": "Indítás...",
   "turnCard.stepsCompleted": "Lépések befejezve",
+  "turnCard.thinking": "Gondolkodás",
+  "turnCard.viewThinking": "Gondolatmenet megtekintése",
   "viewer.clearSession": "Munkamenet törlése",
   "webui.connectingToServer": "Csatlakozás a szerverhez...",
   "webui.connectionFailed": "Kapcsolódás sikertelen",

@@ -726,6 +726,10 @@ export interface AskUserResponse {
  */
 export interface TrajectorySourceBlock {
   type: string;
+  /** Original provider block index; stable while streaming and after completion. */
+  index?: number;
+  /** Transient client projection only; completed provider blocks omit this. */
+  isStreaming?: boolean;
   content?: string;
   imageSrc?: string;
   imageAlt?: string;
@@ -816,6 +820,7 @@ export type AgentEvent =
   | { type: 'status'; message: string }
   | { type: 'info'; message: string }
   | { type: 'text_delta'; text: string; turnId?: string; parentToolUseId?: string; timestamp?: number }
+  | { type: 'thinking_delta'; text: string; turnId: string; blockIndex: number; complete?: boolean }
   | { type: 'text_complete'; text: string; isIntermediate?: boolean; turnId?: string; parentToolUseId?: string; sdkMessageId?: string; timestamp?: number; usage?: PiUsage; requestSeq?: number; promptSnapshot?: string; contextSnapshot?: RequestContextSnapshot; assistantMetrics?: AssistantMetrics; outputBlocks?: TrajectorySourceBlock[]; durableOperationId?: string; durableSeq?: number }
   | { type: 'pi_turn_anchor'; sdkMessageId: string; sdkTurnAnchor: string }
   | { type: 'tool_start'; toolName: string; toolUseId: string; input: Record<string, unknown>; intent?: string; displayName?: string; turnId?: string; parentToolUseId?: string; toolDisplayMeta?: ToolDisplayMeta; timestamp?: number; durableOperationId?: string; durableSeq?: number }

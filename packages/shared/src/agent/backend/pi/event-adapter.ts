@@ -1,3 +1,4 @@
+import { extractPiSourceBlocks } from './source-blocks';
 /**
  * Pi SDK Event Adapter
  *
@@ -16,7 +17,6 @@ import type {
   ContextUsageSnapshot,
   PiUsage,
   RequestContextSnapshot,
-  TrajectorySourceBlock,
 } from '@phaneris/core/types';
 import { contextAfterCompaction, contextFromPi } from '../../context-usage.ts';
 import type { PiContextUsagePayload } from './protocol.ts';
@@ -551,6 +551,11 @@ export class PiEventAdapter extends BaseEventAdapter {
       case 'message_update': {
         // Pi SDK emits message_update only for assistant messages (streaming deltas)
         const amEvent: AssistantMessageEvent = event.assistantMessageEvent;
+        if (amEvent.type === 'thinking_delta' || amEvent.type === 'thinking_end') {
+          this.messageSubTurnId ??= this.nextSubTurnId('m');
+          yield { type: 'thinking_delta', text: amEvent.type === 'thinking_delta' ? amEvent.delta : '',
+            turnId: this.messageSubTurnId, blockIndex: amEvent.contentIndex, complete: amEvent.type === 'thinking_end' };
+        }
         if (amEvent.type === 'text_delta' && amEvent.delta) {
           // First delta of the step marks firstTokenTime for TTFT.
           if (this.pendingFirstToken === null && this.pendingStepStart !== null) {
@@ -717,7 +722,7 @@ export class PiEventAdapter extends BaseEventAdapter {
             promptSnapshot: (event as { promptSnapshot?: unknown }).promptSnapshot as string | undefined,
             contextSnapshot: (event as { contextSnapshot?: unknown }).contextSnapshot as RequestContextSnapshot | undefined,
             assistantMetrics,
-            outputBlocks: this.extractSourceBlocks(event.message),
+            outputBlocks: extractPiSourceBlocks(event.message),
             ...this.durableAttachments(event),
           };
           this.hasStreamedDeltas = false;
@@ -1110,60 +1115,6 @@ export class PiEventAdapter extends BaseEventAdapter {
     if (typeof message !== 'object' || message === null) return undefined;
     const ts = (message as { timestamp?: unknown }).timestamp;
     return typeof ts === 'number' ? ts : undefined;
-  }
-
-  /**
-   * Extract structured content blocks (text / image / tool-call) from a Pi
-   * AgentMessage content array, preserving model order for the trajectory
-   * details panel. Mirrors the VanDSH TrajectorySourceBlock shape.
-   */
-  private extractSourceBlocks(message: unknown): TrajectorySourceBlock[] | undefined {
-    if (!message || typeof message !== 'object') return undefined;
-    const msg = message as { content?: string | Array<Record<string, unknown>> };
-    if (!Array.isArray(msg.content) || msg.content.length === 0) return undefined;
-
-    const blocks: TrajectorySourceBlock[] = [];
-    for (const block of msg.content) {
-      const type = typeof block.type === 'string' ? block.type : 'other';
-      if (type === 'text') {
-        if (typeof block.text === 'string' && block.text.length > 0) {
-          blocks.push({ type: 'text', content: block.text });
-        }
-      } else if (type === 'image') {
-        const source = block.source as { type?: string; data?: string; url?: string; mediaType?: string } | undefined;
-        blocks.push({
-          type: 'image',
-          imageSrc: typeof source?.data === 'string'
-            ? `data:${source.mediaType ?? 'image/png'};base64,${source.data}`
-            : typeof source?.url === 'string' ? source.url : undefined,
-          imageAlt: typeof block.alt === 'string' ? block.alt : undefined,
-        });
-      } else if (type === 'thinking' || type === 'reasoning') {
-        const content = block.thinking ?? block.text;
-        if (typeof content === 'string' && content.trim()) blocks.push({ type: 'thinking', content });
-      } else if (type === 'tool_use' || type === 'toolCall') {
-        blocks.push({
-          type: 'tool-call',
-          callId: typeof block.id === 'string' ? block.id : undefined,
-          toolName: typeof block.name === 'string' ? block.name : undefined,
-          content: JSON.stringify(block.arguments ?? block.input ?? {}),
-        });
-      } else if (type === 'tool_result') {
-        const content = block.content;
-        const text = Array.isArray(content)
-          ? content
-            .filter((c): c is Record<string, unknown> => typeof c === 'object' && c !== null && typeof c.text === 'string')
-            .map((c) => c.text as string)
-            .join('')
-          : undefined;
-        blocks.push({
-          type: 'tool-result',
-          content: text,
-          callId: typeof block.tool_use_id === 'string' ? block.tool_use_id : undefined,
-        });
-      }
-    }
-    return blocks.length > 0 ? blocks : undefined;
   }
 
   /**

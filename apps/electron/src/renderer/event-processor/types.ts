@@ -10,6 +10,7 @@ import type { PiUsage, AssistantMetrics, TrajectorySourceBlock, ContextUsageSnap
 
 /** Explicit SDK retry boundaries; keep their transport shape authoritative. */
 export type TextDiscardEvent = Extract<SessionEvent, { type: 'text_discard' }>
+export type ThinkingDeltaEvent = Extract<SessionEvent, { type: 'thinking_delta' }>
 export type RetryEvent = Extract<SessionEvent, { type: 'retry' }>
 
 /**
@@ -619,6 +620,7 @@ export type AgentEvent =
   | TextDiscardEvent
   | RetryEvent
   | TextDeltaEvent
+  | ThinkingDeltaEvent
   | TextCompleteEvent
   | ToolStartEvent
   | ToolResultEvent

@@ -1847,7 +1847,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                             // All other tools → preview panel markdown entry (formatted activity)
                             openPreviewEntry({
                               content: formatActivityAsMarkdown(activity),
-                              title: activity.displayName || activity.toolName || t('contentPanel.preview.activity'),
+                              title: activity.type === 'thinking' ? t('turnCard.thinking') : activity.displayName || activity.toolName || t('contentPanel.preview.activity'),
                               id: `activity:${activity.id}`,
                             })
                           }

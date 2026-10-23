@@ -555,8 +555,9 @@ function registerCustomEndpointModels(
     authHeader: true,
     models: allIds.map(id => buildCustomEndpointModelDef(
       id,
-      { supportsImages: initConfig!.customEndpoint?.supportsImages === true },
+      { supportsImages: initConfig!.customEndpoint?.supportsImages === true, baseUrl },
       customModelOverrides.get(id),
+      api,
     )),
   });
   debugLog(`Registered custom endpoint: ${baseUrl} with ${allIds.length} model(s) [${allIds.join(', ')}], api: ${api}`);

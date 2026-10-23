@@ -19,8 +19,7 @@ export const BUFFER_CONFIG = {
   MIN_WORDS_QUESTION: 8,       // Questions from AI show faster
   MIN_WORDS_HEADER: 12,        // Headers indicate structure
   MIN_BUFFER_MS: 500,          // Always wait at least 500ms
-  MAX_BUFFER_MS: 2500,         // Never buffer longer than 2.5s
-  TIMEOUT_MIN_WORDS: 5,        // Show on timeout if at least this many words
+  MAX_BUFFER_MS: 2500,         // Release any nonempty text, including unspaced CJK
   HIGH_WORD_COUNT: 60,         // Show regardless of structure at this count
   CONTENT_THROTTLE_MS: 300,    // Throttle content updates during streaming (perf optimization)
 } as const
@@ -141,8 +140,8 @@ export function shouldShowContent(
     return { shouldShow: false, reason: 'min_time', wordCount }
   }
 
-  // Maximum buffer time - force show after 2.5s if we have some content
-  if (elapsed > BUFFER_CONFIG.MAX_BUFFER_MS && wordCount >= BUFFER_CONFIG.TIMEOUT_MIN_WORDS) {
+  // A time bound cannot depend on whitespace word counts (CJK may be one word).
+  if (elapsed >= BUFFER_CONFIG.MAX_BUFFER_MS && text.trim()) {
     return { shouldShow: true, reason: 'timeout', wordCount }
   }
 

@@ -1,10 +1,11 @@
-/** The host adapter consumes text deltas; complete content/usage arrives at message_end. */
-export function compactTextUpdate(event: { assistantMessageEvent: { type: string; delta?: string } }, now = Date.now()) {
+/** Forward incremental content, never the SDK's accumulated partial message. */
+export function compactTextUpdate(event: { assistantMessageEvent: { type: string; delta?: string; contentIndex?: number } }, now = Date.now()) {
   const update = event.assistantMessageEvent;
-  if (update.type !== 'text_delta' || !update.delta) return undefined;
+  if (!['text_delta', 'thinking_delta', 'thinking_end'].includes(update.type)) return undefined;
+  if (update.type !== 'thinking_end' && !update.delta) return undefined;
   return {
     type: 'message_update' as const,
-    assistantMessageEvent: { type: 'text_delta' as const, delta: update.delta },
+    assistantMessageEvent: { type: update.type, delta: update.delta ?? '', contentIndex: update.contentIndex ?? 0 },
     ts: now,
   };
 }

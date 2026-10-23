@@ -192,9 +192,12 @@ await verificationWorkflow('pi-interruption-recovery', async evidence => {
     return receive(line)
   }
   const deliveryIdentities: string[] = []
+  let failDelivery = false
   registerSessionScopedToolCallbacks(piSession, { sendAgentMessageFn: async (_target, _message, _attachments, deliveryId) => {
     assert(typeof deliveryId === 'string' && deliveryId.startsWith('toolop_')); deliveryIdentities.push(deliveryId)
-    await activeToolGate; return { delivery: 'delivered', targetBusy: false }
+    await activeToolGate
+    if (failDelivery) throw new Error('Fixture observed late delivery failure')
+    return { delivery: 'delivered', targetBusy: false }
   } })
   const driver = await runtime.execution.ensureDriver(piSession, async () => new PiRuntimeDriver(agent))
   const events: any[] = []
@@ -234,6 +237,17 @@ await verificationWorkflow('pi-interruption-recovery', async evidence => {
     assert.equal((await deadline(turn('replacement-child-run'), 15000)).kind, 'terminal')
     assert.equal(runtime.queries.events(workspace, { operationId: 'replacement-child-run' }).filter(event => event.type === 'tool_outcome_committed').length, 0)
     checks.push('old-child-late-outcome-stays-on-original-run')
+    const failedGate = Promise.withResolvers<void>()
+    activeToolGate = failedGate.promise; failDelivery = true; mode = 'late-tool'
+    assert.equal((await deadline(turn('late-error-run'), 15000)).kind, 'parked')
+    assert.equal(runtime.queries.unsettledTools(workspace, 'late-error-run').length, 1)
+    failedGate.resolve()
+    for (let i = 0; i < 100 && runtime.queries.unsettledTools(workspace, 'late-error-run').length; i++) await new Promise(r => setTimeout(r, 20))
+    assert.equal(runtime.queries.unsettledTools(workspace, 'late-error-run').length, 0)
+    assert(runtime.queries.events(workspace, { operationId: 'late-error-run' }).some(event => event.type === 'tool_outcome_committed' && (event.payload as any).isError === true))
+    failDelivery = false; runtime.execution.refreshRecovery(piSession)
+    assert.equal((await deadline(turn('after-late-error'), 15000)).kind, 'terminal')
+    checks.push('observed-late-error-T2-unblocks-run', 'next-turn-after-observed-late-error')
     mode = 'exit'
     const streaming = new Promise<void>(resolve => { streamStarted = resolve })
     const crashing = turn('exit-run')

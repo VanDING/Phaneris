@@ -32,6 +32,7 @@
     "apps/*"
   ],
   "scripts": {
+    "verify:conversation-start": "bun run scripts/verification/conversation-start-fix-workflow.ts",
     "verify:model-harness": "bun run scripts/verification/model-harness-contract-workflow.ts && bun run scripts/verification/harness-tool-effects-workflow.ts && bun run scripts/verification/harness-prompt-assembly-workflow.ts && bun run server:build:subprocess && bun run scripts/verification/model-harness-pi-workflow.ts && bun run scripts/verification/harness-tool-order-pi-workflow.ts && bun run scripts/verification/harness-task-context-pi-workflow.ts",
     "verify:capabilities": "bun run scripts/verification/run-capability-integration.ts",
     "test": "bun run scripts/run-workspace-tests.ts",

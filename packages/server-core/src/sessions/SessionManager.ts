@@ -1,3 +1,4 @@
+import { SessionDeltaBatcher, type ThinkingDelta } from './session-deltas'
 import { getContextPolicy, getCompactionThreshold } from '@phaneris/shared/config/appearance';
 import { assembleSessionAgent } from './agent-assembly'
 import { buildPlanApproval } from './plan-approval'
@@ -5,6 +6,7 @@ import { buildAgentSessionSnapshot, buildSessionTaskContext } from './agent-prod
 import { createSessionAgentCallbacks } from './agent-product-callbacks'
 import { prepareSessionSourceResources, type SessionSourceResources } from './source-resources'
 import { SessionProductRepository } from './product-repository'
+import { clearThinkingStream, rememberThinkingDelta, takeInterruptedThinking } from './thinking-stream'
 import { isContextPolicy, validateHandoffDocument, buildHandoffSeed, HANDOFF_INSTRUCTION, CONTEXT_HANDOFF_ACTIVE_PHASES, type ContextPolicy, type ContextHandoffState } from '@phaneris/shared/agent/context-policy'
 import { estimateTranscriptBytes } from '@phaneris/core/utils'
 import type { EventSink, RpcServer } from '@phaneris/server-core/transport'
@@ -1077,7 +1079,6 @@ function managedToSession(m: ManagedSession, overrides?: Partial<Session>): Sess
 }
 
 // Performance: Batch IPC delta events to reduce renderer load
-const DELTA_BATCH_INTERVAL_MS = 50  // Flush batched deltas every 50ms
 
 /**
  * Coalescing window for the planning-changed signal. Long enough to collapse the
@@ -1086,10 +1087,6 @@ const DELTA_BATCH_INTERVAL_MS = 50  // Flush batched deltas every 50ms
  */
 const PLANNING_CHANGED_COALESCE_MS = 250
 
-interface PendingDelta {
-  delta: string
-  turnId?: string
-}
 
 /**
  * In-process session-completion signal for the Tasks Conductor.
@@ -1212,8 +1209,7 @@ export class SessionManager implements ISessionManager {
     this.execution = durableRuntime.execution
   }
   // Delta batching for performance - reduces IPC events from 50+/sec to ~20/sec
-  private pendingDeltas: Map<string, PendingDelta> = new Map()
-  private deltaFlushTimers: Map<string, NodeJS.Timeout> = new Map()
+  private readonly deltas = new SessionDeltaBatcher((event, workspace) => this.sendEvent(event, workspace))
   // Config watchers for live updates (sources, etc.) - one per workspace
   private configWatchers: Map<string, ConfigWatcher> = new Map()
   // App-scoped watcher: exactly one regardless of workspace count.
@@ -6899,12 +6895,7 @@ initialSources: {
     finally { await this.disposeManagedAgentResources(managed, 'session deletion') }
 
     // Clean up delta flush timers to prevent orphaned timers
-    const timer = this.deltaFlushTimers.get(sessionId)
-    if (timer) {
-      clearTimeout(timer)
-      this.deltaFlushTimers.delete(sessionId)
-    }
-    this.pendingDeltas.delete(sessionId)
+    this.deltas.clear(sessionId)
     this.clearAdminRememberApprovalsForSession(sessionId)
     this.clearPendingPermissionRequestsForSession(sessionId)
     this.clearPendingAskUserRequestsForSession(sessionId)
@@ -7364,6 +7355,7 @@ initialSources: {
     try {
       managed.lastMessageAt = Date.now()
       managed.streamingText = ''
+      clearThinkingStream(managed)
       managed.streamingTurnId = undefined
       managed.turnStartFinalMessageId = this.getLastFinalAssistantMessageId(managed.messages)
       managed.turnSteers = []
@@ -7550,7 +7542,7 @@ initialSources: {
           sawFirstEvent = true
           sendSpan.mark('chat.first_event')
         }
-        if (!sawFirstResponse && (event.type === 'text_delta' || event.type === 'text_complete')) {
+        if (!sawFirstResponse && (event.type === 'thinking_delta' || event.type === 'text_delta' || event.type === 'text_complete')) {
           sawFirstResponse = true
           sendSpan.mark('chat.first_response')
         }
@@ -7559,7 +7551,7 @@ initialSources: {
           sendSpan.mark('chat.first_tool')
         }
         // Log events (skip noisy text_delta)
-        if (event.type !== 'text_delta') {
+        if (event.type !== 'text_delta' && event.type !== 'thinking_delta') {
           if (event.type === 'tool_start') {
             sessionLog.info(`tool_start: ${event.toolName} (${event.toolUseId})`)
           } else if (event.type === 'tool_result') {
@@ -7958,8 +7950,16 @@ initialSources: {
     if (this.shuttingDown) return
     const sessionId = event.handle.sessionId
     const managed = this.sessions.get(sessionId)
-    if (!managed) return
+    if (!managed || !this.execution.isCurrent(event.handle)) return
     const reason = event.reason
+    this.flushDelta(sessionId, managed.workspace.id)
+    const partial = takeInterruptedThinking(managed, this.monotonic())
+    if (partial) {
+      managed.messages.push(partial)
+      this.sendEvent({ type: 'text_complete', sessionId, text: partial.content, turnId: partial.turnId, isIntermediate: true,
+        messageId: partial.id, timestamp: partial.timestamp, outputBlocks: partial.outputBlocks }, managed.workspace.id)
+      this.persistSession(managed)
+    }
     managed.lastAccessAt = Date.now()
     this.applyDurableUsageProjection(managed)
     // 1b. Orphan backstop: with the default per-turn subprocess model, any
@@ -9401,6 +9401,10 @@ initialSources: {
     this.notifySessionActivity(sessionId)
 
     switch (event.type) {
+      case 'thinking_delta':
+        rememberThinkingDelta(managed, event)
+        this.queueDelta(sessionId, workspaceId, event.text, event.turnId, { blockIndex: event.blockIndex, complete: event.complete })
+        break
       case 'text_delta':
         managed.streamingText += event.text
         managed.streamingTurnId = event.turnId
@@ -9409,6 +9413,7 @@ initialSources: {
         break
 
       case 'text_discard':
+        clearThinkingStream(managed)
         // Discard, NEVER flush, the failed attempt's batch before announcing
         // backoff. Otherwise a delayed failed token can arrive after retry start.
         this.discardDelta(sessionId, event.turnId)
@@ -9425,6 +9430,7 @@ initialSources: {
         break
 
       case 'text_complete': {
+        clearThinkingStream(managed)
         // Flush any pending deltas before sending complete (ensures renderer has all content)
         this.flushDelta(sessionId, workspaceId)
 
@@ -10347,60 +10353,11 @@ initialSources: {
    * Queue a text delta for batched sending (performance optimization)
    * Instead of sending 50+ IPC events per second, batches deltas and flushes every 50ms
    */
-  private queueDelta(sessionId: string, workspaceId: string, delta: string, turnId?: string): void {
-    const existing = this.pendingDeltas.get(sessionId)
-    if (existing) {
-      // Append to existing batch
-      existing.delta += delta
-      // Keep the latest turnId (should be the same, but just in case)
-      if (turnId) existing.turnId = turnId
-    } else {
-      // Start new batch
-      this.pendingDeltas.set(sessionId, { delta, turnId })
-    }
-
-    // Schedule flush if not already scheduled
-    if (!this.deltaFlushTimers.has(sessionId)) {
-      const timer = setTimeout(() => {
-        this.flushDelta(sessionId, workspaceId)
-      }, DELTA_BATCH_INTERVAL_MS)
-      this.deltaFlushTimers.set(sessionId, timer)
-    }
+  private queueDelta(sessionId: string, workspaceId: string, delta: string, turnId?: string, thinking?: ThinkingDelta): void {
+    this.deltas.queue(sessionId, workspaceId, delta, turnId, thinking)
   }
-
-  /** Remove a failed assistant's unsent batch without affecting another stream. */
-  private discardDelta(sessionId: string, turnId: string): void {
-    if (this.pendingDeltas.get(sessionId)?.turnId !== turnId) return
-    const timer = this.deltaFlushTimers.get(sessionId)
-    if (timer) clearTimeout(timer)
-    this.deltaFlushTimers.delete(sessionId)
-    this.pendingDeltas.delete(sessionId)
-  }
-
-  /**
-   * Flush any pending deltas for a session (sends batched IPC event)
-   * Called on timer or when streaming ends (text_complete)
-   */
-  private flushDelta(sessionId: string, workspaceId: string): void {
-    // Clear the timer
-    const timer = this.deltaFlushTimers.get(sessionId)
-    if (timer) {
-      clearTimeout(timer)
-      this.deltaFlushTimers.delete(sessionId)
-    }
-
-    // Send batched delta if any
-    const pending = this.pendingDeltas.get(sessionId)
-    if (pending && pending.delta) {
-      this.sendEvent({
-        type: 'text_delta',
-        sessionId,
-        delta: pending.delta,
-        turnId: pending.turnId
-      }, workspaceId)
-      this.pendingDeltas.delete(sessionId)
-    }
-  }
+  private discardDelta(sessionId: string, turnId: string): void { this.deltas.discard(sessionId, turnId) }
+  private flushDelta(sessionId: string, _workspaceId: string): void { this.deltas.flush(sessionId) }
 
   /**
    * Execute a prompt automation by creating a new session and sending the prompt.
@@ -10967,11 +10924,7 @@ resources: {
     this.automationSystems.clear()
 
     // Clear all pending delta flush timers
-    for (const [sessionId, timer] of this.deltaFlushTimers) {
-      clearTimeout(timer)
-    }
-    this.deltaFlushTimers.clear()
-    this.pendingDeltas.clear()
+    this.deltas.dispose()
 
     // Clear pending credential resolvers (they won't be resolved, but prevents memory leak)
     this.pendingCredentialResolvers.clear()

@@ -232,12 +232,11 @@ export function getPreviewText(
     return runningTask.toolInput.description as string
   }
 
-  // While still streaming, show the latest intermediate message content
-  // This gives visibility into what the LLM is "thinking"
+  // The collapsed turn previews the latest commentary or reasoning activity.
   if (isStreaming && !isComplete) {
     const latestIntermediate = [...activities]
       .reverse()
-      .find(a => a.type === 'intermediate' && a.content)
+      .find(a => (a.type === 'intermediate' || a.type === 'thinking') && a.content)
     if (latestIntermediate?.content) {
       return latestIntermediate.content
     }

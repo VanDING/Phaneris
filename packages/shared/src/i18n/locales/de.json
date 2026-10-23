@@ -2637,6 +2637,8 @@
   "turnCard.reviewRecovery": "Wiederherstellung prüfen",
   "turnCard.starting": "Starten...",
   "turnCard.stepsCompleted": "Schritte abgeschlossen",
+  "turnCard.thinking": "Denken",
+  "turnCard.viewThinking": "Gedankengang anzeigen",
   "viewer.clearSession": "Sitzung zurücksetzen",
   "webui.connectingToServer": "Verbindung zum Server wird hergestellt...",
   "webui.connectionFailed": "Verbindung fehlgeschlagen",

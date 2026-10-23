@@ -56,13 +56,28 @@ export async function seedConversationFixture(config: string, workspace: string)
     const lastUser = messages.findLastIndex(message => message.role === 'user')
     const user = text(messages[lastUser]?.content ?? '')
     const toolResult = messages.slice(lastUser + 1).some(message => message.role === 'tool')
-    const mode = tools.length === 0 ? 'utility' : user.includes('GOVERNANCE_PERMISSION') ? 'permission'
+    const mode = tools.length === 0 ? 'utility' : user.includes('GOVERNANCE_THINKING_CANCEL') ? 'thinking-cancel' : user.includes('GOVERNANCE_THINKING') ? 'thinking' : user.includes('GOVERNANCE_PERMISSION') ? 'permission'
       : user.includes('GOVERNANCE_PLAN_REQUEST') ? 'plan' : user.includes('GOVERNANCE_CANCEL') ? 'cancel' : 'continuation'
     requests.push({ mode, tools, toolResult })
     const chunk = (delta: unknown, finish: string | null = null) => `data: ${JSON.stringify({ id: `ui-${requests.length}`, object: 'chat.completion.chunk',
       created: 1, model: 'fixture', choices: [{ index: 0, delta, finish_reason: finish }],
       ...(finish ? { usage: { prompt_tokens: 100, completion_tokens: 10, total_tokens: 110 } } : {}) })}\n\n`
     const headers = { 'Content-Type': 'text/event-stream' }
+    if (mode === 'thinking' || mode === 'thinking-cancel') {
+      const encoder = new TextEncoder()
+      return new Response(new ReadableStream({ async start(controller) {
+        try {
+          controller.enqueue(encoder.encode(chunk({ role: 'assistant' })))
+          for (let tick = 0; tick < 30 && !request.signal.aborted; tick++) {
+            controller.enqueue(encoder.encode(chunk({ reasoning_content: tick === 0 ? 'GOVERNANCE_THINKING_CONTENT Inspect the fixture. ' : 'Additional fixture consideration. ' })))
+            await Bun.sleep(100)
+          }
+          while (mode === 'thinking-cancel' && !request.signal.aborted) await Bun.sleep(20)
+          if (!request.signal.aborted) controller.enqueue(encoder.encode(chunk({ content: 'GOVERNANCE_THINKING_DONE' }) + chunk({}, 'stop') + 'data: [DONE]\n\n'))
+          controller.close()
+        } catch { /* Real cancellation closes the controlled connection. */ }
+      } }), { headers })
+    }
     if (mode === 'cancel') {
       let timer: ReturnType<typeof setInterval> | undefined
       const release = () => { if (timer) { clearInterval(timer); streams.delete(timer); timer = undefined } }
