@@ -20,6 +20,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
+Default 主题收敛：[2026-10-23 修复与验证](verification/default-theme-refinement-2026-10-23.md) — 仅保留 Default，统一派生算法、颜色职责与启动/运行时契约；旧配置保留模式和字体，用户主题文件不删除。
+
 Harness 审查与实施：[系统职责及审查结论](architecture/model-facing-harness.md)、[2026-10-22 实施记录](process/model-harness-implementation-2026-10-22.md) — 新分支覆盖调用契约、检索、效果排序、任务连续性和 prompt 组装；保留 skill 显式选用设计，真实模型及原生环境验证限制见记录。
 
 会话迟迟不开始：[2026-10-23 六例现场与分析复核](verification/session-start-latency-review-2026-10-23.md) / [修复与 thinking 活动验证](verification/conversation-start-fix-2026-10-23.md) — 修复活动传输、中文缓冲、截图等待及停止后错误结算；API 对超长思考的归因仍待控制实验。
