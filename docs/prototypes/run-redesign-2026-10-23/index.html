@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Phaneris · Run 界面设计原型</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="prototype-bar">
+    <div class="prototype-label"><strong>Phaneris</strong><span class="bar-divider"></span><span>Run 交互原型</span><span class="sample-label">示例数据</span></div>
+    <div class="prototype-controls">
+      <label class="scenario-label"><span class="sr-only">演示状态</span><select id="scenario"><option value="complete">已完成</option><option value="running">运行中</option><option value="legacy">历史数据</option><option value="empty">空会话</option><option value="error">加载失败</option></select></label>
+      <div class="segmented width-picker" aria-label="预览宽度"><button data-width="wide" aria-pressed="true">宽屏</button><button data-width="panel" aria-pressed="false">面板</button></div>
+      <button id="theme-toggle" class="icon-button" aria-label="切换深色模式"></button>
+      <button id="notes-open" class="quiet-button">设计说明</button>
+    </div>
+  </div>
+  <div class="preview-ground">
+    <div id="workspace" class="workspace" data-width="wide">
+      <header class="run-header">
+        <div class="run-identity"><span id="run-icon" class="run-mark"></span><strong>Run</strong><span class="header-slash">/</span><span class="session-name">优化会话启动延迟</span></div>
+        <span class="session-link">Phaneris <span class="header-slash">/</span> 本地会话</span>
+        <span id="run-state"></span>
+      </header>
+      <nav class="run-tabs" aria-label="Run 视图" role="tablist">
+        <button role="tab" id="tab-overview" data-tab="overview" aria-selected="true" aria-controls="main-view">Overview<span>总览</span></button>
+        <button role="tab" id="tab-trajectory" data-tab="trajectory" title="Trajectory 保留现有界面，原型展示已有截图" aria-selected="false" aria-controls="main-view">Trajectory</button>
+        <button role="tab" id="tab-decisions" data-tab="decisions" aria-selected="false" aria-controls="main-view">Decision<span>决策</span></button>
+        <button role="tab" id="tab-context" data-tab="context" aria-selected="false" aria-controls="main-view">Context<span>上下文</span></button>
+        <button role="tab" disabled title="Map 本轮保持现状，不包含在原型中" aria-selected="false">Map</button>
+        <span class="tabs-tail" id="header-status"></span>
+      </nav>
+      <main id="main-view" role="tabpanel" aria-labelledby="tab-overview" tabindex="-1"></main>
+      <footer class="run-footer"><span><i class="small-dot"></i>本地示例会话 · 2026-10-23 00:42</span><span>仅用于设计评审</span></footer>
+    </div>
+  </div>
+  <dialog id="design-notes" class="notes-dialog" aria-labelledby="notes-title">
+    <div class="notes-head"><h2 id="notes-title">这版设计的取舍</h2><button id="notes-close" class="icon-button" aria-label="关闭设计说明"></button></div>
+    <div class="notes-body">
+      <p class="notes-intro">用同一套视觉语言，让三个视图分别回答一个问题。</p>
+      <p>各视图直接呈现内容，不另设重复的页面标题和引导说明。运行状态统一放在 Run 顶栏，请求选择放在请求历史卡片内。Decision 统计只读，筛选集中在事项卡片的两个下拉框；导出不纳入本轮。</p>
+      <dl class="design-principles"><div><dt>Overview</dt><dd>运行结果与异常先出现；诊断摘要、环境和计量口径均以常驻卡片呈现，活动形态链接至 Trajectory。</dd></div><div><dt>Context</dt><dd>请求历史保持原样；下方使用与参考截图一致的分类折叠列表，同时显示条目数、token、占比和变化，展开后就地阅读。</dd></div><div><dt>Decision</dt><dd>沿用 Overview 的卡片结构：结果分布、功能统计和事项列表。处理证据在记录下方展开。</dd></div></dl>
+      <h3>吸收 DSH-CONTEXT 的部分</h3>
+      <ul><li>分类颜色贯穿组成、趋势、浏览器，颜色不承担运行状态。</li><li>请求级趋势与具体内容联动；累计与增量切换。</li><li>总量与组成分开说明，保留估算、未知、历史缺口。</li><li>参考附件的分类折叠列表与变化徽标，保留工具参数、状态与结果原文。</li></ul>
+      <h3>原型与现有能力的边界</h3>
+      <p>所有数字与内容都是固定示例，不读取真实会话。工具定义、工具结果、技能注入拆分为独立类别，以及请求差异和上下文事件联动，是拟议交互，实施前需要补齐或核实数据投影。</p>
+      <p>分类 token 为估算；供应商 input token 是独立计量，不能把分类估算当作官方精确分项。费用保留未知请求数。决策事项数与模型请求数分开，不用建议推断实际生效，也不把历史缺失视为零。</p>
+      <p>Decision 使用现有支持的结果、功能筛选，未放入会在分页中漏项的本地全文搜索。Context 和 Decision 在窄面板均就地展开，保持宽窄屏的阅读逻辑一致。</p>
+      <h3>评审范围</h3>
+      <p>Overview、Context、Decision。Trajectory 与 Map 保留导航位置，本次不重设计。浅色、深色、宽屏、窄面板和缺失数据状态均可在顶部切换。</p>
+      <p class="source-note">参考：<a href="https://github.com/bowenliang123/dsh-context" target="_blank" rel="noreferrer">DSH-CONTEXT</a> 的 README、页面截图、分类模型及样式。该项目采用 Apache-2.0；此原型自行编写，未复制其组件源码。</p>
+    </div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
