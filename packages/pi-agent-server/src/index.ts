@@ -11,6 +11,8 @@ import { ToolExecutionScheduler, toolExecutionResources } from './tool-execution
 import { createContextPolicyStream, type HandoffSignal } from './context-policy-stream'
 import { isContextPolicy, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import { prepareRequestDiagnostics } from './request-diagnostics.ts';
+import { prepareToolResultView, readCapture, readFileWithEvidence } from './tool-result-view.ts';
+import { access as accessReadFile } from 'node:fs/promises';
 /**
  * Pi Agent Server
  *
@@ -41,6 +43,7 @@ import {
   ModelRegistry as PiModelRegistry,
   ModelRuntime,
   createReadToolDefinition,
+  detectSupportedImageMimeTypeFromFile,
   createBashToolDefinition,
   createPowerShellToolDefinition,
   createEditToolDefinition,
@@ -61,7 +64,8 @@ import { HostCredentialStore } from './host-credential-store.ts';
 import { normalizePiProvider } from '@phaneris/shared/config/pi-provider-compat';
 
 // Pi AI types
-import type { TextContent as PiTextContent } from '@earendil-works/pi-ai';
+import type { TextContent as PiTextContent, ImageContent as PiImageContent } from '@earendil-works/pi-ai';
+import { getCurrentTools } from '@earendil-works/pi-ai';
 
 import { registerPiSdkRuntime } from './sdk-registration.ts';
 import type { StreamFn } from '@earendil-works/pi-agent-core';
@@ -139,7 +143,7 @@ import {
 } from './length-continuation.ts';
 
 // Direct source imports from shared (bundled by bun build)
-import { handleLargeResponse, estimateTokens, tokenLimitFor, setLargeResultFilter } from '@phaneris/shared/utils/large-response';
+import { setLargeResultFilter } from '@phaneris/shared/utils/large-response';
 import { getSessionPlansPath, getSessionPath } from '@phaneris/shared/sessions/paths';
 import { buildCallLlmRequest } from '@phaneris/shared/agent/llm-tool';
 import type { LLMQueryRequest, LLMQueryResult } from '@phaneris/shared/agent/llm-tool';
@@ -151,7 +155,7 @@ import { CompactionThresholdController } from './compaction-threshold.ts';
 import { isCompactionThreshold } from '@phaneris/shared/agent/compaction-threshold';
 import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
-import { allowPhanerisMetadataProperties, stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
+import { stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
 import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSystemPrompt } from './phaneris-resource-loader.ts';
 import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { readContextUsage, deferContextUsage } from './context-usage.ts';
@@ -218,7 +222,6 @@ function nextLocalEphemeralQueryId(source: string): string {
 let initConfig: Extract<InboundMessage, { type: 'init' }> | null = null;
 
 // Mutable state
-let currentUserMessage = '';
 let currentDurableRunOperationId: string | undefined;
 let currentDurableTurnId: string | undefined;
 let lastCanonicalContextCursor = 0;
@@ -262,9 +265,19 @@ const pendingDurableModelPrepares = new PendingReplies<{ ok: boolean; prepared?:
 const pendingDurableModelOutcomes = new PendingReplies<{ ok: boolean; committedSeq?: number; reason?: string }>();
 const durableToolAccounting = new DurableToolAccounting();
 const toolExecutionScheduler = new ToolExecutionScheduler();
+const toolResultBudgets = new Map<string, number>();
 
 function rememberDurableToolBatch(message: AssistantMessage, toolBatchId: string): void {
-  durableToolAccounting.rememberBatch(message.content.filter(part => part.type === 'toolCall'), toolBatchId);
+  const calls = message.content.filter(part => part.type === 'toolCall');
+  durableToolAccounting.rememberBatch(calls, toolBatchId);
+  const active = sessionLifecycle.current;
+  const model = active?.model;
+  const window = model?.contextWindow ?? 131072;
+  const used = active?.getContextUsage()?.tokens ?? window / 2;
+  // A conservative character allocation is deterministic and independent of completion order.
+  const available = Math.max(0, window - used - Math.max(model?.maxTokens ?? 8192, 8192));
+  const each = Math.min(256000, Math.floor(available / Math.max(1, calls.length)));
+  for (const call of calls) toolResultBudgets.set(call.id, each);
 }
 
 // Pending session MCP tool calls for completion detection
@@ -361,8 +374,8 @@ const transport = createJsonlTransport<OutboundMessage>();
 const send = transport.send;
 const debugLog = transport.debug;
 
-// Large tool results (decision model, toggle `largeResults`): handleLargeResponse asks the
-// main process whether a summary is needed before summarizing.
+// Retain the legacy filter transport for explicit compatibility callers.
+// Main tool results use the deterministic evidence view, never this semantic gate.
 const largeResultFilter = createLargeResultFilterClient(send);
 setLargeResultFilter(largeResultFilter.filter);
 
@@ -675,7 +688,12 @@ async function createSession(): Promise<AgentSession> {
   //   - Do NOT pass tool *objects* to `tools` — `allowedToolNames = new Set(options.tools)`
   //     then `.has(name)` returns false for every string lookup → zero tools active.
   const builtinDefs = [
-    createReadToolDefinition(cwd),
+    createReadToolDefinition(cwd, { operations: { readFile: readFileWithEvidence, access: accessReadFile, detectImageMimeType: async path => {
+      const mime = await detectSupportedImageMimeTypeFromFile(path);
+      const capture = readCapture.getStore();
+      if (capture) capture.image = !!mime;
+      return mime;
+    } } }),
     process.platform === 'win32'
       ? createPowerShellToolDefinition(cwd)
       : createBashToolDefinition(cwd),
@@ -712,6 +730,7 @@ async function createSession(): Promise<AgentSession> {
     resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), settingsManager: mainSettings, observeLifecycle: observeSdkLifecycle,
       installCompaction: pi => compactionController.install(pi),
       wrapOrchestrationTool: wrapSingleTool,
+      productTools: () => proxyToolDefs,
       gateToolCall: async (toolName, input, toolCallId) => { await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true); } }),
     settingsManager: mainSettings,
   };
@@ -787,7 +806,8 @@ async function createSession(): Promise<AgentSession> {
     session.dispose();
     throw new Error('Pi resumed a different model or provider than the configured connection; reselect the model before continuing.');
   }
-  session.setActiveToolsByName([...catalog.activeNames]);
+  const restoredToolNames = getCurrentTools(session.sessionManager.buildSessionContext().messages).map(tool => tool.name);
+  session.setActiveToolsByName([...new Set([...catalog.activeNames, ...restoredToolNames])]);
   // Ordinary requests keep their existing boundary. SDK background refreshes
   // use a distinct boundary and never publish assistant/tool output.
   const sessionStream = installCacheWarmingAccounting(
@@ -1051,7 +1071,7 @@ function wrapToolsWithHooks(tools: ToolDefinition<any, any>[]): ToolDefinition<a
 
 function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any> {
   const originalExecute = tool.execute;
-  const parameters = allowPhanerisMetadataProperties(tool.parameters);
+  const parameters = tool.parameters;
 
   const wrappedExecute: ToolDefinition<any, any>['execute'] = async (
     toolCallId,
@@ -1067,8 +1087,6 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     return toolExecutionScheduler.run(resources, signal, async () => {
       let inputObj: Record<string, unknown> = { ...(params as Record<string, unknown>) };
 
-      // Extract intent before main process strips metadata (used for summarization)
-      const intent = typeof inputObj._intent === 'string' ? inputObj._intent : undefined;
 
       // Normalize Pi SDK parameter names: path → file_path
       if ((sdkToolName === 'Write' || sdkToolName === 'Edit' || sdkToolName === 'MultiEdit' || sdkToolName === 'NotebookEdit')
@@ -1087,14 +1105,31 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
       // upstream Pi tool implementation always receives clean executable args,
       // even if a future pre-tool-use path returns `allow` without modification.
       inputObj = stripPhanerisMetadata(inputObj);
+      if (['Write', 'Edit', 'MultiEdit', 'NotebookEdit'].includes(sdkToolName) && typeof inputObj.file_path === 'string') {
+        inputObj.path = inputObj.file_path;
+      }
+      const approvedResources = toolExecutionResources(tool.name, inputObj,
+        initConfig?.workingDirectory || initConfig?.workspaceRootPath || process.cwd(),
+        tool.name.startsWith('mcp__session__') && proxyToolDefs.some(def => def.name === tool.name && def.readOnly === true));
+      if (JSON.stringify(approvedResources) !== JSON.stringify(resources)) {
+        throw new Error(`Execution target changed during preflight; operation not dispatched. Retry using the approved target ${String(inputObj.path ?? inputObj.file_path ?? '')}.`);
+      }
       signal?.throwIfAborted();
 
+      if ((toolResultBudgets.get(toolCallId) ?? 1000) < 1000) throw new Error('Insufficient context for this tool batch; operation not dispatched. Compact or reduce the batch before retrying.');
+
       // T1 must commit after preflight and before the implementation is allowed to run.
+      if (sdkToolName === 'Read') for (const key of ['offset', 'limit']) {
+        if (inputObj[key] !== undefined && (!Number.isSafeInteger(inputObj[key]) || Number(inputObj[key]) < 1)) {
+          throw new Error(`Read ${key} must be a positive integer; operation not dispatched.`);
+        }
+      }
       const durable = await requestDurableToolPrepare(sdkToolName, inputObj, toolCallId);
 
       // Execute original tool with (potentially modified) input. T2 commits before
       // the result is returned to Pi, so the next model request cannot outrun durability.
       let result: AgentToolResult<any>;
+      const capturedRead: { path?: string; buffer?: Buffer } = {};
       try {
         const durableTool: DurableToolExecutionIdentity = {
           operationId: durable.operationId,
@@ -1107,7 +1142,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         };
         const executionContext = attachDurableToolContext(ctx, durableTool) as typeof ctx;
         signal?.throwIfAborted();
-        result = await originalExecute(toolCallId, inputObj, signal, onUpdate, executionContext);
+        result = await readCapture.run(capturedRead, () => originalExecute(toolCallId, inputObj, signal, onUpdate, executionContext));
       } catch (error) {
         // An aborted proxy may still be executing in the host/provider. Leave T1
         // pending for reconciliation rather than assert an unobserved T2 failure.
@@ -1121,7 +1156,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         );
         throw error;
       }
-      // --- Post-execute: large response summarization ---
+      // --- Post-execute: deterministic model view and original evidence ---
 
       const resultText = result.content
         .filter((c): c is PiTextContent => c.type === 'text')
@@ -1142,43 +1177,12 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         throw new Error(resultText || `${sdkToolName} failed`);
       }
 
-      // Source the active model's contextWindow each call so the threshold
-      // tracks set_model mid-session, not the model that was active at session
-      // creation. Falls back to the fixed default when the model isn't set yet.
-      const modelContextWindow = sessionLifecycle.current?.agent.state.model?.contextWindow;
-      if (estimateTokens(resultText) > tokenLimitFor(modelContextWindow) && initConfig) {
-        try {
-          const sessionPath = getSessionPath(
-            initConfig.workspaceRootPath,
-            initConfig.sessionId,
-          );
-
-          const largeResult = await handleLargeResponse({
-            text: resultText,
-            sessionPath,
-            context: {
-              toolName: sdkToolName,
-              input: inputObj,
-              intent,
-              userRequest: currentUserMessage,
-            },
-            summarize: runMiniCompletion,
-            contextWindow: modelContextWindow,
-            signal,
-          });
-
-          if (largeResult) {
-            result = {
-              ...result,
-              content: [{ type: 'text', text: largeResult.message }],
-              details: result.details,
-            };
-          }
-        } catch (error) {
-          debugLog(
-            `Large response handling failed: ${error instanceof Error ? error.message : String(error)}`,
-          );
-        }
+      // The batch reservation uses the active model and SDK occupancy at dispatch.
+      if (initConfig) {
+        result = await prepareToolResultView({ result, toolName: sdkToolName, input: inputObj,
+          sessionPath: getSessionPath(initConfig.workspaceRootPath, initConfig.sessionId),
+          budgetChars: toolResultBudgets.get(toolCallId) ?? 48_000, capture: capturedRead,
+          supportsImages: sessionLifecycle.current?.model?.input.includes('image') }) as AgentToolResult<any>;
       }
 
       // Commit exactly the representation Pi will append to model context.
@@ -1193,12 +1197,14 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
       // abort synchronously so no follow-up model request outruns the UI pause.
       if (handsControlToUI(sdkToolName) && result.details?.continuation === 'await_user') sessionLifecycle.current?.agent.abort();
       return result;
-    });
+    }).finally(() => { toolResultBudgets.delete(toolCallId); });
   };
 
   return {
     ...tool,
     parameters,
+    // Accept legacy UI-only keys without advertising them in new model schemas.
+    prepareArguments: args => stripPhanerisMetadata(tool.prepareArguments ? tool.prepareArguments(args) : args),
     // The SDK makes a batch containing a potential UI handoff sequential. Its
     // loop stops after a confirmed wait, before later calls acquire T1.
     executionMode: handsControlToUI(tool.name) ? 'sequential' : tool.executionMode,
@@ -1295,7 +1301,8 @@ function proxyResultToSdk(def: ProxyToolDef, result: PiProxyToolResult): AgentTo
     ...(result.structuredContent !== undefined ? { structuredContent: result.structuredContent } : {}),
   } : result.structuredContent;
   return {
-    content: [{ type: 'text', text: result.content }],
+    content: result.contentBlocks?.length ? result.contentBlocks.map(block => block.type === 'text' || block.type === 'image'
+      ? block as unknown as PiTextContent | PiImageContent : { type: 'text' as const, text: JSON.stringify(block) }) : [{ type: 'text', text: result.content }],
     details: result.continuation ? { continuation: result.continuation } : undefined,
     // The JSONL transport has already validated JSON serializability.
     ...(structured !== undefined ? { structuredContent: structured as AgentToolResult<any>['structuredContent'] } : {}),
@@ -1625,7 +1632,6 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
 async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): Promise<void> {
   let received = false;
   lengthContinuationTracker.reset();
-  currentUserMessage = msg.message;
   durableToolAccounting.resetBatches();
   currentDurableRunOperationId = msg.durableRunOperationId;
   currentDurableTurnId = msg.durableTurnId ?? msg.id;

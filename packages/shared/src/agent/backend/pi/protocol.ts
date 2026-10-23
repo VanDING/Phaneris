@@ -22,7 +22,8 @@ export interface PiProxyToolDefinition {
   inputSchema: Record<string, unknown>;
   outputSchema?: Record<string, unknown>;
   exposure?: 'direct' | 'deferred' | 'codemode' | 'hidden' | 'model-only';
-  namespace?: { name: string; description?: string; instructions?: string };
+  namespace?: { name: string; description?: string; instructions?: string; aliases?: readonly string[] };
+  availability?: { status: 'ready' | 'unsupported'; reason?: string };
   annotations?: { readOnlyHint?: boolean; destructiveHint?: boolean; idempotentHint?: boolean; openWorldHint?: boolean };
 }
 
@@ -51,8 +52,8 @@ export interface PiCompactResult extends PiContextUsagePayload {
 }
 
 /**
- * Subprocess → main: should this large tool result be summarized? The decision
- * layer lives in the main process (decision model, toggle `largeResults`).
+ * Legacy compatibility transport for explicit large-result helpers.
+ * Main tool results no longer use this automatic semantic gate.
  */
 export interface PiLargeResultGateRequest {
   type: 'large_result_gate_request';

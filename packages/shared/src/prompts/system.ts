@@ -19,6 +19,18 @@ import {
 } from './prompt-sanitize.ts';
 import { findGitRepositoryRoot } from './developer-context.ts';
 import { buildAssistantPromptModules, type CompiledSystemPrompt, type PromptSection } from './assistant-prompt.ts';
+import { buildCapabilityGuidance } from './capability-guidance.ts';
+
+function assistantFacts(workspaceRootPath?: string, backendName?: string) {
+  return { workspacePath: workspaceRootPath || `${APP_ROOT}/workspaces/{id}`, backendName: backendName ?? 'Phaneris Backend',
+    platform: process.platform, browserTools: getBrowserToolEnabled(), managedConfiguration: FEATURE_FLAGS.phanerisCli,
+    developerFeedback: FEATURE_FLAGS.developerFeedback, decideTool: isDecisionFeatureActive('decideTool'), docs: DOC_REFS, permissionModes: PERMISSION_MODE_CONFIG };
+}
+
+/** Same canonical workflow corpus as the resident compiler; no preferences or skill enumeration. */
+export function getCapabilityPromptSections(workspaceRootPath?: string): PromptSection[] {
+  return buildCapabilityGuidance(assistantFacts(workspaceRootPath));
+}
 
 /** Maximum size of CLAUDE.md file to include (10KB) */
 const MAX_CONTEXT_FILE_SIZE = 10 * 1024;
@@ -445,11 +457,7 @@ export function compileSystemPrompt(options: SystemPromptOptions = {}): Compiled
   // to enable prompt caching. The system prompt stays static and cacheable.
   // Safe Mode context is also in user messages for the same reason.
   const sections: PromptSection[] = [
-    ...buildAssistantPromptModules({ workspacePath: workspaceRootPath || `${APP_ROOT}/workspaces/{id}`,
-      backendName: backendName ?? 'Phaneris Backend', platform: process.platform,
-      browserTools: getBrowserToolEnabled(), managedConfiguration: FEATURE_FLAGS.phanerisCli,
-      developerFeedback: FEATURE_FLAGS.developerFeedback, decideTool: isDecisionFeatureActive('decideTool'),
-      docs: DOC_REFS, permissionModes: PERMISSION_MODE_CONFIG }),
+    ...buildAssistantPromptModules(assistantFacts(workspaceRootPath, backendName)),
     { id: 'preferences', source: 'user-preferences', content: preferences },
     { id: 'project', source: 'project-context', content: projectBlock },
     { id: 'debug', source: 'runtime-debug', content: debugContext },

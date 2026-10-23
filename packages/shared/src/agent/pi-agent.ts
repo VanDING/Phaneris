@@ -119,6 +119,7 @@ import { attachSessionSelfManagementBindings } from './session-self-management-b
 
 // Session tool proxy definitions (for registering with subprocess)
 import { getSessionToolProxyDefs, SESSION_TOOL_NAMES, type SessionToolProxyDef } from './backend/pi/session-tool-defs.ts';
+import type { PrerequisiteManager } from './core/prerequisite-manager.ts';
 
 // Session tool registry (for executing proxy tool calls)
 import {
@@ -462,11 +463,13 @@ export class PiAgent extends BaseAgent {
   private pendingLargeResultFilters = new Map<string, AbortController>();
   private pendingBashReads = new Map<string, string>();
   private pendingFileReads = new Map<string, Record<string, unknown>>();
+  private pendingReadDeliveries: Array<Parameters<PrerequisiteManager['trackReadTool']>> = [];
   private pendingSourceDelivery: (() => void) | null = null;
 
   private clearPendingReads(): void {
     this.pendingBashReads.clear();
     this.pendingFileReads.clear();
+    this.pendingReadDeliveries = [];
     this.pendingSourceDelivery = null;
   }
 
@@ -801,7 +804,7 @@ export class PiAgent extends BaseAgent {
     // These tools (SubmitPlan, config_validate, source auth, call_llm, etc.)
     // are executed in the main process when the LLM calls them.
     this.assertBackendSessionToolParity();
-    let sessionToolDefs = getSessionToolProxyDefs();
+    let sessionToolDefs = getSessionToolProxyDefs(this.config.workspace.rootPath);
 
     // Patch call_llm description with provider-specific model hint
     if (this.config.miniModel) {
@@ -1451,6 +1454,13 @@ export class PiAgent extends BaseAgent {
 
     // Detect session MCP tool completions (same pattern as in-process version)
     const eventType = event.type as string;
+    const response = event.message as { role?: string; stopReason?: string } | undefined;
+    // Pi also emits message_start for requests that fail before any response.
+    // A completed non-error response confirms delivery before its next tool call.
+    if (eventType === 'message_end' && response?.role === 'assistant'
+      && response.stopReason !== 'error' && response.stopReason !== 'aborted') {
+      for (const args of this.pendingReadDeliveries.splice(0)) this.prerequisiteManager.trackReadTool(...args);
+    }
     // Manual /compact uses an RPC-owned generator rather than the event queue.
     // Its SDK end arrives before compact_result; only the correlated response
     // may report success (including after a timeout/stop discarded the request).
@@ -1518,7 +1528,10 @@ export class PiAgent extends BaseAgent {
       if (agentEvent.type === 'tool_result') {
         const fileRead = this.pendingFileReads.get(agentEvent.toolUseId);
         this.pendingFileReads.delete(agentEvent.toolUseId);
-        if (!agentEvent.isError && fileRead) this.prerequisiteManager.trackReadTool(fileRead, typeof agentEvent.result === 'string' ? agentEvent.result : undefined);
+        if (!agentEvent.isError && fileRead) {
+          const provenance = (event.result as { details?: { phanerisResult?: Parameters<PrerequisiteManager['trackReadTool']>[2] } } | undefined)?.details?.phanerisResult;
+          this.pendingReadDeliveries.push([fileRead, typeof agentEvent.result === 'string' ? agentEvent.result : '', provenance]);
+        }
         const command = this.pendingBashReads.get(agentEvent.toolUseId);
         this.pendingBashReads.delete(agentEvent.toolUseId);
         if (!agentEvent.isError && command) this.prerequisiteManager.trackSuccessfulBashRead(command);

@@ -4,6 +4,8 @@ Status: accepted — implementation baseline on the working branch; merge and re
 
 日期：2026-10-22。状态：已在 `codex/model-harness-implementation` 实施并进行本地验证，未合并或发布。逐批证据与未验证范围见[实施记录](../process/model-harness-implementation-2026-10-22.md)。
 
+2026-10-23 的能力契约与条件指导增量见[后续实施记录](../process/harness-capability-implementation-2026-10-23.md)；下文保留本基线的历史范围与验证事实。
+
 本次范围包括 system prompt 的设计与组装、工具定义/检索/权限/执行、计划与任务连续性，以及 skills、sources、plugins。评判原则是：**harness 应提供模型无法可靠推断的事实、能力接口和执行保障，使模型更好地完成用户目标。** 不把每个任务变成固定流程，不以辅助模型回答代替授权，也不因增加规则而宣布质量提高。
 
 ## 材料与证据边界

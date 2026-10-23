@@ -327,6 +327,7 @@ export function createApiTool(
             intent: _intent,
             signal,
             summarize,
+            deferTextProjection: true,
           });
           if (guarded) {
             return { content: [{ type: 'text' as const, text: guarded }] };

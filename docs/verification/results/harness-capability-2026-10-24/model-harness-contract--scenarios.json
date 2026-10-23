@@ -1,0 +1,90 @@
+{
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-harness-rvrkjk",
+  "scope": "Real permission functions and session handlers; synthetic host and tool catalog; no model inference",
+  "results": [
+    {
+      "id": "explore:mcp__session__web_search",
+      "passed": true
+    },
+    {
+      "id": "ask:mcp__session__web_search",
+      "passed": true
+    },
+    {
+      "id": "explore:mcp__session__web_fetch",
+      "passed": true
+    },
+    {
+      "id": "ask:mcp__session__web_fetch",
+      "passed": true
+    },
+    {
+      "id": "unknown-tool-is-not-silently-safe",
+      "passed": true
+    },
+    {
+      "id": "source-suffix-does-not-inherit-internal-permission",
+      "passed": true
+    },
+    {
+      "id": "source-browser-suffix-does-not-inherit-internal-permission",
+      "passed": true
+    },
+    {
+      "id": "llm-schema-only-advertises-supported-arguments",
+      "passed": true
+    },
+    {
+      "id": "submit-plan-waits-for-host",
+      "passed": true
+    },
+    {
+      "id": "submit-plan-host-failure-is-tool-error",
+      "passed": true
+    },
+    {
+      "id": "silent-oauth-continues-without-ui",
+      "passed": true
+    },
+    {
+      "id": "interactive-oauth-reports-ui-wait",
+      "passed": true
+    },
+    {
+      "id": "multilingual-discovery-and-loaded-tools",
+      "passed": true
+    },
+    {
+      "id": "source-format-is-observational-and-latest-state-is-authoritative",
+      "passed": true
+    },
+    {
+      "id": "partial-skill-read-does-not-clear-prerequisite",
+      "passed": true
+    },
+    {
+      "id": "sdk-truncated-skill-read-does-not-clear-prerequisite",
+      "passed": true
+    },
+    {
+      "id": "skill-catalog-invalidates-on-watcher-event",
+      "passed": true
+    },
+    {
+      "id": "plan-approval-binds-rendered-version-and-rejects-stale-path",
+      "passed": true
+    },
+    {
+      "id": "recovery-retains-original-goal-and-accepted-scope",
+      "passed": true
+    },
+    {
+      "id": "plugin-context-declares-version-and-authority",
+      "passed": true
+    },
+    {
+      "id": "prompt-language-uses-persisted-preference-before-i18n-hydration",
+      "passed": true
+    }
+  ]
+}

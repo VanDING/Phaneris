@@ -1,0 +1,2 @@
+$ bun run scripts/check-i18n-dead-keys.ts
+i18n dead keys OK (2748 en keys, all referenced)

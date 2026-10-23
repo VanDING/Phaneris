@@ -47,11 +47,11 @@ export interface DecisionLayerFeatureToggles {
   smartTitles: boolean;
   /** Lower the thinking level for a simple turn (never above the session's). */
   adaptiveThinking: boolean;
-  /** Mid-turn messages: steer corrections, queue follow-ups, merge queued continuations. */
+  /** Retained on disk for compatibility; automatic input reclassification is retired. */
   midTurnMessages: boolean;
-  /** Skip the summary of a large tool result when the preview and saved file are enough. */
+  /** Retained on disk for compatibility; automatic evidence filtering is retired. */
   largeResults: boolean;
-  /** Point the agent at a skill or inactive source the user's message plainly needs. */
+  /** Non-blocking UI recommendations; never silently activate a skill/source. */
   suggestions: boolean;
 }
 

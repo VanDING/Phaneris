@@ -52,6 +52,11 @@ export function prepareRequestDiagnostics(model: Model<any>, context: Transcript
       capturedAt: Date.now(),
       provider: model.provider,
       model: model.id,
+      modelCapabilities: { contextWindow: model.contextWindow, maxTokens: model.maxTokens, input: model.input },
+      resultViews: conversation.filter(message => message.role === 'toolResult').flatMap(message => {
+        const provenance = (message as unknown as { details?: { phanerisResult?: { modelView?: { sha256: string }; coverage?: unknown } } }).details?.phanerisResult;
+        return provenance ? [{ toolCallId: message.toolCallId, viewHash: provenance.modelView?.sha256, coverage: provenance.coverage }] : [];
+      }),
       system: digest(JSON.stringify(systemPrompt)),
       messages,
       tools: tools.map(tool => {

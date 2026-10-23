@@ -533,6 +533,7 @@ export class McpClientPool {
           intent: options?.intent,
           signal: options?.signal,
           summarize: this.summarizeCallback,
+          deferTextProjection: true,
         });
         if (guarded) {
           return { content: guarded, isError: false, ...fullResult };
@@ -714,6 +715,7 @@ export class McpClientPool {
       input,
       intent,
       summarize: this.summarizeCallback,
+      deferTextProjection: true,
     });
     return guarded ?? text;
   }

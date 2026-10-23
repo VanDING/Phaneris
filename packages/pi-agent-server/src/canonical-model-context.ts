@@ -64,11 +64,17 @@ export function canonicalContextToPiMessages(
       }
       continue;
     }
+    const result = item.result && typeof item.result === 'object' ? item.result as { content?: unknown[]; structuredContent?: unknown; details?: unknown } : undefined;
+    const blocks = result?.content;
+    const modelBlocks = Array.isArray(blocks) && blocks.every(b => b && typeof b === 'object' && ['text', 'image'].includes((b as { type: string }).type))
+      ? blocks as Array<{ type: 'text'; text: string } | { type: 'image'; data: string; mimeType: string }> : undefined;
     messages.push({
       role: 'toolResult',
       toolCallId: item.toolCallId,
       toolName: item.toolName,
-      content: [{ type: 'text', text: resultText(item.result) }],
+      content: modelBlocks ?? [{ type: 'text', text: resultText(item.result) }],
+      ...(result?.structuredContent !== undefined ? { structuredContent: result.structuredContent } : {}),
+      ...(result?.details !== undefined ? { details: result.details as Extract<AgentMessage, { role: 'toolResult' }>['details'] } : {}),
       isError: item.isError,
       timestamp: item.seq,
     });

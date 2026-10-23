@@ -1123,8 +1123,8 @@ export default function AiSettingsPage() {
                                     label={label}
                                     description={description}
                                     tooltip={tooltip}
-                                    checked={decisionStatus.settings.features[feature] ?? false}
-                                    disabled={savingDecisions}
+                                    checked={feature === 'midTurnMessages' || feature === 'largeResults' ? false : decisionStatus.settings.features[feature] ?? false}
+                                    disabled={savingDecisions || feature === 'midTurnMessages' || feature === 'largeResults'}
                                     onCheckedChange={(checked) => { void updateDecisionSettings({ features: { [feature]: checked } }) }}
                                   />
                                 ))}

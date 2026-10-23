@@ -42,7 +42,7 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 - `PiAgent` 将会话工具与 source 工具合并为完整集合，通过 `sync_tools` 同步。
 - 首轮请求等待同一个完整初始化 promise，完成策略、压缩设置和工具同步后才进入；退出、销毁及超时会结束等待。
 - 工具时长优先保留 SDK 的有效 `durationMs`，旧记录兼容墙钟差值；它可能包含审批和宿主往返，不作为纯命令执行耗时。
-- 大结果先完整保存，再在用户开关下按全结果分块摘取；失败、缺答案或无有效裁剪时沿用摘要/预览，完整结构化值与执行事实保留。
+- 结果区分原始工具返回、源材料范围、模型视图和程序值。未受控长文本使用可恢复的确定性预览；Read 保留精确范围与版本，避免自动语义摘要。非文本块与结构化值保留；T2 提交实际交付视图及来源元数据。
 - 相同定义不会重复同步；新增、删除或 schema 变化才会让 Pi 会话在下一轮重建。
 - source runtime 在 `SessionManager` 中缓存，并只对同一个 agent 实例应用一次。
 - 浏览器工具开关会推送给所有存活的 Pi 子进程；忙碌会话在下一轮安全刷新，不中断当前工作。
@@ -69,9 +69,9 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 
 ## 请求上下文与系统提示
 
-- provider 请求上下文是 Pi 归一化后的 transcript：系统提示与工具声明位于 system 消息内，指令与工具变化以 section 增量补丁下发。Phaneris 覆盖整个 prompt：loader 的 `systemPromptOverride` 提供基础 prompt，内联 extension 的 `before_agent_start` 把它作为 forced prompt 返回，SDK 将其投影为请求头部的 system 消息。不再改写 SDK 私有字段（`state.systemPrompt` / `_baseSystemPrompt` / `_rebuildSystemPrompt`），因为 `agent.state.systemPrompt` 自 0.86.0 起只读，且替换 `_rebuildSystemPrompt` 会让 prompt/tool section 增量与实际请求脱节。
+- provider 请求上下文是 Pi 归一化后的 transcript：系统提示与工具声明位于 system 消息内，指令与工具变化以 section 增量补丁下发。loader 的 `systemPromptOverride` 提供 Phaneris 基础 prompt；主会话在公开 `before_agent_start` 的结构化选项中设置 `customPrompt`，并在 `context_with_system` 同步活跃能力指导。这样保留产品身份、SDK 的 cwd 事实与工具声明，不引入默认 coding prompt，也避免 forced prompt 清除动态 sections。独立 utility 请求仍可使用完整 forced prompt。禁止改写 SDK 私有字段。
 - 请求诊断从 transcript 回放当前 prompt 与工具声明（`getCurrentSystemPrompt` / `getCurrentTools`），因此 `canonicalRequestHash` 与 manifest 不依赖 SDK 的传输形式；conversation 消息只统计 system 消息之外的条目，避免提示与工具被重复计数。请求期 prompt 快照读取 provider 实际收到的 Phaneris prompt，不读取 SDK 结构化 base prompt 的渲染结果（其中含 SDK 自带的 `<cwd>` section）。
-- canonical context 恢复（`canonicalContextToPiMessages`）写回的 transcript 不含 system 消息；forced prompt 投影保证恢复后的请求仍带完整 system prompt。工具调用参数按 JSON 值建模（`DurableJsonObject`），与 SDK 的 `ToolCall.arguments` 约束一致。
+- canonical context 恢复（`canonicalContextToPiMessages`）写回的 transcript 不含 system 消息；公开 prompt/loadout 组装保证恢复后的请求重新携带产品契约与工具指导。工具调用参数按 JSON 值建模（`DurableJsonObject`），与 SDK 的 `ToolCall.arguments` 约束一致。
 
 ## 提示缓存与预热
 

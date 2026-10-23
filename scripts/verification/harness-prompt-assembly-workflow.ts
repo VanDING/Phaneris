@@ -46,7 +46,7 @@ await verificationWorkflow('harness-prompt-assembly', async run => {
     const baseline = JSON.parse(readFileSync(join(import.meta.dir, 'fixtures/harness-prompt-baseline.json'), 'utf8'))
     const matrix = baseline.cases.map((item: any) => {
       const sections = buildAssistantPromptModules({ workspacePath: '/workspace/harness', backendName: 'Fixture Backend',
-        platform: item.platform, browserTools: item.browser, managedConfiguration: item.cli,
+        platform: item.platform, browserTools: item.browser, managedConfiguration: item.cli, includeAllCapabilityGuidance: true,
         developerFeedback: item.feedback, decideTool: item.decide, docs: DOC_REFS, permissionModes: PERMISSION_MODE_CONFIG })
       const content = sections.map(section => section.content).join('')
       assert.equal(new Set(sections.map(section => section.id)).size, sections.length)

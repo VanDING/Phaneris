@@ -608,6 +608,8 @@ export async function guardLargeResult(
      *  call sites without model knowledge to retain the fixed default. */
     contextWindow?: number;
     signal?: AbortSignal;
+    /** Pi owns text projection; binary extraction still happens here. */
+    deferTextProjection?: boolean;
   }
 ): Promise<string | null> {
   opts.signal?.throwIfAborted();
@@ -651,7 +653,8 @@ export async function guardLargeResult(
     return `[Base64-encoded binary detected but save failed: ${result.error}]`;
   }
 
-  // 3. Existing size check + summarize flow (model-aware when contextWindow provided).
+  if (opts.deferTextProjection) return null;
+  // Text projection is deterministic unless a caller explicitly supplies semantic processing.
   // Use density-aware estimate so base64-heavy text (MIME, JSON-embedded binary)
   // can't slip past the 4-chars/token heuristic and poison conversation context.
   if (estimateTokensDensityAware(text) <= tokenLimitFor(opts.contextWindow)) return null;

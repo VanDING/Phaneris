@@ -1,0 +1,117 @@
+$ bun run test:shared:llm-connections && bun run test:shared:models-pi && bun run test:shared:config
+$ cd packages/shared && bun test tests/llm-connections.test.ts
+bun test v1.4.2 (744846f84)
+
+tests\llm-connections.test.ts:
+(pass) getMiniModel() > honors an explicit utility model from the provider catalog [1.50ms]
+(pass) getMiniModel() > finds haiku for anthropic provider [4.76ms]
+(pass) getMiniModel() > finds mini for pi provider [0.36ms]
+(pass) getMiniModel() > skips denied codex-mini-latest alias for pi provider [0.16ms]
+(pass) getMiniModel() > skips denied pi/codex-mini-latest alias for pi provider [0.11ms]
+(pass) getMiniModel() > finds mini for pi_compat provider [0.10ms]
+(pass) getMiniModel() > finds mini for Pi list with mixed models [0.12ms]
+(pass) getMiniModel() > finds mini even when model name has "mini" in different position [0.10ms]
+(pass) getMiniModel() > does not match minimax brand names for the "mini" keyword [36.93ms]
+(pass) getMiniModel() > falls back to last model when Pi list has no mini/flash model [0.49ms]
+(pass) getMiniModel() > returns undefined for empty model list [0.19ms]
+(pass) getMiniModel() > returns undefined for undefined models [0.14ms]
+(pass) getMiniModel() > falls back to last model when no keyword match [0.18ms]
+(pass) getMiniModel() > fallback ignores denied alias and returns last allowed model [0.32ms]
+(pass) getMiniModel() > handles single-model list [0.13ms]
+(pass) getSummarizationModel() > returns same result as getMiniModel (shared implementation) [10.53ms]
+(pass) getMiniModel() — auth-flavor awareness > skips *codex-mini* variants under openai-codex auth [2.02ms]
+(pass) getMiniModel() — auth-flavor awareness > still returns *codex-mini* variants under regular openai (API-key) auth [0.35ms]
+(pass) getMiniModel() — auth-flavor awareness > falls back to last allowed model when every mini candidate is denied [1.37ms]
+(pass) isDeniedMiniModelId() > always denies codex-mini-latest [0.27ms]
+(pass) isDeniedMiniModelId() > denies *codex-mini* variants only under openai-codex auth [0.15ms]
+(pass) isDeniedMiniModelId() > does not deny non-codex-mini models [0.12ms]
+
+ 22 pass
+ 0 fail
+ 30 expect() calls
+Ran 22 tests across 1 file. [237.00ms]
+$ cd packages/shared && bun test tests/models-pi.test.ts
+bun test v1.4.2 (744846f84)
+
+tests\models-pi.test.ts:
+(pass) models-pi filtering > excludes codex-mini-latest for openai models [32.02ms]
+(pass) models-pi filtering > excludes all gpt-4* models for openai models [2.97ms]
+(pass) models-pi filtering > keeps Claude Opus 4.6 models in Anthropic catalogs [11.19ms]
+(pass) models-pi filtering > includes DeepSeek in the Pi API key provider list with a human-readable label [5.67ms]
+(pass) models-pi filtering > returns current DeepSeek models, including the patched deepseek-flash entry [8.77ms]
+(pass) models-pi filtering > includes Moonshot AI in the Pi API key provider list with human-readable labels [2.22ms]
+(pass) models-pi filtering > returns Claude Opus 5 from the Pi SDK catalog for Anthropic and Bedrock [7.02ms]
+(pass) models-pi filtering > returns Claude Opus 5.5 from the Pi SDK catalog for Anthropic and Bedrock [6.50ms]
+(pass) models-pi filtering > returns GPT-6 Astra from the Pi SDK catalog for OpenAI API keys and ChatGPT accounts [2.34ms]
+(pass) models-pi filtering > returns Kimi K3 from the Pi SDK catalog for both Moonshot providers [0.79ms]
+
+ 10 pass
+ 0 fail
+ 30 expect() calls
+Ran 10 tests across 1 file. [1299.00ms]
+$ cd packages/shared && bun test src/config/__tests__/storage-migrations.test.ts src/config/__tests__/storage-startup-migration.test.ts src/config/__tests__/default-thinking-level.test.ts src/config/__tests__/theme.test.ts
+bun test v1.4.2 (744846f84)
+
+src\config\__tests__\default-thinking-level.test.ts:
+(pass) default thinking level storage > falls back to bundled default when no app-level default is set [1396.26ms]
+(pass) default thinking level storage > persists defaultThinkingLevel to config.json [962.90ms]
+(pass) default thinking level storage > round-trips persisted value across processes [1614.55ms]
+(pass) default thinking level storage > supports every thinking level [2016.37ms]
+(pass) default thinking level storage > migrates legacy "think" value to "medium" [743.49ms]
+
+src\config\__tests__\storage-migrations.test.ts:
+(pass) shouldMigratePiOpenAiProvider > migrates legacy Pi OAuth OpenAI connections to openai-codex [0.40ms]
+(pass) shouldMigratePiOpenAiProvider > does not migrate Pi API key OpenAI connections [0.10ms]
+(pass) shouldMigratePiOpenAiProvider > does not migrate Pi custom endpoint connections [0.07ms]
+(pass) shouldMigratePiOpenAiProvider > does not migrate already-correct openai-codex connections [0.12ms]
+(pass) shouldRepairPiApiKeyCodexProvider > repairs Pi API key connections that were incorrectly set to openai-codex [0.12ms]
+(pass) shouldRepairPiApiKeyCodexProvider > repairs Pi API key with endpoint connections that were incorrectly set to openai-codex [0.07ms]
+(pass) shouldRepairPiApiKeyCodexProvider > does not repair OAuth openai-codex connections [0.07ms]
+(pass) shouldRepairPiApiKeyCodexProvider > does not repair non-OpenAI-Codex providers [0.05ms]
+(pass) inferModelSelectionMode > infers automaticallySyncedFromProvider when model list equals provider defaults [0.67ms]
+(pass) inferModelSelectionMode > infers userDefined3Tier when model list is a custom subset [0.15ms]
+(pass) inferModelSelectionMode > infers automaticallySyncedFromProvider for empty model lists [0.07ms]
+
+src\config\__tests__\storage-startup-migration.test.ts:
+(pass) startup migration (integration) > repairs broken pi-api-key openai-codex provider on startup migration [1865.39ms]
+(pass) startup migration (integration) > preserves userDefined3Tier model subsets during startup migration [1270.43ms]
+(pass) startup migration (integration) > normalizes auto mode model set back to provider defaults [1356.91ms]
+(pass) startup migration (integration) > repairs userDefined3Tier lists by removing invalid IDs and fixing default model [1385.14ms]
+(pass) startup migration (integration) > falls back to provider defaults when userDefined3Tier becomes empty after filtering [1507.60ms]
+(pass) startup migration (integration) > normalizes legacy unprefixed userDefined3Tier model IDs instead of resetting [1636.58ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps direct Anthropic Opus 4.6 default/model entries intact [1076.78ms]
+(pass) legacy Opus migration to default Opus (integration) > restores Opus 4.6 once to direct Anthropic connections and respects a later removal [1840.10ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates direct Anthropic Opus 4.5 defaults straight to Opus 4.8 [952.56ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates previous direct Anthropic Opus 4.7 defaults to Opus 4.8 while keeping 4.7 selectable [1224.92ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps workspace default Opus 4.6 unchanged [1439.77ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates workspace default Opus 4.7 to Opus 4.8 [1283.20ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps Pi Anthropic Opus 4.6 IDs unchanged [2302.88ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps Pi Bedrock Opus 4.6 native IDs unchanged [1898.97ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates legacy unprefixed Pi Anthropic Opus 4.6 IDs to pi-prefixed Opus 4.6 [1428.12ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates legacy Bedrock provider Opus 4.6 IDs to Pi Bedrock native Opus 4.6 IDs [1149.38ms]
+(pass) endpoint transport repair (integration) > collapses a compat connection stored without an endpoint protocol back to native Pi [1032.66ms]
+(pass) endpoint transport repair (integration) > leaves genuine custom endpoints compat [963.79ms]
+(pass) endpoint transport repair (integration) > drops a leftover protocol from a native connection [1016.02ms]
+
+src\config\__tests__\theme.test.ts:
+(pass) themeToCSS > emits semantic and visual tokens from a theme file [0.87ms]
+(pass) themeToCSS > expands each high-level depth preset [0.95ms]
+(pass) themeToCSS > glass depth exposes blur while other depths disable it [0.22ms]
+(pass) themeToCSS > raised depth combines a hard border ring with zero-blur offset shadows [0.12ms]
+(pass) themeToCSS > keeps status colors in their original CSS syntax without parallel RGB channels [0.12ms]
+(pass) themeToCSS > leaves omitted surfaces and material tokens on the static Default baseline [0.11ms]
+(pass) themeToCSS > dark mode overrides visual tokens without losing light defaults [0.15ms]
+(pass) theme resolution > deeply overlays a user theme onto the canonical default [0.61ms]
+(pass) theme resolution > normalizes both light-only and dark-only themes [0.15ms]
+(pass) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [1.10ms]
+(pass) theme resolution > bundles exactly the canonical Default theme [25.88ms]
+(pass) theme resolution > keeps Electron startup backgrounds aligned with the Default CSS colors [0.09ms]
+(pass) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [7.06ms]
+(pass) theme validation > accepts the expanded preset schema [0.71ms]
+(pass) theme validation > rejects unsupported values and CSS declaration injection [9.46ms]
+(pass) theme validation > rejects unknown preset fields and ambiguous supported modes [0.98ms]
+
+ 51 pass
+ 0 fail
+ 384 expect() calls
+Ran 51 tests across 4 files. [35.69s]

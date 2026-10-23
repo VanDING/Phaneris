@@ -3,10 +3,9 @@
  *
  * The agent does not see the workspace's skills unless the user mentions one,
  * and sees inactive sources only by slug. Before a turn, the model picks at
- * most one skill or usable inactive source that the message plainly needs, and
- * the agent gets a short hint for that turn. Nothing is read, enabled or
- * activated on the model's behalf: the agent decides under the usual
- * permissions. No confident pick means no hint.
+ * most one skill or usable inactive source that the message plainly needs.
+ * The host displays non-blocking UI advice; it never injects the pick into the
+ * main prompt or activates anything. No confident pick means no advice.
  *
  * After the request, a follow-up line says whether the agent used the pick anyway
  * (`suggestionFollowUp`): shown and used, shown and ignored, held back but used (a miss the

@@ -1117,6 +1117,23 @@ export interface JsonSchemaToolDef {
   inputSchema: Record<string, unknown>;
   /** Host scheduling hint; not a provider argument or an authorization grant. */
   readOnly?: boolean;
+  exposure?: 'direct' | 'deferred' | 'hidden';
+  namespace?: { name: string; description: string; aliases: string[]; instructions?: string };
+  availability?: { status: 'ready' | 'unsupported'; reason?: string };
+}
+
+/** Canonical, host-owned grouping; descriptive metadata never confers permission. */
+function capabilityMetadata(name: string): Pick<JsonSchemaToolDef, 'exposure' | 'namespace' | 'availability'> {
+  const family = name.includes('page') ? 'pages' : name.startsWith('artifact_') || name === 'image_generate' || name === 'render_template' ? 'deliverables'
+    : name === 'call_llm' || name === 'decide' || name === 'spawn_session' ? 'secondary-models'
+    : /^(?:source_|config_|skill_|update_user_preferences|project_memory)/.test(name) ? 'resources'
+    : /session|task|messaging/.test(name) ? 'session-management'
+    : name === 'transform_data' || name === 'script_sandbox' ? 'data' : 'core';
+  const aliases: Record<string, string[]> = { pages: ['页面', '小应用', 'dashboard'], deliverables: ['交付物', '文档', '图像', 'artifact'], resources: ['连接', '认证', '配置', '资源', '技能', '插件', '自动化', 'skills', 'plugins', 'automations'], 'secondary-models': ['辅助模型', '分析', '委派'], 'session-management': ['会话', '任务', '标签', '日程'], data: ['数据', '计算', '转换'], core: ['提问', '计划', '浏览器'] };
+  const unsupported = process.platform === 'win32' && ['script_sandbox', 'transform_data'].includes(name);
+  return { exposure: unsupported ? 'hidden' : family === 'core' ? 'direct' : 'deferred',
+    namespace: { name: `phaneris:${family}`, description: `${family} ${aliases[family]!.join(' ')}`, aliases: aliases[family]! },
+    availability: { status: unsupported ? 'unsupported' : 'ready', ...(unsupported ? { reason: 'Isolation backend unavailable on Windows. Use file/shell tools within authorization; isolation is not bypassed.' } : {}) } };
 }
 
 /**
@@ -1144,6 +1161,7 @@ export function getToolDefsAsJsonSchema(opts?: {
       name: prefix + def.name,
       description: def.description,
       inputSchema: jsonSchema,
+      ...capabilityMetadata(def.name),
       ...(def.readOnly !== undefined ? { readOnly: def.readOnly } : {}),
     };
   });
