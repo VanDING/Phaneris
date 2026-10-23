@@ -28,12 +28,14 @@ export class VerificationRun {
   private untested: string[] = ['Windows/Linux native execution', 'live provider APIs', 'signed installer/release']
   private readonly source = {
     headSha: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repository, encoding: 'utf8' }).trim(),
-    dirtyPaths: execFileSync('git', ['status', '--porcelain', '--untracked-files=all'], { cwd: repository, encoding: 'utf8' }).trim().split('\n').filter(Boolean),
+    dirtyPaths: execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], { cwd: repository, encoding: 'utf8' }).trim().split('\n').filter(Boolean),
     lockfileSha256: sha256(join(repository, 'bun.lock')),
     changedFiles: [...new Set([
-      ...execFileSync('git', ['diff', '--name-only', '-z', 'HEAD'], { cwd: repository }).toString().split('\0'),
-      ...execFileSync('git', ['ls-files', '--others', '--exclude-standard', '-z'], { cwd: repository }).toString().split('\0'),
-    ].filter(Boolean))].sort().map(path => ({ path, sha256: existsSync(join(repository, path)) ? sha256(join(repository, path)) : null })),
+      // Generated evidence is hashed as artifacts, not recursively as source.
+      ...execFileSync('git', ['diff', '--name-only', '-z', 'HEAD', '--', '.', ':(exclude)docs/verification/results/**'], { cwd: repository }).toString().split('\0'),
+      ...execFileSync('git', ['ls-files', '--others', '--exclude-standard', '-z', '--', '.', ':(exclude)docs/verification/results/**'], { cwd: repository }).toString().split('\0'),
+    ].filter(Boolean))].filter(path => !path.startsWith('docs/verification/results/'))
+      .sort().map(path => ({ path, sha256: existsSync(join(repository, path)) ? sha256(join(repository, path)) : null })),
   }
   constructor(readonly workflow: string, readonly args = process.argv.slice(2)) {
     const position = args.indexOf('--output-dir')

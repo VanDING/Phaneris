@@ -88,3 +88,7 @@ openclaw-*/
 # Playwright debug artifacts are evidence the reviewer runs locally, not history.
 docs/verification/results/**/trace.zip
 docs/verification/results/**/*.webm
+
+# Verification outputs are generated locally and never committed.
+docs/verification/results/
+docs/prototypes/**/verification/
