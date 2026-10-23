@@ -147,7 +147,7 @@ export function InlineExecution({
             type="button"
             onClick={onDismiss}
             className={cn(
-              "flex items-center gap-1 px-2 py-1 rounded-md bg-success/10 text-success hover:bg-success/20 transition-colors",
+              "craft-control flex items-center gap-1 px-2 py-1 rounded-md bg-success/10 text-success-text hover:bg-success/20 transition-colors",
               SIZE_CONFIG.fontSize
             )}
           >
@@ -195,7 +195,7 @@ export function InlineExecution({
             type="button"
             onClick={onRetry}
             className={cn(
-              "px-2 py-1 rounded-md bg-accent/10 text-accent hover:bg-accent/20 transition-colors",
+              "craft-control px-2 py-1 rounded-md bg-accent/10 text-accent-text hover:bg-accent/20 transition-colors",
               SIZE_CONFIG.fontSize
             )}
           >

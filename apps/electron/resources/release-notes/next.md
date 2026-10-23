@@ -6,6 +6,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- **Default appearance** — Keep one product theme with light, dark and system modes. Align the default palette with Run, retain readable semantic colors without unnecessary dark mixing, and use one color policy for startup, runtime and contrast checks. Previous theme selections fall back to Default while mode, font and user-owned files are preserved.
 
 - **Thinking activities** — Model thinking appears in chronological order alongside tool activities as a single line. Click it to read the full content in the existing full-screen viewer.
 

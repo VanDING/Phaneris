@@ -117,7 +117,7 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
           {validation && (
             <span className="inline-flex items-center gap-1">
               {validation.valid
-                ? <Check className="h-3 w-3 text-success-text" />
+                ? <Check className="h-3 w-3 text-success" />
                 : <AlertTriangle className="h-3 w-3 text-destructive" />}
               {validation.summary}
             </span>

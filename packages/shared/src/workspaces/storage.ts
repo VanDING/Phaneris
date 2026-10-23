@@ -23,7 +23,6 @@ import { atomicWriteFileSync, readJsonFileSync } from '../utils/files.ts';
 import { getDefaultStatusConfig, saveStatusConfig, ensureDefaultIconFiles } from '../statuses/storage.ts';
 import { getDefaultLabelConfig, saveLabelConfig } from '../labels/storage.ts';
 import { loadConfigDefaults } from '../config/defaults.ts';
-import { isValidUserThemeId } from '../config/theme.ts';
 import { parsePermissionMode, DEFAULT_PERMISSION_MODES } from '../agent/mode-types.ts';
 import { normalizeThinkingLevel } from '../agent/thinking-levels.ts';
 import type {
@@ -442,11 +441,9 @@ export function discoverWorkspacesInDefaultLocation(): string[] {
  * @param rootPath - Absolute path to workspace root folder
  * @returns Theme ID or undefined (inherit from app default)
  */
-export function getWorkspaceColorTheme(rootPath: string): string | undefined {
-  const config = loadWorkspaceConfig(rootPath);
-  const themeId = config?.defaults?.colorTheme;
-  if (!themeId || themeId === 'default') return undefined;
-  return isValidUserThemeId(themeId) ? themeId : undefined;
+export function getWorkspaceColorTheme(_rootPath: string): string | undefined {
+  // Legacy overrides are inactive. Reading does not rewrite workspace config.
+  return undefined;
 }
 
 /**
@@ -456,26 +453,13 @@ export function getWorkspaceColorTheme(rootPath: string): string | undefined {
  * @param rootPath - Absolute path to workspace root folder
  * @param themeId - Preset theme ID or undefined to inherit
  */
-export function setWorkspaceColorTheme(rootPath: string, themeId: string | undefined): void {
+export function setWorkspaceColorTheme(rootPath: string, _themeId: string | undefined): void {
   const config = loadWorkspaceConfig(rootPath);
   if (!config) return;
 
-  const normalizedThemeId = themeId === 'default' ? undefined : themeId;
-  if (normalizedThemeId && !isValidUserThemeId(normalizedThemeId)) {
-    console.warn(`[workspace-storage] Invalid theme ID rejected: ${normalizedThemeId}`);
-    return;
-  }
-
-  // Initialize defaults if not present
-  if (!config.defaults) {
-    config.defaults = {};
-  }
-
-  if (normalizedThemeId) {
-    config.defaults.colorTheme = normalizedThemeId;
-  } else {
-    delete config.defaults.colorTheme;
-  }
+  // Retain the IPC shape for older clients, while every workspace inherits
+  // Default. Clearing an override preserves all unrelated workspace settings.
+  if (config.defaults) delete config.defaults.colorTheme;
 
   saveWorkspaceConfig(rootPath, config);
 }

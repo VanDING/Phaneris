@@ -148,14 +148,14 @@ export function TaskActionMenu({ task, sessionId, onKillTask, onInsertMessage, o
   const StatusIcon = () => {
     switch (task.status) {
       case 'completed':
-        return <CheckCircle2 className="h-3.5 w-3.5 text-success-text" />
+        return <CheckCircle2 className="h-3.5 w-3.5 text-success" />
       case 'failed':
         return <XCircle className="h-3.5 w-3.5 text-destructive" />
       case 'stopped':
         return <Square className="h-3 w-3 opacity-60" />
       case 'orphaned':
       case 'stale':
-        return <AlertTriangle className="h-3.5 w-3.5 text-info-text" />
+        return <AlertTriangle className="h-3.5 w-3.5 text-info" />
       default:
         return <Spinner className="text-meta" />
     }

@@ -205,7 +205,7 @@ export function TaskTile({
               <span />
             )}
             {task.isFlagged && (
-              <Flag className="h-3.5 w-3.5 shrink-0 fill-info text-info-text" aria-hidden />
+              <Flag className="h-3.5 w-3.5 shrink-0 fill-info text-info" aria-hidden />
             )}
           </div>
         )}

@@ -3,6 +3,7 @@ import { PresetThemeSchema } from '@phaneris/shared/config/schemas'
 import { THEME_TOKEN_MANIFEST, type ThemeDiagnostic } from '@phaneris/shared/config/theme-manifest'
 import { resolveTheme, themeDerivedCSS, themeToCSS, type ThemeFile } from '@phaneris/shared/config/theme'
 import { ThemeCompilationError, themeCSSDeclarations, type CompiledTheme } from '@phaneris/shared/config/theme-runtime'
+import { deriveThemeSemanticColors, THEME_COLOR_POLICY, type SemanticRole } from '@phaneris/shared/config/theme-color-policy'
 
 type VisualMode = 'light' | 'dark'
 
@@ -143,18 +144,17 @@ export async function compileThemeInBrowser(theme: ThemeFile, signal?: AbortSign
       // Text/solid/on-solid duties are separate. Keep authors' raw colors;
       // move text toward their foreground only as far as contrast requires.
       if (!diagnostics.some(value => value.severity === 'error')) {
-        const background = rgba(values['--background']!), foreground = values['--foreground']!
-        const surfaces = ['--background', '--paper', '--muted', '--card', '--input', '--popover-solid'].map(name => rgba(values[name] ?? values['--background']!))
-        for (const key of ['accent', 'info', 'success', 'destructive']) {
-          let candidate = ''
-          for (let mix = 50; mix >= 0; mix -= 5) {
-            candidate = `color-mix(in oklab, ${values[`--${key}`]} ${mix}%, ${foreground})`
-            if (surfaces.every(surface => contrast(rgba(candidate), surface) >= 4.5)) break
-          }
-          authored[`--${key}-text`] = candidate
+        const foreground = values['--foreground']!
+        const semantic = deriveThemeSemanticColors({
+          background: rgba(values['--background']!), foreground: rgba(foreground),
+          surfaces: THEME_COLOR_POLICY.surfaces.map(name => rgba(values[`--${name}`] ?? values['--background']!)),
+          colors: Object.fromEntries(THEME_COLOR_POLICY.roles.map(role => [role, rgba(values[`--${role}`]!)])) as Record<SemanticRole, number[]>,
+        })
+        Object.assign(authored, semantic.tokens)
+        for (const role of THEME_COLOR_POLICY.roles) if (semantic.contrasts[role] < THEME_COLOR_POLICY.textContrast) {
+          diagnostics.push({ path: `${mode}.${role}-text`, code: 'contrast', severity: 'warning',
+            message: `No foreground mix meets ${THEME_COLOR_POLICY.textContrast}:1 across shared surfaces; best ${semantic.contrasts[role].toFixed(2)}:1` })
         }
-        const accent = rgba(values['--accent']!), accentOpaque = accent.slice(0, 3).map((value, i) => value * accent[3]! / 255 + background[i]! * (1 - accent[3]! / 255))
-        authored['--on-accent'] = contrast([0, 0, 0], accentOpaque) > contrast([255, 255, 255], accentOpaque) ? '#000000' : '#FFFFFF'
         // Non-blocking author feedback: the derived `--*-text` tokens are moved
         // until they pass, but the *authored* dim-ink tokens are the author's
         // choice. A user theme that ships 3:1 secondary text looks fine to the
@@ -196,7 +196,7 @@ export async function compileThemeInBrowser(theme: ThemeFile, signal?: AbortSign
   }
   const revisionInput = assetRevision && theme.backgroundImage?.startsWith('data:')
     ? { ...theme, backgroundImage: `asset:${assetRevision}` } : theme
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify([revisionInput, assetRevision])))
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify([revisionInput, assetRevision, THEME_COLOR_POLICY.version])))
   const revision = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('')
   return Object.freeze({ revision, css: Object.freeze(css), tokens: Object.freeze(tokens), diagnostics: Object.freeze(diagnostics.map(value => Object.freeze(value))) })
 }

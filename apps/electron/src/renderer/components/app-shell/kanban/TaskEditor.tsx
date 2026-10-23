@@ -1347,9 +1347,9 @@ function ResultsPanel({
           )}
         >
           {verdict.result === 'pass' ? (
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success-text" />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
           ) : verdict.result === 'fail' ? (
-            <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive-text" />
+            <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
           ) : (
             <CircleSlash className="mt-0.5 h-4 w-4 shrink-0 text-text-secondary" />
           )}
@@ -1384,9 +1384,9 @@ function ResultsPanel({
             {verdicts.map((v, i) => (
               <div key={i} className="flex items-start gap-2 text-meta">
                 {v.result === 'pass' ? (
-                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success-text" />
+                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
                 ) : v.result === 'fail' ? (
-                  <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-destructive-text" />
+                  <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-destructive" />
                 ) : (
                   <CircleSlash className="mt-0.5 h-3.5 w-3.5 shrink-0 text-text-secondary" />
                 )}

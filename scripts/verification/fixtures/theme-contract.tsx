@@ -14,6 +14,14 @@ import { BUILTIN_THEMES, type ThemeFile, type ThemePreferences } from '@config/t
 import type { ElectronAPI } from '../../../apps/electron/src/shared/types'
 import { App as ViewerApp } from '../../../apps/viewer/src/App'
 import { FrontendP2Surface } from './frontend-p2'
+import { compileThemeInBrowser } from '../../../packages/ui/src/lib/theme-compiler'
+import { Provider } from 'jotai'
+import { ModalProvider } from '@/context/ModalContext'
+import { AppShellProvider, type AppShellContextType } from '@/context/AppShellContext'
+import AppearanceSettingsPage from '@/pages/settings/AppearanceSettingsPage'
+import zh from '../../../packages/shared/src/i18n/locales/zh-Hans.json'
+import { EscapeInterruptProvider } from '@/context/EscapeInterruptContext'
+import { InlineExecution } from '../../../packages/ui/src/components/chat/InlineExecution'
 
 const params = new URLSearchParams(location.search)
 const host = params.get('css')?.split('/').at(-1)?.replace('.css', '') ?? 'electron'
@@ -26,7 +34,8 @@ const sheets = {
 const sheet = await (sheets[host as keyof typeof sheets] ?? sheets.electron)()
 const style = document.createElement('style'); style.textContent = sheet.default; document.head.append(style)
 const i18n = createInstance()
-await i18n.init({ lng: 'en', resources: { en: { translation: {} } }, fallbackLng: false, interpolation: { escapeValue: false } })
+await i18n.init({ lng: params.get('appearance') === 'true' ? 'zh-Hans' : 'en', keySeparator: false,
+  resources: { en: { translation: {} }, 'zh-Hans': { translation: zh } }, fallbackLng: false, interpolation: { escapeValue: false } })
 const listeners = new Set<(value: ThemePreferences) => void>()
 let preferences: ThemePreferences = { mode: 'light', colorTheme: 'default', font: 'theme' }
 const definitions: Record<string, ThemeFile> = { ...BUILTIN_THEMES }
@@ -36,6 +45,8 @@ const harness = {
     preferences = { ...preferences, mode, colorTheme: id }; listeners.forEach(callback => callback(preferences))
   },
   toggleDOM() { document.documentElement.classList.toggle('dark') },
+  compile: compileThemeInBrowser,
+  inlineCalls: [] as string[],
 }
 declare global { interface Window { themeContract: typeof harness } }
 window.themeContract = harness
@@ -44,7 +55,9 @@ window.electronAPI = {
   setThemePreferences: async next => { preferences = next; return next },
   onThemePreferencesChange: callback => { listeners.add(callback); return () => { listeners.delete(callback) } },
   loadPresetTheme: async id => definitions[id] ? { id, path: `fixture:${id}`, theme: definitions[id] } : null,
-} as ElectronAPI
+  getToolIconMappings: async () => [],
+  getHomeDir: async () => 'E:/isolated-fixture',
+} satisfies Partial<ElectronAPI> as unknown as ElectronAPI
 function Surface() {
   const theme = useTheme()
   const [overlay, setOverlay] = React.useState(false)
@@ -57,6 +70,10 @@ function Surface() {
     <div className="mt-4 flex items-center gap-4"><Button data-testid="control" className="rounded-md">主题按钮</Button>
       <Button data-testid="icon" size="icon" aria-label="图标"><Circle data-testid="circle" /></Button></div>
     <div data-testid="step" className="mt-4 rounded-md bg-foreground-50 p-4">派生色阶</div>
+    {params.get('inline') === 'true' && <div className="my-4 space-y-4">
+      <div data-testid="inline-success"><InlineExecution status="success" activities={[]} onDismiss={() => harness.inlineCalls.push('dismiss')} /></div>
+      <div data-testid="inline-error"><InlineExecution status="error" activities={[]} onRetry={() => harness.inlineCalls.push('retry')} /></div>
+    </div>}
     {Object.entries({ body: ['text-foreground bg-background', '--foreground', '--background'],
       muted: ['text-muted-foreground bg-muted', '--muted-foreground', '--muted'],
       'muted-paper': ['text-muted-foreground bg-paper', '--muted-foreground', '--paper'],
@@ -76,6 +93,9 @@ function Surface() {
 let content = params.get('standalone') === 'true' ? <CodeBlock code="const answer = 42" language="typescript" />
   : <ThemeProvider><Surface /></ThemeProvider>
 if (params.get('frontend-p2') === 'true') content = <ThemeProvider><FrontendP2Surface /></ThemeProvider>
+if (params.get('appearance') === 'true') content = <Provider><ModalProvider><EscapeInterruptProvider><AppShellProvider value={{ workspaces: [], sessionStatuses: [], sessionOptions: new Map(), pendingPermissions: new Map(), pendingCredentials: new Map(), pendingQuestions: new Map(), llmConnections: [], activeWorkspaceId: null, isCompactMode: false } as unknown as AppShellContextType}>
+  <ThemeProvider><TooltipProvider><AppearanceSettingsPage /></TooltipProvider></ThemeProvider>
+</AppShellProvider></EscapeInterruptProvider></ModalProvider></Provider>
 if (params.get('viewer') === 'true') {
   window.history.replaceState({}, '', '/s/theme-contract')
   content = <ViewerApp />

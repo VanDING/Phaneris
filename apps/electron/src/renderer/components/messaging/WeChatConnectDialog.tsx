@@ -146,7 +146,7 @@ export function WeChatConnectDialog({ open, onOpenChange, onConnected }: WeChatC
           )}
 
           {phase.kind === 'connected' && (
-            <StatusRow icon={<Check className="h-4 w-4 text-success-text" />}>
+            <StatusRow icon={<Check className="h-4 w-4 text-success" />}>
               {t('dialog.wechat.connected')}
             </StatusRow>
           )}

@@ -17,6 +17,12 @@
 | Terminal | chrome、普通文字、状态和 copy target 使用角色 | ANSI span 和输出原色不被重写 |
 | PDF / HTML / Pages | 宿主工具栏更新；重绘和响应式尺寸独立记录 | PDF 不反色；Pages 保持 digest-bound 原字节和 opaque sandbox，不注入主题 CSS |
 
+## 2026-10-23 Default 收敛
+
+产品目录仅保留 Default，旧 app / workspace 选择统一回到 Default，明暗与字体偏好继续独立持久化。用户主题文件保留且不可选择。内部 schema、compiler 与 host snapshot 协议继续兼容。
+
+Default 颜色与批准的 Run 视觉协调。静态 CSS、启动/失败回退、运行时 compiler 与对比度门禁共用 `theme-color-policy.ts`：原色先测、按需做最小文字调整；八种承载面及 20% 状态底覆盖 4.5:1。图标使用原色，四种实底分别拥有 on-color。算法版本参与 revision，避免样式或代码缓存复用旧策略。历史验收不能代替本轮证据，见[本轮失败矩阵与记录](../verification/default-theme-refinement-2026-10-23.md)。
+
 ## 存量例外与门禁
 
 [visual-debt-ledger.json](../../scripts/visual-debt-ledger.json) 按文件、规则、节点指纹登记 owner、reason、exit 和数量。它独立于既有 [warning 基线](../../scripts/lint-warning-baseline.json)，不关闭目录。登记债务不等于宣布其交互通过；已迁移真实控件、功能面和宿主由 E2E 单独验收。

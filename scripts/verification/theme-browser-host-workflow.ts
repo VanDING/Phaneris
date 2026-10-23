@@ -24,13 +24,13 @@ await verificationWorkflow('theme-browser-host', async run => {
     for (const host of ['toolbar', 'empty']) {
       await page.goto(`${base}?host=${host}`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
       await page.locator('#root > *').first().waitFor({ timeout: 120_000 })
-      for (const id of ['default', 'ink', 'geek', 'cyberpunk-2077']) for (const mode of ['light', 'dark'] as const) await check(`TC14-${host}-${id}-${mode}`, async () => {
+      for (const id of ['default']) for (const mode of ['light', 'dark'] as const) await check(`TC14-${host}-${id}-${mode}`, async () => {
         await page.evaluate(({ id, mode }) => window.themeBrowserHost.choose(id, mode), { id, mode })
         await page.waitForFunction(({ id }) => document.documentElement.dataset.theme === id && document.documentElement.dataset.themeStatus === 'ready', { id }, { timeout: 5000 })
         const sample = await page.evaluate(() => ({ theme: document.documentElement.dataset.theme, mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
           revision: document.documentElement.dataset.themeRevision, foreground: getComputedStyle(document.body).color, background: getComputedStyle(document.body).backgroundColor }))
-        assert(sample.revision); assert.equal(sample.mode, id === 'geek' || id === 'cyberpunk-2077' ? 'dark' : mode); samples.push({ host, id, requestedMode: mode, ...sample })
-        if (id === 'ink') await page.screenshot({ path: join(run.directory, `${host}-${mode}.png`) })
+        assert(sample.revision); assert.equal(sample.mode, mode); samples.push({ host, id, requestedMode: mode, ...sample })
+        if (id === 'default') await page.screenshot({ path: join(run.directory, `${host}-${mode}.png`) })
       })
       await check(`TC14-${host}-invalid-fallback`, async () => {
         await page.evaluate(() => window.themeBrowserHost.choose('invalid', 'light', { name: 'Invalid', background: 'banana' }))
@@ -42,8 +42,8 @@ await verificationWorkflow('theme-browser-host', async run => {
         assert.equal(await page.evaluate(() => document.documentElement.style.backgroundImage), '')
       })
       await check(`TC14-${host}-repair`, async () => {
-        await page.evaluate(() => window.themeBrowserHost.choose('ink', 'dark'))
-        await page.waitForFunction(() => document.documentElement.dataset.theme === 'ink' && document.documentElement.dataset.themeStatus === 'ready', null, { timeout: 5000 })
+        await page.evaluate(() => window.themeBrowserHost.choose('default', 'dark'))
+        await page.waitForFunction(() => document.documentElement.dataset.theme === 'default' && document.documentElement.dataset.themeStatus === 'ready', null, { timeout: 5000 })
       })
     }
     await check('TC18-browser-host-errors', async () => assert.deepEqual(errors, []))

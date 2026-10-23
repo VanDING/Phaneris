@@ -301,7 +301,7 @@ export function PageView({ pageSlug }: PageViewProps) {
               title={config.share ? t('pages.shared') : t('pages.share.title')}
               className="flex h-7 items-center gap-1.5 rounded-md px-2 text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
-              <Globe2 className={config.share ? 'h-4 w-4 text-accent-text' : 'h-4 w-4'} />
+              <Globe2 className={config.share ? 'h-4 w-4 text-accent' : 'h-4 w-4'} />
               {config.share && (
                 <span className="hidden text-meta @[28rem]/panel:inline">{t('pages.shared')}</span>
               )}

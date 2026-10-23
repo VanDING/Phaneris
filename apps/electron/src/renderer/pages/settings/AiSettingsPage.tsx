@@ -117,7 +117,7 @@ function CredentialHealthBanner({ issues, onReauthenticate }: CredentialHealthBa
   return (
     <div className="rounded-lg border border-info/30 bg-info/10 p-4 mb-6">
       <div className="flex items-start gap-3">
-        <AlertTriangle className="h-5 w-5 text-info-text flex-shrink-0 mt-0.5" />
+        <AlertTriangle className="h-5 w-5 text-info flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
           <h4 className="text-body font-medium text-info-text">
             {t("settings.ai.credentialIssue")}
@@ -211,7 +211,7 @@ function ConnectionRow({ connection, usedForImages, isLastConnection, onRenameCl
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="inline-flex items-center" aria-label={t("settings.ai.duplicateAccount")}>
-                    <AlertTriangle className="h-3.5 w-3.5 text-info-text" />
+                    <AlertTriangle className="h-3.5 w-3.5 text-info" />
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>{t("settings.ai.duplicateAccount")}</TooltipContent>

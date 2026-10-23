@@ -153,8 +153,8 @@ describe('theme resolution', () => {
     expect(resourceTheme).toEqual(DEFAULT_THEME_FILE);
   });
 
-  test('bundles exactly the four canonical, valid themes', () => {
-    expect(Object.keys(BUILTIN_THEMES)).toEqual(['default', 'geek', 'cyberpunk-2077', 'ink']);
+  test('bundles exactly the canonical Default theme', () => {
+    expect(Object.keys(BUILTIN_THEMES)).toEqual(['default']);
     for (const [id, theme] of Object.entries(BUILTIN_THEMES)) {
       const path = resolve(import.meta.dir, `../../../../../apps/electron/resources/themes/${id}.json`);
       expect(JSON.parse(readFileSync(path, 'utf8'))).toEqual(theme);
@@ -162,7 +162,7 @@ describe('theme resolution', () => {
     }
     expect(DEFAULT_THEME_FILE.name).toBe('Default');
     expect(DEFAULT_THEME_FILE.accent).toBe('#7851A9');
-    expect(DEFAULT_THEME_FILE.dark?.accent).toBe('oklch(0.660 0.160 302.3)');
+    expect(DEFAULT_THEME_FILE.dark?.accent).toBe('#B194DF');
   });
 
   test('keeps Electron startup backgrounds aligned with the Default CSS colors', () => {
@@ -170,7 +170,7 @@ describe('theme resolution', () => {
     // the literal types produced by BACKGROUND_HEX's as-const assertion.
     const actual: Record<'light' | 'dark', string> = BACKGROUND_HEX;
     // BrowserWindow accepts hex; keep startup surfaces on the applied Default palette.
-    expect(actual).toEqual({ light: '#FFFFFF', dark: '#17191E' });
+    expect(actual).toEqual({ light: '#FFFFFF', dark: '#171A21' });
   });
 
   test('keeps static CSS palettes, typography and material tokens synchronized with Default', () => {

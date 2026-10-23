@@ -114,7 +114,7 @@ function OptionRow({
         <span className="flex flex-wrap items-center gap-1.5">
           <span className="text-meta font-medium text-foreground">{text}</span>
           {recommended && (
-            <span className="rounded-sm bg-info/15 px-1.5 py-px text-micro font-medium text-info">
+            <span className="rounded-sm bg-info/15 px-1.5 py-px text-micro font-medium text-info-text">
               {t('chat.question.recommended')}
             </span>
           )}
@@ -240,7 +240,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
           unstyled ? 'border-0' : 'border border-info/30 rounded-shape-lg shadow-middle',
         )}
       >
-        <div className="flex items-center gap-1.5 px-4 pt-3 text-meta font-medium text-info">
+        <div className="flex items-center gap-1.5 px-4 pt-3 text-meta font-medium text-info-text">
           <MessageCircleQuestion className="h-3.5 w-3.5" />
           <span>{q.header || t('chat.question.planReview')}</span>
         </div>
@@ -303,7 +303,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
             <MessageCircleQuestion className="mt-0.5 h-3.5 w-3.5 shrink-0 text-info" />
             <div className="min-w-0 flex-1">
               {question.header && (
-                <div className="text-micro font-medium uppercase tracking-wide text-info">
+                <div className="text-micro font-medium uppercase tracking-wide text-info-text">
                   {question.header}
                 </div>
               )}
@@ -380,7 +380,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
         </div>
 
         {showError && (
-          <div role="status" className="text-meta text-destructive">
+          <div role="status" className="text-meta text-destructive-text">
             {t('chat.question.answerRequired')}
           </div>
         )}

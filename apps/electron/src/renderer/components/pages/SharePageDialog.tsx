@@ -441,7 +441,7 @@ function ScriptGrantsBlock({
   return (
     <div className="flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/[0.06] p-3">
       <div className="flex items-start gap-2">
-        <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-destructive-text" />
+        <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
         <div className="min-w-0 text-body">
           <div className="font-medium">{t('pages.share.scriptBlockedTitle')}</div>
           <div className="mt-0.5 text-meta text-text-secondary">{t('pages.share.scriptBlocked')}</div>

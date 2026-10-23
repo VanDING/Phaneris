@@ -5,14 +5,12 @@
  * Light mode is default, with optional dark mode overrides.
  *
  * Theme sources:
- * - Built in:       Default (`default`), Geek, Cyberpunk 2077, Ink
- * - User themes:    ~/.phaneris/themes/*.json
+ * - Product theme: Default (`default`), with light and dark variants.
+ * - File/compiler types remain compatible for internal tools and future use.
  */
 
-import geekTheme from './themes/geek.json';
-import cyberpunkTheme from './themes/cyberpunk-2077.json';
-import inkTheme from './themes/ink.json';
 import type { ThemeDiagnostic } from './theme-manifest';
+import { deriveThemeSemanticColors, themeHexColor, THEME_COLOR_POLICY, type SemanticRole } from './theme-color-policy';
 
 /**
  * CSS color string - any valid CSS color format:
@@ -475,11 +473,7 @@ export function themeDerivedCSS(isDark: boolean): string {
     `--shadow-border-opacity: ${isDark ? '0.15' : '0.08'};`,
     `--shadow-blur-opacity: ${isDark ? '0.12' : '0.06'};`,
     `--user-message-bubble-dimmed: ${isDark ? '#252525' : '#F7F7F7'};`,
-    `--on-accent: ${isDark ? '#000000' : '#FFFFFF'};`,
-    '--accent-text: color-mix(in oklab, var(--accent) 50%, var(--foreground));',
-    '--info-text: color-mix(in oklab, var(--info) 50%, var(--foreground));',
-    '--success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));',
-    '--destructive-text: color-mix(in oklab, var(--destructive) 50%, var(--foreground));',
+    ...Object.entries(defaultSemanticColors(isDark).tokens).map(([name, value]) => `${name}: ${value};`),
   ];
   for (const step of [1.5, 2, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95]) {
     vars.push(`--foreground-${String(step).replace('.', '\\.')}: color-mix(in srgb, var(--foreground) ${step}%, var(--background));`);
@@ -493,7 +487,7 @@ export function themeDerivedCSS(isDark: boolean): string {
  */
 export const BACKGROUND_HEX = {
   light: '#FFFFFF', // Matches DEFAULT_THEME.background
-  dark: '#17191E', // Matches DEFAULT_THEME.dark.background
+  dark: '#171A21', // Matches DEFAULT_THEME.dark.background
 } as const;
 
 /**
@@ -511,21 +505,21 @@ export const DEFAULT_THEME: ThemeOverrides = {
   "mode": "solid",
   "background": "#FFFFFF",
   "backgroundElevated": "#FFFFFF",
-  "foreground": "#20232C",
-  "foregroundDimmed": "#606775",
+  "foreground": "#222630",
+  "foregroundDimmed": "#626B7B",
   "card": "#FFFFFF",
-  "cardForeground": "#20232C",
-  "popoverForeground": "#20232C",
+  "cardForeground": "#222630",
+  "popoverForeground": "#222630",
   "secondary": "#F2F3F8",
   "secondaryForeground": "#373D4B",
   "muted": "#F7F8FB",
-  "mutedForeground": "#606775",
-  "border": "#E5E5E6",
+  "mutedForeground": "#626B7B",
+  "border": "#E2E6ED",
   "userMessageBubble": "#F3F3F3",
   "accent": "#7851A9",
   "ring": "#7851A9",
-  "info": "#94601C",
-  "success": "#267454",
+  "info": "#96651D",
+  "success": "#287659",
   "destructive": "#B63E4C",
   "paper": "#FFFFFF",
   "input": "#FFFFFF",
@@ -559,37 +553,43 @@ export const DEFAULT_THEME: ThemeOverrides = {
   "iconStrokeLinecap": "round",
   "density": "comfortable",
   "dark": {
-    "background": "#17191E",
-    "backgroundElevated": "#22262E",
+    "background": "#171A21",
+    "backgroundElevated": "#252A35",
     "foreground": "#EEF0F6",
-    "foregroundDimmed": "#AAB1C1",
-    "card": "#1C1F26",
+    "foregroundDimmed": "#ACB5C6",
+    "card": "#1E222B",
     "cardForeground": "#EEF0F6",
     "popoverForeground": "#EEF0F6",
-    "secondary": "#2A2F38",
+    "secondary": "#252A35",
     "secondaryForeground": "#E0E4EE",
-    "muted": "#20242B",
-    "mutedForeground": "#AAB1C1",
-    "border": "#343946",
+    "muted": "#252A35",
+    "mutedForeground": "#ACB5C6",
+    "border": "#353D4C",
     "userMessageBubble": "#2B2B2B",
-    // Same hue and near-chroma as #7851A9, lifted to 0.660 so black `--on-accent`
-    // text clears 4.5:1 (6.33) and the focus ring clears 3:1 on the dark canvas
-    // (5.30 / 4.70). The literal brand value fails there: 2.97:1 ring and
-    // 3.55:1 black text — see check:contrast-floor.
-    "accent": "oklch(0.660 0.160 302.3)",
-    "ring": "oklch(0.660 0.160 302.3)",
-    "info": "#E3B674",
-    "success": "#83CBA7",
-    "destructive": "#F18C98",
-    "paper": "#1C1F26",
-    "input": "#191C21",
-    "popover": "#262A32",
-    "popoverSolid": "#262A32",
+    "accent": "#B194DF",
+    "ring": "#B194DF",
+    "info": "#DFBB7C",
+    "success": "#8BC7A9",
+    "destructive": "#ECA2AC",
+    "paper": "#1E222B",
+    "input": "#1E222B",
+    "popover": "#252A35",
+    "popoverSolid": "#252A35",
     "depth": "flat",
     "shadowColor": "#08090C",
     "shadowStrength": 0.22
   }
 };
+
+/** Static, fallback and compiled Default use the same measured color policy. */
+export function defaultSemanticColors(isDark: boolean) {
+  const colors = isDark ? { ...DEFAULT_THEME, ...DEFAULT_THEME.dark } : DEFAULT_THEME;
+  return deriveThemeSemanticColors({
+    foreground: themeHexColor(colors.foreground!), background: themeHexColor(colors.background!),
+    surfaces: [colors.background, colors.paper, colors.muted, colors.card, colors.input, colors.popoverSolid, colors.secondary, colors.userMessageBubble].map(value => themeHexColor(value!)),
+    colors: Object.fromEntries(THEME_COLOR_POLICY.roles.map(role => [role, themeHexColor(colors[role]!)])) as Record<SemanticRole, readonly number[]>,
+  });
+}
 
 // ============================================
 // Preset Themes
@@ -658,14 +658,11 @@ export const DEFAULT_THEME_FILE: ThemeFile = {
 /** Read-only built-ins shared by desktop, standalone hosts and previews. */
 export const BUILTIN_THEMES: Readonly<Record<string, ThemeFile>> = {
   default: DEFAULT_THEME_FILE,
-  geek: geekTheme as ThemeFile,
-  'cyberpunk-2077': cyberpunkTheme as ThemeFile,
-  ink: inkTheme as ThemeFile,
 };
 
 /** Compatibility alias for the user-designed Twilight theme's original filename. */
 export function normalizeBuiltinThemeId(id: string): string {
-  return id === 'twilight' ? 'default' : id;
+  return ['twilight', 'geek', 'cyberpunk-2077', 'ink'].includes(id.toLowerCase()) ? 'default' : id;
 }
 
 export function isBuiltinThemeId(id: string): boolean {

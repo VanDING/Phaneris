@@ -62,6 +62,7 @@
     "test:markdown-popout": "bun run scripts/verification/markdown-popout-workflow.ts",
     "test:theme-foundation": "bun run scripts/verification/theme-foundation-workflow.ts",
     "test:theme-contract": "bun run scripts/verification/theme-contract-workflow.ts",
+    "test:theme-default": "bun run scripts/verification/default-theme-refinement-workflow.ts",
     "test:theme-roles": "bun run scripts/verification/theme-roles-workflow.ts",
     "test:design-w1": "bun run scripts/verification/design-w1-workflow.ts",
     "test:design-w2": "bun run scripts/verification/design-w2-workflow.ts",

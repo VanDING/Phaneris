@@ -119,7 +119,7 @@ export function ActivityCardsOverlay({
                     render={(props) => {
                       const isCopied = (props as Record<string, unknown>)['data-copied']
                       return isCopied ? (
-                        <Check className="ml-1.5 inline-flex cursor-pointer text-success-text" size={10} onClick={props.onClick} />
+                        <Check className="ml-1.5 inline-flex cursor-pointer text-success" size={10} onClick={props.onClick} />
                       ) : (
                         <Copy className="ml-1.5 inline-flex cursor-pointer text-muted-foreground hover:text-foreground" size={10} onClick={props.onClick} />
                       )

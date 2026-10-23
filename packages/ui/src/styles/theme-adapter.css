@@ -27,6 +27,9 @@
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
   --color-on-accent: var(--on-accent);
+  --color-on-info: var(--on-info);
+  --color-on-success: var(--on-success);
+  --color-on-destructive: var(--on-destructive);
   --color-popover-solid: var(--popover-solid);
   --color-info-text: var(--info-text);
   --color-success-text: var(--success-text);
@@ -72,7 +75,7 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-destructive-foreground: var(--background);
+  --color-destructive-foreground: var(--on-destructive);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);

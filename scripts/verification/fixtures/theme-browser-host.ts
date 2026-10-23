@@ -8,7 +8,7 @@ const choose = (id: string, mode: ThemePreferences['mode'], theme: ThemeFile = B
   updates.forEach(listener => listener(input))
   window.dispatchEvent(new CustomEvent('craft-browser-theme', { detail: input }))
 }
-choose('ink', 'light')
+choose('default', 'light')
 Object.assign(window, { browserToolbar: {
   instanceId: 'theme-fixture', navigate: async () => {}, goBack: async () => {}, goForward: async () => {}, reload: async () => {}, stop: async () => {},
   setMenuGeometry: async () => {}, hideWindow: async () => {}, closeWindowEntirely: async () => {},

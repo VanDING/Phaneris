@@ -9,9 +9,6 @@
 | ID | 名称 | 支持模式 |
 | --- | --- | --- |
 | default | Default | light, dark |
-| geek | Geek | dark |
-| cyberpunk-2077 | Cyberpunk 2077 | dark |
-| ink | Ink | light, dark |
 
 ## 作者字段
 
@@ -63,7 +60,11 @@
 
 结构使用 [schemas.ts](../../packages/shared/src/config/schemas.ts)，文件、路径和图片限制使用 [appearance.ts](../../packages/shared/src/config/appearance.ts)。浏览器 [compiler](../../packages/ui/src/lib/theme-compiler.ts) 验语法、引用依赖、计算值、opaque 和图片解码；错误不能标记 ready，回退 Default 并保留 requested/applied 与 diagnostics。合法现代 CSS、var fallback、calc 和相对单位仍可使用。
 
-对比度由作者负责，编译器只提示：`--*-text` 由 accent/info/success/destructive 向 foreground 混合，直到 4.5:1；`foreground` / `mutedForeground` / `foregroundDimmed` 与承载面的组合低于 4.5:1 时产出 `code: contrast` 的 warning，不阻断发布。内置主题另由 `bun run check:contrast-floor` 按 WCAG 计算并断言。scenic 背景图无法静态计算，作者须自行为文字列提供保护层。
+产品仅支持 Default；历史选择解析为 Default，保留明暗模式与字体。工作区统一继承；用户主题文件保留、不列入产品选择。文件 schema 和编译器保留，用于内部校验与未来扩展。
+
+颜色职责：`--accent/info/success/destructive` 是原始填充、边框与图标色；`--*-text` 为文字色；`--on-*` 是各自实底上的文字色，不能跨角色借用。
+
+统一算法见 [theme-color-policy.ts](../../packages/shared/src/config/theme-color-policy.ts)：先测原色，合格即保留；不足时按 1% 步长向 foreground 做 OKLab 混合，取首个达到 4.5:1 的实际量化色。覆盖八种共享承载面及同角色 20% 状态底；无法满足时保留最佳结果并给 contrast warning。每种实底分别在黑白中选择对比度更高的文字。Default 静态生成、启动回退、运行时和校验门禁共用该算法；算法版本进入编译 revision。内置 Default 的文字 4.5:1、信息图形 3:1 由 `check:contrast-floor` 强制保证。自定义输入的主体与辅助文字仍输出非阻断诊断；scenic 图像不能静态保证。
 
 Shiki 可用名称来自安装版本的 [生成注册表](../../packages/shared/src/config/shiki-themes.generated.json)，当前 65 个。scenic 必须有图片，缺图或解码失败会回退；本地图片不能逃出主题目录，支持的单图上限仍为 20 MiB。
 

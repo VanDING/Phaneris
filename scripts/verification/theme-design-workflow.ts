@@ -16,7 +16,7 @@ await verificationWorkflow('theme-design', async run => {
   const context = await launched.browser.newContext({ viewport: { width: 1280, height: 1000 }, reducedMotion: 'reduce' }), page = await context.newPage()
   const checks: string[] = [], samples: { id: string; file: string; group: string; geometry: unknown }[] = [], errors: string[] = []
   page.on('pageerror', error => errors.push(error.message)); await context.tracing.start({ screenshots: true, snapshots: true })
-  const scenes = [{ theme: 'default', mode: 'light' as const }, { theme: 'default', mode: 'dark' as const }, { theme: 'ink', mode: 'light' as const }]
+  const scenes = [{ theme: 'default', mode: 'light' as const }, { theme: 'default', mode: 'dark' as const }]
   const open = async (compact = false, collapsed = false) => {
     await gotoWithRetry(page, `${base}?css=electron.css&compact=${compact}&collapsed=${collapsed}`)
     await page.locator('[data-roles-ready]').waitFor()

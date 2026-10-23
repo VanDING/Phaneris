@@ -2,7 +2,7 @@
  * AppearanceSettingsPage
  *
  * Visual customization settings: theme mode, color theme, font,
- * workspace-specific theme overrides, and CLI tool icon mappings.
+ * workspace avatar colors, and CLI tool icon mappings.
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
@@ -44,7 +44,7 @@ import { setProjectColorTreatment, useProjectColorTreatment } from '@/hooks/useP
 import { PROJECT_COLOR_PALETTE, type ProjectColorTreatment } from '@/utils/project-colors'
 import { Info_DataTable, SortableHeader } from '@/components/info/Info_DataTable'
 import { Info_Badge } from '@/components/info/Info_Badge'
-import { DEFAULT_THEME_FILE, type ThemeSummary } from '@config/theme'
+import { DEFAULT_THEME_FILE } from '@config/theme'
 
 export const meta: DetailsPageMeta = {
   navigator: 'settings',
@@ -113,12 +113,8 @@ export default function AppearanceSettingsPage() {
   const {
     mode,
     setMode,
-    colorTheme,
-    setColorTheme,
     font,
     setFont,
-    activeWorkspaceId,
-    setWorkspaceColorTheme,
     themeLoadError,
     themePreferenceError,
     snapshot,
@@ -127,12 +123,6 @@ export default function AppearanceSettingsPage() {
 
   // Fetch workspace icons as data URLs (file:// URLs don't work in renderer)
   const workspaceIconMap = useWorkspaceIcons(workspaces)
-
-  // Preset themes for the color theme dropdown
-  const [presetThemes, setPresetThemes] = useState<ThemeSummary[]>([])
-
-  // Per-workspace theme overrides (workspaceId -> themeId or undefined)
-  const [workspaceThemes, setWorkspaceThemes] = useState<Record<string, string | undefined>>({})
 
   // Tool icon mappings loaded from main process
   const [toolIcons, setToolIcons] = useState<ToolIconMapping[]>([])
@@ -215,42 +205,6 @@ export default function AppearanceSettingsPage() {
   // persisted in localStorage via atomWithStorage — read by App.tsx + ChatPage).
   const [showBackgroundFinishedChip, setShowBackgroundFinishedChip] = useAtom(showBackgroundFinishedChipAtom)
 
-  // Load preset themes on mount
-  useEffect(() => {
-    const loadThemes = async () => {
-      if (!window.electronAPI) {
-        setPresetThemes([])
-        return
-      }
-      try {
-        const themes = await window.electronAPI.loadPresetThemes()
-        setPresetThemes(themes)
-      } catch (error) {
-        console.error('Failed to load preset themes:', error)
-        setPresetThemes([])
-      }
-    }
-    void loadThemes()
-    const cleanup = window.electronAPI?.onUserThemesChanged?.(() => {
-      void loadThemes()
-    })
-    return cleanup
-  }, [])
-
-  // Load workspace themes on mount
-  useEffect(() => {
-    const loadWorkspaceThemes = async () => {
-      if (!window.electronAPI?.getAllWorkspaceThemes) return
-      try {
-        const themes = await window.electronAPI.getAllWorkspaceThemes()
-        setWorkspaceThemes(themes)
-      } catch (error) {
-        console.error('Failed to load workspace themes:', error)
-      }
-    }
-    loadWorkspaceThemes()
-  }, [])
-
   // Load tool icon mappings and resolve the config file path on mount
   useEffect(() => {
     const load = async () => {
@@ -268,48 +222,6 @@ export default function AppearanceSettingsPage() {
     }
     load()
   }, [])
-
-  // Handler for workspace theme change
-  // Uses ThemeContext for the active workspace (immediate visual update) and IPC for other workspaces
-  const handleWorkspaceThemeChange = useCallback(
-    async (workspaceId: string, value: string) => {
-      // 'default' means inherit from app default (null in storage)
-      const themeId = value === 'default' ? null : value
-
-      // If changing the current workspace, use context for immediate update
-      if (workspaceId === activeWorkspaceId) {
-        setWorkspaceColorTheme(themeId)
-      } else {
-        // For other workspaces, just persist via IPC
-        await window.electronAPI?.setWorkspaceColorTheme?.(workspaceId, themeId)
-      }
-
-      // Update local state for UI
-      setWorkspaceThemes(prev => ({
-        ...prev,
-        [workspaceId]: themeId ?? undefined
-      }))
-    },
-    [activeWorkspaceId, setWorkspaceColorTheme]
-  )
-
-  // Theme options for dropdowns
-  const themeOptions = useMemo(() => [
-    { value: 'default', label: DEFAULT_THEME_FILE.name },
-    ...presetThemes
-      .filter(t => t.id !== 'default')
-      .map(t => ({
-        value: t.id,
-        label: t.name || t.id,
-      })),
-  ], [presetThemes])
-
-  // Workspace inheritance names the app's selected theme, including Default.
-  const appDefaultLabel = useMemo(() => {
-    if (colorTheme === 'default') return DEFAULT_THEME_FILE.name
-    const preset = presetThemes.find(t => t.id === colorTheme)
-    return preset?.name || colorTheme
-  }, [colorTheme, presetThemes])
 
   return (
     <div className="h-full flex flex-col">
@@ -337,11 +249,7 @@ export default function AppearanceSettingsPage() {
                     />
                   </SettingsRow>
                   <SettingsRow label={t("settings.appearance.colorTheme")}>
-                    <SettingsMenuSelect
-                      value={colorTheme}
-                      onValueChange={setColorTheme}
-                      options={themeOptions}
-                    />
+                    <span className="text-label text-text-secondary">{DEFAULT_THEME_FILE.name}</span>
                   </SettingsRow>
                   <SettingsRow label={t("settings.appearance.font")}>
                     <SettingsSegmentedControl
@@ -391,16 +299,13 @@ export default function AppearanceSettingsPage() {
                 )}
               </SettingsSection>
 
-              {/* Workspace Themes */}
+              {/* Workspace identity */}
               {workspaces.length > 0 && (
                 <SettingsSection
-                  title={t("settings.appearance.workspaceThemes")}
-                  description={t("settings.appearance.workspaceThemesDesc")}
+                  title={t("settings.appearance.workspaceAvatarColor")}
                 >
                   <SettingsCard>
                     {workspaces.map((workspace) => {
-                      const wsTheme = workspaceThemes[workspace.id]
-                      const hasCustomTheme = wsTheme !== undefined
                       return (
                         <SettingsRow
                           key={workspace.id}
@@ -432,20 +337,7 @@ export default function AppearanceSettingsPage() {
                             </div>
                           }
                         >
-                          <SettingsMenuSelect
-                            value={hasCustomTheme ? wsTheme : 'default'}
-                            onValueChange={(value) => handleWorkspaceThemeChange(workspace.id, value)}
-                            options={[
-                              { value: 'default', label: appDefaultLabel ? t("settings.appearance.useDefaultWithTheme", { theme: appDefaultLabel }) : t("settings.appearance.useDefault") },
-                              { value: 'twilight', label: DEFAULT_THEME_FILE.name },
-                              ...presetThemes
-                                .filter(t => t.id !== 'default')
-                                .map(t => ({
-                                  value: t.id,
-                                  label: t.name || t.id,
-                                })),
-                            ]}
-                          />
+                          <span className="text-label text-text-secondary">{DEFAULT_THEME_FILE.name}</span>
                         </SettingsRow>
                       )
                     })}

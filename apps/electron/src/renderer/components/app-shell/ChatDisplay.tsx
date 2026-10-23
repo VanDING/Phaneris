@@ -1490,7 +1490,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                             '--shadow-color': 'var(--destructive)',
                           } as React.CSSProperties}
                         >
-                          <AlertTriangle className="mx-auto mb-2 h-4 w-4 text-destructive-text" />
+                          <AlertTriangle className="mx-auto mb-2 h-4 w-4 text-destructive" />
                           <div className="text-body font-medium text-destructive">{t("chat.failedToLoadConversation")}</div>
                           <p className="mt-1 break-words text-meta text-destructive-text">{messagesLoadError}</p>
                           {onRetryMessagesLoad && (

@@ -138,7 +138,7 @@ export function BackgroundFinishedChip({ sessionId }: BackgroundFinishedChipProp
             )}
             style={{ '--shadow-color': 'rgba(168,85,247,0.35)' } as CSSProperties}
           >
-            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-accent-text" />
+            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-accent" />
             <span className="truncate max-w-[150px]">{entry.title}</span>
           </button>
         </motion.div>

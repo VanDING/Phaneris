@@ -14,7 +14,6 @@ import {
   DEFAULT_SHIKI_THEME,
   DEFAULT_THEME_FILE,
   getShikiTheme,
-  isValidUserThemeId,
   resolveTheme,
   resolveThemeMode,
   themeToCSS,
@@ -139,10 +138,8 @@ function loadStoredTheme(): StartupThemeCache | null {
   const cached = storage.get<StoredThemeCacheInput | null>(storage.KEYS.theme, null)
   if (!cached || !isThemeMode(cached.mode)) return null
 
-  const colorTheme = cached.colorTheme === 'default'
-    || (typeof cached.colorTheme === 'string' && isValidUserThemeId(cached.colorTheme))
-    ? cached.colorTheme
-    : 'default'
+  const colorTheme = 'default'
+
 
   if (cached.version === 3 && isFontFamily(cached.font)) {
     return {
@@ -351,8 +348,8 @@ export function ThemeProvider({
     persistPreferences({ mode: nextMode })
   }, [persistPreferences])
 
-  const setColorTheme = useCallback((nextTheme: string) => {
-    persistPreferences({ colorTheme: nextTheme || 'default' })
+  const setColorTheme = useCallback((_nextTheme: string) => {
+    persistPreferences({ colorTheme: 'default' })
   }, [persistPreferences])
 
   const setFont = useCallback((nextFont: FontFamily) => {

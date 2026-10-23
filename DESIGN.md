@@ -4,17 +4,17 @@ description: Local-first agent workspace with a cool-neutral, ink-on-paper ident
 colors:
   background: "#FFFFFF"
   background-elevated: "#FFFFFF"
-  foreground: "#20232C"
-  foreground-dimmed: "#606775"
+  foreground: "#222630"
+  foreground-dimmed: "#626B7B"
   card: "#FFFFFF"
   secondary: "#F2F3F8"
   muted: "#F7F8FB"
-  border: "#E5E5E6"
+  border: "#E2E6ED"
   user-message-bubble: "#F3F3F3"
   accent-violet: "#7851A9"
-  accent-violet-dark: "#A577E2"
-  info-amber: "#94601C"
-  success-green: "#267454"
+  accent-violet-dark: "#B194DF"
+  info-amber: "#96651D"
+  success-green: "#287659"
   danger-red: "#B63E4C"
 typography:
   micro: { fontSize: "10px", lineHeight: "1.4" }
@@ -73,13 +73,13 @@ Roles, not hues:
 
 | Role | Light | Dark | Use |
 | --- | --- | --- | --- |
-| Canvas | `#FFFFFF` | `#17191E` | App ground |
-| Raised | `#FFFFFF` | `#1C1F26` | Cards, panels |
-| Sunken | `#F7F8FB` | `#222630` | Wells, toolbars, inactive rows |
-| Ink | `#20232C` | `#EEF0F6` | Primary text |
-| Dimmed ink | `#606775` | `#AAB1C1` | Secondary text |
-| Border | `#E5E5E6` | `#343946` | Hairlines and control outlines |
-| Accent | `#7851A9` | `oklch(0.660 0.160 302.3)` | Focus, selection, active state |
+| Canvas | `#FFFFFF` | `#171A21` | App ground |
+| Raised | `#FFFFFF` | `#1E222B` | Cards, panels |
+| Sunken | `#F7F8FB` | `#252A35` | Wells, toolbars, inactive rows |
+| Ink | `#222630` | `#EEF0F6` | Primary text |
+| Dimmed ink | `#626B7B` | `#ACB5C6` | Secondary text |
+| Border | `#E2E6ED` | `#353D4C` | Hairlines and control outlines |
+| Accent | `#7851A9` | `#B194DF` | Focus, selection, active state |
 | User bubble | `#F3F3F3` | `#2B2B2B` | User message surface (neutral, not accent) |
 
 Rules:
@@ -87,15 +87,19 @@ Rules:
 - `The Accent-Is-For-Intent Rule` — the accent marks focus, selection and the
   active control. It never fills large surfaces or decorates text.
 - Status colors (`info`, `success`, `destructive`) are semantic; each has a
-  `*-text` variant mixed 50% toward the foreground for AA text contrast.
+  `*-text` variant that retains the raw color when readable and adjusts only as far as AA text contrast requires.
 - Never introduce a new hex in a component. Author it in the theme engine
   (`DEFAULT_THEME` or a theme file) so every host and mode receives it.
-- **One accent hue, two mode values.** Light ships the brand value verbatim
-  (`#7851A9`); dark ships the same hue lifted to `oklch(0.660 0.160 302.3)`.
-  The literal value cannot serve dark: on `#17191E` the focus ring measures
-  2.97:1 (floor 3) and black `--on-accent` text 3.55:1 (floor 4.5).
-  `check:contrast-floor` is the authority — never paste the light hex into the
-  dark override.
+- **One theme, two mode values.** Default is the only selectable product theme.
+  Light uses `#7851A9`; dark uses `#B194DF`, matching the approved Run palette.
+  App and workspace legacy selections resolve to Default without changing mode
+  or font, or deleting user files. Shared schema/compiler types remain available
+  for internal validation, not as additional user-facing themes.
+- **One color algorithm.** `theme-color-policy.ts` owns static, fallback and
+  runtime semantic colors. Keep readable raw values; otherwise search in 1%
+  OKLab steps toward foreground, measuring actual emitted colors across the
+  eight shared surfaces and same-role 20% washes. Text requires 4.5:1; meaningful
+  graphics require 3:1. Each solid role gets its own `--on-*` black/white value.
 
 ### Status and state colours
 
@@ -104,8 +108,7 @@ There is no fifth hue: a state either means "waiting / in flight", "good",
 "broken" or "identity", and those are `info`, `success`, `destructive` and
 `accent`. The 2026-10-20 review found 172 raw palette classes in their place —
 `text-amber-600 dark:text-amber-300` next to `text-emerald-600 dark:…` — each
-pair hand-picked per mode, which is why Ink and Cyberpunk 2077 could not govern
-state at all. They now resolve through the theme.
+pair hand-picked per mode, which prevented the theme from governing state consistently. They now resolve through the theme.
 
 | Meaning | Surface / icon | Text | Was |
 | --- | --- | --- | --- |
@@ -121,8 +124,8 @@ Rules:
   never pair a `dark:` twin with one: the role already resolves per mode.
   `check:design-drift` counts them; the only exemption is a brand mark
   (`ConnectionIcon`), because a vendor logo owns its colour.
-- A solid role surface takes `text-on-accent`, never `text-white`: the token
-  flips with the mode, and the contrast gate asserts it per theme.
+- A solid role surface takes its matching `text-on-accent/info/success/destructive`,
+  never a different role’s on-color. The contrast gate asserts each pairing.
 - Text on a role *surface* uses the `*-text` mix; the raw role is only for
   borders, fills and icons.
 
@@ -194,8 +197,9 @@ Rules:
   `text-foreground` for the active state and `--text-secondary` for the
   inactive one (see `CompactModelSelector`'s vision toggle).
 - **Status text uses the `*-text` variant.** `--info-text`, `--success-text`,
-  `--destructive-text` and `--accent-text` are the raw status colour mixed 50%
-  toward the foreground, which is what clears 4.5:1. Never dim a status colour.
+  `--destructive-text` and `--accent-text` retain the raw status color whenever
+  readable; the shared algorithm adjusts only failing pairs. Icons use raw
+  roles, not text variants. Never dim a status colour.
 - **Scenic mode is the author's risk, with a checklist.** When `--background`
   is a background image, contrast depends on the picture and no gate here can
   measure it. A scenic theme ships nothing unless it answers all four:

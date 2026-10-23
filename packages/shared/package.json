@@ -130,6 +130,7 @@
     "./config/theme": "./src/config/theme.ts",
     "./config/theme-manifest": "./src/config/theme-manifest.ts",
     "./config/theme-runtime": "./src/config/theme-runtime.ts",
+    "./config/theme-color-policy": "./src/config/theme-color-policy.ts",
     "./config/workspace-selection": "./src/config/workspace-selection.ts",
     "./config/connection-normalize": "./src/config/connection-normalize.ts",
     "./config/source-validation": "./src/config/source-validation.ts",

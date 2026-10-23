@@ -28,7 +28,7 @@ export interface StoredConfig {
   // Notifications
   notificationsEnabled?: boolean;  // Desktop notifications for task completion (default: true)
   // Appearance
-  colorTheme?: string;  // ID of selected preset theme (e.g., 'dracula', 'nord'). Default: 'default'
+  colorTheme?: string;  // Legacy-compatible field; product reads/writes resolve to 'default'.
   themeMode?: 'light' | 'dark' | 'system';
   themeFont?: 'theme' | 'inter' | 'system';
   /** Interface scale: multiplies control geometry and type, not reading width. */

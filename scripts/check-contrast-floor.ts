@@ -25,6 +25,8 @@
  */
 import assert from 'node:assert/strict'
 import { BUILTIN_THEMES, DEFAULT_THEME, resolveTheme, resolveThemeMode, type ThemeOverrides } from '../packages/shared/src/config/theme'
+import { defaultSemanticColors } from '../packages/shared/src/config/theme'
+import { THEME_COLOR_POLICY } from '../packages/shared/src/config/theme-color-policy'
 
 const TEXT_FLOOR = 4.5
 const GRAPHIC_FLOOR = 3
@@ -97,27 +99,6 @@ function oklabToRGB(lightness: number, aAxis: number, bAxis: number): RGB {
   return { r: clamp(toGamma(linear.r)), g: clamp(toGamma(linear.g)), b: clamp(toGamma(linear.b)) }
 }
 
-function srgbToOklab(color: RGB): [number, number, number] {
-  const r = toLinear(color.r), g = toLinear(color.g), b = toLinear(color.b)
-  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
-  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
-  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
-  return [
-    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-  ]
-}
-
-/** `color-mix(in oklab, a weight%, b)`, the recipe `themeDerivedCSS` uses for
- *  `--accent-text` / `--info-text` / `--success-text` / `--destructive-text`. */
-export function mixOklab(first: string, second: string, firstWeight = 0.5): RGB {
-  const [l1, a1, b1] = srgbToOklab(parseColor(first))
-  const [l2, a2, b2] = srgbToOklab(parseColor(second))
-  const w = firstWeight, v = 1 - firstWeight
-  return oklabToRGB(l1 * w + l2 * v, a1 * w + a2 * v, b1 * w + b2 * v)
-}
-
 interface EffectivePalette {
   background: string
   foreground: string
@@ -174,7 +155,7 @@ function samplesFor(theme: string, mode: 'light' | 'dark', palette: EffectivePal
   const graphic = (pair: string, foreground: string, background: string): Sample => ({
     theme, mode, pair, foreground, background, ratio: contrastRatio(foreground, background), floor: GRAPHIC_FLOOR,
   })
-  const statusText = (color: string) => mixOklab(color, palette.foreground, 0.5)
+  const semantic = defaultSemanticColors(mode === 'dark')
   return [
     text('foreground / background', palette.foreground, palette.background),
     text('foreground / muted', palette.foreground, palette.muted),
@@ -184,14 +165,16 @@ function samplesFor(theme: string, mode: 'light' | 'dark', palette: EffectivePal
     text('text-secondary / background', palette.mutedForeground, palette.background),
     text('text-secondary / muted', palette.mutedForeground, palette.muted),
     text('text-secondary / secondary', palette.mutedForeground, palette.secondary),
-    text('accent-text / background', mixOklab(palette.accent, palette.foreground, 0.5) as unknown as string, palette.background),
-    text('info-text / background', statusText(palette.info) as unknown as string, palette.background),
-    text('success-text / background', statusText(palette.success) as unknown as string, palette.background),
-    text('destructive-text / background', statusText(palette.destructive) as unknown as string, palette.background),
+    ...THEME_COLOR_POLICY.roles.flatMap(role => [
+      text(`${role}-text / background`, semantic.tokens[`--${role}-text`]!, palette.background),
+      text(`foreground on ${role}`, semantic.tokens[`--on-${role}`]!, palette[role]),
+      { ...text(`${role}-text / worst surface and 20% wash`, semantic.tokens[`--${role}-text`]!, palette.background), background: 'shared surfaces', ratio: semantic.contrasts[role] },
+      graphic(`${role} icon / background`, palette[role], palette.background),
+      graphic(`${role} icon / muted`, palette[role], palette.muted),
+    ]),
     // Status chips paint `bg-info/10` (and friends) under `text-info-text`; the
     // 10% wash moves the surface by well under a point, so the canvas pair is
     // the conservative bound.
-    text('foreground on accent', mode === 'dark' ? '#000000' : '#FFFFFF', palette.accent),
     graphic('focus ring / background', palette.accent, palette.background),
     graphic('focus ring / muted', palette.accent, palette.muted),
   ]

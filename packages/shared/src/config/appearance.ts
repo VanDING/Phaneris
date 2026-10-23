@@ -1,6 +1,6 @@
 /** appearance ownership. config.json writes belong exclusively to repository.ts. */
 
-import { existsSync, mkdirSync, readFileSync, statSync, readdirSync, realpathSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, statSync, realpathSync } from 'fs';
 
 import { join, dirname, resolve, relative, isAbsolute } from 'path';
 
@@ -494,43 +494,14 @@ export function ensurePresetThemes(): void {
 }
 
 /**
- * List read-only built-ins followed by valid user themes, without loading images.
+ * List the single product theme. Never modify or expose user-owned theme files.
  */
 export function loadPresetThemes(): ThemeSummary[] {
-  const themes: ThemeSummary[] = [];
-
-  try {
-    ensureUserThemesDir();
-    const themesRoot = realpathSync(APP_THEMES_DIR);
-    for (const file of readdirSync(APP_THEMES_DIR).filter((entry) => entry.endsWith('.json'))) {
-      const id = file.slice(0, -'.json'.length);
-      if (!isValidUserThemeId(id) || isBuiltinThemeId(id)) continue;
-      const path = join(APP_THEMES_DIR, file);
-      try {
-        const realThemePath = realpathSync(path);
-        if (!isPathWithin(themesRoot, realThemePath)) continue;
-        const theme = readValidatedThemeFile(realThemePath, id);
-        if (!theme) continue;
-        themes.push({
-          id,
-          name: theme.name,
-          description: theme.description,
-          author: theme.author,
-          supportedModes: theme.supportedModes,
-        });
-      } catch (error) {
-        debug(`[ThemeStorage] Failed to inspect theme "${id}"`, error);
-      }
-    }
-  } catch {
-    // Built-ins remain available even if the user directory cannot be read.
-  }
-
-  const builtins = Object.entries(BUILTIN_THEMES).map(([id, theme]) => ({
-    id, name: theme.name, description: theme.description,
-    author: theme.author, supportedModes: theme.supportedModes,
-  }));
-  return [...builtins, ...themes.sort((a, b) => a.name.localeCompare(b.name))];
+  // Product selection is intentionally Default-only. User files remain owned
+  // by the user; internal tooling may still validate them through the engine.
+  return [{ id: 'default', name: DEFAULT_THEME_FILE.name,
+    description: DEFAULT_THEME_FILE.description, author: DEFAULT_THEME_FILE.author,
+    supportedModes: DEFAULT_THEME_FILE.supportedModes }];
 }
 
 /**
@@ -663,10 +634,8 @@ export function resetPresetTheme(_id: string): boolean {
  * Get the currently selected color theme ID.
  * Returns 'default' if not set.
  */
-function normalizeThemeSelectionId(value: unknown): string {
-  if (typeof value === 'string' && isBuiltinThemeId(value)) return normalizeBuiltinThemeId(value);
-  if (value === 'default') return 'default';
-  return typeof value === 'string' && isValidUserThemeId(value) ? value : 'default';
+function normalizeThemeSelectionId(_value: unknown): string {
+  return 'default';
 }
 
 /** Load the authoritative app-level theme preferences from config.json. */

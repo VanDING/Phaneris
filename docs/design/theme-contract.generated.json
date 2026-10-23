@@ -1,6 +1,33 @@
 {
   "version": 1,
   "compatibility": "Legacy fontSize changes root font-size and rem geometry; each of the 39 authoring fields is optional, while presets require a name and at least one base color.",
+  "colorPolicy": {
+    "version": 2,
+    "textContrast": 4.5,
+    "graphicContrast": 3,
+    "statusWash": 0.2,
+    "roles": [
+      "accent",
+      "info",
+      "success",
+      "destructive"
+    ],
+    "surfaces": [
+      "background",
+      "paper",
+      "muted",
+      "card",
+      "input",
+      "popover-solid",
+      "secondary",
+      "user-message-bubble"
+    ]
+  },
+  "selection": {
+    "product": "default-only",
+    "legacy": "Default; preserve mode and font",
+    "userFiles": "preserved, not selectable"
+  },
   "tokens": {
     "background": {
       "css": "--background",
@@ -266,40 +293,6 @@
       "shikiTheme": {
         "light": "github-light",
         "dark": "github-dark"
-      }
-    },
-    {
-      "id": "geek",
-      "name": "Geek",
-      "supportedModes": [
-        "dark"
-      ],
-      "shikiTheme": {
-        "light": "github-light",
-        "dark": "vesper"
-      }
-    },
-    {
-      "id": "cyberpunk-2077",
-      "name": "Cyberpunk 2077",
-      "supportedModes": [
-        "dark"
-      ],
-      "shikiTheme": {
-        "light": "github-light",
-        "dark": "vesper"
-      }
-    },
-    {
-      "id": "ink",
-      "name": "Ink",
-      "supportedModes": [
-        "light",
-        "dark"
-      ],
-      "shikiTheme": {
-        "light": "rose-pine-dawn",
-        "dark": "vesper"
       }
     }
   ],

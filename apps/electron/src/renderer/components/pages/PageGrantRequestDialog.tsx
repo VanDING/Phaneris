@@ -38,7 +38,7 @@ export function PageGrantRequestDialog({ pageName, requests, busy, onApprove, on
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <KeyRound className="h-4 w-4 text-info-text" />
+            <KeyRound className="h-4 w-4 text-info" />
             {t('pages.grants.title')}
           </DialogTitle>
           <DialogDescription>{t('pages.grants.description', { name: pageName })}</DialogDescription>

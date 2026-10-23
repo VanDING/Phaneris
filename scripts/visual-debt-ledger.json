@@ -2817,27 +2817,7 @@
       "file": "packages/ui/src/components/chat/InlineExecution.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
-      "fingerprint": "6e2ddb8d9847e851cb5d023945ffbc15fcf70f8f2f8766b8b468759e2efdbaf0",
-      "count": 1,
-      "owner": "shared UI",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "packages/ui/src/components/chat/InlineExecution.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
       "fingerprint": "f55a9668f53ae6caf8b19e3bcf0c3244cab0901201fe32c3c1df77fd502440d3",
-      "count": 1,
-      "owner": "shared UI",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "packages/ui/src/components/chat/InlineExecution.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "478e34661138462df89e2af17fc46a154c34ef6310edf8981cde52175a8d2711",
       "count": 1,
       "owner": "shared UI",
       "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",

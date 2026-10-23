@@ -4,24 +4,29 @@ import { createRoot } from 'react-dom/client'
 import { ThemeProvider, useTheme } from '@/context/ThemeContext'
 import { DEFAULT_THEME_FILE } from '@config/theme'
 import type { ElectronAPI } from '../../../apps/electron/src/shared/types'
+import '@/index.css'
 
 const params = new URLSearchParams(location.search), scenario = params.get('scenario') ?? 'preferences'
-const style = document.createElement('link'); style.rel = 'stylesheet'; style.href = params.get('css')!; document.head.append(style)
 localStorage.setItem('craft-theme', JSON.stringify({ version: 3, mode: 'light', colorTheme: 'default', font: 'inter' }))
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+let release!: () => void
+const gate = new Promise<void>(resolve => { release = resolve })
+declare global { interface Window { themeStartup: { release: () => void } } }
+window.themeStartup = { release }
 if (scenario !== 'preview') window.electronAPI = {
   getThemePreferences: async () => {
-    await delay(scenario.startsWith('workspace') ? 100 : 2200)
+    await gate
     if (scenario === 'preferences-error') throw new Error('Startup read failed')
     return { mode: 'light', colorTheme: scenario === 'theme-error' ? 'missing' : 'small', font: 'inter' }
   },
-  getWorkspaceColorTheme: async () => { await delay(2600); return scenario === 'workspace-event' ? 'small' : 'workspace-small' },
+  getWorkspaceColorTheme: async () => { await gate; await delay(200); return scenario === 'workspace-event' ? 'small' : 'workspace-small' },
   loadPresetTheme: async (id: string) => id === 'missing' ? null : ({ id, path: `fixture:${id}`, theme: {
     ...DEFAULT_THEME_FILE, name: id, fontSize: id === 'workspace-small' ? '14px' : '13px',
   } }),
   onThemePreferencesChange: () => () => {}, onWorkspaceThemeChange: (callback: (value: { workspaceId: string; themeId: string }) => void) => {
-    const timer = scenario === 'workspace-event' ? setTimeout(() => callback({ workspaceId: 'fixture', themeId: 'workspace-small' }), 200) : undefined
-    return () => clearTimeout(timer)
+    let cancelled = false
+    if (scenario === 'workspace-event') void gate.then(() => { if (!cancelled) callback({ workspaceId: 'fixture', themeId: 'workspace-small' }) })
+    return () => { cancelled = true }
   },
 } as unknown as ElectronAPI
 

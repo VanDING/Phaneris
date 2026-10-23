@@ -435,7 +435,7 @@ export function ActivityStatusIcon({
       case 'error':
         return <XCircle className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-destructive")} />
       case 'unknown':
-        return <CircleAlert className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-info-text")} />
+        return <CircleAlert className={cn(SIZE_CONFIG.iconSize, "shrink-0 text-info")} />
     }
   }
 

@@ -8,7 +8,7 @@
 @property --foreground {
   syntax: "<color>";
   inherits: true;
-  initial-value: #20232C;
+  initial-value: #222630;
 }
 
 @property --accent {
@@ -20,13 +20,13 @@
 @property --info {
   syntax: "<color>";
   inherits: true;
-  initial-value: #94601C;
+  initial-value: #96651D;
 }
 
 @property --success {
   syntax: "<color>";
   inherits: true;
-  initial-value: #267454;
+  initial-value: #287659;
 }
 
 @property --destructive {
@@ -47,11 +47,14 @@
   --shadow-border-opacity: 0.08;
   --shadow-blur-opacity: 0.06;
   --user-message-bubble-dimmed: #F7F7F7;
+  --accent-text: #6e4c9b;
   --on-accent: #FFFFFF;
-  --accent-text: color-mix(in oklab, var(--accent) 50%, var(--foreground));
-  --info-text: color-mix(in oklab, var(--info) 50%, var(--foreground));
-  --success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));
-  --destructive-text: color-mix(in oklab, var(--destructive) 50%, var(--foreground));
+  --info-text: #7b5729;
+  --on-info: #FFFFFF;
+  --success-text: #2a6852;
+  --on-success: #FFFFFF;
+  --destructive-text: #9c3c48;
+  --on-destructive: #FFFFFF;
   --foreground-1\.5: color-mix(in srgb, var(--foreground) 1.5%, var(--background));
   --foreground-2: color-mix(in srgb, var(--foreground) 2%, var(--background));
   --foreground-3: color-mix(in srgb, var(--foreground) 3%, var(--background));
@@ -67,21 +70,21 @@
   --foreground-90: color-mix(in srgb, var(--foreground) 90%, var(--background));
   --foreground-95: color-mix(in srgb, var(--foreground) 95%, var(--background));
   --background: #FFFFFF;
-  --foreground: #20232C;
+  --foreground: #222630;
   --accent: #7851A9;
-  --info: #94601C;
-  --success: #267454;
+  --info: #96651D;
+  --success: #287659;
   --destructive: #B63E4C;
   --background-elevated: #FFFFFF;
-  --foreground-dimmed: #606775;
+  --foreground-dimmed: #626B7B;
   --secondary: #F2F3F8;
   --secondary-foreground: #373D4B;
   --muted: #F7F8FB;
-  --muted-foreground: #606775;
+  --muted-foreground: #626B7B;
   --card: #FFFFFF;
-  --card-foreground: #20232C;
-  --popover-foreground: #20232C;
-  --border: #E5E5E6;
+  --card-foreground: #222630;
+  --popover-foreground: #222630;
+  --border: #E2E6ED;
   --ring: #7851A9;
   --user-message-bubble: #F3F3F3;
   --paper: #FFFFFF;
@@ -127,11 +130,14 @@
   --shadow-border-opacity: 0.15;
   --shadow-blur-opacity: 0.12;
   --user-message-bubble-dimmed: #252525;
+  --accent-text: #bba4e4;
   --on-accent: #000000;
-  --accent-text: color-mix(in oklab, var(--accent) 50%, var(--foreground));
-  --info-text: color-mix(in oklab, var(--info) 50%, var(--foreground));
-  --success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));
-  --destructive-text: color-mix(in oklab, var(--destructive) 50%, var(--foreground));
+  --info-text: #dfbb7c;
+  --on-info: #000000;
+  --success-text: #8bc7a9;
+  --on-success: #000000;
+  --destructive-text: #eca2ac;
+  --on-destructive: #000000;
   --foreground-1\.5: color-mix(in srgb, var(--foreground) 1.5%, var(--background));
   --foreground-2: color-mix(in srgb, var(--foreground) 2%, var(--background));
   --foreground-3: color-mix(in srgb, var(--foreground) 3%, var(--background));
@@ -146,28 +152,28 @@
   --foreground-80: color-mix(in srgb, var(--foreground) 80%, var(--background));
   --foreground-90: color-mix(in srgb, var(--foreground) 90%, var(--background));
   --foreground-95: color-mix(in srgb, var(--foreground) 95%, var(--background));
-  --background: #17191E;
+  --background: #171A21;
   --foreground: #EEF0F6;
-  --accent: oklch(0.660 0.160 302.3);
-  --info: #E3B674;
-  --success: #83CBA7;
-  --destructive: #F18C98;
-  --background-elevated: #22262E;
-  --foreground-dimmed: #AAB1C1;
-  --secondary: #2A2F38;
+  --accent: #B194DF;
+  --info: #DFBB7C;
+  --success: #8BC7A9;
+  --destructive: #ECA2AC;
+  --background-elevated: #252A35;
+  --foreground-dimmed: #ACB5C6;
+  --secondary: #252A35;
   --secondary-foreground: #E0E4EE;
-  --muted: #20242B;
-  --muted-foreground: #AAB1C1;
-  --card: #1C1F26;
+  --muted: #252A35;
+  --muted-foreground: #ACB5C6;
+  --card: #1E222B;
   --card-foreground: #EEF0F6;
   --popover-foreground: #EEF0F6;
-  --border: #343946;
-  --ring: oklch(0.660 0.160 302.3);
+  --border: #353D4C;
+  --ring: #B194DF;
   --user-message-bubble: #2B2B2B;
-  --paper: #1C1F26;
-  --input: #191C21;
-  --popover: #262A32;
-  --popover-solid: #262A32;
+  --paper: #1E222B;
+  --input: #1E222B;
+  --popover: #252A35;
+  --popover-solid: #252A35;
   --theme-radius: 6px;
   --theme-panel-radius: 6px;
   --theme-border-width: 1px;

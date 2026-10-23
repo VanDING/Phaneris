@@ -228,7 +228,7 @@ export function MarkdownJsonBlock({ code, className }: MarkdownJsonBlockProps) {
                 const isCopied = props['data-copied']
                 return isCopied ? (
                   <Check
-                    className="ml-1.5 inline-flex cursor-pointer text-success-text"
+                    className="ml-1.5 inline-flex cursor-pointer text-success"
                     size={10}
                     onClick={props.onClick as React.MouseEventHandler}
                   />

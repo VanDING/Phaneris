@@ -105,10 +105,10 @@ const mutations: Mutation[] = [
     command: themeTest, expect: 'fail', expectPattern: /typography and material tokens synchronized/,
   },
   {
-    id: 'FA09', rule: 'theme-resource-parity', failureMode: 'A non-default built-in drifts from its canonical definition',
-    file: 'apps/electron/resources/themes/geek.json',
-    apply: source => replaceOnce(source, 'Cascadia Code', 'Cascadia Code Mutated'),
-    command: themeTest, expect: 'fail', expectPattern: /bundles exactly the four canonical/,
+    id: 'FA09', rule: 'theme-resource-parity', failureMode: 'The Default resource drifts from its canonical definition',
+    file: 'apps/electron/resources/themes/default.json',
+    apply: source => replaceOnce(source, '#7851A9', '#7951A9'),
+    command: themeTest, expect: 'fail', expectPattern: /bundles exactly the canonical Default/,
   },
   {
     id: 'FA12', rule: 'crlf-tolerance', failureMode: 'A CRLF checkout must not break the CSS block parsing',

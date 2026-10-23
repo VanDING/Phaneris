@@ -2,7 +2,7 @@
 
 - 作者：Phaneris（与 Captain 协作）
 - 日期：2026-08-20
-- 状态：historical（2026-08 设计与当时实施记录）；当前字段、四套内置主题和运行时校验见[生成契约](theme-contract.generated.md)及[宿主与回滚](theme-hosts-and-rollout.md)。下文数字与路径保留历史口径。
+- 状态：historical（2026-08 设计与当时实施记录）；当前字段、Default 单主题和运行时校验见[生成契约](theme-contract.generated.md)及[宿主与回滚](theme-hosts-and-rollout.md)。下文数字与路径保留历史口径。
 - 配套演示：`docs/prototypes/theme-engine-demo-5-themes.html`（五套主题全维度对比）
 - 主题制作提示词：[`docs/guides/theme-authoring-prompt.md`](../guides/theme-authoring-prompt.md) —— 面向"让 AI 产出主题文件"的完整 token 契约（39 个 token、schema 硬约束、light/dark 继承模型、Shiki 白名单）
 - 面向最终用户的说明：`apps/electron/resources/docs/themes.md`（随应用打包并同步到 `~/.phaneris/docs/`）

@@ -70,7 +70,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
           {risks.length > 0 && (
             <div className="flex flex-wrap gap-1" title={t('chat.permissionRiskHint')}>
               {risks.map((risk) => (
-                <span key={risk} className="rounded-shape-sm bg-destructive/10 px-1.5 py-0.5 text-micro font-medium text-destructive">
+                <span key={risk} className="rounded-shape-sm bg-destructive/10 px-1.5 py-0.5 text-micro font-medium text-destructive-text">
                   {riskLabels[risk]}
                 </span>
               ))}
@@ -112,7 +112,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 gap-1.5 text-destructive hover:text-destructive border border-dashed border-destructive/50 hover:bg-destructive/10 hover:border-destructive/70 active:bg-destructive/20"
+          className="h-7 gap-1.5 text-destructive-text hover:text-destructive-text border border-dashed border-destructive/50 hover:bg-destructive/10 hover:border-destructive/70 active:bg-destructive/20"
           onClick={handleDeny}
         >
           <X className="h-3.5 w-3.5" />

@@ -16,7 +16,7 @@ await verificationWorkflow('theme-contract', async run => {
   const checks: { id: string; passed: boolean; error?: string }[] = [], samples: unknown[] = [], errors: string[] = []
   const sources = ['scripts/verification/fixtures/theme-contract-css/electron.css', 'scripts/verification/fixtures/theme-contract-css/ui.css',
     'scripts/verification/fixtures/theme-contract-css/viewer.css', 'scripts/verification/fixtures/theme-contract-css/webui.css',
-    'packages/shared/src/config/theme.ts', 'packages/shared/src/config/schemas.ts', 'packages/shared/src/config/themes/ink.json',
+    'packages/shared/src/config/theme.ts', 'packages/shared/src/config/schemas.ts',
     'packages/ui/src/styles/index.css', 'apps/electron/src/renderer/index.css', 'apps/viewer/src/index.css', 'apps/viewer/src/App.tsx',
     'apps/electron/src/renderer/context/ThemeContext.tsx', 'packages/ui/src/context/ShikiThemeContext.tsx',
     'packages/ui/src/components/markdown/CodeBlock.tsx', 'packages/ui/src/lib/theme-compiler.ts', 'packages/shared/src/config/theme-runtime.ts',
@@ -78,7 +78,7 @@ await verificationWorkflow('theme-contract', async run => {
           }); samples.push({ host, id, mode, contrasts }); assert(contrasts.every(value => value.ratio >= 4.5), JSON.stringify(contrasts.filter(value => value.ratio < 4.5)))
         })
       }
-      await choose('ink', 'light'); await page.screenshot({ path: join(run.directory, `${host}-ink-light.png`) })
+      await choose('default', 'light'); await page.screenshot({ path: join(run.directory, `${host}-default-light.png`) })
     }
     const invalid: Record<string, Record<string, unknown>> = {
       banana: { background: 'banana' }, radius: { radius: '-8px' }, calculated: { radius: 'calc(2px - 8px)' },

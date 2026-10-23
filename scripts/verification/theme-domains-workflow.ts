@@ -26,7 +26,7 @@ await verificationWorkflow('theme-domains', async run => {
   const choose = async (id: string, mode: 'light' | 'dark') => {
     await page.evaluate(({ id, mode }) => window.themeRoles.choose(id, mode), { id, mode })
     await page.waitForFunction(({ id, mode }) => (document.documentElement.dataset.theme ?? 'default') === id && document.documentElement.dataset.themeStatus === 'ready'
-      && document.documentElement.classList.contains('dark') === (id === 'geek' || id === 'cyberpunk-2077' || mode === 'dark'), { id, mode })
+      && document.documentElement.classList.contains('dark') === (mode === 'dark'), { id, mode })
     await page.evaluate(async () => { await document.fonts.ready; await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))) })
   }
   try {
@@ -37,7 +37,7 @@ await verificationWorkflow('theme-domains', async run => {
     const pdf = page.getByTestId('domain-pdf').locator('canvas'), frame = page.frameLocator('[data-testid="domain-pages"] iframe')
     await page.getByTestId('domain-pdf').locator('.react-pdf__Page__textContent').waitFor()
     const ansiBefore = await page.getByTestId('domain-terminal').locator('pre span').filter({ hasText: 'ANSI red' }).evaluate(element => getComputedStyle(element).color)
-    for (const id of ['default', 'ink', 'geek', 'cyberpunk-2077']) for (const mode of ['light', 'dark'] as const) {
+    for (const id of ['default']) for (const mode of ['light', 'dark'] as const) {
       await choose(id, mode)
       for (const state of ['ready', 'empty', 'loading', 'error'] as const) await check(`TC14-domains-${id}-${mode}-${state}`, async () => {
         await page.evaluate(state => window.themeDomains.setState(state), state)
@@ -66,7 +66,7 @@ await verificationWorkflow('theme-domains', async run => {
         assert((await page.getByTestId('domain-pdf').locator('.react-pdf__Page__textContent').innerText()).includes('User-owned PDF'))
       })
     }
-    await choose('ink', 'light'); await page.evaluate(() => window.themeDomains.setState('ready'))
+    await choose('default', 'light'); await page.evaluate(() => window.themeDomains.setState('ready'))
     await check('TC11-domain-keyboard-row', async () => { await page.getByTestId('entity').focus(); await page.keyboard.press('Enter'); assert.equal(await page.getByTestId('entity').getAttribute('aria-selected'), 'true') })
     await check('TC11-domain-touch-copy', async () => {
       for (const button of await page.getByTestId('domain-terminal').locator('button').all()) {
