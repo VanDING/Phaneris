@@ -2,10 +2,11 @@ export type CustomEndpointInput = 'text' | 'image'
 import type { ModelDefinition } from '@phaneris/shared/config/models'
 
 /** Custom endpoint protocol — determines which streaming adapter Pi SDK uses. */
-export type CustomEndpointApi = 'openai-completions' | 'anthropic-messages'
+export type CustomEndpointApi = 'openai-completions' | 'anthropic-messages' | 'openai-responses'
 
 export interface CustomEndpointModelDefaults {
   supportsImages?: boolean
+  baseUrl?: string
 }
 
 export interface CustomEndpointModelOverrides {
@@ -84,6 +85,11 @@ export function buildCustomEndpointModelDef(
 ) {
   const supportsImages = overrides?.supportsImages ?? defaults?.supportsImages ?? false
   const input: CustomEndpointInput[] = supportsImages ? ['text', 'image'] : ['text']
+  let deepseek = false
+  try {
+    const host = new URL(defaults?.baseUrl ?? '').hostname
+    deepseek = /^deepseek(?:-|\/)/i.test(id) && (host === 'api.deepseek.com' || host === 'opencode.ai')
+  } catch { /* Unknown endpoints retain the generic protocol. */ }
 
   return {
     id,
@@ -96,6 +102,8 @@ export function buildCustomEndpointModelDef(
     ...(overrides?.promptCache ? { promptCache: overrides.promptCache } : {}),
     contextWindow: overrides?.contextWindow ?? 131_072,
     maxTokens: overrides?.maxTokens ?? 16_384,
-    ...(api === 'openai-completions' ? { compat: { supportsStore: false } } : {}),
+    ...(api === 'openai-completions' ? { compat: { supportsStore: false,
+      ...(deepseek ? { thinkingFormat: 'deepseek' as const, maxTokensField: 'max_tokens' as const, requiresReasoningContentOnAssistantMessages: true } : {}),
+    } } : {}),
   }
 }

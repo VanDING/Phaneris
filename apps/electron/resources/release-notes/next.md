@@ -13,5 +13,6 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 - **Conversation feedback** — Forward thinking updates while a model is reasoning, retain received thinking when a response is stopped, and release short paused responses after the display buffer deadline.
 - **Browser cancellation** — Stop waiting indefinitely for browser captures, preserve completed batch output on cancellation, and settle observed tool errors returned after a stop.
+- **Custom connections** — Preserve DeepSeek thinking settings on recognized custom endpoints and avoid selecting an unrelated utility model from the connection's authentication label.
 
 ## Breaking Changes

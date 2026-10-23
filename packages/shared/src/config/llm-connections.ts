@@ -268,7 +268,7 @@ export function isDeniedMiniModelId(modelId: string, piAuthProvider?: string): b
  * Used for mini agent, title generation, and mini completions.
  */
 export function getMiniModel(
-  connection: Pick<LlmConnection, 'models' | 'providerType' | 'piAuthProvider' | 'utilityModel'>,
+  connection: Pick<LlmConnection, 'models' | 'providerType' | 'piAuthProvider' | 'utilityModel' | 'defaultModel'>,
 ): string | undefined {
   return findSmallModel(connection);
 }
@@ -281,7 +281,7 @@ export function getMiniModel(
  * Used for response summarization and API tool summarization.
  */
 export function getSummarizationModel(
-  connection: Pick<LlmConnection, 'models' | 'providerType' | 'piAuthProvider' | 'utilityModel'>,
+  connection: Pick<LlmConnection, 'models' | 'providerType' | 'piAuthProvider' | 'utilityModel' | 'defaultModel'>,
 ): string | undefined {
   return findSmallModel(connection);
 }
@@ -298,7 +298,7 @@ export function getSummarizationModel(
  * auth flavor.
  */
 function findSmallModel(
-  connection: Pick<LlmConnection, 'models' | 'providerType' | 'piAuthProvider' | 'utilityModel'>,
+  connection: Pick<LlmConnection, 'models' | 'providerType' | 'piAuthProvider' | 'utilityModel' | 'defaultModel'>,
 ): string | undefined {
   if (!connection.models || connection.models.length === 0) return undefined;
 
@@ -315,7 +315,10 @@ function findSmallModel(
     if (explicit && isAllowedModel(explicit)) return connection.utilityModel
   }
 
-  const preferred = connection.piAuthProvider ? PI_PREFERRED_MINI_MODELS[connection.piAuthProvider] ?? [] : [];
+  // Custom endpoints may use OpenAI-shaped authentication without serving OpenAI's catalog.
+  // The selected main model is known to work; another utility model must be explicit.
+  if (connection.providerType === 'pi_compat' && connection.defaultModel) return connection.defaultModel;
+  const preferred = connection.piAuthProvider && connection.providerType !== 'pi_compat' ? PI_PREFERRED_MINI_MODELS[connection.piAuthProvider] ?? [] : [];
   for (const candidate of preferred) {
     const match = connection.models.find(model => isAllowedModel(model) && preferredModelRank(toId(model), [candidate]) === 0);
     if (match) return toId(match);
