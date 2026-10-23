@@ -27,9 +27,11 @@ export function contextBadgeUsage(tokenUsage: Session['tokenUsage'] | undefined)
     inputTokens: snapshot ? snapshot.usedTokens ?? undefined : tokenUsage?.contextTokens,
     // `limitKind: 'compaction'` makes `limitTokens` the compaction threshold rather
     // than the model window, so it is only usable as a denominator when it *is* the
-    // window. The ledger's contextWindow stays the primary source.
+    // window. The current SDK snapshot also carries the complete window; prefer
+    // it over a ledger capacity left behind by the previous model.
     contextWindow:
-      tokenUsage?.contextWindow ?? (snapshot?.limitKind === 'context' ? snapshot.limitTokens : undefined),
+      snapshot?.contextWindow ?? tokenUsage?.contextWindow
+      ?? (snapshot?.limitKind === 'context' ? snapshot.limitTokens : undefined),
     isUsageUnknown: snapshot != null && snapshot.usedTokens == null,
   }
 }

@@ -125,6 +125,7 @@ export class PiEventAdapter extends BaseEventAdapter {
       ?? (afterCompaction ? contextAfterCompaction(estimatedTokensAfter, this.contextUsage) : undefined);
     if (snapshot) {
       this.contextUsage = snapshot;
+      if (snapshot.contextWindow) this.setContextWindow(snapshot.contextWindow);
       yield { type: 'context_usage', contextUsage: snapshot };
     }
   }

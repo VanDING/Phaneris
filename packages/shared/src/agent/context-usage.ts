@@ -23,6 +23,7 @@ export function contextAfterCompaction(
   const count = tokenCount(postTokens);
   return {
     ...(previous?.limitTokens && { limitTokens: previous.limitTokens }),
+    ...(previous?.contextWindow && { contextWindow: previous.contextWindow }),
     usedTokens: count ?? null,
     limitKind: previous?.limitKind ?? 'compaction',
     isEstimate: true,
@@ -44,6 +45,7 @@ export function contextFromPi(
   const limit = window !== undefined && reserve !== undefined ? window - reserve : window;
   return {
     usedTokens: usedTokens ?? null,
+    ...(window !== undefined && window > 0 && { contextWindow: window }),
     ...(limit !== undefined && limit > 0 && { limitTokens: limit }),
     limitKind: reserve !== undefined ? 'compaction' : 'context',
     isEstimate: true,

@@ -11,7 +11,7 @@
 
 import type { PermissionMode } from '../agent/mode-manager.ts';
 import type { ThinkingLevel } from '../agent/thinking-levels.ts';
-import type { PiUsage, StoredAttachment, MessageRole, ToolStatus, AuthRequestType, AuthStatus, CredentialInputMode, StoredMessage } from '@phaneris/core/types';
+import type { PiUsage, StoredAttachment, MessageRole, ToolStatus, AuthRequestType, AuthStatus, CredentialInputMode, StoredMessage, ContextUsageSnapshot } from '@phaneris/core/types';
 
 /**
  * Session fields that persist to disk.
@@ -127,6 +127,8 @@ export interface SessionTokenUsage {
   full?: PiUsage;
   /** Model's context window size in tokens (from SDK modelUsage) */
   contextWindow?: number;
+  /** Current occupancy and complete model capacity, independent of billing totals. */
+  contextUsage?: ContextUsageSnapshot;
 }
 
 /**

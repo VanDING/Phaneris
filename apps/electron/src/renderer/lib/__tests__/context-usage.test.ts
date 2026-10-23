@@ -17,6 +17,20 @@ function ledger(overrides: Partial<TokenUsage> = {}): TokenUsage {
 }
 
 describe('context badge occupancy', () => {
+  it('keeps the complete SDK window distinct from the compaction threshold and stale ledger', () => {
+    const contextUsage = {
+      usedTokens: 42_000, contextWindow: 256_000, limitTokens: 240_000,
+      limitKind: 'compaction' as const, isEstimate: true, isStale: false, canCompact: true,
+    }
+    const current = contextBadgeUsage(ledger({ contextWindow: 128_000, contextUsage }))
+    expect(current.contextWindow).toBe(256_000)
+    const stale = contextBadgeUsage(ledger({ contextWindow: undefined,
+      contextUsage: { ...contextUsage, usedTokens: null, isStale: true } }))
+    expect(stale.contextWindow).toBe(256_000)
+    expect(stale.inputTokens).toBeUndefined()
+    expect(stale.isUsageUnknown).toBe(true)
+  })
+
   it('prefers the authoritative snapshot over the derived pre-compaction count', () => {
     const usage = contextBadgeUsage(ledger({
       contextUsage: {

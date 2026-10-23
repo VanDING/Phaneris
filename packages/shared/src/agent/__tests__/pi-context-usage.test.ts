@@ -22,6 +22,15 @@ function adapt(adapter: PiEventAdapter, event: unknown): AgentEvent[] {
 }
 
 describe('Pi canonical context occupancy', () => {
+  it('uses the SDK window for subsequent usage events without a static catalog entry', () => {
+    const adapter = new PiEventAdapter();
+    adapt(adapter, { type: 'context_usage', contextUsage: { tokens: 42_000, contextWindow: 500_000 }, compactionSettings: settings });
+    const events = adapt(adapter, { type: 'message_end', message: { role: 'assistant', content: [{ type: 'text', text: 'ok' }], usage: billing } });
+    expect(events.find(event => event.type === 'usage_update')).toMatchObject({
+      usage: { contextWindow: 500_000 },
+    });
+  });
+
   it('uses SDK occupancy and resolved reserve rather than billing input', () => {
     const adapter = new PiEventAdapter();
     const events = adapt(adapter, {

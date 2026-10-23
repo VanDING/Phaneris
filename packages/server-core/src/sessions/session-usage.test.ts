@@ -83,9 +83,11 @@ describe('session usage ledger authority', () => {
   })
 
   it('publishes authoritative occupancy and never re-publishes a pre-compaction count', async () => {
+    await commit(1, { input: 100, output: 10, cacheRead: 20, cacheWrite: 5, totalTokens: 135,
+      cost: { input: 0.01, output: 0, cacheRead: 0, cacheWrite: 0, total: 0.01 } }, 'stop')
     managed.tokenUsage = { inputTokens: 292, outputTokens: 25, totalTokens: 317, contextTokens: 182, costUsd: 0.03 }
     await internals.processEvent(managed, { type: 'context_usage', contextUsage: {
-      usedTokens: 419_000, limitTokens: 469_000, limitKind: 'compaction',
+      usedTokens: 419_000, contextWindow: 500_000, limitTokens: 469_000, limitKind: 'compaction',
       isEstimate: true, isStale: false, canCompact: true,
     } })
     expect(managed.tokenUsage.contextUsage).toMatchObject({ usedTokens: 419_000, limitTokens: 469_000 })
@@ -95,6 +97,17 @@ describe('session usage ledger authority', () => {
     expect(sent.at(-1)).toMatchObject({ type: 'usage_update', tokenUsage: { contextUsage: { usedTokens: 419_000 } } })
     // context_usage is the occupancy channel: cumulative counters are untouched.
     expect(managed.tokenUsage).toMatchObject({ inputTokens: 292, totalTokens: 317, contextTokens: 182 })
+    expect(managed.tokenUsage.contextWindow).toBe(500_000)
+    internals.applyDurableUsageProjection(managed)
+    expect(managed.tokenUsage.contextUsage).toMatchObject({ usedTokens: 419_000, contextWindow: 500_000, limitTokens: 469_000 })
+    const file = join(root, 'context-session.jsonl')
+    writeSessionJsonl(file, { id: 's', workspaceRootPath: root, createdAt: 1, lastUsedAt: 1,
+      messages: [], tokenUsage: managed.tokenUsage! })
+    const loaded = readSessionJsonl(file)!
+    const { messages: _messages, ...metadata } = loaded
+    const reloaded = createManagedSession(metadata, managed.workspace, { messagesLoaded: true })
+    internals.applyDurableUsageProjection(reloaded)
+    expect(reloaded.tokenUsage?.contextUsage).toEqual(managed.tokenUsage.contextUsage)
 
     // A compaction boundary with no fresh SDK count invalidates, never freezes.
     await internals.processEvent(managed, { type: 'context_usage', contextUsage: {

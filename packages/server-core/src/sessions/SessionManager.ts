@@ -2917,6 +2917,7 @@ export class SessionManager implements ISessionManager {
       cacheReadTokens: usage.cacheReadTokens,
       cacheCreationTokens: usage.cacheCreationTokens,
       contextWindow: managed.tokenUsage?.contextWindow,
+      contextUsage: managed.tokenUsage?.contextUsage,
     }
     managed.lastFullUsage = usage.lastFullUsage as PiUsage | undefined
   }
@@ -10280,6 +10281,9 @@ initialSources: {
         // consumers that only read `usage_update`.
         managed.tokenUsage ??= { ...DEFAULT_TOKEN_USAGE }
         managed.tokenUsage.contextUsage = event.contextUsage
+        if (event.contextUsage.contextWindow) {
+          managed.tokenUsage.contextWindow = event.contextUsage.contextWindow
+        }
         this.sendEvent({
           type: 'context_usage',
           sessionId: managed.id,

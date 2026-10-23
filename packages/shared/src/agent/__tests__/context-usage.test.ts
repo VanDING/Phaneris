@@ -5,18 +5,19 @@ import { contextAfterCompaction, contextFromPi } from '../context-usage.ts';
 /** A resolved pre-compaction snapshot, as the adapter would have cached it. */
 const before: ContextUsageSnapshot = {
   usedTokens: 419_000, limitTokens: 1_000_000, limitKind: 'compaction',
+  contextWindow: 1_100_000,
   isEstimate: true, isStale: false, canCompact: true,
 };
 
 describe('context occupancy snapshots', () => {
   it('replaces 419k with post-compaction 12k while retaining the resolved limit', () => {
     expect(contextAfterCompaction(12_000, before)).toEqual({
-      usedTokens: 12_000, limitTokens: 1_000_000, limitKind: 'compaction', isEstimate: true, isStale: false, canCompact: true,
+      usedTokens: 12_000, limitTokens: 1_000_000, contextWindow: 1_100_000, limitKind: 'compaction', isEstimate: true, isStale: false, canCompact: true,
     });
   });
 
   it('invalidates the old count when compaction has no post-token metadata', () => {
-    expect(contextAfterCompaction(undefined, before)).toMatchObject({ usedTokens: null, isStale: true, limitTokens: 1_000_000 });
+    expect(contextAfterCompaction(undefined, before)).toMatchObject({ usedTokens: null, isStale: true, limitTokens: 1_000_000, contextWindow: 1_100_000 });
     expect(contextAfterCompaction(Number.NaN, before).usedTokens).toBeNull();
     expect(contextAfterCompaction(0, before)).toMatchObject({ usedTokens: 0, isStale: false });
   });
@@ -29,7 +30,7 @@ describe('context occupancy snapshots', () => {
 
   it('uses Pi SDK token estimates and the actual configured reserve', () => {
     expect(contextFromPi({ tokens: 120_000, contextWindow: 200_000 }, { enabled: true, reserveTokens: 16_384 })).toEqual({
-      usedTokens: 120_000, limitTokens: 183_616, limitKind: 'compaction', isEstimate: true, isStale: false, canCompact: true,
+      usedTokens: 120_000, limitTokens: 183_616, contextWindow: 200_000, limitKind: 'compaction', isEstimate: true, isStale: false, canCompact: true,
     });
     expect(contextFromPi({ tokens: 120_000, contextWindow: 200_000 }, { enabled: true, reserveTokens: 20_000 })?.limitTokens).toBe(180_000);
   });
