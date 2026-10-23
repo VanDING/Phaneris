@@ -1,13 +1,20 @@
 /**
- * TrajectoryView — compact summary over a turn-aware event ledger with
- * timeline range selection, search filtering, two-level folding, and a
- * record inspector. Ported from the VanDSH view over the Craft snapshot.
+ * Run — the session's run view.
+ *
+ * One frame, five reading paths: Overview answers "how did the run go", the
+ * Trajectory ledger shows every record, Decision shows what the auxiliary layer
+ * changed, Context shows what the model could see per request, and Map keeps the
+ * execution graph. One strip carries the tabs, run state and scope. The
+ * workbench already names the session, so the panel needs no second header.
  */
 
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
-import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
+import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '../../lib/motion'
 import { useTranslation } from 'react-i18next'
+import { Activity, AlertTriangle, RefreshCw } from 'lucide-react'
+import type { SessionDecisionStatus } from '@phaneris/shared/decisions/session'
+import type { DecisionLayerFeature } from '@phaneris/shared/decisions/settings'
 import type { PiUsage } from '@phaneris/core/types'
 import type { TrajectorySnapshot, WorkbenchFocus } from './trajectory-contract'
 import { deriveTrajectoryLayout, flattenTurnRecords, type TrajectoryCellProps, type TrajectoryTurnModel } from './trajectory-layout'
@@ -17,10 +24,12 @@ import { TrajectoryToolbar } from './TrajectoryToolbar'
 import { TrajectoryStrip } from './TrajectoryStrip'
 import { TrajectoryTable } from './TrajectoryTable'
 import { RecordInspector } from './RecordInspector'
-import { TrajectoryOverview } from './TrajectoryOverview'
-import { TrajectoryContextView } from './TrajectoryContextView'
 import { TrajectoryMapView } from './TrajectoryMapView'
+import { RunOverview } from './RunOverview'
+import { RunContextView } from './RunContextView'
+import type { RunDecisionSummary, RunReliabilityFacts } from './run-model'
 import type { TrajectorySessionMap } from './trajectory-session-map'
+import css from './run-view.module.css'
 import './trajectory-theme.css'
 
 const DURATION_PREFERENCE_KEY = 'craft.trajectory.duration'
@@ -28,6 +37,25 @@ const VIEW_PREFERENCE_KEY = 'craft.trajectory.view'
 const RUN_VIEWS = ['overview', 'trajectory', 'decisions', 'context', 'map'] as const
 
 export type TrajectoryRunView = typeof RUN_VIEWS[number]
+
+/** A one-shot request from another Run view to focus a decision record. */
+export interface RunDecisionIntent {
+  nonce: number
+  status?: SessionDecisionStatus
+  feature?: DecisionLayerFeature
+}
+
+export interface RunDecisionSlot {
+  onOpenContext: (messageId: string) => void
+  intent?: RunDecisionIntent
+}
+
+/** Loading / error state of the session evidence the whole view depends on. */
+export interface RunViewState {
+  loading?: boolean
+  error?: boolean
+  onRetry?: () => void
+}
 
 function readDurationPreference(): boolean {
   try {
@@ -50,9 +78,8 @@ function readViewPreference(): TrajectoryRunView {
 }
 
 export interface TrajectoryViewProps {
-  decisions?: ReactNode
-  decisionSummary?: (onOpen: () => void) => ReactNode
-  trajectoryState?: ReactNode
+  /** Decisions view content; the slot receives the Context hand-off callback. */
+  decisions?: (slot: RunDecisionSlot) => ReactNode
   snapshot: TrajectorySnapshot
   /** Session cumulative usage for the inspector's usage tab. */
   sessionTotal?: PiUsage
@@ -60,8 +87,14 @@ export interface TrajectoryViewProps {
   isProcessing?: boolean
   /** Session/environment facts formerly shown in the standalone Context panel. */
   contextSummary?: TrajectoryContextSummary
+  /** Decision facts for the Overview impact card. */
+  decisionSummary?: RunDecisionSummary
+  /** Retained-runtime reliability facts for the diagnostics card. */
+  reliability?: RunReliabilityFacts
   /** Current session and its connected branch/subtask family. */
   sessionMap?: TrajectorySessionMap
+  /** Loading / error state for the evidence the view projects. */
+  viewState?: RunViewState
   onOpenChat?: (messageId: string) => void
   onOpenReview?: (changeId: string) => void
   onOpenFile?: (path: string) => void
@@ -84,9 +117,15 @@ export interface TrajectoryContextSummary {
   outputTokens?: number
   totalTokens?: number
   contextTokens?: number
+  /** Model context window when the host knows it; the occupancy ratio stays hidden otherwise. */
+  contextWindow?: number
   costUsd?: number
   unknownCostRequests?: number
   estimatedCostRequests?: number
+  /** Workspace identity for the run breadcrumb. */
+  workspaceName?: string
+  /** Remote workspaces are named as such instead of "local session". */
+  remote?: boolean
 }
 
 /** Stable record identity used for assistant folding. */
@@ -94,11 +133,30 @@ function assistantRecordId(cell: TrajectoryCellProps): string {
   return cell.sourceSeq ?? cell.callId ?? `index-${cell.index}`
 }
 
-export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSummary, sessionMap, decisions, decisionSummary, trajectoryState, onOpenChat, onOpenReview, onOpenFile, onOpenSession, focus, onFocusChange }: TrajectoryViewProps) {
+/** The request that first carried a message, for cross-view hand-offs. */
+function requestSeqForMessage(snapshot: TrajectorySnapshot, messageId: string): number | undefined {
+  let ordinal = 0
+  for (const message of snapshot.messages) {
+    if (message.role === 'assistant' && message.requestSeq !== undefined) ordinal += 1
+    if (message.id !== messageId) continue
+    return message.role === 'assistant' && message.requestSeq !== undefined ? ordinal : Math.max(1, ordinal + 1)
+  }
+  return undefined
+}
+
+export function TrajectoryView({
+  snapshot, sessionTotal, isProcessing, contextSummary, decisionSummary, reliability, sessionMap, viewState,
+  decisions, onOpenChat, onOpenReview, onOpenFile, onOpenSession, focus, onFocusChange,
+}: TrajectoryViewProps) {
   const { t } = useTranslation()
   const [runView, setRunView] = useState<TrajectoryRunView>(readViewPreference)
   const [visitedViews, setVisitedViews] = useState(() => new Set<TrajectoryRunView>([runView]))
   const viewId = useId()
+  useEffect(() => {
+    // Selection can change after native focus scrolling; keep the active tab
+    // fully visible once React has committed its selected weight and underline.
+    document.getElementById(`${viewId}-tab-${runView}`)?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }, [runView, viewId])
   const reduceMotion = useReducedMotionConfig()
   const [searchQuery, setSearchQuery] = useState('')
   const [eventFilter, setEventFilter] = useState<'all' | 'conversation' | 'tools' | 'errors'>('all')
@@ -110,6 +168,9 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
   const [timelineRange, setTimelineRange] = useState<TrajectoryTimeRange | null>(null)
   const [actualDuration, setActualDuration] = useState<boolean>(readDurationPreference)
   const [actualTime, setActualTime] = useState(false)
+  const [contextFocus, setContextFocus] = useState<number | undefined>(focus?.requestSeq)
+  const [contextCategory, setContextCategory] = useState<string | undefined>()
+  const [decisionIntent, setDecisionIntent] = useState<RunDecisionIntent | undefined>()
   const seenAssistantIdsRef = useRef(new Set<string>())
 
   const turns = useMemo<readonly TrajectoryTurnModel[]>(() => {
@@ -176,6 +237,10 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
     setCollapsedAssistants((current) => new Set([...current, ...newAssistantIds]))
   }, [turns])
 
+  useEffect(() => {
+    if (focus?.requestSeq !== undefined) setContextFocus(focus.requestSeq)
+  }, [focus?.requestSeq])
+
   const toggleAllTurns = () => {
     const all = new Set<number>()
     if (!allTurnsCollapsed) {
@@ -238,6 +303,7 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
   }
 
   const selectRunView = (view: TrajectoryRunView) => {
+    if (view !== 'context') setContextCategory(undefined)
     setVisitedViews(current => current.has(view) ? current : new Set([...current, view]))
     setRunView(view)
     try {
@@ -245,6 +311,23 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
     } catch {
       // Best-effort preference only.
     }
+  }
+
+  const focusContext = (requestSeq: number | undefined, category?: string) => {
+    if (requestSeq === undefined) return
+    setContextFocus(requestSeq)
+    if (category) setContextCategory(category)
+    onFocusChange?.({ source: 'run', requestSeq })
+    selectRunView('context')
+  }
+
+  const openDecisionContext = (messageId: string) => {
+    focusContext(requestSeqForMessage(snapshot, messageId))
+  }
+
+  const openDecisionIssues = (status: 'failed' | 'fallback') => {
+    setDecisionIntent({ nonce: Date.now(), status })
+    selectRunView('decisions')
   }
 
   const openTrajectory = (index?: number) => {
@@ -325,131 +408,219 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
     </div>
   )
 
+  const loading = viewState?.loading === true
+  const failed = viewState?.error === true
+  const empty = !loading && !failed && snapshot.contributions.length === 0
+  const ready = !loading && !failed && !empty
+  const turnCount = turns.filter(turn => turn.turn !== null).length
+  const requestCount = snapshot.contributions.filter(contribution => contribution.kind === 'request-header').length
+  const stateLabel = loading
+    ? t('run.state.loading')
+    : failed
+      ? t('run.state.unavailable')
+      : empty
+        ? t('run.state.waiting')
+        : isProcessing
+          ? t('run.state.running')
+          : t('run.state.complete')
+  const stateTone = loading
+    ? css.statusNeutral
+    : failed
+      ? css.statusWarning
+      : empty
+        ? css.statusNeutral
+        : isProcessing
+          ? css.statusAccent
+          : css.statusSuccess
+  const tailLabel = loading
+    ? t('run.state.loadingTail')
+    : failed
+      ? t('run.state.unavailableTail')
+      : empty
+        ? t('run.state.waitingTail')
+        : isProcessing
+          ? t('run.state.runningTail', { requests: requestCount })
+          : t('run.state.scope', { turns: turnCount, requests: requestCount })
+
+  const stateView = loading || failed || empty
+    ? (
+      <div className={css.emptyState} data-run-empty={failed ? 'error' : loading ? 'loading' : 'empty'}>
+        {failed ? <AlertTriangle /> : <Activity />}
+        <h2>{failed ? t('run.empty.errorTitle') : loading ? t('run.empty.loadingTitle') : t('run.empty.emptyTitle')}</h2>
+        <p>{failed ? t('run.empty.errorHint') : loading ? t('run.empty.loadingHint') : t('run.empty.emptyHint')}</p>
+        {failed && viewState?.onRetry && (
+          <button type="button" className={`${css.outlineButton} craft-control`} onClick={viewState.onRetry}>
+            <RefreshCw />{t('run.empty.retry')}
+          </button>
+        )}
+      </div>
+    )
+    : null
+
   return (
     <div className="trajectory-root flex h-full min-h-0 flex-col @container/trajectory">
-      <LayoutGroup id={viewId}>
-        <div className="flex h-10 shrink-0 items-end gap-5 overflow-x-auto border-b border-border/50 bg-background/80 px-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist" aria-label={t('trajectory.views.label')}>
-          {RUN_VIEWS.map((view, index) => (
-            <button
-              key={view}
-              type="button"
-              role="tab"
-              id={`${viewId}-tab-${view}`}
-              aria-controls={`${viewId}-panel-${view}`}
-              tabIndex={runView === view ? 0 : -1}
-              aria-selected={runView === view}
-              onKeyDown={event => {
-                const next = event.key === 'ArrowRight' ? (index + 1) % RUN_VIEWS.length
-                  : event.key === 'ArrowLeft' ? (index + RUN_VIEWS.length - 1) % RUN_VIEWS.length
-                    : event.key === 'Home' ? 0 : event.key === 'End' ? RUN_VIEWS.length - 1 : null
-                if (next === null) return
-                event.preventDefault()
-                const target = RUN_VIEWS[next]!
-                selectRunView(target)
-                document.getElementById(`${viewId}-tab-${target}`)?.focus()
-              }}
-              onClick={() => selectRunView(view)}
-              className={`craft-control relative h-10 shrink-0 px-0.5 text-label font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${runView === view ? 'text-foreground' : 'text-text-secondary hover:text-foreground'}`}
-            >
-              {t(`trajectory.views.${view}`)}
-              {runView === view && <motion.span layoutId="run-active-view" className="absolute inset-x-0 bottom-0 h-0.5 rounded-t bg-accent" transition={motionTween(reduceMotion, 'standard', 'move')} />}
-            </button>
-          ))}
+      <div className={css.runView} data-run-view>
+        <div className={css.runToolbar} data-run-toolbar>
+          <div
+            className={css.runTabs}
+            role="tablist"
+            // Roving focus lives on the tabs. The container is programmatically
+            // focusable only so the composite widget satisfies the a11y contract
+            // without adding a second tab stop.
+            tabIndex={-1}
+            aria-label={t('trajectory.views.label')}
+            onKeyDown={event => {
+              if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return
+              const index = RUN_VIEWS.indexOf(runView)
+              const next = event.key === 'ArrowRight' ? (index + 1) % RUN_VIEWS.length
+                : event.key === 'ArrowLeft' ? (index + RUN_VIEWS.length - 1) % RUN_VIEWS.length
+                  : event.key === 'Home' ? 0 : RUN_VIEWS.length - 1
+              event.preventDefault()
+              const target = RUN_VIEWS[next]!
+              selectRunView(target)
+              document.getElementById(`${viewId}-tab-${target}`)?.focus()
+            }}
+          >
+            {RUN_VIEWS.map(view => (
+              <button
+                key={view}
+                type="button"
+                role="tab"
+                id={`${viewId}-tab-${view}`}
+                aria-controls={`${viewId}-panel-${view}`}
+                tabIndex={runView === view ? 0 : -1}
+                aria-selected={runView === view}
+                className={`${css.runTab} craft-segment`}
+                onClick={() => selectRunView(view)}
+              >
+                {t(`trajectory.views.${view}`)}
+                {runView === view && (
+                  <motion.span
+                    layoutId="run-active-view"
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5"
+                    style={{ background: 'var(--run-accent)' }}
+                    transition={motionTween(reduceMotion, 'standard', 'move')}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+          <div className={css.runState}>
+            <span className={`${css.statusBadge} ${stateTone}`} data-run-state>
+              <span className={css.statusDot} />{stateLabel}
+            </span>
+            <span className={css.tabsTail} data-run-scope>{tailLabel}</span>
+          </div>
         </div>
 
-      </LayoutGroup>
-      <div className="min-h-0 flex-1">
-        {visitedViews.has('overview') && (
-          <section id={`${viewId}-panel-overview`} role="tabpanel" aria-labelledby={`${viewId}-tab-overview`} hidden={runView !== 'overview'} className="h-full min-h-0 motion-view-enter">
-            <TrajectoryOverview
-              snapshot={snapshot}
-              turns={turns}
-              records={flatRecords}
-              isProcessing={isProcessing}
-              contextSummary={contextSummary}
-              decisionSummary={decisionSummary?.(() => selectRunView('decisions'))}
-              onOpenTrajectory={openTrajectory}
-              onOpenContext={(requestSeq) => {
-                if (requestSeq !== undefined) onFocusChange?.({ source: 'run', requestSeq })
-                selectRunView('context')
-              }}
-            />
-          </section>
-        )}
-        {visitedViews.has('trajectory') && (
-          <section id={`${viewId}-panel-trajectory`} role="tabpanel" aria-labelledby={`${viewId}-tab-trajectory`} hidden={runView !== 'trajectory'} className="h-full min-h-0 motion-view-enter">
-            <div className="flex h-full min-h-0 flex-col">
-              {toolbar(true, true)}
-              <TrajectoryStrip
-                turns={turns}
-                mode={timelineMode}
-                range={timelineRange}
-                selectedIndex={selectedIndex}
-                onRangeChange={(range) => {
-                  setTimelineRange(range)
-                  if (range) onFocusChange?.({ source: 'run', timelineRange: { ...range, mode: timelineMode } })
-                }}
-                onRecordSelect={onSelectIndex}
-              />
-              {trajectoryState ?? ledger}
+          {isProcessing && ready && (
+            <div className={css.runningStrip} data-run-running>
+              <Activity />
+              {t('run.runningStrip', { requests: requestCount + 1 })}
             </div>
-          </section>
-        )}
-        {visitedViews.has('decisions') && (
-          <section id={`${viewId}-panel-decisions`} role="tabpanel" aria-labelledby={`${viewId}-tab-decisions`} hidden={runView !== 'decisions'} className="h-full min-h-0 motion-view-enter">
-            {decisions}
-          </section>
-        )}
-        {visitedViews.has('context') && (
-          <section id={`${viewId}-panel-context`} role="tabpanel" aria-labelledby={`${viewId}-tab-context`} hidden={runView !== 'context'} className="h-full min-h-0 motion-view-enter">
-            <TrajectoryContextView
-              snapshot={snapshot}
-              focusedRequestSeq={focus?.requestSeq}
-              onRequestFocus={(requestSeq) => onFocusChange?.({ source: 'run', requestSeq })}
-              onOpenChat={onOpenChat}
-              onOpenFile={onOpenFile}
-            />
-          </section>
-        )}
-        {visitedViews.has('map') && sessionMap && (
-          <section id={`${viewId}-panel-map`} role="tabpanel" aria-labelledby={`${viewId}-tab-map`} hidden={runView !== 'map'} className="h-full min-h-0 motion-view-enter">
-            <TrajectoryMapView
-              key={sessionMap.currentSessionId}
-              snapshot={snapshot}
-              isProcessing={isProcessing}
-              isActive={runView === 'map'}
-              turns={turns}
-              sessionMap={sessionMap}
-              onSelectRecord={(index) => {
-                setSearchQuery('')
-                setEventFilter('all')
-                setTimelineRange(null)
-                const record = flatRecords.find(record => record.cell.index === index)
-                if (record?.turn !== null && record?.turn !== undefined) {
-                  setCollapsedTurns(current => {
-                    const next = new Set(current)
-                    next.delete(record.turn!)
-                    return next
-                  })
-                }
-                // Reveal only the owning ledger group; preserve unrelated folds.
-                if (record?.cell.kind === 'tool' || record?.cell.kind === 'subtool') {
-                  let position = flatRecords.indexOf(record) - 1
-                  while (position >= 0 && (flatRecords[position]?.cell.kind === 'tool' || flatRecords[position]?.cell.kind === 'subtool')) position -= 1
-                  const owner = flatRecords[position]?.cell
-                  if (owner?.kind === 'message') setCollapsedAssistants(current => {
-                    const next = new Set(current)
-                    next.delete(assistantRecordId(owner))
-                    return next
-                  })
-                }
-                onSelectIndex(index)
-                selectRunView('trajectory')
-              }}
-              onOpenSession={onOpenSession}
-            />
-          </section>
-        )}
+          )}
+          {stateView ?? (
+            <div className={css.runMain}>
+              {visitedViews.has('overview') && (
+                <section id={`${viewId}-panel-overview`} role="tabpanel" aria-labelledby={`${viewId}-tab-overview`} hidden={runView !== 'overview'} className={`${css.pane} motion-view-enter`}>
+                  <RunOverview
+                    snapshot={snapshot}
+                    turns={turns}
+                    records={flatRecords}
+                    isProcessing={isProcessing}
+                    contextSummary={contextSummary}
+                    decisionSummary={decisionSummary}
+                    reliability={reliability}
+                    onOpenTrajectory={openTrajectory}
+                    onOpenContext={focusContext}
+                    onOpenDecisions={() => selectRunView('decisions')}
+                    onOpenDecisionIssues={openDecisionIssues}
+                  />
+                </section>
+              )}
+              {visitedViews.has('trajectory') && (
+                <section id={`${viewId}-panel-trajectory`} role="tabpanel" aria-labelledby={`${viewId}-tab-trajectory`} hidden={runView !== 'trajectory'} className={`${css.pane} ${css.ledgerTheme} motion-view-enter`}>
+                  <div className="flex h-full min-h-0 flex-col">
+                    {toolbar(true, true)}
+                    <TrajectoryStrip
+                      turns={turns}
+                      mode={timelineMode}
+                      range={timelineRange}
+                      selectedIndex={selectedIndex}
+                      onRangeChange={(range) => {
+                        setTimelineRange(range)
+                        if (range) onFocusChange?.({ source: 'run', timelineRange: { ...range, mode: timelineMode } })
+                      }}
+                      onRecordSelect={onSelectIndex}
+                    />
+                    {ledger}
+                  </div>
+                </section>
+              )}
+              {visitedViews.has('decisions') && (
+                <section id={`${viewId}-panel-decisions`} role="tabpanel" aria-labelledby={`${viewId}-tab-decisions`} hidden={runView !== 'decisions'} className={`${css.pane} motion-view-enter`}>
+                  {decisions
+                    ? decisions({ onOpenContext: openDecisionContext, intent: decisionIntent })
+                    : <div className={css.emptyState}><p>{t('run.decision.unavailable')}</p></div>}
+                </section>
+              )}
+              {visitedViews.has('context') && (
+                <section id={`${viewId}-panel-context`} role="tabpanel" aria-labelledby={`${viewId}-tab-context`} hidden={runView !== 'context'} className={`${css.pane} motion-view-enter`}>
+                  <RunContextView
+                    snapshot={snapshot}
+                    focusedRequestSeq={contextFocus ?? focus?.requestSeq}
+                  focusCategory={contextCategory}
+                    onRequestFocus={requestSeq => {
+                      setContextFocus(requestSeq)
+                      onFocusChange?.({ source: 'run', requestSeq })
+                    }}
+                    onOpenChat={onOpenChat}
+                    onOpenFile={onOpenFile}
+                  />
+                </section>
+              )}
+              {visitedViews.has('map') && sessionMap && (
+                <section id={`${viewId}-panel-map`} role="tabpanel" aria-labelledby={`${viewId}-tab-map`} hidden={runView !== 'map'} className={`${css.pane} motion-view-enter`}>
+                  <TrajectoryMapView
+                    key={sessionMap.currentSessionId}
+                    snapshot={snapshot}
+                    isProcessing={isProcessing}
+                    isActive={runView === 'map'}
+                    turns={turns}
+                    sessionMap={sessionMap}
+                    onSelectRecord={(index) => {
+                      setSearchQuery('')
+                      setEventFilter('all')
+                      setTimelineRange(null)
+                      const record = flatRecords.find(record => record.cell.index === index)
+                      if (record?.turn !== null && record?.turn !== undefined) {
+                        setCollapsedTurns(current => {
+                          const next = new Set(current)
+                          next.delete(record.turn!)
+                          return next
+                        })
+                      }
+                      // Reveal only the owning ledger group; preserve unrelated folds.
+                      if (record?.cell.kind === 'tool' || record?.cell.kind === 'subtool') {
+                        let position = flatRecords.indexOf(record) - 1
+                        while (position >= 0 && (flatRecords[position]?.cell.kind === 'tool' || flatRecords[position]?.cell.kind === 'subtool')) position -= 1
+                        const owner = flatRecords[position]?.cell
+                        if (owner?.kind === 'message') setCollapsedAssistants(current => {
+                          const next = new Set(current)
+                          next.delete(assistantRecordId(owner))
+                          return next
+                        })
+                      }
+                      onSelectIndex(index)
+                      selectRunView('trajectory')
+                    }}
+                    onOpenSession={onOpenSession}
+                  />
+                </section>
+              )}
+            </div>
+          )}
       </div>
     </div>
   )

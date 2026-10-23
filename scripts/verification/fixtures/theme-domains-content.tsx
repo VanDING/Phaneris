@@ -29,7 +29,7 @@ function pdfBytes() {
   return new TextEncoder().encode(document)
 }
 const bytes = pdfBytes()
-const totals = { legacyCalls: 0, points: 1, requests: 1, changed: 0, fallback: 1, unconfirmed: 0, failures: 1, cancelled: 0,
+const totals = { legacyCalls: 0, points: 1, requests: 1, changed: 0, unchanged: 0, fallback: 1, discarded: 0, unconfirmed: 0, failures: 1, cancelled: 0,
   knownCostUsd: 0, knownCostRequests: 1, unknownCostRequests: 0, inputTokens: 20, outputTokens: 5 }
 const report: SessionDecisionReport = { schemaVersion: 1, sessionId: 'roles', workspaceId: 'fixture', revision: 1, enabled: true, coverage: 'recorded',
   totals, features: [{ feature: DECISION_LAYER_FEATURES[0]!, totals }], items: [{ id: 'decision', feature: DECISION_LAYER_FEATURES[0]!, startedAt: 1, updatedAt: 2,

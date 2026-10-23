@@ -1,18 +1,50 @@
 import type { Message } from '@phaneris/core/types'
 import type { TrajectorySnapshot } from './trajectory-contract'
 
-export type TrajectoryContextCategory = 'system' | 'user' | 'assistant' | 'tools' | 'attachments' | 'injected'
+/**
+ * Context categories the Run view reports.
+ *
+ * Seven categories, each with a distinct source, so the composition answers
+ * "what occupies the context" instead of collapsing everything into one
+ * "tools" bucket:
+ *   · system    — the captured system prompt (exact text + manifest chars)
+ *   · schemas   — registered tool definitions from the request manifest
+ *   · user      — user message text (attachments stay inside their message)
+ *   · inject    — runtime-injected status/info/plan records
+ *   · skill     — SKILL.md content the model read through a tool call
+ *   · assistant — assistant responses and commentary
+ *   · tool      — tool calls and their results
+ *
+ * `schemas` and `tool` used to share one category even though the manifest
+ * records definitions separately from results. `skill` is derived only from a
+ * recorded read of a `SKILL.md` file; nothing is inferred from a name alone.
+ */
+export type TrajectoryContextCategory = 'system' | 'schemas' | 'user' | 'inject' | 'skill' | 'assistant' | 'tool'
 
 export interface TrajectoryContextItem {
   id: string
   category: TrajectoryContextCategory
+  /** Data-derived title; empty when the view composes one from the category. */
   label: string
+  /** Secondary source descriptor (file basename, tool name, prompt version). */
+  source?: string
   content: string
   chars: number
   estimatedTokens: number
   messageId?: string
   callId?: string
   filePath?: string
+  /** Tool records keep their recorded outcome for the reader's fact row. */
+  toolName?: string
+  toolArguments?: Record<string, unknown>
+  toolResult?: string
+  timestamp?: number
+  toolStatus?: 'succeeded' | 'failed'
+  durationSeconds?: number
+  /** 1-based request ordinal that first included this item. */
+  introducedSeq?: number
+  /** Prompt version for the system-prompt item. */
+  promptVersion?: number
 }
 
 export interface TrajectoryContextGroup {
@@ -20,6 +52,8 @@ export interface TrajectoryContextGroup {
   items: readonly TrajectoryContextItem[]
   chars: number
   estimatedTokens: number
+  /** Sum of the other groups, for a share that cannot exceed 100%. */
+  share: number
 }
 
 export interface TrajectoryRequestContext {
@@ -49,12 +83,26 @@ export interface TrajectoryContextGrowthBucket {
   value: number
 }
 
-const CATEGORY_ORDER: readonly TrajectoryContextCategory[] = [
-  'system', 'user', 'assistant', 'tools', 'attachments', 'injected',
+export type TrajectoryContextEventKind = 'compaction' | 'prompt'
+
+export interface TrajectoryContextEvent {
+  kind: TrajectoryContextEventKind
+  /** Request the change is first observable in. */
+  requestSeq: number
+  /** Net token change at that request, when both totals are known. */
+  deltaTokens?: number
+}
+
+export const CONTEXT_CATEGORY_ORDER: readonly TrajectoryContextCategory[] = [
+  'system', 'schemas', 'user', 'inject', 'skill', 'assistant', 'tool',
 ]
 
 function tokenEstimate(content: string): number {
   return content.length === 0 ? 0 : Math.max(1, Math.ceil(content.length / 4))
+}
+
+function charsToTokens(chars: number): number {
+  return chars === 0 ? 0 : Math.max(1, Math.ceil(chars / 4))
 }
 
 function safeJson(value: unknown): string {
@@ -64,6 +112,36 @@ function safeJson(value: unknown): string {
   } catch {
     return String(value)
   }
+}
+
+/** The skill mechanism reads `SKILL.md`; an unrelated file named by the call is not skill content. */
+function skillPath(toolInput: Record<string, unknown> | undefined): string | undefined {
+  if (!toolInput) return undefined
+  for (const key of ['path', 'file_path', 'filePath']) {
+    const value = toolInput[key]
+    if (typeof value === 'string' && /(^|[\\/])SKILL\.md$/i.test(value)) return value
+  }
+  return undefined
+}
+
+function basename(path: string): string {
+  return path.split(/[\\/]/).filter(Boolean).at(-1) ?? path
+}
+
+function toolCallSummary(message: Message): string {
+  const input = message.toolInput
+  if (!input) return ''
+  const preferred = ['path', 'file_path', 'filePath', 'command', 'pattern', 'query', 'url', 'description']
+  for (const key of preferred) {
+    const value = input[key]
+    if (typeof value === 'string' && value.trim()) return value.trim().split('\n')[0]!.slice(0, 72)
+  }
+  return ''
+}
+
+function firstLine(content: string, maximum = 88): string {
+  const line = content.split('\n').find(entry => entry.trim())?.trim() ?? ''
+  return line.length > maximum ? `${line.slice(0, maximum - 1)}…` : line
 }
 
 function item(category: TrajectoryContextCategory, message: Message, label: string, content: string): TrajectoryContextItem {
@@ -77,6 +155,7 @@ function item(category: TrajectoryContextCategory, message: Message, label: stri
     chars: content.length,
     estimatedTokens: tokenEstimate(content),
     messageId: message.id,
+    timestamp: message.timestamp,
     callId: message.toolUseId,
     filePath,
   }
@@ -85,43 +164,58 @@ function item(category: TrajectoryContextCategory, message: Message, label: stri
 function messageItems(message: Message): TrajectoryContextItem[] {
   switch (message.role) {
     case 'user': {
-      const result = [item('user', message, 'User message', message.content)]
-      for (const [index, attachment] of (message.attachments ?? []).entries()) {
-        const content = [attachment.storedPath, attachment.mimeType, `${attachment.size} bytes`].filter(Boolean).join('\n')
-        result.push({
-          id: `attachment:${message.id}:${index}`,
-          category: 'attachments',
-          label: attachment.name,
-          content,
-          chars: content.length,
-          estimatedTokens: tokenEstimate(content),
-          messageId: message.id,
-          filePath: attachment.storedPath,
-        })
-      }
-      return result
+      // Attachments belong to the user message that carried them: they were sent
+      // as part of it, and the manifest cannot separate their bytes afterwards.
+      const attachments = (message.attachments ?? []).map(attachment => (
+        `[attachment] ${attachment.name} · ${attachment.mimeType} · ${attachment.size} bytes`
+      ))
+      const content = [message.content, ...attachments].filter(Boolean).join('\n')
+      return [item('user', message, firstLine(message.content), content)]
     }
     case 'assistant':
-      return [item('assistant', message, message.isIntermediate ? 'Assistant commentary' : 'Assistant message', message.content)]
+      return [item('assistant', message, firstLine(message.content), message.content)]
     case 'tool': {
+      const skill = skillPath(message.toolInput)
       const input = safeJson(message.toolInput)
       const result = message.toolResult ?? message.content
-      return [item('tools', message, message.toolDisplayName ?? message.toolName ?? 'Tool', [input, result].filter(Boolean).join('\n\n'))]
+      const content = [input, result].filter(Boolean).join('\n\n')
+      const entry = item(skill ? 'skill' : 'tool', message, '', content)
+      entry.toolName = message.toolName
+      entry.toolArguments = message.toolInput
+      entry.toolResult = result
+      entry.toolStatus = message.isError || message.toolStatus === 'error' ? 'failed'
+        : message.toolStatus === 'completed' ? 'succeeded' : undefined
+      entry.durationSeconds = message.toolDuration === undefined ? undefined : message.toolDuration / 1000
+      if (skill) {
+        entry.filePath = skill
+        entry.source = basename(skill)
+      } else {
+        const summary = toolCallSummary(message)
+        if (summary) entry.source = basename(summary)
+      }
+      entry.label = [message.toolName ?? message.toolDisplayName ?? 'Tool', entry.source].filter(Boolean).join(' · ')
+      return [entry]
     }
-    case 'info':
-    case 'status':
-    case 'warning':
-    case 'plan':
-      return [item('injected', message, message.statusType ?? message.role, message.content)]
+    case 'error':
+      return [item('inject', message, message.errorTitle ?? firstLine(message.content), message.content)]
     default:
-      return []
+      return [item('inject', message, message.statusType ?? message.role, message.content)]
   }
+}
+
+function manifestCharsByRole(manifest: Message['contextSnapshot'], roles: readonly string[]): number | undefined {
+  if (!manifest?.messages) return undefined
+  return manifest.messages.reduce((sum, entry) => roles.includes(entry.role) ? sum + entry.chars : sum, 0)
 }
 
 /**
  * Reconstruct the observable request context from persisted session evidence.
- * The system prompt is exact. Conversation categories are intentionally marked
- * estimated in the UI because provider adapters may compact or transform them.
+ *
+ * `system`, `schemas`, `user` and `assistant` use the request-time manifest when
+ * one exists. `inject`, `skill` and `tool` are reconstructed from the persisted
+ * messages: the manifest records only a role and a char count for those, so a
+ * split between them would otherwise have to be invented. Every category value
+ * stays an estimate; the displayed total uses provider usage when available.
  */
 export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly TrajectoryRequestContext[] {
   const contexts: TrajectoryRequestContext[] = []
@@ -141,67 +235,88 @@ export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly Tr
       const systemItem: TrajectoryContextItem = {
         id: `system:${message.id}`,
         category: 'system',
-        label: `System prompt v${promptVersion}`,
+        label: '',
         content: prompt,
         chars: prompt.length,
         estimatedTokens: tokenEstimate(prompt),
+        introducedSeq: requestOrdinal,
+        promptVersion,
       }
       const manifest = message.contextSnapshot
       const registeredTools: TrajectoryContextItem[] = (manifest?.tools ?? []).map((tool, index) => {
-        const content = tool.description ?? ''
-        const chars = tool.schemaChars + content.length
+        const description = tool.description ?? ''
         return {
           id: `tool-definition:${message.id}:${index}`,
-          category: 'tools',
-          label: `${tool.name} · registered tool`,
-          content,
-          chars,
-          estimatedTokens: tokenEstimate(' '.repeat(chars)),
+          category: 'schemas',
+          label: tool.name,
+          content: description,
+          chars: tool.schemaChars + description.length,
+          estimatedTokens: charsToTokens(tool.schemaChars + description.length),
+          introducedSeq: requestOrdinal,
         }
       })
       const allItems = [systemItem, ...registeredTools, ...accumulated]
-      const groups = CATEGORY_ORDER.map(category => {
+      const manifestUserChars = manifestCharsByRole(manifest, ['user'])
+      const manifestAssistantChars = manifestCharsByRole(manifest, ['assistant'])
+      const manifestToolChars = manifestCharsByRole(manifest, ['tool', 'toolResult', 'tool_result'])
+      const itemCharsOf = (category: TrajectoryContextCategory) => allItems
+        .reduce((sum, entry) => entry.category === category ? sum + entry.chars : sum, 0)
+      // The manifest records one total for tool results; the split between a
+      // tool result and a SKILL.md read is a share of that measured total.
+      const skillItemChars = itemCharsOf('skill')
+      const toolItemChars = itemCharsOf('tool')
+      const toolSplit = skillItemChars + toolItemChars
+      const skillChars = manifestToolChars !== undefined && toolSplit > 0
+        ? Math.round(manifestToolChars * (skillItemChars / toolSplit))
+        : undefined
+      const groups = CONTEXT_CATEGORY_ORDER.map(category => {
         const items = allItems.filter(entry => entry.category === category)
-        const manifestMessageChars = manifest?.messages?.reduce((sum, entry) => {
-          const manifestCategory: TrajectoryContextCategory = entry.role === 'user'
-            ? 'user'
-            : entry.role === 'assistant'
-              ? 'assistant'
-              : entry.role === 'tool'
-                ? 'tools'
-                : 'injected'
-          return manifestCategory === category ? sum + entry.chars : sum
-        }, 0)
-        const manifestChars = !manifest || category === 'attachments'
-          ? undefined
-          : category === 'system'
-            ? manifest.system?.chars
-            : category === 'tools'
-              ? (manifestMessageChars ?? 0) + (manifest.tools ?? []).reduce((sum, tool) => sum + tool.schemaChars + (tool.description?.length ?? 0), 0)
-              : manifestMessageChars
-        const chars = manifestChars ?? items.reduce((sum, entry) => sum + entry.chars, 0)
+        const itemChars = items.reduce((sum, entry) => sum + entry.chars, 0)
+        const chars = category === 'system'
+          ? (manifest?.system?.chars ?? itemChars)
+          : category === 'schemas'
+            ? (manifest?.tools?.length ? items.reduce((sum, entry) => {
+              const tool = manifest.tools?.find(candidate => candidate.name === entry.label)
+              return sum + (tool ? tool.schemaChars + (tool.description?.length ?? 0) : entry.chars)
+            }, 0) : itemChars)
+            : category === 'user'
+              ? (manifestUserChars ?? itemChars)
+              : category === 'assistant'
+                ? (manifestAssistantChars ?? itemChars)
+                : category === 'skill' && skillChars !== undefined
+                  ? skillChars
+                  : category === 'tool' && manifestToolChars !== undefined
+                    ? Math.max(0, manifestToolChars - (skillChars ?? 0))
+                    : itemChars
         return {
           category,
           items,
           chars,
-          estimatedTokens: tokenEstimate(' '.repeat(chars)),
+          estimatedTokens: charsToTokens(chars),
+          share: 0,
         }
       }).filter(group => group.items.length > 0 || group.chars > 0)
+      const estimated = groups.reduce((sum, group) => sum + group.estimatedTokens, 0)
       contexts.push({
         id: message.id,
         requestSeq: requestOrdinal,
         sourceRequestSeq: message.requestSeq,
         promptVersion,
         inputTokens: message.usage ? message.usage.input + message.usage.cacheRead + message.usage.cacheWrite : undefined,
-        groups,
+        groups: groups.map(group => ({ ...group, share: estimated > 0 ? group.estimatedTokens / estimated : 0 })),
         totalChars: groups.reduce((sum, group) => sum + group.chars, 0),
-        estimatedTokens: groups.reduce((sum, group) => sum + group.estimatedTokens, 0),
+        estimatedTokens: estimated,
         captured: manifest !== undefined,
         provider: manifest?.provider,
         model: manifest?.model,
       })
     }
-    accumulated.push(...messageItems(message))
+    // The message lands after this request's snapshot, so it first becomes
+    // visible in the request that follows (ordinal + 1).
+    accumulated.push(...messageItems(message).map(entry => ({
+      ...entry,
+      introducedSeq: entry.introducedSeq ?? requestOrdinal + 1,
+    })))
   }
   return contexts
 }
@@ -245,4 +360,54 @@ export function requestContextDelta(
   const currentValue = current.inputTokens ?? current.estimatedTokens
   const previousValue = previous.inputTokens ?? previous.estimatedTokens
   return currentValue - previousValue
+}
+
+export function contextTotal(context: TrajectoryRequestContext): number {
+  return context.inputTokens ?? context.estimatedTokens
+}
+
+export function findContextItem(context: TrajectoryRequestContext, itemId: string): TrajectoryContextItem | undefined {
+  for (const group of context.groups) {
+    const found = group.items.find(entry => entry.id === itemId)
+    if (found) return found
+  }
+  return undefined
+}
+
+/**
+ * Compactions and prompt-version changes, mapped to the request where the change
+ * first becomes visible. A compaction is attributed to the request that follows
+ * it; the last request is used when the compaction has no successor yet.
+ */
+export function deriveRequestContextEvents(
+  snapshot: TrajectorySnapshot,
+  contexts: readonly TrajectoryRequestContext[],
+): readonly TrajectoryContextEvent[] {
+  if (contexts.length === 0) return []
+  const events: TrajectoryContextEvent[] = []
+  const requestAt = new Map<string, number>()
+  let ordinal = 0
+  for (const message of snapshot.messages) {
+    if (message.role === 'assistant' && message.requestSeq !== undefined) ordinal += 1
+    requestAt.set(message.id, ordinal)
+  }
+  const deltaAt = (requestSeq: number) => {
+    const index = contexts.findIndex(context => context.requestSeq === requestSeq)
+    const previous = index > 0 ? contexts[index - 1] : undefined
+    const current = contexts[index]
+    if (!current) return undefined
+    return requestContextDelta(current, previous)
+  }
+  for (const contribution of snapshot.contributions) {
+    if (contribution.kind !== 'compaction') continue
+    const before = requestAt.get(contribution.message.id) ?? contexts.length
+    const requestSeq = Math.min(contexts.length, Math.max(1, before + 1))
+    events.push({ kind: 'compaction', requestSeq, deltaTokens: deltaAt(requestSeq) })
+  }
+  for (let index = 1; index < contexts.length; index += 1) {
+    if (contexts[index]!.promptVersion !== contexts[index - 1]!.promptVersion) {
+      events.push({ kind: 'prompt', requestSeq: contexts[index]!.requestSeq })
+    }
+  }
+  return events.sort((a, b) => a.requestSeq - b.requestSeq)
 }

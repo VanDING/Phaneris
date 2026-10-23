@@ -1,12 +1,13 @@
 import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
 import { DECISION_LAYER_FEATURES } from '@phaneris/shared/decisions/settings'
 import type { DecisionRecord } from '@phaneris/shared/decisions'
-import type { DecisionObservation, SessionDecisionItem, SessionDecisionQuery, SessionDecisionReport, SessionDecisionTotals } from '@phaneris/shared/decisions/session'
+import { decisionOutcome, type DecisionObservation, type SessionDecisionItem, type SessionDecisionQuery, type SessionDecisionReport, type SessionDecisionTotals } from '@phaneris/shared/decisions/session'
 import type { RuntimeUsageRow } from '../durable-runtime/index'
 import { createHash } from 'node:crypto'
 
-const emptyTotals = (): SessionDecisionTotals => ({ points: 0, requests: 0, legacyCalls: 0, changed: 0, fallback: 0,
-  unconfirmed: 0, failures: 0, cancelled: 0, knownCostUsd: 0, knownCostRequests: 0, unknownCostRequests: 0, inputTokens: 0, outputTokens: 0 })
+const emptyTotals = (): SessionDecisionTotals => ({ points: 0, requests: 0, legacyCalls: 0, changed: 0, unchanged: 0,
+  fallback: 0, discarded: 0, unconfirmed: 0, failures: 0, cancelled: 0,
+  knownCostUsd: 0, knownCostRequests: 0, unknownCostRequests: 0, inputTokens: 0, outputTokens: 0 })
 
 export function buildSessionDecisionReport(input: {
   sessionId: string; workspaceId: string; enabled: boolean; completeSince: number; activeSince?: number; sessionCreatedAt: number;
@@ -14,7 +15,7 @@ export function buildSessionDecisionReport(input: {
 }): SessionDecisionReport {
   const { sessionId, workspaceId, query = {} } = input
   if (query.feature && !DECISION_LAYER_FEATURES.includes(query.feature)) throw new Error('Invalid decision feature')
-  if (query.status && !['changed', 'fallback', 'unconfirmed', 'failed', 'cancelled'].includes(query.status)) throw new Error('Invalid decision status')
+  if (query.status && !['changed', 'unchanged', 'fallback', 'discarded', 'unconfirmed', 'failed', 'cancelled'].includes(query.status)) throw new Error('Invalid decision status')
   if (query.turnId !== undefined && (typeof query.turnId !== 'string' || query.turnId.length > 256)) throw new Error('Invalid decision turn')
   if (query.limit !== undefined && (!Number.isInteger(query.limit) || query.limit < 1 || query.limit > 100)) throw new Error('Invalid decision page size')
   if (query.cursor !== undefined && (typeof query.cursor !== 'string' || query.cursor.length > 100)) throw new Error('Invalid decision cursor')
@@ -104,11 +105,12 @@ export function buildSessionDecisionReport(input: {
   const items = [...points.values()].filter(item => {
     if (query.feature && item.feature !== query.feature) return false
     if (query.turnId && item.source?.turnId !== query.turnId) return false
-    if (query.status === 'changed') return item.application?.status === 'applied' && item.application.changed
-    if (query.status === 'fallback') return item.application?.status === 'fallback'
-    if (query.status === 'unconfirmed') return !item.application || item.application.status === 'unknown'
     if (query.status === 'failed') return item.attempts.some(attempt => attempt.status === 'failed' || attempt.status === 'timeout')
     if (query.status === 'cancelled') return item.attempts.some(attempt => attempt.status === 'cancelled')
+    // Behavior outcomes belong to decision points; a historical call has no
+    // recorded application, so it must not answer an outcome filter (and its
+    // absence from the outcome totals stays consistent).
+    if (query.status) return !item.legacy && decisionOutcome(item) === query.status
     return true
   }).sort((a, b) => b.startedAt - a.startedAt || a.id.localeCompare(b.id))
   const filtered = !!query.status || !!query.turnId
@@ -124,9 +126,10 @@ export function buildSessionDecisionReport(input: {
       if (item.legacy) total.legacyCalls += item.attempts.length
       else total.points++
       total.requests += item.attempts.filter(attempt => attempt.sent).length
-      if (item.application?.status === 'applied' && item.application.changed) total.changed++
-      if (item.application?.status === 'fallback') total.fallback++
-      if (!item.application || item.application.status === 'unknown') total.unconfirmed++
+      if (!item.legacy) {
+        const outcome = decisionOutcome(item)
+        total[outcome]++
+      }
       total.failures += item.attempts.filter(attempt => attempt.status === 'failed' || attempt.status === 'timeout').length
       total.cancelled += item.attempts.filter(attempt => attempt.status === 'cancelled').length
     }

@@ -55,12 +55,13 @@ function KindIcon({ kind }: { kind: TrajectoryCellKind }) {
 
 function kindTagClass(kind: TrajectoryCellKind): string {
   switch (kind) {
-    case 'system': return css.systemNeutral ?? ''
-    case 'context': return css.contextGreen ?? ''
+    case 'system': return css.system ?? ''
+    case 'user': return css.user ?? ''
+    case 'context': return css.context ?? ''
     case 'compacted': return css.compacted ?? ''
-    case 'tool': return css.toolAmber ?? ''
-    case 'message': return css.assistantVioletBright ?? ''
-    case 'subtool': return css.subtoolAmber ?? ''
+    case 'tool': return css.tool ?? ''
+    case 'message': return css.assistant ?? ''
+    case 'subtool': return css.tool ?? ''
     default: return ''
   }
 }

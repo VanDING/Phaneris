@@ -4,7 +4,7 @@ import { createInstance } from 'i18next'
 import { I18nextProvider } from 'react-i18next'
 import { TooltipProvider } from '@phaneris/ui'
 import { CompactionThresholdSetting } from '@/components/settings/CompactionThresholdSetting'
-import { TrajectoryOverview } from '../../../packages/ui/src/components/trajectory/TrajectoryOverview'
+import { RunOverview } from '../../../packages/ui/src/components/trajectory/RunOverview'
 import { EMPTY_TRAJECTORY_SNAPSHOT } from '../../../packages/ui/src/components/trajectory/trajectory-contract'
 import type { TrajectoryContextSummary } from '../../../packages/ui/src/components/trajectory/TrajectoryView'
 import type { ElectronAPI } from '../../../apps/electron/src/shared/types'
@@ -39,7 +39,7 @@ function App() {
     <section data-testid="threshold-setting"><CompactionThresholdSetting key={revision} /></section>
     <button type="button" data-testid="blur-target">Move focus</button>
     {Object.entries(projections).map(([key, contextSummary]) => <section key={key} data-testid={`metering-${key}`}>
-      <TrajectoryOverview onOpenTrajectory={() => {}} onOpenContext={() => {}} snapshot={EMPTY_TRAJECTORY_SNAPSHOT} turns={[]} records={[]} contextSummary={contextSummary} />
+      <RunOverview onOpenTrajectory={() => {}} onOpenContext={() => {}} onOpenDecisions={() => {}} onOpenDecisionIssues={() => {}} snapshot={EMPTY_TRAJECTORY_SNAPSHOT} turns={[]} records={[]} contextSummary={contextSummary} />
     </section>)}
   </main>
 }

@@ -68,6 +68,9 @@ export {
 // Trajectory (DSH-style turn-aware ledger)
 export {
   TrajectoryView,
+  RunOverview,
+  RunContextView,
+  RunDecisionView,
   TrajectoryTable,
   TrajectoryToolbar,
   TrajectoryStrip,
@@ -81,6 +84,16 @@ export {
   type TrajectoryMapLayout,
   type TrajectoryMapNode,
   type TrajectoryMapEdge,
+  type RunDecisionIntent,
+  type RunDecisionSlot,
+  type RunDecisionSummary,
+  type RunReliabilityFacts,
+  type RunViewState,
+  type RunOverviewProps,
+  type RunContextViewProps,
+  type RunDecisionViewProps,
+  type RunDecisionState,
+  type RunDecisionFilter,
   buildTrajectorySessionMapLayout,
   selectTrajectorySessionFamily,
 } from './components/trajectory'

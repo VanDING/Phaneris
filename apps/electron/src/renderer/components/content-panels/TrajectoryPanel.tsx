@@ -1,21 +1,23 @@
 /**
- * TrajectoryPanel — trajectory ledger bound to the active session.
+ * Run panel — the session's run view bound to the active session.
  *
- * Builds a trajectory snapshot from the session's enriched messages
- * (timestamp / usage / requestSeq / promptSnapshot / parentToolUseId /
- * compaction added by the Pi event pipeline) and renders the trajectory view.
- * Empty states cover no-active-session and no-messages; while messages are
- * still loading a placeholder is shown so "no records" is never a false
- * positive.
+ * Builds the evidence the Run views read: the trajectory snapshot from the
+ * session's enriched messages, the unfiltered decision report (whose totals own
+ * the Decision statistics), and the flattened facts the Overview cards name.
+ * Loading and failure are passed down as state, not as pre-rendered text, so the
+ * view can keep its own reading path while the evidence is absent.
  */
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Activity } from 'lucide-react'
-import { TrajectoryView, buildTrajectorySnapshot, EMPTY_TRAJECTORY_SNAPSHOT, Spinner, type TrajectorySessionMap } from '@phaneris/ui'
+import {
+  TrajectoryView, buildTrajectorySnapshot, EMPTY_TRAJECTORY_SNAPSHOT, type RunDecisionSummary,
+  type RunReliabilityFacts, type TrajectorySessionMap,
+} from '@phaneris/ui'
 import { useSessionDecisions } from '@/hooks/useSessionDecisions'
-import { DecisionSummary, SessionDecisions } from './SessionDecisions'
+import { SessionDecisions } from './SessionDecisions'
 import { openDecisionModelSettings } from '@/lib/ai-settings-navigation'
 import { PanelEmptyState } from './PanelEmptyState'
 import { activeSessionIdAtom } from '@/atoms/active-session'
@@ -48,6 +50,7 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
 
   const [messagesLoading, setMessagesLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  const [loadNonce, setLoadNonce] = useState(0)
 
   useEffect(() => {
     if (!activeSessionId) {
@@ -68,7 +71,9 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
     return () => {
       cancelled = true
     }
-  }, [activeSessionId, ensureMessagesLoaded])
+  }, [activeSessionId, ensureMessagesLoaded, loadNonce])
+
+  const retry = useCallback(() => setLoadNonce(value => value + 1), [])
 
   const snapshot = useMemo(() => {
     if (!session) return EMPTY_TRAJECTORY_SNAPSHOT
@@ -120,6 +125,42 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
     return { currentSessionId: activeSessionId, sessions: summaries }
   }, [activeSessionId, session, sessionMetaMap, t])
 
+  const decisionSummary = useMemo<RunDecisionSummary>(() => {
+    const report = decisions.report
+    const totals = report?.totals
+    return {
+      state: decisions.state,
+      enabled: report?.enabled ?? false,
+      points: totals?.points ?? 0,
+      requests: totals?.requests ?? 0,
+      changed: totals?.changed ?? 0,
+      unchanged: totals?.unchanged ?? 0,
+      fallback: totals?.fallback ?? 0,
+      discarded: totals?.discarded ?? 0,
+      unconfirmed: totals?.unconfirmed ?? 0,
+      failures: totals?.failures ?? 0,
+      knownCostUsd: totals?.knownCostUsd ?? 0,
+      knownCostRequests: totals?.knownCostRequests ?? 0,
+      unknownCostRequests: totals?.unknownCostRequests ?? 0,
+      legacyCalls: totals?.legacyCalls ?? 0,
+    }
+  }, [decisions.report, decisions.state])
+
+  const reliability = useMemo<RunReliabilityFacts>(() => {
+    const value = decisions.report?.reliability
+    if (!value) return { state: 'loading' }
+    if (value.state === 'unavailable') return { state: 'unavailable' }
+    return {
+      state: 'available',
+      terminalCounts: value.terminal,
+      unsettled: value.unsettled.count,
+      unsettledOldestMs: value.unsettled.oldestAgeMs,
+      taskBudgets: value.taskBudgets.map(budget => ({ limit: budget.limit, used: budget.used })),
+      signals: value.signals.map(signal => ({ kind: signal.kind, toolName: signal.toolName, count: signal.count })),
+      sdkRetries: value.observations.sdkRetries,
+    }
+  }, [decisions.report])
+
   if (!activeSessionId) {
     return (
       <div className="flex h-full flex-col">
@@ -132,9 +173,7 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
     )
   }
 
-  const trajectoryState = messagesLoading ? <div className="flex flex-1 items-center justify-center"><Spinner /></div>
-    : loadError ? <PanelEmptyState icon={<Activity className="h-8 w-8" />} title={t('errors.failedToLoadSession')} hint={t('errors.pleaseReload')} />
-      : snapshot.contributions.length === 0 ? <PanelEmptyState icon={<Activity className="h-8 w-8" />} title={t('contentPanel.trajectory.noRecords')} hint={t('contentPanel.trajectory.noRecordsHint')} /> : undefined
+  const contextUsage = contextBadgeUsage(meta?.tokenUsage)
 
   return (
     <div className="flex h-full flex-col">
@@ -142,15 +181,26 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
         <div className="h-full min-h-0 overflow-hidden bg-background">
           <TrajectoryView
             key={`${decisionServerScope}:${decisionWorkspaceId}:${activeSessionId}`}
+            viewState={{ loading: messagesLoading, error: loadError, onRetry: retry }}
             snapshot={snapshot}
-            trajectoryState={trajectoryState}
-            decisionSummary={onOpen => <DecisionSummary data={decisions} onOpen={onOpen} />}
-            decisions={<SessionDecisions sessionId={activeSessionId} workspaceId={decisionWorkspaceId} serverScope={decisionServerScope} data={decisions}
-              onConfigure={openDecisionModelSettings} onOpenChat={messageId => {
-                navigateToSession(activeSessionId)
-                setChatFocusRequest({ sessionId: activeSessionId, messageId, nonce: Date.now() })
-                collapseWorkbench()
-              }} />}
+            decisionSummary={decisionSummary}
+            reliability={reliability}
+            decisions={slot => (
+              <SessionDecisions
+                sessionId={activeSessionId}
+                workspaceId={decisionWorkspaceId}
+                serverScope={decisionServerScope}
+                data={decisions}
+                intent={slot.intent}
+                onOpenContext={slot.onOpenContext}
+                onConfigure={openDecisionModelSettings}
+                onOpenChat={messageId => {
+                  navigateToSession(activeSessionId)
+                  setChatFocusRequest({ sessionId: activeSessionId, messageId, nonce: Date.now() })
+                  collapseWorkbench()
+                }}
+              />
+            )}
             sessionTotal={snapshot.totalUsage}
             isProcessing={session?.isProcessing}
             contextSummary={{
@@ -166,10 +216,13 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
               inputTokens: meta?.tokenUsage?.inputTokens,
               outputTokens: meta?.tokenUsage?.outputTokens,
               totalTokens: meta?.tokenUsage?.totalTokens,
-              contextTokens: contextBadgeUsage(meta?.tokenUsage).inputTokens,
+              contextTokens: contextUsage.inputTokens,
+              contextWindow: contextUsage.contextWindow,
               costUsd: meta?.tokenUsage?.costUsd,
               unknownCostRequests: meta?.tokenUsage?.unknownCostRequests,
               estimatedCostRequests: meta?.tokenUsage?.estimatedCostRequests,
+              workspaceName: workspace?.name,
+              remote: Boolean(workspace?.remoteServer),
             }}
             sessionMap={sessionMap}
             focus={focusBySession[activeSessionId]}

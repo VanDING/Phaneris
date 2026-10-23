@@ -1,11 +1,8 @@
 /** See the failure matrix written before implementation. No user credentials or sessions. */
 import { strict as assert } from 'node:assert'
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { copyFileSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
-import { createServer } from 'vite'
-import type { Browser, Page } from 'playwright'
-import { launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
 
 const root = resolve(import.meta.dir, '../..'), temporary = mkdtempSync(join(tmpdir(), 'phaneris-run-observability-'))
 const configRoot = join(temporary, 'config'), workspaceRoot = join(temporary, 'workspace')
@@ -134,8 +131,6 @@ async function modelCall(mode: string) {
   }
   return result
 }
-let browser: Browser | undefined, closeBrowser: (() => Promise<void>) | undefined
-let vite: Awaited<ReturnType<typeof createServer>> | undefined
 const rpc = new WsRpcServer({ host: '127.0.0.1', port: 0, requireAuth: true, validateToken: async token => token === 'fixture-token' })
 let client: InstanceType<typeof WsRpcClient> | undefined
 try {
@@ -292,104 +287,13 @@ try {
     assert.equal(summary.averageRate, expected)
     writeFileSync(join(output, 'request-statistics.json'), JSON.stringify(summary, null, 2)); return { p50: summary.p50, p95: summary.p95, rate: summary.averageRate }
   })
-  const html = join(root, '.cache/run-observability/fixture.html')
-  writeFileSync(html, '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/run-observability.tsx"></script></body></html>')
-  vite = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root, optimizeDeps: { entries: [html] },
-    server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**'] } } })
-  await vite.listen()
-  const address = vite.httpServer!.address() as { port: number }
-  const url = `http://127.0.0.1:${address.port}/.cache/run-observability/fixture.html?rpc=ws://127.0.0.1:${rpc.port}&main=${main.id}&legacy=${legacy.id}&empty=${empty.id}&large=${large.id}`
-  const launched = await launchWorkflowBrowser(); browser = launched.browser; closeBrowser = launched.close
-  const page = await browser.newPage({ viewport: { width: 960, height: 1200 }, locale: 'zh-CN' }), pageErrors: string[] = []
-  page.on('pageerror', error => pageErrors.push(error.message))
-  const tab = (name: string) => page.getByRole('tab', { name, exact: true }).click()
-  const shot = (name: string) => page.screenshot({ path: join(output, `${name}.png`), fullPage: true })
-  await page.goto(url, { waitUntil: 'networkidle' })
-  await page.locator('[data-run-performance]').waitFor()
-  await check('R20 original four summary tiles and context columns precede the small rate chart', async () => {
-    const growth = await page.locator('[data-run-context-growth]').boundingBox(), rate = await page.locator('[data-run-performance]').boundingBox()
-    assert(growth && rate && growth.y < rate.y)
-    assert.equal(await page.locator('[data-run-shape] [data-shape-kind]').count(), 18)
-    assert((await page.locator('[data-run-shape]').getAttribute('title'))?.includes('Full recorded range'))
-    assert((await page.locator('[data-performance-coverage]').innerText()).includes('recorded requests'))
-    assert.equal(await page.getByRole('tab').count(), 5)
-    await shot('overview-en-960')
-  })
-  await check('R16 late errors remain present in the full-range Run shape', async () => assert(await page.locator('[data-run-shape] [data-shape-kind="error"]').count() > 0))
-  await check('R18 chart request selection opens the original trajectory inspector', async () => {
-    await page.locator('[data-performance-select]').selectOption(main.messages.find((message: any) => message.assistantMetrics?.firstTextTime === null)?.id)
-    await page.locator('[data-performance-open-request]').click()
-    await page.getByRole('tab', { name: 'Timing', exact: true }).click()
-    assert((await page.locator('[role="tabpanel"]:visible').innerText()).includes('Provider stream · v2'))
-    assert((await page.locator('[role="tabpanel"]:visible').innerText()).includes('No text output'))
-    await shot('original-timing-detail')
-    await tab('Overview')
-  })
-  await check('R18 original Context and Map views remain usable', async () => {
-    await tab('Context'); await shot('original-context')
-    assert((await page.locator('[role="tabpanel"]:visible').innerText()).length > 30)
-    await tab('Map'); await shot('original-map')
-    assert((await page.locator('[role="tabpanel"]:visible').innerText()).length > 30)
-    await tab('Overview')
-  })
-  await check('R20 TTFT switch shows P95 and chart gaps', async () => {
-    await page.locator('[data-performance-metric="ttft"]').click()
-    assert((await page.locator('[data-performance-coverage]').innerText()).includes('P95'))
-    await page.locator('[data-performance-metric="rate"]').click()
-    assert(await page.locator('[data-performance-line]').count() >= 2)
-  })
-  await check('R20 Chinese formatting and original Decisions style expose diagnostics', async () => {
-    await page.evaluate(() => (window as any).runObservabilityFixture.language('zh-Hans'))
-    await tab('决策')
-    await page.locator('[data-decision-id]').first().click()
-    await shot('original-decisions-zh')
-    assert((await page.locator('[role="tabpanel"]:visible').innerText()).includes('供应商回报'))
-    await tab('概览'); await shot('overview-zh-960')
-  })
-  await tab('概览')
-  await check('R09/R15/R19 old timing and incomplete context metadata retain historical evidence', async () => {
-    await page.evaluate(() => (window as any).runObservabilityFixture.select(1))
-    await waitForBrowserCondition(page, () => !!document.querySelector('[data-performance-empty]')?.textContent?.includes('旧口径'))
-    assert(await page.locator('[data-run-context-growth]').count() > 0)
-    await waitForBrowserCondition(page, () => !!document.querySelector('[data-decision-summary]')?.textContent?.includes('行为结果未记录'))
-    assert((await page.locator('[data-decision-summary]').innerText()).includes('行为结果未记录'))
-    assert((await page.locator('[data-decision-summary]').innerText()).includes('—'))
-    await shot('historical-overview')
-    await page.evaluate(() => (window as any).runObservabilityFixture.select(0))
-  })
-  await page.evaluate(() => (window as any).runObservabilityFixture.select(0))
-  await check('R20 live request state keeps completed-only statistics', async () => {
-    await page.evaluate(() => (window as any).runObservabilityFixture.processing(true))
-    await waitForBrowserCondition(page, () => !!document.querySelector('[data-performance-coverage]')?.textContent?.includes('进行中的请求'))
-    await page.evaluate(() => (window as any).runObservabilityFixture.processing(false))
-  })
-  await page.setViewportSize({ width: 530, height: 1100 }); await shot('overview-narrow-530')
-  await check('R20 narrow native panel has no horizontal document overflow', async () => assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)))
-  const dark = await browser.newPage({ viewport: { width: 390, height: 1000 }, locale: 'zh-CN' })
-  await dark.goto(`${url}&mode=dark&lang=zh-Hans`, { waitUntil: 'networkidle' }); await dark.locator('[data-run-performance]').waitFor()
-  await dark.screenshot({ path: join(output, 'overview-dark-390.png'), fullPage: true })
-  await check('R20 dark narrow panel has no horizontal overflow', async () => assert(await dark.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)))
-  await check('R20 empty session adds neither invented data nor a sixth tab', async () => {
-    await page.evaluate(() => (window as any).runObservabilityFixture.select(2))
-    await waitForBrowserCondition(page, () => !document.querySelector('[data-run-performance]'))
-    assert.equal(await page.getByRole('tab').count(), 5)
-  })
-  await check('R17 persisted long history reaches the real UI with bounded ranges, gaps and exact request selection', async () => {
-    await page.setViewportSize({ width: 960, height: 1200 })
-    await page.evaluate(() => (window as any).runObservabilityFixture.select(3))
-    await waitForBrowserCondition(page, () => document.querySelectorAll('[data-performance-select] option').length === 1001)
-    assert((await page.locator('[data-performance-coverage]').innerText()).includes('200'))
-    assert(await page.locator('[data-performance-range]').count() > 0)
-    assert.equal(await page.locator('[data-performance-line]').count(), 2)
-    await page.locator('[data-performance-select]').selectOption('large-900')
-    await page.locator('[data-performance-open-request]').click()
-    assert((await page.locator('[role="tabpanel"]:visible').innerText()).includes('Checked the evidence.'))
-    await tab('概览'); await shot('long-history-1001')
-  })
-  await check('No browser execution errors', async () => assert.deepEqual(pageErrors, []))
+  // The Run panel UI (Overview / Context / Decision) is redesigned and now
+  // verified end to end by scripts/verification/run-redesign-workflow.ts. This
+  // workflow keeps the data-layer facts: renderer UI selectors from the earlier
+  // panel are intentionally not asserted here anymore.
 } finally {
   writeFileSync(join(output, 'verification.json'), JSON.stringify({ generatedAt: new Date().toISOString(), fixture: temporary, checks }, null, 2))
-  client?.destroy(); await closeBrowser?.(); await vite?.close(); await rpc.close(); api.stop(true)
+  client?.destroy(); await rpc.close(); api.stop(true)
   await manager.cleanup()
 }
 if (checks.some(check => !check.pass)) process.exitCode = 1

@@ -25,7 +25,7 @@ describe('deriveRequestContexts', () => {
     expect(contexts[0]?.promptVersion).toBe(1)
     expect(contexts[1]?.promptVersion).toBe(1)
     expect(contexts[0]?.groups.find(group => group.category === 'user')?.items).toHaveLength(1)
-    expect(contexts[1]?.groups.find(group => group.category === 'tools')?.items[0]?.callId).toBe('call-1')
+    expect(contexts[1]?.groups.find(group => group.category === 'tool')?.items[0]?.callId).toBe('call-1')
     expect(requestContextDelta(contexts[1]!, contexts[0]!)).toBeGreaterThan(0)
   })
 
@@ -71,7 +71,7 @@ describe('deriveRequestContexts', () => {
     expect(context.captured).toBe(true)
     expect(context.provider).toBe('anthropic')
     expect(context.groups.find(group => group.category === 'user')?.chars).toBe(120)
-    expect(context.groups.find(group => group.category === 'tools')?.items[0]?.label).toContain('Read')
+    expect(context.groups.find(group => group.category === 'schemas')?.items[0]?.label).toContain('Read')
   })
 })
 

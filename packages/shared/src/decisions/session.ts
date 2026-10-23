@@ -76,7 +76,9 @@ export interface SessionDecisionTotals {
   points: number;
   requests: number;
   changed: number;
+  unchanged: number;
   fallback: number;
+  discarded: number;
   unconfirmed: number;
   failures: number;
   cancelled: number;
@@ -86,12 +88,40 @@ export interface SessionDecisionTotals {
   inputTokens: number;
   outputTokens: number;
 }
+/**
+ * The five behavior outcomes the Run view reports, plus request-level states.
+ * An outcome answers "what did the caller actually do"; `failed` / `cancelled`
+ * answer "did the auxiliary request complete" and are filters, not outcomes.
+ */
+export type SessionDecisionOutcome = 'changed' | 'unchanged' | 'fallback' | 'discarded' | 'unconfirmed';
+export type SessionDecisionStatus = SessionDecisionOutcome | 'failed' | 'cancelled';
 export interface SessionDecisionQuery {
   feature?: DecisionLayerFeature;
-  status?: 'changed' | 'fallback' | 'unconfirmed' | 'failed' | 'cancelled';
+  status?: SessionDecisionStatus;
   turnId?: string;
   cursor?: string;
   limit?: number;
+}
+/**
+ * The single mapping from one record's evidence to the reported outcome.
+ *
+ * Application evidence wins: `applied` without a change and `unchanged` both
+ * mean behavior stayed the same. A request-level failure is not an outcome — a
+ * record whose request failed but that has no application stays unconfirmed,
+ * because no caller handling was recorded. An unavailable decision point falls
+ * back on the configured path, which is what the host then ran.
+ */
+export function decisionOutcome(
+  item: Pick<SessionDecisionItem, 'application' | 'unavailableReason'>,
+): SessionDecisionOutcome {
+  const application = item.application;
+  if (application) {
+    if (application.status === 'applied') return application.changed ? 'changed' : 'unchanged';
+    if (application.status === 'unknown') return 'unconfirmed';
+    return application.status;
+  }
+  if (item.unavailableReason) return 'fallback';
+  return 'unconfirmed';
 }
 export interface SessionDecisionReport {
   reliability?: import('../durable-runtime/reliability').ReliabilityObservation;

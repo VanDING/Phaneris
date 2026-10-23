@@ -167,6 +167,7 @@
 }
 
 .kindTag {
+  --kind-color: var(--dsw-alias-label-secondary);
   display: inline-flex;
   flex: none;
   align-items: center;
@@ -179,6 +180,8 @@
   line-height: 16px;
   font-weight: 600;
   letter-spacing: 0.035em;
+  color: color-mix(in srgb, var(--kind-color) 45%, var(--dsw-alias-label-primary));
+  background: color-mix(in srgb, var(--kind-color) 10%, var(--dsw-alias-bg-layer-1));
   user-select: none;
 }
 
@@ -287,59 +290,13 @@
   }
 }
 
-.systemNeutral {
-  color: var(--dsw-alias-label-secondary);
-  background: var(--dsw-alias-bg-module-platform);
-}
-
-.contextGreen {
-  color: color-mix(
-    in srgb,
-    var(--dsw-alias-state-success-primary) 68%,
-    var(--dsw-alias-label-secondary)
-  );
-  background: var(--dsw-alias-state-success-tertiary);
-}
-
-.compacted {
-  color: var(--dsw-alias-label-secondary);
-  background: var(--dsw-alias-bg-module-platform);
-}
-
-.assistantVioletBright {
-  color: color-mix(
-    in srgb,
-    var(--dsw-alias-brand-primary-new-colorprimary-new-color) 60%,
-    var(--dsw-alias-state-error-secondary)
-  );
-  background: color-mix(
-    in srgb,
-    color-mix(
-      in srgb,
-      var(--dsw-alias-brand-primary-new-colorprimary-new-color) 55%,
-      var(--dsw-alias-state-error-secondary)
-    ) 15%,
-    var(--dsw-alias-bg-layer-1)
-  );
-}
-
-.toolAmber {
-  color: var(--dsw-alias-state-warn-label);
-  background: var(--dsw-alias-state-warn-tertiary);
-}
-
-.subtoolAmber {
-  color: color-mix(
-    in srgb,
-    var(--dsw-alias-state-warn-label) 62%,
-    var(--dsw-alias-label-tertiary)
-  );
-  background: color-mix(
-    in srgb,
-    var(--dsw-alias-state-warn-tertiary) 58%,
-    var(--dsw-alias-bg-layer-1)
-  );
-}
+.system { --kind-color: var(--run-cat-system, var(--dsw-alias-state-business-primary)); }
+.user { --kind-color: var(--run-cat-user, var(--dsw-alias-state-success-primary)); }
+.context { --kind-color: var(--run-cat-inject, var(--dsw-alias-state-business-primary)); }
+.compacted { --kind-color: var(--dsw-alias-label-secondary); }
+.assistant { --kind-color: var(--run-cat-assistant, var(--dsw-static-blue-500)); }
+.tool { --kind-color: var(--run-cat-tool, var(--dsw-alias-state-success-primary)); }
+.table tbody tr[data-error='true'] .kindTag { --kind-color: var(--dsw-alias-state-error-primary); }
 
 .contentText {
   display: block;
