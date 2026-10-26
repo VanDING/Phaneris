@@ -128,6 +128,23 @@ requiredSources:
   - github               # Auto-enable GitHub source
 ```
 
+### requiredCapabilities (optional)
+
+An explicitly invoked skill can prepare installed product tool families without
+an extra discovery round. This does not install tools or grant permission.
+
+```yaml
+requiredCapabilities:
+  - deliverables
+  - pages
+```
+
+Available family names are `core`, `deliverables`, `pages`, `resources`, `data`,
+`secondary-models`, and `session-management`. Unsupported platform backends remain
+unavailable. Small selected source tool sets are prepared separately; larger sets
+remain discoverable through `tool_search`. The resolved skill's original text is
+prepared with the task; long files keep exact ranges and a path for further reads.
+
 ## Creating a Skill
 
 ### 1. Create through the available configuration route

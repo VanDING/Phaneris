@@ -1,9 +1,20 @@
 import {
   putArtifactTextPreview,
+  listArtifacts,
   resolveFileFormat,
   type ArtifactStorageScope,
   type ResolvedArtifact,
 } from '@phaneris/shared/artifacts'
+import { existsSync } from 'node:fs'
+
+/** Current product projection; the store remains the sole artifact owner. */
+export function sessionArtifactContext(workspaceRootPath: string, sessionId: string) {
+  return listArtifacts({ workspaceRootPath }, { sessionId }).map(current => {
+    const artifact = current.artifact
+    return { id: artifact.id, title: artifact.title, status: artifact.status,
+      revision: artifact.draftRevision ?? artifact.currentRevision, path: current.editablePath ?? current.activePath ?? undefined }
+  })
+}
 
 /**
  * Create a distributable, dependency-local human preview for standard Office
@@ -20,6 +31,7 @@ export async function renderOfficeArtifactPreview(
   if (!revision || !resolved.activePath) {
     throw new Error(`Office artifact ${resolved.artifact.id} has no renderable revision`)
   }
+  if (resolved.artifact.previews.some(preview => preview.revision === revision && preview.kind === 'markdown' && preview.path && existsSync(preview.path))) return resolved
   // markitdown-js and its parser stack are heavy; load them only when an
   // Office artifact is actually previewed.
   const { MarkItDown } = await import('markitdown-js')

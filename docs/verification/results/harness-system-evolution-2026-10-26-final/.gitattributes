@@ -1,0 +1,4 @@
+# Raw verification evidence preserves original bytes, including CRLF and spaces.
+# Source whitespace checks remain unchanged outside this evidence directory.
+* -whitespace
+*.log.txt -diff

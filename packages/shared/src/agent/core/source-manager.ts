@@ -18,6 +18,7 @@ import { sourceNeedsAuthentication } from '../../sources/credential-manager.ts';
 import type { SourceManagerConfig } from './types.ts';
 import type { McpListCount } from '../../mcp/mcp-pool.ts';
 import { escapePromptXmlAttr, sanitizePromptBody, sanitizePromptLine } from '../../prompts/prompt-sanitize.ts';
+import { prepareInstructions, formatPreparedInstructions } from './task-preparation.ts';
 
 /** Slugs exempt from guide.md prerequisite (internal sources) */
 const GUIDE_EXEMPT_SLUGS = new Set(['session']);
@@ -169,7 +170,7 @@ export class SourceManager {
    *
    * @returns Formatted XML string for context injection
    */
-  formatSourceState(): string {
+  formatSourceState(budgetChars = 16_000): string {
     // Use intended active slugs (what UI shows) rather than just what built successfully
     const activeSlugs = [...this.intendedSlugs].sort();
 
@@ -221,13 +222,7 @@ export class SourceManager {
       parts.push(`Inactive: ${inactiveList.join(', ')}`);
     }
 
-    // Persistent reminder: if any active source has a guide, remind the LLM every message
-    const activeSourcesWithGuides = activeSources.filter(
-      (s) => s.guide?.raw && !GUIDE_EXEMPT_SLUGS.has(s.config.slug)
-    );
-    if (activeSourcesWithGuides.length > 0) {
-      parts.push('Read the relevant source guide before nontrivial use. A failed read is not a successful activation; use the live schema when sufficient to recover.');
-    }
+    const activeSourcesWithGuides = activeSources.filter(s => s.guide?.raw && !GUIDE_EXEMPT_SLUGS.has(s.config.slug));
 
     // What connected MCP sources offer beyond tools, shown once per source (this
     // block rides on every user message, so repeating it would only fill context):
@@ -297,14 +292,17 @@ export class SourceManager {
       output += `\n</source_issue>`;
     }
 
+    if (activeSourcesWithGuides.length) output += '\n\n' + formatPreparedInstructions(prepareInstructions(
+      activeSourcesWithGuides.map(source => ({ kind: 'source', name: source.config.slug,
+        path: join(source.folderPath, 'guide.md'), text: source.guide!.raw })), budgetChars));
     return output;
   }
 
   /** Formatting is observational. Commit only after a model response proves delivery. */
-  prepareSourceState(): { content: string; acknowledge: () => void } {
+  prepareSourceState(budgetChars = 16_000): { content: string; acknowledge: () => void } {
     const slugs = this.allSources.map(source => source.config.slug);
     const features = [...this.activeSlugs].filter(slug => this.formatSourceFeatures(slug).length > 0);
-    return { content: this.formatSourceState(), acknowledge: () => {
+    return { content: this.formatSourceState(budgetChars), acknowledge: () => {
       slugs.forEach(slug => this.knownSlugs.add(slug));
       features.forEach(slug => this.featuresShownSlugs.add(slug));
     } };

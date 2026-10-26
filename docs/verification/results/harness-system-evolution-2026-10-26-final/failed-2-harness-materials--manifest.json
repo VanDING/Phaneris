@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "workflow": "harness-materials",
+  "startedAt": "2026-10-26T00:29:39.766Z",
+  "finishedAt": "2026-10-26T00:29:41.039Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\harness-materials-workflow.ts"
+  ],
+  "source": {
+    "headSha": "ab0282111938bc169cf952dbf00b1a868f384036",
+    "dirtyPaths": [
+      "M docs/README.md",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M packages/pi-agent-server/src/index.ts",
+      " M packages/pi-agent-server/src/messages.ts",
+      " M packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      " M packages/pi-agent-server/src/tool-discovery.ts",
+      " M packages/session-tools-core/src/tool-defs.ts",
+      " M packages/shared/src/agent/backend/types.ts",
+      " M packages/shared/src/agent/base-agent.ts",
+      " M packages/shared/src/agent/core/pre-tool-use.ts",
+      " M packages/shared/src/agent/core/source-manager.ts",
+      " M packages/shared/src/agent/pi-agent.ts",
+      " M packages/shared/src/skills/storage.ts",
+      " M packages/shared/src/skills/types.ts",
+      " M scripts/verification/packaged-client-verification.mjs",
+      "?? docs/architecture/harness-system-evolution-2026-10-25.md",
+      "?? docs/verification/harness-system-evolution-failure-matrix-2026-10-26.md",
+      "?? packages/shared/src/agent/core/task-preparation.ts",
+      "?? scripts/verification/harness-materials-workflow.ts",
+      "?? scripts/verification/harness-system-ready-pi-workflow.ts"
+    ],
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
+    "changedFiles": [
+      {
+        "path": "docs/README.md",
+        "sha256": "0208ac255953a9f23b731d18a0d9e85446c5c35c4df324492fd5a4c0e936c953"
+      },
+      {
+        "path": "docs/architecture/harness-system-evolution-2026-10-25.md",
+        "sha256": "2ece753e92de61b762e2d4108dfeff14d7fbf69817f8ade7d6d5ccf262269746"
+      },
+      {
+        "path": "docs/verification/harness-system-evolution-failure-matrix-2026-10-26.md",
+        "sha256": "cae3c7018be125fe4bad76f7e3f9542a957fc52cd83f74709c6f269892b804ac"
+      },
+      {
+        "path": "packages/pi-agent-server/src/index.ts",
+        "sha256": "d9bd5ff141ed5f2b927485d14acc5cf822d85ad409ea73ad6b87477e43b60be6"
+      },
+      {
+        "path": "packages/pi-agent-server/src/messages.ts",
+        "sha256": "fea8e2ddaebe5eb6d4cbd591a1ffe3f79298ccc302b0e8eb37ed341b8809c173"
+      },
+      {
+        "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+        "sha256": "44604d9bcaffa3001d1b521ccd2f8d9c9fd656f4fc3c90e1a4f12836f074a259"
+      },
+      {
+        "path": "packages/pi-agent-server/src/tool-discovery.ts",
+        "sha256": "af8eeb0b6210c9d2a2213977a5a4cddbe3ddef3d4eea95efeaa1ee0d4e0b7c43"
+      },
+      {
+        "path": "packages/session-tools-core/src/tool-defs.ts",
+        "sha256": "00d075d80b84e30525bd063ac7659ddd26596df25fe1b14e5de504bf25c6baf0"
+      },
+      {
+        "path": "packages/shared/src/agent/backend/types.ts",
+        "sha256": "064128b4b2529d4719ed7b95ea0be2e9bd93dab7e3b0ac6b5e7277d642fb7605"
+      },
+      {
+        "path": "packages/shared/src/agent/base-agent.ts",
+        "sha256": "3c3c65b6cb97ce1691dfdf9ecf9b5c1a2f14cb38eb46c8f46ab8059b24836584"
+      },
+      {
+        "path": "packages/shared/src/agent/core/pre-tool-use.ts",
+        "sha256": "74173eeb4c8abfc1dfca8bd417aaa80b8acfcdf1a4424cb061058ac69415f0a5"
+      },
+      {
+        "path": "packages/shared/src/agent/core/source-manager.ts",
+        "sha256": "b76f3f1c020e7f779fab555ebbd66ac54a940b8fb0c1bec7a689e144c53e6792"
+      },
+      {
+        "path": "packages/shared/src/agent/core/task-preparation.ts",
+        "sha256": "884ab115af7c582794390744ef74c18209d205839d858ea2beb3e06186671812"
+      },
+      {
+        "path": "packages/shared/src/agent/pi-agent.ts",
+        "sha256": "60860a21f17497397c9f12bd9bc61138567313f2748d0a95fd7d4580a17c2f73"
+      },
+      {
+        "path": "packages/shared/src/skills/storage.ts",
+        "sha256": "60d0c7e444128d04ff464aa5d248276d3b5dda0de5977f1d188c862c4b05fdcb"
+      },
+      {
+        "path": "packages/shared/src/skills/types.ts",
+        "sha256": "20d7477066e6364d44f652828e247e15e20556ef2c0100cde50c484c110e2ba1"
+      },
+      {
+        "path": "scripts/verification/harness-materials-workflow.ts",
+        "sha256": "090eb29031b7ab90ab1bfd8eab7e638ff32752766a68181f8d7caa035e60231b"
+      },
+      {
+        "path": "scripts/verification/harness-system-ready-pi-workflow.ts",
+        "sha256": "8b27b3b38e3d88e92448ca78a8dfef14b2659e11e3774708c1e412bcc12f8a5a"
+      },
+      {
+        "path": "scripts/verification/packaged-client-verification.mjs",
+        "sha256": "fda94624cb3ef4adbbed81a1987df6af370f3b3f03e0b4d16d40f8f996b80c10"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [],
+  "passed": 0,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "failure.json",
+      "sha256": "a4faf04dcf4dc543ba7d8adadc8d0319bf5c381400f0c71016df5c43b5b86443",
+      "bytes": 446
+    },
+    {
+      "path": "workspace/evidence.txt",
+      "sha256": "f5c962601b413ccda2fc14d64d98479d9fc74c90c2dde15f25ee9922e57f5074",
+      "bytes": 19
+    },
+    {
+      "path": "workspace/long_responses/f5c962601b413ccda2fc14d64d98479d9fc74c90c2dde15f25ee9922e57f5074.txt",
+      "sha256": "f5c962601b413ccda2fc14d64d98479d9fc74c90c2dde15f25ee9922e57f5074",
+      "bytes": 19
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

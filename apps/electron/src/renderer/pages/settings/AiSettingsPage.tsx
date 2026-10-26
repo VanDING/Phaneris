@@ -1,4 +1,4 @@
-import type { DecisionLayerFeature } from '@phaneris/shared/decisions/settings'
+import { RETIRED_DECISION_FEATURES, type DecisionLayerFeature } from '@phaneris/shared/decisions/settings'
 import { CompactionThresholdSetting } from '@/components/settings/CompactionThresholdSetting'
 import { DECISION_SETTINGS_CHANGED_EVENT, guardedModeAvailableAtom } from "@/atoms/permission-modes"
 /**
@@ -1123,8 +1123,8 @@ export default function AiSettingsPage() {
                                     label={label}
                                     description={description}
                                     tooltip={tooltip}
-                                    checked={feature === 'midTurnMessages' || feature === 'largeResults' ? false : decisionStatus.settings.features[feature] ?? false}
-                                    disabled={savingDecisions || feature === 'midTurnMessages' || feature === 'largeResults'}
+                                    checked={RETIRED_DECISION_FEATURES.includes(feature) ? false : decisionStatus.settings.features[feature] ?? false}
+                                    disabled={savingDecisions || RETIRED_DECISION_FEATURES.includes(feature)}
                                     onCheckedChange={(checked) => { void updateDecisionSettings({ features: { [feature]: checked } }) }}
                                   />
                                 ))}

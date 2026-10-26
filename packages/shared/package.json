@@ -17,6 +17,7 @@
     "./agent": "./src/agent/index.ts",
     "./agent/backend": "./src/agent/backend/index.ts",
     "./agent/context-policy": "./src/agent/context-policy.ts",
+    "./agent/task-continuity": "./src/agent/core/task-continuity.ts",
     "./agent/tool-result-contract": "./src/agent/tool-result-contract.ts",
     "./agent/compaction-threshold": "./src/agent/compaction-threshold.ts",
     "./agent/core/rtk-detector": "./src/agent/core/rtk-detector.ts",

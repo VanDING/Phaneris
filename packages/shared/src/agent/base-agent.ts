@@ -56,7 +56,8 @@ import { PromptBuilder } from './core/prompt-builder.ts';
 import { PathProcessor } from './core/path-processor.ts';
 import { ConfigWatcherManager, type ConfigWatcherManagerCallbacks } from './core/config-watcher-manager.ts';
 import { UsageTracker, type UsageUpdate } from './core/usage-tracker.ts';
-import { PrerequisiteManager } from './core/prerequisite-manager.ts';
+import { prepareInstructions, formatPreparedInstructions, projectInstructionRequests } from './core/task-preparation.ts';
+import { formatTaskContinuity } from './core/task-continuity.ts';
 
 // Automation system for agent events
 import type { AutomationSystem } from '../automations/automation-system.ts';
@@ -164,6 +165,7 @@ export const MINI_AGENT_MCP_KEYS = ['session'] as const;
  * - runMiniCompletion(): Simple text completion using backend's auth
  */
 export abstract class BaseAgent implements AgentBackend {
+  private selectedSkillSlugs: string[] = [];
   // ============================================================
   // Backend Identity
   // ============================================================
@@ -195,7 +197,6 @@ export abstract class BaseAgent implements AgentBackend {
   protected pathProcessor: PathProcessor;
   protected configWatcherManager: ConfigWatcherManager | null = null;
   protected usageTracker: UsageTracker;
-  protected prerequisiteManager: PrerequisiteManager;
   protected automationSystem?: AutomationSystem;
 
   // ============================================================
@@ -310,11 +311,6 @@ export abstract class BaseAgent implements AgentBackend {
       onDebug: (msg) => this.debug(msg),
     });
 
-    // PrerequisiteManager: blocks source tool calls until guide.md is read
-    this.prerequisiteManager = new PrerequisiteManager({
-      workspaceRootPath: config.workspace.rootPath,
-      onDebug: (msg) => this.debug(msg),
-    });
 
     // AutomationSystem: workspace-level automations from automations.json
     this.automationSystem = config.automationSystem;
@@ -534,6 +530,7 @@ export abstract class BaseAgent implements AgentBackend {
   }
 
   setSessionId(sessionId: string | null): void {
+    if (sessionId !== this._sessionId) this.selectedSkillSlugs = [];
     this._sessionId = sessionId || `agent-${Date.now()}`;
   }
 
@@ -543,18 +540,15 @@ export abstract class BaseAgent implements AgentBackend {
    */
   clearHistory(): void {
     this.usageTracker.reset();
-    this.prerequisiteManager.resetReadState();
+    this.selectedSkillSlugs = [];
     this.debug('History cleared');
   }
 
   /**
-   * Reset prerequisite read state (e.g., on context compaction).
-   * After compaction the LLM no longer has guide content in context,
-   * so it must re-read before using source tools.
-   * Also resets seen sources so guide paths re-appear in source introductions.
+   * Compatibility entry point after compression: reintroduce current sources.
+   * Explicit instructions are rehydrated separately; no reading gate is reset.
    */
   resetPrerequisiteState(): void {
-    this.prerequisiteManager.resetReadState();
     this.sourceManager.resetSeenSources();
   }
 
@@ -906,8 +900,7 @@ ${formattedMessages}
    * Extract skill mentions from a message and resolve their SKILL.md paths.
    *
    * Parses [skill:slug] or [skill:workspaceId:slug] mentions, resolves the
-   * corresponding SKILL.md file paths. Does NOT read the files — the model
-   * must read them itself (enforced by PrerequisiteManager).
+   * corresponding SKILL.md paths and declared installed capability families.
    *
    * @param message - The user message containing potential skill mentions
    * @returns Object with:
@@ -915,10 +908,11 @@ ${formattedMessages}
    *   - cleanMessage: Message with mentions stripped, or default directive
    *   - missingSkills: Array of skill slugs that were mentioned but not found
    */
-  protected extractSkillPaths(message: string): {
+  protected extractSkillPaths(message: string, selectedSkillSlugs?: string[], selectedSkillMessage?: string): {
     skillPaths: Map<string, string>;
     cleanMessage: string;
     missingSkills: string[];
+    capabilityFamilies: string[];
   } {
     const workspaceRoot = this.config.workspace?.rootPath ?? this.workingDirectory;
     const projectRoot = this.config.session?.workingDirectory;
@@ -927,7 +921,16 @@ ${formattedMessages}
 
     this.debug(`[extractSkillPaths] Available skills: ${skillSlugs.join(', ')}`);
 
-    const parsed = parseMentions(message, skillSlugs, []);
+    const parsed = parseMentions(selectedSkillSlugs !== undefined ? selectedSkillSlugs.map(slug => `[skill:${slug}]`).join(' ') : message, skillSlugs, []);
+    if (selectedSkillSlugs !== undefined || parsed.skills.length || parsed.invalidSkills?.length) this.selectedSkillSlugs = [...parsed.skills];
+    // Continue the current selection; do not accumulate every historical mention.
+    if (selectedSkillSlugs === undefined && !this.selectedSkillSlugs.length && !parsed.invalidSkills?.length) {
+      const selected = selectedSkillMessage;
+      const previous = (selected !== undefined ? [{ type: 'user', content: selected }] : this.config.getRecoveryMessages?.() ?? []).filter(item => item.type === 'user').reverse()
+        .map(item => parseMentions(item.content, skillSlugs, []))
+        .find(item => item.skills.length || item.invalidSkills?.length);
+      if (previous) this.selectedSkillSlugs = [...previous.skills];
+    }
     this.debug(`[extractSkillPaths] Parsed skills: ${JSON.stringify(parsed.skills)}`);
     if (parsed.invalidSkills && parsed.invalidSkills.length > 0) {
       this.debug(`[extractSkillPaths] Invalid skills: ${JSON.stringify(parsed.invalidSkills)}`);
@@ -935,7 +938,8 @@ ${formattedMessages}
 
     // Resolve SKILL.md paths for matched skills
     const skillPaths = new Map<string, string>();
-    for (const slug of parsed.skills) {
+    const unavailable = [...(parsed.invalidSkills ?? [])];
+    for (const slug of this.selectedSkillSlugs) {
       const skill = skills.find(s => s.slug === slug);
       if (skill) {
         const skillMdPath = join(skill.path, 'SKILL.md');
@@ -943,9 +947,10 @@ ${formattedMessages}
           skillPaths.set(slug, skillMdPath);
           this.debug(`[extractSkillPaths] Resolved skill ${slug} → ${skillMdPath}`);
         } else {
+          unavailable.push(slug);
           this.debug(`[extractSkillPaths] SKILL.md not found: ${skillMdPath}`);
         }
-      }
+      } else unavailable.push(slug);
     }
 
     // Resolve mentions to semantic markers (like file mentions) instead of stripping them.
@@ -967,20 +972,10 @@ ${formattedMessages}
     return {
       skillPaths,
       cleanMessage,
-      missingSkills: parsed.invalidSkills || []
+      missingSkills: [...new Set(unavailable)],
+      capabilityFamilies: [...new Set(skills.filter(skill => this.selectedSkillSlugs.includes(skill.slug))
+        .flatMap(skill => skill.metadata.requiredCapabilities ?? []))],
     };
-  }
-
-  /**
-   * Format a directive telling the model to read skill SKILL.md files before proceeding.
-   * Called from chat() — all agents get the same directive prepended to their message.
-   */
-  protected formatSkillDirective(skillPaths: Map<string, string>): string {
-    if (skillPaths.size === 0) return '';
-    const pathList = [...skillPaths.entries()]
-      .map(([slug, path]) => `- ${path} (skill: ${slug})`)
-      .join('\n');
-    return `Read the following skill instruction files before performing the specialized work they govern, using the exposed file reader or shell:\n${pathList}\n\nClarifications, status updates and recovery from a failed read may proceed. A failed or partial read does not establish that the skill instructions were loaded.`;
   }
 
   // ============================================================
@@ -989,52 +984,51 @@ ${formattedMessages}
 
   /**
    * Send a message and stream back events.
-   * Validates skill mentions, registers prerequisites, prepends read directive,
-   * then delegates to chatImpl. All skill logic is handled here — chatImpl
-   * never sees skill paths.
+   * Resolves explicit selection and prepares original instructions and task facts
+   * before delegating to Pi; no guide-reading execution gate.
    */
   async *chat(
     message: string,
     attachments?: FileAttachment[],
     options?: ChatOptions
   ): AsyncGenerator<AgentEvent> {
-    const { skillPaths, cleanMessage, missingSkills } = this.extractSkillPaths(message);
-    if (missingSkills.length > 0) {
-      yield { type: 'error', message: `Skill(s) not found: ${missingSkills.join(', ')}` };
-      yield { type: 'complete' };
-      return;
-    }
-
-    // Register skill prerequisites — blocks all tools until SKILL.md files are read.
-    if (skillPaths.size > 0) {
-      this.prerequisiteManager.registerSkillPrerequisites([...skillPaths.values()]);
-    }
+    // Conservative host preallocation; the actual SDK request remains the
+    // authoritative occupancy boundary, including schemas and image blocks.
+    const preparationBudget = Math.min(64_000, Math.max(2000, Math.floor((this.usageTracker.getContextWindow() ?? 128_000) / 2)));
+    const workContext = this.config.getTaskContinuityContext?.(Math.floor(preparationBudget / 4));
+    const { skillPaths, cleanMessage, missingSkills, capabilityFamilies } = this.extractSkillPaths(message, options?.selectedSkillSlugs, workContext?.selectedSkillMessage);
+    const instructions = [formatPreparedInstructions(prepareInstructions([
+      ...projectInstructionRequests(this.config.session?.workingDirectory),
+      ...[...skillPaths].map(([name, path]) => ({ kind: 'skill' as const, name, path })),
+    ], Math.floor(preparationBudget / 2))), formatTaskContinuity(workContext)].filter(Boolean).join('\n\n');
+    if (workContext?.artifacts.length && !capabilityFamilies.includes('deliverables')) capabilityFamilies.push('deliverables');
+    const missing = missingSkills.length ? `Selected skill(s) unavailable/not found: ${missingSkills.join(', ')}. Explain the limitation and continue independent work; do not claim their instructions were loaded.` : '';
 
     // Prepend branch seed context (for seeded branch sessions) and transferred-session summary.
     const branchSeedContext = this.buildBranchSeedContext(this.config.getBranchSeedMessages?.());
-    if (branchSeedContext) {
-      this.config.markBranchSeedApplied?.();
-    }
 
     const transferredSessionSummary = this.config.getTransferredSessionSummary?.();
     const transferredSessionContext = transferredSessionSummary
       ? buildTransferredSessionContext(transferredSessionSummary)
       : null;
-    if (transferredSessionContext) {
-      this.config.markTransferredSessionSummaryApplied?.();
-    }
 
-    // Prepend read directive to the message so the model reads SKILL.md first. Host guidance for
+    // Host guidance for
     // this turn goes last, after mention parsing, so it can never register a skill or source.
-    const directive = this.formatSkillDirective(skillPaths);
-    const messageParts = [branchSeedContext, transferredSessionContext, directive, cleanMessage, options?.turnContext].filter(Boolean);
+    const messageParts = [branchSeedContext, transferredSessionContext, missing, cleanMessage, options?.turnContext].filter(Boolean);
     const effectiveMessage = messageParts.join('\n\n');
 
     // Replay the original input through mention resolution, retaining explicit
     // skill/source selections without duplicating stale generated context.
     this.setCurrentTurnUserMessage(message);
     try {
-      yield* this.chatImpl(effectiveMessage, attachments, options);
+      yield* this.chatImpl(effectiveMessage, attachments, {
+        ...options, taskPreparation: { instructions, capabilityFamilies, budgetChars: Math.floor(preparationBudget / 4) },
+        onContextDelivered: () => {
+          if (branchSeedContext) this.config.markBranchSeedApplied?.();
+          if (transferredSessionContext) this.config.markTransferredSessionSummaryApplied?.();
+          options?.onContextDelivered?.();
+        },
+      });
     } finally {
       this.setCurrentTurnUserMessage(null);
     }
@@ -1046,9 +1040,8 @@ ${formattedMessages}
 
   /**
    * Provider-specific chat implementation.
-   * Called by chat() after skill validation, prerequisite registration,
-   * and directive injection. The message already contains any skill
-   * read directives — subclasses don't handle skills at all.
+   * Called after selection and preparation. The backend transports prepared
+   * instructions alongside the user message without rediscovering skills.
    *
    * @param message - User message (may have skill read directive prepended)
    * @param attachments - File attachments

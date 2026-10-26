@@ -115,6 +115,18 @@ await verificationWorkflow('harness-input-continuity', async evidence => {
     assert.equal(requests, beforeOutcome + 1, 'The finished classifier must actually run')
     assert.equal(review.sessionStatus, 'todo', 'A finished label cannot close a session or manufacture acceptance')
     checks.push('HC15 an overconfident finished classifier does not close an unverified session')
+    const { setDecisionLayerSettings } = await import('../../packages/shared/src/config/storage')
+    setDecisionLayerSettings({ features: { suggestions: false, adaptiveThinking: true } })
+    const beforeThinking = requests
+    const direct = manager.startPreTurnDecisions(managed, 'Continue with the user-selected thinking level.', { thinkingLevel: 'high' })
+    assert.equal((await direct)?.thinkingOverride, 'high')
+    assert.equal(manager.startPreTurnDecisions(managed, 'A simple request.'), null)
+    assert.equal(requests, beforeThinking)
+    checks.push('HE17 legacy adaptive preference cannot invoke pre-turn inference or lower explicit thinking')
+    const { canSteerTextPayload } = await import('../../packages/server-core/src/sessions/SessionManager')
+    assert.equal(canSteerTextPayload(undefined, undefined, { skillSlugs: [] }), false)
+    assert.equal(canSteerTextPayload(undefined, undefined, { badges: [] }), true)
+    checks.push('HE04 explicit skill clearing takes the prepared-input path while ordinary steering stays available')
     evidence.json('input-continuity.json', { checks, requests, advice: events.filter(e => e.type === 'info'), seed,
       scope: 'Real host decision scheduling and SQLite accounting; handoff seed contract, not live model quality' })
     evidence.complete(checks, ['live model quality', 'native UI steering during external effects', 'cross-platform packaging'])

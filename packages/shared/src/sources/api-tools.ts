@@ -241,11 +241,9 @@ export async function executeApiRequest(
  *
  * The description is sent to the LLM with every request, so we keep it small
  * and point to `sources/{slug}/guide.md` for endpoint-specific detail. The
- * agent's PrerequisiteManager already blocks calls to this tool until the
- * guide has been Read in the current context window, so the guide always
- * lands in conversation history before the model can call anything — making
- * a duplicate copy here pure waste (and the cause of #683-style provider
- * rejections when guide.md is large).
+ * host prepares applicable source guidance with explicit coverage and a path
+ * for additional ranges. Keeping a second full copy in every tool schema
+ * wastes context and can cause provider rejections when guide.md is large.
  *
  * Exported only for unit testing; treat as internal.
  */

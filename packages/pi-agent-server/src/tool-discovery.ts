@@ -38,6 +38,8 @@ export function createPhanerisToolSearch(tools: Catalog, availability: (name: st
       }).filter(match => match.score > 0).sort((a, b) => b.score - a.score || a.index - b.index);
       const matches = ranked.slice(offset, offset + limit).map(({ tool }) => ({ name: tool.name,
         description: tool.description.split(/\r?\n/)[0], namespace: tool.namespace?.name,
+        parameters: normalized ? tool.parameters : undefined,
+        instructions: normalized ? tool.namespace?.instructions : undefined,
         availability: availability(tool.name) ?? { status: 'ready' },
         status: availability(tool.name)?.status === 'unsupported' ? 'unsupported' : active.includes(tool.name) ? 'already_available' : 'loaded_now' }));
       // A directory is observational; it does not activate every listed tool.

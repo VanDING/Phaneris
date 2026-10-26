@@ -1,0 +1,4 @@
+{
+  "message": "Canonical replay must not undo native history reduction",
+  "stack": "AssertionError [ERR_ASSERTION]: Canonical replay must not undo native history reduction\n    at <anonymous> (E:\\Phaneris\\scripts\\verification\\harness-compaction-authority-workflow.ts:34:3)\n    at verificationWorkflow (E:\\Phaneris\\scripts\\verification\\verification-artifacts.ts:96:37)\n    at E:\\Phaneris\\scripts\\verification\\harness-compaction-authority-workflow.ts:11:7"
+}

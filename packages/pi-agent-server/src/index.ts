@@ -12,6 +12,7 @@ import { createContextPolicyStream, type HandoffSignal } from './context-policy-
 import { isContextPolicy, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import { prepareRequestDiagnostics } from './request-diagnostics.ts';
 import { prepareToolResultView, readCapture, readFileWithEvidence } from './tool-result-view.ts';
+import { requestCapacity, ResultBudget } from './request-capacity.ts';
 import { access as accessReadFile } from 'node:fs/promises';
 /**
  * Pi Agent Server
@@ -83,8 +84,14 @@ let piCacheRetention: CacheRetention = 'short';
 function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (() => 'compaction' | undefined)): StreamFn {
   return wrapDurableModelStream(stream, async (model, context, requestObservation) => {
     const purpose = typeof purposeInput === 'function' ? purposeInput() : purposeInput;
+    const contextScope = initConfig ? JSON.stringify([initConfig.workspaceRootPath, initConfig.sessionId]) : undefined;
     const requestSeq = ++promptSnapshotSeq;
-    const { canonicalRequestHash, contextSnapshot, systemPrompt } = prepareRequestDiagnostics(model, context);
+    const main = sessionLifecycle.current;
+    const mainContext = !purpose && currentDurableModelRun()?.runOperationId === currentDurableRunOperationId && !!currentDurableRunOperationId;
+    const occupancy = main && mainContext ? readContextUsage(main) : undefined;
+    const reserve = occupancy?.compactionSettings?.reserveTokens;
+    const { canonicalRequestHash, contextSnapshot, systemPrompt } = prepareRequestDiagnostics(model, context, reserve, occupancy?.contextUsage?.tokens);
+    const capacity = contextSnapshot.capacity;
     if (!purpose) rememberPromptSnapshot(requestSeq, systemPrompt, contextSnapshot);
     const providerRequestId = String(requestSeq);
     const durableRun = currentDurableModelRun();
@@ -103,9 +110,10 @@ function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (
       Object.assign(message, {
         durableOperationId: prepared.operationId,
         durableSeq: committedSeq,
+        durableContextScope: contextScope,
         durableRequestSeq: requestSeq,
       });
-      if (!purpose) rememberDurableToolBatch(message, prepared.operationId);
+      if (!purpose) rememberDurableToolBatch(message, prepared.operationId, capacity);
     };
   }, () => piCacheRetention);
 }
@@ -156,7 +164,7 @@ import { isCompactionThreshold } from '@phaneris/shared/agent/compaction-thresho
 import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
 import { stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
-import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSystemPrompt } from './phaneris-resource-loader.ts';
+import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSystemPrompt, setPhanerisTaskInstructions } from './phaneris-resource-loader.ts';
 import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { readContextUsage, deferContextUsage } from './context-usage.ts';
 import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS } from './compaction-wait.ts';
@@ -167,7 +175,7 @@ import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '@phaneris/shared/durable-runtime/types';
 import { attachDurableToolContext, durableToolFromContext } from './durable-tool-context.ts';
-import { convergeCanonicalContext } from './canonical-model-context.ts';
+import { convergeCanonicalContext, recordCanonicalCompaction } from './canonical-model-context.ts';
 import {
   hasSupportedBaseUrlScheme,
   isLocalhostUrl,
@@ -225,6 +233,7 @@ let initConfig: Extract<InboundMessage, { type: 'init' }> | null = null;
 let currentDurableRunOperationId: string | undefined;
 let currentDurableTurnId: string | undefined;
 let lastCanonicalContextCursor = 0;
+let lastCanonicalCoveredSeq = 0;
 const durableModelRunStorage = new AsyncLocalStorage<{ runOperationId: string; turnId: string }>();
 
 function currentDurableModelRun(): { runOperationId: string; turnId: string } | undefined {
@@ -265,19 +274,18 @@ const pendingDurableModelPrepares = new PendingReplies<{ ok: boolean; prepared?:
 const pendingDurableModelOutcomes = new PendingReplies<{ ok: boolean; committedSeq?: number; reason?: string }>();
 const durableToolAccounting = new DurableToolAccounting();
 const toolExecutionScheduler = new ToolExecutionScheduler();
-const toolResultBudgets = new Map<string, number>();
+const toolResultBudgets = new Map<string, ResultBudget>();
 
-function rememberDurableToolBatch(message: AssistantMessage, toolBatchId: string): void {
+function rememberDurableToolBatch(message: AssistantMessage, toolBatchId: string, capacity: ReturnType<typeof requestCapacity>): void {
   const calls = message.content.filter(part => part.type === 'toolCall');
   durableToolAccounting.rememberBatch(calls, toolBatchId);
-  const active = sessionLifecycle.current;
-  const model = active?.model;
-  const window = model?.contextWindow ?? 131072;
-  const used = active?.getContextUsage()?.tokens ?? window / 2;
-  // A conservative character allocation is deterministic and independent of completion order.
-  const available = Math.max(0, window - used - Math.max(model?.maxTokens ?? 8192, 8192));
-  const each = Math.min(256000, Math.floor(available / Math.max(1, calls.length)));
-  for (const call of calls) toolResultBudgets.set(call.id, each);
+  const output = message.usage.output || 0;
+  // Native writes return an acknowledgement; reads/queries need content space.
+  // These tool semantics are known, rather than inferred from task intent.
+  const budget = new ResultBudget(calls.map(call => ({ id: call.id,
+    weight: ['write', 'Write', 'edit', 'Edit', 'MultiEdit', 'report_progress'].includes(call.name) ? 1 : 16 })),
+    Math.max(0, capacity.availableInputTokens - output));
+  for (const call of calls) toolResultBudgets.set(call.id, budget);
 }
 
 // Pending session MCP tool calls for completion detection
@@ -728,7 +736,13 @@ async function createSession(): Promise<AgentSession> {
     tools: [...catalog.allowlist],
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
     resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), settingsManager: mainSettings, observeLifecycle: observeSdkLifecycle,
-      installCompaction: pi => compactionController.install(pi),
+      installCompaction: pi => {
+        compactionController.install(pi);
+        pi.on('session_compact', event => {
+          if (ownedSession && initConfig) recordCanonicalCompaction(ownedSession.sessionManager, event.compactionEntry.id,
+            JSON.stringify([initConfig.workspaceRootPath, initConfig.sessionId]), lastCanonicalCoveredSeq);
+        });
+      },
       wrapOrchestrationTool: wrapSingleTool,
       productTools: () => proxyToolDefs,
       gateToolCall: async (toolName, input, toolCallId) => { await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true); } }),
@@ -806,7 +820,8 @@ async function createSession(): Promise<AgentSession> {
     session.dispose();
     throw new Error('Pi resumed a different model or provider than the configured connection; reselect the model before continuing.');
   }
-  const restoredToolNames = getCurrentTools(session.sessionManager.buildSessionContext().messages).map(tool => tool.name);
+  const availableNames = new Set([...catalog.customTools.filter(tool => tool.exposure !== 'hidden').map(tool => tool.name), ...catalog.activeNames]);
+  const restoredToolNames = getCurrentTools(session.sessionManager.buildSessionContext().messages).map(tool => tool.name).filter(name => availableNames.has(name));
   session.setActiveToolsByName([...new Set([...catalog.activeNames, ...restoredToolNames])]);
   // Ordinary requests keep their existing boundary. SDK background refreshes
   // use a distinct boundary and never publish assistant/tool output.
@@ -821,6 +836,8 @@ async function createSession(): Promise<AgentSession> {
     () => contextPolicy,
     signal => send({ type: 'context_handoff', signal }),
     () => { const forced = forcedContextHandoff; forcedContextHandoff = false; return forced },
+    () => session.settingsManager.getCompactionSettings(session.model).reserveTokens,
+    () => readContextUsage(session).contextUsage?.tokens,
   );
   session.setCacheWarmingMode(initConfig?.promptCacheWarming === true ? 'streaming' : 'off');
 
@@ -1081,13 +1098,11 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     ctx,
   ) => {
     const sdkToolName = PI_TOOL_NAME_MAP[tool.name] || tool.name;
+    let inputObj: Record<string, unknown> = { ...(params as Record<string, unknown>) };
     const resources = toolExecutionResources(tool.name, params as Record<string, unknown>,
       initConfig?.workingDirectory || initConfig?.workspaceRootPath || process.cwd(),
       tool.name.startsWith('mcp__session__') && proxyToolDefs.some(def => def.name === tool.name && def.readOnly === true));
-    return toolExecutionScheduler.run(resources, signal, async () => {
-      let inputObj: Record<string, unknown> = { ...(params as Record<string, unknown>) };
-
-
+    const preflight = async () => {
       // Normalize Pi SDK parameter names: path → file_path
       if ((sdkToolName === 'Write' || sdkToolName === 'Edit' || sdkToolName === 'MultiEdit' || sdkToolName === 'NotebookEdit')
           && typeof inputObj.path === 'string' && !inputObj.file_path) {
@@ -1115,8 +1130,10 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         throw new Error(`Execution target changed during preflight; operation not dispatched. Retry using the approved target ${String(inputObj.path ?? inputObj.file_path ?? '')}.`);
       }
       signal?.throwIfAborted();
-
-      if ((toolResultBudgets.get(toolCallId) ?? 1000) < 1000) throw new Error('Insufficient context for this tool batch; operation not dispatched. Compact or reduce the batch before retrying.');
+    };
+    return toolExecutionScheduler.run(resources, signal, async () => {
+      signal?.throwIfAborted();
+      if (toolResultBudgets.get(toolCallId)?.canDispatch === false) throw new Error('Insufficient context for this tool batch; operation not dispatched. Compact or reduce the batch before retrying.');
 
       // T1 must commit after preflight and before the implementation is allowed to run.
       if (sdkToolName === 'Read') for (const key of ['offset', 'limit']) {
@@ -1177,27 +1194,28 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         throw new Error(resultText || `${sdkToolName} failed`);
       }
 
-      // The batch reservation uses the active model and SDK occupancy at dispatch.
-      if (initConfig) {
-        result = await prepareToolResultView({ result, toolName: sdkToolName, input: inputObj,
-          sessionPath: getSessionPath(initConfig.workspaceRootPath, initConfig.sessionId),
-          budgetChars: toolResultBudgets.get(toolCallId) ?? 48_000, capture: capturedRead,
-          supportsImages: sessionLifecycle.current?.model?.input.includes('image') }) as AgentToolResult<any>;
-      }
+      const prepareView = async (budgetChars: number) => initConfig ? await prepareToolResultView({ result,
+        toolName: sdkToolName, input: inputObj, sessionPath: getSessionPath(initConfig.workspaceRootPath, initConfig.sessionId),
+        budgetChars, capture: capturedRead, supportsImages: sessionLifecycle.current?.model?.input.includes('image') }) as AgentToolResult<any> : result;
+      result = await (toolResultBudgets.get(toolCallId)?.project(toolCallId, prepareView) ?? prepareView(48_000));
 
       // Commit exactly the representation Pi will append to model context.
-      await requestDurableToolOutcome(
+      const outcomeSeq = await requestDurableToolOutcome(
         durable,
         sdkToolName,
         toolCallId,
         result,
         false,
       );
+      // Public result details survive the SDK's tool-message journal adapter.
+      // This receipt describes the represented outcome, never input delivery.
+      result = { ...result, details: { ...result.details, phanerisDurableSeq: outcomeSeq,
+        phanerisDurableScope: JSON.stringify([initConfig!.workspaceRootPath, initConfig!.sessionId]) } };
       // Handoff is a successful tool boundary. Keep T2 before SDK abort, and
       // abort synchronously so no follow-up model request outruns the UI pause.
       if (handsControlToUI(sdkToolName) && result.details?.continuation === 'await_user') sessionLifecycle.current?.agent.abort();
       return result;
-    }).finally(() => { toolResultBudgets.delete(toolCallId); });
+    }, preflight).finally(() => { toolResultBudgets.get(toolCallId)?.finish(toolCallId); toolResultBudgets.delete(toolCallId); });
   };
 
   return {
@@ -1556,7 +1574,7 @@ async function runMiniCompletion(prompt: string): Promise<string | null> {
 // Event Handling
 // ============================================================
 
-const handleSessionEvent = createSessionEventAdapter({
+const adaptSessionEvent = createSessionEventAdapter({
   currentSession: () => sessionLifecycle.current, send, debugLog, observeSdkLifecycle,
   clearCompactionFailure: () => {
     const controller = sessionLifecycle.current && compactionControllers.get(sessionLifecycle.current);
@@ -1579,6 +1597,14 @@ const handleSessionEvent = createSessionEventAdapter({
   settled() { currentDurableRunOperationId = undefined; currentDurableTurnId = undefined; },
 });
 
+function handleSessionEvent(event: AgentSessionEvent): void {
+  if (event.type === 'tool_execution_end') {
+    toolResultBudgets.get(event.toolCallId)?.finish(event.toolCallId);
+    toolResultBudgets.delete(event.toolCallId);
+  }
+  adaptSessionEvent(event);
+}
+
 // ============================================================
 // Command Handlers
 // ============================================================
@@ -1598,6 +1624,7 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
   process.env.PI_CACHE_RETENTION = piCacheRetention;
   clearPromptSnapshots();
   lastCanonicalContextCursor = 0;
+  lastCanonicalCoveredSeq = 0;
 
   // Audit M-4: custom endpoint base URLs must use http/https. Reject other
   // schemes early and neutralize the config so the invalid URL is never
@@ -1633,6 +1660,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
   let received = false;
   lengthContinuationTracker.reset();
   durableToolAccounting.resetBatches();
+  toolResultBudgets.clear();
   currentDurableRunOperationId = msg.durableRunOperationId;
   currentDurableTurnId = msg.durableTurnId ?? msg.id;
 
@@ -1661,9 +1689,11 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
         // durable facts are installed as append-only context edits rather than by
         // replacing agent state — see convergeCanonicalContext for why the three
         // cases matter and when nothing is written.
-        const outcome = convergeCanonicalContext(session.sessionManager, msg.canonicalContext, session.agent.state.model);
+        const outcome = convergeCanonicalContext(session.sessionManager, msg.canonicalContext, session.agent.state.model,
+          JSON.stringify([initConfig!.workspaceRootPath, initConfig!.sessionId]));
         if (outcome !== 'aligned') session.refreshContext();
         lastCanonicalContextCursor = msg.canonicalContext.cursor;
+        lastCanonicalCoveredSeq = Math.max(0, ...msg.canonicalContext.items.map(item => item.seq));
         debugLog(`[canonical-context] ${outcome} ${msg.canonicalContext.items.length} committed facts at cursor ${msg.canonicalContext.cursor}`);
       }
     }
@@ -1674,6 +1704,16 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     if (msg.systemPrompt) {
       setPhanerisSystemPrompt(msg.systemPrompt);
     }
+    setPhanerisTaskInstructions([msg.taskPreparation?.instructions ?? '', msg.taskPreparation?.sourceContext ?? '']);
+    const selectedFamilies = new Set(msg.taskPreparation?.capabilityFamilies ?? []);
+    const selectedSources = new Set(msg.taskPreparation?.sourceSlugs ?? []);
+    const prepared = proxyToolDefs.filter(tool => {
+      if (tool.exposure === 'hidden' || tool.availability?.status === 'unsupported') return false;
+      if (tool.name.startsWith('mcp__session__')) return selectedFamilies.has(tool.namespace?.name.replace('phaneris:', '') ?? '');
+      const slug = tool.name.split('__')[1];
+      return selectedSources.has(slug ?? '') && proxyToolDefs.filter(candidate => candidate.name.startsWith(`mcp__${slug}__`)).length <= 24;
+    });
+    if (prepared.length) session.setActiveToolsByName([...new Set([...session.getActiveToolNames(), ...prepared.map(tool => tool.name)])]);
 
     // Wire up event handler
     if (unsubscribeEvents) {

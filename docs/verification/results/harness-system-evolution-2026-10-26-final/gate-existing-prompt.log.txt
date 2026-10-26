@@ -1,0 +1,28 @@
+bun test v1.4.2 (744846f84)
+
+packages\shared\src\prompts\__tests__\system.isolated.ts:
+(pass) system prompt guidance > keeps quick configuration agents within the same documentation and mode boundaries [0.33ms]
+(pass) system prompt guidance > keeps execution authorization boundaries [6.91ms]
+(pass) system prompt guidance > does not mutate the stable prompt across repeated builds or merge volatile session state into it [11.84ms]
+(pass) system prompt guidance > uses backend-neutral debug log querying guidance (rg/grep via Bash) [11.83ms]
+(pass) prompt attribution removal > omits built-in attribution and preserves the project context argument [5.52ms]
+(pass) formatProjectContextForPrompt > drops the legacy <project_working_directory> line [0.21ms]
+(pass) formatProjectContextForPrompt > always renders the memory path; assets path is always present [0.04ms]
+(pass) formatProjectContextForPrompt > renders an asset manifest when assets are present [0.20ms]
+(pass) formatProjectContextForPrompt > omits the manifest entirely when there are no assets [0.05ms]
+(pass) formatProjectContextForPrompt > emits the <project_memory> wrapper only when memory content is present [0.06ms]
+(pass) formatProjectContextForPrompt > defangs a closing block tag embedded in details so the block is not terminated early [0.07ms]
+(pass) formatProjectContextForPrompt > defangs a closing tag in memory content (case- and whitespace-insensitive) [0.05ms]
+(pass) formatProjectContextForPrompt > defangs a closing block tag in an asset filename so a crafted upload cannot break out [0.08ms]
+(pass) formatProjectContextForPrompt > strips control chars/newlines from an asset filename so it cannot forge extra manifest lines [0.07ms]
+(pass) formatProjectContextForPrompt > defangs a block terminator embedded in a path or MIME type (defense-in-depth) [0.08ms]
+(pass) getWorkingDirectoryContext > defangs a directory name that carries a block terminator or control chars [0.16ms]
+(pass) getWorkingDirectoryContext > defangs the session-root explanation branch without touching the fixed text [0.03ms]
+(pass) getProjectContextFilesPrompt > escapes the working-directory attribute [2.01ms]
+(skip) getProjectContextFilesPrompt > defangs a crafted directory name and escapes the attribute on a real tree
+
+ 18 pass
+ 1 skip
+ 0 fail
+ 53 expect() calls
+Ran 19 tests across 1 file. [201.00ms]

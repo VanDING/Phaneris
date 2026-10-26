@@ -4,7 +4,7 @@ export interface ToolResultProvenance {
   source: { path?: string; sha256?: string; totalLines?: number; scope: 'source' | 'tool-return' };
   coverage: { kind: 'full' | 'partial' | 'unknown'; startLine?: number; endLine?: number; totalLines?: number };
   modelView: { kind: 'exact' | 'range' | 'preview'; sha256: string };
-  recovery: { status: 'available' | 'unavailable'; path?: string; canonicalPath?: string; reason?: string };
+  recovery: { status: 'available' | 'inline' | 'unavailable'; path?: string; canonicalPath?: string; reason?: string };
 }
 
 /** Missing metadata is deliberately unknown. Historical summaries are not original evidence. */

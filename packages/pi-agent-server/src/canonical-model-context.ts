@@ -99,6 +99,45 @@ function sameMessages(left: readonly ModelMessage[], right: readonly ModelMessag
 /** Which case applied, so callers log a fact instead of inferring one. */
 export type CanonicalConvergence = 'aligned' | 'appended' | 'replaced'
 
+const COMPACTION_COVERAGE = 'phaneris:canonical-compaction-coverage';
+interface CompactionCoverage {
+  compactionId: string;
+  scope: string;
+  canonicalThroughSeq: number;
+  nativeThroughSeq: number;
+}
+
+/** Metadata on the SDK journal, never a second copy of its summary or context.
+ * Only actually journaled main outputs advance native coverage. New user facts
+ * above canonicalThroughSeq remain eligible even if admitted during generation:
+ * an SDK queue receipt alone does not prove the model consumed that input. */
+export function recordCanonicalCompaction(
+  manager: SessionManager, compactionId: string, scope: string, canonicalThroughSeq: number,
+): void {
+  const nativeThroughSeq = manager.getBranch(compactionId).reduce((highest, entry) => {
+    const message = entry.type === 'message' ? entry.message as { durableSeq?: number; durableContextScope?: string;
+      details?: { phanerisDurableSeq?: number; phanerisDurableScope?: string } } : undefined;
+    const seq = message?.durableContextScope === scope ? message.durableSeq
+      : message?.details?.phanerisDurableScope === scope ? message.details.phanerisDurableSeq : undefined;
+    return typeof seq === 'number' && Number.isSafeInteger(seq) ? Math.max(highest, seq) : highest;
+  }, canonicalThroughSeq);
+  manager.appendCustomEntry(COMPACTION_COVERAGE, { compactionId, scope, canonicalThroughSeq, nativeThroughSeq } satisfies CompactionCoverage);
+}
+
+function compactedBoundary(manager: SessionManager, scope: string | undefined) {
+  if (!scope) return;
+  const branch = manager.getBranch();
+  const compaction = [...branch].reverse().find(entry => entry.type === 'compaction');
+  if (!compaction) return;
+  const checkpoint = [...branch].reverse().find(entry => entry.type === 'custom' && entry.customType === COMPACTION_COVERAGE
+    && (entry.data as CompactionCoverage | undefined)?.compactionId === compaction.id);
+  const coverage = checkpoint?.type === 'custom' ? checkpoint.data as CompactionCoverage | undefined : undefined;
+  if (!coverage || coverage.scope !== scope || !Number.isSafeInteger(coverage.canonicalThroughSeq)
+    || !Number.isSafeInteger(coverage.nativeThroughSeq) || coverage.canonicalThroughSeq < 0
+    || coverage.nativeThroughSeq < coverage.canonicalThroughSeq) return;
+  return { coverage, prefixIds: new Set(branch.slice(0, branch.indexOf(compaction) + 1).map(entry => entry.id)) };
+}
+
 /**
  * Converge a Pi session onto the durable canonical facts with **append-only**
  * context edits, preserving original message content in the transcript.
@@ -131,24 +170,60 @@ export function convergeCanonicalContext(
   sessionManager: SessionManager,
   context: DurableCanonicalModelContext,
   model: Model<any>,
+  scope?: string,
 ): CanonicalConvergence {
-  const canonical = canonicalContextToPiMessages(context, model) as ModelMessage[];
+  let boundary = compactedBoundary(sessionManager, scope);
+  let items = context.items;
+  let projection = sessionManager.buildSessionProjection();
+  if (boundary) {
+    const { canonicalThroughSeq, nativeThroughSeq } = boundary.coverage;
+    items = context.items.filter(item => item.seq > canonicalThroughSeq && (item.kind === 'user' || item.seq > nativeThroughSeq));
+    const prefixCalls = new Set(projection.entries.filter(entry => boundary!.prefixIds.has(entry.sourceEntry.id))
+      .flatMap(entry => entry.messages).flatMap(message => message.role === 'assistant'
+        ? message.content.filter(block => block.type === 'toolCall').map(block => block.id) : []));
+    const suffixCalls = new Set(items.filter(item => item.kind === 'tool_call').map(item => item.toolCallId));
+    // A late durable T2 may need a call that the summary no longer contains.
+    // Restore the canonical pair once; never execute its effect again here.
+    const brokenPair = items.some(item => item.kind === 'tool_outcome' && !suffixCalls.has(item.toolCallId) && !prefixCalls.has(item.toolCallId))
+      || [...suffixCalls].some(id => prefixCalls.has(id));
+    if (brokenPair) {
+      boundary = undefined;
+      items = context.items;
+    }
+  }
+  const canonical = canonicalContextToPiMessages({ ...context, items }, model) as ModelMessage[];
   if (canonical.length === 0) return 'aligned';
 
-  const projected = sessionManager.buildSessionProjection().messages as ModelMessage[];
-  if (sameMessages(projected.slice(0, canonical.length), canonical)) return 'aligned';
+  let recoveredBranch = false;
+  if (!boundary && projection.entries.some(entry => entry.sourceEntry.type === 'compaction' || entry.sourceEntry.type === 'branch_summary')) {
+    // Summary entries are not context-editable in the public SDK. Recovery
+    // branches before the first summary, preserving every abandoned journal row.
+    const previousLeaf = sessionManager.getLeafId();
+    const firstSummary = sessionManager.getBranch().find(entry => entry.type === 'compaction' || entry.type === 'branch_summary')!;
+    if (firstSummary.parentId) sessionManager.branch(firstSummary.parentId);
+    else sessionManager.resetLeaf();
+    sessionManager.appendCustomEntry('phaneris:canonical-recovery', { previousLeaf, scope });
+    projection = sessionManager.buildSessionProjection();
+    recoveredBranch = true;
+  }
+
+  // The native summary and retained prefix belong to Pi. Reconcile only the
+  // tail after its checkpoint. Without a matching scope/anchor, use full facts.
+  const entries = boundary ? projection.entries.filter(entry => !boundary.prefixIds.has(entry.sourceEntry.id)) : projection.entries;
+  const projected = entries.flatMap(entry => entry.messages) as ModelMessage[];
+  if (sameMessages(projected.slice(0, canonical.length), canonical)) return recoveredBranch ? 'replaced' : 'aligned';
 
   if (projected.length < canonical.length && sameMessages(projected, canonical.slice(0, projected.length))) {
     for (const message of canonical.slice(projected.length)) {
       sessionManager.appendMessage(message as Parameters<SessionManager['appendMessage']>[0]);
     }
-    return 'appended';
+    return recoveredBranch ? 'replaced' : 'appended';
   }
 
-  for (const entry of sessionManager.buildSessionProjection().entries) {
-    const contributes = entry.messages.some(message =>
-      message.role === 'user' || message.role === 'assistant' || message.role === 'toolResult');
-    if (contributes) sessionManager.appendContextEdit(entry.sourceEntry.id, null);
+  for (const entry of entries) {
+    const editable = entry.sourceEntry.type === 'custom_message' || (entry.sourceEntry.type === 'message'
+      && ['user', 'assistant', 'toolResult'].includes(entry.sourceEntry.message.role));
+    if (editable && entry.messages.length) sessionManager.appendContextEdit(entry.sourceEntry.id, null);
   }
   for (const message of canonical) {
     sessionManager.appendMessage(message as Parameters<SessionManager['appendMessage']>[0]);

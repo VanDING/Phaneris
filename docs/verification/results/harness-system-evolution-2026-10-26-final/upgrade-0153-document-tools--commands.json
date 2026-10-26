@@ -1,0 +1,414 @@
+[
+  {
+    "tool": "docx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\docx_tool.py",
+      "create",
+      "--text",
+      "# Closeout\n\nDOCX_MARKER **bold**",
+      "-o",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\report.docx"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Document created: E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\report.docx\n",
+    "elapsedMs": 2219,
+    "scriptSha256": "330d59127446aad443f85248de7f7302bcfc5a6f98825dd34be02d69818d2b0f",
+    "wrapperSha256": "145e888d6a245fa4296ff68972bdd8f6127935d51884d3abbd7c85d2216c212b"
+  },
+  {
+    "tool": "docx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\docx_tool.py",
+      "extract",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\report.docx"
+    ],
+    "exitCode": 0,
+    "stdout": "# Closeout\nDOCX_MARKER bold\n",
+    "stderr": "",
+    "elapsedMs": 1016,
+    "scriptSha256": "330d59127446aad443f85248de7f7302bcfc5a6f98825dd34be02d69818d2b0f",
+    "wrapperSha256": "145e888d6a245fa4296ff68972bdd8f6127935d51884d3abbd7c85d2216c212b"
+  },
+  {
+    "tool": "xlsx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\xlsx_tool.py",
+      "write",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.xlsx",
+      "--cell",
+      "A1",
+      "--value",
+      "name"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Wrote 'name' to A1 in scores.xlsx\n",
+    "elapsedMs": 2031,
+    "scriptSha256": "1bd259234f06da50dc078ace1cd070032b5e0228172178e44c40b51dacbecc82",
+    "wrapperSha256": "659cbbe72e82d1063f87081d0d9e8ceec8dce87826d1006e56f01ebcc78b989d"
+  },
+  {
+    "tool": "xlsx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\xlsx_tool.py",
+      "write",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.xlsx",
+      "--cell",
+      "B1",
+      "--value",
+      "score"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Wrote 'score' to B1 in scores.xlsx\n",
+    "elapsedMs": 1203,
+    "scriptSha256": "1bd259234f06da50dc078ace1cd070032b5e0228172178e44c40b51dacbecc82",
+    "wrapperSha256": "659cbbe72e82d1063f87081d0d9e8ceec8dce87826d1006e56f01ebcc78b989d"
+  },
+  {
+    "tool": "xlsx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\xlsx_tool.py",
+      "write",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.xlsx",
+      "--cell",
+      "A2",
+      "--value",
+      "Ada"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Wrote 'Ada' to A2 in scores.xlsx\n",
+    "elapsedMs": 1219,
+    "scriptSha256": "1bd259234f06da50dc078ace1cd070032b5e0228172178e44c40b51dacbecc82",
+    "wrapperSha256": "659cbbe72e82d1063f87081d0d9e8ceec8dce87826d1006e56f01ebcc78b989d"
+  },
+  {
+    "tool": "xlsx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\xlsx_tool.py",
+      "write",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.xlsx",
+      "--cell",
+      "B2",
+      "--value",
+      "42",
+      "--type",
+      "number"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Wrote '42' to B2 in scores.xlsx\n",
+    "elapsedMs": 1265,
+    "scriptSha256": "1bd259234f06da50dc078ace1cd070032b5e0228172178e44c40b51dacbecc82",
+    "wrapperSha256": "659cbbe72e82d1063f87081d0d9e8ceec8dce87826d1006e56f01ebcc78b989d"
+  },
+  {
+    "tool": "xlsx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\xlsx_tool.py",
+      "read",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.xlsx",
+      "--format",
+      "json"
+    ],
+    "exitCode": 0,
+    "stdout": "[\n  {\n    \"name\": \"Ada\",\n    \"score\": 42\n  }\n]\n",
+    "stderr": "",
+    "elapsedMs": 1219,
+    "scriptSha256": "1bd259234f06da50dc078ace1cd070032b5e0228172178e44c40b51dacbecc82",
+    "wrapperSha256": "659cbbe72e82d1063f87081d0d9e8ceec8dce87826d1006e56f01ebcc78b989d"
+  },
+  {
+    "tool": "xlsx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\xlsx_tool.py",
+      "export",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.xlsx",
+      "--format",
+      "csv",
+      "-o",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.csv"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Output written to E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\scores.csv\n",
+    "elapsedMs": 1187,
+    "scriptSha256": "1bd259234f06da50dc078ace1cd070032b5e0228172178e44c40b51dacbecc82",
+    "wrapperSha256": "659cbbe72e82d1063f87081d0d9e8ceec8dce87826d1006e56f01ebcc78b989d"
+  },
+  {
+    "tool": "pptx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\pptx_tool.py",
+      "create",
+      "--title",
+      "Closeout",
+      "--text",
+      "# One\nPPTX_MARKER\n---\n# Two\nSecond slide",
+      "-o",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\slides.pptx"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Presentation saved to E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\slides.pptx (3 slides)\n",
+    "elapsedMs": 1937,
+    "scriptSha256": "b82d317ba96b8cd36eb3b067456ecf92d3a4b3afde442102b03fa8bfce7a8e9a",
+    "wrapperSha256": "a84a515c2fbea04d6a9826d04c36a5765f80a83a77807bd0c6383b9c96534b96"
+  },
+  {
+    "tool": "pptx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\pptx_tool.py",
+      "info",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\slides.pptx"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"file\": \"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-document-tools-jlsbjs\\\\slides.pptx\",\n  \"slide_count\": 3,\n  \"slide_width_inches\": 10.0,\n  \"slide_height_inches\": 7.5,\n  \"title\": \"\",\n  \"author\": \"\",\n  \"lint_issue_count\": 0,\n  \"slides\": [\n    {\n      \"number\": 1,\n      \"layout\": \"Title Slide\",\n      \"shapes\": [\n        {\n          \"name\": \"Title 1\",\n          \"type\": \"PLACEHOLDER (14)\",\n          \"x\": 0.75,\n          \"y\": 2.33,\n          \"width\": 8.5,\n          \"height\": 1.608,\n          \"text\": \"\",\n          \"has_table\": false,\n          \"has_chart\": false\n        },\n        {\n          \"name\": \"Subtitle 2\",\n          \"type\": \"PLACEHOLDER (14)\",\n          \"x\": 1.5,\n          \"y\": 4.25,\n          \"width\": 7.0,\n          \"height\": 1.917,\n          \"text\": \"\",\n          \"has_table\": false,\n          \"has_chart\": false\n        }\n      ],\n      \"title\": \"\",\n      \"shape_count\": 2,\n      \"table_count\": 0,\n      \"chart_count\": 0,\n      \"image_count\": 0,\n      \"lint_issue_count\": 0\n    },\n    {\n      \"number\": 2,\n      \"layout\": \"Title and Content\",\n      \"shapes\": [\n        {\n          \"name\": \"Title 1\",\n          \"type\": \"PLACEHOLDER (14)\",\n          \"x\": 0.5,\n          \"y\": 0.3,\n          \"width\": 9.0,\n          \"height\": 1.25,\n          \"text\": \"\",\n          \"has_table\": false,\n          \"has_chart\": false\n        },\n        {\n          \"name\": \"Content Placeholder 2\",\n          \"type\": \"PLACEHOLDER (14)\",\n          \"x\": 0.5,\n          \"y\": 1.75,\n          \"width\": 9.0,\n          \"height\": 4.95,\n          \"text\": \"\",\n          \"has_table\": false,\n          \"has_chart\": false\n        },\n        {\n          \"name\": \"TextBox 3\",\n          \"type\": \"TEXT_BOX (17)\",\n          \"x\": 1.0,\n          \"y\": 1.5,\n          \"width\": 8.0,\n          \"height\": 5.0,\n          \"text\": \"PPTX_MARKER\",\n          \"has_table\": false,\n          \"has_chart\": false\n        }\n      ],\n      \"title\": \"\",\n      \"shape_count\": 3,\n      \"table_count\": 0,\n      \"chart_count\": 0,\n      \"image_count\": 0,\n      \"lint_issue_count\": 0\n    },\n    {\n      \"number\": 3,\n      \"layout\": \"Title and Content\",\n      \"shapes\": [\n        {\n          \"name\": \"Title 1\",\n          \"type\": \"PLACEHOLDER (14)\",\n          \"x\": 0.5,\n          \"y\": 0.3,\n          \"width\": 9.0,\n          \"height\": 1.25,\n          \"text\": \"\",\n          \"has_table\": false,\n          \"has_chart\": false\n        },\n        {\n          \"name\": \"Content Placeholder 2\",\n          \"type\": \"PLACEHOLDER (14)\",\n          \"x\": 0.5,\n          \"y\": 1.75,\n          \"width\": 9.0,\n          \"height\": 4.95,\n          \"text\": \"\",\n          \"has_table\": false,\n          \"has_chart\": false\n        },\n        {\n          \"name\": \"TextBox 3\",\n          \"type\": \"TEXT_BOX (17)\",\n          \"x\": 1.0,\n          \"y\": 1.5,\n          \"width\": 8.0,\n          \"height\": 5.0,\n          \"text\": \"Second slide\",\n          \"has_table\": false,\n          \"has_chart\": false\n        }\n      ],\n      \"title\": \"\",\n      \"shape_count\": 3,\n      \"table_count\": 0,\n      \"chart_count\": 0,\n      \"image_count\": 0,\n      \"lint_issue_count\": 0\n    }\n  ],\n  \"available_layouts\": [\n    \"Title Slide\",\n    \"Title and Content\",\n    \"Section Header\",\n    \"Two Content\",\n    \"Comparison\",\n    \"Title Only\",\n    \"Blank\",\n    \"Content with Caption\",\n    \"Picture with Caption\",\n    \"Title and Vertical Text\",\n    \"Vertical Title and Text\"\n  ]\n}\n",
+    "stderr": "",
+    "elapsedMs": 1359,
+    "scriptSha256": "b82d317ba96b8cd36eb3b067456ecf92d3a4b3afde442102b03fa8bfce7a8e9a",
+    "wrapperSha256": "a84a515c2fbea04d6a9826d04c36a5765f80a83a77807bd0c6383b9c96534b96"
+  },
+  {
+    "tool": "pptx-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\pptx_tool.py",
+      "extract",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\slides.pptx"
+    ],
+    "exitCode": 0,
+    "stdout": "--- Slide 1 ---\n# \n\n--- Slide 2 ---\n# \nPPTX_MARKER\n\n--- Slide 3 ---\n# \nSecond slide\n\n",
+    "stderr": "",
+    "elapsedMs": 1797,
+    "scriptSha256": "b82d317ba96b8cd36eb3b067456ecf92d3a4b3afde442102b03fa8bfce7a8e9a",
+    "wrapperSha256": "a84a515c2fbea04d6a9826d04c36a5765f80a83a77807bd0c6383b9c96534b96"
+  },
+  {
+    "tool": "img-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\img_tool.py",
+      "resize",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\pixel.png",
+      "--width",
+      "200",
+      "--height",
+      "200",
+      "-o",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\resized.png"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Image saved to E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\resized.png\n",
+    "elapsedMs": 1641,
+    "scriptSha256": "146f6254c451c6196d8af2b41a96c7f1ee9f6dee28ef292fb3b65958b492a42f",
+    "wrapperSha256": "3ccd4908bb7b8f5049c9f50e60fa8703be143b81f9e8e555d1a66d4b773c1da1"
+  },
+  {
+    "tool": "img-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\img_tool.py",
+      "convert",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\resized.png",
+      "--format",
+      "jpg",
+      "-o",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\converted.jpg"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Converted to JPEG, saved to E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\converted.jpg\n",
+    "elapsedMs": 859,
+    "scriptSha256": "146f6254c451c6196d8af2b41a96c7f1ee9f6dee28ef292fb3b65958b492a42f",
+    "wrapperSha256": "3ccd4908bb7b8f5049c9f50e60fa8703be143b81f9e8e555d1a66d4b773c1da1"
+  },
+  {
+    "tool": "img-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\img_tool.py",
+      "info",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\converted.jpg"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"file\": \"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-document-tools-jlsbjs\\\\converted.jpg\",\n  \"format\": \"JPEG\",\n  \"mode\": \"RGB\",\n  \"width\": 200,\n  \"height\": 200,\n  \"size_bytes\": 1303\n}\n",
+    "stderr": "",
+    "elapsedMs": 547,
+    "scriptSha256": "146f6254c451c6196d8af2b41a96c7f1ee9f6dee28ef292fb3b65958b492a42f",
+    "wrapperSha256": "3ccd4908bb7b8f5049c9f50e60fa8703be143b81f9e8e555d1a66d4b773c1da1"
+  },
+  {
+    "tool": "pdf-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\pdf_tool.py",
+      "from-image",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\converted.jpg",
+      "-o",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\image.pdf"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "PDF written to E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\image.pdf (1 pages from images)\n",
+    "elapsedMs": 2015,
+    "scriptSha256": "b1477e2020d599df400401024b4f49ce707d74bce94e4ad06e8c964e4e76ea25",
+    "wrapperSha256": "a72b8b3227ff7e8e50fdb515d02cd6fe5494c79bac72399d8c54acd506d4aa51"
+  },
+  {
+    "tool": "pdf-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\pdf_tool.py",
+      "info",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\image.pdf"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"file\": \"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-document-tools-jlsbjs\\\\image.pdf\",\n  \"encrypted\": false,\n  \"pages\": 1,\n  \"metadata\": {\n    \"title\": null,\n    \"author\": null,\n    \"subject\": null,\n    \"creator\": null,\n    \"producer\": null,\n    \"creation_date\": \"2026-10-26 01:00:08+00:00\",\n    \"modification_date\": \"2026-10-26 01:00:08+00:00\"\n  },\n  \"page_size\": {\n    \"width\": 150.0,\n    \"height\": 150.0,\n    \"width_inches\": 2.08,\n    \"height_inches\": 2.08\n  }\n}\n",
+    "stderr": "",
+    "elapsedMs": 985,
+    "scriptSha256": "b1477e2020d599df400401024b4f49ce707d74bce94e4ad06e8c964e4e76ea25",
+    "wrapperSha256": "a72b8b3227ff7e8e50fdb515d02cd6fe5494c79bac72399d8c54acd506d4aa51"
+  },
+  {
+    "tool": "ical-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\ical_tool.py",
+      "create",
+      "--data",
+      "[{\"summary\": \"ICAL_MARKER\", \"start\": \"2026-10-20T10:00:00\", \"end\": \"2026-10-20T11:00:00\", \"location\": \"Shanghai\"}]",
+      "--cal-name",
+      "Closeout",
+      "-o",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\planning.ics"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "Output written to E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\planning.ics\n",
+    "elapsedMs": 1156,
+    "scriptSha256": "935be3b6c04ed9a2500de5a53289ee20451bc9ea6a7ffbad3303fba0ffbd06cf",
+    "wrapperSha256": "fea032dd90b7b842bae0f8f3cd7dd5bb6fe4465579667bf731bf8ed891a1b8e4"
+  },
+  {
+    "tool": "ical-tool",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\ical_tool.py",
+      "read",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\planning.ics",
+      "--format",
+      "json"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"file\": \"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upgrade-0153-document-tools-jlsbjs\\\\planning.ics\",\n  \"calendar_name\": \"Closeout\",\n  \"event_count\": 1,\n  \"events\": [\n    {\n      \"index\": 1,\n      \"summary\": \"ICAL_MARKER\",\n      \"start\": \"2026-10-20T10:00:00\",\n      \"end\": \"2026-10-20T11:00:00\",\n      \"location\": \"Shanghai\",\n      \"uid\": \"event-1-20261026010011@ical-tool\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "elapsedMs": 844,
+    "scriptSha256": "935be3b6c04ed9a2500de5a53289ee20451bc9ea6a7ffbad3303fba0ffbd06cf",
+    "wrapperSha256": "fea032dd90b7b842bae0f8f3cd7dd5bb6fe4465579667bf731bf8ed891a1b8e4"
+  },
+  {
+    "tool": "doc-diff",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\doc_diff.py",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\before.txt",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\after.txt",
+      "--format",
+      "summary"
+    ],
+    "exitCode": 0,
+    "stdout": "Comparison: before.txt vs after.txt\n\nFile 1: 2 lines, 12 characters\nFile 2: 2 lines, 15 characters\n\nSimilarity: 50.0%\n\nLine changes:\n  Added lines:   0\n  Removed lines: 0\n  Changed lines: 1\n\nCharacter-level changes:\n  Insertions: 1 (8 characters)\n  Deletions:  1 (5 characters)\n",
+    "stderr": "Converting before.txt...\nConverting after.txt...\n",
+    "elapsedMs": 1234,
+    "scriptSha256": "2d58611d35e9531f1983224fe4e2a39861350b6dbff17b9b3d94cc6052173c79",
+    "wrapperSha256": "009b7514258abf6b54a132136733262a8a147a1090fd8f0b66c5f3d499c69b99"
+  },
+  {
+    "tool": "markitdown",
+    "argv": [
+      "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+      "run",
+      "--python",
+      "3.12.15",
+      "E:\\Phaneris\\apps\\electron\\resources\\scripts\\markitdown_cli.py",
+      "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs\\report.docx"
+    ],
+    "exitCode": 0,
+    "stdout": "Closeout\nDOCX_MARKER bold\n",
+    "stderr": "",
+    "elapsedMs": 1157,
+    "scriptSha256": "7084e7ce070070c63b2b832bb362271944c94a3b5d0f00ed0c509b0f906580cf",
+    "wrapperSha256": "8f1d5b2e7fc3a0c99e724db5c082d97440931bab8253791d33e2c167925994f7"
+  }
+]

@@ -1,0 +1,4 @@
+{
+  "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'available'\n- 'inline'\n",
+  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'available'\n- 'inline'\n\n    at <anonymous> (E:\\Phaneris\\scripts\\verification\\harness-materials-workflow.ts:23:10)\n    at async verificationWorkflow (E:\\Phaneris\\scripts\\verification\\verification-artifacts.ts:96:37)"
+}

@@ -59,7 +59,8 @@ export interface RuntimeConfigUpdateMessage {
 
 export type InboundMessage =
   | InitMessage
-  | { type: 'prompt'; id: string; message: string; systemPrompt: string; durableRunOperationId?: string; durableTurnId?: string; canonicalContext?: DurableCanonicalModelContext; images?: Array<{ type: 'image'; data: string; mimeType: string }> }
+  | { type: 'prompt'; id: string; message: string; systemPrompt: string; durableRunOperationId?: string; durableTurnId?: string; canonicalContext?: DurableCanonicalModelContext; images?: Array<{ type: 'image'; data: string; mimeType: string }>;
+      taskPreparation?: { instructions: string; capabilityFamilies: string[]; sourceSlugs?: string[]; sourceContext?: string } }
   | { type: 'sync_tools'; tools: ProxyToolDef[] }
   | { type: 'tool_execute_response'; requestId: string; result: PiProxyToolResult }
   | { type: 'pre_tool_use_response'; requestId: string; action: 'allow' | 'block' | 'modify'; input?: Record<string, unknown>; reason?: string }

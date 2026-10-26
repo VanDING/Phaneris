@@ -32,6 +32,8 @@ Harness 目标设计：[2026-10-23 系统设计方案](architecture/harness-desi
 
 Harness 能力实施：[2026-10-23 实施与验收](process/harness-capability-implementation-2026-10-23.md)、[实施前失败矩阵](verification/harness-capability-failure-matrix-2026-10-23.md) — 独立分支已完成结果与交付契约、能力家族和条件指导、输入投递、非阻塞建议与交接连续性；2026-10-24 本地通过 84 个 harness 场景，真实模型质量与发布尚未验证。
 
+Harness 系统演进：[2026-10-25 系统方案](architecture/harness-system-evolution-2026-10-25.md)、[实施记录](process/harness-system-evolution-implementation-2026-10-26.md)、[实施前失败矩阵](verification/harness-system-evolution-failure-matrix-2026-10-26.md) — 2026-10-26 已完成分支实施与本机 132 个 harness 场景，覆盖任务准备、能力暴露、材料操作、原生压缩所有权及长期任务连续性；质量对照与发行边界见实施记录。
+
 会话迟迟不开始：[2026-10-23 六例现场与分析复核](verification/session-start-latency-review-2026-10-23.md) / [修复与 thinking 活动验证](verification/conversation-start-fix-2026-10-23.md) — 修复活动传输、中文缓冲、截图等待及停止后错误结算；API 对超长思考的归因仍待控制实验。
 
 本次专项：[防御逻辑与测试精简治理](process/defensive-code-test-cleanup-2026-10-17.md)。

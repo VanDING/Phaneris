@@ -26,6 +26,8 @@ export interface SkillMetadata {
   icon?: string;
   /** Optional source slugs to auto-enable when this skill is invoked */
   requiredSources?: string[];
+  /** Installed product capability families to prepare when this skill is explicitly selected. */
+  requiredCapabilities?: string[];
 }
 
 /** Source of a loaded skill */

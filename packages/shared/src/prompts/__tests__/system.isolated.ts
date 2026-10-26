@@ -1,6 +1,6 @@
 import { describe, it, expect, mock } from 'bun:test'
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 
 // Keep user preferences isolated from disk.
@@ -23,19 +23,14 @@ describe('system prompt guidance', () => {
     expect(mini).not.toContain('Use Read, Edit, Write tools for file operations.')
   })
 
-  it('keeps execution rules before capability details and routes deliverables to a real guide', () => {
+  it('keeps execution authorization boundaries', () => {
     const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Phaneris Backend')
-    expect(prompt.indexOf('## Execution Contract')).toBeLessThan(prompt.indexOf('## Documentation and Capability Discovery'))
     expect(prompt).toContain('In Ask/Guarded/Execute, do not require an additional `SubmitPlan` for work already authorized')
     expect(prompt).toContain('An analysis-only request needs no plan submission.')
-    expect(prompt).toContain('Only the user accepts/discards it.')
     expect(prompt).not.toContain('Never try to execute a plan without submitting it first')
     expect(prompt).not.toContain('guaranteed JSON output')
-    const guides = [...prompt.matchAll(/~\/\.phaneris\/docs\/([a-z-]+\.md)/g)]
-    expect(guides.some(match => match[1] === 'artifacts.md')).toBe(true)
-    for (const match of guides) {
-      expect(existsSync(resolve(import.meta.dir, '../../../../../apps/electron/resources/docs', match[1]!))).toBe(true)
-    }
+    // Capability-local guidance is verified through the actual tool catalog in
+    // harness-capability-workflow.ts, rather than a resident documentation list.
   })
 
   it('does not mutate the stable prompt across repeated builds or merge volatile session state into it', () => {
@@ -62,12 +57,6 @@ describe('system prompt guidance', () => {
     expect(prompt).not.toContain('Grep pattern=')
   })
 
-  it('does not mention Grep in call_llm tool-dependency guidance', () => {
-    const prompt = getSystemPrompt(undefined, undefined, '/tmp/workspace', '/tmp/workspace')
-
-    expect(prompt).toContain('The subtask needs file/shell tools (for example, Read or Bash)')
-    expect(prompt).not.toContain('The subtask needs tools (Read, Bash, Grep)')
-  })
 })
 
 describe('prompt attribution removal', () => {

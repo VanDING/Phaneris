@@ -4,6 +4,8 @@ import { assembleSessionAgent } from './agent-assembly'
 import { buildPlanApproval } from './plan-approval'
 import { buildAgentSessionSnapshot, buildSessionTaskContext } from './agent-product-context'
 import { createSessionAgentCallbacks } from './agent-product-callbacks'
+import { projectTaskContinuity, readTaskHistory } from '@phaneris/shared/agent/task-continuity'
+import { parseMentions } from '@phaneris/shared/mentions'
 import { prepareSessionSourceResources, type SessionSourceResources } from './source-resources'
 import { SessionProductRepository } from './product-repository'
 import { clearThinkingStream, rememberThinkingDelta, takeInterruptedThinking } from './thinking-stream'
@@ -140,7 +142,6 @@ import { isSmallTalk, titleNoLongerFits, TITLE_DRIFT_RECENT_MESSAGES } from '../
 import { buildGuardedModeCheck } from '../decisions/guarded-mode'
 import { buildLargeResultFilter, noteLargeResultFileUse, finishLargeResultExcerpts } from '../decisions/large-result-filter'
 import { assessPermissionRisks } from '../decisions/permission-risks'
-import { pickTurnThinkingLevel, recordThinkingFollowUp } from '../decisions/adaptive-thinking'
 import { wantsSuggestion, collectSuggestionCandidates, pickSuggestion, formatSuggestionHint, candidatesUsedBy, suggestionFollowUp, type SuggestionTrace } from '../decisions/suggestions'
 import { setLargeResultFilter } from '@phaneris/shared/utils'
 import { setGuardedModeActiveResolver } from '@phaneris/shared/agent'
@@ -153,7 +154,7 @@ import { buildBackendRuntimeSignature, buildRestartRequiredSignature } from './r
 import { prepareAttachmentsForModelInput } from './model-image-input'
 import { auxiliaryModelEffect } from '../services/auxiliary-model-effect'
 import { validateArchiveTarget } from './archive-guards'
-import { renderOfficeArtifactPreview } from '../services/artifact-preview'
+import { renderOfficeArtifactPreview, sessionArtifactContext } from '../services/artifact-preview'
 import {
   generateImage,
   resolveConfiguredImageGeneration,
@@ -1162,7 +1163,7 @@ export function canSteerTextPayload(attachments?: FileAttachment[], storedAttach
   if (attachments?.length || storedAttachments?.length) return false
   return !Object.entries(options ?? {}).some(([key, value]) => {
     if (value === undefined || key === 'optimisticMessageId') return false
-    if ((key === 'skillSlugs' || key === 'badges') && Array.isArray(value) && !value.length) return false
+    if (key === 'badges' && Array.isArray(value) && !value.length) return false
     if (key === 'hidden' && value === false) return false
     return true
   })
@@ -4104,16 +4105,8 @@ export class SessionManager implements ISessionManager {
       const cutoff = managed.messages.findIndex(message => message.id === state.cutoffMessageId)
       const late = managed.messages.filter((message, index) => message.role === 'user'
         && (message.isQueued === true || (cutoff >= 0 && index > cutoff)))
-      const originalInputs = managed.messages.filter(message => message.role === 'user' && !message.hidden)
-      const preserved = new Set([originalInputs[0]?.id, ...originalInputs.slice(-8).map(message => message.id),
-        ...originalInputs.filter(message => message.content.startsWith('Plan approved, please execute the accepted scope below.')).map(message => message.id)])
-      let continuityBudget = 64_000
-      const continuityMessages = originalInputs.filter(message => preserved.has(message.id)).reverse().map(message => {
-        const content = message.content.length <= continuityBudget ? message.content : undefined
-        if (content) continuityBudget -= content.length
-        return { id: message.id, ...(content ? { content } : { omitted: true }),
-          skillReferences: message.badges?.filter(badge => badge.type === 'skill').map(badge => badge.filePath ?? badge.rawText) }
-      }).reverse()
+      const continuity = projectTaskContinuity({ task: buildSessionTaskContext(managed), messages: managed.messages,
+        artifacts: sessionArtifactContext(managed.workspace.rootPath, managed.id) })
       const seed = buildHandoffSeed({
         document,
         rootSessionId: rootId,
@@ -4124,12 +4117,13 @@ export class SessionManager implements ISessionManager {
         workingDirectory: managed.workingDirectory,
         activePlugin: managed.activePlugin,
         lateMessages: late.map(message => `${message.content}\n${JSON.stringify(message.attachments ?? [])}`),
-        continuity: { task: buildSessionTaskContext(managed), messages: continuityMessages },
+        continuity,
       })
       // The queue hands over with the task: the successor receives the messages
       // verbatim, so replaying them in the original session would duplicate them.
       const admission = Promise.withResolvers<void>()
-      void this.sendMessage(child.id, seed, undefined, undefined, undefined, undefined, false, () => {
+      const selection = parseMentions(continuity.selectedSkillMessage ?? '', loadAllSkills(managed.workspace.rootPath, managed.workingDirectory).map(skill => skill.slug), [])
+      void this.sendMessage(child.id, seed, undefined, undefined, { skillSlugs: [...selection.skills, ...selection.invalidSkills] }, undefined, false, () => {
         void (async () => {
           if (managed.contextHandoff?.phase === 'cancelled' || managed.runtime.stopRequested) {
             await this.cancelProcessing(child.id, true)
@@ -4365,7 +4359,8 @@ export class SessionManager implements ISessionManager {
           branchContextStrategy: managed.branchContextStrategy, branchSeedApplied: managed.branchSeedApplied,
           transferredSessionSummary: managed.transferredSessionSummary,
           transferredSessionSummaryApplied: managed.transferredSessionSummaryApplied, thinkingLevel: managed.thinkingLevel,
-          messages: managed.messages.map(({ role, content, isIntermediate }) => ({ role, content, isIntermediate })) }),
+          messages: managed.messages.map(({ id, role, content, isIntermediate, hidden, isQueued, badges, skillSlugs }) => ({ id, role, content, isIntermediate, hidden, isQueued, badges, skillSlugs })) }),
+        artifacts: () => sessionArtifactContext(managed.workspace.rootPath, managed.id),
         patch: changes => { Object.assign(managed, changes) },
         persist: () => this.persistSession(managed),
         flush: () => this.productRepository.flush(managed.id),
@@ -5509,6 +5504,12 @@ initialSources: {
           source: () => ({ runOperationId: managed.runtime.activeDurableRunOperationId }),
           log: (message: string) => sessionLog.info(message),
         }),
+        readSessionMessagesFn: async (sessionId, query) => {
+          const target = this.sessions.get(sessionId ?? managed.id)
+          if (!target || target.workspace.id !== managed.workspace.id) throw new Error('Session history is not available in this workspace.')
+          await this.ensureMessagesLoaded(target)
+          return readTaskHistory(target.messages, query)
+        },
         getSessionInfoFn: (sessionId?: string) => {
           const targetId = sessionId ?? managed.id
           const session = this.sessions.get(targetId)
@@ -7059,6 +7060,7 @@ initialSources: {
               timestamp: this.monotonic(),
               attachments: storedAttachments,
               badges: options?.badges,
+              skillSlugs: options?.skillSlugs,
             },
             status: 'accepted',
             optimisticMessageId: options?.optimisticMessageId,
@@ -7173,6 +7175,7 @@ initialSources: {
         timestamp: this.monotonic(),
         attachments: storedAttachments,
         badges: options?.badges,
+        skillSlugs: options?.skillSlugs,
         inputReception: { disposition: 'saved' },
         // Hidden system-generated messages reach the model but never render as a
         // transcript bubble (e.g. background-task-completion nudge).
@@ -7264,6 +7267,7 @@ initialSources: {
         timestamp: this.monotonic(),
         attachments: storedAttachments, // Include for persistence (has thumbnailBase64)
         badges: options?.badges,  // Include content badges (sources, skills with embedded icons)
+        skillSlugs: options?.skillSlugs,
         inputReception: { disposition: 'saved' },
         // Hidden system-generated messages reach the model but never render as a
         // transcript bubble (e.g. background-task-completion nudge).
@@ -7699,6 +7703,7 @@ initialSources: {
         const result = await this.execution.drive(handle, this.execution.view(sessionId).driver!, {
           message: effectiveMessage, attachments: modelInputAttachments.attachments,
           options: { inputId: userMessage.id, thinkingOverride: turnDecision?.thinkingOverride ?? undefined,
+            selectedSkillSlugs: options?.skillSlugs,
             turnContext: turnDecision?.suggestionHint ?? undefined }, beforeRun: () => turnDecision?.apply?.(),
         })
         deferred = result.kind === 'deferred'
@@ -10969,111 +10974,40 @@ resources: {
     options?: SendMessageOptions,
     turn: { activationResend?: boolean; authRetry?: boolean; attachments?: Array<{ name: string; type: string; size: number }> } = {},
   ): Promise<{ thinkingOverride: ThinkingLevel | null; suggestionHint: string | null; apply?: () => void; discard?: () => void }> | null {
-    // An auto-retry continues the same request: keep its thinking level, ask nothing again.
     if (turn.activationResend || turn.authRetry) {
-      const thinkingOverride = managed.turnThinkingOverride ?? null
-      const suggestionHint = turn.authRetry ? managed.turnSuggestionHint ?? null : null
-      return thinkingOverride || suggestionHint ? Promise.resolve({ thinkingOverride, suggestionHint }) : null
+      return managed.turnThinkingOverride ? Promise.resolve({ thinkingOverride: managed.turnThinkingOverride, suggestionHint: null }) : null
     }
-    managed.turnThinkingOverride = null
-    managed.turnSuggestionHint = null
     managed.preTurnDecisionAbort?.abort()
     managed.preTurnDecisionAbort = undefined
-    const previousThinking = managed.thinkingTrace
+    managed.turnThinkingOverride = options?.thinkingLevel ?? null
+    managed.turnSuggestionHint = null
     managed.thinkingTrace = undefined
     this.finishSuggestionTrace(managed)
-    const log = (line: string) => sessionLog.info(line)
+    const suggest = isAttendedSession(managed) && !options?.hidden && !managed.taskRunId && !managed.taskSlug
+      && this.decisionFeatureActive('suggestions') && wantsSuggestion(message, options)
+    const result = { thinkingOverride: managed.turnThinkingOverride, suggestionHint: null }
+    if (!suggest) return managed.turnThinkingOverride ? Promise.resolve(result) : null
+    const abort = new AbortController()
+    managed.preTurnDecisionAbort = abort
     const generation = managed.runtime.processingGeneration
     const inputRevision = managed.messages.findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id
     const current = () => this.sessions.get(managed.id) === managed && managed.runtime.processingGeneration === generation
       && managed.runtime.isProcessing && !managed.runtime.stopRequested
       && managed.messages.findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id === inputRevision
-    const interactive = isAttendedSession(managed) && !options?.hidden
-    const explicitThinking = options?.thinkingLevel ?? null
-    // Slash commands are instructions to the app, not requests to rate.
-    const rateThinking = !explicitThinking && interactive && !managed.taskRunId && !managed.taskSlug && !message.trim().startsWith('/') && this.decisionFeatureActive('adaptiveThinking')
-    const suggest = interactive && !managed.taskRunId && !managed.taskSlug
-      && this.decisionFeatureActive('suggestions') && wantsSuggestion(message, options)
-    // Nothing to ask: the caller skips the await entirely.
-    if (!rateThinking && !suggest) {
-      managed.turnThinkingOverride = explicitThinking
-      return explicitThinking ? Promise.resolve({ thinkingOverride: explicitThinking, suggestionHint: null }) : null
-    }
-
-    const abort = new AbortController()
-    managed.preTurnDecisionAbort = abort
-    const previousReplyIndex = managed.messages.findLastIndex(m => m.role === 'assistant' && !m.isIntermediate && !m.hidden)
-    const previousReply = managed.messages[previousReplyIndex]?.content
-    const repliedTo = managed.messages.slice(0, previousReplyIndex).findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id
-    const userMessageId = managed.messages.findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id
-    const thinkingCapture = new DecisionCapture({ messageId: userMessageId, turnId: userMessageId })
-    const suggestionCapture = new DecisionCapture({ messageId: userMessageId, turnId: userMessageId })
-
-    // Adaptive thinking: a lower level for a simple turn, never above the session's.
-    const thinking = rateThinking
-      ? pickTurnThinkingLevel({ message, previousReply, attachments: turn.attachments?.map(a => `${a.name.slice(0, 200)} (${a.type}, ${a.size} bytes)`) },
-          managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL, { ...thinkingCapture.deps, sessionId: managed.id, log, signal: abort.signal,
-            isCurrent: current, getSessionLevel: () => managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL })
-          .then(({ level, result }) => {
-            if (!current()) return null
-            if (previousThinking && repliedTo === previousThinking.userMessageId) recordThinkingFollowUp(previousThinking.result, result)
-            if (result && userMessageId) managed.thinkingTrace = { result, userMessageId }
-            if (level) sessionLog.info(`[adaptive-thinking] Session ${managed.id}: thinking ${level} for this turn`)
-            return level
-          })
-          .catch((e) => {
-            sessionLog.warn(`[adaptive-thinking] Check failed for session ${managed.id}:`, e)
-            return null
-          })
-      : Promise.resolve(explicitThinking)
-
-    // Suggestions: point the agent at a skill or usable inactive source the message plainly needs.
-    const suggestion = suggest
-      ? (async () => {
-          const workspaceRoot = managed.workspace.rootPath
-          const candidates = collectSuggestionCandidates({
-            skills: loadAllSkills(workspaceRoot, managed.workingDirectory),
-            sources: loadAllSources(workspaceRoot),
-            activeSourceSlugs: managed.enabledSourceSlugs ?? [],
-          })
-          const { hint, trace } = await pickSuggestion(message, candidates, { ...suggestionCapture.deps, sessionId: managed.id, log, signal: abort.signal, isCurrent: current })
-          // Kept until the request is over, to record whether the agent used the pick anyway.
-          if (trace && current()) managed.suggestionTrace = { trace, used: new Set() }
-          if (!hint) return null
-          sessionLog.info(`[suggestions] Session ${managed.id}: suggesting ${hint.kind} "${hint.slug}"`)
-          return formatSuggestionHint(hint)
-        })().catch((e) => {
-          sessionLog.warn(`[suggestions] Check failed for session ${managed.id}:`, e)
-          return null
-        })
-      : Promise.resolve(null)
-
-    // Optional recommendations are UI advice, never a dependency of the first model request.
-    void suggestion.then(suggestionHint => {
-      if (!current()) { suggestionCapture.discard('obsolete_turn'); return }
-      if (suggestionHint) this.sendEvent({ type: 'info', sessionId: managed.id, message: suggestionHint, level: 'info' }, managed.workspace.id)
-      suggestionCapture.resolve(suggestionHint ? 'ui_suggestion' : 'none', !!suggestionHint)
-    }).catch(error => sessionLog.warn('[suggestions] Advice display failed:', error))
-    void Promise.allSettled([thinking, suggestion]).then(() => {
-      if (managed.preTurnDecisionAbort === abort) managed.preTurnDecisionAbort = undefined
-    })
-    return thinking.then(thinkingOverride => {
-      const suggestionHint = null
-      if (!current()) {
-        thinkingCapture.discard('obsolete_turn')
-        return { thinkingOverride: null, suggestionHint: null }
-      }
-      const currentLevel = managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL
-      if (!explicitThinking && thinkingOverride && THINKING_LEVEL_IDS.indexOf(thinkingOverride) >= THINKING_LEVEL_IDS.indexOf(currentLevel)) thinkingOverride = null
-      managed.turnThinkingOverride = thinkingOverride
-      managed.turnSuggestionHint = suggestionHint
-      return { thinkingOverride, suggestionHint,
-        apply: () => {
-          thinkingCapture.resolve(thinkingOverride ? `thinking:${thinkingOverride}` : 'keep', !!thinkingOverride, { sessionLevel: currentLevel })
-        },
-        discard: () => { thinkingCapture.discard('chat_not_started') },
-      }
-    })
+    const capture = new DecisionCapture({ messageId: inputRevision, turnId: inputRevision })
+    void (async () => {
+      const candidates = collectSuggestionCandidates({ skills: loadAllSkills(managed.workspace.rootPath, managed.workingDirectory),
+        sources: loadAllSources(managed.workspace.rootPath), activeSourceSlugs: managed.enabledSourceSlugs ?? [] })
+      const { hint, trace } = await pickSuggestion(message, candidates, { ...capture.deps, sessionId: managed.id,
+        log: line => sessionLog.info(line), signal: abort.signal, isCurrent: current })
+      if (!current()) { capture.discard('obsolete_turn'); return }
+      if (trace) managed.suggestionTrace = { trace, used: new Set() }
+      if (hint) this.sendEvent({ type: 'info', sessionId: managed.id, message: formatSuggestionHint(hint), level: 'info' }, managed.workspace.id)
+      capture.resolve(hint ? 'ui_suggestion' : 'none', !!hint)
+    })().catch(error => { capture.discard('suggestion_failed'); sessionLog.warn('[suggestions] Advice failed:', error) })
+      .finally(() => { if (managed.preTurnDecisionAbort === abort) managed.preTurnDecisionAbort = undefined })
+    // No auxiliary inference on the request's critical path; explicit thinking passes through.
+    return Promise.resolve(result)
   }
 
   private decisionFeatureActive(feature: DecisionLayerFeature): boolean {

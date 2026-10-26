@@ -201,6 +201,7 @@ export const SkillMetadataSchema = z.object({
   alwaysAllow: z.array(z.string()).optional(),
   icon: z.string().optional(),
   requiredSources: z.array(z.string()).optional(),
+  requiredCapabilities: z.array(z.string()).optional(),
 }).passthrough();
 
 /**

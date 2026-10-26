@@ -325,32 +325,11 @@ describe('runPreToolUseChecks', () => {
   });
 
   // ============================================================
-  // Step 3: Prerequisite check
+  // Legacy prerequisite argument remains accepted; production preparation is
+  // verified by harness-system-ready-pi-workflow.ts without a reading gate.
   // ============================================================
 
-  describe('step 3: prerequisite check', () => {
-    it('blocks when prerequisites are not met', () => {
-      const prereqManager = createMockPrerequisiteManager({
-        checkPrerequisites: () => ({
-          allowed: false,
-          blockReason: 'Please read the guide.md for linear before using its tools.',
-        }),
-      });
-
-      const result = runPreToolUseChecks(createInput({
-        toolName: 'mcp__linear__createIssue',
-        input: {},
-        activeSourceSlugs: ['linear'],
-        allSourceSlugs: ['linear'],
-        prerequisiteManager: prereqManager,
-      }));
-
-      expect(result.type).toBe('block');
-      if (result.type === 'block') {
-        expect(result.reason).toContain('guide.md');
-      }
-    });
-
+  describe('legacy prerequisite argument', () => {
     it('passes when prerequisites are met', () => {
       const prereqManager = createMockPrerequisiteManager({
         checkPrerequisites: () => ({ allowed: true }),
@@ -811,8 +790,7 @@ describe('runPreToolUseChecks', () => {
       }
     });
 
-    it('source blocking runs before prerequisite check', () => {
-      // Inactive source → source_activation_needed (not prerequisite block)
+    it('inactive source is handled regardless of a legacy prerequisite argument', () => {
       const prereqManager = createMockPrerequisiteManager({
         checkPrerequisites: () => ({
           allowed: false,
@@ -829,29 +807,6 @@ describe('runPreToolUseChecks', () => {
       }));
 
       expect(result.type).toBe('source_activation_needed');
-    });
-
-    it('prerequisite check runs before call_llm interception', () => {
-      // This scenario is contrived (call_llm is from session server which is exempt
-      // from prerequisites), but validates pipeline order for other session tools
-      const prereqManager = createMockPrerequisiteManager({
-        checkPrerequisites: (toolName: string) => {
-          if (toolName === 'mcp__custom__some_tool') {
-            return { allowed: false, blockReason: 'blocked' };
-          }
-          return { allowed: true };
-        },
-      });
-
-      const result = runPreToolUseChecks(createInput({
-        toolName: 'mcp__custom__some_tool',
-        input: {},
-        activeSourceSlugs: ['custom'],
-        allSourceSlugs: ['custom'],
-        prerequisiteManager: prereqManager,
-      }));
-
-      expect(result.type).toBe('block');
     });
 
     it('call_llm interception runs before transforms', () => {

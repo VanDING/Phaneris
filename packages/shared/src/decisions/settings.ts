@@ -45,7 +45,7 @@ export interface DecisionLayerFeatureToggles {
   taskRepairs: boolean;
   /** Skip titling small talk; refresh automatic titles that no longer fit. */
   smartTitles: boolean;
-  /** Lower the thinking level for a simple turn (never above the session's). */
+  /** Retained on disk for compatibility; automatic pre-turn thinking downgrades are retired. */
   adaptiveThinking: boolean;
   /** Retained on disk for compatibility; automatic input reclassification is retired. */
   midTurnMessages: boolean;
@@ -56,6 +56,7 @@ export interface DecisionLayerFeatureToggles {
 }
 
 export type DecisionLayerFeature = keyof DecisionLayerFeatureToggles;
+export const RETIRED_DECISION_FEATURES: readonly DecisionLayerFeature[] = ['midTurnMessages', 'largeResults', 'adaptiveThinking'];
 
 export const DECISION_LAYER_FEATURES: readonly DecisionLayerFeature[] = [
   'decideTool',

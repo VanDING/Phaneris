@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "workflow": "harness-system-ready-pi",
+  "startedAt": "2026-10-26T00:20:02.933Z",
+  "finishedAt": "2026-10-26T00:20:16.832Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\harness-system-ready-pi-workflow.ts"
+  ],
+  "source": {
+    "headSha": "ab0282111938bc169cf952dbf00b1a868f384036",
+    "dirtyPaths": [
+      "M docs/README.md",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M scripts/verification/packaged-client-verification.mjs",
+      "?? docs/architecture/harness-system-evolution-2026-10-25.md",
+      "?? docs/verification/harness-system-evolution-failure-matrix-2026-10-26.md",
+      "?? scripts/verification/harness-system-ready-pi-workflow.ts"
+    ],
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
+    "changedFiles": [
+      {
+        "path": "docs/README.md",
+        "sha256": "0208ac255953a9f23b731d18a0d9e85446c5c35c4df324492fd5a4c0e936c953"
+      },
+      {
+        "path": "docs/architecture/harness-system-evolution-2026-10-25.md",
+        "sha256": "2ece753e92de61b762e2d4108dfeff14d7fbf69817f8ade7d6d5ccf262269746"
+      },
+      {
+        "path": "docs/verification/harness-system-evolution-failure-matrix-2026-10-26.md",
+        "sha256": "cae3c7018be125fe4bad76f7e3f9542a957fc52cd83f74709c6f269892b804ac"
+      },
+      {
+        "path": "scripts/verification/harness-system-ready-pi-workflow.ts",
+        "sha256": "5f381c8691fa32ca7515009006d9c339bbf021dfc1eab54232b85d40be364537"
+      },
+      {
+        "path": "scripts/verification/packaged-client-verification.mjs",
+        "sha256": "fda94624cb3ef4adbbed81a1987df6af370f3b3f03e0b4d16d40f8f996b80c10"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [],
+  "passed": 0,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": ".pi/agent/models-store.json",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "bytes": 2
+    },
+    {
+      "path": "failure.json",
+      "sha256": "3298c46991259af0ca490d159ac7f25ba984c597d07862b1592794dbd6c60cab",
+      "bytes": 1973
+    },
+    {
+      "path": "ready-report.json",
+      "sha256": "110defc79ce783db99f3af56419c5074cabe9456243f73dcd6e0550f774c8893",
+      "bytes": 139995
+    },
+    {
+      "path": "workspace/project/.agents/skills/research/SKILL.md",
+      "sha256": "3653a7b16cbd6f96cf18432374e7a680700b6181d855856e16bf86b5afb446ba",
+      "bytes": 153
+    },
+    {
+      "path": "workspace/project/AGENTS.md",
+      "sha256": "fa19d40813bdfd20728ca5db50102a5ee5207f3936b7ebe149b32396bd3828b2",
+      "bytes": 59
+    },
+    {
+      "path": "workspace/project/evidence.txt",
+      "sha256": "eacdd7511db3e16dea0fed6dbb9d76520bac895c1240152ff5345dd8fffa65fc",
+      "bytes": 42
+    },
+    {
+      "path": "workspace/runtime/runtime.db",
+      "sha256": "298fdec299ad661a2938aec14b71f920ed661fc97f23cfa99672d9389c03d2ef",
+      "bytes": 131072
+    },
+    {
+      "path": "workspace/sessions/ready-report/.pi-sessions/2026-10-26T00-20-16-348Z_01a17594-4f5c-740f-8c34-e63b7a7061eb.jsonl",
+      "sha256": "f75a206b2b5c72223c2f132a5b394086ac3ca8b67c632953c167d78601887d4d",
+      "bytes": 43990
+    },
+    {
+      "path": "workspace/skills/research/SKILL.md",
+      "sha256": "f521f7e9ec8c6f7eed9a259c6ad5adc6492b61fc86e00712f1776ef78a1e5cc7",
+      "bytes": 76
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

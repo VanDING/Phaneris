@@ -1,0 +1,15 @@
+Comparison: before.txt vs after.txt
+
+File 1: 2 lines, 12 characters
+File 2: 2 lines, 15 characters
+
+Similarity: 50.0%
+
+Line changes:
+  Added lines:   0
+  Removed lines: 0
+  Changed lines: 1
+
+Character-level changes:
+  Insertions: 1 (8 characters)
+  Deletions:  1 (5 characters)

@@ -1,0 +1,74 @@
+{
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-tool-effects-orXVY4",
+  "scope": "Real registry and Guarded classification; isolated scheduling contracts",
+  "results": [
+    {
+      "id": "canonical-readonly-metadata-reaches-host-proxies",
+      "passed": true
+    },
+    {
+      "id": "guarded-automation-effects:mcp__session__set_session_labels",
+      "passed": true
+    },
+    {
+      "id": "guarded-automation-effects:mcp__session__set_session_status",
+      "passed": true
+    },
+    {
+      "id": "browser-effect:\"upload @e1 secret.txt\"",
+      "passed": true
+    },
+    {
+      "id": "browser-effect:\"snapshot; upload @e1 secret.txt\"",
+      "passed": true
+    },
+    {
+      "id": "browser-effect:[\"upload\",\"@e1\",\"secret.txt\"]",
+      "passed": true
+    },
+    {
+      "id": "browser-effect:\"evaluate fetch(\\\"https://fixture.invalid\\\", {method:\\\"POST\\\"})\"",
+      "passed": true
+    },
+    {
+      "id": "browser-effect:\"set-clipboard copied data\"",
+      "passed": true
+    },
+    {
+      "id": "browser-inspection-and-navigation-remain-available",
+      "passed": true
+    },
+    {
+      "id": "invalid-browser-syntax-is-an-input-error-not-an-approval",
+      "passed": true
+    },
+    {
+      "id": "resource-ordering-cancellation-and-barriers",
+      "passed": true
+    },
+    {
+      "id": "path-aliases-and-parent-scan-conflict",
+      "passed": true
+    },
+    {
+      "id": "codemode-does-not-lock-out-nested-tools",
+      "passed": true
+    },
+    {
+      "id": "parallel-reads-and-fair-writer-order",
+      "passed": true
+    },
+    {
+      "id": "source-reads-remain-parallel-without-trusting-server-hints",
+      "passed": true
+    },
+    {
+      "id": "browser-inspection-does-not-block-independent-file-work",
+      "passed": true
+    },
+    {
+      "id": "shared-scheduling-ports-stay-transitively-pure",
+      "passed": true
+    }
+  ]
+}

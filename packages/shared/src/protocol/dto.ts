@@ -517,6 +517,7 @@ export type SessionEvent =
 export interface SendMessageOptions {
   /** Explicit turn-level choice; does not rewrite the session's saved preference. */
   thinkingLevel?: ThinkingLevel
+  /** Explicit input selection; omit to continue the task's selection, [] clears it. */
   skillSlugs?: string[]
   badges?: ContentBadge[]
   optimisticMessageId?: string

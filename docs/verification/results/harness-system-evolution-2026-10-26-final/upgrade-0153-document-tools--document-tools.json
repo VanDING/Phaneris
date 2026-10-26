@@ -1,0 +1,71 @@
+{
+  "scenes": [
+    "DOC-01-docx-create-extract",
+    "DOC-02-xlsx-write-read-export",
+    "DOC-03-pptx-create-extract",
+    "DOC-04-image-resize-convert-read",
+    "DOC-05-pdf-create-inspect",
+    "DOC-06-ical-create-read",
+    "DOC-07-document-difference",
+    "DOC-08-markitdown-document-conversion"
+  ],
+  "commands": 20,
+  "artifacts": {
+    "after.txt": {
+      "bytes": 17,
+      "sha256": "198563bb1fad50e5880750fe63925bb05a9bcfb395058dc21cc34e2eddbd5aac"
+    },
+    "before.txt": {
+      "bytes": 14,
+      "sha256": "8f9e99332aa14be2fd8e6e7052c0a42ecedf771020a3293170dfefa344da59ac"
+    },
+    "commands.json": {
+      "bytes": 20469,
+      "sha256": "94881a7148b4543ad798d50ff51d720ed5eed068fe82c193bcfb2e22acefd03e"
+    },
+    "converted.jpg": {
+      "bytes": 1303,
+      "sha256": "be5511c4d04f559a490eea818806c41adaa7bfced729a0d20ee77cf077bd4a8a"
+    },
+    "converted.md": {
+      "bytes": 28,
+      "sha256": "a5b209c8e097381646ea5a3fabdda55b12c763046da2fcc830ef6d6fc382eb1e"
+    },
+    "difference.txt": {
+      "bytes": 293,
+      "sha256": "149d42a48b83c33073ab13a9132fceef6ab5e1dbd388897bcdc456177bac8496"
+    },
+    "image.pdf": {
+      "bytes": 2718,
+      "sha256": "b993876f257d9aa13b1de0acc4dc13c466e6ce75ec49b2a0870b595ed785622d"
+    },
+    "pixel.png": {
+      "bytes": 68,
+      "sha256": "a3da355a7f5f78d05f9df52628b25d9d8ef9bdd20b67b6ec34a562a71e821836"
+    },
+    "planning.ics": {
+      "bytes": 322,
+      "sha256": "1206b736431728d21944059cabd26be3637273c652a3ff1bea58566b85995715"
+    },
+    "report.docx": {
+      "bytes": 36660,
+      "sha256": "7875c2c2cd5d4bef0bb29d23fc32760005d8b942465c2ba9567e1cfe36de84f6"
+    },
+    "resized.png": {
+      "bytes": 537,
+      "sha256": "21b9541804b4a1d9947ce983afb2d9440306688e74a34ab127e333d4ef8366d6"
+    },
+    "scores.csv": {
+      "bytes": 22,
+      "sha256": "5a676b0a9e4c5a51f65a191beaa9ddfc4a9f895a7686e426f0ba92eeb51d4882"
+    },
+    "scores.xlsx": {
+      "bytes": 4859,
+      "sha256": "de663f7b4aeb423f0bb37dd4df2ac6e2464c43d4d40b38d3fe8406d9e60764a3"
+    },
+    "slides.pptx": {
+      "bytes": 30302,
+      "sha256": "9567fbfafd17adf5e629003c5894d10ba4a358127a5c26c5cb11003243d7f332"
+    }
+  }
+}

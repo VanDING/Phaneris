@@ -12,6 +12,8 @@ import { getCurrentTools } from '@earendil-works/pi-ai';
  * before_agent_start extension hook on every turn and rebuild.
  */
 let currentPhanerisPrompt = '';
+let currentTaskInstructions: string[] = [];
+export function setPhanerisTaskInstructions(instructions: string | string[]): void { currentTaskInstructions = (Array.isArray(instructions) ? instructions : [instructions]).filter(Boolean); }
 
 export function setPhanerisSystemPrompt(prompt: string): void {
   currentPhanerisPrompt = prompt;
@@ -92,8 +94,15 @@ export async function createPhanerisResourceLoader(options: {
               sections[key] ??= null;
               if (declared.has(tool.name)) sections[key] = tool.namespace.instructions;
             }
-            if (!Object.keys(sections).length) return;
-            return { messages: [...event.messages, { role: 'system' as const, content: '', sections, timestamp: 0 }] };
+            const messages = [...event.messages];
+            if (Object.keys(sections).length) messages.push({ role: 'system' as const, content: '', sections, timestamp: 0 });
+            // Rehydrate the host's explicit selection after native compression,
+            // without granting external instructions privileged system scope.
+            if (options.wrapOrchestrationTool) for (const instruction of currentTaskInstructions) {
+              if (!event.messages.some(message => 'content' in message && JSON.stringify(message.content).includes(JSON.stringify(instruction).slice(1, -1))))
+                messages.push({ role: 'user', content: instruction, timestamp: 0 });
+            }
+            return { messages };
           });
           if (options.gateToolCall) pi.on('tool_call', async event => {
             try { await options.gateToolCall!(event.toolName, event.input, event.toolCallId); }

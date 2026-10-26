@@ -107,8 +107,8 @@ try {
   runtime.execution.accept(failedDelivery, { operationId: 'run-failed-delivery', userMessageId: 'failed-delivery', userMessage: 'Read delivery evidence' })
   await runtime.execution.drive(failedDelivery, driver, { message: 'Read delivery evidence', options: { inputId: 'failed-delivery' } })
   assert.equal(requests.length, 10)
-  assert.equal((agent as any).prerequisiteManager.hasRead(join(workspace, 'unreceived-evidence.txt')), false,
-    'An SDK error message_start after a rejected provider request must not acknowledge original delivery')
+  assert.equal((agent as any).prerequisiteManager, undefined,
+    'Original-read receipts must not be a second execution gate; failed provider requests retain ordinary runtime facts')
   const utility = await (agent as PiAgent).queryLlm({ prompt: 'UTILITY_ONLY_CONTEXT', systemPrompt: 'ISOLATED_UTILITY_CONTEXT', model: 'pi/fixture' })
   assert.equal(utility.text, 'INDEPENDENT_RUN_COMPLETE')
   assert.equal((requests[10].tools ?? []).length, 0, 'Utility requests must not inherit active main-session tools')

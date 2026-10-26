@@ -19,7 +19,7 @@ import {
 } from './prompt-sanitize.ts';
 import { findGitRepositoryRoot } from './developer-context.ts';
 import { buildAssistantPromptModules, type CompiledSystemPrompt, type PromptSection } from './assistant-prompt.ts';
-import { buildCapabilityGuidance } from './capability-guidance.ts';
+import { buildOperationalCapabilityGuidance } from './capability-guidance.ts';
 
 function assistantFacts(workspaceRootPath?: string, backendName?: string) {
   return { workspacePath: workspaceRootPath || `${APP_ROOT}/workspaces/{id}`, backendName: backendName ?? 'Phaneris Backend',
@@ -29,7 +29,7 @@ function assistantFacts(workspaceRootPath?: string, backendName?: string) {
 
 /** Same canonical workflow corpus as the resident compiler; no preferences or skill enumeration. */
 export function getCapabilityPromptSections(workspaceRootPath?: string): PromptSection[] {
-  return buildCapabilityGuidance(assistantFacts(workspaceRootPath));
+  return buildOperationalCapabilityGuidance(assistantFacts(workspaceRootPath));
 }
 
 /** Maximum size of CLAUDE.md file to include (10KB) */
