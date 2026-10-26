@@ -1,14 +1,44 @@
-import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
+import type { RuntimeEvent, DurableToolPrepareRequest, DurableToolOutcomeRequest, DurableModelPrepareRequest, DurableModelOutcomeRequest } from '@phaneris/shared/durable-runtime'
 import { DurableRuntimeCoordinator } from '../coordinator.js'
 import type { ProjectionParityObservation } from '../store.js'
 import { RuntimeHost } from '../execution/host.js'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { withinDeadline } from '../execution/deadline.js'
+import { RuntimeReceiptJournal } from '../receipt-journal.js'
+import { RuntimeDatabaseError } from '../store.js'
+
+function isStorageFailure(error: unknown): boolean {
+  const cause = (error instanceof RuntimeDatabaseError ? error.cause : error) as { name?: string; code?: string } | undefined
+  return cause?.name === 'SQLiteError' || !!cause?.code?.startsWith('SQLITE_')
+    || ['EACCES', 'EPERM', 'ENOSPC', 'EROFS', 'EIO', 'EBUSY'].includes(cause?.code ?? '')
+}
 
 /** Capability views over one authority; no view exposes the SQLite Store. */
 export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = {}) {
   const kernel = new DurableRuntimeCoordinator()
+  const receipts = new RuntimeReceiptJournal(async (workspace, receipt) => {
+    if (receipt.kind === 'model') return kernel.commitModelOutcome(workspace, receipt.request)
+    const execution = (receipt.request.result as { execution?: { status?: string } } | undefined)?.execution
+    if (execution?.status === 'not_dispatched' && !kernel.storeFor(workspace).getToolRecoveryEvidence(receipt.request.operationId)) return
+    return kernel.commitToolOutcome(workspace, receipt.request)
+  })
+  const commitToolOutcome: DurableRuntimeCoordinator['commitToolOutcome'] = async (workspace, request) => {
+    try { return await kernel.commitToolOutcome(workspace, request) }
+    catch (error) {
+      if (!isStorageFailure(error)) throw error
+      try { receipts.retain(workspace, { kind: 'tool', request }); return { deferred: true } }
+      catch { throw error }
+    }
+  }
+  const commitModelOutcome: DurableRuntimeCoordinator['commitModelOutcome'] = async (workspace, request) => {
+    try { return await kernel.commitModelOutcome(workspace, request) }
+    catch (error) {
+      if (!isStorageFailure(error)) throw error
+      try { receipts.retain(workspace, { kind: 'model', request }); return { deferred: true } }
+      catch { throw error }
+    }
+  }
   let closed = false
   let draining = false
   let closing: Promise<void> | undefined
@@ -43,20 +73,31 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
       return kernel.acceptRun(...args)
     }), recordUserInputAdmission: admission(bind('recordUserInputAdmission')),
     commitAdditionalUserMessage: bind('commitAdditionalUserMessage'), commitAssistantMessage: bind('commitAssistantMessage'),
-    completeRun: bind('completeRun'), recoverInterruptedModel: bind('recoverInterruptedModel'),
+    completeRun: guarded((workspace: string, operationId: string, reason: Parameters<DurableRuntimeCoordinator['completeRun']>[2]) =>
+      receipts.pending(workspace, undefined, operationId) ? { kind: 'parked' as const, operationId, reason } : kernel.completeRun(workspace, operationId, reason)),
+    recoverInterruptedModel: bind('recoverInterruptedModel'),
   })
   const effects = Object.freeze({
     trackAuxiliary, retainAuxiliary,
     boundaryFor: (workspace: string) => ({
-      prepare: admission(kernel.boundaryFor(workspace).prepare), commitOutcome: guarded(kernel.boundaryFor(workspace).commitOutcome) }),
-    modelBoundaryFor: (workspace: string) => ({ prepare: admission(kernel.modelBoundaryFor(workspace).prepare),
-      commitOutcome: guarded(kernel.modelBoundaryFor(workspace).commitOutcome),
-      recordObservation: guarded(kernel.modelBoundaryFor(workspace).recordObservation!) }),
-    prepareTool: admission(bind('prepareTool')), commitToolOutcome: bind('commitToolOutcome'),
-    prepareModel: admission(bind('prepareModel')), commitModelOutcome: bind('commitModelOutcome'), recordSdkObservation: bind('recordSdkObservation'),
+      prepare: admission(async (request: DurableToolPrepareRequest) => { await receipts.flush(workspace); return kernel.prepareTool(workspace, request) }),
+      commitOutcome: guarded((request: DurableToolOutcomeRequest) => commitToolOutcome(workspace, request)) }),
+    modelBoundaryFor: (workspace: string) => ({ prepare: admission(async (request: DurableModelPrepareRequest) => { await receipts.flush(workspace); return kernel.prepareModel(workspace, request) }),
+      commitOutcome: guarded((request: DurableModelOutcomeRequest) => commitModelOutcome(workspace, request)),
+      recordObservation: guarded((request: Parameters<DurableRuntimeCoordinator['recordSdkObservation']>[1]) => {
+        try { return kernel.recordSdkObservation(workspace, request) }
+        finally { if (request.event === 'outcome_receipt_retained') receipts.watch(workspace) }
+      }) }),
+    prepareTool: admission(async (...args: Parameters<DurableRuntimeCoordinator['prepareTool']>) => { await receipts.flush(args[0]); return kernel.prepareTool(...args) }),
+    commitToolOutcome: guarded(commitToolOutcome),
+    prepareModel: admission(async (...args: Parameters<DurableRuntimeCoordinator['prepareModel']>) => { await receipts.flush(args[0]); return kernel.prepareModel(...args) }),
+    commitModelOutcome: guarded(commitModelOutcome), recordSdkObservation: bind('recordSdkObservation'),
   })
   const queries = Object.freeze({
     getCanonicalSessionProjection: bind('getCanonicalSessionProjection'), getCanonicalModelContext: bind('getCanonicalModelContext'),
+    hasPendingReceipts: guarded((workspace: string, sessionId?: string) => receipts.pending(workspace, sessionId)),
+    consumedInputIds: guarded((workspace: string, sessionId: string) => receipts.consumedInputIds(workspace, sessionId)),
+    storageStatus: bind('storageStatus'),
     inputAdmission: bind('getInputAdmission'),
     events: guarded((workspace: string, options: { sessionId?: string; operationId?: string; afterSeq?: number; limit?: number } = {}) =>
       options.limit !== undefined ? kernel.storeFor(workspace).listEvents(options) : kernel.storeFor(workspace).listAllEvents(options)),
@@ -103,10 +144,16 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
     }), recoverWorkspace: admission(bind('recoverWorkspace')),
     start: admission((workspaces: string[], onMaintenanceError: (workspace: string, error: unknown) => void) => {
       const reports = workspaces.map(workspace => {
-        const integrity = kernel.checkDatabaseIntegrity(workspace)
-        if (!integrity.ok) throw new Error(`Durable Runtime integrity failed: ${integrity.messages.join('; ')}`)
-        try { maintain(workspace) } catch (error) { onMaintenanceError(workspace, error) }
-        return kernel.recoverWorkspace(workspace)
+        receipts.watch(workspace)
+        try {
+          const status = kernel.storageStatus(workspace)
+          if (status.recovery) onMaintenanceError(workspace, new Error(`Runtime storage recovered automatically: ${status.recovery.reason}`))
+          try { maintain(workspace) } catch (error) { onMaintenanceError(workspace, error) }
+          return kernel.recoverWorkspace(workspace)
+        } catch (error) {
+          onMaintenanceError(workspace, error)
+          return { workspaceRootPath: workspace, recoveredAt: Date.now(), items: [] }
+        }
       })
       if (!maintenanceTimer) {
         maintenanceTimer = setInterval(() => { for (const workspace of workspaces) try { maintain(workspace) } catch (error) { onMaintenanceError(workspace, error) } }, 6 * 60 * 60 * 1000)
@@ -124,6 +171,7 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
     if (maintenanceTimer) clearInterval(maintenanceTimer)
     for (const cancel of auxiliaries.values()) try { cancel?.() } catch { /* Drain the remaining effects even if cancellation fails. */ }
     await Promise.all([execution.shutdown(), withinDeadline(Promise.allSettled([...auxiliaries.keys()]), deadlineMs)])
+    await receipts.close()
     closed = true
     kernel.closeAll()
   })()

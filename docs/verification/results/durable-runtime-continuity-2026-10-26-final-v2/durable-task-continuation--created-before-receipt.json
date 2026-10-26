@@ -1,0 +1,181 @@
+{
+  "sent": [
+    {
+      "id": "existing-child",
+      "text": "Task file scope (scheduling contract):\nRead: []\nWrite: [\"e:\\\\phaneris\\\\.cache\\\\verification\\\\durable-task-continuation-mvedy1\\\\created-before-receipt\"]\nKeep all file access within these declared paths. This declaration does not bypass permission checks.\n\nORIGINAL_TASK"
+    },
+    {
+      "id": "new-b",
+      "text": "Task file scope (scheduling contract):\nRead: []\nWrite: [\"e:\\\\phaneris\\\\.cache\\\\verification\\\\durable-task-continuation-mvedy1\\\\created-before-receipt\"]\nKeep all file access within these declared paths. This declaration does not bypass permission checks.\n\nUse RECOVERED_OUTPUT"
+    },
+    {
+      "id": "parent",
+      "text": "The task \"Continuity\" has finished running.\n\nGoal: Resume pending work\n\nNode outputs:\n### a (a)\nRECOVERED_OUTPUT\n### b (b)\nDONE\n\nVerify the final result against the criteria above and summarize the outcome.\nEnd your reply with a verdict line, on its own line, in exactly one of these forms:\nVERDICT: PASS\nVERDICT: FAIL — <one-line reason>\nIf only some subtasks need redoing, name them so only those (and their dependents) re-run:\nVERDICT: FAIL — nodes=<id>,<id> — <one-line reason>"
+    }
+  ],
+  "creates": 1,
+  "facts": [
+    {
+      "kind": "run-started",
+      "taskId": "continuity",
+      "runId": "run",
+      "t": "2026-10-26T07:37:54.289Z",
+      "orchestratorSessionId": "parent"
+    },
+    {
+      "kind": "node-scheduled",
+      "nodeId": "a",
+      "t": "2026-10-26T07:37:54.291Z"
+    },
+    {
+      "kind": "run-resumed",
+      "t": "2026-10-26T07:37:54.330Z"
+    },
+    {
+      "kind": "node-spawned",
+      "nodeId": "a",
+      "sessionId": "existing-child",
+      "t": "2026-10-26T07:37:54.331Z"
+    },
+    {
+      "kind": "node-finished",
+      "nodeId": "a",
+      "sessionId": "existing-child",
+      "state": "done",
+      "output": {
+        "text": "RECOVERED_OUTPUT"
+      },
+      "t": "2026-10-26T07:37:54.361Z"
+    },
+    {
+      "kind": "node-scheduled",
+      "nodeId": "b",
+      "t": "2026-10-26T07:37:54.370Z"
+    },
+    {
+      "kind": "node-spawned",
+      "nodeId": "b",
+      "sessionId": "new-b",
+      "t": "2026-10-26T07:37:54.371Z"
+    },
+    {
+      "kind": "node-finished",
+      "nodeId": "b",
+      "sessionId": "new-b",
+      "state": "done",
+      "output": {
+        "text": "DONE"
+      },
+      "t": "2026-10-26T07:37:54.401Z"
+    },
+    {
+      "kind": "run-verifying",
+      "t": "2026-10-26T07:37:54.410Z"
+    },
+    {
+      "kind": "verdict",
+      "result": "pass",
+      "output": {
+        "text": "VERDICT: PASS"
+      },
+      "t": "2026-10-26T07:37:54.442Z"
+    },
+    {
+      "kind": "run-completed",
+      "t": "2026-10-26T07:37:54.449Z"
+    }
+  ],
+  "log": [
+    {
+      "kind": "run-started",
+      "taskId": "continuity",
+      "runId": "run",
+      "t": "2026-10-26T07:37:54.289Z",
+      "orchestratorSessionId": "parent"
+    },
+    {
+      "kind": "node-scheduled",
+      "nodeId": "a",
+      "t": "2026-10-26T07:37:54.291Z"
+    },
+    {
+      "kind": "run-resumed",
+      "t": "2026-10-26T07:37:54.330Z"
+    },
+    {
+      "kind": "node-spawned",
+      "nodeId": "a",
+      "sessionId": "existing-child",
+      "t": "2026-10-26T07:37:54.331Z"
+    },
+    {
+      "kind": "node-finished",
+      "nodeId": "a",
+      "sessionId": "existing-child",
+      "state": "done",
+      "output": {
+        "text": "RECOVERED_OUTPUT"
+      },
+      "t": "2026-10-26T07:37:54.361Z"
+    },
+    {
+      "kind": "node-scheduled",
+      "nodeId": "b",
+      "t": "2026-10-26T07:37:54.370Z"
+    },
+    {
+      "kind": "node-spawned",
+      "nodeId": "b",
+      "sessionId": "new-b",
+      "t": "2026-10-26T07:37:54.371Z"
+    },
+    {
+      "kind": "node-finished",
+      "nodeId": "b",
+      "sessionId": "new-b",
+      "state": "done",
+      "output": {
+        "text": "DONE"
+      },
+      "t": "2026-10-26T07:37:54.401Z"
+    },
+    {
+      "kind": "run-verifying",
+      "t": "2026-10-26T07:37:54.410Z"
+    },
+    {
+      "kind": "verdict",
+      "result": "pass",
+      "output": {
+        "text": "VERDICT: PASS"
+      },
+      "t": "2026-10-26T07:37:54.442Z"
+    },
+    {
+      "kind": "run-completed",
+      "t": "2026-10-26T07:37:54.449Z"
+    }
+  ],
+  "snapshot": {
+    "slug": "continuity",
+    "runId": "run",
+    "taskId": "continuity",
+    "status": "completed",
+    "orchestratorSessionId": "parent",
+    "tokensUsed": 0,
+    "nodes": [
+      {
+        "id": "a",
+        "state": "done",
+        "sessionId": "existing-child",
+        "attempt": 1
+      },
+      {
+        "id": "b",
+        "state": "done",
+        "sessionId": "new-b",
+        "attempt": 1
+      }
+    ]
+  }
+}

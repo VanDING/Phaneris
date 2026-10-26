@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict'
+import { Database } from 'bun:sqlite'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { createHash } from 'node:crypto'
+import { createDurableRuntime } from '../packages/server-core/src/durable-runtime'
+const source = 'C:/Users/dotty/.phaneris/workspaces/Work/runtime/runtime.db'
+const sessionId = '261026-prime-iron'
+const workspace = join(import.meta.dir, 'verification', `live-session-continuation-${Date.now()}`)
+mkdirSync(join(workspace, 'runtime'), { recursive: true })
+const original = new Database(source, { readonly: true, create: false })
+const bytes = original.serialize(); original.close()
+writeFileSync(join(workspace, 'runtime/runtime.db'), bytes)
+const rt = createDurableRuntime()
+try {
+ const before = rt.queries.unsettledTools(workspace, undefined, sessionId)
+ assert(before.length > 0, 'Reported session no longer has unresolved effects; original issue fixture changed')
+ const previousOperations = rt.queries.operations(workspace, sessionId).map(({operationId,phase})=>({operationId,phase}))
+ rt.admin.start([workspace], () => {})
+ const scope = { workspaceRootPath: workspace, sessionId }
+ rt.execution.recoverSession(scope)
+ const handle = rt.execution.begin(scope)
+ rt.execution.accept(handle, { operationId: 'continuation-verification', userMessageId: 'continuation-verification-input', userMessage: 'Inspect existing outputs and continue pending work.' })
+ await rt.effects.prepareModel(workspace, { sessionId, runOperationId: 'continuation-verification', providerRequestId: 'verification-only-no-provider', provider: 'fixture', model: 'fixture', canonicalRequestHash: 'verification' })
+ assert.equal(rt.execution.view(sessionId).blocked, false)
+ assert.equal(rt.queries.unsettledTools(workspace, undefined, sessionId).length, before.length)
+ const summary = { sourceAccess: 'read-only SQLite serialization; all runtime mutations target isolated clone', sourceSnapshotSha256: createHash('sha256').update(bytes).digest('hex'), sessionId,
+  previousOperations, unresolvedToolCount: before.length, blocked: false, nextForegroundAdmitted: true, nextModelPrepared: true, providerInvoked: false, originalUnknownOutcomesPreserved: true }
+ writeFileSync(join(workspace, 'summary.json'), JSON.stringify(summary, null, 2)); console.log(JSON.stringify({ output: join(workspace, 'summary.json'), ...summary }))
+} finally { await rt.close() }

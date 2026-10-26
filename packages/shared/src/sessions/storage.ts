@@ -128,6 +128,7 @@ export async function createSession(
     taskSlug?: string;
     taskRunId?: string;
     taskNodeId?: string;
+    taskNodeDispatchId?: string;
     taskDraft?: boolean;
   }
 ): Promise<SessionConfig> {
@@ -177,6 +178,7 @@ export async function createSession(
     taskSlug: options?.taskSlug,
     taskRunId: options?.taskRunId,
     taskNodeId: options?.taskNodeId,
+    taskNodeDispatchId: options?.taskNodeDispatchId,
     taskDraft: options?.taskDraft,
   };
 

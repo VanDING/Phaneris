@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "HE15 independent reads proceed during approval while dependent effects retain order",
+    "HE16 stop during approval never starts an effect",
+    "HE11 nested tool effects and result allocation cannot form a waiting cycle"
+  ],
+  "log": [
+    "approval",
+    "independent",
+    "write",
+    "dependent"
+  ],
+  "current": "approved",
+  "executed": false
+}

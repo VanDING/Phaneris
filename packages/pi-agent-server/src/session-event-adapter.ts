@@ -7,6 +7,7 @@ import { observeNativeSessionEvent } from './native-lifecycle-observation';
 import { readContextUsage, deferContextUsage } from './context-usage';
 import { LengthContinuationTracker, LENGTH_CONTINUATION_PROMPT, MAX_AUTO_LENGTH_CONTINUATIONS } from './length-continuation';
 export interface SessionEventPorts {
+  annotateInput?(message: import('@earendil-works/pi-agent-core').AgentMessage): void;
   currentSession(): AgentSession | null;
   compactionFailure?(): string | undefined;
   clearCompactionFailure?(): void;
@@ -60,6 +61,7 @@ export function createSessionEventAdapter(ports: SessionEventPorts): (event: Age
 
   // Log API errors for debugging and attach provider-native turn anchor for branch cutoffs.
   if (event.type === 'message_end') {
+    ports.annotateInput?.(event.message);
     const msg = event.message as {
       role?: string;
       stopReason?: string;

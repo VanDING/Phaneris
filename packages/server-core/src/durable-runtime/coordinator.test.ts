@@ -141,28 +141,7 @@ describe('DurableRuntimeCoordinator', () => {
     coordinator.closeAll()
   })
 
-  test('does not start the next model attempt while any tool effect is unsettled', async () => {
-    const { root, coordinator } = setup()
-    await coordinator.prepareTool(root, {
-      sessionId: 'session-1',
-      turnId: 'turn-1',
-      runOperationId: 'run-1',
-      providerToolCallId: 'call-1',
-      toolName: 'read',
-      args: { path: 'a.txt' },
-    })
-
-    await expect(coordinator.prepareModel(root, {
-      sessionId: 'session-1',
-      turnId: 'turn-1',
-      runOperationId: 'run-1',
-      providerRequestId: '2',
-      provider: 'openai',
-      model: 'gpt-test',
-      canonicalRequestHash: 'hash-2',
-    })).rejects.toThrow('still has 1 unsettled tool operation')
-    coordinator.closeAll()
-  })
+  // Historical unknown tools no longer gate inference; RC01/RC12 cover continuation and scoped replay restrictions end to end.
 
   test('commits final assistant output before it is projected', () => {
     const { root, coordinator } = setup()

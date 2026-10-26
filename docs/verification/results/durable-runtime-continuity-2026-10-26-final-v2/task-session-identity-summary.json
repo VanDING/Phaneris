@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "Concurrent same-identity creation returns one actual persisted child",
+    "Cold session registry restores dispatch identity from its actual persisted header",
+    "An explicitly new attempt cannot reuse an unrelated legacy completed child",
+    "Restart recovery can resolve a unique legacy child without creating another session"
+  ],
+  "passed": 4,
+  "scope": "Real SessionManager, session storage, concurrent creation and cold registry; no provider called"
+}

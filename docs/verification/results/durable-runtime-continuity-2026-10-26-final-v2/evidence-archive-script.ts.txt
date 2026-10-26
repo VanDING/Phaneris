@@ -1,0 +1,72 @@
+import assert from 'node:assert/strict'
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, statSync, copyFileSync } from 'node:fs'
+import { join, dirname, relative, resolve } from 'node:path'
+import { createHash } from 'node:crypto'
+import { gzipSync, gunzipSync } from 'node:zlib'
+import { execFileSync } from 'node:child_process'
+import { verifyVerificationDirectory } from '../scripts/verification/verification-artifacts'
+const repo = resolve(import.meta.dir, '..'), root = join(repo, 'docs/verification/results/durable-runtime-continuity-2026-10-26-final-v2')
+mkdirSync(root, { recursive: true })
+assert(!existsSync(join(root, 'index.json')))
+const hash = (bytes: Uint8Array | string) => createHash('sha256').update(bytes).digest('hex')
+const files: any[] = []
+function retain(source: string, label: string, expected?: string) {
+ const bytes = readFileSync(source); if (expected) assert.equal(hash(bytes), expected, source)
+ const zipped = bytes.length > 262144, name = label + (zipped ? '.gz' : ''), output = zipped ? gzipSync(bytes) : bytes
+ if (zipped) assert.deepEqual(gunzipSync(output), bytes)
+ writeFileSync(join(root, name), output)
+ const item = { path: name, bytes: output.length, sha256: hash(output), original: relative(repo, source).replaceAll('\\','/'), originalSha256: hash(bytes), ...(zipped ? { encoding:'gzip' } : {}) }
+ files.push(item); return name
+}
+function directories(log: string) {
+ return [...new Set(readFileSync(join(repo, log), 'utf8').split(/\r?\n/).flatMap(line => { try {
+  const v=JSON.parse(line); if(typeof v.output !== 'string') return []
+  const directory=v.output.endsWith('.json') ? dirname(v.output) : v.output
+  return existsSync(join(directory,'manifest.json')) ? [directory] : []
+ } catch { return [] } }))]
+}
+const full = directories('.cache/durable-continuation-final-harness-v2.log')
+const latestTask = readdirSync(join(repo,'.cache/verification')).filter(name=>name.startsWith('durable-task-continuation-')).map(name=>join(repo,'.cache/verification',name))
+ .sort((a,b)=>JSON.parse(readFileSync(join(b,'manifest.json'),'utf8')).startedAt.localeCompare(JSON.parse(readFileSync(join(a,'manifest.json'),'utf8')).startedAt))[0]!
+full.push(latestTask)
+const manifests = full.map(dir=>({ directory:dir, manifest:JSON.parse(readFileSync(join(dir,'manifest.json'),'utf8')) }))
+assert.equal(manifests.length,17); assert.equal(manifests.reduce((sum,r)=>sum+r.manifest.passed,0),173)
+const excluded = new Set(['docs/verification/results/packaged-client-smoke-win.json','docs/verification/results/packaged-client-verification-win.json','scripts/verification/packaged-client-verification.mjs'])
+const changed = [...execFileSync('git',['diff','--name-only','-z','HEAD'],{cwd:repo}).toString().split('\0'), ...execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{cwd:repo}).toString().split('\0')]
+const sources=[...new Set(changed)].filter(path=>path&&!path.startsWith('docs/')&&!excluded.has(path)&&!path.endsWith('.test.ts')).sort().map(path=>({path,sha256:hash(readFileSync(join(repo,path)))}))
+for(const {manifest} of manifests) for(const file of sources) assert.equal(manifest.source.changedFiles.find((entry:any)=>entry.path===file.path)?.sha256,file.sha256,`${manifest.workflow}: source drift ${file.path}`)
+function retainRun(directory: string, prefix?: string, passing=true) {
+ const m=JSON.parse(readFileSync(join(directory,'manifest.json'),'utf8')); if(passing) verifyVerificationDirectory(directory)
+ const label=prefix??m.workflow, artifacts=[retain(join(directory,'manifest.json'),`${label}--manifest.json`)]
+ for(const a of m.artifacts) if(!a.path.includes('/')&&!a.path.includes('\\')&&/\.(json|txt|log)$/.test(a.path)) artifacts.push(retain(join(directory,a.path),`${label}--${a.path}`,a.sha256))
+ return {workflow:m.workflow,passed:m.passed,exitCode:m.exitCode,directory:relative(repo,directory).replaceAll('\\','/'),artifacts,untested:m.untested}
+}
+const harness=manifests.map(r=>retainRun(r.directory))
+const boundary=directories('.cache/durable-continuation-final-boundary-v2.log').map(dir=>retainRun(dir))
+assert.equal(boundary.reduce((sum,r)=>sum+r.passed,0),29)
+const failed = ['durable-continuation','durable-task-continuation'].map(workflow=>{
+ const candidates=readdirSync(join(repo,'.cache/verification')).filter(name=>name.startsWith(`${workflow}-`)).map(name=>join(repo,'.cache/verification',name)).filter(dir=>existsSync(join(dir,'manifest.json')))
+  .map(directory=>({directory,manifest:JSON.parse(readFileSync(join(directory,'manifest.json'),'utf8'))})).filter(r=>r.manifest.workflow===workflow&&r.manifest.exitCode===1).sort((a,b)=>a.manifest.startedAt.localeCompare(b.manifest.startedAt))
+ assert(candidates.length); return retainRun(candidates[0]!.directory,`red-${workflow}`,false)
+})
+const live=JSON.parse(readFileSync(join(repo,'.cache/durable-live-session-recovery-v2.log'),'utf8').trim())
+retain(live.output,'live-session-summary.json'); retain(join(repo,'.cache/durable-live-session-recovery.ts'),'live-session-probe.ts.txt')
+const identity = readFileSync(join(repo,'.cache/durable-task-identity-probe-v2.log'),'utf8').split(/\r?\n/).flatMap(line=>{try{const value=JSON.parse(line);return value.output?[value]:[]}catch{return[]}})[0]
+retain(identity.output,'task-session-identity-summary.json'); retain(join(repo,'.cache/durable-task-identity-probe.ts'),'task-session-identity-probe.ts.txt')
+const wireRed = readdirSync(join(repo,'.cache/verification')).filter(name=>name.startsWith('durable-continuation-')).map(name=>join(repo,'.cache/verification',name)).filter(dir=>existsSync(join(dir,'failure.json')) && readFileSync(join(dir,'failure.json'),'utf8').includes('different model outcome')).sort((a,b)=>JSON.parse(readFileSync(join(b,'manifest.json'),'utf8')).startedAt.localeCompare(JSON.parse(readFileSync(join(a,'manifest.json'),'utf8')).startedAt))[0]
+if(wireRed) failed.push(retainRun(wireRed,'red-model-wire-receipt',false))
+const piDir=manifests.find(r=>r.manifest.workflow==='durable-continuation-pi')!.directory
+const pi=JSON.parse(readFileSync(join(piDir,'pi-continuation.json'),'utf8')); retain(pi.draft,'fixture-native-draft.txt')
+for(const [label,path] of Object.entries({harness:'.cache/durable-continuation-final-harness-v2.log',boundary:'.cache/durable-continuation-final-boundary-v2.log',types:'.cache/durable-continuation-final-types-v2.log',lint:'.cache/durable-continuation-final-lint-v2.log',product:'.cache/durable-continuation-final-product-gates.log','pi-tests':'.cache/durable-pi-package-tests.log','server-tests':'.cache/durable-server-package-tests-final-v2.log'})) retain(join(repo,path),`gate-${label}.log.txt`)
+const fixturePath='packages/server-core/src/sessions/pi-retry-streaming.test.ts', baseFixture=execFileSync('git',['show',`HEAD:${fixturePath}`],{cwd:repo}).toString(), currentFixture=readFileSync(join(repo,fixturePath),'utf8')
+assert.equal(currentFixture.replaceAll('\r\n','\n'),baseFixture.replaceAll('\r\n','\n'))
+const managerPath='packages/server-core/src/sessions/SessionManager.ts', baseManager=execFileSync('git',['show',`HEAD:${managerPath}`],{cwd:repo}).toString(), currentManager=readFileSync(join(repo,managerPath),'utf8')
+const queueMethod=(source:string)=>source.replaceAll('\r\n','\n').match(/private queueDelta\([^]*?\n  }/)![0]
+assert.equal(queueMethod(baseManager),queueMethod(currentManager))
+writeFileSync(join(root,'.gitattributes'),'* -whitespace\n*.log.txt -diff\n')
+const index={schemaVersion:1,date:'2026-10-26',branch:'codex/durable-runtime-continuity',base:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),
+ source:sources,build:{path:'packages/pi-agent-server/dist/bundle.js',sha256:hash(readFileSync(join(repo,'packages/pi-agent-server/dist/bundle.js')))},harness:{passed:173,workflows:harness},boundary:{passed:29,workflows:boundary},baselineFailures:failed,
+ liveSession:{summary:'live-session-summary.json',originalDataModified:false},tests:{pi:{passed:200,failed:0},server:{passed:449,failed:4,limit:'Existing fixture omits deltas initialization; unchanged fixture and unchanged queueDelta method verified against base.',fixtureNormalizedSha256:hash(currentFixture.replaceAll('\r\n','\n')),queueMethodSha256:hash(queueMethod(currentManager))}},
+ gates:{typecheck:'pass',lint:'pass',i18n:'pass',identity:'pass',version:'pass',docs:'pending-final'},untested:['Live model quality','Signed/installed release','Other operating systems','Bun 1.4.3 execution (local Bun 1.4.2)'],artifacts:files}
+writeFileSync(join(root,'index.json'),JSON.stringify(index,null,2)+'\n')
+console.log(JSON.stringify({archive:root,files:files.length,harness:173,boundary:29}))

@@ -1,0 +1,341 @@
+{
+  "checks": [
+    "HE13 all user inputs represented without first/recent-only selection",
+    "HE13 exact bounded message range lookup",
+    "HE13 unknown message never falls back to unrelated history",
+    "HE13 oversized input has truthful omitted/partial coverage",
+    "HE14 current artifact revision is product data",
+    "HE04 persisted explicit selection and clearing override quoted historical mentions"
+  ],
+  "facts": {
+    "task": {
+      "id": "task",
+      "description": "Current task",
+      "acceptanceCriteria": "Verifiable report"
+    },
+    "messages": [
+      {
+        "id": "input-0",
+        "historyOffset": 0,
+        "content": "Clarification 0",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-1",
+        "historyOffset": 1,
+        "content": "Clarification 1",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-2",
+        "historyOffset": 2,
+        "content": "Clarification 2",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-3",
+        "historyOffset": 3,
+        "content": "Clarification 3",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-4",
+        "historyOffset": 4,
+        "content": "Clarification 4",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-5",
+        "historyOffset": 5,
+        "content": "Clarification 5",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-6",
+        "historyOffset": 6,
+        "content": "Clarification 6",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-7",
+        "historyOffset": 7,
+        "content": "Clarification 7",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-8",
+        "historyOffset": 8,
+        "content": "Clarification 8",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-9",
+        "historyOffset": 9,
+        "content": "Clarification 9",
+        "coverage": "full",
+        "characters": 15
+      },
+      {
+        "id": "input-10",
+        "historyOffset": 10,
+        "content": "Clarification 10",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-11",
+        "historyOffset": 11,
+        "content": "Clarification 11",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-12",
+        "historyOffset": 12,
+        "content": "Clarification 12",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-13",
+        "historyOffset": 13,
+        "content": "Clarification 13",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-14",
+        "historyOffset": 14,
+        "content": "Clarification 14",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-15",
+        "historyOffset": 15,
+        "content": "Clarification 15",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-16",
+        "historyOffset": 16,
+        "content": "Clarification 16",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-17",
+        "historyOffset": 17,
+        "content": "PRESERVE_MIDDLE_REQUIREMENT",
+        "coverage": "full",
+        "characters": 27
+      },
+      {
+        "id": "input-18",
+        "historyOffset": 18,
+        "content": "Clarification 18",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-19",
+        "historyOffset": 19,
+        "content": "Clarification 19",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-20",
+        "historyOffset": 20,
+        "content": "Clarification 20",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-21",
+        "historyOffset": 21,
+        "content": "Clarification 21",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-22",
+        "historyOffset": 22,
+        "content": "Clarification 22",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-23",
+        "historyOffset": 23,
+        "content": "Clarification 23",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-24",
+        "historyOffset": 24,
+        "content": "Clarification 24",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-25",
+        "historyOffset": 25,
+        "content": "Clarification 25",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-26",
+        "historyOffset": 26,
+        "content": "Clarification 26",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-27",
+        "historyOffset": 27,
+        "content": "Clarification 27",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-28",
+        "historyOffset": 28,
+        "content": "Clarification 28",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-29",
+        "historyOffset": 29,
+        "content": "Clarification 29",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-30",
+        "historyOffset": 30,
+        "content": "Clarification 30",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-31",
+        "historyOffset": 31,
+        "content": "Clarification 31",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-32",
+        "historyOffset": 32,
+        "content": "Clarification 32",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-33",
+        "historyOffset": 33,
+        "content": "Clarification 33",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-34",
+        "historyOffset": 34,
+        "content": "Clarification 34",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-35",
+        "historyOffset": 35,
+        "content": "Clarification 35",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-36",
+        "historyOffset": 36,
+        "content": "Clarification 36",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-37",
+        "historyOffset": 37,
+        "content": "Clarification 37",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-38",
+        "historyOffset": 38,
+        "content": "Clarification 38",
+        "coverage": "full",
+        "characters": 16
+      },
+      {
+        "id": "input-39",
+        "historyOffset": 39,
+        "content": "Clarification 39",
+        "coverage": "full",
+        "characters": 16
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "report",
+        "status": "draft",
+        "revision": "current-version",
+        "path": "/draft/report.md"
+      }
+    ]
+  },
+  "history": {
+    "total": 1,
+    "offset": 0,
+    "hasMore": false,
+    "nextOffset": null,
+    "messages": [
+      {
+        "id": "input-17",
+        "historyOffset": 17,
+        "role": "user",
+        "content": "MIDDLE",
+        "coverage": "partial",
+        "startCharacter": 9,
+        "endCharacter": 15,
+        "characters": 27,
+        "nextCharacter": 15
+      }
+    ]
+  },
+  "huge": {
+    "task": {
+      "id": "task"
+    },
+    "messages": [
+      {
+        "id": "large",
+        "historyOffset": 0,
+        "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "coverage": "partial",
+        "characters": 90000
+      }
+    ],
+    "artifacts": []
+  }
+}

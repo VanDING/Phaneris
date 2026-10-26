@@ -1,0 +1,4 @@
+{
+  "message": "Expected values to be strictly equal:\n\n0 !== 1\n",
+  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at <anonymous> (E:\\Phaneris\\scripts\\verification\\durable-task-continuation-workflow.ts:40:64)\n    at async verificationWorkflow (E:\\Phaneris\\scripts\\verification\\verification-artifacts.ts:96:37)"
+}

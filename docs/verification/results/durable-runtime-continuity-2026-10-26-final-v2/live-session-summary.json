@@ -1,0 +1,17 @@
+{
+  "sourceAccess": "read-only SQLite serialization; all runtime mutations target isolated clone",
+  "sourceSnapshotSha256": "55b8c5140b442cee8bb9251b1b247eeb2688472445ee497f2190dcab0f9f8c20",
+  "sessionId": "261026-prime-iron",
+  "previousOperations": [
+    {
+      "operationId": "run_msg-1792982855690-246e41113822_5",
+      "phase": "recovery_parked"
+    }
+  ],
+  "unresolvedToolCount": 1,
+  "blocked": false,
+  "nextForegroundAdmitted": true,
+  "nextModelPrepared": true,
+  "providerInvoked": false,
+  "originalUnknownOutcomesPreserved": true
+}

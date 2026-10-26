@@ -24,12 +24,13 @@ import {
   type ToolRecoveryMode,
 } from '@phaneris/shared/durable-runtime'
 import { canonicalToolArgsHash, durableToolOperationId } from './tool-identity.js'
+import { canonicalJson as canonicalJsonForOutcome } from './canonical-json.js'
 import { redactDurablePayload } from './sensitive-payload.js'
 import { redactBrowserToolArguments } from '@phaneris/shared/utils/browser-input-privacy'
 import { auditModelUsage } from './model-usage-audit.js'
 import { createHash } from 'node:crypto'
-import { copyFileSync, existsSync, renameSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { copyFileSync, existsSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs'
+import { basename, dirname, join, resolve } from 'node:path'
 import { DurableRuntimeStore, type RuntimeDatabaseIntegrity, type RuntimeUsageRow } from './store.js'
 import { DurableProjectionRunner, ProjectionSchemaMismatchError } from './projection-runner.js'
 import {
@@ -38,7 +39,7 @@ import {
 } from './projection.js'
 
 const SAFE_REPLAY_TOOLS = new Set([
-  'read', 'grep', 'find', 'ls', 'websearch', 'web_search', 'webfetch', 'web_fetch',
+  'read', 'grep', 'find', 'ls', 'websearch', 'web_search', 'webfetch', 'web_fetch', 'tool_search', 'get_session_info', 'artifact_status',
 ])
 
 export function defaultToolRecoveryMode(toolName: string): ToolRecoveryMode {
@@ -117,14 +118,70 @@ export type DurableRunSettlement =
 export class DurableRuntimeCoordinator {
   private readonly stores = new Map<string, DurableRuntimeStore>()
   private readonly reconciliationAdapters = new Map<string, ToolReconciliationAdapter>()
+  private readonly recoveredStorage = new Map<string, { databasePath: string; reason: string }>()
 
   storeFor(workspaceRootPath: string): DurableRuntimeStore {
     let store = this.stores.get(workspaceRootPath)
     if (!store) {
-      store = new DurableRuntimeStore(workspaceRootPath)
+      let databasePath: string | undefined
+      const marker = join(workspaceRootPath, 'runtime', 'recovery-storage.json')
+      if (existsSync(marker)) try {
+        const saved = JSON.parse(readFileSync(marker, 'utf8')) as { file?: string }
+        if (saved.file && basename(saved.file) === saved.file && /^runtime\.recovery(?:-\d+)?\.db$/.test(saved.file)) {
+          databasePath = join(workspaceRootPath, 'runtime', saved.file)
+          this.recoveredStorage.set(workspaceRootPath, { databasePath, reason: 'Continuing the preserved recovery store' })
+        }
+      } catch { /* Recover from the original store or its verified backups. */ }
+      try {
+        store = new DurableRuntimeStore(workspaceRootPath, { databasePath })
+        const integrity = store.checkIntegrity()
+        if (!integrity.ok) throw new Error(integrity.messages.join('; '))
+      } catch (error) {
+        try { store?.close() } catch { /* Preserve the original failure. */ }
+        store = this.openRecoveryStorage(workspaceRootPath, error)
+      }
       this.stores.set(workspaceRootPath, store)
     }
     return store
+  }
+
+  storageStatus(workspaceRootPath: string) {
+    const store = this.storeFor(workspaceRootPath)
+    return { persistent: store.databasePath !== ':memory:', recovery: this.recoveredStorage.get(workspaceRootPath) }
+  }
+
+  private openRecoveryStorage(workspaceRootPath: string, error: unknown): DurableRuntimeStore {
+    const directory = join(workspaceRootPath, 'runtime'), reason = String(error)
+    let databasePath = join(directory, 'runtime.recovery.db')
+    if (existsSync(databasePath)) databasePath = join(directory, `runtime.recovery-${Date.now()}.db`)
+    const backupDirectory = join(directory, 'backups')
+    const backups = existsSync(backupDirectory) ? readdirSync(backupDirectory).filter(name => /^runtime-.*\.db$/.test(name)).sort().reverse() : []
+    let recovered: DurableRuntimeStore | undefined
+    for (const backup of backups) {
+      const staged = `${databasePath}.${backup}.tmp`
+      try {
+        copyFileSync(join(backupDirectory, backup), staged)
+        const candidate = new DurableRuntimeStore(workspaceRootPath, { databasePath: staged })
+        let valid: boolean
+        try { valid = candidate.checkIntegrity().ok } finally { candidate.close() }
+        if (!valid) continue
+        renameSync(staged, databasePath)
+        recovered = new DurableRuntimeStore(workspaceRootPath, { databasePath })
+        break
+      } catch { /* Originals and rejected copies remain available for diagnostics. */ }
+    }
+    try {
+      recovered ??= new DurableRuntimeStore(workspaceRootPath, { databasePath })
+      writeFileSync(join(directory, 'recovery-storage.json'), JSON.stringify({ file: basename(databasePath), reason, recoveredAt: Date.now() }), { mode: 0o600, flush: true })
+    } catch {
+      // A workspace whose runtime directory is unwritable must not prevent
+      // ordinary conversation or other workspaces from initializing. Native
+      // session journals retain conversation content; effectful dispatch below
+      // still requires persistent intent storage.
+      recovered ??= new DurableRuntimeStore(workspaceRootPath, { databasePath: ':memory:' })
+    }
+    this.recoveredStorage.set(workspaceRootPath, { databasePath: recovered.databasePath, reason })
+    return recovered
   }
 
   closeAll(): void {
@@ -763,10 +820,8 @@ export class DurableRuntimeCoordinator {
       }])[0]!
       return { operationId, idempotencyKey: operationId, created: true, status: 'effect_pending', committedSeq }
     }
-    const unsettledTools = store.listUnsettledToolOperations(request.runOperationId)
-    if (unsettledTools.length > 0) {
-      throw new Error(`Durable run ${request.runOperationId} still has ${unsettledTools.length} unsettled tool operation(s)`)
-    }
+    // SDK execution owns tool/model sequencing. An older missing receipt cannot
+    // prevent a model from inspecting state or continuing independent work.
     const operationId = durableModelOperationId(request.runOperationId, request.providerRequestId)
     const outcomeEvent = store.getEvent(`${operationId}:outcome`)
     if (outcomeEvent) {
@@ -834,15 +889,26 @@ export class DurableRuntimeCoordinator {
     workspaceRootPath: string,
     request: DurableModelOutcomeRequest,
   ): Promise<DurableModelOutcomeResponse> {
+    // Transport correlation can change after a lost ACK. It is not outcome identity.
+    const fact = (value: unknown): DurableModelOutcomeRequest => {
+      const payload = { ...value as Record<string, unknown> }
+      delete payload.type; delete payload.requestId
+      return payload as unknown as DurableModelOutcomeRequest
+    }
+    request = fact(request)
     const store = this.storeFor(workspaceRootPath)
     const existing = store.getEvent(`${request.operationId}:outcome`)
-    if (existing) return { committedSeq: existing.seq ?? 0 }
+    if (existing) {
+      if (existing.sessionId !== request.sessionId || canonicalJsonForOutcome(fact(existing.payload)) !== canonicalJsonForOutcome(redactDurablePayload(request))) {
+        throw new Error('A different model outcome already exists for this operation')
+      }
+      return { committedSeq: existing.seq ?? 0 }
+    }
     const warming = Boolean(request.purpose)
     const runState = store.getOperation(request.runOperationId)
-    if (!runState && !warming) throw new Error(`Durable run ${request.runOperationId} is not open`)
     if (runState && runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
-    const dispatch = warming ? store.getEvent(`${request.operationId}:dispatch`) : undefined
-    const currentModel = (warming ? dispatch?.payload : (runState!.data as { currentModel?: unknown }).currentModel) as {
+    const dispatch = store.getEvent(`${request.operationId}:dispatch`)
+    const currentModel = dispatch?.payload as {
       operationId?: string
       providerRequestId?: string
       provider?: string
@@ -852,10 +918,10 @@ export class DurableRuntimeCoordinator {
       runOperationId?: string
       sessionId?: string
     } | undefined
-    if (warming && (currentModel?.purpose !== request.purpose
+    if (dispatch?.sessionId !== request.sessionId || currentModel?.purpose !== request.purpose
       || currentModel?.runOperationId !== request.runOperationId
-      || currentModel?.sessionId !== request.sessionId)) {
-      throw new Error('Auxiliary model outcome requires its matching dispatch')
+      || currentModel?.sessionId !== request.sessionId) {
+      throw new Error('Model outcome requires its matching dispatch')
     }
     if (currentModel?.operationId !== request.operationId
       || currentModel.providerRequestId !== request.providerRequestId
@@ -865,11 +931,12 @@ export class DurableRuntimeCoordinator {
       throw new Error(`Durable run ${request.runOperationId} is not awaiting model attempt ${request.operationId}`)
     }
     const now = Date.now()
-    const checkpoint = warming ? undefined : nextState(runState!, 'checkpoint', {
+    const ownsCheckpoint = !warming && runState && (runState.data as { currentModel?: { operationId?: string } }).currentModel?.operationId === request.operationId
+    const checkpoint = !ownsCheckpoint ? undefined : nextState(runState, 'checkpoint', {
       ...(typeof runState!.data === 'object' && runState!.data !== null ? runState!.data : {}),
       currentModel: null,
     }, now)
-    const modelVisible = !warming && (runState!.data as { modelVisible?: boolean }).modelVisible !== false
+    const modelVisible = !warming && (!runState || (runState.data as { modelVisible?: boolean }).modelVisible !== false)
     const usage: RuntimeUsageRow[] = request.usage ? [{
       usageId: `model:${request.runOperationId}:${request.providerRequestId}`,
       operationId: request.runOperationId,
@@ -921,7 +988,7 @@ export class DurableRuntimeCoordinator {
       payload: item,
       createdAt: now,
     }))]
-    const committed = warming ? store.commitFactsAndUsage({ events, usage }) : store.commitOperationTransition({
+    const committed = !checkpoint ? store.commitFactsAndUsage({ events, usage }) : store.commitOperationTransition({
       events,
       usage,
       operationState: checkpoint!,
@@ -941,7 +1008,17 @@ export class DurableRuntimeCoordinator {
 
     const operationId = durableToolOperationId(request.runOperationId, request.providerToolCallId)
     const recoveryMode = request.recoveryMode ?? defaultToolRecoveryMode(request.toolName)
+    if (store.databasePath === ':memory:' && recoveryMode !== 'safe_replay') {
+      throw new Error('Persistent intent storage is unavailable; this action was not dispatched. Inspection and independent work may continue.')
+    }
     const canonicalArgsHash = canonicalToolArgsHash(request.toolName, request.args)
+    if (recoveryMode !== 'safe_replay') {
+      const unresolved = [...new Set([request.sessionId, ...request.recoverySessionIds ?? []])]
+        .flatMap(sessionId => store.listUnsettledToolOperations(undefined, sessionId)).find(item => item.dispatch
+        && item.dispatch.operationId !== operationId && item.dispatch.toolName === request.toolName
+        && item.dispatch.canonicalArgsHash === canonicalArgsHash)
+      if (unresolved) throw new Error('An earlier invocation of this exact action has an unconfirmed outcome. Inspect existing outputs or receipts instead of repeating it. Independent work may continue.')
+    }
     const intent: ToolDispatchIntent = {
       protocol: DURABLE_TOOL_BOUNDARY_PROTOCOL,
       runOperationId: request.runOperationId,
@@ -1024,9 +1101,6 @@ export class DurableRuntimeCoordinator {
     request: DurableToolOutcomeRequest,
   ): Promise<DurableToolOutcomeResponse> {
     const store = this.storeFor(workspaceRootPath)
-    const runState = store.getOperation(request.runOperationId)
-    if (!runState) throw new Error(`Durable run ${request.runOperationId} is not open`)
-    if (runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
     const outcome: ToolOutcome = {
       runOperationId: request.runOperationId,
       operationId: request.operationId,
@@ -1039,6 +1113,14 @@ export class DurableRuntimeCoordinator {
       isError: request.isError,
       externalReference: request.externalReference,
     }
+    const existing = store.getEvent(`${request.operationId}:outcome`)
+    if (existing) {
+      if (existing.sessionId !== request.sessionId || canonicalJsonForOutcome(existing.payload) !== canonicalJsonForOutcome(outcome)) throw new Error('A different outcome already exists for this operation')
+      return { committedSeq: existing.seq ?? 0 }
+    }
+    const runState = store.getOperation(request.runOperationId)
+    if (!runState) throw new Error(`Durable run ${request.runOperationId} is not open`)
+    if (runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
     const now = Date.now()
     const remainingIds = store.listUnsettledToolOperations(request.runOperationId)
       .map(item => item.dispatch?.operationId)

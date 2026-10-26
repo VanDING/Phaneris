@@ -141,6 +141,7 @@ export interface Session extends SessionPlanningFields {
   taskRunId?: string
   /** Tasks Conductor: id of the DAG node this child session executes (child nodes only). */
   taskNodeId?: string
+  taskNodeDispatchId?: string
   /** Tasks Conductor: total DAG node count (orchestrator only) — stable board progress denominator. */
   taskNodeCount?: number
   /** Tasks Conductor: generate-time draft orchestrator, hidden from the board until adopted by createTask. */
@@ -197,6 +198,7 @@ export interface CreateSessionOptions extends SessionPlanningFields {
   taskRunId?: string
   /** Tasks Conductor: id of the DAG node this child session executes (child nodes only). */
   taskNodeId?: string
+  taskNodeDispatchId?: string
   /** Tasks Conductor: mark the orchestrator as a generate-time draft (hidden until adopted by createTask). */
   taskDraft?: boolean
   /**

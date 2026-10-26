@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "workflow": "durable-continuation",
+  "startedAt": "2026-10-26T06:09:05.925Z",
+  "finishedAt": "2026-10-26T06:09:06.266Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\durable-continuation-workflow.ts"
+  ],
+  "source": {
+    "headSha": "bc2f436a0533e37b3b97f73ce079d672ecd5ed94",
+    "dirtyPaths": [
+      "M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M scripts/verification/packaged-client-verification.mjs",
+      "?? docs/verification/durable-runtime-continuity-failure-matrix-2026-10-26.md",
+      "?? scripts/verification/durable-continuation-workflow.ts"
+    ],
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
+    "changedFiles": [
+      {
+        "path": "docs/verification/durable-runtime-continuity-failure-matrix-2026-10-26.md",
+        "sha256": "dcf1338bed25d83f1bcc03fa1eaf938506b3b57f3a3d4406249541f03a7cf566"
+      },
+      {
+        "path": "scripts/verification/durable-continuation-workflow.ts",
+        "sha256": "15319d05698bbd106ed6a15e9808c6a9cafc0454e12050efcc0640d16b942952"
+      },
+      {
+        "path": "scripts/verification/packaged-client-verification.mjs",
+        "sha256": "fda94624cb3ef4adbbed81a1987df6af370f3b3f03e0b4d16d40f8f996b80c10"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [],
+  "passed": 0,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "Ls/runtime/runtime.db",
+      "sha256": "cd2c50ccb38048d33740340eaae1aa83510c6204a7d1c51b81c1fb04f081693a",
+      "bytes": 110592
+    },
+    {
+      "path": "failure.json",
+      "sha256": "167b7740b5603d9b243f4d91704c6569d76a94261fe48d7a8f48110ce8a1c366",
+      "bytes": 476
+    },
+    {
+      "path": "progress.json",
+      "sha256": "abb1fe69ccc67fcf3f882820d5b2ee055d5f61b0e423a55331eef3e48f09cad5",
+      "bytes": 158
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

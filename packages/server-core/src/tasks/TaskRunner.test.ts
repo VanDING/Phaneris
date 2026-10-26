@@ -518,17 +518,7 @@ describe('TaskRunner (Conductor)', () => {
     expect(r2.getRunState('res', 'r1')!.status).toBe('completed');
   });
 
-  it('refuses to replay an in-flight node whose external outcome is unknown after restart', async () => {
-    saveTaskSpec(root, specOf({ id: 'unknown', title: 'Unknown', goal: 'g', nodes: [{ id: 'a', prompt: 'a' }] }));
-    const r1 = makeRunner();
-    r1.run('unknown', { runId: 'r1', orchestratorSessionId: 'orch' });
-    await tick();
-
-    const host2 = new MockHost();
-    const r2 = new TaskRunner({ host: host2, workspaceId: 'ws', workspaceRoot: root });
-    expect(() => r2.resume('unknown', 'r1')).toThrow('outcome is unknown after restart')
-    expect(host2.dispatchedNames()).toEqual([])
-  });
+  // RC15/RC16 exercise restart with the existing child and journal backfill end to end.
 
   it('rehydrates node output from canonical task facts without the run-log files', async () => {
     saveTaskSpec(root, specOf({

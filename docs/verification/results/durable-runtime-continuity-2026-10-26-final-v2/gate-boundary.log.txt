@@ -1,0 +1,6 @@
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":15,"output":"E:\\Phaneris\\.cache\\verification\\durable-runtime-boundary-Pdnz27\\workflow.json"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":8,"output":"E:\\Phaneris\\.cache\\verification\\durable-runtime-crash-WwK1a9\\crash.json"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":6,"output":"E:\\Phaneris\\.cache\\verification\\durable-runtime-pi-vev9dj\\independent-pi.json"}

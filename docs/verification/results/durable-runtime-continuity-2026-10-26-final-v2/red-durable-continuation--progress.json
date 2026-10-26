@@ -1,0 +1,11 @@
+[
+  {
+    "toolName": "Ls",
+    "settled": {
+      "kind": "parked",
+      "operationId": "r",
+      "reason": "interrupted"
+    },
+    "blocked": true
+  }
+]

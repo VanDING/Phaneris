@@ -5,6 +5,7 @@ import { registerNativeLifecycle, type ObserveLifecycle } from './native-lifecyc
 import { createPhanerisSettingsManager } from './session-settings.ts';
 import type { SettingsManager, ExtensionAPI } from '@earendil-works/pi-coding-agent';
 import { getCurrentTools } from '@earendil-works/pi-ai';
+import { completeToolResultContext } from './canonical-model-context.ts';
 
 /**
  * Current Phaneris system prompt for the active session.
@@ -102,7 +103,7 @@ export async function createPhanerisResourceLoader(options: {
               if (!event.messages.some(message => 'content' in message && JSON.stringify(message.content).includes(JSON.stringify(instruction).slice(1, -1))))
                 messages.push({ role: 'user', content: instruction, timestamp: 0 });
             }
-            return { messages };
+            return { messages: options.wrapOrchestrationTool ? completeToolResultContext(messages) : messages };
           });
           if (options.gateToolCall) pi.on('tool_call', async event => {
             try { await options.gateToolCall!(event.toolName, event.input, event.toolCallId); }

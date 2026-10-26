@@ -1,0 +1,2 @@
+* -whitespace
+*.log.txt -diff

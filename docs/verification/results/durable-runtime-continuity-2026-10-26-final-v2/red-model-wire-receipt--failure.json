@@ -1,0 +1,4 @@
+{
+  "message": "A different model outcome already exists for this operation",
+  "stack": "Error: A different model outcome already exists for this operation\n    at commitModelOutcome (E:\\Phaneris\\packages\\server-core\\src\\durable-runtime\\coordinator.ts:896:19)\n    at <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\durable-runtime\\api\\runtime.ts:35:31)\n    at <anonymous> (E:\\Phaneris\\scripts\\verification\\durable-continuation-workflow.ts:129:42)\n    at async verificationWorkflow (E:\\Phaneris\\scripts\\verification\\verification-artifacts.ts:96:37)"
+}

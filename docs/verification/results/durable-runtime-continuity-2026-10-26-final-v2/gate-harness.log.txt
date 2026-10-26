@@ -1,0 +1,97 @@
+$ bun run scripts/verification/model-harness-contract-workflow.ts && bun run scripts/verification/harness-tool-effects-workflow.ts && bun run scripts/verification/harness-prompt-assembly-workflow.ts && bun run scripts/verification/harness-capability-workflow.ts && bun run server:build:subprocess && bun run scripts/verification/model-harness-pi-workflow.ts && bun run scripts/verification/harness-tool-order-pi-workflow.ts && bun run scripts/verification/harness-task-context-pi-workflow.ts && bun run scripts/verification/harness-input-continuity-workflow.ts && bun run scripts/verification/harness-materials-workflow.ts && bun run scripts/verification/harness-continuity-workflow.ts && bun run scripts/verification/harness-execution-readiness-workflow.ts && bun run scripts/verification/harness-artifact-feedback-workflow.ts && bun run scripts/verification/harness-compaction-authority-workflow.ts && bun run scripts/verification/harness-system-ready-pi-workflow.ts && bun run scripts/verification/durable-continuation-workflow.ts && bun run scripts/verification/durable-continuation-pi-workflow.ts && bun run scripts/verification/durable-task-continuation-workflow.ts
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"output":"E:\\Phaneris\\.cache\\verification\\model-harness-contract-U6Q5oO","results":[{"id":"explore:mcp__session__web_search","passed":true},{"id":"ask:mcp__session__web_search","passed":true},{"id":"explore:mcp__session__web_fetch","passed":true},{"id":"ask:mcp__session__web_fetch","passed":true},{"id":"unknown-tool-is-not-silently-safe","passed":true},{"id":"source-suffix-does-not-inherit-internal-permission","passed":true},{"id":"source-browser-suffix-does-not-inherit-internal-permission","passed":true},{"id":"llm-schema-only-advertises-supported-arguments","passed":true},{"id":"submit-plan-waits-for-host","passed":true},{"id":"submit-plan-host-failure-is-tool-error","passed":true},{"id":"silent-oauth-continues-without-ui","passed":true},{"id":"interactive-oauth-reports-ui-wait","passed":true},{"id":"multilingual-discovery-and-loaded-tools","passed":true},{"id":"source-format-is-observational-and-latest-state-is-authoritative","passed":true},{"id":"partial-skill-read-does-not-clear-prerequisite","passed":true},{"id":"sdk-truncated-skill-read-does-not-clear-prerequisite","passed":true},{"id":"skill-catalog-invalidates-on-watcher-event","passed":true},{"id":"plan-approval-binds-rendered-version-and-rejects-stale-path","passed":true},{"id":"recovery-retains-original-goal-and-accepted-scope","passed":true},{"id":"plugin-context-declares-version-and-authority","passed":true},{"id":"prompt-language-uses-persisted-preference-before-i18n-hydration","passed":true}]}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"output":"E:\\Phaneris\\.cache\\verification\\harness-tool-effects-CDXgBv","results":[{"id":"canonical-readonly-metadata-reaches-host-proxies","passed":true},{"id":"guarded-automation-effects:mcp__session__set_session_labels","passed":true},{"id":"guarded-automation-effects:mcp__session__set_session_status","passed":true},{"id":"browser-effect:\"upload @e1 secret.txt\"","passed":true},{"id":"browser-effect:\"snapshot; upload @e1 secret.txt\"","passed":true},{"id":"browser-effect:[\"upload\",\"@e1\",\"secret.txt\"]","passed":true},{"id":"browser-effect:\"evaluate fetch(\\\"https://fixture.invalid\\\", {method:\\\"POST\\\"})\"","passed":true},{"id":"browser-effect:\"set-clipboard copied data\"","passed":true},{"id":"browser-inspection-and-navigation-remain-available","passed":true},{"id":"invalid-browser-syntax-is-an-input-error-not-an-approval","passed":true},{"id":"resource-ordering-cancellation-and-barriers","passed":true},{"id":"path-aliases-and-parent-scan-conflict","passed":true},{"id":"codemode-does-not-lock-out-nested-tools","passed":true},{"id":"parallel-reads-and-fair-writer-order","passed":true},{"id":"source-reads-remain-parallel-without-trusting-server-hints","passed":true},{"id":"browser-inspection-does-not-block-independent-file-work","passed":true},{"id":"shared-scheduling-ports-stay-transitively-pure","passed":true}]}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":7,"output":"E:\\Phaneris\\.cache\\verification\\harness-prompt-assembly-aYCzku"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":11,"output":"E:\\Phaneris\\.cache\\verification\\harness-capability-KuosRF"}
+$ cd packages/pi-agent-server && bun run build
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 2738 modules in 749ms
+
+  bundle.js  10.66 MB  (entry point)
+
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":11,"output":"E:\\Phaneris\\.cache\\verification\\model-harness-pi-tDPhyT\\harness-pi.json"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":6,"output":"E:\\Phaneris\\.cache\\verification\\harness-tool-order-pi-hTi4AE\\tool-order-pi.json"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":4,"output":"E:\\Phaneris\\.cache\\verification\\harness-task-context-pi-VYsEM6"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+[session] mid-stream send {
+  sessionId: "261026-safe-heath",
+  behavior: "steer",
+  steered: true,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "steer-fixture",
+}
+[session] mid-stream send {
+  sessionId: "261026-safe-heath",
+  behavior: "queue",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "queue-fixture",
+}
+[session] mid-stream send {
+  sessionId: "261026-safe-heath",
+  behavior: "steer",
+  steered: true,
+  compactionInFlight: false,
+  queueLengthBefore: 1,
+  backend: "bound Object",
+  connectionSlug: "steer-fixture",
+}
+{"passed":9,"output":"E:\\Phaneris\\.cache\\verification\\harness-input-continuity-51V7rm"}
+[session] Cleaning up resources...
+[session] Cleanup complete
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":5,"output":"E:\\Phaneris\\.cache\\verification\\harness-materials-7kpBbB"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":6,"output":"E:\\Phaneris\\.cache\\verification\\harness-continuity-sgCLKq"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":3,"output":"E:\\Phaneris\\.cache\\verification\\harness-execution-readiness-zdBAgg"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":5,"output":"E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":12,"output":"E:\\Phaneris\\.cache\\verification\\harness-compaction-authority-aGZexO"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":15,"output":"E:\\Phaneris\\.cache\\verification\\harness-system-ready-pi-ntGaMX"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":27,"output":"E:\\Phaneris\\.cache\\verification\\durable-continuation-VccUWU"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+{"passed":10,"output":"E:\\Phaneris\\.cache\\verification\\durable-continuation-pi-buy2oo"}
+warning: in the working copy of 'packages/server-core/src/tasks/TaskRunner.test.ts', CRLF will be replaced by LF the next time Git touches it
+[conductor] Retaining native task journal for automatic fact backfill 21 |       async setSessionStatus() {}, async setKanbanColumn() {}, async setTaskNodeCount() {}, async cancelProcessing() {},
+22 |       onSessionComplete(fn) { listeners.add(fn); return () => listeners.delete(fn) },
+23 |       getSessionFinalText() { return undefined }, getSessionWorkingDirectory() { return root },
+24 |       async prepareTaskNodeDispatch(input) { return { durableSessionId: 'parent', runOperationId: input.nodeId, operationId: `dispatch-${input.nodeId}`, providerToolCallId: input.nodeId, canonicalArgsHash: 'hash', created: input.nodeId !== 'a' } },
+25 |       async commitTaskNodeDispatch() { if (failing) throw new Error('fixture fact outage') },
+26 |       commitTaskRunFact(input) { if (failing) throw new Error('fixture fact outage'); facts[input.ordinal] = input.entry },
+                                                             ^
+error: fixture fact outage
+      at commitTaskRunFact (E:\Phaneris\scripts\verification\durable-task-continuation-workflow.ts:26:57)
+      at log (E:\Phaneris\packages\server-core\src\tasks\TaskRunner.ts:1117:24)
+      at resumeFromHydrated (E:\Phaneris\packages\server-core\src\tasks\TaskRunner.ts:447:10)
+      at rehydrate (E:\Phaneris\packages\server-core\src\tasks\TaskRunner.ts:1381:9)
+      at resume (E:\Phaneris\packages\server-core\src\tasks\TaskRunner.ts:1350:10)
+      at <anonymous> (E:\Phaneris\scripts\verification\durable-task-continuation-workflow.ts:36:12)
+      at async verificationWorkflow (E:\Phaneris\scripts\verification\verification-artifacts.ts:96:37)
+
+[conductor] Retaining native task journal for automatic fact backfill 21 |       async setSessionStatus() {}, async setKanbanColumn() {}, async setTaskNodeCount() {}, async cancelProcessing() {},
+22 |       onSessionComplete(fn) { listeners.add(fn); return () => listeners.delete(fn) },
+23 |       getSessionFinalText() { return undefined }, getSessionWorkingDirectory() { return root },
+24 |       async prepareTaskNodeDispatch(input) { return { durableSessionId: 'parent', runOperationId: input.nodeId, operationId: `dispatch-${input.nodeId}`, providerToolCallId: input.nodeId, canonicalArgsHash: 'hash', created: input.nodeId !== 'a' } },
+25 |       async commitTaskNodeDispatch() { if (failing) throw new Error('fixture fact outage') },
+26 |       commitTaskRunFact(input) { if (failing) throw new Error('fixture fact outage'); facts[input.ordinal] = input.entry },
+                                                             ^
+error: fixture fact outage
+      at commitTaskRunFact (E:\Phaneris\scripts\verification\durable-task-continuation-workflow.ts:26:57)
+      at log (E:\Phaneris\packages\server-core\src\tasks\TaskRunner.ts:1117:24)
+      at dispatch (E:\Phaneris\packages\server-core\src\tasks\TaskRunner.ts:641:12)
+

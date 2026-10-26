@@ -29,7 +29,14 @@ export function wrapDurableModelStream(
       try {
         const timing = createAssistantTiming();
         const observed = observeNativeRequest(effectiveOptions, () => timing.dispatched());
-        const commit = await prepare(model, context, observed.observation);
+        let commit: (message: AssistantMessage) => Promise<void>;
+        try { commit = await prepare(model, context, observed.observation); }
+        catch (error) {
+          if (error instanceof Error && error.name === 'DurableReplayBlocked') throw error;
+          // Inference and its actual response do not require a healthy audit
+          // database. Tool effects still take their own persistent T1 boundary.
+          commit = async message => { Object.assign(message, { durableCommitError: String(error) }); };
+        }
         if (effectiveOptions?.signal?.aborted) {
           // T1 may wait for the host while warming is disabled or the run ends.
           // No provider call has occurred, so a zero-usage cancellation is known.
@@ -41,7 +48,7 @@ export function wrapDurableModelStream(
           };
           attachModelMetering(aborted, observed.observation, true);
           Object.assign(aborted, { assistantMetrics: timing.completed(aborted, observed.observation) });
-          await commit(aborted);
+          try { await commit(aborted); } catch (error) { Object.assign(aborted, { durableCommitError: String(error) }); }
           target.push({ type: 'error', reason: 'aborted', error: aborted });
           return;
         }
@@ -53,7 +60,10 @@ export function wrapDurableModelStream(
             const message = event.type === 'done' ? event.message : event.error;
             attachModelMetering(message, observed.observation);
             Object.assign(message, { assistantMetrics: timing.completed(message, observed.observation) });
-            await commit(message);
+            // The provider's observed result remains true if bookkeeping fails.
+            // The boundary retains a retryable receipt; never replace a known
+            // successful response with an empty synthetic model error.
+            try { await commit(message); } catch (error) { Object.assign(message, { durableCommitError: String(error) }); }
           }
           target.push(event);
         }

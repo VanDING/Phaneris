@@ -72,6 +72,10 @@ export interface ConductorSessionHost {
   getSessionTokenUsage?(sessionId: string): TokenUsage | undefined;
   /** Resolved working directory of a session, so children inherit the orchestrator's cwd. */
   getSessionWorkingDirectory(sessionId: string): string | undefined;
+  /** Resolve an existing child from persisted identity/history, never by replaying its work. */
+  findTaskNodeSession?(input: { workspaceId: string; taskSlug: string; runId: string; nodeId: string; dispatchId: string; sessionId?: string; allowLegacy?: boolean }): Promise<{
+    id: string; hasInput: boolean; processing: boolean; finalText?: string;
+  } | undefined>;
   /** Optional Runtime Host boundary around child-session creation + first dispatch. */
   prepareTaskNodeDispatch?(input: {
     workspaceRoot: string;
@@ -90,8 +94,7 @@ export interface ConductorSessionHost {
     providerToolCallId: string;
     canonicalArgsHash: string;
   }): Promise<void>;
-  /** Canonical TaskRunner fact sink. When present, it is authoritative and is
-   * committed before the JSONL compatibility projection is updated. */
+  /** Task facts are automatically backfilled from the native append-only run journal. */
   commitTaskRunFact?(input: {
     workspaceRoot: string;
     sessionId: string;
@@ -299,6 +302,8 @@ class ActiveRun {
   /** Wall-clock deadline timer for this run (see DEFAULT_RUN_TIMEOUT_MS). */
   private timeoutTimer?: NodeJS.Timeout;
   private factOrdinal = 0;
+  private factEntries: RunLogEntry[] = [];
+  private readonly recoveringNodes = new Set<string>();
   private readonly workingDirectory: string;
   private readonly fileScopes: ReturnType<typeof snapshotFileScopes>;
   private readonly scopeTokens = new Map<string, object>();
@@ -366,7 +371,7 @@ class ActiveRun {
     if (this.runStatus !== 'paused') return;
     // Cancelled nodes return to pending so they re-dispatch. Nodes that exhausted their `retry`
     // budget stay 'failed' — automatic retry happens in failNode within the run, not on resume.
-    for (const [, st] of this.state) if (st.state === 'cancelled') st.state = 'pending';
+    for (const [nodeId, st] of this.state) if (st.state === 'cancelled') { st.state = 'pending'; this.recoveringNodes.add(nodeId); }
     this.runStatus = 'running';
     this.log({ kind: 'run-resumed' });
     this.scheduleReady();
@@ -374,8 +379,7 @@ class ActiveRun {
 
   /**
    * Rebuild run state from a persisted run-log (cross-restart resume). Done nodes reuse their
-   * recorded output and are NOT re-run. In-flight/cancelled nodes remain unknown
-   * and block automatic resume. A done node whose output file is missing falls back to pending.
+   * recorded output and are NOT re-run. Unfinished nodes resume in their existing child.
    */
   hydrate(log: RunLogEntry[], loadOutput: (nodeId: string) => NodeOutput | null): string[] {
     const started = log.find(entry => entry.kind === 'run-started');
@@ -396,6 +400,9 @@ class ActiveRun {
           st.state = 'running';
           st.attempt += 1;
         }
+      } else if (e.kind === 'node-retry') {
+        const st = this.state.get(e.nodeId);
+        if (st) { st.state = 'pending'; st.lastFailure = e.reason; }
       } else if (e.kind === 'node-finished') {
         const st = this.state.get(e.nodeId);
         if (st) {
@@ -413,16 +420,17 @@ class ActiveRun {
         else if (e.result === 'pass') this.unparsedReAsks = 0;
       }
     }
-    this.factOrdinal = log.length;
+    this.factEntries = [...log];
+    this.factOrdinal = 0;
     const recoveryRequired: string[] = [];
     for (const [nodeId, st] of this.state) {
       if (st.state === 'done') {
         const out = this.outputs[nodeId] ?? loadOutput(nodeId);
         if (out) this.outputs[nodeId] = out;
-        else st.state = 'pending'; // recorded output missing → must re-run
+        else { st.state = 'pending'; this.recoveringNodes.add(nodeId); }
       } else if (st.state === 'running' || st.state === 'cancelled') {
-        // A durable scheduling record does not prove whether the child side
-        // effect happened. Never collapse this unknown state back to pending.
+        st.state = 'pending';
+        this.recoveringNodes.add(nodeId);
         recoveryRequired.push(nodeId);
       }
     }
@@ -555,9 +563,9 @@ class ActiveRun {
   private markRunning(node: TaskNode): void {
     const st = this.state.get(node.id)!;
     st.state = 'running';
-    st.attempt += 1;
+    if (!this.recoveringNodes.has(node.id)) st.attempt += 1;
     this.inFlight += 1;
-    this.log({ kind: 'node-scheduled', nodeId: node.id });
+    if (!this.recoveringNodes.has(node.id)) this.log({ kind: 'node-scheduled', nodeId: node.id });
   }
 
   private async dispatch(node: TaskNode): Promise<void> {
@@ -569,16 +577,19 @@ class ActiveRun {
       if (!!prepareDurableDispatch !== !!commitDurableDispatch) {
         throw new Error('task node durable boundary is only partially configured');
       }
-      durableDispatch = await prepareDurableDispatch?.call(this.deps.host, {
+      const st = this.state.get(node.id)!;
+      const dispatchId = `tasknode:${this.slug}:${this.runId}:${node.id}:${st.attempt}`;
+      try { if (!this.recoveringNodes.has(node.id) || !st.sessionId) durableDispatch = await prepareDurableDispatch?.call(this.deps.host, {
         workspaceRoot: this.deps.workspaceRoot,
         taskSlug: this.slug,
         runId: this.runId,
         nodeId: node.id,
         attempt: this.state.get(node.id)!.attempt,
         orchestratorSessionId: this.opts.orchestratorSessionId,
-      });
-      if (durableDispatch && !durableDispatch.created) {
-        throw new Error(`task node ${node.id} already crossed durable T1 and requires recovery`);
+      }); } catch (error) {
+        // Child identity is persisted by createSession before any message is dispatched.
+        // A bookkeeping outage cannot require another copy of the child or stop its work.
+        console.error('[conductor] Task dispatch accounting unavailable; using session identity', error);
       }
       // Task-level skills ride as [skill:slug] mentions on every child prompt — the agent
       // pipeline resolves each SKILL.md and blocks tools until it is read (skills-as-context).
@@ -597,6 +608,7 @@ class ActiveRun {
         taskSlug: this.slug,
         taskRunId: this.runId,
         taskNodeId: node.id,
+        taskNodeDispatchId: dispatchId,
         name: nodeTitle(node),
         model: node.model ?? this.spec.defaults?.model,
         // Required for non-default (e.g. pi/*) models to resolve a backend — without it the
@@ -615,16 +627,29 @@ class ActiveRun {
       };
       // createSession announces the child to the renderer by default, so it nests under the task
       // tile with its real title instead of a fabricated "New Chat" (or never appearing).
-      const child = await this.deps.host.createSession(this.deps.workspaceId, options);
-      const st = this.state.get(node.id)!;
+      const recovered = await this.deps.host.findTaskNodeSession?.({ workspaceId: this.deps.workspaceId, taskSlug: this.slug,
+        runId: this.runId, nodeId: node.id, dispatchId, sessionId: this.recoveringNodes.has(node.id) ? st.sessionId : undefined,
+        allowLegacy: this.recoveringNodes.has(node.id) || durableDispatch?.created === false });
+      const recovering = this.recoveringNodes.has(node.id);
+      const existing = recovered ?? (!this.deps.host.findTaskNodeSession && recovering && st.sessionId ? { id: st.sessionId, hasInput: true, processing: false } : undefined);
+      const previousSessionId = recovering ? st.sessionId : undefined;
+      if (!existing && previousSessionId) options.handoffFromSessionId = previousSessionId;
+      const child = existing ?? await this.deps.host.createSession(this.deps.workspaceId, options);
+      this.recoveringNodes.delete(node.id);
       st.sessionId = child.id;
       this.sessionToNode.set(child.id, node.id);
       this.log({ kind: 'node-spawned', nodeId: node.id, sessionId: child.id });
       if (this.runStatus !== 'running' || st.state !== 'running') { await this.cancelNodeScope(node.id); return; }
       await this.deps.host.setKanbanColumn(child.id, 'in-progress');
-      await this.deps.host.sendMessage(child.id, prompt);
+      if (existing?.finalText !== undefined) {
+        this.onSessionComplete({ sessionId: child.id, workspaceId: this.deps.workspaceId, reason: 'complete', finalText: existing.finalText });
+      } else if (!existing?.processing) {
+        await this.deps.host.sendMessage(child.id, existing?.hasInput || previousSessionId
+          ? `Resume this task from its prior execution${previousSessionId ? ` (session ${previousSessionId})` : ''}. Inspect prior messages, tool results and produced files first. Continue only unfinished work; an interrupted result is unknown, so do not blindly repeat non-idempotent effects.\n\nOriginal task scope:\n${prompt}`
+          : prompt);
+      }
       if (durableDispatch && commitDurableDispatch) {
-        await commitDurableDispatch.call(this.deps.host, {
+        try { await commitDurableDispatch.call(this.deps.host, {
           workspaceRoot: this.deps.workspaceRoot,
           durableSessionId: durableDispatch.durableSessionId,
           childSessionId: child.id,
@@ -632,7 +657,7 @@ class ActiveRun {
           operationId: durableDispatch.operationId,
           providerToolCallId: durableDispatch.providerToolCallId,
           canonicalArgsHash: durableDispatch.canonicalArgsHash,
-        });
+        }); } catch (error) { console.error('[conductor] Child dispatched; its receipt will be recovered from session identity', error); }
         durableCommitted = true;
       }
     } catch (err) {
@@ -1084,16 +1109,17 @@ class ActiveRun {
   private log(entry: RunLogEntryInput): void {
     const t = this.deps.now ? this.deps.now() : new Date().toISOString();
     const committed = { ...entry, t } as RunLogEntry;
-    this.deps.host.commitTaskRunFact?.({
-      workspaceRoot: this.deps.workspaceRoot,
-      sessionId: this.opts.orchestratorSessionId ?? `task:${this.slug}:${this.runId}`,
-      taskSlug: this.slug,
-      runId: this.runId,
-      ordinal: this.factOrdinal,
-      entry: committed,
-    });
-    this.factOrdinal += 1;
-    appendRunLog(this.deps.workspaceRoot, this.slug, this.runId, committed);
+    this.factEntries.push(committed);
+    try { appendRunLog(this.deps.workspaceRoot, this.slug, this.runId, committed); }
+    catch (error) { console.error('[conductor] Native run journal unavailable; retaining task facts', error); }
+    while (this.factOrdinal < this.factEntries.length) {
+      try {
+        this.deps.host.commitTaskRunFact?.({ workspaceRoot: this.deps.workspaceRoot,
+          sessionId: this.opts.orchestratorSessionId ?? `task:${this.slug}:${this.runId}`,
+          taskSlug: this.slug, runId: this.runId, ordinal: this.factOrdinal, entry: this.factEntries[this.factOrdinal]! });
+        this.factOrdinal += 1;
+      } catch (error) { console.error('[conductor] Retaining native task journal for automatic fact backfill', error); break; }
+    }
   }
 
   private async finishNodeAfterOutcomeCheck(nodeId: string, sessionId: string, text: string): Promise<void> {
@@ -1331,8 +1357,12 @@ export class TaskRunner {
       throw new Error(`Cannot resume "${slug}:${runId}": task.yaml is missing or invalid`);
     }
     assertExecutableTask(loaded.spec);
-    const canonicalLog = this.deps.host.listTaskRunFacts?.(this.deps.workspaceRoot, slug, runId) ?? [];
-    const log = canonicalLog.length > 0 ? canonicalLog : readRunLog(this.deps.workspaceRoot, slug, runId);
+    let canonicalLog: RunLogEntry[] = [];
+    try { canonicalLog = this.deps.host.listTaskRunFacts?.(this.deps.workspaceRoot, slug, runId) ?? []; }
+    catch (error) { console.error('[conductor] Reading native task journal while runtime facts recover', error); }
+    const nativeLog = readRunLog(this.deps.workspaceRoot, slug, runId);
+    const log = nativeLog.length >= canonicalLog.length ? nativeLog : canonicalLog;
+    for (const entry of log.slice(nativeLog.length)) appendRunLog(this.deps.workspaceRoot, slug, runId, entry);
     if (log.length === 0) throw new Error(`Cannot resume "${slug}:${runId}": no run-log found`);
     const started = log.find((e) => e.kind === 'run-started');
     const orchestratorSessionId = started && started.kind === 'run-started' ? started.orchestratorSessionId : undefined;
@@ -1343,15 +1373,10 @@ export class TaskRunner {
       { orchestratorSessionId, params: resolveParams(loaded.spec), verifyOnComplete: true },
       this.deps,
     );
-    const recoveryRequired = run.hydrate(
+    run.hydrate(
       log,
       (nodeId) => readNodeOutput(this.deps.workspaceRoot, slug, runId, nodeId),
     );
-    if (recoveryRequired.length > 0) {
-      throw new Error(
-        `Cannot automatically resume "${slug}:${runId}": node outcome is unknown after restart (${recoveryRequired.join(', ')}). Reconcile it before retrying.`,
-      );
-    }
     this.runs.set(this.key(slug, runId), run);
     run.resumeFromHydrated();
     return run.snapshot();

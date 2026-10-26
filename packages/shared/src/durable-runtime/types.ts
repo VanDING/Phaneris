@@ -176,6 +176,8 @@ export interface ToolReconciliationAdapter {
 }
 
 export interface DurableToolPrepareRequest {
+  /** Host-owned continuation/fork lineage within the same workspace. */
+  recoverySessionIds?: readonly string[]
   sessionId: string
   turnId?: string
   runOperationId: string
@@ -213,7 +215,9 @@ export interface DurableToolExecutionIdentity {
 
 export interface DurableToolOutcomeResponse {
   /** Sequence of the last fact atomically committed at T2. */
-  committedSeq: number
+  committedSeq?: number
+  /** Known result retained locally for automatic ledger backfill. */
+  deferred?: true
 }
 
 export interface DurableToolOutcomeRequest {
@@ -273,6 +277,8 @@ export interface NativeRequestObservation {
 }
 
 export interface DurableModelOutcomeRequest {
+  /** Input IDs actually delivered to the native request, not queue receipts. */
+  consumedInputIds?: string[]
   /** Background refresh: independently metered, never model-visible. */
   purpose?: 'cache_warm' | 'decision' | 'image_generation' | 'compaction'
   sessionId: string
@@ -297,7 +303,8 @@ export interface DurableModelOutcomeRequest {
 }
 
 export interface DurableModelOutcomeResponse {
-  committedSeq: number
+  committedSeq?: number
+  deferred?: true
 }
 
 export interface DurableModelBoundary {
