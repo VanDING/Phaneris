@@ -635,7 +635,7 @@ export interface PreToolUseInput {
   hasSourceActivation: boolean;
   /** PermissionManager for session-scoped whitelists */
   permissionManager: PermissionManagerLike;
-  /** PrerequisiteManager for guide.md checking */
+  /** @deprecated Accepted for old embedders; production checks ignore reading gates. */
   prerequisiteManager?: PrerequisiteManagerLike;
   /** Backend metadata (e.g. Pi forwards intent / displayName via input.metadata) */
   backendMetadata?: { intent?: string; displayName?: string };
@@ -658,7 +658,7 @@ export interface PermissionManagerLike {
 }
 
 /**
- * Minimal interface for PrerequisiteManager.
+ * Legacy compatibility shape; task preparation replaced this execution gate.
  */
 export interface PrerequisiteManagerLike {
   checkPrerequisites(toolName: string): PrerequisiteCheckResult;
@@ -718,7 +718,6 @@ export function runPreToolUseChecks(ctx: PreToolUseInput): PreToolUseCheckResult
     allSourceSlugs,
     hasSourceActivation,
     permissionManager,
-    prerequisiteManager,
     backendMetadata,
     onDebug,
   } = ctx;
@@ -779,21 +778,8 @@ export function runPreToolUseChecks(ctx: PreToolUseInput): PreToolUseCheckResult
     }
   }
 
-  // ============================================================
-  // 3. PREREQUISITE CHECK (guide.md before source tools)
-  // ============================================================
-  if (prerequisiteManager) {
-    // A shell read of a guide or skill file (cat, head, sed -n) counts like the Read tool.
-    // Pi's `bash` tool arrives here as "Bash" too (PI_TOOL_NAME_MAP).
-    const prereqResult = toolName === 'Bash' && prerequisiteManager.checkBashPrerequisites
-      ? prerequisiteManager.checkBashPrerequisites(typeof input.command === 'string' ? input.command : '')
-      : toolName === 'Bash' && prerequisiteManager.trackBashSkillRead?.(input)
-        ? { allowed: true }
-        : prerequisiteManager.checkPrerequisites(toolName);
-    if (!prereqResult.allowed) {
-      return { type: 'block', reason: prereqResult.blockReason!, source: 'prerequisite' };
-    }
-  }
+  // Instructions are prepared with the task/capability. Reading history is not
+  // an execution permission; real mode/source checks above remain authoritative.
 
   // ============================================================
   // 4. CALL_LLM / SPAWN_SESSION INTERCEPTION

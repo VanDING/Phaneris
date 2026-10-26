@@ -24,6 +24,16 @@ Default 主题收敛：[2026-10-23 修复与验证](verification/default-theme-r
 
 Harness 审查与实施：[系统职责及审查结论](architecture/model-facing-harness.md)、[2026-10-22 实施记录](process/model-harness-implementation-2026-10-22.md) — 新分支覆盖调用契约、检索、效果排序、任务连续性和 prompt 组装；保留 skill 显式选用设计，真实模型及原生环境验证限制见记录。
 
+Harness 能力影响复审：[2026-10-23 第二轮审查](architecture/harness-capability-review-2026-10-23.md) — 核对常驻工作流、内部工具暴露、结果加工、辅助决策与串行屏障；保存实施前探针与质量消融设计，后续实施见下方记录，尚未证明质量收益。
+
+六个 Harness 对照：[2026-10-23 源码比较与改进方向](architecture/six-harness-comparison-2026-10-23.md) — 固定 Pi、OMP、DSH、OpenCode、Claude 恢复仓库与 Codex 快照；比较设计取舍，复现 Read 二次处理，保存方案依据与实施前状态。
+
+Harness 目标设计：[2026-10-23 系统设计方案](architecture/harness-design-proposal-2026-10-23.md) — 基于六项目洞察，明确 Pi/宿主职责、能力与指导同源、结果及交付契约、连续性、辅助决策、迁移与验收；已授权分支实施，实际状态见下方记录。
+
+Harness 能力实施：[2026-10-23 实施与验收](process/harness-capability-implementation-2026-10-23.md)、[实施前失败矩阵](verification/harness-capability-failure-matrix-2026-10-23.md) — 独立分支已完成结果与交付契约、能力家族和条件指导、输入投递、非阻塞建议与交接连续性；2026-10-24 本地通过 84 个 harness 场景，真实模型质量与发布尚未验证。
+
+Harness 系统演进：[2026-10-25 系统方案](architecture/harness-system-evolution-2026-10-25.md)、[实施记录](process/harness-system-evolution-implementation-2026-10-26.md)、[实施前失败矩阵](verification/harness-system-evolution-failure-matrix-2026-10-26.md) — 2026-10-26 已完成分支实施与本机 132 个 harness 场景，覆盖任务准备、能力暴露、材料操作、原生压缩所有权及长期任务连续性；质量对照与发行边界见实施记录。
+
 会话迟迟不开始：[2026-10-23 六例现场与分析复核](verification/session-start-latency-review-2026-10-23.md) / [修复与 thinking 活动验证](verification/conversation-start-fix-2026-10-23.md) — 修复活动传输、中文缓冲、截图等待及停止后错误结算；API 对超长思考的归因仍待控制实验。
 
 本次专项：[防御逻辑与测试精简治理](process/defensive-code-test-cleanup-2026-10-17.md)。

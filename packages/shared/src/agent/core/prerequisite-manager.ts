@@ -10,13 +10,15 @@
  * - Reset state on context compaction
  */
 
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { basename, isAbsolute, resolve, join } from 'node:path';
 import bashParser from 'bash-parser';
 import { DOCS_DIR } from '../../config/paths.ts';
 import { expandPath } from './path-processor.ts';
 import { getBrowserToolEnabled } from '../../config/appearance.ts';
 import { isBrowserToolNameOrAlias } from '../browser-tool-names.ts';
+import { isDerivedRead, type ToolResultProvenance } from '../tool-result-contract.ts';
 
 // ============================================================
 // Types
@@ -121,8 +123,10 @@ export class PrerequisiteManager {
   private static readonly MAX_REJECTIONS = 1;
 
   private readFiles: Set<string> = new Set();
+  private readRanges = new Map<string, { version: string; total: number; ranges: Array<[number, number]> }>();
   private rejectionCounts: Map<string, number> = new Map();
   private pendingSkillPaths: Set<string> = new Set();
+  private selectedSkillPaths: Set<string> = new Set();
   private workspaceRootPath: string;
   private onDebug?: (message: string) => void;
 
@@ -140,6 +144,7 @@ export class PrerequisiteManager {
     for (const path of paths) {
       const expanded = expandPath(path);
       this.pendingSkillPaths.add(expanded);
+      this.selectedSkillPaths.add(expanded);
       this.onDebug?.(`Prerequisite: registered skill prerequisite ${expanded}`);
     }
   }
@@ -160,7 +165,7 @@ export class PrerequisiteManager {
       const requiredPath = rule.resolveRequiredPath(toolName, this.workspaceRootPath);
       if (!requiredPath) continue; // No guide.md exists, skip
 
-      if (!this.readFiles.has(requiredPath)) {
+      if (!this.hasRead(requiredPath)) {
         const count = (this.rejectionCounts.get(requiredPath) ?? 0) + 1;
         this.rejectionCounts.set(requiredPath, count);
 
@@ -188,10 +193,11 @@ export class PrerequisiteManager {
    * If pending skill paths exist and the tool is NOT a Read targeting one of them, block.
    */
   private checkSkillPrerequisites(toolName: string): PrerequisiteCheckResult {
+    for (const path of this.selectedSkillPaths) if (!this.hasRead(path)) this.pendingSkillPaths.add(path);
     if (this.pendingSkillPaths.size === 0) return { allowed: true };
 
     // Allow Read tool through — trackReadTool will clear the prerequisite
-    if (toolName === 'Read') return { allowed: true };
+    if (['Read', 'Grep', 'Glob', 'LS', 'tool_search', 'report_progress', 'mcp__session__ask_user'].includes(toolName)) return { allowed: true };
 
     const pendingList = [...this.pendingSkillPaths].join(', ');
     const key = `skill:${pendingList}`;
@@ -206,7 +212,7 @@ export class PrerequisiteManager {
 
     // Exceeded max rejections — allow through and clear
     this.onDebug?.(`Skill prerequisite: allowing ${toolName} after ${count} rejections (max reached)`);
-    this.pendingSkillPaths.clear();
+    // A recovery fallback is not proof of delivery. Keep the selected skill pending.
     return { allowed: true };
   }
 
@@ -215,7 +221,33 @@ export class PrerequisiteManager {
    * normalizes it, and adds to the read set.
    * Also clears matching pending skill paths.
    */
-  trackReadTool(toolInput: Record<string, unknown>, resultText?: string): void {
+  trackReadTool(toolInput: Record<string, unknown>, resultText?: string, provenance?: ToolResultProvenance): void {
+    if (provenance) {
+      const { coverage, source, modelView } = provenance;
+      if (!source.sha256 || modelView.kind === 'preview' || coverage.kind === 'unknown') return;
+      const path = source.path ?? toolInput.file_path ?? toolInput.path;
+      if (typeof path !== 'string' || !coverage.totalLines || coverage.startLine === undefined || coverage.endLine === undefined) return;
+      const expanded = expandPath(path);
+      let entry = this.readRanges.get(expanded);
+      if (!entry || entry.version !== source.sha256) {
+        this.readFiles.delete(expanded);
+        entry = { version: source.sha256, total: coverage.totalLines, ranges: [] };
+        this.readRanges.set(expanded, entry);
+      }
+      for (const [alias, record] of this.readRanges) {
+        if (record.version !== source.sha256 || record.total !== coverage.totalLines) continue;
+        record.ranges.push([coverage.startLine, coverage.endLine]);
+        record.ranges.sort((a, b) => a[0] - b[0]);
+        let end = 0;
+        for (const [start, finish] of record.ranges) { if (start > end + 1) break; end = Math.max(end, finish); }
+        if (end >= record.total) this.markRead(alias, 'Read');
+      }
+      return;
+    }
+    if (resultText && isDerivedRead(resultText)) return;
+    // Legacy in-process callers without text retain their explicit acknowledgement API.
+    // A protocol result without provenance cannot establish a complete provider view.
+    if (resultText !== undefined) return;
     // A bounded or ranged read does not establish that the instructions were loaded.
     if (toolInput.limit !== undefined || (typeof toolInput.offset === 'number' && toolInput.offset > 1)) return;
     if (resultText && /\[[^\]\n]*(?:Use offset=\d+ to continue|exceeds[^\]\n]*limit)[^\]\n]*\]/i.test(resultText)) return;
@@ -236,7 +268,7 @@ export class PrerequisiteManager {
 
   /**
    * Check if a Bash command is reading a pending skill file.
-   * If it matches, clear the prerequisite and return true.
+   * A match permits recovery reading, without acknowledging content delivery.
    * Called from the pre-tool-use pipeline to allow targeted Bash reads through.
    */
   trackBashSkillRead(input: Record<string, unknown>): boolean {
@@ -252,9 +284,7 @@ export class PrerequisiteManager {
     for (const path of this.pendingSkillPaths) {
       const normalizedPath = path.replace(/\\/g, '/')
       if (command.includes(path) || normalizedCommand.includes(normalizedPath)) {
-        this.pendingSkillPaths.delete(path);
-        this.readFiles.add(path);
-        this.onDebug?.(`Prerequisite: cleared skill prerequisite via Bash: ${path}`);
+        // Permit a recovery read; command text is not evidence of successful delivery.
         matched = true;
       }
     }
@@ -264,14 +294,16 @@ export class PrerequisiteManager {
   /**
    * Reset read state. Called on context compaction since the LLM
    * loses the guide content and needs to re-read.
-   * Also clears pending skill paths (model lost the directive).
+   * Preserve explicitly selected skills while invalidating their current content.
    */
   resetReadState(): void {
     const count = this.readFiles.size;
     const skillCount = this.pendingSkillPaths.size;
     this.readFiles.clear();
+    this.readRanges.clear();
     this.rejectionCounts.clear();
     this.pendingSkillPaths.clear();
+    for (const path of this.selectedSkillPaths) this.pendingSkillPaths.add(path);
     this.onDebug?.(`Prerequisite: reset read state (cleared ${count} reads, ${skillCount} skill prerequisites)`);
   }
 
@@ -279,7 +311,14 @@ export class PrerequisiteManager {
    * Check if a specific file has been read (for testing).
    */
   hasRead(filePath: string): boolean {
-    return this.readFiles.has(expandPath(filePath));
+    const path = expandPath(filePath);
+    const record = this.readRanges.get(path);
+    if (record && this.readFiles.has(path)) {
+      try {
+        if (createHash('sha256').update(readFileSync(path)).digest('hex') !== record.version) this.readFiles.delete(path);
+      } catch { this.readFiles.delete(path); }
+    }
+    return this.readFiles.has(path);
   }
 
   checkBashPrerequisites(command: string): PrerequisiteCheckResult {
@@ -292,7 +331,8 @@ export class PrerequisiteManager {
   }
 
   trackSuccessfulBashRead(command: string): void {
-    for (const path of getBashReadPaths(command)) this.markRead(path, 'Bash');
+    // Arbitrary shell output has no reliable version/range contract. Use native Read.
+    void command;
   }
 
   private markRead(path: string, via: 'Read' | 'Bash'): void {

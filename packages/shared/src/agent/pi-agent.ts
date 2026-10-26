@@ -119,6 +119,7 @@ import { attachSessionSelfManagementBindings } from './session-self-management-b
 
 // Session tool proxy definitions (for registering with subprocess)
 import { getSessionToolProxyDefs, SESSION_TOOL_NAMES, type SessionToolProxyDef } from './backend/pi/session-tool-defs.ts';
+import { prepareAttachmentMaterials } from './core/task-preparation.ts';
 
 // Session tool registry (for executing proxy tool calls)
 import {
@@ -460,14 +461,12 @@ export class PiAgent extends BaseAgent {
   // This provides a deterministic bridge when side-channel metadata store misses.
   private pendingHostToolRequests = new Map<string, AbortController>();
   private pendingLargeResultFilters = new Map<string, AbortController>();
-  private pendingBashReads = new Map<string, string>();
-  private pendingFileReads = new Map<string, Record<string, unknown>>();
   private pendingSourceDelivery: (() => void) | null = null;
+  private pendingContextDelivery: (() => void) | null = null;
 
   private clearPendingReads(): void {
-    this.pendingBashReads.clear();
-    this.pendingFileReads.clear();
     this.pendingSourceDelivery = null;
+    this.pendingContextDelivery = null;
   }
 
   private preToolMetadataByCallId: Map<string, {
@@ -801,7 +800,7 @@ export class PiAgent extends BaseAgent {
     // These tools (SubmitPlan, config_validate, source auth, call_llm, etc.)
     // are executed in the main process when the LLM calls them.
     this.assertBackendSessionToolParity();
-    let sessionToolDefs = getSessionToolProxyDefs();
+    let sessionToolDefs = getSessionToolProxyDefs(this.config.workspace.rootPath);
 
     // Patch call_llm description with provider-specific model hint
     if (this.config.miniModel) {
@@ -1451,6 +1450,12 @@ export class PiAgent extends BaseAgent {
 
     // Detect session MCP tool completions (same pattern as in-process version)
     const eventType = event.type as string;
+    const response = event.message as { role?: string; stopReason?: string } | undefined;
+    if (eventType === 'message_end' && response?.role === 'assistant'
+      && response.stopReason !== 'error' && response.stopReason !== 'aborted') {
+      this.pendingSourceDelivery?.(); this.pendingSourceDelivery = null;
+      this.pendingContextDelivery?.(); this.pendingContextDelivery = null;
+    }
     // Manual /compact uses an RPC-owned generator rather than the event queue.
     // Its SDK end arrives before compact_result; only the correlated response
     // may report success (including after a timeout/stop discarded the request).
@@ -1496,19 +1501,7 @@ export class PiAgent extends BaseAgent {
     // The event adapter expects typed PiAgentEvent/AgentSessionEvent objects,
     // but since we're receiving plain JSON, we cast through unknown.
     for (const agentEvent of this.adapter.adaptEvent(adaptedEvent as any)) {
-      if (this.pendingSourceDelivery && (agentEvent.type === 'text_delta' || agentEvent.type === 'tool_start' || agentEvent.type === 'text_complete')) {
-        this.pendingSourceDelivery();
-        this.pendingSourceDelivery = null;
-      }
-      if (agentEvent.type === 'tool_start' && agentEvent.toolName === 'Bash') {
-        const command = (agentEvent.input as Record<string, unknown>)?.command;
-        if (typeof command === 'string') this.pendingBashReads.set(agentEvent.toolUseId, command);
-      }
-      // Track Read tool calls for prerequisite checking
-      if (agentEvent.type === 'tool_start' && agentEvent.toolName === 'Read') {
-        this.pendingFileReads.set(agentEvent.toolUseId, agentEvent.input as Record<string, unknown>);
-      }
-      // Reset prerequisite state on compaction (LLM loses guide content)
+      // Reintroduce source state after compaction; preparation restores guidance.
       if (agentEvent.type === 'info' && typeof agentEvent.message === 'string' && agentEvent.message.startsWith('Compacted')) {
         this.resetPrerequisiteState();
         this.clearPendingReads();
@@ -1516,12 +1509,6 @@ export class PiAgent extends BaseAgent {
 
       // Fire PostToolUse / PostToolUseFailure hook events (fire-and-forget)
       if (agentEvent.type === 'tool_result') {
-        const fileRead = this.pendingFileReads.get(agentEvent.toolUseId);
-        this.pendingFileReads.delete(agentEvent.toolUseId);
-        if (!agentEvent.isError && fileRead) this.prerequisiteManager.trackReadTool(fileRead, typeof agentEvent.result === 'string' ? agentEvent.result : undefined);
-        const command = this.pendingBashReads.get(agentEvent.toolUseId);
-        this.pendingBashReads.delete(agentEvent.toolUseId);
-        if (!agentEvent.isError && command) this.prerequisiteManager.trackSuccessfulBashRead(command);
         const hookEvent = agentEvent.isError ? 'PostToolUseFailure' : 'PostToolUse';
         this.emitAutomationEvent(hookEvent, {
           hook_event_name: hookEvent,
@@ -1629,7 +1616,6 @@ export class PiAgent extends BaseAgent {
       allSourceSlugs: this.sourceManager.getAllSources().map(s => s.config.slug),
       hasSourceActivation: !!this.onSourceActivationRequest,
       permissionManager: this.permissionManager,
-      prerequisiteManager: this.prerequisiteManager,
       rtkContext,
       onDebug: (msg) => this.debug(`PreToolUse(sessionId=${sessionId}): ${msg}`),
     });
@@ -1776,17 +1762,6 @@ export class PiAgent extends BaseAgent {
    *   { content: string; isError: boolean }
    */
   private async handleToolExecuteRequest(request: HostToolExecutionRequest): Promise<void> {
-    // Prerequisite check: block source tools until guide.md is read
-    const prereqResult = this.prerequisiteManager.checkPrerequisites(request.toolName);
-    if (!prereqResult.allowed) {
-      this.send({
-        type: 'tool_execute_response',
-        requestId: request.requestId,
-        result: { content: prereqResult.blockReason!, isError: true },
-      });
-      return;
-    }
-
     const epoch = this.subprocessEpoch;
     const abort = new AbortController();
     this.pendingHostToolRequests.set(request.requestId, abort);
@@ -2698,7 +2673,8 @@ export class PiAgent extends BaseAgent {
       );
 
       // Build context from sources
-      const sourceDelivery = this.sourceManager.prepareSourceState();
+      const materialBudget = Math.floor((options?.taskPreparation?.budgetChars ?? 16_000) / 2);
+      const sourceDelivery = this.sourceManager.prepareSourceState(materialBudget);
       const sourceContext = sourceDelivery.content;
       this.pendingSourceDelivery = sourceDelivery.acknowledge;
 
@@ -2765,6 +2741,8 @@ export class PiAgent extends BaseAgent {
       const userParts = [
         ...volatileParts,
         ...attachmentParts,
+        prepareAttachmentMaterials(attachments ?? [], materialBudget),
+        options?.taskPreparation?.instructions,
         message,
       ].filter(Boolean);
       const userMessage = userParts.join('\n\n');
@@ -2776,14 +2754,15 @@ export class PiAgent extends BaseAgent {
         this.debug(`Canonical model context unavailable; retaining Pi context: ${error instanceof Error ? error.message : String(error)}`);
       }
 
-      // Adaptive thinking affects only the subprocess turn, never the stored setting.
-      if (options?.thinkingOverride && THINKING_LEVEL_IDS.indexOf(options.thinkingOverride) < THINKING_LEVEL_IDS.indexOf(this.getThinkingLevel())) {
+      // An explicit turn choice affects the subprocess, never the stored setting.
+      if (options?.thinkingOverride && options.thinkingOverride !== this.getThinkingLevel()) {
         this.send({ type: 'set_thinking_level', level: options.thinkingOverride });
       }
 
       // Send prompt to subprocess
       const turnId = `turn-${++this.rpcIdCounter}`;
       this.activePromptInputId = options?.inputId ?? turnId;
+      this.pendingContextDelivery = options?.onContextDelivered ?? null;
       this.send({
         type: 'prompt',
         id: this.activePromptInputId,
@@ -2792,6 +2771,8 @@ export class PiAgent extends BaseAgent {
         durableRunOperationId: options?.durableRunOperationId,
         durableTurnId: options?.durableTurnId,
         canonicalContext,
+        taskPreparation: { instructions: options?.taskPreparation?.instructions ?? '',
+          capabilityFamilies: options?.taskPreparation?.capabilityFamilies ?? [], sourceSlugs: [...this.sourceManager.getActiveSlugs()], sourceContext },
         images: images.length > 0 ? images : undefined,
       });
 
@@ -2865,6 +2846,8 @@ export class PiAgent extends BaseAgent {
       if (options?.thinkingOverride && this.subprocess) {
         this.send({ type: 'set_thinking_level', level: this.getThinkingLevel() });
       }
+      this.pendingContextDelivery = null;
+      this.pendingSourceDelivery = null;
       this._isProcessing = false;
     }
   }

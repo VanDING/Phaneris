@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "workflow": "harness-execution-readiness",
+  "startedAt": "2026-10-26T00:58:18.972Z",
+  "finishedAt": "2026-10-26T00:58:19.980Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\harness-execution-readiness-workflow.ts"
+  ],
+  "source": {
+    "headSha": "ab0282111938bc169cf952dbf00b1a868f384036",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+      " M docs/README.md",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M packages/core/src/types/message.ts",
+      " M packages/pi-agent-server/src/context-policy-stream.ts",
+      " M packages/pi-agent-server/src/index.ts",
+      " M packages/pi-agent-server/src/messages.ts",
+      " M packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      " M packages/pi-agent-server/src/request-diagnostics.ts",
+      " M packages/pi-agent-server/src/tool-discovery.ts",
+      " M packages/pi-agent-server/src/tool-execution-scheduler.ts",
+      " M packages/pi-agent-server/src/tool-result-view.ts",
+      " M packages/server-core/src/services/artifact-preview.ts",
+      " M packages/server-core/src/sessions/SessionManager.ts",
+      " M packages/server-core/src/sessions/agent-assembly.ts",
+      " M packages/server-core/src/sessions/agent-product-callbacks.ts",
+      " M packages/session-tools-core/src/context.ts",
+      " M packages/session-tools-core/src/handlers/get-session-info.ts",
+      " M packages/session-tools-core/src/index.ts",
+      " M packages/session-tools-core/src/tool-defs.ts",
+      " M packages/shared/package.json",
+      " M packages/shared/src/agent/backend/types.ts",
+      " M packages/shared/src/agent/base-agent.ts",
+      " M packages/shared/src/agent/core/pre-tool-use.ts",
+      " M packages/shared/src/agent/core/source-manager.ts",
+      " M packages/shared/src/agent/pi-agent.ts",
+      " M packages/shared/src/agent/session-scoped-tool-callback-registry.ts",
+      " M packages/shared/src/agent/session-self-management-bindings.ts",
+      " M packages/shared/src/agent/tool-result-contract.ts",
+      " M packages/shared/src/decisions/resolve.ts",
+      " M packages/shared/src/decisions/settings.ts",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M packages/shared/src/prompts/assistant-prompt.ts",
+      " M packages/shared/src/prompts/capability-guidance.ts",
+      " M packages/shared/src/prompts/system.ts",
+      " M packages/shared/src/skills/storage.ts",
+      " M packages/shared/src/skills/types.ts",
+      " M scripts/verification/model-harness-pi-workflow.ts",
+      " M scripts/verification/packaged-client-verification.mjs",
+      "?? docs/architecture/harness-system-evolution-2026-10-25.md",
+      "?? docs/verification/harness-system-evolution-failure-matrix-2026-10-26.md",
+      "?? packages/pi-agent-server/src/request-capacity.ts",
+      "?? packages/shared/src/agent/core/task-continuity.ts",
+      "?? packages/shared/src/agent/core/task-preparation.ts",
+      "?? scripts/verification/harness-continuity-workflow.ts",
+      "?? scripts/verification/harness-execution-readiness-workflow.ts",
+      "?? scripts/verification/harness-materials-workflow.ts",
+      "?? scripts/verification/harness-system-ready-pi-workflow.ts"
+    ],
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+        "sha256": "4d806f8989e77bf2970f3feb6e11312a5709e6fb6cf949ed7f25f165a4925beb"
+      },
+      {
+        "path": "docs/README.md",
+        "sha256": "0208ac255953a9f23b731d18a0d9e85446c5c35c4df324492fd5a4c0e936c953"
+      },
+      {
+        "path": "docs/architecture/harness-system-evolution-2026-10-25.md",
+        "sha256": "2ece753e92de61b762e2d4108dfeff14d7fbf69817f8ade7d6d5ccf262269746"
+      },
+      {
+        "path": "docs/verification/harness-system-evolution-failure-matrix-2026-10-26.md",
+        "sha256": "cae3c7018be125fe4bad76f7e3f9542a957fc52cd83f74709c6f269892b804ac"
+      },
+      {
+        "path": "packages/core/src/types/message.ts",
+        "sha256": "6377e6f8f444b90c38d351ea35165fdfa9fb4bce2f01eb34867d36bd2d140cd6"
+      },
+      {
+        "path": "packages/pi-agent-server/src/context-policy-stream.ts",
+        "sha256": "4660c6a235788247db485357979385e824f8990464d09d6d2fe55940c1f4e0dc"
+      },
+      {
+        "path": "packages/pi-agent-server/src/index.ts",
+        "sha256": "da4c392a1d6b6a564a4596fff054115c474755060e8f5eeac81bcf5f247d7489"
+      },
+      {
+        "path": "packages/pi-agent-server/src/messages.ts",
+        "sha256": "8f88971898769e097f3b2dc89b3b18e21e92f6a6147ab50444df29d4efd3e40e"
+      },
+      {
+        "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+        "sha256": "48833b83c016b3bd03e5c6e1b22b52232c2f90de1f1a72daedb6cafe4683864d"
+      },
+      {
+        "path": "packages/pi-agent-server/src/request-capacity.ts",
+        "sha256": "3c92ef263a1aeb7689aed1538331a930c951cbc11c4b55605a98f5b7437efb3e"
+      },
+      {
+        "path": "packages/pi-agent-server/src/request-diagnostics.ts",
+        "sha256": "d8392f74c33cd1cc0c14bf67733b3ecf66849cba585ca9248b6e3beb0d7acfa4"
+      },
+      {
+        "path": "packages/pi-agent-server/src/tool-discovery.ts",
+        "sha256": "af8eeb0b6210c9d2a2213977a5a4cddbe3ddef3d4eea95efeaa1ee0d4e0b7c43"
+      },
+      {
+        "path": "packages/pi-agent-server/src/tool-execution-scheduler.ts",
+        "sha256": "988d07330ec2adaf1b6cc291ed0c946266bb8498431738344d30c2baa500ab38"
+      },
+      {
+        "path": "packages/pi-agent-server/src/tool-result-view.ts",
+        "sha256": "331e452ac8857bb5b3086f310f944ca3c41ab9920b6980fcf3184f6714d6f4c9"
+      },
+      {
+        "path": "packages/server-core/src/services/artifact-preview.ts",
+        "sha256": "4fd47df122f0b25cddd5a46d7f6e5d0a66c8fe046f681dec7f62fe0102f7478d"
+      },
+      {
+        "path": "packages/server-core/src/sessions/SessionManager.ts",
+        "sha256": "1907724e3da178a735fdda3aa8bf9bff029a05bbe1a1b9876862fc619afe0f1b"
+      },
+      {
+        "path": "packages/server-core/src/sessions/agent-assembly.ts",
+        "sha256": "43f918ad983b806a06c879c08bdb9bb288fb305bc8ee72ec54521f06dce650f5"
+      },
+      {
+        "path": "packages/server-core/src/sessions/agent-product-callbacks.ts",
+        "sha256": "65851fee70920e325917a001cabcb0afbedb5cca2b604a0f4db50820a194e6c9"
+      },
+      {
+        "path": "packages/session-tools-core/src/context.ts",
+        "sha256": "f8c19be629c872f88e42a04806bc32f092c91aad7b839eaf9c7647a44c749e2e"
+      },
+      {
+        "path": "packages/session-tools-core/src/handlers/get-session-info.ts",
+        "sha256": "f5856b353ef61a7b00e35c7a3ee75b8b6a180abd7b51760d4be2c12873927683"
+      },
+      {
+        "path": "packages/session-tools-core/src/index.ts",
+        "sha256": "9e4e7ed4d3f31a6ac0432255fce97c86e3febfabcd5968ad5d42d3283d9879c3"
+      },
+      {
+        "path": "packages/session-tools-core/src/tool-defs.ts",
+        "sha256": "5567e350ff63639d87857b5f523740b956c18d3686b3fee37614263a4a0b5bef"
+      },
+      {
+        "path": "packages/shared/package.json",
+        "sha256": "85d15f0cc58fcc56210155cdacabc19367255a27b5b6a3a4700fa4d8da5688c7"
+      },
+      {
+        "path": "packages/shared/src/agent/backend/types.ts",
+        "sha256": "753ebd946c15262a5a9dce3651457193f9d5a77d1179528998a0582e473ec452"
+      },
+      {
+        "path": "packages/shared/src/agent/base-agent.ts",
+        "sha256": "42caba7bb05b52d7a63d91eb1bf3b1f1f9ef1e5c0ca481e3f15dd368162aa57e"
+      },
+      {
+        "path": "packages/shared/src/agent/core/pre-tool-use.ts",
+        "sha256": "74173eeb4c8abfc1dfca8bd417aaa80b8acfcdf1a4424cb061058ac69415f0a5"
+      },
+      {
+        "path": "packages/shared/src/agent/core/source-manager.ts",
+        "sha256": "2e24cbc483ce482e3be0ae1622d25bb7c5365b76343d44008c93c69c45a045a0"
+      },
+      {
+        "path": "packages/shared/src/agent/core/task-continuity.ts",
+        "sha256": "5de0312ff0a0f90aa9ce03d1d0e147a5380bba2b8279e74d4b9e62bbd8c25017"
+      },
+      {
+        "path": "packages/shared/src/agent/core/task-preparation.ts",
+        "sha256": "980ac01e9829a33d7f8e291d81f5a0852ee333987cfe2f98cc075b39e9e3b30d"
+      },
+      {
+        "path": "packages/shared/src/agent/pi-agent.ts",
+        "sha256": "bf9c1eedd0bbb71744dc76101ee676aa563ea4b66dc0c8219a93e9ae0ddb2e09"
+      },
+      {
+        "path": "packages/shared/src/agent/session-scoped-tool-callback-registry.ts",
+        "sha256": "00b8180d512aff61ea2206f691345d16905f5d1b34ce0a04013c163cc722ea08"
+      },
+      {
+        "path": "packages/shared/src/agent/session-self-management-bindings.ts",
+        "sha256": "a68fa41f6587e49c6acdd8e24c699777fc2ac3682677ab2886bcdfcc87a1ed68"
+      },
+      {
+        "path": "packages/shared/src/agent/tool-result-contract.ts",
+        "sha256": "132bce4fe80ee1e4a5ba744260266bbbabba1eef05d6d0f635ea5939488a34b5"
+      },
+      {
+        "path": "packages/shared/src/decisions/resolve.ts",
+        "sha256": "4cb5197cc90528c4ac87136f75eb4255406cd2549c235c8fd06594b66fc45c8d"
+      },
+      {
+        "path": "packages/shared/src/decisions/settings.ts",
+        "sha256": "1b5348729c43e6de30e32f9707b0386fd4f1f032c35ef78e9dc99ac40c686a8f"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "bd463a82d2bb9cc3b8878e97c5d0de04bff62156afab698fb3dc880ee0277f91"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "e0bd3fa3729de16d227e2f8573d8e6c4dd5aee7a9ef83384f5df097b94913294"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "4a915b14bf81ed8aaf1a93d235da189ca8486ac888cbc578f8c87623d3efd6a8"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "53fdd258e1aa1c25abf0cb0147fa37158b5c49f3bf0f306335c1849f944b5fc1"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "9a32cd99ea48295467f2b49afe9ae327460280a5c61dd8fce9a58d5c4f146a46"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "a2c3f08e9ddfce552ab530ce9668cc8a19a232897473eda11573191c57c0fbd5"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "662c40570d1365b1eea022c71f44a606c7456bdc7b0a1e41dec1243f185a8848"
+      },
+      {
+        "path": "packages/shared/src/prompts/assistant-prompt.ts",
+        "sha256": "aa54d1c20f67fe3dda33a2a9c5bfc9203b1e0426a4dc31068186749113f10c37"
+      },
+      {
+        "path": "packages/shared/src/prompts/capability-guidance.ts",
+        "sha256": "6b72042c97907ea01869f05f4332e56a13ee7d9467c87884c962dcb18a428f2c"
+      },
+      {
+        "path": "packages/shared/src/prompts/system.ts",
+        "sha256": "1fc50c1f649e8425b6059575a7a34d9628d849ffae289844aaaff682ee6269fb"
+      },
+      {
+        "path": "packages/shared/src/skills/storage.ts",
+        "sha256": "60d0c7e444128d04ff464aa5d248276d3b5dda0de5977f1d188c862c4b05fdcb"
+      },
+      {
+        "path": "packages/shared/src/skills/types.ts",
+        "sha256": "20d7477066e6364d44f652828e247e15e20556ef2c0100cde50c484c110e2ba1"
+      },
+      {
+        "path": "scripts/verification/harness-continuity-workflow.ts",
+        "sha256": "06acca752aee46a29ea2f0da4633bd5eae810feb79b0ec80642cb7c3ccd30e0a"
+      },
+      {
+        "path": "scripts/verification/harness-execution-readiness-workflow.ts",
+        "sha256": "4cc39e293cd896dd917613cd61c32eae1018cd7a7e9753ccaa4c426610105672"
+      },
+      {
+        "path": "scripts/verification/harness-materials-workflow.ts",
+        "sha256": "45ddc1d8db8ffff145b9d49b6c7c9b6ebd7a2369616d8c78c6faccbd257216ff"
+      },
+      {
+        "path": "scripts/verification/harness-system-ready-pi-workflow.ts",
+        "sha256": "347cd427a0e375ae43d048b5a3f6aa4267b7e9f6b43bd1ad2d0fa392c3b96cfd"
+      },
+      {
+        "path": "scripts/verification/model-harness-pi-workflow.ts",
+        "sha256": "abd5bca288505fb88e0b8af6ecc59d25d00277ea3477f8a024068d62343fa192"
+      },
+      {
+        "path": "scripts/verification/packaged-client-verification.mjs",
+        "sha256": "fda94624cb3ef4adbbed81a1987df6af370f3b3f03e0b4d16d40f8f996b80c10"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [],
+  "passed": 0,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "failure.json",
+      "sha256": "34842135bc2af9e4f0773d860fa32a8128c60a56956a94201cce4e78111b3bea",
+      "bytes": 427
+    },
+    {
+      "path": "files/a.txt",
+      "sha256": "2687f86ed6784b8a5fca36e6c468e12aa44dc3c7e8137e3160d1a95079bdcd02",
+      "bytes": 8
+    },
+    {
+      "path": "files/b.txt",
+      "sha256": "27eb5e51506c911f6fc4bb345c0d9db6f60415fceab7c18e1e9b862637415777",
+      "bytes": 7
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

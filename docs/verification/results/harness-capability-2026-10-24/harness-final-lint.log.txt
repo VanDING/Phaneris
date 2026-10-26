@@ -1,0 +1,104 @@
+$ bun run lint:workspace && bun run lint:transition-all && bun run lint:runtime-boundary && bun run lint:architecture && bun run lint:automation-events && bun run check:themes && bun run check:visual-contracts && bun run check:scale-contract && bun run audit:scale && bun run check:design-drift && bun run check:file-size && bun run audit:ui-merge && bun run check:contrast-floor && bun run check:governance && bun run check:ipc && bun run check:boundaries && bun run check:cycles && bun run check:rpc-contracts && bun run check:distribution
+$ bun run scripts/lint-workspace.ts
+warning: in the working copy of 'packages/shared/src/agent/backend/pi/session-tool-defs.ts', CRLF will be replaced by LF the next time Git touches it
+Workspace lint OK: 2445 files, 24 registered warnings
+$ bun run scripts/check-transition-all.ts
+transition-all: clean (1035 files scanned)
+$ bun run scripts/check-runtime-boundary.ts
+{
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-10-23T22:10:50.786Z",
+  "scannedFiles": 1601,
+  "violationCount": 0,
+  "violations": []
+}
+$ bun run scripts/check-architecture.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-23T22:10:53.330Z",
+  "scannedFiles": 1601,
+  "webuiClosureSize": 801,
+  "webuiShimCount": 4,
+  "inspected": {
+    "webui-unshimmed-node": 8,
+    "undeclared-subpath-import": 1273
+  },
+  "baselineSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "currentSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "failures": []
+}
+$ bun run scripts/check-automation-events.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-23T22:10:53.755Z",
+  "vocabularySize": 13,
+  "emittedCount": 5,
+  "unemittedCount": 8,
+  "emitted": {},
+  "unemitted": [
+    "Notification",
+    "PermissionRequest",
+    "PreCompact",
+    "SessionEnd",
+    "SessionStart",
+    "Setup",
+    "SubagentStart",
+    "SubagentStop"
+  ],
+  "failures": []
+}
+$ bun run scripts/generate-theme-contract.ts --check
+Theme contract verified: 39 fields, 1 built-ins, 65 Shiki themes.
+$ bun run scripts/check-visual-contracts.ts
+Visual contracts OK: four domains, 502 explicit legacy findings, no new debt.
+$ bun run scripts/check-scale-contract.ts
+Scale contract OK: fontSize 7 tiers, radius 5 tiers, controlHeight 6 tiers; DESIGN.md, tokens, allowlist and tree agree.
+$ bun run scripts/measure-scale-drift.ts
+fontSize: 0 sites / 0 values
+
+radius: 2 sites / 1 values
+  2px(2)
+controlHeight: 50 sites / 23 values
+  1px(1) 2px(3) 6px(1) 12px(8) 15px(1) 16px(2) 18px(1) 24px(1) 32px(1) 44px(1) 48px(1) 50px(4) 88px(1) 120px(1) 180px(1) 200px(1) 240px(8) 260px(1) 300px(2) 320px(3) 400px(5) 460px(1) 600px(1)
+width(informational): 42 sites
+css font-size: 1 sites; css radius: 0 sites
+  font 16px(1)
+files scanned: 807 (playground excluded: 70)
+Report mode: counts are informational and never fail CI.
+$ bun run scripts/check-design-drift.ts
+Design drift OK: 6 counters at or below baseline; 2 motion utilities all consumed.
+$ bun run scripts/check-file-size.ts
+can tighten — packages/ui/src/components/chat/TurnCard.tsx: 3037 lines, budget 3043 — tighten to 3037
+can tighten — apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx: 2469 lines, budget 2473 — tighten to 2469
+File-size ratchet OK: 7 files within budget (threshold 1200 lines).
+$ bun run scripts/audit-ui-merge.ts
+files scanned: 775
+tiers registered: micro, meta, label, body, reading, title, display, glyph-watermark, glyph-avatar
+Merge layer OK: every literal keeps its contract font-size tier.
+$ bun run scripts/check-contrast-floor.ts
+58 colour pairs across 1 built-in themes.
+  tightest: default light destructive-text / worst surface and 20% wash = 4.51:1 (floor 4.5)
+  tightest: default light success-text / worst surface and 20% wash = 4.53:1 (floor 4.5)
+  tightest: default dark accent-text / worst surface and 20% wash = 4.53:1 (floor 4.5)
+  tightest: default light info-text / worst surface and 20% wash = 4.54:1 (floor 4.5)
+  tightest: default light accent-text / worst surface and 20% wash = 4.54:1 (floor 4.5)
+Contrast floor OK: no built-in pair below its WCAG threshold.
+$ bun run scripts/check-governance.ts
+Governance wiring OK: 13 members, 4 tooling projects; uv and artifact pins checked
+$ bun run scripts/ipc-inventory.ts
+IPC compatibility fixture OK: 428 literal channels
+$ bun run scripts/check-governance-boundaries.ts
+Governance boundaries OK: 1601 modules; 9176 references; 8 pure entries; one config writer
+$ bun run scripts/check-cycles.ts
+Runtime cycles OK: 1601 modules; 3 exact reviewed compositions; new/changed/stale edges fail
+$ bun run scripts/contract-inventory.ts
+RPC contracts OK: 428 channels; 52 validated input contracts
+$ bun run scripts/check-distribution.ts
+Distribution inputs OK: Bun 1.4.3; 13 workspaces; 3 patches before install

@@ -1,0 +1,3746 @@
+[
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": false,
+    "feedback": false,
+    "decide": false,
+    "sha256": "3430d9763b9377543de96a25a2642d80f7402f8bdedc5d3c0fbd48c8111f91ca",
+    "characters": 22986,
+    "currentSha256": "8c60b58adf83437d7058b789bc9fa0ddf11c45708a5d6328ff31831bccb2c087",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2477,
+        "sha256": "c26c8afbf1b666eb7369285fac188ab1e3209b6fd967a5ca7dc5b100dab7bee0"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": false,
+    "feedback": false,
+    "decide": true,
+    "sha256": "946c73060c8a36478d5a273ce6a99750e2ec391a9a7763537aee1e09f02f5a80",
+    "characters": 24409,
+    "currentSha256": "a8d0913a6e77a063745154cd9e39707c04ea2e0633e0697ffc406b0de0db0de5",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2585,
+        "sha256": "b9d8d30c62ca28d6d8cc0180cece1215e8d69242f4c32da26452320d2dad9065"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": false,
+    "feedback": true,
+    "decide": false,
+    "sha256": "9a7f40ff412f31714da71266ac15fd7e91bf2f397cf9d64735aa254df45aeaf3",
+    "characters": 23283,
+    "currentSha256": "e99e23584327d9c197610cc87efb60b9bfca09013a017f5afbde67da95213637",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2477,
+        "sha256": "c26c8afbf1b666eb7369285fac188ab1e3209b6fd967a5ca7dc5b100dab7bee0"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": false,
+    "feedback": true,
+    "decide": true,
+    "sha256": "035b8699a965bc3cbc01b7bbe9f08fcafeadd14f7a4c1167c15fc7b6abad0197",
+    "characters": 24706,
+    "currentSha256": "5451d4120665f914058e0eedef332669fdbaf532272173e6f2b1c4158d7889e4",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2585,
+        "sha256": "b9d8d30c62ca28d6d8cc0180cece1215e8d69242f4c32da26452320d2dad9065"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": true,
+    "feedback": false,
+    "decide": false,
+    "sha256": "3669dfa6d62252dfd649775d2403448dd48740cbd8a60b6178fe6733610efff9",
+    "characters": 23521,
+    "currentSha256": "dcd95f6904d728f058fe21f9b0f210cb181814f6706c84757ca7608a0952d82b",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2570,
+        "sha256": "c94e71614885eedd12033b5e3718332af288651ff34096b85df32aafef997106"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": true,
+    "feedback": false,
+    "decide": true,
+    "sha256": "66773c8b17825f455495588338f48f6f3f4d5a37b9f393da8580ae5d73038793",
+    "characters": 24944,
+    "currentSha256": "a88f76cab665f9340105fc619babf787dc961d61f0b984760212d6b4d7244a9a",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2678,
+        "sha256": "19f566f3b13f2a6023d3d7b3baf9560ad27bf05e0e1e2689d50874446d86866e"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": true,
+    "feedback": true,
+    "decide": false,
+    "sha256": "727b04762a04c2bd9f48c9b5a4339ecb659bca3a53b470ff9fbaa6c9f824c144",
+    "characters": 23818,
+    "currentSha256": "4d9a73e59c9ae94ffc877cb5a28c05aaa2f262e98d2399cf4ca2332c7fa1d401",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2570,
+        "sha256": "c94e71614885eedd12033b5e3718332af288651ff34096b85df32aafef997106"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": false,
+    "cli": true,
+    "feedback": true,
+    "decide": true,
+    "sha256": "3c1bf178866594dbcb5a4456f613d39ff6d88c9ff536a4b4b1882e42c8ced8eb",
+    "characters": 25241,
+    "currentSha256": "fddd26183483838c67cf786d50617ca268cabac1b09fa3e7d40ae6fd36e7d468",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2678,
+        "sha256": "19f566f3b13f2a6023d3d7b3baf9560ad27bf05e0e1e2689d50874446d86866e"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": false,
+    "feedback": false,
+    "decide": false,
+    "sha256": "652ed6c17206ccab8f591be33761c9fc16db678a3af17b775198b33ceac48efa",
+    "characters": 23953,
+    "currentSha256": "fadd99f176e0223a8558379589c635447fd721d2abe448bbe055143eac8f872a",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2552,
+        "sha256": "d2f98621c5ea8bfbaacde2cc272f1d2f73daf3c47fcdff4a01e96503e1ed04d8"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": false,
+    "feedback": false,
+    "decide": true,
+    "sha256": "64bb8d872a3ec35baecdf6a1386845f2ad9a85af9debd5a6391d49fc3b40d58c",
+    "characters": 25376,
+    "currentSha256": "0c1fd238c80aefd557fef7441c2bdc7639e15a87110ca821ba2b0c2ad45eb5a6",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2660,
+        "sha256": "e2a6e22a14e7319f1492e5cbf92fcb348551d3c90efd19d60a58778d1ebd808c"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": false,
+    "feedback": true,
+    "decide": false,
+    "sha256": "115ecb467fca70d44fc59685ed0dc48d8c96c67e1daa7e169401e8054d2553c0",
+    "characters": 24250,
+    "currentSha256": "e9e38769f4cc79c0e64ff0f723bcfacf2c7f3b6c58823a352614b42c63aa5ce5",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2552,
+        "sha256": "d2f98621c5ea8bfbaacde2cc272f1d2f73daf3c47fcdff4a01e96503e1ed04d8"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": false,
+    "feedback": true,
+    "decide": true,
+    "sha256": "bbba8d946ba62daad68f8b09741126e9f7111c6aa7c634ef93d92817e6fd219c",
+    "characters": 25673,
+    "currentSha256": "8598f59e4280f2d2089087bf51e2ae84a6bfafe261cd5285883f2e3ee6640c73",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2660,
+        "sha256": "e2a6e22a14e7319f1492e5cbf92fcb348551d3c90efd19d60a58778d1ebd808c"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": true,
+    "feedback": false,
+    "decide": false,
+    "sha256": "e0b376cb9b6bf8cadd3fb09aeebb2b5404b8e0c40ca880e19e0c9ecfbc2f5cd5",
+    "characters": 24488,
+    "currentSha256": "db5b5ed611c68f36638b9726b14f5eab3203fc6e111820ff2cd9f22a5542d1f6",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2645,
+        "sha256": "cba38c5ee68027f5a4a8aaba43b2a287f5b02cc576cf8ac413ef0dffcc9cdc48"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": true,
+    "feedback": false,
+    "decide": true,
+    "sha256": "9181810a3dcb52fb64e678dd465d25a88873abb9f62592a02ebb667f164021d7",
+    "characters": 25911,
+    "currentSha256": "1ef349fa92a2243c8feca49ddf908dcc89cdc80ebb9e7738d242286edc95c9bd",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2753,
+        "sha256": "612fe33a15d3b21c1d123beba29d6b11a9cff8aab2b54f9db18c05aca2334dde"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": true,
+    "feedback": true,
+    "decide": false,
+    "sha256": "2aa0b99a842b969ce15b052a3c5bbc097cc825719609551ee5ae4068bc145e5c",
+    "characters": 24785,
+    "currentSha256": "e743e31fd3ec30033c0995ebb160e024dc75571fd76ce010f2323b18de818ed0",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2645,
+        "sha256": "cba38c5ee68027f5a4a8aaba43b2a287f5b02cc576cf8ac413ef0dffcc9cdc48"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "win32",
+    "browser": true,
+    "cli": true,
+    "feedback": true,
+    "decide": true,
+    "sha256": "894e677cf653700db567e3348c7927d15b21e8e69659df5832a0d852859cd5e5",
+    "characters": 26208,
+    "currentSha256": "346189ffcf869365d6e0b335fca9577b4a403b20ab9aebb11ad4e96ccfeee5fd",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1946,
+        "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2753,
+        "sha256": "612fe33a15d3b21c1d123beba29d6b11a9cff8aab2b54f9db18c05aca2334dde"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": false,
+    "feedback": false,
+    "decide": false,
+    "sha256": "c77d0b2a7bb96d42726aec194b97e5e1e76bbb295680117b726814185d93294d",
+    "characters": 22743,
+    "currentSha256": "044f7f2fc9baa60161fce681efa6585f8a87194a4495f3653b8afb1624e978b3",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2477,
+        "sha256": "c26c8afbf1b666eb7369285fac188ab1e3209b6fd967a5ca7dc5b100dab7bee0"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": false,
+    "feedback": false,
+    "decide": true,
+    "sha256": "13dde461d0b0ca9947245e3d86add10608a9e2207a0e472ea6a44214c66f4a63",
+    "characters": 24166,
+    "currentSha256": "6002c63a14c499aa7e76f0051f93aa73eb5a229655b5dcf80c54cfb6068dc013",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2585,
+        "sha256": "b9d8d30c62ca28d6d8cc0180cece1215e8d69242f4c32da26452320d2dad9065"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": false,
+    "feedback": true,
+    "decide": false,
+    "sha256": "46b1d1d29a2eee30cddb0d94db9235813a9c6e1280ed72628a6999b75d0fec5b",
+    "characters": 23040,
+    "currentSha256": "089c7ef691e9f305b77978aba77df760bf4a6e1db07fc5d453680f4e60da28a3",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2477,
+        "sha256": "c26c8afbf1b666eb7369285fac188ab1e3209b6fd967a5ca7dc5b100dab7bee0"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": false,
+    "feedback": true,
+    "decide": true,
+    "sha256": "b5041a380dbbb1e6fbfebdbc93f6b8443edd197306ffb6c309a55599da2185dc",
+    "characters": 24463,
+    "currentSha256": "5f7a4e5d56ef650d5203c6fd5353d2e1b14b71bee7a7f87a751b275f8e6ca383",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2585,
+        "sha256": "b9d8d30c62ca28d6d8cc0180cece1215e8d69242f4c32da26452320d2dad9065"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": true,
+    "feedback": false,
+    "decide": false,
+    "sha256": "c570f2fc1dc23c49808dd3167ed9c19dcdd4ba487f8953c5ec1f6b5f604713ad",
+    "characters": 23278,
+    "currentSha256": "14e16ddb0b14aa8d75e1767d22083cb26f2c9672600a751b4c36d23099d09ddf",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2570,
+        "sha256": "c94e71614885eedd12033b5e3718332af288651ff34096b85df32aafef997106"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": true,
+    "feedback": false,
+    "decide": true,
+    "sha256": "86a3c46bb8dbed56aab1577b578f12fc8e540bd01d94f990722f6f09bd4c122b",
+    "characters": 24701,
+    "currentSha256": "8426b78e38001a17c095bdc8d67b7167b89e07403e636a619047e0207ecd7f6c",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2678,
+        "sha256": "19f566f3b13f2a6023d3d7b3baf9560ad27bf05e0e1e2689d50874446d86866e"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": true,
+    "feedback": true,
+    "decide": false,
+    "sha256": "f69c231b3c6ecec073c1af219697516be547eb7fe7440134a2dd133b9ae4f80c",
+    "characters": 23575,
+    "currentSha256": "b966a86951dc591c4c10323ad9bcaa646d7092a591d3014f9d97f22ba19dabea",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2570,
+        "sha256": "c94e71614885eedd12033b5e3718332af288651ff34096b85df32aafef997106"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": false,
+    "cli": true,
+    "feedback": true,
+    "decide": true,
+    "sha256": "32fbe4669068449048d5c5396c7021f90832b65d73bda7cea79ba361b95950c0",
+    "characters": 24998,
+    "currentSha256": "b098b32395cf30fab7506f794d362573a2da29cd5efde6fb85c7eb07fec0a481",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2678,
+        "sha256": "19f566f3b13f2a6023d3d7b3baf9560ad27bf05e0e1e2689d50874446d86866e"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": false,
+    "feedback": false,
+    "decide": false,
+    "sha256": "0695d56c5a1c541eeeb3d28ac2aa683f653cccdc001840bb937dc74973dccb15",
+    "characters": 23710,
+    "currentSha256": "7a52e4096e33f906ff20a04059180265fedda46c6c6bee2a05c1e195a07822a1",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2552,
+        "sha256": "d2f98621c5ea8bfbaacde2cc272f1d2f73daf3c47fcdff4a01e96503e1ed04d8"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": false,
+    "feedback": false,
+    "decide": true,
+    "sha256": "667e8709587209324aca64d145cc48e3a5edb8a3b87a22e087c41d5680b13d04",
+    "characters": 25133,
+    "currentSha256": "17bdc127b03745ba711bd23dccb6782ebe0befe3f5f2f5090d7394abef6188fb",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2660,
+        "sha256": "e2a6e22a14e7319f1492e5cbf92fcb348551d3c90efd19d60a58778d1ebd808c"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": false,
+    "feedback": true,
+    "decide": false,
+    "sha256": "7c134baeefe3a646e3c9926751f2c193b6f568102fe9d5a02b199cacfa84a3b7",
+    "characters": 24007,
+    "currentSha256": "f55c2ef13498bce07cf7497d4f3946436264de90d1628a9efbc0cfdc9672576d",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2552,
+        "sha256": "d2f98621c5ea8bfbaacde2cc272f1d2f73daf3c47fcdff4a01e96503e1ed04d8"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": false,
+    "feedback": true,
+    "decide": true,
+    "sha256": "7f932995dcbae6b9cf12dc186d603237365ca6d3fae2c9c4170447bb22c4a954",
+    "characters": 25430,
+    "currentSha256": "d90ccda8cdf6c3c9c4d7de38d96c93cacc8cfce20c697b877dcdc9a5dd735413",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2660,
+        "sha256": "e2a6e22a14e7319f1492e5cbf92fcb348551d3c90efd19d60a58778d1ebd808c"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": true,
+    "feedback": false,
+    "decide": false,
+    "sha256": "9f9b7799e91e89175ebc24e074b1700c1aca3e40b51048f0cf22655634625f06",
+    "characters": 24245,
+    "currentSha256": "ffb00f81409ae814a13be1532add740d84a667380272eb78c52b9fec2e5f7dad",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2645,
+        "sha256": "cba38c5ee68027f5a4a8aaba43b2a287f5b02cc576cf8ac413ef0dffcc9cdc48"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": true,
+    "feedback": false,
+    "decide": true,
+    "sha256": "68f127461be7d867ecb645aff4fbcdfa57564d53cde9cffb56e84b1e0369cc53",
+    "characters": 25668,
+    "currentSha256": "063028b3da816e00747d8bd91492a31689ccf8a282dca61325853c6ed2a68871",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2753,
+        "sha256": "612fe33a15d3b21c1d123beba29d6b11a9cff8aab2b54f9db18c05aca2334dde"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": true,
+    "feedback": true,
+    "decide": false,
+    "sha256": "80ba6558d06b13e20ba0879d34bb69b227ca8e3aa3836603f8e70ad639990fdf",
+    "characters": 24542,
+    "currentSha256": "e6eba62d2fa328d9b6d3128ed086a4ac284cde4beb84865ade71801c1f0c19da",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2645,
+        "sha256": "cba38c5ee68027f5a4a8aaba43b2a287f5b02cc576cf8ac413ef0dffcc9cdc48"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "linux",
+    "browser": true,
+    "cli": true,
+    "feedback": true,
+    "decide": true,
+    "sha256": "f0ac4a8a03bac921e1ebc104f6d452b011c071e3b8865e3e020391440b254fe3",
+    "characters": 25965,
+    "currentSha256": "5c350b8e7b84d67656d5440fc0e5a56ccc963d1047cb1bf70a2d8c39a967520d",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2753,
+        "sha256": "612fe33a15d3b21c1d123beba29d6b11a9cff8aab2b54f9db18c05aca2334dde"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": false,
+    "feedback": false,
+    "decide": false,
+    "sha256": "c77d0b2a7bb96d42726aec194b97e5e1e76bbb295680117b726814185d93294d",
+    "characters": 22743,
+    "currentSha256": "044f7f2fc9baa60161fce681efa6585f8a87194a4495f3653b8afb1624e978b3",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2477,
+        "sha256": "c26c8afbf1b666eb7369285fac188ab1e3209b6fd967a5ca7dc5b100dab7bee0"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": false,
+    "feedback": false,
+    "decide": true,
+    "sha256": "13dde461d0b0ca9947245e3d86add10608a9e2207a0e472ea6a44214c66f4a63",
+    "characters": 24166,
+    "currentSha256": "6002c63a14c499aa7e76f0051f93aa73eb5a229655b5dcf80c54cfb6068dc013",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2585,
+        "sha256": "b9d8d30c62ca28d6d8cc0180cece1215e8d69242f4c32da26452320d2dad9065"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": false,
+    "feedback": true,
+    "decide": false,
+    "sha256": "46b1d1d29a2eee30cddb0d94db9235813a9c6e1280ed72628a6999b75d0fec5b",
+    "characters": 23040,
+    "currentSha256": "089c7ef691e9f305b77978aba77df760bf4a6e1db07fc5d453680f4e60da28a3",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2477,
+        "sha256": "c26c8afbf1b666eb7369285fac188ab1e3209b6fd967a5ca7dc5b100dab7bee0"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": false,
+    "feedback": true,
+    "decide": true,
+    "sha256": "b5041a380dbbb1e6fbfebdbc93f6b8443edd197306ffb6c309a55599da2185dc",
+    "characters": 24463,
+    "currentSha256": "5f7a4e5d56ef650d5203c6fd5353d2e1b14b71bee7a7f87a751b275f8e6ca383",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2585,
+        "sha256": "b9d8d30c62ca28d6d8cc0180cece1215e8d69242f4c32da26452320d2dad9065"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": true,
+    "feedback": false,
+    "decide": false,
+    "sha256": "c570f2fc1dc23c49808dd3167ed9c19dcdd4ba487f8953c5ec1f6b5f604713ad",
+    "characters": 23278,
+    "currentSha256": "14e16ddb0b14aa8d75e1767d22083cb26f2c9672600a751b4c36d23099d09ddf",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2570,
+        "sha256": "c94e71614885eedd12033b5e3718332af288651ff34096b85df32aafef997106"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": true,
+    "feedback": false,
+    "decide": true,
+    "sha256": "86a3c46bb8dbed56aab1577b578f12fc8e540bd01d94f990722f6f09bd4c122b",
+    "characters": 24701,
+    "currentSha256": "8426b78e38001a17c095bdc8d67b7167b89e07403e636a619047e0207ecd7f6c",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2678,
+        "sha256": "19f566f3b13f2a6023d3d7b3baf9560ad27bf05e0e1e2689d50874446d86866e"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": true,
+    "feedback": true,
+    "decide": false,
+    "sha256": "f69c231b3c6ecec073c1af219697516be547eb7fe7440134a2dd133b9ae4f80c",
+    "characters": 23575,
+    "currentSha256": "b966a86951dc591c4c10323ad9bcaa646d7092a591d3014f9d97f22ba19dabea",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2570,
+        "sha256": "c94e71614885eedd12033b5e3718332af288651ff34096b85df32aafef997106"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 1130,
+        "sha256": "1e6ebcee23c217c0a46a6474a63670cd524e0bab9fbab04f669c42e2e37ef355"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": false,
+    "cli": true,
+    "feedback": true,
+    "decide": true,
+    "sha256": "32fbe4669068449048d5c5396c7021f90832b65d73bda7cea79ba361b95950c0",
+    "characters": 24998,
+    "currentSha256": "b098b32395cf30fab7506f794d362573a2da29cd5efde6fb85c7eb07fec0a481",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2678,
+        "sha256": "19f566f3b13f2a6023d3d7b3baf9560ad27bf05e0e1e2689d50874446d86866e"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2445,
+        "sha256": "ed6b592564a62f22302d11f0c41b640afaa1b53e103ec31f429a377f1fb3df71"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": false,
+    "feedback": false,
+    "decide": false,
+    "sha256": "0695d56c5a1c541eeeb3d28ac2aa683f653cccdc001840bb937dc74973dccb15",
+    "characters": 23710,
+    "currentSha256": "7a52e4096e33f906ff20a04059180265fedda46c6c6bee2a05c1e195a07822a1",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2552,
+        "sha256": "d2f98621c5ea8bfbaacde2cc272f1d2f73daf3c47fcdff4a01e96503e1ed04d8"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": false,
+    "feedback": false,
+    "decide": true,
+    "sha256": "667e8709587209324aca64d145cc48e3a5edb8a3b87a22e087c41d5680b13d04",
+    "characters": 25133,
+    "currentSha256": "17bdc127b03745ba711bd23dccb6782ebe0befe3f5f2f5090d7394abef6188fb",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2660,
+        "sha256": "e2a6e22a14e7319f1492e5cbf92fcb348551d3c90efd19d60a58778d1ebd808c"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": false,
+    "feedback": true,
+    "decide": false,
+    "sha256": "7c134baeefe3a646e3c9926751f2c193b6f568102fe9d5a02b199cacfa84a3b7",
+    "characters": 24007,
+    "currentSha256": "f55c2ef13498bce07cf7497d4f3946436264de90d1628a9efbc0cfdc9672576d",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2552,
+        "sha256": "d2f98621c5ea8bfbaacde2cc272f1d2f73daf3c47fcdff4a01e96503e1ed04d8"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": false,
+    "feedback": true,
+    "decide": true,
+    "sha256": "7f932995dcbae6b9cf12dc186d603237365ca6d3fae2c9c4170447bb22c4a954",
+    "characters": 25430,
+    "currentSha256": "d90ccda8cdf6c3c9c4d7de38d96c93cacc8cfce20c697b877dcdc9a5dd735413",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2660,
+        "sha256": "e2a6e22a14e7319f1492e5cbf92fcb348551d3c90efd19d60a58778d1ebd808c"
+      },
+      {
+        "id": "resources",
+        "characters": 2341,
+        "sha256": "319966fdf6f5f9430c10f5fdf867df7360e0f472749cf2ca256b86ee53221666"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": true,
+    "feedback": false,
+    "decide": false,
+    "sha256": "9f9b7799e91e89175ebc24e074b1700c1aca3e40b51048f0cf22655634625f06",
+    "characters": 24245,
+    "currentSha256": "ffb00f81409ae814a13be1532add740d84a667380272eb78c52b9fec2e5f7dad",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2645,
+        "sha256": "cba38c5ee68027f5a4a8aaba43b2a287f5b02cc576cf8ac413ef0dffcc9cdc48"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": true,
+    "feedback": false,
+    "decide": true,
+    "sha256": "68f127461be7d867ecb645aff4fbcdfa57564d53cde9cffb56e84b1e0369cc53",
+    "characters": 25668,
+    "currentSha256": "063028b3da816e00747d8bd91492a31689ccf8a282dca61325853c6ed2a68871",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2753,
+        "sha256": "612fe33a15d3b21c1d123beba29d6b11a9cff8aab2b54f9db18c05aca2334dde"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 906,
+        "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": true,
+    "feedback": true,
+    "decide": false,
+    "sha256": "80ba6558d06b13e20ba0879d34bb69b227ca8e3aa3836603f8e70ad639990fdf",
+    "characters": 24542,
+    "currentSha256": "e6eba62d2fa328d9b6d3128ed086a4ac284cde4beb84865ade71801c1f0c19da",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2645,
+        "sha256": "cba38c5ee68027f5a4a8aaba43b2a287f5b02cc576cf8ac413ef0dffcc9cdc48"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 2022,
+        "sha256": "80af1c6d5d9245f1237d3b8072b4f329fad7b4cf6014fd1e11c9a521e6ccad8e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  },
+  {
+    "platform": "darwin",
+    "browser": true,
+    "cli": true,
+    "feedback": true,
+    "decide": true,
+    "sha256": "f0ac4a8a03bac921e1ebc104f6d452b011c071e3b8865e3e020391440b254fe3",
+    "characters": 25965,
+    "currentSha256": "5c350b8e7b84d67656d5440fc0e5a56ccc963d1047cb1bf70a2d8c39a967520d",
+    "reviewedChange": "question-dismissal",
+    "modules": [
+      {
+        "id": "identity",
+        "characters": 211,
+        "sha256": "fbba1dec2b8de6d2d2921eb37c141387de1c45c24da643d7fedb869d831939bb"
+      },
+      {
+        "id": "execution-contract",
+        "characters": 1703,
+        "sha256": "265dd46d0b48106ad9b1e521ebc34026b924c4c00320484d71f229a1358627fd"
+      },
+      {
+        "id": "permissions",
+        "characters": 2432,
+        "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+      },
+      {
+        "id": "recovery",
+        "characters": 1353,
+        "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+      },
+      {
+        "id": "documentation-routing",
+        "characters": 2753,
+        "sha256": "612fe33a15d3b21c1d123beba29d6b11a9cff8aab2b54f9db18c05aca2334dde"
+      },
+      {
+        "id": "resources",
+        "characters": 2783,
+        "sha256": "38815bf502baa6196815708f07ad9769039b7b0616d67dfef898d4f3644f5a7b"
+      },
+      {
+        "id": "secondary-models",
+        "characters": 3337,
+        "sha256": "da3d798922fbaa9b66813c0d6d82780778c2992e3e685fdb723de24156bd434e"
+      },
+      {
+        "id": "deliverables",
+        "characters": 2599,
+        "sha256": "41d2a9db5ea2e2ea5684941a4349be0b5df41ed831feaa9a9b119661200167a5"
+      },
+      {
+        "id": "automations",
+        "characters": 615,
+        "sha256": "84fd7dfb10a5570ba78dfb8fedfa3d07312f8fdac6368efb6ad71eff64923a7d"
+      },
+      {
+        "id": "pages",
+        "characters": 903,
+        "sha256": "309d08c5646aec2d64897146520860e21064c5cfcc859c315a3623d536cfe564"
+      },
+      {
+        "id": "questions",
+        "characters": 1567,
+        "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+      },
+      {
+        "id": "session-management",
+        "characters": 4619,
+        "sha256": "65572812c6d57d9207514f639e3aaf854496b350622ac495d11f59046bc2e0b8"
+      },
+      {
+        "id": "communication",
+        "characters": 1203,
+        "sha256": "34bd0828d72d789560df727e7a8aa0050f1f2b710088c73f80fd03f5fde15825"
+      }
+    ]
+  }
+]

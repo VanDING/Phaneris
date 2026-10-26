@@ -1,34 +1,11 @@
 import type { StreamFn } from '@earendil-works/pi-agent-core'
 import { createAssistantMessageEventStream, getCurrentTools, type AssistantMessage, type TranscriptContext } from '@earendil-works/pi-ai'
-import { calculateContextTokens, estimateTokens } from '@earendil-works/pi-coding-agent'
+import { requestCapacity } from './request-capacity'
 import { contextHandoffBudget, HANDOFF_INSTRUCTION, validateHandoffDocument, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 
 export type HandoffSignal = { phase: 'generating' | 'ready' | 'failed'; document?: string; error?: string }
 
 /** Occupancy of the exact prefix the provider is about to receive. */
-function measureContext(messages: TranscriptContext['messages']): number {
-  let billedTokens = 0
-  let lastUsage = -1
-  for (let index = messages.length - 1; index >= 0; index--) {
-    const message = messages[index]!
-    if (message.role !== 'assistant') continue
-    if (message.stopReason === 'error' || message.stopReason === 'aborted') continue
-    const tokens = calculateContextTokens(message.usage)
-    if (tokens <= 0) continue
-    billedTokens = tokens
-    lastUsage = index
-    break
-  }
-  // The last billed request already covered everything before it, system prompt
-  // and tool declarations included; only the messages appended since need
-  // estimating. Without a usable usage, estimate the whole prefix.
-  let used = billedTokens
-  for (let index = lastUsage + 1; index < messages.length; index++) {
-    used += estimateTokens(messages[index]!)
-  }
-  return used
-}
-
 /**
  * Runs at the actual provider boundary: every request — first and follow-up,
  * after each tool batch — passes through here, so a handoff starts as soon as
@@ -39,6 +16,8 @@ export function createContextPolicyStream(
   policy: () => ContextPolicy,
   notify: (signal: HandoffSignal) => void,
   consumeForcedHandoff: () => boolean,
+  reserveTokens: () => number | undefined = () => undefined,
+  nativeTokens: () => number | null | undefined = () => undefined,
 ): StreamFn {
   let previousUsed = 0
   return (model, context, options) => {
@@ -48,12 +27,13 @@ export function createContextPolicyStream(
     const active = forced ? 'handoff' : policy()
     if (active === 'compact') return stream(model, context, options)
     const currentTools = getCurrentTools(context.messages)
-    const used = measureContext(context.messages)
+    const capacity = requestCapacity(model, context, reserveTokens(), nativeTokens())
+    const used = capacity.usedTokens
     const growth = previousUsed > 0 ? Math.max(0, used - previousUsed) : 0
     previousUsed = used
     const budget = contextHandoffBudget(model.contextWindow, used, model.maxTokens, growth)
     const handoff = active === 'handoff' && (forced || used >= budget.triggerTokens)
-    const manualFull = active === 'manual' && used + Math.min(model.maxTokens, 8192) + 2048 >= model.contextWindow
+    const manualFull = active === 'manual' && capacity.availableInputTokens <= 2048
     if (!handoff && !manualFull) return stream(model, context, options)
 
     const target = createAssistantMessageEventStream()

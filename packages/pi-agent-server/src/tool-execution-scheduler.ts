@@ -80,6 +80,7 @@ interface Waiting {
   signal?: AbortSignal;
   start(): void;
   cancel(): void;
+  ready: boolean;
 }
 
 /** In-process ordering through T2. Durable recovery owns unknown/cross-process effects. */
@@ -87,9 +88,9 @@ export class ToolExecutionScheduler {
   private readonly running = new Set<Waiting>();
   private readonly waiting: Waiting[] = [];
 
-  run<T>(resources: readonly ToolResource[], signal: AbortSignal | undefined, execute: () => Promise<T>): Promise<T> {
+  run<T>(resources: readonly ToolResource[], signal: AbortSignal | undefined, execute: () => Promise<T>, prepare?: () => Promise<void>): Promise<T> {
     if (signal?.aborted) return Promise.reject(signal.reason);
-    if (!resources.length) return execute();
+    if (!resources.length) return Promise.resolve().then(() => { signal?.throwIfAborted(); return prepare?.(); }).then(() => { signal?.throwIfAborted(); return execute(); });
     return new Promise<T>((resolveResult, reject) => {
       const abort = () => {
         const index = this.waiting.indexOf(job);
@@ -100,7 +101,7 @@ export class ToolExecutionScheduler {
         this.drain();
       };
       const job: Waiting = {
-        resources, signal, cancel: abort,
+        resources, signal, cancel: abort, ready: !prepare,
         start: () => {
           signal?.removeEventListener('abort', abort);
           this.running.add(job);
@@ -115,6 +116,16 @@ export class ToolExecutionScheduler {
       };
       signal?.addEventListener('abort', abort, { once: true });
       this.waiting.push(job);
+      if (prepare) void Promise.resolve().then(() => { signal?.throwIfAborted(); return prepare(); }).then(() => {
+        job.ready = true;
+        this.drain();
+      }, error => {
+        const index = this.waiting.indexOf(job);
+        if (index >= 0) this.waiting.splice(index, 1);
+        signal?.removeEventListener('abort', abort);
+        reject(error);
+        this.drain();
+      });
       this.drain();
     });
   }
@@ -123,6 +134,7 @@ export class ToolExecutionScheduler {
     for (let index = 0; index < this.waiting.length;) {
       const job = this.waiting[index]!;
       if (job.signal?.aborted) { job.cancel(); continue; }
+      if (!job.ready) { index++; continue; }
       const blocked = [...this.running].some(active => conflict(active.resources, job.resources))
         || this.waiting.slice(0, index).some(earlier => conflict(earlier.resources, job.resources));
       if (blocked) { index++; continue; }

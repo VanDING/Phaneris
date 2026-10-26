@@ -3,6 +3,7 @@ import type { ThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
 import type { SessionAgentCallbacks } from './agent-assembly'
 import type { SessionTaskContext } from '@phaneris/shared/sessions'
 import { buildSessionTaskContext } from './agent-product-context'
+import { projectTaskContinuity, type TaskInput, type TaskArtifact } from '@phaneris/shared/agent/task-continuity'
 
 export interface AgentProductView extends SessionTaskContext {
   readonly id: string
@@ -16,7 +17,7 @@ export interface AgentProductView extends SessionTaskContext {
   readonly transferredSessionSummary?: string
   readonly transferredSessionSummaryApplied?: boolean
   readonly thinkingLevel?: ThinkingLevel
-  readonly messages: readonly { readonly role: string; readonly content: string; readonly isIntermediate?: boolean }[]
+  readonly messages: readonly TaskInput[]
 }
 type ProductPatch = Partial<Pick<AgentProductView, 'sdkSessionId' | 'branchFromSdkSessionId' | 'branchFromSdkCwd'
   | 'branchFromSdkTurnId' | 'branchSeedApplied' | 'transferredSessionSummaryApplied' | 'thinkingLevel'>>
@@ -28,6 +29,7 @@ export interface AgentProductPorts {
   thinkingChanged(level: ThinkingLevel): void
   log(message: string, details?: unknown): void
   error(message: string, error: unknown): void
+  artifacts?(): readonly TaskArtifact[]
 }
 
 export function createSessionAgentCallbacks(ports: AgentProductPorts): Omit<SessionAgentCallbacks, 'onImageResize'> {
@@ -40,6 +42,8 @@ export function createSessionAgentCallbacks(ports: AgentProductPorts): Omit<Sess
     .map(message => ({ type: message.role as 'user' | 'assistant', content: message.content }))
   return {
     getSessionTaskContext: () => buildSessionTaskContext(ports.read()),
+    getTaskContinuityContext: budget => projectTaskContinuity({ task: buildSessionTaskContext(ports.read()),
+      messages: ports.read().messages, artifacts: ports.artifacts?.() }, budget),
     onSdkSessionIdUpdate(sdkSessionId) {
       const view = ports.read()
       ports.patch({ sdkSessionId, ...(view.branchFromSdkSessionId ? {

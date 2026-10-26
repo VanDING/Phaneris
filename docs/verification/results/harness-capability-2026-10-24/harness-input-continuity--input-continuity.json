@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "HC09 real host returns before held optional decision response",
+    "HC09 suggestions remain UI-only with no implicit skill activation",
+    "HC09 real host preserves steer/queue preference while legacy classification is enabled",
+    "HC09 advice based on an earlier user revision is discarded",
+    "HC12 host continuity preserves original corrections, scope and task criteria",
+    "HC12 real successor creation preserves task fields and forwards late correction",
+    "HC15 an overconfident finished classifier does not close an unverified session"
+  ],
+  "requests": 3,
+  "advice": [
+    {
+      "type": "info",
+      "sessionId": "261024-witty-storm",
+      "message": "<system-reminder>A quick check by the decision model suggests this request may need the skill \"research\" (slug: research). If it applies, read E:\\Phaneris\\.cache\\verification\\harness-input-continuity-f4SCFJ\\workspace\\skills\\research\\SKILL.md first and follow it. Ignore this if it does not fit.</system-reminder>",
+      "level": "info"
+    }
+  ],
+  "seed": "Continue the user's unfinished task automatically from the handoff below. Do not ask them to repeat it. Preserve the existing permission boundaries. Verify uncertain external effects before repeating them.\n\nOriginal session: 261024-witty-storm\nPrevious session: 261024-witty-storm\nFull history: E:\\Phaneris\\.cache\\verification\\harness-input-continuity-f4SCFJ\\workspace\\sessions\\261024-witty-storm\\session.jsonl\nHandoff file: handoff.md\nEarlier handoffs in this chain: E:\\Phaneris\\.cache\\verification\\harness-input-continuity-f4SCFJ\\workspace\nWorking directory: \nActive plugin: none\n\n# New user messages received during handoff\nKeep chapter three. Only change the conclusion.\n\n# Host continuity records\nThese are copied product/user records, not generated acceptance evidence. Omitted bodies remain in the original history. Preserve the latest user corrections over the handoff narrative.\n{\"task\":{\"description\":\"Research report\",\"acceptanceCriteria\":\"Check citations\"},\"messages\":[{\"id\":\"approval\",\"content\":\"Plan approved: original immutable scope hash ABC.\"},{\"id\":\"late\",\"content\":\"Keep chapter three. Only change the conclusion.\"}]}\n\nGenerated narrative",
+  "scope": "Real host decision scheduling and SQLite accounting; handoff seed contract, not live model quality"
+}

@@ -6,6 +6,8 @@
 
 **本文件是实施裁定、收口状态与后续条件事项的唯一当前入口。** 已接受的架构、制作指南、所有权清单和验收规范继续有效；历史规划中的“下一步”、工期、OPEN 和旧版本缺口不再自动生成待办。
 
+2026-10-26 用户明确授权[Harness 系统演进方案](../architecture/harness-system-evolution-2026-10-25.md)实施。独立分支 `codex/harness-system-evolution` 基于 `ab0282111` 完成任务准备、能力暴露、材料反馈、共同容量口径、原生压缩所有权、接续与执行链收敛，本机 132 个 harness 场景及静态门禁通过；记录见[实施与验证边界](harness-system-evolution-implementation-2026-10-26.md)与[事先失败矩阵](../verification/harness-system-evolution-failure-matrix-2026-10-26.md)。未合并或发布，真实模型质量尚未对照；不重开通用评测平台、多代理控制面或自动语义干预项目。
+
 2026-10-15 用户批准的 Craft 0.15.0 / 0.15.1 非 UI 吸收已完成 B1–B6。[实施记录](../verification/upstream-0.15-non-ui-implementation-2026-10-15.md)及[机器结果](../verification/results/upstream-0.15-non-ui-2026-10-15.json)记录 33 项新增流程通过、静态门禁与生产构建通过，以及全量旧测试未全绿的明确限制；实施遵循[事先失败矩阵](../verification/upstream-0.15-non-ui-failure-matrix-2026-10-15.md)。保留现有 Pi 1.2.0 与视觉体系；不重开已关闭的原生 MCP 全面替换、Claude SDK、网关或通用记忆系统计划。
 
 2026-10-16 用户批准的 G01–G08 存量治理已实施并完成本机验证：[实施报告](../verification/project-governance-implementation-2026-10-16.md)记录会话存储/删除、用量提交、搜索、MCP 和页面生命周期修复。完整测试现为 6,301 pass / 0 fail / 7 skip，原有 26 个失败归零；首导航超预算和 Windows server 分发限制仍保留。六个既有文档索引问题已按用户后续授权删除过期图标说明后消除，文档检查现已通过。

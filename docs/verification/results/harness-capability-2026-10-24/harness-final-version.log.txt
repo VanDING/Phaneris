@@ -1,0 +1,2 @@
+$ bun run scripts/check-versions.ts
+Version OK — 0.4.0 across 27 declarations (13 workspace packages).

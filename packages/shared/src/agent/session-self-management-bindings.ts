@@ -41,6 +41,10 @@ export function attachSessionSelfManagementBindings(
     get: () => getSessionScopedToolCallbacks(sessionId)?.appendProjectMemoryFn,
     configurable: true, enumerable: true,
   });
+  Object.defineProperty(context, 'readSessionMessages', {
+    get: () => getSessionScopedToolCallbacks(sessionId)?.readSessionMessagesFn,
+    configurable: true, enumerable: true,
+  });
   Object.defineProperty(context, 'mcpSources', {
     get: () => getSessionScopedToolCallbacks(sessionId)?.mcpSources,
     configurable: true, enumerable: true,

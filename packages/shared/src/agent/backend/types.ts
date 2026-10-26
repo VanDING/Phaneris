@@ -267,6 +267,7 @@ export interface CoreBackendConfig {
 
   /** Live product task projection. This port supplies data, never runtime authority. */
   getSessionTaskContext?: () => import('../../sessions/types.ts').SessionTaskContext | undefined;
+  getTaskContinuityContext?: (budgetChars?: number) => import('../core/task-continuity.ts').TaskContinuityContext;
 
   /**
    * Get ALL parent messages for branch fork fallback (not limited to 6).
@@ -321,12 +322,17 @@ export interface CoreBackendConfig {
 export interface ChatOptions {
   /** Original durable input identity, preserved across transport acknowledgements. */
   inputId?: string;
+  selectedSkillSlugs?: string[];
+  /** Internal host callback; preparing context alone must not consume one-shot facts. */
+  onContextDelivered?: () => void;
   /** Retry flag (internal use for session recovery) */
   isRetry?: boolean;
   /** Override thinking level for this message only */
   thinkingOverride?: ThinkingLevel;
   /** Host guidance for this turn only, outside the durable user message. */
   turnContext?: string;
+  /** Host-prepared instructions and explicitly selected installed capability families. */
+  taskPreparation?: { instructions: string; capabilityFamilies: string[]; sourceContext?: string; budgetChars?: number };
   /** Durable parent operation for this accepted unit of agent work. */
   durableRunOperationId?: string;
   /** Stable product turn identity used by durable projections. */

@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "workflow": "model-harness-contract",
+  "startedAt": "2026-10-23T22:14:07.960Z",
+  "finishedAt": "2026-10-23T22:14:08.430Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\model-harness-contract-workflow.ts"
+  ],
+  "source": {
+    "headSha": "df397f88025231d8494f56d6555a271bab0b71e4",
+    "dirtyPaths": [
+      "M apps/electron/resources/docs/decisions.md",
+      " M apps/electron/resources/release-notes/next.md",
+      " M apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+      " M docs/README.md",
+      " M docs/architecture/model-facing-harness.md",
+      " M docs/guides/pi-kernel.md",
+      " M package.json",
+      " M packages/pi-agent-server/src/canonical-model-context.ts",
+      " M packages/pi-agent-server/src/index.ts",
+      " M packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      " M packages/pi-agent-server/src/request-diagnostics.ts",
+      " M packages/pi-agent-server/src/tool-discovery.ts",
+      " M packages/server-core/src/decisions/suggestions.ts",
+      " M packages/server-core/src/sessions/SessionManager.ts",
+      " M packages/session-tools-core/src/tool-defs.ts",
+      " M packages/shared/package.json",
+      " M packages/shared/src/agent/backend/pi/protocol.ts",
+      " M packages/shared/src/agent/backend/pi/session-tool-defs.ts",
+      " M packages/shared/src/agent/context-policy.ts",
+      " M packages/shared/src/agent/core/prerequisite-manager.ts",
+      " M packages/shared/src/agent/pi-agent.ts",
+      " M packages/shared/src/decisions/settings.ts",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M packages/shared/src/mcp/mcp-pool.ts",
+      " M packages/shared/src/prompts/assistant-prompt.ts",
+      " M packages/shared/src/prompts/system.ts",
+      " M packages/shared/src/sources/api-tools.ts",
+      " M packages/shared/src/utils/large-response.ts",
+      " M scripts/verification/harness-prompt-assembly-workflow.ts",
+      " M scripts/verification/model-harness-pi-workflow.ts",
+      "?? docs/architecture/harness-capability-review-2026-10-23.md",
+      "?? docs/architecture/harness-design-proposal-2026-10-23.md",
+      "?? docs/architecture/six-harness-comparison-2026-10-23.md",
+      "?? docs/process/harness-capability-implementation-2026-10-23.md",
+      "?? docs/verification/harness-capability-failure-matrix-2026-10-23.md",
+      "?? packages/pi-agent-server/src/tool-result-view.ts",
+      "?? packages/shared/src/agent/tool-result-contract.ts",
+      "?? scripts/verification/harness-capability-workflow.ts",
+      "?? scripts/verification/harness-input-continuity-workflow.ts"
+    ],
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
+    "changedFiles": [
+      {
+        "path": "apps/electron/resources/docs/decisions.md",
+        "sha256": "600d538e92fa28c8dae6e506885159013b6ea446eea493205fc33750cadcf380"
+      },
+      {
+        "path": "apps/electron/resources/release-notes/next.md",
+        "sha256": "1fe5aae272394d3198c87e04826ede1f0b3dd9229d954708d204436da5a1796e"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+        "sha256": "5491311b946f041ab22b8e5b0db11b91f2f0b3388884fc6e39368990cdfbe14d"
+      },
+      {
+        "path": "docs/README.md",
+        "sha256": "57d6c9391d85290c5e438a0dc1b2ebb272c31e65021d9777f3f9444f4338a881"
+      },
+      {
+        "path": "docs/architecture/harness-capability-review-2026-10-23.md",
+        "sha256": "f60b271a89c89128d0fc5f09a813173aece9833fcc553959171deefd0ae0a5ae"
+      },
+      {
+        "path": "docs/architecture/harness-design-proposal-2026-10-23.md",
+        "sha256": "41006d8dfb846f80741582c29383df595e31e37fd27c239d589f23f2dca7706d"
+      },
+      {
+        "path": "docs/architecture/model-facing-harness.md",
+        "sha256": "3f195d277842ced604c4e84d12e8f5bc8cadc34868fa2bae48c8ed840ae228c2"
+      },
+      {
+        "path": "docs/architecture/six-harness-comparison-2026-10-23.md",
+        "sha256": "10c2ba3b1fa91b5bda3fa6fe61eabf897967f0d5b728913bc7f2bb1f2073cb30"
+      },
+      {
+        "path": "docs/guides/pi-kernel.md",
+        "sha256": "19f37d7aca196ed2c1c42de0139d4d08e65da0798d9e5492abadfe0f388008ef"
+      },
+      {
+        "path": "docs/process/harness-capability-implementation-2026-10-23.md",
+        "sha256": "1332e7d78e484d3d0f71a8a0868fd8522be6e329b9039cced4578106cf1af85d"
+      },
+      {
+        "path": "docs/verification/harness-capability-failure-matrix-2026-10-23.md",
+        "sha256": "ed431bd719144e070d784263bd53e5f2ce027f5f03ddcf7d1c49c09fa36f013a"
+      },
+      {
+        "path": "package.json",
+        "sha256": "d11f88edf58a65ab3862f45699fb1a5084458b68b791d238800677eb36f2c894"
+      },
+      {
+        "path": "packages/pi-agent-server/src/canonical-model-context.ts",
+        "sha256": "5b22a0f869a79470c10b725b0acea03587b00102751d07a390704acbdb5a801a"
+      },
+      {
+        "path": "packages/pi-agent-server/src/index.ts",
+        "sha256": "fb6b9f95bbb64d46ef1181cd2b0e92f20786449c886876b17aa52c15e541f678"
+      },
+      {
+        "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+        "sha256": "ba2c2b5466121dc222bd36aaa2d57ceb80660b67bab0947a4db64318d4c3e417"
+      },
+      {
+        "path": "packages/pi-agent-server/src/request-diagnostics.ts",
+        "sha256": "6eb7be389507cdcffc12f54a3d6fe4c960421a0753a6bc0079621fa3bdec5f65"
+      },
+      {
+        "path": "packages/pi-agent-server/src/tool-discovery.ts",
+        "sha256": "fffd0557bc526f76784186300cd08dffea189f7a8075b677374a9433102eb570"
+      },
+      {
+        "path": "packages/pi-agent-server/src/tool-result-view.ts",
+        "sha256": "94b2d2d78b1b0dd48bfdad576d3c2ec12a5ec9c12ca3927871aceefc4e091c0e"
+      },
+      {
+        "path": "packages/server-core/src/decisions/suggestions.ts",
+        "sha256": "a7b01eefa83437cff705b7a7055db6ada302647d1c1c6718c63b2e92cbafb1a5"
+      },
+      {
+        "path": "packages/server-core/src/sessions/SessionManager.ts",
+        "sha256": "9aaecd81bcb07801cb9971eee8169bb40d3ea94bc5a45394d953135be160b219"
+      },
+      {
+        "path": "packages/session-tools-core/src/tool-defs.ts",
+        "sha256": "91422b03ac56afeb2fa16af94c37b57a34cc1267959d60fe5228e5cdb201f379"
+      },
+      {
+        "path": "packages/shared/package.json",
+        "sha256": "626ed408a132c7cb577439014841cf8edcfe66b5b2834d8b1c0ebc2b4d376a78"
+      },
+      {
+        "path": "packages/shared/src/agent/backend/pi/protocol.ts",
+        "sha256": "7f27aade9c2ce71aff496982aade374f056483ae9166179aeb2c7dd2b6259607"
+      },
+      {
+        "path": "packages/shared/src/agent/backend/pi/session-tool-defs.ts",
+        "sha256": "679d25a986fc04de02e40089113e4f12981e7cf12b9c6f1213544a4095816a69"
+      },
+      {
+        "path": "packages/shared/src/agent/context-policy.ts",
+        "sha256": "6856695a5c97751a25aea30d0c1a5720d3cf9a3ba6b396ac5de5277e2a96937e"
+      },
+      {
+        "path": "packages/shared/src/agent/core/prerequisite-manager.ts",
+        "sha256": "cec50fa00c9ecdb1c953136bb0396db5bc7e847baebbc7684020c278ffc7a6d0"
+      },
+      {
+        "path": "packages/shared/src/agent/pi-agent.ts",
+        "sha256": "94a58b33334cc2b94c6b8a82d213e7cbef67244316bce7e46b218d9b02e5216d"
+      },
+      {
+        "path": "packages/shared/src/agent/tool-result-contract.ts",
+        "sha256": "8cf16de33bc0a6e62912bb08fc6111606d592f44ca0bc4c295b5191a2f5ab983"
+      },
+      {
+        "path": "packages/shared/src/decisions/settings.ts",
+        "sha256": "8906dc6e7608b49f0339bba372f11d719ad1216ba78c0fc399e7a7486d5061ac"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "dd3e05c8728dbf3e174ed728db1b8533ea87f6f0e177e300588bdcadbbcf4ae8"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "aa0605b947977fda7b83ed4eec7a1b3b25455a37a000b2bb8ac2d77fe2c3e327"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "07bd6d63d88538706bdeef2b30349440e444bbfe232b1deefd0dd0f199069568"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "52d7fde7ad9e9720f30c62bb9cd8f95206c207492f34591c0f9a4c99ff3334f8"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "61b2315e9637e9b7e55f9fbe3bb3c5d657d1745d932e55d4a9d008787479cfc0"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "4ab8bf211f37aa7041edb9afabdf269064fbe1e906db7edd365df9ab5ba6c197"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "728a38a793e6149337198198c553594002926cf1838cef7a5cdc64f9c44f6fa5"
+      },
+      {
+        "path": "packages/shared/src/mcp/mcp-pool.ts",
+        "sha256": "839afa17d512a83a350fdbcdc615a66ef995d4e5738973452960e5aac4256c08"
+      },
+      {
+        "path": "packages/shared/src/prompts/assistant-prompt.ts",
+        "sha256": "289e610827cc3f59a8bda0f47fd92b46512699792a0408c97d347f963de50857"
+      },
+      {
+        "path": "packages/shared/src/prompts/system.ts",
+        "sha256": "45268a3e16e466d498c65581194b7d7dd1c6b27caa9559b21f9fda4417510371"
+      },
+      {
+        "path": "packages/shared/src/sources/api-tools.ts",
+        "sha256": "88bc717b22e34617c32a272011898cc70c49a4da3efdc0ae678e8961542f7f20"
+      },
+      {
+        "path": "packages/shared/src/utils/large-response.ts",
+        "sha256": "7ca75aff053e11ab3284459ab0bd5349722daf9533d992eb9c1b7845355c292a"
+      },
+      {
+        "path": "scripts/verification/harness-capability-workflow.ts",
+        "sha256": "95de20fb3796d6c1aea7b9cc94d243c52ee5aeef147da52f396a00e2568b6a95"
+      },
+      {
+        "path": "scripts/verification/harness-input-continuity-workflow.ts",
+        "sha256": "caad7d168fa16435f440679baa50bc60c451f4b9c0adbd499ff26a49af42188f"
+      },
+      {
+        "path": "scripts/verification/harness-prompt-assembly-workflow.ts",
+        "sha256": "ca9b30e64696036c467c6116d4eb047e3624ae2eff88462d922aadaf99f0321f"
+      },
+      {
+        "path": "scripts/verification/model-harness-pi-workflow.ts",
+        "sha256": "5d8a962c29811e285b0232921b037c441bb376246be673e3a686efa6c3a7f304"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "explore:mcp__session__web_search",
+    "ask:mcp__session__web_search",
+    "explore:mcp__session__web_fetch",
+    "ask:mcp__session__web_fetch",
+    "unknown-tool-is-not-silently-safe",
+    "source-suffix-does-not-inherit-internal-permission",
+    "source-browser-suffix-does-not-inherit-internal-permission",
+    "llm-schema-only-advertises-supported-arguments",
+    "submit-plan-waits-for-host",
+    "submit-plan-host-failure-is-tool-error",
+    "silent-oauth-continues-without-ui",
+    "interactive-oauth-reports-ui-wait",
+    "multilingual-discovery-and-loaded-tools",
+    "source-format-is-observational-and-latest-state-is-authoritative",
+    "partial-skill-read-does-not-clear-prerequisite",
+    "sdk-truncated-skill-read-does-not-clear-prerequisite",
+    "skill-catalog-invalidates-on-watcher-event",
+    "plan-approval-binds-rendered-version-and-rejects-stale-path",
+    "recovery-retains-original-goal-and-accepted-scope",
+    "plugin-context-declares-version-and-authority",
+    "prompt-language-uses-persisted-preference-before-i18n-hydration"
+  ],
+  "passed": 21,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "scenarios.json",
+      "sha256": "7bc1e59bb59848f4b679222f81337117ab36552be2ea580b7c6263176c5d6aaf",
+      "bytes": 2160
+    }
+  ],
+  "untested": [
+    "live model quality",
+    "native browser UI",
+    "external OAuth",
+    "Linux isolation",
+    "conflicting side effects"
+  ]
+}

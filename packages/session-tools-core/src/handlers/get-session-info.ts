@@ -1,9 +1,10 @@
-import type { SessionToolContext } from '../context.ts';
+import type { SessionToolContext, SessionHistoryQuery } from '../context.ts';
 import type { ToolResult } from '../types.ts';
 import { successResponse, errorResponse } from '../response.ts';
 
 export interface GetSessionInfoArgs {
   sessionId?: string;
+  history?: SessionHistoryQuery;
 }
 
 export async function handleGetSessionInfo(
@@ -19,7 +20,9 @@ export async function handleGetSessionInfo(
     if (!info) {
       return errorResponse(`Session not found: ${args.sessionId ?? ctx.sessionId}`);
     }
-    return successResponse(JSON.stringify(info, null, 2));
+    if (args.history && !ctx.readSessionMessages) return errorResponse('Original history reading is not available in this context.');
+    const history = args.history ? await ctx.readSessionMessages!(args.sessionId, args.history) : undefined;
+    return successResponse(JSON.stringify({ ...info, ...(history ? { history } : {}) }, null, 2));
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return errorResponse(`Failed to get session info: ${message}`);

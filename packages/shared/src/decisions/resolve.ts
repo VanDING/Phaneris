@@ -13,6 +13,7 @@
  */
 
 import { getCredentialManager } from '../credentials/index.ts';
+import { RETIRED_DECISION_FEATURES } from './settings.ts';
 import { getLlmConnection } from '../config/connections.ts';
 import { loadStoredConfig } from '../config/repository.ts';
 import { type StoredConfig } from '../config/persisted-types.ts';
@@ -111,7 +112,7 @@ export function isDecisionLayerActive(settings: DecisionLayerSettings = readDeci
 
 /** Master switch on AND the feature toggle on. Sync; no key check. */
 export function isDecisionFeatureActive(feature: DecisionLayerFeature, settings: DecisionLayerSettings = readDecisionLayerSettings()): boolean {
-  return isDecisionLayerActive(settings) && settings.features[feature];
+  return !RETIRED_DECISION_FEATURES.includes(feature) && isDecisionLayerActive(settings) && settings.features[feature];
 }
 
 function fail(failure: DecisionFailure): DecisionClientResolution {

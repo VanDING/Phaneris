@@ -1,0 +1,331 @@
+$ bun run scripts/run-workspace-tests.ts "--filter=pi-agent-server"
+
+=== packages/pi-agent-server (packages/pi-agent-server/src/bundle-smoke.test.ts) ===
+bun test v1.4.2 (744846f84)
+
+src\bundle-smoke.test.ts:
+(pass) pi-agent-server bundle > resolves a ChatGPT Plus credential for Astra through the bundled auth pipeline offline [2668.58ms]
+
+src\cache-warming-accounting.test.ts:
+(pass) real SDK accounts warming separately and stops on disable/settle (enabled=false, supported=true, inFlight=false) [336.93ms]
+(pass) real SDK accounts warming separately and stops on disable/settle (enabled=true, supported=true, inFlight=false) [296.95ms]
+(pass) real SDK accounts warming separately and stops on disable/settle (enabled=true, supported=false, inFlight=false) [245.70ms]
+(pass) real SDK accounts warming separately and stops on disable/settle (enabled=true, supported=true, inFlight=true) [246.01ms]
+(pass) an ordinary one-token request is never counted as a background refresh [0.38ms]
+
+src\callback-auth.test.ts:
+(pass) isValidCallbackToken (audit M-2) > rejects a missing header [0.07ms]
+(pass) isValidCallbackToken (audit M-2) > rejects an empty header [0.02ms]
+(pass) isValidCallbackToken (audit M-2) > rejects a wrong token [0.02ms]
+(pass) isValidCallbackToken (audit M-2) > accepts the exact token [0.68ms]
+(pass) isValidCallbackToken (audit M-2) > rejects a token that only shares a prefix (length check) [0.16ms]
+(pass) isValidCallbackToken (audit M-2) > uses the first value when node delivers duplicate headers as an array [0.15ms]
+(pass) guardCallbackToken over HTTP (audit M-2) > rejects a request without the token header with 401 [59.39ms]
+(pass) guardCallbackToken over HTTP (audit M-2) > rejects a request with a wrong token with 401 [9.89ms]
+(pass) guardCallbackToken over HTTP (audit M-2) > allows a request carrying the correct token [8.65ms]
+
+src\canonical-model-context.test.ts:
+(pass) canonical model context > rebuilds a provider-safe tool exchange from committed facts [0.65ms]
+(pass) canonical model context > does not include an accepted current run excluded by Runtime Host [0.09ms]
+
+src\compaction-wait.test.ts:
+(pass) waitForCompaction > returns immediately when nothing is compacting [1.52ms]
+(pass) waitForCompaction > waits until the flag clears and reports the elapsed time [0.91ms]
+(pass) waitForCompaction > gives up after the budget while the flag is still set (regression for #1060) [0.45ms]
+(pass) waitForCompaction > leaves the manual compaction most of the host deadline [0.05ms]
+
+src\context-policy-session.test.ts:
+(pass) a real session replaces the overflowing request with document generation [147.04ms]
+(pass) compact policy leaves the SDK request path untouched [91.54ms]
+
+src\context-policy-stream.test.ts:
+(pass) compact policy passes through > never measures or intercepts a request [1.11ms]
+(pass) handoff policy below the trigger > answers the user normally while the window still has room [0.43ms]
+(pass) handoff policy above the trigger > replaces the ordinary request with document generation and reserves its own output budget [1.65ms]
+(pass) handoff policy above the trigger > fails closed when the model answers with an incomplete document [0.81ms]
+(pass) handoff policy above the trigger > refuses to generate when the remaining room cannot hold the reservation [0.35ms]
+(pass) forced handoff > generates the document even when the budget would not have triggered [0.48ms]
+(pass) forced handoff > is consumed once, so the next request is measured normally again [0.65ms]
+(pass) manual policy > runs normally while the window still has room [0.24ms]
+(pass) manual policy > pauses with an explanation instead of compacting or handing off [0.27ms]
+
+src\context-usage.test.ts:
+(pass) Pi server context usage transport > reads raw SDK usage and real compaction settings without normalizing in subprocess [0.27ms]
+(pass) Pi server context usage transport > fails soft when SDK usage is unavailable but still carries settings [0.18ms]
+(pass) Pi server context usage transport > fails soft when compaction settings are unavailable but still carries usage [0.21ms]
+(pass) Pi server context usage transport > guards deferred post-message reads against stale session replacement [0.31ms]
+(pass) Pi server context usage transport > emits the committed read for the live session after the microtask [0.28ms]
+
+src\custom-endpoint-auth.test.ts:
+(pass) isLocalhostUrl (audit M-4) > treats localhost as local [0.20ms]
+(pass) isLocalhostUrl (audit M-4) > treats any 127.0.0.0/8 address as local (not just .1) [0.05ms]
+(pass) isLocalhostUrl (audit M-4) > treats IPv6 loopback ::1 as local [0.04ms]
+(pass) isLocalhostUrl (audit M-4) > treats IPv4-mapped IPv6 loopback as local [0.25ms]
+(pass) isLocalhostUrl (audit M-4) > treats IPv4 link-local addresses as local [0.04ms]
+(pass) isLocalhostUrl (audit M-4) > treats IPv6 link-local fe80::/10 addresses as local [0.04ms]
+(pass) isLocalhostUrl (audit M-4) > keeps private-LAN and public hosts as non-local (legacy setups) [0.15ms]
+(pass) isLocalhostUrl (audit M-4) > returns false for unparseable URLs [0.08ms]
+(pass) hasSupportedBaseUrlScheme (audit M-4) > accepts http and https [0.10ms]
+(pass) hasSupportedBaseUrlScheme (audit M-4) > rejects other schemes [0.05ms]
+(pass) hasSupportedBaseUrlScheme (audit M-4) > rejects scheme-less and unparseable base URLs [0.07ms]
+(pass) resolveCustomEndpointApiKeyFor (audit M-4) > never returns the real key for loopback endpoints, even with a credential [0.10ms]
+(pass) resolveCustomEndpointApiKeyFor (audit M-4) > never returns the real key for link-local endpoints [0.04ms]
+(pass) resolveCustomEndpointApiKeyFor (audit M-4) > returns the placeholder for loopback endpoints with no credentials at all [0.03ms]
+(pass) resolveCustomEndpointApiKeyFor (audit M-4) > still returns the configured key for private-LAN endpoints (legacy setups) [0.03ms]
+(pass) resolveCustomEndpointApiKeyFor (audit M-4) > returns the legacy apiKey for remote endpoints [0.02ms]
+(pass) resolveCustomEndpointApiKeyFor (audit M-4) > returns an empty string when a remote endpoint has no key [0.04ms]
+
+src\custom-endpoint-models.test.ts:
+(pass) normalizeCustomEndpointModelEntry > strips pi/ prefixes from string model IDs [0.23ms]
+(pass) normalizeCustomEndpointModelEntry > preserves per-model image support when enabled [0.05ms]
+(pass) normalizeCustomEndpointModelEntry > preserves explicit per-model image support when disabled [0.03ms]
+(pass) normalizeCustomEndpointModelEntry > preserves context window, output limit and image support together [0.04ms]
+(pass) normalizeCustomEndpointModelEntry > preserves reasoning capability metadata [0.04ms]
+(pass) buildCustomEndpointModelDef > defaults custom endpoint models to text-only input [0.35ms]
+(pass) buildCustomEndpointModelDef > uses an explicit per-model output limit [0.10ms]
+(pass) buildCustomEndpointModelDef > enables image input when the connection explicitly opts in [0.06ms]
+(pass) buildCustomEndpointModelDef > lets per-model overrides disable image input even when the connection default is enabled [0.04ms]
+(pass) buildCustomEndpointModelDef > lets per-model overrides enable image input and custom context window [0.05ms]
+(pass) buildCustomEndpointModelDef > registers custom reasoning support and its Pi level map [0.05ms]
+(pass) buildCustomEndpointModelDef > disables the store param for openai-completions endpoints [0.04ms]
+(pass) buildCustomEndpointModelDef > does not set store compat for anthropic-messages endpoints [0.03ms]
+(pass) buildCustomEndpointModelDef > does not set store compat when the api is unspecified [0.03ms]
+
+src\durable-model-stream.test.ts:
+(pass) durable model stream > commits native request evidence with the outcome before publishing completion [1.68ms]
+(pass) durable model stream > leaves an indeterminate thrown stream pending instead of committing fabricated zero usage [0.51ms]
+(pass) durable model stream > commits tool-only usage before forwarding the response [0.63ms]
+(pass) durable model stream > commits failed partial usage before forwarding the response [0.13ms]
+(pass) durable model stream > does not call the provider when preparation fails [0.36ms]
+(pass) durable model stream > does not publish successful completion when the usage commit fails [0.40ms]
+(pass) durable model stream cache retention > applies the configured default when callers omit cacheRetention [0.47ms]
+(pass) durable model stream cache retention > preserves an explicit cacheRetention and skips the default resolver [0.39ms]
+(pass) cancellation while awaiting T1 commits known zero usage without dispatching [0.44ms]
+
+src\durable-tool-context.test.ts:
+(pass) durable tool execution context > adds stable identity without mutating the original SDK context [0.19ms]
+(pass) durable tool execution context > proxy tools recover the exact identity from the fifth execute argument [0.07ms]
+
+src\ephemeral-query-lifecycle.test.ts:
+(pass) EphemeralQueryCoordinator > enforces the deadline around the running task and cancels its registered resource [1.83ms]
+(pass) EphemeralQueryCoordinator > cancels only the matching query when multiple queries run concurrently [0.63ms]
+(pass) EphemeralQueryCoordinator > ignores a late task result after timeout without resurrecting request state [0.38ms]
+(pass) EphemeralQueryCoordinator > cleans up a resource created after cancellation without deleting a reused id [0.58ms]
+(pass) EphemeralQueryCoordinator > clears the deadline after success [0.31ms]
+(pass) EphemeralQueryCoordinator > cancels every active query during subprocess shutdown [0.47ms]
+
+src\length-continuation.test.ts:
+(pass) exhaustedModelOutputLimit > detects an assistant response that reached the declared model output limit [0.08ms]
+(pass) exhaustedModelOutputLimit > leaves context-clamped length stops to Pi compaction recovery [0.03ms]
+(pass) exhaustedModelOutputLimit > does not continue complete, non-assistant or unmetered responses [0.05ms]
+(pass) LengthContinuationTracker > bounds automatic continuations and resets for the next user prompt [0.16ms]
+
+src\mini-model-query.test.ts:
+(pass) queryMiniModel > regenerates a title with the session model when ChatGPT rejects the configured mini [3.83ms]
+(pass) queryMiniModel > keeps a working mini model, including on accounts that support it [0.75ms]
+(pass) queryMiniModel > tries provider catalog alternatives when the session model is also rejected [1.67ms]
+(pass) queryMiniModel > continues past a catalog model that resolves locally but is unavailable to the account [2.13ms]
+(pass) queryMiniModel > never retries the same model through prefixed and bare aliases [0.96ms]
+(pass) queryMiniModel > does not switch models for unrelated errors: HTTP 401: Unauthorized [0.38ms]
+(pass) queryMiniModel > does not switch models for unrelated errors: rate limit exceeded [0.07ms]
+(pass) queryMiniModel > does not switch models for unrelated errors: Ephemeral query cancelled [0.10ms]
+(pass) queryMiniModel > does not switch models for unrelated errors: The 'temperature' parameter is not supported [0.03ms]
+(pass) queryMiniModel > does not send OAuth utility requests to OpenAI API-key or Anthropic models [0.48ms]
+(pass) queryMiniModel > skips known denied Codex mini fallbacks even if they resolve in the registry [0.42ms]
+(pass) queryMiniModel > preserves the cheap OpenAI API-key fallback before trying a larger session model [0.33ms]
+(pass) queryMiniModel > respects custom-endpoint precedence when resolving fallback candidates [0.36ms]
+
+src\model-resolution.test.ts:
+(pass) resolvePiModel > preferCustomEndpoint > returns custom-endpoint model when preferCustomEndpoint=true and model exists in both providers [0.47ms]
+(pass) resolvePiModel > preferCustomEndpoint > returns anthropic model when preferCustomEndpoint=false [0.17ms]
+(pass) resolvePiModel > preferCustomEndpoint > falls through to piAuthProvider when preferCustomEndpoint=true but model not in custom-endpoint [0.07ms]
+(pass) resolvePiModel > exact provider lookup > returns exact match for piAuthProvider [0.05ms]
+(pass) resolvePiModel > exact provider lookup > strips MiniMax- prefix for minimax-cn provider [0.07ms]
+(pass) resolvePiModel > pi/ prefix stripping > strips pi/ prefix from model ID [0.06ms]
+(pass) resolvePiModel > fallback chain > falls through getAll scan when no exact match [0.10ms]
+(pass) resolvePiModel > fallback chain > tries common providers in fallback list (custom-endpoint first) [0.12ms]
+(pass) resolvePiModel > fallback chain > returns undefined when model not found anywhere [0.09ms]
+(pass) resolvePiModel > provider-safe fallback > does not return a model from an incompatible provider via getAll fallback [0.07ms]
+(pass) resolvePiModel > provider-safe fallback > returns same-provider model from getAll fallback when exact lookup misses [0.06ms]
+(pass) resolvePiModel > provider-safe fallback > allows custom-endpoint models regardless of piAuthProvider [0.05ms]
+(pass) resolvePiModel > provider-safe fallback > does not filter by provider when piAuthProvider is not set [0.04ms]
+(pass) resolvePiModel > provider-safe fallback > skips incompatible providers in the common-provider fallback loop [0.06ms]
+(pass) isDeniedMiniModelId > denies codex-mini-latest regardless of auth provider [0.04ms]
+(pass) isDeniedMiniModelId > denies *codex-mini* variants when piAuthProvider is openai-codex (ChatGPT account) [0.04ms]
+(pass) isDeniedMiniModelId > allows *codex-mini* variants when piAuthProvider is a regular openai API key [0.02ms]
+(pass) isDeniedMiniModelId > allows non-codex-mini models under openai-codex auth [0.04ms]
+(pass) isDeniedMiniModelId > treats unset piAuthProvider as unrestricted (only the hardcoded denylist applies) [0.05ms]
+(pass) isModelNotFoundError > matches the ChatGPT-account Codex refusal [0.03ms]
+(pass) isModelNotFoundError > matches classic OpenAI model_not_found shapes [0.04ms]
+(pass) isModelNotFoundError > is case-insensitive [0.02ms]
+(pass) isModelNotFoundError > does not match unrelated errors [0.04ms]
+(pass) isModelRejectionError > matches the Codex refusal that quotes the requested model [0.02ms]
+(pass) isModelRejectionError > does NOT match a hosted-tool refusal that also says "is not supported" [0.02ms]
+(pass) isModelRejectionError > matches unambiguous model shapes without requiring the model id [0.03ms]
+(pass) isModelRejectionError > matches ambiguous shapes only when the message names the model (case-insensitive) [0.03ms]
+(pass) isModelRejectionError > does not match unrelated errors at all [0.04ms]
+
+src\native-lifecycle-observation.test.ts:
+(pass) real SDK hooks observe tools and settled usage (retry=false) without mutating execution [103.84ms]
+(pass) real SDK hooks observe tools and settled usage (retry=true) without mutating execution [105.89ms]
+
+src\native-request-observation.test.ts:
+(pass) native request observation > hashes the post-extension payload without changing the callback contract or persisting content [0.80ms]
+(pass) native request observation > preserves in-place mutation and undefined return values [0.54ms]
+(pass) native request observation > preserves response callbacks and only records allowed headers [0.58ms]
+(pass) native request observation > does not turn observation failures into model failures, and bounds observations [3.89ms]
+(pass) native request observation > does not swallow existing callback errors or share observations between concurrent calls [1.21ms]
+
+src\phaneris-metadata-schema.test.ts:
+(pass) Phaneris metadata schema compatibility for Pi tools > widens a strict Edit-like schema with optional Phaneris metadata properties [0.29ms]
+(pass) Phaneris metadata schema compatibility for Pi tools > widens the actual Pi Edit tool schema without making metadata required [0.11ms]
+(pass) Phaneris metadata schema compatibility for Pi tools > preserves upstream metadata properties if Pi defines them later [0.08ms]
+(pass) Phaneris metadata schema compatibility for Pi tools > returns unknown schema shapes unchanged [0.04ms]
+(pass) Phaneris metadata schema compatibility for Pi tools > strips Phaneris metadata before upstream Pi tool execution [0.15ms]
+(pass) Phaneris metadata schema compatibility for Pi tools > returns the same input object when no metadata is present [0.03ms]
+
+src\phaneris-resource-loader.test.ts:
+(pass) createPhanerisResourceLoader > returns the Phaneris prompt via systemPromptOverride after reload [93.59ms]
+(pass) createPhanerisResourceLoader > falls back to the base prompt when no Phaneris prompt is set [94.11ms]
+(pass) createPhanerisResourceLoader > honors an injected getPrompt instead of the module-level prompt (ephemeral isolation) [66.71ms]
+
+src\pick-mini-model.test.ts:
+(pass) pickProviderAppropriateMiniModel > returns undefined for anthropic so caller falls through to Haiku [0.39ms]
+(pass) pickProviderAppropriateMiniModel > openai-codex: skips denied codex-mini variants, returns first resolvable candidate [0.19ms]
+(pass) pickProviderAppropriateMiniModel > openai-codex: returns undefined when no preferred candidate resolves [0.11ms]
+(pass) pickProviderAppropriateMiniModel > openai: returns first resolvable candidate from preferred list [0.22ms]
+(pass) pickProviderAppropriateMiniModel > unknown provider: returns undefined [0.13ms]
+(pass) pickProviderAppropriateMiniModel > empty registry: returns undefined [0.17ms]
+
+src\proxy-tool-sync.test.ts:
+(pass) proxyToolDefinitionsChanged > ignores an identical per-turn synchronization [0.15ms]
+(pass) proxyToolDefinitionsChanged > detects additions, removals and schema metadata changes [0.06ms]
+
+src\request-diagnostics.test.ts:
+(pass) derives prompt and tools from the transcript instead of listing system messages twice [1.45ms]
+(pass) hash covers prompt, conversation and tool declarations [1.91ms]
+
+src\session-settings.test.ts:
+(pass) createPhanerisSettingsManager > pins the agent-level auto-retry policy [0.22ms]
+(pass) createPhanerisSettingsManager > enables provider-level (pre-stream) retries that the SDK leaves off by default [0.25ms]
+(pass) createPhanerisSettingsManager > uses a smaller retry policy for bounded ephemeral queries [0.14ms]
+(pass) createPhanerisSettingsManager > keeps auto-compaction enabled [0.06ms]
+(pass) createPhanerisSettingsManager > batches steers without changing the follow-up default [0.13ms]
+(pass) createPhanerisSettingsManager > starts with prompt cache warming off until main-session accounting is installed [0.10ms]
+(pass) createPhanerisSettingsManager > ignores a .pi/settings.json in the working directory [46.04ms]
+(pass) createPhanerisSettingsManager > returns a fresh manager per call so sessions cannot leak settings into each other [0.58ms]
+
+src\session-tool-registration.test.ts:
+(pass) Pi subprocess tool shape contract > createSearchTool returns a valid ToolDefinition with promptSnippet [0.25ms]
+(pass) Pi subprocess tool shape contract > createWebFetchTool returns a valid ToolDefinition with promptSnippet [0.14ms]
+(pass) Pi subprocess tool shape contract > Pi SDK builtin factories all return valid ToolDefinitions [0.32ms]
+(pass) Pi subprocess tool shape contract > Pi 0.84.4 exposes a valid native PowerShell tool for Windows [0.07ms]
+(pass) Pi SDK CreateAgentSessionOptions contract > `tools` field is typed as string[] (name allowlist, not objects) [0.10ms]
+(pass) Pi SDK CreateAgentSessionOptions contract > `customTools` field accepts ToolDefinition[] (the tool object channel) [0.10ms]
+(pass) Pi SDK CreateAgentSessionOptions contract > customTools names ⊆ tools allowlist invariant [0.18ms]
+
+src\steering-sdk.test.ts:
+(pass) batches steers pending at one model boundary and delivers a later steer at the next [14.89ms]
+
+src\system-prompt-delivery.test.ts:
+(pass) delivers the Phaneris prompt as the provider-leading system prompt [121.81ms]
+(pass) restores a canonical transcript without losing the prompt [95.38ms]
+(pass) keeps input the user added after the last commit when converging again [58.72ms]
+(pass) masks abandoned rows instead of letting them reach the provider [100.51ms]
+
+src\transport-delta.test.ts:
+(pass) wire delta size is independent of accumulated SDK response size [0.59ms]
+
+src\tools\web-fetch.test.ts:
+(pass) createWebFetchTool error contract > throws for blocked URLs so Pi records an actual tool error [2.84ms]
+
+src\tools\search\create-search-tool.test.ts:
+(pass) createSearchTool > keeps canonical tool identity [0.09ms]
+(pass) createSearchTool > validates arguments through the SDK TypeBox build (coercion + required checks) [8.51ms]
+(pass) createSearchTool > clamps count to [1, 10] and formats results [0.79ms]
+(pass) createSearchTool > automatically falls back when primary provider fails [0.98ms]
+(pass) createSearchTool > marks failures as errors when primary and fallback both fail [0.53ms]
+(pass) createSearchTool > truncates oversized provider errors in the tool result [0.43ms]
+(pass) createSearchTool > does not recurse fallback when provider is already fallback provider [0.20ms]
+(pass) createSearchTool > routes explicit engine selection to the public provider and reports partial failures [0.36ms]
+(pass) createSearchTool > redacts credentials from surfaced provider errors [0.37ms]
+
+src\tools\search\resolve-provider.test.ts:
+(pass) resolveSearchProvider > selects ResponsesApiSearchProvider for openai + api_key [0.18ms]
+(pass) resolveSearchProvider > does not send a custom completions endpoint key to the OpenAI API [0.08ms]
+(pass) resolveSearchProvider > does not infer native search support from a custom Responses protocol [0.02ms]
+(pass) resolveSearchProvider > selects ChatGPTBackendSearchProvider for openai-codex + oauth with valid JWT [0.90ms]
+(pass) resolveSearchProvider > selects ChatGPTBackendSearchProvider for openai-codex + api_key with valid JWT token [0.08ms]
+(pass) resolveSearchProvider > falls back to DDG for openai-codex + oauth with malformed JWT [0.11ms]
+(pass) resolveSearchProvider > falls back to DDG for openai-codex + api_key with malformed non-JWT token [0.04ms]
+(pass) resolveSearchProvider > selects ResponsesApiSearchProvider for openrouter + api_key [0.03ms]
+(pass) resolveSearchProvider > selects Google provider for google + api_key [0.04ms]
+(pass) resolveSearchProvider > falls back to DDG for openai + oauth (no ChatGPT backend for plain openai) [0.02ms]
+(pass) resolveSearchProvider > falls back to DDG when provider is unknown [0.02ms]
+(pass) resolveSearchProvider > falls back to DDG when key is empty [0.01ms]
+(pass) resolveSearchProvider > falls back to DDG when no piAuth is provided [0.02ms]
+(pass) resolveSearchProvider > falls back to DDG for github-copilot (no search API available) [0.13ms]
+(pass) resolveSearchProvider > falls back to DDG for vercel-ai-gateway (not yet wired for provider-native search) [0.05ms]
+
+ 202 pass
+ 0 fail
+ 601 expect() calls
+Ran 202 tests across 31 files. [7.92s]
+
+=== isolated: packages/pi-agent-server/src/tools/search/providers/chatgpt.isolated.ts ===
+bun test v1.4.2 (744846f84)
+
+packages\pi-agent-server\src\tools\search\providers\chatgpt.isolated.ts:
+(pass) extractChatGptAccountId > extracts accountId from a valid ChatGPT JWT [0.21ms]
+(pass) extractChatGptAccountId > returns null for a JWT without the claim path [0.05ms]
+(pass) extractChatGptAccountId > returns null for a JWT with empty accountId [0.03ms]
+(pass) extractChatGptAccountId > returns null for a non-JWT string [0.03ms]
+(pass) extractChatGptAccountId > returns null for malformed base64 [0.09ms]
+(pass) ChatGPTBackendSearchProvider > calls ChatGPT backend endpoint with correct auth headers [1.20ms]
+(pass) ChatGPTBackendSearchProvider > parses SSE payload even when content-type is not event-stream [0.34ms]
+(pass) ChatGPTBackendSearchProvider > retries with web_search_preview when first attempt returns 400 [1.85ms]
+(pass) ChatGPTBackendSearchProvider > retries with web_search_preview when first attempt returns 200 with non-JSON body [0.43ms]
+(pass) ChatGPTBackendSearchProvider > retries with web_search_preview when first attempt returns invalid SSE payload [0.27ms]
+(pass) ChatGPTBackendSearchProvider > aggregates parse failures when both attempts fail to parse [0.28ms]
+(pass) ChatGPTBackendSearchProvider > throws immediately on non-400 errors (no retry) with request fingerprint [0.19ms]
+(pass) ChatGPTBackendSearchProvider > uses the plumbed active model instead of the default [0.16ms]
+(pass) ChatGPTBackendSearchProvider > retries with the next candidate model when the account rejects the model [0.23ms]
+(pass) ChatGPTBackendSearchProvider > retries the same model with the next tool type when the tool (not the model) is rejected [0.22ms]
+(pass) ChatGPTBackendSearchProvider > caps the failover sweep at 4 candidate models and summarizes the thrown error [0.33ms]
+
+ 16 pass
+ 0 fail
+ 82 expect() calls
+Ran 16 tests across 1 file. [36.00ms]
+
+=== isolated: packages/pi-agent-server/src/tools/search/providers/ddg.isolated.ts ===
+bun test v1.4.2 (744846f84)
+
+packages\pi-agent-server\src\tools\search\providers\ddg.isolated.ts:
+(pass) DDGSearchProvider public fallback > uses 360 Search when DuckDuckGo endpoints are unreachable [7.63ms]
+(pass) DDGSearchProvider public fallback > aggregates selected engines, de-duplicates URLs, and preserves partial failures [4.10ms]
+(pass) DDGSearchProvider public fallback > supports the CSDN and Juejin engines exposed by the former MCP source [1.41ms]
+(pass) DDGSearchProvider public fallback > surfaces an error when every public endpoint fails [0.32ms]
+
+ 4 pass
+ 0 fail
+ 11 expect() calls
+Ran 4 tests across 1 file. [59.00ms]
+
+=== isolated: packages/pi-agent-server/src/tools/search/providers/openai.isolated.ts ===
+bun test v1.4.2 (744846f84)
+
+packages\pi-agent-server\src\tools\search\providers\openai.isolated.ts:
+(pass) ResponsesApiSearchProvider > calls Responses API with web_search tool and parses URL citations [0.88ms]
+(pass) ResponsesApiSearchProvider > uses custom apiBase and model for OpenRouter [0.21ms]
+(pass) ResponsesApiSearchProvider > respects count limit when parsing citations [0.21ms]
+(pass) ResponsesApiSearchProvider > falls back to summary result when no citations are present [0.14ms]
+(pass) ResponsesApiSearchProvider > includes extraHeaders in the request [0.12ms]
+(pass) ResponsesApiSearchProvider > derives display name from apiBase [0.03ms]
+
+ 6 pass
+ 0 fail
+ 22 expect() calls
+Ran 6 tests across 1 file. [37.00ms]
+
+All workspace tests passed

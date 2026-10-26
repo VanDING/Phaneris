@@ -1,0 +1,63 @@
+{
+  "checks": [
+    "HC02 mixed content, exact spill, head/tail and canonical program value",
+    "HC04 unsupported image input is explicit without deleting canonical media",
+    "HC11 canonical replay preserves ordered model blocks",
+    "HC01 native bounded read is not transformed again",
+    "HC03 spill failure is truthful and preserves media",
+    "HC04 derived text and arbitrary shell do not prove full reading",
+    "HC05 HC12 real Pi range coverage, immutable snapshot, mutation and compaction invalidation",
+    "HC04 exact source containing a preview marker remains original evidence",
+    "HC06 internal family aliases, directory paging and stable activation",
+    "HC08 unsupported isolation is discoverable but never activated",
+    "HC13 resident permissions and explicit skills with deferred workflows"
+  ],
+  "receipt": {
+    "version": 1,
+    "source": {
+      "scope": "tool-return",
+      "sha256": "c09e5b9911be4866553c8a8c9f24cba80dc20416a11e70f562c9e39b3a02919e"
+    },
+    "coverage": {
+      "kind": "unknown"
+    },
+    "modelView": {
+      "kind": "preview",
+      "sha256": "6c665c7daec58ed4de04e3e3758d76aa97bee4b463d116e380bed6213809cd31"
+    },
+    "recovery": {
+      "status": "available",
+      "path": "E:\\Phaneris\\.cache\\verification\\harness-capability-jqSLVf\\workspace\\long_responses\\c09e5b9911be4866553c8a8c9f24cba80dc20416a11e70f562c9e39b3a02919e.txt",
+      "canonicalPath": "E:\\Phaneris\\.cache\\verification\\harness-capability-jqSLVf\\workspace\\long_responses\\c103dce23b2ffb48d92fc02f0da006cd211a0da8430504a93694673e9f9f6c55.json"
+    }
+  },
+  "directory": {
+    "loaded": [],
+    "matches": [
+      {
+        "name": "mcp__session__source_test",
+        "description": "Validate, test, and (by default) activate a source configuration.",
+        "namespace": "phaneris:resources",
+        "availability": {
+          "status": "ready"
+        },
+        "status": "loaded_now"
+      },
+      {
+        "name": "mcp__session__source_oauth_trigger",
+        "description": "Start OAuth authentication for an MCP source.",
+        "namespace": "phaneris:resources",
+        "availability": {
+          "status": "ready"
+        },
+        "status": "loaded_now"
+      }
+    ],
+    "totalMatches": 37,
+    "directory": true,
+    "offset": 2,
+    "hasMore": true
+  },
+  "fixture": "E:\\Phaneris\\.cache\\verification\\harness-capability-jqSLVf\\workspace",
+  "scope": "Contract integration; real filesystem, real definitions and SDK adapters; no live provider"
+}

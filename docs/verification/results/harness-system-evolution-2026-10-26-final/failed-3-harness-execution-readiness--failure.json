@@ -1,0 +1,4 @@
+{
+  "message": "Result projection must not deadlock nested tools behind another effect lock",
+  "stack": "AssertionError [ERR_ASSERTION]: Result projection must not deadlock nested tools behind another effect lock\n    at <anonymous> (E:\\Phaneris\\scripts\\verification\\harness-execution-readiness-workflow.ts:43:3)\n    at async verificationWorkflow (E:\\Phaneris\\scripts\\verification\\verification-artifacts.ts:96:37)"
+}

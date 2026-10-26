@@ -4,15 +4,15 @@
 
 ## Automatic features and permissions
 
-Advanced settings exposes 13 independent feature switches. The master switch is off by default. Existing defaults for `decideTool`, `taskVerdicts`, and `semanticLabels` remain enabled behind it; the other ten switches default to off. A feature also needs a usable provider configuration and any required credential. Remote workspace settings and credentials belong to the target server.
+Advanced settings retains 13 feature fields for compatibility. Automatic result filtering and message reclassification are retired; their two legacy controls are disabled without rewriting stored preferences. The master switch is off by default. Existing defaults for `decideTool`, `taskVerdicts`, and `semanticLabels` remain enabled behind it; other features default to off. Active features also need a usable provider configuration and any required credential. Remote workspace settings and credentials belong to the target server.
 
 | Switch | Effect |
 |---|---|
 | `decideTool` | Expose typed decisions to the agent. |
-| `suggestions` | Add a transient hint for a clearly relevant skill or usable inactive source. The agent still chooses whether to use it under ordinary permissions; the decision does not activate a source. |
+| `suggestions` | Display optional UI advice for a relevant skill or source without delaying the main request, injecting a main-prompt hint or enabling a capability. Stale advice is discarded. |
 | `adaptiveThinking` | Lower thinking for a simple interactive turn; never exceed the user's level or overwrite their saved preference. |
-| `largeResults` | Decide whether a result preview is sufficient after saving the complete result to a file. Without a clear answer, retain the normal summary path. |
-| `midTurnMessages` | Classify plain text sent during a turn as steering or queued follow-up. Adjacent continuations may share one model turn while retaining every original message and acknowledgment. Attachments and semantic send options take the complete queue path. |
+| `largeResults` | Legacy setting; no automatic effect. Tool results use exact ranges or recoverable deterministic previews, with typed coverage and original program values. |
+| `midTurnMessages` | Legacy setting; no automatic effect. The connection's steer/queue preference controls delivery; original message identities are preserved. |
 | `turnOutcome` | Detect completed, needs-input, and blocked replies. Interactive sessions needing help move to Needs Review; unattended task steps asking for input or reporting a blocker fail rather than count as done. |
 | `smartTitles` | Defer titles for small talk and refresh automatic titles after topic drift. Manual titles and newer turns remain protected. |
 | `guardedMode` | Make Guarded available for interactive permission checks as described below. |

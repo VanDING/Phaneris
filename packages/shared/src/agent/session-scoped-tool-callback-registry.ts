@@ -64,6 +64,7 @@ export interface SessionScopedToolCallbacks {
   archiveSessionFn?: (sessionId: string, archived: boolean) => void | Promise<void>;
   /** Get detailed info about a session (defaults to current). */
   getSessionInfoFn?: (sessionId?: string) => import('@phaneris/session-tools-core').SessionInfo | null;
+  readSessionMessagesFn?: (sessionId: string | undefined, query: import('@phaneris/session-tools-core').SessionHistoryQuery) => Promise<unknown>;
   /** List sessions in the workspace with pagination. */
   listSessionsFn?: (options?: import('@phaneris/session-tools-core').ListSessionsOptions) => import('@phaneris/session-tools-core').ListSessionsResult;
   /** List background tasks (running + terminal) for a session from the main-process registry. */

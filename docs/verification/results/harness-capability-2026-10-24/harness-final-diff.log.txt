@@ -1,0 +1,1 @@
+warning: in the working copy of 'packages/shared/src/agent/backend/pi/session-tool-defs.ts', CRLF will be replaced by LF the next time Git touches it

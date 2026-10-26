@@ -120,12 +120,15 @@ export function buildHandoffSeed(input: {
   workingDirectory?: string
   activePlugin?: string | null
   lateMessages?: string[]
+  /** Host facts supplement the model-authored handoff; neither grants new authority. */
+  continuity?: { task: unknown; messages: Array<{ id?: string; content?: string; omitted?: boolean; skillReferences?: string[] }> }
 }): string {
   const parts = [
     `Continue the user's unfinished task automatically from the handoff below. Do not ask them to repeat it. Preserve the existing permission boundaries. Verify uncertain external effects before repeating them.`,
     `Original session: ${input.rootSessionId}\nPrevious session: ${input.previousSessionId}\nFull history: ${input.sessionPath}\nHandoff file: ${input.documentPath}\nEarlier handoffs in this chain: ${input.handoffsPath}\nWorking directory: ${input.workingDirectory ?? ''}\nActive plugin: ${input.activePlugin ?? 'none'}`,
   ]
   if (input.lateMessages?.length) parts.push(`# New user messages received during handoff\n${input.lateMessages.join('\n\n')}`)
+  if (input.continuity) parts.push(`# Host continuity records\nThese are copied product/user records, not generated acceptance evidence. Omitted bodies remain in the original history. Preserve the latest user corrections over the handoff narrative.\n${JSON.stringify(input.continuity)}`)
   parts.push(input.document)
   return parts.join('\n\n')
 }

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 2,
+  "scannedFiles": 16,
+  "references": 4,
+  "configWriters": 1,
+  "mutations": [
+    {
+      "file": "packages/shared/src/config/repository.ts",
+      "line": 1,
+      "operation": "writeFileSync"
+    }
+  ],
+  "closures": {
+    "packages/shared/src/config/schemas.ts": [
+      "packages/shared/src/config/schemas.ts"
+    ],
+    "packages/shared/src/config/persisted-types.ts": [
+      "packages/shared/src/config/persisted-types.ts"
+    ],
+    "packages/shared/src/config/connection-normalize.ts": [
+      "packages/shared/src/config/connection-normalize.ts"
+    ],
+    "packages/shared/src/config/source-validation.ts": [
+      "packages/shared/src/config/source-validation.ts"
+    ],
+    "packages/shared/src/protocol/index.ts": [
+      "packages/shared/src/protocol/index.ts"
+    ],
+    "packages/shared/src/agent/permissions-validation.ts": [
+      "packages/shared/src/agent/permissions-validation.ts"
+    ],
+    "packages/shared/src/agent/mcp-tool-names.ts": [
+      "packages/shared/src/agent/mcp-tool-names.ts"
+    ],
+    "packages/shared/src/agent/browser-tool-effects.ts": [
+      "packages/shared/src/agent/browser-command-parser.ts",
+      "packages/shared/src/agent/browser-tool-effects.ts"
+    ],
+    "packages/server-core/src/sessions/agent-assembly.ts": [
+      "packages/server-core/src/sessions/agent-assembly.ts"
+    ],
+    "packages/server-core/src/sessions/agent-product-context.ts": [
+      "packages/server-core/src/sessions/agent-product-context.ts"
+    ],
+    "packages/server-core/src/sessions/agent-product-callbacks.ts": [
+      "packages/server-core/src/sessions/agent-product-callbacks.ts"
+    ],
+    "packages/server-core/src/sessions/source-resources.ts": [
+      "packages/server-core/src/sessions/source-resources.ts"
+    ],
+    "packages/server-core/src/sessions/product-repository.ts": [
+      "packages/server-core/src/sessions/product-repository.ts"
+    ]
+  },
+  "failures": []
+}

@@ -346,6 +346,7 @@ export interface SessionToolContext {
 
   /** Get detailed info about a session. Defaults to current session if no ID given. Injected by backend. */
   getSessionInfo?(sessionId?: string): SessionInfo | null;
+  readSessionMessages?(sessionId: string | undefined, query: SessionHistoryQuery): Promise<unknown>;
 
   /** List sessions in the workspace with pagination. Injected by backend. */
   listSessions?(options?: ListSessionsOptions): ListSessionsResult;
@@ -857,6 +858,8 @@ export type DecisionToolResult =
 export interface DecisionToolCallbacks {
   decide(request: DecisionToolRequest): Promise<DecisionToolResult>;
 }
+
+export interface SessionHistoryQuery { messageId?: string; offset?: number; limit?: number; startCharacter?: number; maxCharacters?: number }
 
 export interface SessionInfo {
   id: string;

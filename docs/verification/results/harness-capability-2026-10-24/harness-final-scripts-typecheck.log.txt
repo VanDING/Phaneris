@@ -1,0 +1,1 @@
+$ bun run tsc --noEmit -p tsconfig.tooling.json && bun run tsc --noEmit -p scripts/performance/tsconfig.runner.json && bun run tsc --noEmit -p scripts/performance/tsconfig.server.json

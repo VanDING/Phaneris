@@ -1,0 +1,4 @@
+{
+  "message": "false == true",
+  "stack": "AssertionError [ERR_ASSERTION]: false == true\n    at <anonymous> (E:\\Phaneris\\scripts\\verification\\harness-execution-readiness-workflow.ts:29:58)\n    at async verificationWorkflow (E:\\Phaneris\\scripts\\verification\\verification-artifacts.ts:96:37)"
+}

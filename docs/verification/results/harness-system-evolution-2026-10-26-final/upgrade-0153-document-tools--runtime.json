@@ -1,0 +1,13 @@
+{
+  "command": [
+    "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+    "run",
+    "--python",
+    "3.12.15",
+    "--no-project",
+    "E:\\Phaneris\\scripts\\verification\\fixtures\\document-tools.py",
+    "E:\\Phaneris",
+    "E:\\Phaneris\\.cache\\verification\\upgrade-0153-document-tools-jlsbjs"
+  ],
+  "source": "bundled"
+}

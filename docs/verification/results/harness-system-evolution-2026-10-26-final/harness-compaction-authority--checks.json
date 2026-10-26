@@ -1,0 +1,32 @@
+{
+  "checks": [
+    "HE21 native compaction keeps old raw history outside working context",
+    "HE21 unchanged compacted context is idempotent",
+    "HE21 new canonical input and complete tool exchange append after native prefix",
+    "HE21 public SDK journal reload preserves scope-bound compaction coverage",
+    "HE21 an abandoned tail is replaced without touching the compacted prefix",
+    "HE21 journaled current-run output remains summarized without a full-turn replay",
+    "HE21 user facts above the synchronized boundary survive even below a later output receipt",
+    "HE21 successive native compactions replace their own coverage without restoring prior raw history",
+    "HE21 inherited parent output receipts cannot hide facts in a child task",
+    "HE21 late T2 restores a summarized call and outcome together without invoking an effect",
+    "HE21 another product scope cannot inherit a compaction checkpoint",
+    "HE21 legacy compaction without coverage uses complete facts"
+  ],
+  "lateInput": [
+    {
+      "role": "compactionSummary",
+      "summary": "SECOND_NATIVE_SUMMARY",
+      "tokensBefore": 6000,
+      "timestamp": 1792981808745
+    }
+  ],
+  "recoveredRoles": [
+    "user",
+    "assistant",
+    "user",
+    "assistant",
+    "assistant",
+    "toolResult"
+  ]
+}

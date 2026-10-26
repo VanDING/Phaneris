@@ -284,6 +284,10 @@ export const UpdateSessionPlanningSchema = z.object({
 
 export const GetSessionInfoSchema = z.object({
   sessionId: z.string().optional().describe('Session ID to query. Omit to get info about the current session.'),
+  history: z.object({
+    messageId: z.string().optional(), offset: z.number().int().min(0).optional(), limit: z.number().int().min(1).max(50).optional(),
+    startCharacter: z.number().int().min(0).optional(), maxCharacters: z.number().int().min(1).max(32000).optional(),
+  }).optional().describe('Read original user/assistant message ranges; messageId selects one message. Omit history for metadata only.'),
 });
 
 export const ArchiveSessionSchema = z.object({
@@ -874,8 +878,12 @@ export type SessionToolExecutionMode = 'registry' | 'backend';
 /** Safe/Explore mode behavior for a session tool. */
 export type SessionToolSafeMode = 'allow' | 'block';
 
+export type SessionToolFamily = 'core' | 'resources' | 'data' | 'deliverables' | 'secondary-models' | 'session-management' | 'pages';
+
 interface SessionToolDefBase {
   name: string;
+  family: SessionToolFamily;
+  exposure?: 'direct' | 'deferred';
   description: string;
   inputSchema: z.ZodObject<z.ZodRawShape>;
   /** Whether this tool is allowed in Explore/Safe mode. */
@@ -925,67 +933,67 @@ export const ProjectMemoryAppendSchema = z.object({
 });
 
 export const SESSION_TOOL_DEFS: SessionToolDef[] = [
-  { name: 'SubmitPlan', description: TOOL_DESCRIPTIONS.SubmitPlan, inputSchema: SubmitPlanSchema, executionMode: 'registry', safeMode: 'allow', handler: handleSubmitPlan },
+  { name: 'SubmitPlan', family: 'core', description: TOOL_DESCRIPTIONS.SubmitPlan, inputSchema: SubmitPlanSchema, executionMode: 'registry', safeMode: 'allow', handler: handleSubmitPlan },
   // ask_user is read-only with respect to the workspace and must stay callable in
   // Explore: clarifying intent is exactly what that mode needs most. Its answer
   // is advice, not authorization — the permission pipeline still gates actions.
-  { name: 'ask_user', description: TOOL_DESCRIPTIONS.ask_user, inputSchema: AskUserSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleAskUser },
-  { name: 'config_validate', description: TOOL_DESCRIPTIONS.config_validate, inputSchema: ConfigValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleConfigValidate },
-  { name: 'skill_validate', description: TOOL_DESCRIPTIONS.skill_validate, inputSchema: SkillValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSkillValidate },
-  { name: 'mermaid_validate', description: TOOL_DESCRIPTIONS.mermaid_validate, inputSchema: MermaidValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleMermaidValidate },
-  { name: 'source_test', description: TOOL_DESCRIPTIONS.source_test, inputSchema: SourceTestSchema, executionMode: 'registry', safeMode: 'block', handler: handleSourceTest },
-  { name: 'source_oauth_trigger', description: TOOL_DESCRIPTIONS.source_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleSourceOAuthTrigger },
-  { name: 'source_google_oauth_trigger', description: TOOL_DESCRIPTIONS.source_google_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleGoogleOAuthTrigger },
-  { name: 'source_slack_oauth_trigger', description: TOOL_DESCRIPTIONS.source_slack_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleSlackOAuthTrigger },
-  { name: 'source_microsoft_oauth_trigger', description: TOOL_DESCRIPTIONS.source_microsoft_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleMicrosoftOAuthTrigger },
-  { name: 'source_credential_prompt', description: TOOL_DESCRIPTIONS.source_credential_prompt, inputSchema: CredentialPromptSchema, executionMode: 'registry', safeMode: 'block', handler: handleCredentialPrompt },
-  { name: 'update_user_preferences', description: TOOL_DESCRIPTIONS.update_user_preferences, inputSchema: UpdatePreferencesSchema, executionMode: 'registry', safeMode: 'block', handler: handleUpdatePreferences },
-  { name: 'transform_data', description: TOOL_DESCRIPTIONS.transform_data, inputSchema: TransformDataSchema, executionMode: 'registry', safeMode: 'block', handler: handleTransformData },
-  { name: 'script_sandbox', description: TOOL_DESCRIPTIONS.script_sandbox, inputSchema: ScriptSandboxSchema, executionMode: 'registry', safeMode: 'block', handler: handleScriptSandbox },
-  { name: 'render_template', description: TOOL_DESCRIPTIONS.render_template, inputSchema: RenderTemplateSchema, executionMode: 'registry', safeMode: 'allow', handler: handleRenderTemplate },
-  { name: 'send_developer_feedback', description: TOOL_DESCRIPTIONS.send_developer_feedback, inputSchema: SendDeveloperFeedbackSchema, executionMode: 'registry', safeMode: 'allow', handler: handleSendDeveloperFeedback },
-  { name: 'call_llm', description: TOOL_DESCRIPTIONS.call_llm, inputSchema: CallLlmSchema, executionMode: 'backend', safeMode: 'allow', readOnly: true, handler: null },
+  { name: 'ask_user', family: 'core', description: TOOL_DESCRIPTIONS.ask_user, inputSchema: AskUserSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleAskUser },
+  { name: 'config_validate', family: 'resources', description: TOOL_DESCRIPTIONS.config_validate, inputSchema: ConfigValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleConfigValidate },
+  { name: 'skill_validate', family: 'resources', description: TOOL_DESCRIPTIONS.skill_validate, inputSchema: SkillValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSkillValidate },
+  { name: 'mermaid_validate', family: 'core', description: TOOL_DESCRIPTIONS.mermaid_validate, inputSchema: MermaidValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleMermaidValidate },
+  { name: 'source_test', family: 'resources', description: TOOL_DESCRIPTIONS.source_test, inputSchema: SourceTestSchema, executionMode: 'registry', safeMode: 'block', handler: handleSourceTest },
+  { name: 'source_oauth_trigger', family: 'resources', description: TOOL_DESCRIPTIONS.source_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleSourceOAuthTrigger },
+  { name: 'source_google_oauth_trigger', family: 'resources', description: TOOL_DESCRIPTIONS.source_google_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleGoogleOAuthTrigger },
+  { name: 'source_slack_oauth_trigger', family: 'resources', description: TOOL_DESCRIPTIONS.source_slack_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleSlackOAuthTrigger },
+  { name: 'source_microsoft_oauth_trigger', family: 'resources', description: TOOL_DESCRIPTIONS.source_microsoft_oauth_trigger, inputSchema: SourceOAuthTriggerSchema, executionMode: 'registry', safeMode: 'block', handler: handleMicrosoftOAuthTrigger },
+  { name: 'source_credential_prompt', family: 'resources', description: TOOL_DESCRIPTIONS.source_credential_prompt, inputSchema: CredentialPromptSchema, executionMode: 'registry', safeMode: 'block', handler: handleCredentialPrompt },
+  { name: 'update_user_preferences', family: 'resources', description: TOOL_DESCRIPTIONS.update_user_preferences, inputSchema: UpdatePreferencesSchema, executionMode: 'registry', safeMode: 'block', handler: handleUpdatePreferences },
+  { name: 'transform_data', family: 'data', description: TOOL_DESCRIPTIONS.transform_data, inputSchema: TransformDataSchema, executionMode: 'registry', safeMode: 'block', handler: handleTransformData },
+  { name: 'script_sandbox', family: 'data', description: TOOL_DESCRIPTIONS.script_sandbox, inputSchema: ScriptSandboxSchema, executionMode: 'registry', safeMode: 'block', handler: handleScriptSandbox },
+  { name: 'render_template', family: 'deliverables', description: TOOL_DESCRIPTIONS.render_template, inputSchema: RenderTemplateSchema, executionMode: 'registry', safeMode: 'allow', handler: handleRenderTemplate },
+  { name: 'send_developer_feedback', family: 'session-management', description: TOOL_DESCRIPTIONS.send_developer_feedback, inputSchema: SendDeveloperFeedbackSchema, executionMode: 'registry', safeMode: 'allow', handler: handleSendDeveloperFeedback },
+  { name: 'call_llm', family: 'secondary-models', description: TOOL_DESCRIPTIONS.call_llm, inputSchema: CallLlmSchema, executionMode: 'backend', safeMode: 'allow', readOnly: true, handler: null },
   // Decision model (registry — uses ctx.decide from SessionManager; hidden unless the user enabled the decision layer)
-  { name: 'decide', description: TOOL_DESCRIPTIONS.decide, inputSchema: DecideSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleDecide },
-  { name: 'spawn_session', description: TOOL_DESCRIPTIONS.spawn_session, inputSchema: SpawnSessionSchema, executionMode: 'backend', safeMode: 'block', handler: null },
+  { name: 'decide', family: 'secondary-models', description: TOOL_DESCRIPTIONS.decide, inputSchema: DecideSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleDecide },
+  { name: 'spawn_session', family: 'secondary-models', description: TOOL_DESCRIPTIONS.spawn_session, inputSchema: SpawnSessionSchema, executionMode: 'backend', safeMode: 'block', handler: null },
   // Browser tool (backend-specific — requires BrowserPaneManager in Electron)
   // Single CLI-like tool that handles all browser actions via command string.
-  { name: 'browser_tool', description: TOOL_DESCRIPTIONS.browser_tool, inputSchema: BrowserToolSchema, executionMode: 'backend', safeMode: 'allow', handler: null },
-  { name: 'terminal_read', description: TOOL_DESCRIPTIONS.terminal_read, inputSchema: TerminalReadSchema, executionMode: 'backend', safeMode: 'allow', readOnly: true, handler: null },
+  { name: 'browser_tool', family: 'core', description: TOOL_DESCRIPTIONS.browser_tool, inputSchema: BrowserToolSchema, executionMode: 'backend', safeMode: 'allow', handler: null },
+  { name: 'terminal_read', family: 'core', description: TOOL_DESCRIPTIONS.terminal_read, inputSchema: TerminalReadSchema, executionMode: 'backend', safeMode: 'allow', readOnly: true, handler: null },
   // Session self-management tools (registry — use context callbacks to reach SessionManager)
-  { name: 'set_session_labels', description: TOOL_DESCRIPTIONS.set_session_labels, inputSchema: SetSessionLabelsSchema, executionMode: 'registry', safeMode: 'block', handler: handleSetSessionLabels },
-  { name: 'set_session_status', description: TOOL_DESCRIPTIONS.set_session_status, inputSchema: SetSessionStatusSchema, executionMode: 'registry', safeMode: 'block', handler: handleSetSessionStatus },
-  { name: 'update_session_planning', description: TOOL_DESCRIPTIONS.update_session_planning, inputSchema: UpdateSessionPlanningSchema, executionMode: 'registry', safeMode: 'block', handler: handleUpdateSessionPlanning },
-  { name: 'archive_session', description: TOOL_DESCRIPTIONS.archive_session, inputSchema: ArchiveSessionSchema, executionMode: 'registry', safeMode: 'block', handler: handleArchiveSession },
-  { name: 'create_task', description: TOOL_DESCRIPTIONS.create_task, inputSchema: CreateTaskSchema, executionMode: 'registry', safeMode: 'block', handler: handleCreateTask },
+  { name: 'set_session_labels', family: 'session-management', description: TOOL_DESCRIPTIONS.set_session_labels, inputSchema: SetSessionLabelsSchema, executionMode: 'registry', safeMode: 'block', handler: handleSetSessionLabels },
+  { name: 'set_session_status', family: 'session-management', description: TOOL_DESCRIPTIONS.set_session_status, inputSchema: SetSessionStatusSchema, executionMode: 'registry', safeMode: 'block', handler: handleSetSessionStatus },
+  { name: 'update_session_planning', family: 'session-management', description: TOOL_DESCRIPTIONS.update_session_planning, inputSchema: UpdateSessionPlanningSchema, executionMode: 'registry', safeMode: 'block', handler: handleUpdateSessionPlanning },
+  { name: 'archive_session', family: 'session-management', description: TOOL_DESCRIPTIONS.archive_session, inputSchema: ArchiveSessionSchema, executionMode: 'registry', safeMode: 'block', handler: handleArchiveSession },
+  { name: 'create_task', family: 'session-management', description: TOOL_DESCRIPTIONS.create_task, inputSchema: CreateTaskSchema, executionMode: 'registry', safeMode: 'block', handler: handleCreateTask },
   // Artifact draft tools. Accept/discard intentionally remain user-only RPC actions.
-  { name: 'artifact_status', description: TOOL_DESCRIPTIONS.artifact_status, inputSchema: ArtifactStatusSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleArtifactStatus },
-  { name: 'artifact_create', description: TOOL_DESCRIPTIONS.artifact_create, inputSchema: ArtifactCreateSchema, executionMode: 'registry', safeMode: 'block', handler: handleArtifactCreate },
-  { name: 'artifact_apply', description: TOOL_DESCRIPTIONS.artifact_apply, inputSchema: ArtifactApplySchema, executionMode: 'registry', safeMode: 'block', handler: handleArtifactApply },
-  { name: 'artifact_inspect', description: TOOL_DESCRIPTIONS.artifact_inspect, inputSchema: ArtifactInspectSchema, executionMode: 'registry', safeMode: 'allow', handler: handleArtifactInspect },
-  { name: 'artifact_render', description: TOOL_DESCRIPTIONS.artifact_render, inputSchema: ArtifactInspectSchema, executionMode: 'registry', safeMode: 'allow', handler: handleArtifactInspect },
-  { name: 'artifact_submit', description: TOOL_DESCRIPTIONS.artifact_submit, inputSchema: ArtifactSubmitSchema, executionMode: 'registry', safeMode: 'block', handler: handleArtifactSubmit },
-  { name: 'image_generate', description: TOOL_DESCRIPTIONS.image_generate, inputSchema: ImageGenerateSchema, executionMode: 'registry', safeMode: 'block', handler: handleImageGenerate },
+  { name: 'artifact_status', family: 'deliverables', exposure: 'direct', description: TOOL_DESCRIPTIONS.artifact_status, inputSchema: ArtifactStatusSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleArtifactStatus },
+  { name: 'artifact_create', family: 'deliverables', exposure: 'direct', description: TOOL_DESCRIPTIONS.artifact_create, inputSchema: ArtifactCreateSchema, executionMode: 'registry', safeMode: 'block', handler: handleArtifactCreate },
+  { name: 'artifact_apply', family: 'deliverables', description: TOOL_DESCRIPTIONS.artifact_apply, inputSchema: ArtifactApplySchema, executionMode: 'registry', safeMode: 'block', handler: handleArtifactApply },
+  { name: 'artifact_inspect', family: 'deliverables', description: TOOL_DESCRIPTIONS.artifact_inspect, inputSchema: ArtifactInspectSchema, executionMode: 'registry', safeMode: 'allow', handler: handleArtifactInspect },
+  { name: 'artifact_render', family: 'deliverables', description: TOOL_DESCRIPTIONS.artifact_render, inputSchema: ArtifactInspectSchema, executionMode: 'registry', safeMode: 'allow', handler: handleArtifactInspect },
+  { name: 'artifact_submit', family: 'deliverables', description: TOOL_DESCRIPTIONS.artifact_submit, inputSchema: ArtifactSubmitSchema, executionMode: 'registry', safeMode: 'block', handler: handleArtifactSubmit },
+  { name: 'image_generate', family: 'deliverables', description: TOOL_DESCRIPTIONS.image_generate, inputSchema: ImageGenerateSchema, executionMode: 'registry', safeMode: 'block', handler: handleImageGenerate },
   // Pages tools (registry — use the grouped ctx.pages callbacks from SessionManager)
-  { name: 'list_pages', description: TOOL_DESCRIPTIONS.list_pages, inputSchema: ListPagesSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListPages },
-  { name: 'get_page', description: TOOL_DESCRIPTIONS.get_page, inputSchema: GetPageSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleGetPage },
-  { name: 'create_page', description: TOOL_DESCRIPTIONS.create_page, inputSchema: CreatePageSchema, executionMode: 'registry', safeMode: 'block', handler: handleCreatePage },
-  { name: 'update_page', description: TOOL_DESCRIPTIONS.update_page, inputSchema: UpdatePageSchema, executionMode: 'registry', safeMode: 'block', handler: handleUpdatePage },
-  { name: 'write_page_data', description: TOOL_DESCRIPTIONS.write_page_data, inputSchema: WritePageDataSchema, executionMode: 'registry', safeMode: 'block', handler: handleWritePageData },
-  { name: 'delete_page', description: TOOL_DESCRIPTIONS.delete_page, inputSchema: DeletePageSchema, executionMode: 'registry', safeMode: 'block', handler: handleDeletePage },
-  { name: 'get_session_info', description: TOOL_DESCRIPTIONS.get_session_info, inputSchema: GetSessionInfoSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleGetSessionInfo },
-  { name: 'list_sessions', description: TOOL_DESCRIPTIONS.list_sessions, inputSchema: ListSessionsSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListSessions },
-  { name: 'list_background_tasks', description: TOOL_DESCRIPTIONS.list_background_tasks, inputSchema: ListBackgroundTasksSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListBackgroundTasks },
+  { name: 'list_pages', family: 'pages', description: TOOL_DESCRIPTIONS.list_pages, inputSchema: ListPagesSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListPages },
+  { name: 'get_page', family: 'pages', description: TOOL_DESCRIPTIONS.get_page, inputSchema: GetPageSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleGetPage },
+  { name: 'create_page', family: 'pages', description: TOOL_DESCRIPTIONS.create_page, inputSchema: CreatePageSchema, executionMode: 'registry', safeMode: 'block', handler: handleCreatePage },
+  { name: 'update_page', family: 'pages', description: TOOL_DESCRIPTIONS.update_page, inputSchema: UpdatePageSchema, executionMode: 'registry', safeMode: 'block', handler: handleUpdatePage },
+  { name: 'write_page_data', family: 'pages', description: TOOL_DESCRIPTIONS.write_page_data, inputSchema: WritePageDataSchema, executionMode: 'registry', safeMode: 'block', handler: handleWritePageData },
+  { name: 'delete_page', family: 'pages', description: TOOL_DESCRIPTIONS.delete_page, inputSchema: DeletePageSchema, executionMode: 'registry', safeMode: 'block', handler: handleDeletePage },
+  { name: 'get_session_info', family: 'session-management', exposure: 'direct', description: TOOL_DESCRIPTIONS.get_session_info, inputSchema: GetSessionInfoSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleGetSessionInfo },
+  { name: 'list_sessions', family: 'session-management', description: TOOL_DESCRIPTIONS.list_sessions, inputSchema: ListSessionsSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListSessions },
+  { name: 'list_background_tasks', family: 'session-management', description: TOOL_DESCRIPTIONS.list_background_tasks, inputSchema: ListBackgroundTasksSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListBackgroundTasks },
   // Inter-session messaging
-  { name: 'send_agent_message', description: TOOL_DESCRIPTIONS.send_agent_message, inputSchema: SendAgentMessageSchema, executionMode: 'registry', safeMode: 'block', handler: handleSendAgentMessage },
+  { name: 'send_agent_message', family: 'session-management', description: TOOL_DESCRIPTIONS.send_agent_message, inputSchema: SendAgentMessageSchema, executionMode: 'registry', safeMode: 'block', handler: handleSendAgentMessage },
   // Messaging gateway tools
-  { name: 'list_messaging_channels', description: TOOL_DESCRIPTIONS.list_messaging_channels, inputSchema: ListMessagingChannelsSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListMessagingChannels },
-  { name: 'unbind_messaging_channel', description: TOOL_DESCRIPTIONS.unbind_messaging_channel, inputSchema: UnbindMessagingChannelSchema, executionMode: 'registry', safeMode: 'block', handler: handleUnbindMessagingChannel },
-{ name: 'source_list_resources', description: TOOL_DESCRIPTIONS.source_list_resources, inputSchema: SourceListResourcesSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceListResources },
-{ name: 'source_read_resource', description: TOOL_DESCRIPTIONS.source_read_resource, inputSchema: SourceReadResourceSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceReadResource },
-{ name: 'source_list_prompts', description: TOOL_DESCRIPTIONS.source_list_prompts, inputSchema: SourceListPromptsSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceListPrompts },
-{ name: 'source_get_prompt', description: TOOL_DESCRIPTIONS.source_get_prompt, inputSchema: SourceGetPromptSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceGetPrompt },
-{ name: 'project_memory_append', description: TOOL_DESCRIPTIONS.project_memory_append, inputSchema: ProjectMemoryAppendSchema, executionMode: 'registry', safeMode: 'block', handler: handleProjectMemoryAppend },
+  { name: 'list_messaging_channels', family: 'session-management', description: TOOL_DESCRIPTIONS.list_messaging_channels, inputSchema: ListMessagingChannelsSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleListMessagingChannels },
+  { name: 'unbind_messaging_channel', family: 'session-management', description: TOOL_DESCRIPTIONS.unbind_messaging_channel, inputSchema: UnbindMessagingChannelSchema, executionMode: 'registry', safeMode: 'block', handler: handleUnbindMessagingChannel },
+{ name: 'source_list_resources', family: 'resources', exposure: 'direct', description: TOOL_DESCRIPTIONS.source_list_resources, inputSchema: SourceListResourcesSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceListResources },
+{ name: 'source_read_resource', family: 'resources', exposure: 'direct', description: TOOL_DESCRIPTIONS.source_read_resource, inputSchema: SourceReadResourceSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceReadResource },
+{ name: 'source_list_prompts', family: 'resources', exposure: 'direct', description: TOOL_DESCRIPTIONS.source_list_prompts, inputSchema: SourceListPromptsSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceListPrompts },
+{ name: 'source_get_prompt', family: 'resources', exposure: 'direct', description: TOOL_DESCRIPTIONS.source_get_prompt, inputSchema: SourceGetPromptSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSourceGetPrompt },
+{ name: 'project_memory_append', family: 'resources', description: TOOL_DESCRIPTIONS.project_memory_append, inputSchema: ProjectMemoryAppendSchema, executionMode: 'registry', safeMode: 'block', handler: handleProjectMemoryAppend },
 ];
 
 export interface SessionToolFilterOptions {
@@ -1117,6 +1125,18 @@ export interface JsonSchemaToolDef {
   inputSchema: Record<string, unknown>;
   /** Host scheduling hint; not a provider argument or an authorization grant. */
   readOnly?: boolean;
+  exposure?: 'direct' | 'deferred' | 'hidden';
+  namespace?: { name: string; description: string; aliases: string[]; instructions?: string };
+  availability?: { status: 'ready' | 'unsupported'; reason?: string };
+}
+
+/** Canonical, host-owned grouping; descriptive metadata never confers permission. */
+function capabilityMetadata({ name, family, exposure }: SessionToolDef): Pick<JsonSchemaToolDef, 'exposure' | 'namespace' | 'availability'> {
+  const aliases: Record<string, string[]> = { pages: ['页面', '小应用', 'dashboard'], deliverables: ['交付物', '文档', '图像', 'artifact'], resources: ['连接', '认证', '配置', '资源', '技能', '插件', '自动化', 'skills', 'plugins', 'automations'], 'secondary-models': ['辅助模型', '分析', '委派'], 'session-management': ['会话', '任务', '标签', '日程'], data: ['数据', '计算', '转换'], core: ['提问', '计划', '浏览器'] };
+  const unsupported = process.platform === 'win32' && ['script_sandbox', 'transform_data'].includes(name);
+  return { exposure: unsupported ? 'hidden' : exposure ?? (family === 'core' ? 'direct' : 'deferred'),
+    namespace: { name: `phaneris:${family}`, description: `${family} ${aliases[family]!.join(' ')}`, aliases: aliases[family]! },
+    availability: { status: unsupported ? 'unsupported' : 'ready', ...(unsupported ? { reason: 'Isolation backend unavailable on Windows. Use file/shell tools within authorization; isolation is not bypassed.' } : {}) } };
 }
 
 /**
@@ -1144,6 +1164,7 @@ export function getToolDefsAsJsonSchema(opts?: {
       name: prefix + def.name,
       description: def.description,
       inputSchema: jsonSchema,
+      ...capabilityMetadata(def),
       ...(def.readOnly !== undefined ? { readOnly: def.readOnly } : {}),
     };
   });
