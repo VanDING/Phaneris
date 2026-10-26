@@ -80,7 +80,37 @@ export function canonicalContextToPiMessages(
     });
     lastAssistantOperationId = undefined;
   }
-  return messages;
+  return completeToolResultContext(messages);
+}
+
+/** A provider protocol view, never a synthetic business-outcome ledger entry.
+ * Late real receipts replace this view naturally on canonical convergence. */
+export function completeToolResultContext(messages: readonly AgentMessage[]): AgentMessage[] {
+  const used = new Set<number>(), results = new Map<string, Array<{ index: number; message: Extract<AgentMessage, { role: 'toolResult' }> }>>();
+  messages.forEach((message, index) => {
+    if (message.role === 'toolResult') results.set(message.toolCallId, [...(results.get(message.toolCallId) ?? []), { index, message }]);
+  });
+  const output: AgentMessage[] = [];
+  for (let index = 0; index < messages.length; index++) {
+    const message = messages[index]!;
+    if (message.role === 'toolResult') {
+      if (!used.has(index)) output.push({ role: 'user', content: [
+        { type: 'text', text: `Recovered output from ${message.toolName}; no matching call is present in this working view.` }, ...message.content,
+      ], timestamp: message.timestamp });
+      continue;
+    }
+    output.push(message);
+    if (message.role !== 'assistant') continue;
+    for (const call of message.content) {
+      if (call.type !== 'toolCall') continue;
+      const found = results.get(call.id)?.find(result => result.index > index && !used.has(result.index));
+      if (found) { used.add(found.index); output.push(found.message); }
+      else output.push({ role: 'toolResult', toolCallId: call.id, toolName: call.name,
+        content: [{ type: 'text', text: 'Runtime interruption: the tool result was not collected and its effect is unknown. This is not evidence of business success or failure. Inspect existing outputs or receipts; do not blindly repeat non-idempotent actions. Independent work may continue.' }],
+        details: { phanerisRecovery: { status: 'outcome_unknown' } }, isError: true, timestamp: message.timestamp });
+    }
+  }
+  return output;
 }
 
 /** Model-visible messages only; the converted facts never produce custom messages. */

@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "workflow": "durable-task-continuation",
+  "startedAt": "2026-10-26T07:12:08.957Z",
+  "finishedAt": "2026-10-26T07:12:10.329Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\durable-task-continuation-workflow.ts"
+  ],
+  "source": {
+    "headSha": "bc2f436a0533e37b3b97f73ce079d672ecd5ed94",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M packages/pi-agent-server/src/canonical-model-context.ts",
+      " M packages/pi-agent-server/src/durable-model-stream.test.ts",
+      " M packages/pi-agent-server/src/durable-model-stream.ts",
+      " M packages/pi-agent-server/src/index.ts",
+      " M packages/pi-agent-server/src/messages.ts",
+      " M packages/pi-agent-server/src/pending-replies.ts",
+      " M packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      " M packages/pi-agent-server/src/session-event-adapter.ts",
+      " M packages/server-core/src/durable-runtime/api/runtime.ts",
+      " M packages/server-core/src/durable-runtime/canonical-json.ts",
+      " M packages/server-core/src/durable-runtime/coordinator.ts",
+      " M packages/server-core/src/durable-runtime/execution/host.ts",
+      " M packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      " M packages/server-core/src/durable-runtime/tool-identity.ts",
+      " M packages/server-core/src/runtime-adapters/pi-driver.ts",
+      " M packages/server-core/src/runtime-adapters/session-input-recovery.ts",
+      " M packages/server-core/src/sessions/SessionManager.ts",
+      " M packages/shared/package.json",
+      " M packages/shared/src/agent/pi-agent.ts",
+      " M packages/shared/src/durable-runtime/types.ts",
+      " M scripts/verification/durable-runtime-boundary-workflow.ts",
+      " M scripts/verification/harness-capability-workflow.ts",
+      " M scripts/verification/packaged-client-verification.mjs",
+      "?? docs/verification/durable-runtime-continuity-failure-matrix-2026-10-26.md",
+      "?? packages/pi-agent-server/src/input-consumption.ts",
+      "?? packages/server-core/src/durable-runtime/receipt-journal.ts",
+      "?? packages/shared/src/durable-runtime/identity.ts",
+      "?? packages/shared/src/durable-runtime/receipt-storage.ts",
+      "?? packages/shared/src/durable-runtime/redact.ts",
+      "?? scripts/verification/durable-continuation-pi-workflow.ts",
+      "?? scripts/verification/durable-continuation-workflow.ts",
+      "?? scripts/verification/durable-task-continuation-workflow.ts"
+    ],
+    "lockfileSha256": "bbbd8dba70bb2038ec1ecd77fe472d9aadac25650aa5fbc718e419af1b51623a",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "sha256": "84e3b9d04c87a3b2fa5cc0d9c4e8a6ab02998ac42997bc1cd523c947eb75e5cb"
+      },
+      {
+        "path": "docs/verification/durable-runtime-continuity-failure-matrix-2026-10-26.md",
+        "sha256": "f95fddf4fab2cb06cab8acca6aa71b54099ab600b297187cd4092e34bb679da6"
+      },
+      {
+        "path": "packages/pi-agent-server/src/canonical-model-context.ts",
+        "sha256": "7e32fc918480cd7908a9eb269be41453769c137119384c1453c7f9b681ca9b5a"
+      },
+      {
+        "path": "packages/pi-agent-server/src/durable-model-stream.test.ts",
+        "sha256": "b5eafcda676c7395efcce12648b894575f5168783ca6f5b500d2253f5ca34dc2"
+      },
+      {
+        "path": "packages/pi-agent-server/src/durable-model-stream.ts",
+        "sha256": "8362a039b2eb07a5077e778554cf2b706443859302c6b9963a774cc4c527b13d"
+      },
+      {
+        "path": "packages/pi-agent-server/src/index.ts",
+        "sha256": "97994283a7266b65b7d68b24498750b88287ebafb01d57ba742fc8bf5c0058d9"
+      },
+      {
+        "path": "packages/pi-agent-server/src/input-consumption.ts",
+        "sha256": "18afffdd79a22c8d4da110e85f8e9e85fc3a9cfb5076905d1ac8c85a5f2bbf97"
+      },
+      {
+        "path": "packages/pi-agent-server/src/messages.ts",
+        "sha256": "e9945ab22f559a812d12402ef364b101fc9fc5e41e4180af648b626de0121b50"
+      },
+      {
+        "path": "packages/pi-agent-server/src/pending-replies.ts",
+        "sha256": "d3ddf78032cfd598dd42b7955fbae4d77347c8900024805413db4168e6983e71"
+      },
+      {
+        "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+        "sha256": "641d7c3ab5cb34a40b1925fa65132b0d69586fbddd593c6f17f9184f7a26cd8b"
+      },
+      {
+        "path": "packages/pi-agent-server/src/session-event-adapter.ts",
+        "sha256": "2e60505edbf94d553530ac2be14f80c8a7a771ae2fb205b9cd9755350a471fdf"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/api/runtime.ts",
+        "sha256": "2c532702aae4442d4afe8613091405385ad482f7f6ecfa82a5bfe99b50658f79"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/canonical-json.ts",
+        "sha256": "ad288b241c77766ce321aafadcfd6027fe3d894266dfc50bb11c93f201823b48"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/coordinator.ts",
+        "sha256": "9d39899f5d076054198017d11514d617b4dcc6e558afdbccadaee32d5d4a9abf"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/execution/host.ts",
+        "sha256": "3c4c22713fab47e0f8e91f5b476c0104f1c9acb31fd8be3e34f2127029cc03d2"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/receipt-journal.ts",
+        "sha256": "6d0bf086447e7b0ceb8ee9f4ac6ba88e3c05a876d2095ca9657d7305c66b95fd"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+        "sha256": "be7229007d3000deac782c84afa85ecca18256a1dde4d9e0be04b658da3fb7ad"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/tool-identity.ts",
+        "sha256": "fe298694e69db677f7d270d6ab025ba563b1cb000b259466448fba005313f54c"
+      },
+      {
+        "path": "packages/server-core/src/runtime-adapters/pi-driver.ts",
+        "sha256": "61dc9b711c01e18625db5012d454ad3180385c718f85bee501a10e6e5e7b783c"
+      },
+      {
+        "path": "packages/server-core/src/runtime-adapters/session-input-recovery.ts",
+        "sha256": "d6515cef261af035e5c1bc9cc75ef881eec94e9bfabad93836f5af1e75996249"
+      },
+      {
+        "path": "packages/server-core/src/sessions/SessionManager.ts",
+        "sha256": "f19438fcd5f765c97b4a58de7c5c3894f0277c6b8d2e0598e0fbd78ac3602687"
+      },
+      {
+        "path": "packages/shared/package.json",
+        "sha256": "7bc424efb4841679a3993e194970f23843ef9be7fea99570523035a23cf31652"
+      },
+      {
+        "path": "packages/shared/src/agent/pi-agent.ts",
+        "sha256": "06708ae7ad5d4834e29eb8bf0d121c1f77b31407dcd7997191a83f68251f1197"
+      },
+      {
+        "path": "packages/shared/src/durable-runtime/identity.ts",
+        "sha256": "fe2eb250bd54606c8b4aeaaa6801cd6a751ef6d723798d09c1adc28c7e6dad85"
+      },
+      {
+        "path": "packages/shared/src/durable-runtime/receipt-storage.ts",
+        "sha256": "c8f4bbd913e8811b52876cfbae88e24d371e9a40264a88f844608ba65263c31c"
+      },
+      {
+        "path": "packages/shared/src/durable-runtime/redact.ts",
+        "sha256": "9505fbad58e3576deda939e4349aa68db507cbb84d732efe4f849e5896f7add0"
+      },
+      {
+        "path": "packages/shared/src/durable-runtime/types.ts",
+        "sha256": "68e4c90e9b874dd074ef8b033ea9aa27b2348be89678c71fee99aad4ff07c07f"
+      },
+      {
+        "path": "scripts/verification/durable-continuation-pi-workflow.ts",
+        "sha256": "513715df2c509e88ad52fff6103d909b86a4a311e9a3f50426f2032cfbb33732"
+      },
+      {
+        "path": "scripts/verification/durable-continuation-workflow.ts",
+        "sha256": "fea6f7b1b1a3b958c055a3fcef0e8cc96e5459bca863146236bdac1001b65e25"
+      },
+      {
+        "path": "scripts/verification/durable-runtime-boundary-workflow.ts",
+        "sha256": "050328d7c39d171d0f1d83e8182a219bd0e1eca96b723a514bee06906189d21a"
+      },
+      {
+        "path": "scripts/verification/durable-task-continuation-workflow.ts",
+        "sha256": "dcbc6532b200581d407da4d946206155a480985256a6d0879dd2bcc39dd527a5"
+      },
+      {
+        "path": "scripts/verification/harness-capability-workflow.ts",
+        "sha256": "e5420e086bed38c1c9ec2c5e33cdf0389efa5ab7fc835d5ba7b0b54316707c98"
+      },
+      {
+        "path": "scripts/verification/packaged-client-verification.mjs",
+        "sha256": "fda94624cb3ef4adbbed81a1987df6af370f3b3f03e0b4d16d40f8f996b80c10"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [],
+  "passed": 0,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "completed/tasks/continuity/runs/run/run-log.jsonl",
+      "sha256": "b01490394b5c05162df6a808eb1c53b5e402a3d446780d070347c5314d4ce6ff",
+      "bytes": 621
+    },
+    {
+      "path": "completed/tasks/continuity/task.yaml",
+      "sha256": "eb0fb6a5c03fd16dacab8e76dff7cd332cc5f605ab03e1cb3f17c443d74520ed",
+      "bytes": 257
+    },
+    {
+      "path": "failure.json",
+      "sha256": "5208b61235d42f5b6070a5ea83277a7c7d6919863cd55b90f8cb0df071ecd729",
+      "bytes": 376
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

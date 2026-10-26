@@ -65,18 +65,23 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
   const { workspaceRootPath: workspace, sessionId } = scope
   const utilityLeases = new Map<string, () => void>()
   return {
-    durableToolBoundary: runtime.effects.boundaryFor(workspace),
+    durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: request => runtime.effects.boundaryFor(workspace).prepare({ ...request, recoverySessionIds: scope.recoverySessionIds }) },
     durableModelBoundary: { ...runtime.effects.modelBoundaryFor(workspace), commitOutcome: async request => {
       const result = await runtime.effects.commitModelOutcome(workspace, request)
       if (request.purpose === 'cache_warm') notify()
       return result
     } },
     getCanonicalModelContext: excludeOperationId => {
+      try {
+      // Until a known result is backfilled, the native journal has the newer
+      // working transcript. An older projection must not overwrite it.
+      if (runtime.queries.hasPendingReceipts(workspace, sessionId) || runtime.queries.storageStatus(workspace).recovery) return undefined
       if (options.compatibilityMessages) {
         const parity = reportLegacyProjectionParity(runtime.queries.events(workspace, { sessionId }), [...options.compatibilityMessages()])
         if (!parity.canonicalFacts || parity.issueCount) return undefined
       }
       return runtime.queries.getCanonicalModelContext(workspace, sessionId, excludeOperationId)
+      } catch (error) { options.observerError?.(error); return undefined }
     },
     beginDurableUtilityRun: ({ requestId, prompt }) => {
       const operationId = `utility:${sessionId}:${requestId}:${Date.now()}`

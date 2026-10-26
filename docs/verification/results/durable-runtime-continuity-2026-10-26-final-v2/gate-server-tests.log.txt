@@ -1,0 +1,1064 @@
+bun test v1.4.2 (744846f84)
+
+packages\server-core\src\bootstrap\lock-identity.test.ts:
+(pass) parseTasklistImageName > extracts the image name from a CSV data row [0.14ms]
+(pass) parseTasklistImageName > returns null for the no-tasks INFO message [0.06ms]
+(pass) parseTasklistImageName > returns null for empty or malformed output [0.06ms]
+(pass) parseTasklistImageName > uses only the first row of multi-line output [0.04ms]
+(pass) lockHolderMatchesLock (#978) > matches on identical execName [0.10ms]
+(pass) lockHolderMatchesLock (#978) > matches execName case-insensitively [0.03ms]
+(pass) lockHolderMatchesLock (#978) > matches dev shapes the legacy heuristic missed (bun holding the lock) [0.02ms]
+(pass) lockHolderMatchesLock (#978) > rejects a different executable even when its name contains the product name [0.03ms]
+(pass) lockHolderMatchesLock (#978) > fails open when the live exec name cannot be determined [0.01ms]
+(pass) lockHolderMatchesLock (#978) > ignores the command line when execName is recorded [0.01ms]
+(pass) lockHolderMatchesLock (#978) > legacy locks without execName > falls back to the product-substring heuristic on the command line [0.07ms]
+(pass) lockHolderMatchesLock (#978) > legacy locks without execName > fails open when the command line cannot be read [0.02ms]
+
+packages\server-core\src\decisions\tool-callbacks.test.ts:
+(pass) decision tool callbacks > fails closed with the resolver failure when the layer is unavailable [3.26ms]
+(pass) decision tool callbacks > runs the decision and records it with the session id and meta [55.21ms]
+(pass) decision tool callbacks > maps client errors to tool errors and records the failure [40.34ms]
+(pass) decision tool callbacks > reuses one resolution across a batch and re-resolves after the TTL [3.57ms]
+(pass) decision tool callbacks > fails closed when the resolver itself throws, and does not cache the failure [1.47ms]
+(pass) decision tool callbacks > turns client-side validation errors into invalid_request without a network call [1.53ms]
+
+packages\server-core\src\domain\connection-setup-logic.test.ts:
+(pass) validateSetupTestInput > rejects pi custom endpoint tests without piAuthProvider [0.14ms]
+(pass) validateSetupTestInput > allows pi custom endpoint tests with piAuthProvider [0.05ms]
+(pass) setup test API key requirements > detects loopback base URLs [0.21ms]
+(pass) setup test API key requirements > requires API key for non-loopback setup tests [0.11ms]
+(pass) setup test API key requirements > allows keyless setup tests for loopback endpoints [0.04ms]
+(pass) resolveCustomEndpointSetup > treats loopback URL with no credential as keyless local model [0.23ms]
+(pass) resolveCustomEndpointSetup > treats loopback URL *with* a credential as a keyed custom endpoint (#636) [0.08ms]
+(pass) resolveCustomEndpointSetup > uses the anthropic provider hint for anthropic-messages protocol [0.04ms]
+(pass) resolveCustomEndpointSetup > treats remote endpoints with a credential as keyed custom endpoints [0.03ms]
+(pass) resolveCustomEndpointSetup > treats remote endpoints without a credential as keyed (still requires a key) [0.03ms]
+(pass) resolveCustomEndpointSetup > treats undefined baseUrl as a non-loopback (keyed) endpoint [0.03ms]
+(pass) resolveConnectionTransport > keeps a native Pi provider native when the setup only carries its endpoint [0.14ms]
+(pass) resolveConnectionTransport > classifies a prefilled provider endpoint on a brand new connection as native [0.05ms]
+(pass) resolveConnectionTransport > keeps a real custom endpoint compat and pins its protocol [0.08ms]
+(pass) resolveConnectionTransport > treats a keyless loopback endpoint as a local model [0.08ms]
+(pass) resolveConnectionTransport > drops the compat transport when a connection loses its protocol [0.04ms]
+(pass) resolveConnectionTransport > leaves OAuth connections untouched by endpoint fields [0.03ms]
+(pass) resolveConnectionTransport > returns null when the setup did not touch the endpoint [0.07ms]
+(pass) resolveConnectionTransport > preserves a non-api-key auth type on a native connection [0.04ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > Anthropic API key → 'steer' (Pi backend) [0.54ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > Claude Max OAuth → 'steer' (Anthropic subscription via Pi backend) [0.12ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > ChatGPT Plus → 'steer' (Pi backend, native polite steer) [0.13ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > Grok / X → 'steer' (xAI subscription via Pi backend) [0.16ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > Kimi Code → 'steer' (Kimi subscription via Pi backend) [0.08ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > OpenRouter → 'steer' (credits via Pi backend) [0.05ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > Radius → 'steer' (gateway via Pi backend) [0.03ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > Pi API key (Phaneris Backend) → 'steer' [0.05ms]
+(pass) createBuiltInConnection seeds midStreamBehavior > anthropic-api with a resolved custom-endpoint transport → 'steer' [0.03ms]
+(pass) API key masking for the edit form > masks long keys keeping the provider prefix and the last four characters [0.09ms]
+(pass) API key masking for the edit form > masks short keys completely [0.03ms]
+(pass) API key masking for the edit form > recognizes masked values and nothing else [0.10ms]
+(pass) resolveSetupTestApiKey > uses a typed key as-is and never consults the store [0.38ms]
+(pass) resolveSetupTestApiKey > resolves the masked placeholder to the stored key of the edited connection [0.24ms]
+(pass) resolveSetupTestApiKey > asks for the key when the placeholder arrives without a connection slug [0.14ms]
+(pass) resolveSetupTestApiKey > asks for the key when nothing is stored for the slug [0.12ms]
+(pass) resolveSetupTestApiKey > requires a key for remote endpoints and allows none for loopback [0.14ms]
+(pass) validateModelList > accepts a string list with a matching default [0.31ms]
+(pass) validateModelList > regression: Pi ModelDefinition[] with valid default is accepted [0.12ms]
+(pass) validateModelList > rejects when default model is not in the list [0.06ms]
+(pass) validateModelList > auto-selects first model when default is undefined [0.02ms]
+(pass) validateModelList > auto-selects first ModelDefinition.id when default is undefined [0.03ms]
+(pass) validateModelList > returns valid for empty model list [0.01ms]
+(pass) createBuiltInConnection > creates anthropic-api with the native Pi transport [0.05ms]
+(pass) createBuiltInConnection > honours a resolved custom-endpoint transport override [0.05ms]
+(pass) createBuiltInConnection > creates claude-max with oauth [0.04ms]
+(pass) createBuiltInConnection > creates pi-api-key with pi provider [0.03ms]
+(pass) createBuiltInConnection > handles numeric suffix slugs (anthropic-api-2) by deriving from base template [0.04ms]
+(pass) createBuiltInConnection > handles numeric suffix slugs (pi-api-key-3) [0.03ms]
+(pass) createBuiltInConnection > throws for unknown slug [0.11ms]
+(pass) createBuiltInConnection > always sets createdAt [0.05ms]
+(pass) createBuiltInConnection > sets piAuthProvider for chatgpt-plus [0.13ms]
+(pass) createBuiltInConnection > sets piAuthProvider for github-copilot [0.05ms]
+(pass) parseTestConnectionError > maps ECONNREFUSED to friendly message [0.16ms]
+(pass) parseTestConnectionError > maps ENOTFOUND to friendly message [0.05ms]
+(pass) parseTestConnectionError > maps fetch failed to friendly message [0.02ms]
+(pass) parseTestConnectionError > maps 401 to invalid API key [0.03ms]
+(pass) parseTestConnectionError > maps unauthorized to invalid API key [0.02ms]
+(pass) parseTestConnectionError > maps 404+model to model message [0.03ms]
+(pass) parseTestConnectionError > maps 404 without model to endpoint message [0.04ms]
+(pass) parseTestConnectionError > maps 429 to rate limit [0.08ms]
+(pass) parseTestConnectionError > maps 403 to permission error [0.03ms]
+(pass) parseTestConnectionError > maps provider mismatch API key errors to actionable guidance [0.01ms]
+(pass) parseTestConnectionError > passes through unknown errors truncated to 300 chars [0.04ms]
+(pass) parseTestConnectionError > passes through short unknown errors as-is [0.03ms]
+
+packages\server-core\src\durable-runtime\audit.test.ts:
+(pass) legacy projection audit > detects divergence without mutating either representation [0.59ms]
+(pass) legacy projection audit > emits structured parity metrics for the production shadow read [0.40ms]
+
+packages\server-core\src\durable-runtime\coordinator.test.ts:
+(pass) DurableRuntimeCoordinator > persists native observations without changing execution state, context or usage [56.15ms]
+(pass) DurableRuntimeCoordinator > owns a complete cross-process T1/T2 boundary [47.55ms]
+(pass) DurableRuntimeCoordinator > aggregates a parallel tool batch and accepts out-of-order T2 commits [51.69ms]
+(pass) DurableRuntimeCoordinator > commits final assistant output before it is projected [36.92ms]
+(pass) DurableRuntimeCoordinator > parks a run whose tool outcome is unknown [43.42ms]
+(pass) DurableRuntimeCoordinator > startup recovery parks an unknown effect without replaying it [41.71ms]
+(pass) DurableRuntimeCoordinator > startup recovery terminalizes an interrupted run with no unknown effect [43.68ms]
+(pass) DurableRuntimeCoordinator > atomically commits an assistant model outcome and deduplicated usage [41.93ms]
+(pass) DurableRuntimeCoordinator > owns model T1/T2 and usage across the provider effect boundary [51.75ms]
+(pass) DurableRuntimeCoordinator > parks a provider request left between model T1 and T2 [40.27ms]
+(pass) DurableRuntimeCoordinator > durably resolves an unknown provider attempt without retrying it [37.85ms]
+(pass) DurableRuntimeCoordinator > atomically commits a verified reconciliation and resumes the program counter [39.37ms]
+(pass) DurableRuntimeCoordinator > queries a registered adapter using the durable idempotency identity [41.50ms]
+(pass) DurableRuntimeCoordinator > makes TaskRunner facts authoritative and replayable after terminal cleanup [85.62ms]
+(pass) DurableRuntimeCoordinator > restores a verified backup atomically while retaining the previous live database [100.46ms]
+(pass) DurableRuntimeCoordinator > imports branch history without fabricating tool dispatch evidence [86.33ms]
+(pass) background cache warming ledger > meters warming without disturbing pending tool or adding context [49.92ms]
+(pass) background cache warming ledger > meters warming without disturbing pending model or adding context [53.81ms]
+(pass) background cache warming ledger > accepts metered cancellation after the owning task settles, without reopening it [41.19ms]
+(pass) background cache warming ledger > retains an unknown refresh as pending audit evidence across restart without replay [53.12ms]
+
+packages\server-core\src\durable-runtime\model-usage-audit.test.ts:
+(pass) native usage parity preserves cache and reasoning breakdown without summing subsets twice [1.59ms]
+(pass) detects missing, duplicate and orphan model rows and excludes tool usage [0.46ms]
+(pass) a dispatched request without a provider outcome is indeterminate, not a zero-cost success [4.23ms]
+
+packages\server-core\src\durable-runtime\process-crash.test.ts:
+(pass) durable runtime process crash recovery > a kill before T1 produces zero external effect calls [202.52ms]
+(pass) durable runtime process crash recovery > a kill after an external effect but before T2 parks without replay [201.45ms]
+(pass) durable runtime process crash recovery > a kill after T1 but before the effect remains unknown and never executes automatically [183.67ms]
+(pass) durable runtime process crash recovery > a kill after tool T2 but before publish rebuilds the settled outcome [214.07ms]
+(pass) durable runtime process crash recovery > a kill after a billable model request but before T2 parks without rebilling [193.85ms]
+(pass) durable runtime process crash recovery > a kill after model T2 but before publish rebuilds response and usage [252.87ms]
+
+packages\server-core\src\durable-runtime\projection-runner.test.ts:
+(pass) DurableProjectionRunner > persists an incremental cursor and atomically materialized snapshot [6.61ms]
+(pass) DurableProjectionRunner > rebuilds the same snapshot from seq zero [7.03ms]
+(pass) DurableProjectionRunner > fails closed on an incompatible persisted projection schema [4.57ms]
+(pass) DurableProjectionRunner > CAS prevents two projection writers from advancing the same cursor [5.78ms]
+(pass) session projections skip other sessions without treating their global sequence gaps as corruption [7.91ms]
+
+packages\server-core\src\durable-runtime\projection.test.ts:
+(pass) durable projections > derive deterministic model context while excluding transport and control state [0.37ms]
+(pass) durable projections > rebuild produces the same projection from the same immutable facts [0.06ms]
+(pass) durable projections > incrementally materializes isolated session histories behind one workspace cursor [0.51ms]
+(pass) durable projections > rebuilds token and cost totals from deduplicated model attempts [0.86ms]
+(pass) durable projections > uses canonical semantic order while retaining rich UI-only cache metadata [1.07ms]
+(pass) usage regression cases > deduplicates requests and counts reasoning/cache subcategories once [0.25ms]
+(pass) usage regression cases > preserves tool-only request usage through canonical projection without inventing model text [0.41ms]
+(pass) warming increases cumulative cost and tokens without replacing current context usage [0.25ms]
+
+packages\server-core\src\durable-runtime\sensitive-payload.test.ts:
+(pass) redactDurablePayload > redacts credential-shaped fields recursively while preserving operational identity [0.21ms]
+
+packages\server-core\src\durable-runtime\store.test.ts:
+(pass) DurableRuntimeStore > commits T1 and classifies its uncertain tail for reconciliation [44.94ms]
+(pass) DurableRuntimeStore > commits T2, usage, and next operation state atomically [42.46ms]
+(pass) DurableRuntimeStore > rolls back events when the expected operation version is stale [39.90ms]
+(pass) DurableRuntimeStore > rejects operation identity reuse with different arguments [42.03ms]
+(pass) DurableRuntimeStore > maintains monotonic projection cursors [35.64ms]
+(pass) DurableRuntimeStore > migrates a schema-v1 runtime database through the latest schema without losing canonical facts [79.20ms]
+(pass) DurableRuntimeStore > checks integrity and creates a standalone consistent backup [80.91ms]
+(pass) DurableRuntimeStore > retires only stale rebuildable projections and vacuums without deleting facts [53.76ms]
+(pass) DurableRuntimeStore > persists parity observations as rollout/dashboard evidence [43.95ms]
+(pass) DurableRuntimeStore > classifies actionable SQLite lifecycle failures [0.30ms]
+(pass) DurableRuntimeStore > fails closed with a structured busy error under a real competing writer lock [132.02ms]
+(pass) DurableRuntimeStore > fails closed with a structured readonly error from real SQLite query-only mode [38.00ms]
+(pass) DurableRuntimeStore > fails closed with a structured full error at SQLite max_page_count [41.31ms]
+(pass) DurableRuntimeStore > fails closed with a classified error for a corrupt runtime database [10.44ms]
+
+packages\server-core\src\durable-runtime\task-node-reconciliation.test.ts:
+(pass) task_node_dispatch production reconciliation adapter > requires a committed child input before deciding the dispatch completed [1.17ms]
+(pass) task_node_dispatch production reconciliation adapter > requires durable absence evidence rather than an empty session registry [0.36ms]
+
+packages\server-core\src\pages\content-input.test.ts:
+(pass) Pages compiled HTML import > accepts workspace-relative/absolute HTML and keeps inline content compatible [18.03ms]
+(pass) Pages compiled HTML import > rejects ambiguous inputs, escape paths, invalid UTF-8 and oversized files [21.17ms]
+(pass) Pages compiled HTML import > imports through managed storage, updates digests/notifications, and fails before metadata changes [306.84ms]
+
+packages\server-core\src\pages\tool-callbacks.test.ts:
+(pass) pages tool callbacks (end-to-end against a temp workspace) > create → list → get round-trips through real storage [76.42ms]
+(pass) pages tool callbacks (end-to-end against a temp workspace) > rejects path-traversal slugs at the tool boundary without escaping the workspace [49.17ms]
+(pass) pages tool callbacks (end-to-end against a temp workspace) > update patches metadata, clears via null, and replaces content [56.40ms]
+(pass) pages tool callbacks (end-to-end against a temp workspace) > writePageData spawns the writer, exports the snapshot, and stamps page.json [531.80ms]
+(pass) pages tool callbacks (end-to-end against a temp workspace) > delete removes the folder and reports the unpublish outcome [9.39ms]
+
+packages\server-core\src\services\artifact-preview.test.ts:
+(pass) Office Artifact previews > converts a real XLSX revision into an immutable local Markdown preview [156.55ms]
+
+packages\server-core\src\services\file-target.test.ts:
+(pass) exact file target resolution > resolves Unicode and literal percent characters relative to the session directory [4.63ms]
+(pass) exact file target resolution > resolves links relative to the source document rather than workspace or revision storage [4.13ms]
+(pass) exact file target resolution > decodes file URLs exactly once [4.99ms]
+(pass) exact file target resolution > recognizes home and directory targets [4.35ms]
+(pass) exact file target resolution > does not replace a missing requested file with a nearby same-name file [3.02ms]
+(pass) exact file target resolution > requires context for relative paths and rejects URI schemes [0.34ms]
+(pass) exact file target resolution > applies path permissions including symlink destinations [4.64ms]
+
+packages\server-core\src\services\image-generation.test.ts:
+(pass) native image generation provider > generates one inline image with bounded native defaults [2.92ms]
+(pass) native image generation provider > rejects invalid format combinations and provider payloads before Artifact creation [1.05ms]
+(pass) native image generation provider > only advertises standard OpenAI API-key connections [0.14ms]
+(pass) native image generation provider > resolves the preferred or explicit credential without using OAuth as an Images API key [0.90ms]
+
+packages\server-core\src\services\image-utils.test.ts:
+(pass) inspectImageBuffer > returns ok when metadata is available [0.72ms]
+(pass) inspectImageBuffer > returns invalid_image when the processor can run but the input is unreadable [0.58ms]
+(pass) inspectImageBuffer > returns processor_unavailable when image processing support is missing [0.30ms]
+
+packages\server-core\src\services\vcredist.test.ts:
+(pass) checkVCRedistInstalled > returns installed=true on non-Windows platforms [1.85ms]
+(pass) checkVCRedistInstalled > returns installed=true when DLL exists in System32 [6.28ms]
+(pass) checkVCRedistInstalled > returns correct x64 download URL when DLL not found [2.59ms]
+(pass) checkVCRedistInstalled > returns correct ARM64 download URL on ARM64 architecture [2.10ms]
+
+packages\server-core\src\services\workspace-backup.test.ts:
+(pass) workspace backup > creates a verifiable backup and restores it to a new directory [152.84ms]
+(pass) workspace backup > fails verification when a backed-up file is modified [50.85ms]
+(pass) workspace backup recovery boundaries > backs up a live SQLite store once without WAL and restores over stale files [198.79ms]
+(pass) workspace backup recovery boundaries > rejects traversal, duplicate entries, malformed manifests and symlink sources before restore [155.72ms]
+(pass) workspace backup recovery boundaries > rejects nested backup destinations before creating them [14.67ms]
+
+packages\server-core\src\sessions\adopt-task-draft.test.ts:
+[session] adoptGeneratedTaskOrchestrator: session not found {
+  sessionId: "missing",
+  taskSlug: "slug-a",
+}
+(pass) adoptGeneratedTaskOrchestrator guards > returns false when the session does not exist [12.75ms]
+[session] adoptGeneratedTaskOrchestrator: session is not a task draft {
+  sessionId: "plain",
+  taskSlug: "slug-a",
+}
+(pass) adoptGeneratedTaskOrchestrator guards > returns false when the session is not a task draft [1.09ms]
+(pass) adoptGeneratedTaskOrchestrator guards > is an idempotent no-op (true) when already bound to the same slug [0.35ms]
+[session] adoptGeneratedTaskOrchestrator: slug mismatch, refusing to rebind {
+  sessionId: "orch",
+  existing: "slug-a",
+  requested: "slug-b",
+}
+(pass) adoptGeneratedTaskOrchestrator guards > refuses (false) to rebind a session already bound to a different slug [0.37ms]
+[session] bindExistingSessionToTask: session not found {
+  sessionId: "missing",
+  taskSlug: "slug-a",
+}
+(pass) bindExistingSessionToTask guards > returns false when the session does not exist [0.80ms]
+(pass) bindExistingSessionToTask guards > is an idempotent no-op (true) when already bound to the same slug [0.38ms]
+[session] bindExistingSessionToTask: slug mismatch, refusing to rebind {
+  sessionId: "orch",
+  existing: "slug-a",
+  requested: "slug-b",
+}
+(pass) bindExistingSessionToTask guards > refuses (false) to rebind a session already owned by a different slug [0.31ms]
+[session] adoptGeneratedTaskOrchestrator: promoted draft {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+  modelChanged: true,
+  connectionChanged: true,
+  cwdChanged: true,
+  modeChanged: true,
+}
+(pass) adopt/bind route changed fields through canonical live-update mutators > adopt delegates each changed field to its canonical mutator + sets connection directly [0.93ms]
+[session] adoptGeneratedTaskOrchestrator: promoted draft {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+  modelChanged: false,
+  connectionChanged: false,
+  cwdChanged: false,
+  modeChanged: false,
+}
+(pass) adopt/bind route changed fields through canonical live-update mutators > adopt does NOT touch the mutators when nothing changed (no agent churn) [0.45ms]
+[session] bindExistingSessionToTask: bound existing session {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+  modelChanged: true,
+  connectionChanged: true,
+  cwdChanged: true,
+  modeChanged: true,
+}
+(pass) adopt/bind route changed fields through canonical live-update mutators > bind delegates each changed field to its canonical mutator [0.39ms]
+[session] bindExistingSessionToTask: bound existing session {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+  modelChanged: false,
+(pass) adopt/bind route changed fields through canonical live-update mutators > bind does NOT touch the mutators when nothing changed [0.27ms]
+  connectionChanged: false,
+  cwdChanged: false,
+  modeChanged: false,
+}
+
+packages\server-core\src\sessions\archive-guards.test.ts:
+(pass) validateArchiveTarget (archive_session guards) > allows archiving an idle session in the same workspace [0.12ms]
+(pass) validateArchiveTarget (archive_session guards) > allows unarchiving an idle session in the same workspace [0.04ms]
+(pass) validateArchiveTarget (archive_session guards) > rejects an unknown target [0.04ms]
+(pass) validateArchiveTarget (archive_session guards) > rejects a cross-workspace target with the same opaque message as unknown [0.06ms]
+(pass) validateArchiveTarget (archive_session guards) > rejects archiving a session that is mid-turn [0.03ms]
+(pass) validateArchiveTarget (archive_session guards) > allows UNarchiving a session that is mid-turn [0.03ms]
+
+packages\server-core\src\sessions\background-task-surface.test.ts:
+[session] [bg-lifecycle] task completed {
+  sessionId: "idle-complete",
+  taskId: "task_1",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "idle-complete",
+  taskId: "task_1",
+  status: "completed",
+}
+(pass) background task completion surfacing (idle keep-alive) > surfaces a completed task to an idle keep-alive session with intent + output file [10.90ms]
+[session] [bg-lifecycle] task completed {
+  sessionId: "in-turn",
+  taskId: "task_2",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+(pass) background task completion surfacing (idle keep-alive) > does NOT surface while a turn is active (agent sees the notification via the live stream) [4.14ms]
+[session] [bg-lifecycle] task completed {
+[session] Cannot send event - no event sink
+  sessionId: "keepalive-off",
+  taskId: "task_3",
+  status: "completed",
+}
+(pass) background task completion surfacing (idle keep-alive) > does NOT surface when keep-alive is OFF [2.67ms]
+[session] [bg-lifecycle] task completed {
+[session] Cannot send event - no event sink
+  sessionId: "dupe",
+  taskId: "task_4",
+  status: "completed",
+}
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "dupe",
+  taskId: "task_4",
+  status: "completed",
+}
+[session] [bg-lifecycle] task completed {
+  sessionId: "dupe",
+  taskId: "task_4",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+(pass) background task completion surfacing (idle keep-alive) > surfaces at most once even if a duplicate terminal notification arrives [2.61ms]
+[session] [bg-lifecycle] task completed {
+[session] Cannot send event - no event sink
+  sessionId: "failed",
+  taskId: "task_5",
+  status: "failed",
+}
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "failed",
+  taskId: "task_5",
+  status: "failed",
+}
+(pass) background task completion surfacing (idle keep-alive) > surfaces a failure with a status-appropriate message [3.09ms]
+
+packages\server-core\src\sessions\cold-session-metadata.test.ts:
+[session] Cold-load triggered for persistSession on cold-status
+[session] Cold-hydrated 0 messages for session cold-status
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > setSessionStatus on a cold session is on disk after flushSession resolves [118.82ms]
+[session] Cannot send event - no event sink
+[session] Cold-load triggered for persistSession on cold-labels
+[session] Cold-hydrated 0 messages for session cold-labels
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > setSessionLabels on a cold session is on disk after flushSession resolves [98.46ms]
+[session] Cold-load triggered for persistSession on cold-rename
+[session] Cold-hydrated 0 messages for session cold-rename
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > renameSession on a cold session persists (with explicit flushSession) [87.40ms]
+[session] Cold-load triggered for persistSession on cold-preserve-msgs
+[session] Cold-hydrated 3 messages for session cold-preserve-msgs
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > cold-session persist preserves existing messages on disk [105.67ms]
+[session] Cold-load triggered for persistSession on cold-concurrent
+[session] Cold-hydrated 0 messages for session cold-concurrent
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > concurrent cold-session status changes serialize to last-writer-wins on disk [114.90ms]
+[session] Cold-load triggered for persistSession on cold-flush-ordering
+[session] Cold-hydrated 0 messages for session cold-flush-ordering
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > flushSession on a cold session returns only after the disk write lands [103.11ms]
+
+packages\server-core\src\sessions\context-handoff.test.ts:
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > records a complete document on disk before reporting the handoff ready [67.09ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > fails the handoff instead of dispatching a document the model left incomplete [48.14ms]
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > never resurrects a cancelled handoff when the document arrives late [25.40ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > turns a handoff interrupted by shutdown into an explicit retryable failure [70.08ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > reuses the successor created before the crash instead of spawning a second one [98.49ms]
+(pass) context handoff orchestration > leaves a handoff whose document never materialised untouched rather than dispatching an empty continuation [2.97ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Context handoff successor failed 3186 |     // `{ emitCreatedEvent: false }` to avoid a redundant hydrate.
+3187 |     internal?: { emitCreatedEvent?: boolean },
+3188 |   ): Promise<Session> {
+3189 |     const workspace = getWorkspaceByNameOrId(workspaceId)
+3190 |     if (!workspace) {
+3191 |       throw new Error(`Workspace ${workspaceId} not found`)
+                       ^
+error: Workspace ws_test not found
+      at createSessionInternal (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:3191:17)
+      at startContextSuccessor (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4104:36)
+      at async recoverContextHandoffs (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4232:79)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\context-handoff.test.ts:162:17)
+
+(pass) context handoff orchestration > keeps the document and records a retryable failure when the successor cannot be created [139.09ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > rewrites only the handing-off session and leaves unrelated sessions untouched [66.70ms]
+
+packages\server-core\src\sessions\create-managed-session.test.ts:
+(pass) createManagedSession > normalizes legacy thinkingLevel=think on restore [0.14ms]
+(pass) createManagedSession > drops invalid thinking levels instead of leaking them into runtime state [0.10ms]
+
+packages\server-core\src\sessions\execute-prompt-automation-test-mode.test.ts:
+(pass) executePromptAutomation waitForCompletion > waitForCompletion:false returns as soon as the session is created (does not await the turn) [4.05ms]
+(pass) executePromptAutomation waitForCompletion > default (waitForCompletion unset) awaits sendMessage and propagates its error [3.01ms]
+
+packages\server-core\src\sessions\idle-session-cache.test.ts:
+[session] Lazy-loaded 1 messages for session reload
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) idle eviction flushes pending changes and reloads the complete transcript [104.27ms]
+(pass) idle cleanup protects running work and retires eligible runtime resources [2.47ms]
+(pass) a session accessed during flush is not evicted [0.70ms]
+(pass) failed persistence prevents idle eviction [0.93ms]
+(pass) a new turn during runtime retirement retains its history [1.09ms]
+
+packages\server-core\src\sessions\midstream-queue.test.ts:
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > distinguishes non-interrupting queue mode from a failed steer [2.23ms]
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > queues instead of steering while a manual compaction owns the turn (#1058) [2.87ms]
+[session] mid-stream send {
+  sessionId: "compaction-midstream",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: true,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > mid-stream send during a manual compaction is queued for replay, not steered, and not an interruption [101.32ms]
+[session] mid-stream send {
+  sessionId: "idle-midstream",
+  behavior: "steer",
+  steered: true,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > non-compacting mid-stream send keeps the resolved behavior and stays non-interrupting [105.71ms]
+[session] mid-stream send {
+  sessionId: "legacy-backend-midstream",
+  behavior: "steer",
+  steered: true,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > a backend without the compaction concept is treated as not compacting [113.06ms]
+[session] mid-stream send {
+  sessionId: "failed-steer-midstream",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > a failed steer on a normal turn still marks the replay as interrupted [112.81ms]
+[session] replay queued {
+  sessionId: "queue-ordering",
+  messageId: "queued-user",
+  queueLengthAfterShift: 0,
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > re-stamps replay after the prior final response and emits that timestamp [6.12ms]
+
+packages\server-core\src\sessions\pi-retry-streaming.test.ts:
+10423 |   /**
+10424 |    * Queue a text delta for batched sending (performance optimization)
+10425 |    * Instead of sending 50+ IPC events per second, batches deltas and flushes every 50ms
+10426 |    */
+10427 |   private queueDelta(sessionId: string, workspaceId: string, delta: string, turnId?: string, thinking?: ThinkingDelta): void {
+10428 |     this.deltas.queue(sessionId, workspaceId, delta, turnId, thinking)
+                 ^
+TypeError: undefined is not an object (evaluating 'this.deltas.queue')
+      at queueDelta (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:10428:10)
+      at processEvent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:9480:14)
+      at <anonymous> (E:\Phaneris\packages\server-core\src\sessions\pi-retry-streaming.test.ts:37:11)
+(fail) Pi retry streaming boundaries > discards pending failed deltas before backoff and never sends them later [4.35ms]
+10423 |   /**
+10424 |    * Queue a text delta for batched sending (performance optimization)
+10425 |    * Instead of sending 50+ IPC events per second, batches deltas and flushes every 50ms
+10426 |    */
+10427 |   private queueDelta(sessionId: string, workspaceId: string, delta: string, turnId?: string, thinking?: ThinkingDelta): void {
+10428 |     this.deltas.queue(sessionId, workspaceId, delta, turnId, thinking)
+                 ^
+TypeError: undefined is not an object (evaluating 'this.deltas.queue')
+      at queueDelta (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:10428:10)
+      at processEvent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:9480:14)
+      at <anonymous> (E:\Phaneris\packages\server-core\src\sessions\pi-retry-streaming.test.ts:59:11)
+(fail) Pi retry streaming boundaries > discards already-flushed partials and persists only the recovered answer [1.86ms]
+10423 |   /**
+10424 |    * Queue a text delta for batched sending (performance optimization)
+10425 |    * Instead of sending 50+ IPC events per second, batches deltas and flushes every 50ms
+10426 |    */
+10427 |   private queueDelta(sessionId: string, workspaceId: string, delta: string, turnId?: string, thinking?: ThinkingDelta): void {
+10428 |     this.deltas.queue(sessionId, workspaceId, delta, turnId, thinking)
+                 ^
+TypeError: undefined is not an object (evaluating 'this.deltas.queue')
+      at queueDelta (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:10428:10)
+      at processEvent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:9480:14)
+      at <anonymous> (E:\Phaneris\packages\server-core\src\sessions\pi-retry-streaming.test.ts:80:11)
+(fail) Pi retry streaming boundaries > a discard for another identity cannot wipe a newer stream or its batch [2.02ms]
+10423 |   /**
+10424 |    * Queue a text delta for batched sending (performance optimization)
+10425 |    * Instead of sending 50+ IPC events per second, batches deltas and flushes every 50ms
+10426 |    */
+10427 |   private queueDelta(sessionId: string, workspaceId: string, delta: string, turnId?: string, thinking?: ThinkingDelta): void {
+10428 |     this.deltas.queue(sessionId, workspaceId, delta, turnId, thinking)
+                 ^
+TypeError: undefined is not an object (evaluating 'this.deltas.queue')
+      at queueDelta (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:10428:10)
+      at processEvent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:9480:14)
+      at <anonymous> (E:\Phaneris\packages\server-core\src\sessions\pi-retry-streaming.test.ts:91:13)
+(fail) Pi retry streaming boundaries > repeated failed attempts leave no fused text or unfinished delta timer [2.39ms]
+
+packages\server-core\src\sessions\pi-turn-anchors.test.ts:
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor then loadPiTurnAnchors round-trips [49.24ms]
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor is idempotent for the same value [10.29ms]
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor overwrites when the anchor changes [16.09ms]
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor with empty arguments is a no-op [3.46ms]
+(pass) pi-turn-anchors sidecar > loadPiTurnAnchors tolerates a missing sidecar file [2.71ms]
+(pass) pi-turn-anchors sidecar > loadPiTurnAnchors tolerates a malformed sidecar file [27.84ms]
+(pass) copyPiTurnAnchorsForBranch > copies only anchors whose Craft message id is in the branch path [95.48ms]
+(pass) copyPiTurnAnchorsForBranch > does not write a file when the source has no anchors [3.98ms]
+(pass) copyPiTurnAnchorsForBranch > does not write a file when no source anchor matches the branched ids [24.72ms]
+(pass) copyPiTurnAnchorsForBranch > writes a sidecar in the documented v1 shape [16.53ms]
+
+packages\server-core\src\sessions\plugin-activation.test.ts:
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s1: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > enables the plugin own sources through enabledSourceSlugs [35.22ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s2: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > never aborts the agent and never emits source_activated (P9-3) [28.12ms]
+[session] Session s3: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > hands the live agent the new slot without rebuilding it [13.94ms]
+[session] Session s4: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+[session] Session s4: active plugin cleared
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > clears the slot with null and reports it [20.28ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s5: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+[session] Session s5: active plugin set to "other" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > replaces the previous plugin silently (D12) and keeps its sources enabled [45.88ms]
+[session] Sources required by plugin "market-analyst" are not usable (missing or unauthenticated): needsAuth
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s6: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 1 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > reports unusable contributed sources instead of failing the activation [62.03ms]
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > rejects activating a plugin that is not installed [3.47ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s8: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+[session] Session s8: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > is idempotent — re-activating does not duplicate enabled sources [67.56ms]
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > throws for an unknown session rather than silently doing nothing [2.16ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s9: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > drops the cached source runtime so the next turn rebuilds for the new set [29.07ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s10: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+[session] Session s10: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > leaves an up-to-date runtime alone when activation enables nothing new [42.79ms]
+
+packages\server-core\src\sessions\runtime-config.test.ts:
+(pass) buildBackendRuntimeSignature > changes when a custom endpoint model image override changes [0.56ms]
+(pass) buildBackendRuntimeSignature > ignores non-runtime metadata such as lastUsedAt [0.14ms]
+(pass) buildRestartRequiredSignature > changes when the utility model changes [0.14ms]
+(pass) filterAttachmentsForModelInput > omits images for pi_compat text-only models while preserving other attachments [0.35ms]
+(pass) filterAttachmentsForModelInput > keeps images when the per-model override enables images [0.05ms]
+(pass) filterAttachmentsForModelInput > treats explicit supportsImages=false as overriding endpoint-level true [0.06ms]
+
+packages\server-core\src\sessions\sendmessage-durability.test.ts:
+[session] Cannot send event - no event sink
+[session] Locked session durability-normal to connection "pi-api-key"
+[session] Using LLM connection "pi-api-key" (pi_compat) for session durability-normal
+[session] Cannot send event - no event sink
+[session] [decision:suggestions] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 212 |     ...hooks,
+213 |   }
+214 | }
+215 | 
+216 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+217 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:217:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4422:14)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4261:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:217:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4422:14)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4261:24)
+    at processTicksAndRejections (native:7:39)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "durability-normal",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:217:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4422:14)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4261:24)\n    at processTicksAndRejections (native:7:39)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage durability > user message is on disk before onAck fires (normal branch) [361.12ms]
+[session] mid-stream send {
+  sessionId: "durability-midstream",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "none",
+  connectionSlug: "pi-api-key",
+}
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage durability > user message is on disk before onAck fires (mid-stream / queued branch) [110.93ms]
+
+packages\server-core\src\sessions\sendmessage-oauth-refresh.test.ts:
+[session] Cannot send event - no event sink
+[session] [OAuth] Checking if any tokens need refresh
+[session] [decision:suggestions] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] Locked session cold-oauth to connection "pi-api-key"
+[session] Cannot send event - no event sink
+[session] Using LLM connection "pi-api-key" (pi_compat) for session cold-oauth
+[session] Marked source test-oauth-mcp as needing re-auth
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 212 |     ...hooks,
+213 |   }
+214 | }
+215 | 
+216 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+217 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:217:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4422:14)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4261:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:217:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4422:14)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4261:24)
+    at processTicksAndRejections (native:7:39)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "cold-oauth",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:217:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4422:14)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4261:24)\n    at processTicksAndRejections (native:7:39)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage OAuth refresh ordering (#710) > cold session: tokenRefreshManager runs before getOrCreateAgent [217.04ms]
+[session] Cannot send event - no event sink
+[session] [OAuth] Checking if any tokens need refresh
+[session] [OAuth] Refreshing 1 source(s): failing-mcp
+[session] [OAuth] Some sources failed token refresh: [ "failing-mcp" ]
+[session] [decision:suggestions] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] Cannot send event - no event sink
+[session] Locked session failed-oauth to connection "pi-api-key"
+[session] Using LLM connection "pi-api-key" (pi_compat) for session failed-oauth
+[session] Marked source failing-mcp as needing re-auth
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 212 |     ...hooks,
+213 |   }
+214 | }
+215 | 
+216 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+217 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:217:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4422:14)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4261:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:217:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4422:14)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4261:24)
+    at processTicksAndRejections (native:7:39)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "failed-oauth",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:217:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4422:14)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4261:24)\n    at processTicksAndRejections (native:7:39)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage OAuth refresh ordering (#710) > failed refresh: source excluded from usable set via in-memory mutation [239.62ms]
+
+packages\server-core\src\sessions\session-created-notify.test.ts:
+(pass) notifySessionCreated > emits a session_created session-event scoped to the workspace [0.39ms]
+
+packages\server-core\src\sessions\session-usage.test.ts:
+(pass) session usage ledger authority > counts all requests and caches, keeps context separate, and survives repeated completion and reload [90.54ms]
+(pass) session usage ledger authority > publishes authoritative occupancy and never re-publishes a pre-compaction count [86.07ms]
+(pass) session usage ledger authority > leaves sessions without a ledger unchanged [58.93ms]
+
+packages\server-core\src\sessions\source-activated-auto-retry.test.ts:
+(pass) claimAutoRetryPending > allows the first matching retry and drops later duplicates within the deadline [0.09ms]
+(pass) claimAutoRetryPending > clears stale pending slots without dropping the message [0.03ms]
+(pass) claimAutoRetryPending > does not over-dedup unrelated messages [0.02ms]
+[session] Source "github" activated for session basic-resend, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > basic re-send — fires sendMessage with "[<slug> activated]" suffix [153.28ms]
+[session] Source "github" activated for session chained, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Source "linear" activated for session chained, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > chained activations — produces two retries with different suffixes [304.36ms]
+[session] Source "github" activated for session empty-original, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Source "github" activated for session empty-original, but no message to resend (empty capture, no prior user message); skipping auto-retry
+(pass) source_activated auto-retry > empty originalMessage and no prior user message — skips (nothing to resend) [158.05ms]
+[session] Source "my-space" activated for session empty-with-history, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > empty originalMessage with a prior user message — falls back to the last user message [154.67ms]
+(pass) source_activated auto-retry > lastUserMessageContent skips non-user, empty and non-string entries [2.52ms]
+[session] Source "github" activated for session preempted, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Auto-retry skipped for preempted: follow-up message arrived first
+(pass) source_activated auto-retry > legitimate user message preempts retry — skipped when follow-up arrived [154.57ms]
+[session] Source "github" activated for session race-rpc-first, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Auto-retry skipped for race-rpc-first: follow-up message arrived first
+(pass) source_activated auto-retry > mixed-version race: legacy RPC arrives BEFORE timer fires — exactly one message committed [202.91ms]
+[session] Cannot send event - no event sink
+[session] Source "github" activated for session race-timer-first, scheduling auto-retry
+(pass) source_activated auto-retry > mixed-version race: timer fires BEFORE legacy RPC arrives — exactly one message committed [153.04ms]
+[session] Cannot send event - no event sink
+[session] Source "github" activated for session unrelated-message, scheduling auto-retry
+[session] Auto-retry skipped for unrelated-message: follow-up message arrived first
+(pass) source_activated auto-retry > user message with different content still goes through — pending slot does not over-dedup [152.79ms]
+[session] Source "github" activated for session deleted-mid-window, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > timer cancelled on session delete — no auto-retry fires after deletion [204.19ms]
+
+packages\server-core\src\sessions\workflow-task-progress.test.ts:
+[session] [bg-lifecycle] task backgrounded {
+  sessionId: "wf-register",
+  taskId: "w5x",
+  intent: "PII sweep",
+  turnId: undefined,
+}
+[session] Cannot send event - no event sink
+(pass) workflow background-task progress > registers a workflow launch with workflowId and a zeroed agent count [3.15ms]
+[session] [bg-lifecycle] task backgrounded {
+[session] Cannot send event - no event sink
+  sessionId: "wf-count",
+  taskId: "w5x",
+  intent: undefined,
+  turnId: undefined,
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) workflow background-task progress > increments the completed-agent count on workflow_agent_completed [3.46ms]
+[session] [bg-lifecycle] task backgrounded {
+[session] Cannot send event - no event sink
+  sessionId: "wf-complete-by-wfid",
+  taskId: "w5x",
+  intent: undefined,
+  turnId: undefined,
+}
+[session] [bg-lifecycle] task completed {
+  sessionId: "wf-complete-by-wfid",
+  taskId: "wf_1",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "wf-complete-by-wfid",
+  taskId: "wf_1",
+  status: "completed",
+}
+(pass) workflow background-task progress > resolves completion keyed on the wf_ run id (not just the Task ID) [2.68ms]
+
+packages\server-core\src\tasks\create-task.test.ts:
+(pass) resolveCreateTaskProjectId > inherits the invoking session project when no override is supplied [0.08ms]
+(pass) resolveCreateTaskProjectId > prefers an explicit project over the invoking session project [0.03ms]
+(pass) resolveCreateTaskProjectId > leaves tasks unbound when neither side has a project [0.03ms]
+
+packages\server-core\src\tasks\TaskRunner.test.ts:
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"approval"} [71.15ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"loop"} [27.53ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"orchestrator"} [24.84ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"approval":true} [41.62ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"when":"false"} [27.01ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"loop":{"until":"done","max":2}} [47.38ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"for_each":"items"} [23.13ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"trigger":"one_success"} [34.55ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"replicas":2} [34.00ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"aggregate":"concat"} [24.08ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"max_parallel":2} [37.84ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"timeout":10} [39.78ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"cache":"pure"} [24.25ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"backoff":{"base":1}}} [27.46ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"when":"empty"}} [39.46ms]
+(pass) TaskRunner (Conductor) > pauses at the cumulative token budget even when current context is small [99.83ms]
+(pass) TaskRunner (Conductor) > runs a dependency chain, feeding each output into the next [203.54ms]
+(pass) TaskRunner (Conductor) > passes llmConnection (node value, else the task default) to createSession [84.39ms]
+(pass) TaskRunner (Conductor) > resolves permissionMode: node override → task default → child (never the workspace default) [76.27ms]
+(pass) TaskRunner (Conductor) > rejects an omitted permission mode before creating any child [23.49ms]
+(pass) TaskRunner (Conductor) > stamps task/run/node linkage on each dispatched child session [56.01ms]
+(pass) TaskRunner (Conductor) > creates a child session per node (createSession announces each to the renderer by default) [77.33ms]
+(pass) TaskRunner (Conductor) > children inherit the orchestrator's working directory (falling back to spec.cwd) [52.05ms]
+(pass) TaskRunner (Conductor) > moves the orchestrator tile to in-progress on start and done on completion [66.81ms]
+(pass) TaskRunner (Conductor) > runs a fan-out and joins at the synthesizer [175.98ms]
+(pass) TaskRunner (Conductor) > marks a node failed, leaves dependents pending, and settles the run as failed [99.38ms]
+(pass) TaskRunner (Conductor) > honors max_parallel [99.02ms]
+(pass) TaskRunner (Conductor) > pauses scheduling and resumes [99.86ms]
+(pass) TaskRunner (Conductor) > stops a run and cancels in-flight children [67.59ms]
+(pass) TaskRunner (Conductor) > resumes a run from the persisted run-log after a restart, reusing finished node outputs [136.87ms]
+(pass) TaskRunner (Conductor) > rehydrates node output from canonical task facts without the run-log files [62.25ms]
+(pass) TaskRunner (Conductor) > wraps child dispatch in durable T1/T2 around the external send [43.72ms]
+(pass) TaskRunner (Conductor) > never retries a child dispatch after durable T1 when T2 is missing [65.77ms]
+(pass) TaskRunner (Conductor) > retries a failed node up to retry.limit, then fails [105.98ms]
+(pass) TaskRunner (Conductor) > does not retry when retry.limit is 0 [37.55ms]
+(pass) TaskRunner (Conductor) > feeds the prior failure into the retried prompt and can then succeed [90.74ms]
+(pass) TaskRunner (Conductor) > completes without verifying when there is no orchestrator [73.76ms]
+(pass) TaskRunner (Conductor) > gates the run on the orchestrator verdict and includes acceptance_criteria in the prompt [78.52ms]
+(pass) TaskRunner (Conductor) > re-runs the terminal node once on a FAIL verdict, then completes on PASS [91.47ms]
+(pass) TaskRunner (Conductor) > fails the run when FAIL verdicts exhaust the repair budget (max_iterations) [126.78ms]
+(pass) TaskRunner (Conductor) > re-asks on an unparsable verdict and fails only after the re-ask budget is exhausted [113.19ms]
+(pass) TaskRunner (Conductor) > scopes a repair to the named nodes and their transitive dependents [131.89ms]
+(pass) TaskRunner (Conductor) > an unparsed re-ask does not consume the repair budget [104.51ms]
+(pass) TaskRunner (Conductor) > does not hang in verifying when the verification send rejects [59.10ms]
+(pass) TaskRunner (Conductor) > ignores a verdict that arrives after the run was stopped [73.96ms]
+(pass) TaskRunner (Conductor) > reconstructs the repair counter from the run-log on a cross-restart resume [121.80ms]
+(pass) TaskRunner (Conductor) > fails a node that completes with no text despite declaring outputs (instead of marking it done) [60.43ms]
+(pass) TaskRunner (Conductor) > still marks a node done on empty text when it declares no outputs (lenient default) [42.56ms]
+(pass) TaskRunner (Conductor) > publishes the total node count to the orchestrator at run start (stable board denominator) [60.75ms]
+(pass) TaskRunner (Conductor) > fails a run that exceeds the wall-clock timeout and cancels in-flight children [117.27ms]
+(pass) TaskRunner (Conductor) > fails a run stuck in verifying (orchestrator never returns a verdict) [73.84ms]
+
+packages\server-core\src\utils\path-validation.test.ts:
+(pass) validatePathFormat > accepts Unix absolute paths on Unix platforms [0.15ms]
+(pass) validatePathFormat > rejects relative paths on Unix platforms [0.03ms]
+(pass) validatePathFormat > rejects Windows-style paths on Unix platforms [0.02ms]
+(pass) validatePathFormat > accepts only absolute Windows paths on Windows platforms [0.04ms]
+(pass) validatePathFormat > rejects relative and drive-relative Windows paths on Windows platforms [0.10ms]
+(pass) isValidWorkingDirectory > accepts an existing Unix directory [0.13ms]
+(pass) isValidWorkingDirectory > rejects a file path [0.06ms]
+(pass) isValidWorkingDirectory > rejects invalid Windows paths before filesystem checks [0.01ms]
+(pass) isValidWorkingDirectory > accepts absolute Windows paths when the directory exists [0.04ms]
+(pass) isValidWorkspaceRootPath > accepts an existing directory [0.08ms]
+(pass) isValidWorkspaceRootPath > accepts a non-existent path when the parent directory exists [0.10ms]
+(pass) isValidWorkspaceRootPath > accepts a non-existent path when an ancestor directory exists [0.04ms]
+(pass) isValidWorkspaceRootPath > rejects a non-existent path when no ancestor directory exists [0.03ms]
+(pass) isValidWorkspaceRootPath > rejects a non-directory parent path [0.04ms]
+
+packages\server-core\src\bootstrap\__tests__\token-entropy.test.ts:
+(pass) generateServerToken > produces a 48-character hex string [0.42ms]
+(pass) generateServerToken > generates unique tokens [1.64ms]
+(pass) generateServerToken > has high character diversity [0.13ms]
+
+packages\server-core\src\handlers\rpc\files-resolve.test.ts:
+(pass) resolves conversation links in that session directory and rejects other workspace sessions [11.21ms]
+
+packages\server-core\src\handlers\rpc\sessions-ownership.test.ts:
+(pass) sessions RPC workspace ownership (M-1) > allows access to sessions in the calling client workspace [3.51ms]
+(pass) sessions RPC workspace ownership (M-1) > rejects access to sessions in another workspace [2.48ms]
+(pass) sessions RPC workspace ownership (M-1) > falls back to current behavior when the client has no claimed workspace [0.26ms]
+(pass) sessions RPC workspace ownership (M-1) > rejects path-traversal session ids before use [0.26ms]
+
+packages\server-core\src\handlers\rpc\system.open-url.test.ts:
+(pass) registerSystemCoreHandlers OPEN_URL > routes product action links internally via deeplink:navigate [0.83ms]
+(pass) registerSystemCoreHandlers OPEN_URL > routes workspace deep links to workspace target when URL workspace differs [0.17ms]
+(pass) registerSystemCoreHandlers OPEN_URL > routes documentation links internally instead of opening them externally [0.12ms]
+(pass) registerSystemCoreHandlers OPEN_URL > routes the bare documentation link the Help menu uses [0.09ms]
+(pass) registerSystemCoreHandlers OPEN_URL > falls back to client openExternal for product window-mode links [0.30ms]
+(pass) registerSystemCoreHandlers OPEN_URL > keeps forwarding normal http URLs via client openExternal [0.09ms]
+(pass) registerSystemCoreHandlers OPEN_URL > rejects unsupported protocols with a per-scheme reason [0.20ms]
+(pass) registerSystemCoreHandlers OPEN_URL > rejects javascript: URLs with the JavaScript-specific reason [0.09ms]
+(pass) registerSystemCoreHandlers OPEN_URL > rejects malformed URLs through the shared classifier instead of raw URL parsing [0.09ms]
+
+packages\server-core\src\handlers\rpc\transfer.test.ts:
+[Transfer:server] Started transfer 73d3234b-2e8f-4514-b5b7-8d89b9c4003a: 1 chunks, 0.0MB, channel: test:echo
+(pass) chunked transfer handlers > rejects chunk uploads from a different client [3.09ms]
+[Transfer:server] Started transfer bd5c3852-df00-43da-be69-c8d9e13bc77a: 1 chunks, 0.0MB, channel: test:echo
+[Transfer:server] Transfer aborted by client: bd5c3852
+[Transfer:server] Commit failed — unknown transfer: bd5c3852-df00-43da-be69-c8d9e13bc77a
+(pass) chunked transfer handlers > aborts and cleans up an active transfer [3.20ms]
+[Transfer:server] Started transfer dbfd2454-71a3-4581-b92d-15e12acb5cee: 1 chunks, 0.0MB, channel: test:echo
+[Transfer:server] Received chunk 1/1 for dbfd2454
+[Transfer:server] Committing transfer dbfd2454: 1/1 chunks received
+[Transfer:server] Checksum mismatch for dbfd2454: expected 93a23971a914..., got 2668743fd4ed...
+(pass) chunked transfer handlers > rejects checksum mismatches [9.41ms]
+[Transfer:server] Started transfer 84688f1f-b2cf-4b9e-aa58-92e4cd9a3142: 2 chunks, 0.0MB, channel: test:echo
+[Transfer:server] Committing transfer 84688f1f: 1/2 chunks received
+(pass) chunked transfer handlers > rejects commits with missing chunks [2.37ms]
+(pass) chunked transfer handlers > rejects transfer:start above the totalBytes cap [0.40ms]
+(pass) chunked transfer handlers > rejects transfer:start above the chunkCount cap [0.15ms]
+(pass) chunked transfer handlers > rejects non-integer totalBytes and chunkCount [0.13ms]
+[Transfer:server] Started transfer 5f135a78-e025-4fc7-8e8e-317fd5187d8a: 2 chunks, 0.0MB, channel: test:echo
+(pass) chunked transfer handlers > rejects chunks that would exceed the declared total [2.41ms]
+[Transfer:server] Started transfer 5242e4da-c003-4b78-8a55-1a571e929934: 2 chunks, 0.0MB, channel: test:echo
+[Transfer:server] Received chunk 2/2 for 5242e4da
+[Transfer:server] Committing transfer 5242e4da: 2/2 chunks received
+[Transfer:server] Checksum verified: 3afa6b411713...
+[Transfer:server] Reassembled 0.0MB payload for test:echo — executing handler
+[Transfer:server] Handler test:echo completed successfully
+(pass) chunked transfer handlers > refreshes TTL as chunks arrive so slow healthy uploads survive [60.63ms]
+
+packages\server-core\src\handlers\__tests__\validate-file-path.test.ts:
+(pass) validateFilePath > allows paths inside home directory [1.17ms]
+(pass) validateFilePath > allows paths inside temp directory [1.12ms]
+(pass) validateFilePath > denies paths outside all allowed directories [0.73ms]
+(pass) validateFilePath > allows paths inside additionalAllowedDirs [0.90ms]
+(pass) validateFilePath > canonicalizes macOS /tmp aliases for explicitly allowed workspace roots [0.25ms]
+(pass) validateFilePath > still allows homedir paths when additionalAllowedDirs are provided [1.70ms]
+(pass) validateFilePath > blocks sensitive files even inside allowed dirs [1.30ms]
+(pass) validateFilePath > sensitive patterns match Windows backslash separators [0.10ms]
+(pass) validateFilePath > blocks .env files [1.21ms]
+(pass) validateFilePath > blocks credentials.json [1.08ms]
+(pass) validateFilePath > blocks .pem files even inside additionalAllowedDirs [1.71ms]
+(pass) validateFilePath > expands tilde paths [1.03ms]
+(pass) validateFilePath > rejects relative paths [0.12ms]
+(pass) validateFilePath > filters out falsy values in additionalAllowedDirs [1.27ms]
+(pass) validateFilePath > blocks the encrypted credential vault (credentials.enc) [1.29ms]
+(pass) validateFilePath > blocks any *.enc payload even inside additionalAllowedDirs [1.71ms]
+(pass) validateFilePath > blocks source credential cache (.credential-cache.json) [2.60ms]
+(pass) validateFilePath > blocks the app-level config root config.json [1.15ms]
+(pass) validateFilePath > still allows workspace-tree files under ~/.phaneris/workspaces [1.60ms]
+(pass) validateFilePath > new sensitive patterns match Windows backslash separators [0.14ms]
+
+packages\server-core\src\pages\__tests__\mcp-executor.test.ts:
+(pass) createPagesMcpExecutor > executes a tool and returns the content string [0.99ms]
+(pass) createPagesMcpExecutor > throws for an unknown source [0.18ms]
+(pass) createPagesMcpExecutor > throws for a disabled source [0.15ms]
+(pass) createPagesMcpExecutor > throws the stable source-auth-required error for an unauthenticated source [0.13ms]
+(pass) createPagesMcpExecutor > directs api sources to api-kind grants [0.19ms]
+(pass) createPagesMcpExecutor > surfaces non-auth build errors as connect prose [0.18ms]
+(pass) createPagesMcpExecutor > refreshes refreshable sources before building [0.14ms]
+(pass) createPagesMcpExecutor > skips refresh for non-refreshable sources [0.11ms]
+(pass) createPagesMcpExecutor > failed refresh surfaces the stable auth error, not connect prose [0.19ms]
+(pass) createPagesMcpExecutor > auth-shaped build errors become the stable auth error [0.18ms]
+(pass) createPagesMcpExecutor > throws when the tool result is an error [0.12ms]
+(pass) createPagesMcpExecutor > caps oversized results [1.38ms]
+
+packages\server-core\src\pages\__tests__\script-executor-bridge.test.ts:
+(pass) createPagesScriptExecutor > runs the pinned script and returns exit/stdout/stderr [0.58ms]
+(pass) createPagesScriptExecutor > never sets ScriptAction.page (must not clobber the refresh marker) [0.17ms]
+(pass) createPagesScriptExecutor > injects PHANERIS_ workspace + page env for the triggering page [0.17ms]
+(pass) createPagesScriptExecutor > omits runtime/args when not pinned [0.13ms]
+(pass) createPagesScriptExecutor > surfaces a non-zero exit as a resolved outcome (not a throw) [0.12ms]
+(pass) createPagesScriptExecutor > throws when the run is blocked (path escape / missing runtime) [0.20ms]
+
+packages\server-core\src\sessions\__tests__\host-client-fallback.test.ts:
+(pass) SessionManager — host-client fallback > returns the pinned client when it still advertises the capability [0.20ms]
+(pass) SessionManager — host-client fallback > re-pins to a different connected client in the same workspace when the pinned client is gone [0.10ms]
+(pass) SessionManager — host-client fallback > returns null when no client in the workspace advertises the capability [0.03ms]
+(pass) SessionManager — host-client fallback > does not pick clients that lack the capability [0.03ms]
+
+packages\server-core\src\sessions\__tests__\RemoteBrowserPaneManager.test.ts:
+(pass) RemoteBrowserPaneManager — wire packaging > packages async methods into a BrowserCapabilityRequest with sessionId + workspaceId [0.40ms]
+(pass) RemoteBrowserPaneManager — wire packaging > createForSessionAsync awaits the WS round-trip and returns the resolved id [0.12ms]
+(pass) RemoteBrowserPaneManager — wire packaging > throws BROWSER_NO_CAPABLE_CLIENT when no host client is connected [0.13ms]
+(pass) RemoteBrowserPaneManager — wire packaging > throws BROWSER_REMOTE_UPLOAD_NOT_SUPPORTED for uploadFile [0.12ms]
+(pass) RemoteBrowserPaneManager — wire packaging > throws CAPABILITY_UNAVAILABLE when host client does not advertise the capability [0.10ms]
+(pass) RemoteBrowserPaneManager — screenshot wire conversion > converts Uint8Array imageBytes → Buffer [0.27ms]
+(pass) RemoteBrowserPaneManager — screenshot wire conversion > handles wire arrival as serialized {data} object (structured-clone variant) [0.15ms]
+(pass) RemoteBrowserPaneManager — sync stubs > listInstances (sync) returns []; listInstancesAsync hits the wire [0.14ms]
+
+packages\server-core\src\transport\__tests__\error-codes.test.ts:
+(pass) Transport — error code preservation > reads a single 20 MiB message over bounded binary RPC chunks [729.18ms]
+(pass) Transport — error code preservation > rejects oversized replies without disconnecting the client [35.07ms]
+(pass) Transport — error code preservation > preserves `err.code` from server handler → client invoke [8.28ms]
+(pass) Transport — error code preservation > preserves `err.code` from client handler → server invokeClient [20.07ms]
+(pass) Transport — error code preservation > falls back to HANDLER_ERROR when handler throws a plain Error [8.41ms]
+(pass) Transport — capability introspection > hasClientCapability returns true only for advertised capabilities [7.96ms]
+(pass) Transport — capability introspection > findClientsWithCapability filters by workspaceId [8.22ms]
+
+packages\server-core\src\transport\__tests__\server-lifecycle.test.ts:
+(pass) WsRpcServer lifecycle > accepts valid token [10.89ms]
+(pass) WsRpcServer lifecycle > rejects invalid token with 4005 [10.35ms]
+(pass) WsRpcServer lifecycle > rejects missing token [11.13ms]
+(pass) WsRpcServer lifecycle > rejects connections when at maxClients [13.70ms]
+(pass) WsRpcServer lifecycle > allows new connections after a client disconnects [63.70ms]
+(pass) WsRpcServer lifecycle > times out slow handlers [7.32ms]
+(pass) WsRpcServer lifecycle > closes connections that exceed maxPayload (16MiB) [43.61ms]
+(pass) WsRpcServer lifecycle > rejects wrong protocol major version [8.60ms]
+(pass) WsRpcServer lifecycle > terminates all clients on close() [8.57ms]
+(pass) transport memory budgets > bounds replay bytes for large events and preserves sequence gaps for resync [13.94ms]
+(pass) transport memory budgets > disconnects an over-budget socket instead of growing its outgoing queue [0.22ms]
+
+packages\server-core\src\transport\__tests__\session-read.test.ts:
+(pass) round trips long records and split UTF-8, cleaning the immutable lease [19.53ms]
+(pass) freezes records across reads and enforces owner, workspace and offsets [14.69ms]
+(pass) releases capacity after budget failures [4.72ms]
+(pass) rejects corrupt chunk progress and closes the lease [7.67ms]
+(pass) does not publish partial sessions after an interrupted read [6.38ms]
+(pass) expires abandoned leases and releases their files [87.59ms]
+(pass) falls back only when the new channel is unavailable [0.39ms]
+
+packages\server-core\src\webui\__tests__\oauth-callback.test.ts:
+(pass) WebUI /api/oauth/callback > completes OAuth when the relay forwards the inner flow state [53.40ms]
+(pass) WebUI /api/oauth/callback > renders an OAuth failure page when the relay forwards provider errors [40.61ms]
+
+4 tests failed:
+(fail) Pi retry streaming boundaries > discards pending failed deltas before backoff and never sends them later [4.35ms]
+(fail) Pi retry streaming boundaries > discards already-flushed partials and persists only the recovered answer [1.86ms]
+(fail) Pi retry streaming boundaries > a discard for another identity cannot wipe a newer stream or its batch [2.02ms]
+(fail) Pi retry streaming boundaries > repeated failed attempts leave no fused text or unfinished delta timer [2.39ms]
+
+ 449 pass
+ 4 fail
+ 1181 expect() calls
+Ran 453 tests across 56 files. [19.01s]

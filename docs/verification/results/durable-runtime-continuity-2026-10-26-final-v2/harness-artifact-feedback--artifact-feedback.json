@@ -1,0 +1,210 @@
+{
+  "checks": [
+    "HE12 current XLSX extraction is accessible as an immutable view",
+    "HE12 same-version extraction is reused",
+    "HE14 external draft edit produces a new revision and matching view",
+    "HE14 task context exposes the editable draft instead of the final destination",
+    "HE12 submission leaves destination acceptance to the user"
+  ],
+  "first": {
+    "id": "a594ec10-3a85-479f-b4d3-6120536f179f",
+    "workspaceId": "feedback",
+    "sessionId": "report-task",
+    "title": "report.xlsx",
+    "kind": "spreadsheet",
+    "engineId": "native-file",
+    "sourcePath": "E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm\\content\\report.xlsx",
+    "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "baseRevision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+    "currentRevision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+    "draftRevision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+    "status": "draft",
+    "capabilities": {
+      "preview": true,
+      "inspect": true,
+      "edit": false,
+      "materialize": false
+    },
+    "previews": [
+      {
+        "id": "source:0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "revision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "kind": "source",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      },
+      {
+        "id": "render:markdown:0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "revision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "kind": "markdown",
+        "mimeType": "text/markdown",
+        "path": "E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm\\artifacts\\previews\\a594ec10-3a85-479f-b4d3-6120536f179f\\0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d.md"
+      }
+    ],
+    "deliverables": [],
+    "createdAt": 1793000230344,
+    "updatedAt": 1793000231966,
+    "lease": {
+      "id": "f3e0be38-4bd9-453b-b656-15c782622847",
+      "owner": "agent",
+      "acquiredAt": 1793000230381,
+      "expiresAt": 1793001130381
+    },
+    "validation": {
+      "revision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+      "valid": true,
+      "checkedAt": 1793000230407,
+      "errors": [],
+      "warnings": [],
+      "summary": "Validation passed"
+    },
+    "revisions": [
+      {
+        "id": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "contentHash": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "size": 15954,
+        "createdAt": 1793000230355,
+        "origin": "create"
+      }
+    ]
+  },
+  "updated": {
+    "id": "a594ec10-3a85-479f-b4d3-6120536f179f",
+    "workspaceId": "feedback",
+    "sessionId": "report-task",
+    "title": "report.xlsx",
+    "kind": "spreadsheet",
+    "engineId": "native-file",
+    "sourcePath": "E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm\\content\\report.xlsx",
+    "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "baseRevision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+    "currentRevision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+    "draftRevision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+    "status": "draft",
+    "capabilities": {
+      "preview": true,
+      "inspect": true,
+      "edit": false,
+      "materialize": false
+    },
+    "previews": [
+      {
+        "id": "source:5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "revision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "kind": "source",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      },
+      {
+        "id": "render:markdown:5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "revision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "kind": "markdown",
+        "mimeType": "text/markdown",
+        "path": "E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm\\artifacts\\previews\\a594ec10-3a85-479f-b4d3-6120536f179f\\5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195.md"
+      }
+    ],
+    "deliverables": [],
+    "createdAt": 1793000230344,
+    "updatedAt": 1793000232041,
+    "lease": {
+      "id": "f3e0be38-4bd9-453b-b656-15c782622847",
+      "owner": "agent",
+      "acquiredAt": 1793000230381,
+      "expiresAt": 1793001130381
+    },
+    "validation": {
+      "revision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+      "valid": true,
+      "checkedAt": 1793000232020,
+      "errors": [],
+      "warnings": [],
+      "summary": "Validation passed"
+    },
+    "revisions": [
+      {
+        "id": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "contentHash": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "size": 15954,
+        "createdAt": 1793000230355,
+        "origin": "create"
+      },
+      {
+        "id": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "contentHash": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "size": 15954,
+        "createdAt": 1793000232000,
+        "origin": "external-edit"
+      }
+    ]
+  },
+  "submitted": {
+    "id": "a594ec10-3a85-479f-b4d3-6120536f179f",
+    "workspaceId": "feedback",
+    "sessionId": "report-task",
+    "title": "report.xlsx",
+    "kind": "spreadsheet",
+    "engineId": "native-file",
+    "sourcePath": "E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm\\content\\report.xlsx",
+    "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "baseRevision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+    "currentRevision": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+    "draftRevision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+    "status": "ready",
+    "capabilities": {
+      "preview": true,
+      "inspect": true,
+      "edit": false,
+      "materialize": false
+    },
+    "previews": [
+      {
+        "id": "source:5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "revision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "kind": "source",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      },
+      {
+        "id": "render:markdown:5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "revision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "kind": "markdown",
+        "mimeType": "text/markdown",
+        "path": "E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm\\artifacts\\previews\\a594ec10-3a85-479f-b4d3-6120536f179f\\5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195.md"
+      }
+    ],
+    "deliverables": [],
+    "createdAt": 1793000230344,
+    "updatedAt": 1793000232064,
+    "validation": {
+      "revision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+      "valid": true,
+      "checkedAt": 1793000232064,
+      "errors": [],
+      "warnings": [],
+      "summary": "Validation passed"
+    },
+    "revisions": [
+      {
+        "id": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "contentHash": "0d15e49a51f939f23cc08f2430fc2ec3812423e1893c39acf9be7986053e0f6d",
+        "size": 15954,
+        "createdAt": 1793000230355,
+        "origin": "create"
+      },
+      {
+        "id": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "contentHash": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+        "size": 15954,
+        "createdAt": 1793000232000,
+        "origin": "external-edit"
+      }
+    ]
+  },
+  "facts": [
+    {
+      "id": "a594ec10-3a85-479f-b4d3-6120536f179f",
+      "title": "report.xlsx",
+      "status": "draft",
+      "revision": "5d6726f60a187921e4fc69f1153916ae52e1cdc39d178002460e2e0256449195",
+      "path": "E:\\Phaneris\\.cache\\verification\\harness-artifact-feedback-Id2AIm\\artifacts\\checkouts\\a594ec10-3a85-479f-b4d3-6120536f179f\\report.xlsx"
+    }
+  ],
+  "scope": "Text/structure verification, not Office visual layout"
+}

@@ -438,6 +438,7 @@ export class PiAgent extends BaseAgent {
   // Source activation may cancel a request whose T1 is already committed.
   // Closing the product event queue does not settle that request in the SDK.
   private sourceActivationStopTimeoutMs = 5_000;
+  private pendingAbortDrains = new Map<string, string | null>();
   private pendingSourceActivationStops = new Map<string, {
     resolve: () => void;
     reject: (error: Error) => void;
@@ -1293,6 +1294,12 @@ export class PiAgent extends BaseAgent {
         break;
 
       case 'abort_result': {
+        const drainId = msg.id as string;
+        if (this.pendingAbortDrains.has(drainId)) {
+          const inputId = this.pendingAbortDrains.get(drainId);
+          this.pendingAbortDrains.delete(drainId);
+          if (msg.success === true && inputId === this.activePromptInputId) this.eventQueue.complete();
+        }
         const pending = this.pendingSourceActivationStops.get(msg.id as string);
         if (!pending) break;
         if (msg.success === true) pending.resolve();
@@ -1800,7 +1807,6 @@ export class PiAgent extends BaseAgent {
   private async commitKnownHostToolOutcome(requestId: string): Promise<void> {
     const known = this.knownHostToolOutcomes.get(requestId);
     if (!known) return;
-    this.knownHostToolOutcomes.delete(requestId);
     const { request, result } = known;
     const identity = request.durableTool;
     if (!identity || !request.toolCallId || !this.config.session?.id) return;
@@ -1815,6 +1821,7 @@ export class PiAgent extends BaseAgent {
           ...(result.structuredContent !== undefined ? { structuredContent: result.structuredContent } : {}) },
         isError: result.isError,
       });
+      this.knownHostToolOutcomes.delete(requestId);
     } catch (error) { this.debug(`Known late tool outcome could not be committed: ${String(error)}`); }
   }
 
@@ -1877,6 +1884,7 @@ export class PiAgent extends BaseAgent {
         requestId: request.requestId,
         ok: true,
         committedSeq: committed.committedSeq,
+        deferred: committed.deferred,
       });
     } catch (error) {
       this.send({
@@ -1916,7 +1924,7 @@ export class PiAgent extends BaseAgent {
     }
     try {
       const committed = await boundary.commitOutcome(request);
-      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq });
+      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq, deferred: committed.deferred });
     } catch (error) {
       this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: false, reason: error instanceof Error ? error.message : String(error) });
     }
@@ -3151,8 +3159,8 @@ export class PiAgent extends BaseAgent {
     }
     this.pendingToolExecutions.clear();
 
-    // Signal turn complete to wake up any waiting consumers
-    this.eventQueue.complete();
+    // The SDK's settled acknowledgement closes the stream after tools drain.
+    // Host owns the bounded fallback if the driver cannot acknowledge stop.
 
     // Drop any held overflow/auto-retry recovery state. On abort the SDK
     // cancels an in-flight retry backoff (auto_retry_end "Retry cancelled")
@@ -3171,8 +3179,9 @@ export class PiAgent extends BaseAgent {
       return;
     }
 
-    // For other reasons, send abort to subprocess
-    this.send({ type: 'abort', ...(acknowledgementId ? { id: acknowledgementId } : {}) });
+    const drainId = acknowledgementId ?? `abort-drain-${++this.rpcIdCounter}`;
+    if (!acknowledgementId) this.pendingAbortDrains.set(drainId, this.activePromptInputId);
+    this.send({ type: 'abort', id: drainId });
   }
 
   /**
@@ -3282,6 +3291,7 @@ export class PiAgent extends BaseAgent {
       && this.pendingEnsureSessionReady.size === 0
       && this.pendingCompactions.size === 0
       && this.pendingSourceActivationStops.size === 0
+      && this.pendingAbortDrains.size === 0
       && this.pendingAutoCompactionToggles.size === 0
       && this.pendingRuntimeConfigUpdates.size === 0
       && this.bufferedDurableToolStarts.size === 0;
@@ -3340,20 +3350,20 @@ export class PiAgent extends BaseAgent {
       // stdin may already be closed
     }
 
-    child.kill('SIGTERM');
     let result = await Promise.race([
       waitForExit,
       new Promise<null>(resolve => setTimeout(() => resolve(null), timeoutMs)),
     ]);
 
     if (!result && this.subprocess === child) {
-      this.debug(`Pi subprocess ${pid ?? '(unknown pid)'} did not exit after ${timeoutMs}ms; sending SIGKILL`);
-      child.kill('SIGKILL');
+      this.debug(`Pi subprocess ${pid ?? '(unknown pid)'} did not acknowledge shutdown after ${timeoutMs}ms; sending SIGTERM`);
+      child.kill('SIGTERM');
       result = await Promise.race([
         waitForExit,
         new Promise<null>(resolve => setTimeout(() => resolve(null), 1_000)),
       ]);
     }
+    if (!result && this.subprocess === child) child.kill('SIGKILL');
 
     if (this.readline) {
       this.readline.close();
@@ -3396,6 +3406,7 @@ export class PiAgent extends BaseAgent {
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.pendingAbortDrains.clear();
     this.rejectPendingSourceActivationStops();
     this.subprocessEpoch++;
     this.subprocessStartup = null;

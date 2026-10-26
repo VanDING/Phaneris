@@ -65,9 +65,9 @@ export type InboundMessage =
   | { type: 'tool_execute_response'; requestId: string; result: PiProxyToolResult }
   | { type: 'pre_tool_use_response'; requestId: string; action: 'allow' | 'block' | 'modify'; input?: Record<string, unknown>; reason?: string }
   | { type: 'durable_tool_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; canonicalArgsHash: string; recoveryMode: ToolRecoveryMode; created: boolean; status: string; committedSeq: number }; reason?: string }
-  | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
+  | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; reason?: string }
   | { type: 'durable_model_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }
-  | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
+  | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; reason?: string }
   | PiLargeResultFilterResponse
   | { type: 'abort'; id?: string }
   | { type: 'mini_completion'; id: string; prompt: string; durableRunOperationId?: string; durableTurnId?: string }
@@ -175,6 +175,7 @@ export interface OutboundDurableModelPrepareReq {
 }
 
 export interface OutboundDurableModelOutcomeReq {
+  consumedInputIds?: string[];
   purpose?: 'cache_warm' | 'compaction';
   type: 'durable_model_outcome_request';
   requestId: string;

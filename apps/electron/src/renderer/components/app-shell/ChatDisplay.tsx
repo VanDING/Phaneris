@@ -95,8 +95,6 @@ import { useArtifacts } from "@/hooks/useArtifacts"
 import { ArtifactTurnCards } from "@/components/artifacts/ArtifactTurnCards"
 import { artifactEventsForTurn } from "@/components/artifacts/artifact-events"
 import { dedupeArtifactPreviews } from "@/components/artifacts/artifact-preview-dedupe"
-import { RecoveryReconciliationDialog } from "./RecoveryReconciliationDialog"
-import { ModelRecoveryReconciliationDialog } from "./ModelRecoveryReconciliationDialog"
 
 // ============================================================================
 // CSS Custom Highlight API: the helper lives in transcript-highlights.ts
@@ -408,9 +406,6 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   const internalTextareaRef = React.useRef<RichTextInputHandle>(null)
   const textareaRef = externalTextareaRef || internalTextareaRef
   const [sendMessageKey, setSendMessageKey] = useState<'enter' | 'cmd-enter'>('enter')
-  const [recoveryActivity, setRecoveryActivity] = useState<ActivityItem | null>(null)
-  const [modelRecoveryMessage, setModelRecoveryMessage] = useState<Message | null>(null)
-  const [resolvedModelOperationIds, setResolvedModelOperationIds] = useState<Set<string>>(() => new Set())
   const [openAnnotationRequest, setOpenAnnotationRequest] = React.useState<{
     messageId: string
     annotationId: string
@@ -1616,11 +1611,6 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                                 onSendMessage(lastUserMsg.content)
                               }
                             } : undefined}
-                            onReconcileModel={turn.message.role === 'warning'
-                              && turn.message.durableOperationId
-                              && !resolvedModelOperationIds.has(turn.message.durableOperationId)
-                              ? setModelRecoveryMessage
-                              : undefined}
                           />
                         </div>
                       )
@@ -1716,7 +1706,6 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                         compactMode={compactMode}
                         sendMessageKey={sendMessageKey}
                         openAnnotationRequest={openAnnotationRequest}
-                        onReviewRecovery={compactMode ? undefined : setRecoveryActivity}
                         onBranch={session?.supportsBranching ? async (messageId: string, _options?: { newPanel?: boolean }) => {
                           if (!session) return
                           try {
@@ -1969,23 +1958,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
           />
           </div>
 
-          <RecoveryReconciliationDialog
-            open={recoveryActivity !== null}
-            sessionId={session.id}
-            activity={recoveryActivity}
-            onClose={() => setRecoveryActivity(null)}
-          />
-          <ModelRecoveryReconciliationDialog
-            open={modelRecoveryMessage !== null}
-            sessionId={session.id}
-            modelOperationId={modelRecoveryMessage?.durableOperationId}
-            onClose={() => setModelRecoveryMessage(null)}
-            onResolved={(operationId) => setResolvedModelOperationIds(previous => {
-              const next = new Set(previous)
-              next.add(operationId)
-              return next
-            })}
-          />
+
         </div>
       ) : null}
 

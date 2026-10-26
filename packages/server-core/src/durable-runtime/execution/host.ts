@@ -2,7 +2,7 @@ import type { AcceptDurableRunInput, DurableRunSettlement, DurableRunStopReason 
 import type { DurableSdkObservation } from '@phaneris/shared/durable-runtime'
 import { withinDeadline } from './deadline.js'
 
-export interface RuntimeScope { sessionId: string; workspaceRootPath: string }
+export interface RuntimeScope { sessionId: string; workspaceRootPath: string; recoverySessionIds?: readonly string[] }
 export interface RuntimeExecutionHandle extends RuntimeScope { readonly generation: number }
 export interface RuntimeDriverEvent { type: string }
 /** A required durable commit failed; a projection observer cannot waive it. */
@@ -56,6 +56,7 @@ interface Commands {
   commitAdditionalUserMessage(input: { workspaceRootPath: string; sessionId: string; turnId: string; operationId: string; messageId: string; content: string; createdAt: number }): unknown
 }
 interface Queries {
+  consumedInputIds?(workspace: string, sessionId: string): string[]
   operations(workspace: string, sessionId?: string): Array<{ operationId: string; phase: string; kind: string }>
   events(workspace: string, options: { sessionId?: string; operationId?: string }): Array<{ type: string; payload: unknown }>
 }
@@ -122,7 +123,8 @@ export class RuntimeHost {
     if (!this.isCurrent(h)) throw new Error('Stale Runtime execution handle')
     const s = this.slot(h.sessionId)
     if (!s.processing || s.stopRequested || s.blocked || s.activeRun) throw new Error('Runtime foreground is not accepting a run')
-    this.commands.acceptRun({ ...h, ...input, turnId: input.turnId ?? input.userMessageId })
+    try { this.commands.acceptRun({ ...h, ...input, turnId: input.turnId ?? input.userMessageId }) }
+    catch (error) { this.processing(s, false); this.report(s, error); throw error }
     s.activeRun = input.operationId; s.turnId = input.turnId ?? input.userMessageId
   }
   async ensureDriver(sessionId: string, factory: () => Promise<RuntimeDriver>): Promise<RuntimeDriver> {
@@ -213,7 +215,7 @@ export class RuntimeHost {
       observationId: `${original.messageId}:${generation}:${event}`, sessionId, turnId: s.turnId, runOperationId: runId,
       event, capturedAt: Date.now(), data: { inputId: original.messageId, ...data },
     })
-    observe('input_delivery_attempted', {})
+    try { observe('input_delivery_attempted', {}) } catch (error) { this.report(s, error) }
     let receipt: RuntimeInputReceipt
     try { receipt = await s.driver.steer(input) }
     catch (error) { this.report(s, error); receipt = { disposition: 'unknown', reason: 'driver_delivery_failed_after_attempt' } }
@@ -225,21 +227,25 @@ export class RuntimeHost {
       return { disposition: 'unknown', reason: 'foreground_changed_during_delivery' }
     }
     try { observe('input_delivery_received', { disposition: receipt.disposition, reason: receipt.reason }) }
-    catch (error) { this.report(s, error); receipt = { disposition: 'unknown', reason: 'delivery_receipt_not_committed' } }
+    catch (error) { this.report(s, error) }
     const accepted = ['started', 'queued', 'handled'].includes(receipt.disposition)
     if (accepted && runId && s.scope) try {
       this.commands.commitAdditionalUserMessage({ workspaceRootPath: s.scope.workspaceRootPath, sessionId,
         turnId: s.turnId ?? runId, operationId: runId, ...original })
-    } catch (error) { this.report(s, error); receipt = { disposition: 'unknown', reason: 'delivered_input_commit_failed' } }
+    } catch (error) { this.report(s, error) }
     if (queued && (accepted || receipt.disposition === 'unknown')) this.removeQueued(sessionId, queued)
     return receipt
   }
   recoverQueued<T extends RuntimeQueueInput>(scope: RuntimeScope, candidates: Array<T & { reception?: RuntimeInputReceipt }>): { queued: number; held: number } {
     this.recoverSession(scope)
-    const events = this.queries.events(scope.workspaceRootPath, { sessionId: scope.sessionId })
-    const committed = new Set(events.filter(event => event.type === 'user_message_committed').map(event => (event.payload as { messageId?: string }).messageId))
-    const admitted = new Set(events.filter(event => event.type === 'user_input_admitted'
-      && (event.payload as { deliveryTrackingVersion?: number }).deliveryTrackingVersion === 1).map(event => (event.payload as { messageId?: string }).messageId))
+    let events: ReturnType<Queries['events']>
+    try { events = this.queries.events(scope.workspaceRootPath, { sessionId: scope.sessionId }) }
+    catch (error) { this.report(this.slot(scope.sessionId), error); events = [] }
+    const consumed = new Set(events.filter(event => event.type === 'model_outcome_committed').flatMap(event => {
+      const payload = event.payload as { consumedInputIds?: string[]; stopReason?: string }
+      return ['error', 'aborted'].includes(payload.stopReason ?? '') ? [] : payload.consumedInputIds ?? []
+    }))
+    for (const id of this.queries.consumedInputIds?.(scope.workspaceRootPath, scope.sessionId) ?? []) consumed.add(id)
     const attempts = new Set<string>(), receipts = new Map<string, string>()
     for (const event of events.filter(event => event.type === 'sdk_observation')) {
       const payload = event.payload as { event?: string; data?: { inputId?: string; disposition?: string } }
@@ -251,9 +257,11 @@ export class RuntimeHost {
     let queued = 0, held = 0
     for (const candidate of candidates) {
       const id = candidate.messageId
-      if (!id || committed.has(id) || !admitted.has(id)
-        || (attempts.has(id) && receipts.get(id) !== 'rejected')
-        || (candidate.reception && !['saved', 'rejected'].includes(candidate.reception.disposition))) { held++; continue }
+      if (!id) { held++; continue }
+      if (consumed.has(id)) continue
+      if ((attempts.has(id) && receipts.get(id) !== 'rejected') || candidate.reception?.disposition === 'unknown') {
+        candidate.message = `Recovered user input ${JSON.stringify(id)}: delivery of this original request was interrupted or uncertain. Compare it with existing messages, outputs and receipts; continue unfinished work without repeating completed non-idempotent actions. This is the original scope, not new authorization.\n\n${candidate.message}`
+      }
       this.enqueue(scope.sessionId, candidate); queued++
     }
     return { queued, held }
@@ -276,9 +284,12 @@ export class RuntimeHost {
         }
         result = s.activeRun ? this.commands.completeRun(h.workspaceRootPath, s.activeRun, finalReason) : { kind: 'idle', reason: finalReason === 'complete' ? 'error' : finalReason }
       }
-      catch (error) { s.blocked = true; this.processing(s, false); this.report(s, error); return { kind: 'commit_failed', operationId: s.activeRun, error } }
-      s.blocked = result.kind === 'parked' || result.kind === 'absent'
-      if (!s.blocked) s.activeRun = undefined
+      catch (error) { this.report(s, error); result = { kind: 'commit_failed', operationId: s.activeRun, error } }
+      // A finished driver relinquishes foreground ownership. Historical receipt
+      // uncertainty remains in the ledger; it is not a running process or a
+      // permission decision about the user's next input.
+      s.blocked = false
+      s.activeRun = undefined
       this.processing(s, false)
       if (s.stopTimer) { clearTimeout(s.stopTimer); s.stopTimer = undefined }
       const committedReason = result.kind === 'terminal' || result.kind === 'idle' ? result.reason : 'interrupted'
@@ -299,6 +310,7 @@ export class RuntimeHost {
     if (s.driving) throw new Error('Runtime driver is already consuming this foreground slot')
     const operationId = s.activeRun, turnId = s.turnId!
     let deferred = false
+    let observationFailed = false
     const interruption = Promise.withResolvers<RuntimeSettlement>()
     s.interruption = interruption
     const driving = (async (): Promise<RuntimeSettlement> => {
@@ -306,20 +318,18 @@ export class RuntimeHost {
         for await (const event of driver.run(input, { ...h, operationId, turnId })) {
           if (!this.isCurrent(h) || !s.processing) continue
           for (const o of [...s.observers]) try { if (await o.event?.(event, h) === 'defer') deferred = true } catch (error) {
-            if (error instanceof RuntimeCommitFailure) throw error
+            if (error instanceof RuntimeCommitFailure) observationFailed = true
             this.report(s, error)
           }
-          if (event.type === 'complete') return deferred ? { kind: 'deferred' } : !s.processing ? { kind: 'stale' } : await this.finish(h, s.stopRequested ? 'interrupted' : 'complete')
+          if (event.type === 'complete') return deferred ? { kind: 'deferred' } : !s.processing ? { kind: 'stale' } : await this.finish(h, s.stopRequested ? 'interrupted' : observationFailed ? 'error' : 'complete')
         }
         return deferred ? { kind: 'deferred' } : !this.isCurrent(h) || !s.processing ? { kind: 'stale' } : await this.finish(h, 'interrupted')
       } catch (error) {
         this.report(s, error)
         if (error instanceof RuntimeCommitFailure) {
-          // Keep the identity and queue held for repair; never publish success.
+          // Execution failed; release foreground ownership even if its ledger needs recovery.
           try { driver.stop('runtime_commit_failure') } catch (stopError) { this.report(s, stopError) }
-          s.blocked = true; this.processing(s, false)
-          if (s.stopTimer) { clearTimeout(s.stopTimer); s.stopTimer = undefined }
-          return { kind: 'commit_failed', operationId: s.activeRun, error }
+          return await this.finish(h, 'error')
         }
         const aborted = error instanceof Error && (error.name === 'AbortError' || /aborted/i.test(error.message))
         return await this.finish(h, aborted || s.stopRequested ? 'interrupted' : 'error')
@@ -336,8 +346,8 @@ export class RuntimeHost {
     this.bindSession(scope)
     const s = this.slot(scope.sessionId)
     if (s.processing) return
-    const parked = this.queries.operations(scope.workspaceRootPath, scope.sessionId).find(state => state.kind === 'agent_turn' && state.phase === 'recovery_parked')
-    if (parked) { s.activeRun = parked.operationId; s.blocked = true }
+    // Restored operations are recovery evidence, not foreground leases.
+    this.refreshRecovery(scope.sessionId)
   }
   bindSession(scope: RuntimeScope): void {
     const s = this.slot(scope.sessionId)
@@ -347,27 +357,28 @@ export class RuntimeHost {
   async settleForReplacement(h: RuntimeExecutionHandle): Promise<RuntimeSettlement> {
     if (!this.isCurrent(h)) return { kind: 'stale' }
     const s = this.slot(h.sessionId)
+    this.requestStop(h.sessionId, 'runtime_replacement', { advanceQueue: false })
     // Retry is admitted only after the old driver has drained and its facts settle.
     await withinDeadline<unknown>(s.driving ?? Promise.resolve(), this.deadlineMs)
     const result = await this.finish(h, 'interrupted', { notify: false, advanceQueue: false })
-    if (result.kind === 'terminal' || result.kind === 'idle') {
-      await this.disposeDriver(h.sessionId)
-      s.driving = undefined
-    }
+    await this.disposeDriver(h.sessionId)
+    s.driving = undefined
     return result
   }
   refreshRecovery(sessionId: string): void {
     const s = this.slot(sessionId)
     if (!s.scope || s.processing) return
-    const operations = this.queries.operations(s.scope.workspaceRootPath, sessionId)
-    const active = operations.find(state => state.operationId === s.activeRun)
-    if (s.activeRun && active?.phase === 'checkpoint') {
-      const result = this.commands.completeRun(s.scope.workspaceRootPath, s.activeRun, 'interrupted')
-      if (result.kind === 'terminal') { s.activeRun = undefined; s.blocked = false; s.settledResult = undefined }
-    } else if (s.activeRun && active?.phase === 'recovery_parked'
-      && this.commands.recoverInterruptedModel?.(s.scope.workspaceRootPath, s.activeRun)) {
-      s.activeRun = undefined; s.blocked = false; s.settledResult = undefined
-    } else if (s.activeRun && !active) { s.activeRun = undefined; s.blocked = false; s.settledResult = undefined }
+    let operations: ReturnType<Queries['operations']>
+    try { operations = this.queries.operations(s.scope.workspaceRootPath, sessionId) }
+    catch (error) { this.report(s, error); operations = [] }
+    for (const operation of operations) {
+      if (operation.kind !== 'agent_turn') continue
+      try {
+        if (operation.phase === 'recovery_parked') this.commands.recoverInterruptedModel?.(s.scope.workspaceRootPath, operation.operationId)
+        else this.commands.completeRun(s.scope.workspaceRootPath, operation.operationId, 'interrupted')
+      } catch (error) { this.report(s, error) }
+    }
+    s.activeRun = undefined; s.blocked = false
   }
   hasActiveExecutions(workspace?: string): boolean {
     return this.auxiliaryDrivers.size > 0 || [...this.slots.values()].some(s => (!workspace || s.scope?.workspaceRootPath === workspace)

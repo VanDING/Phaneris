@@ -1,0 +1,60 @@
+[
+  {
+    "type": "done",
+    "reason": "stop",
+    "message": {
+      "role": "assistant",
+      "api": "openai-completions",
+      "provider": "fixture",
+      "model": "fixture",
+      "content": [
+        {
+          "type": "text",
+          "text": "KNOWN_SUCCESSFUL_ANSWER"
+        }
+      ],
+      "usage": {
+        "input": 1,
+        "output": 1,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 2,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0
+        }
+      },
+      "stopReason": "stop",
+      "timestamp": 1793000166111,
+      "durationMs": 1,
+      "modelMetering": {
+        "version": 1,
+        "status": "sdk",
+        "source": "pi_sdk",
+        "inputKnown": true,
+        "outputKnown": true
+      },
+      "assistantMetrics": {
+        "timingVersion": 2,
+        "timingSource": "pi_provider_callbacks",
+        "timingUnavailableReason": "start_unobserved",
+        "timingRecorded": false,
+        "stepStartTime": null,
+        "firstTokenTime": null,
+        "firstTextTime": null,
+        "firstOutputTime": null,
+        "completedTime": 1793000166111,
+        "requestDurationMs": null,
+        "firstOutputLatencyMs": null,
+        "firstTextLatencyMs": null,
+        "generationDurationMs": null,
+        "usageProvided": true,
+        "outputTokens": 1
+      },
+      "durableCommitError": "Error: fixture ledger failure"
+    }
+  }
+]

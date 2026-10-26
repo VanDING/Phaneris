@@ -69,6 +69,7 @@ export const SESSION_PERSISTENT_FIELDS = [
   'taskSlug',
   'taskRunId',
   'taskNodeId',
+  'taskNodeDispatchId',
   'taskNodeCount',
   'taskDraft',
 ] as const;
@@ -273,6 +274,7 @@ export interface SessionConfig extends SessionPlanningFields {
   taskRunId?: string;
   /** Tasks Conductor: id of the DAG node this child session executes (child nodes only). */
   taskNodeId?: string;
+  taskNodeDispatchId?: string;
   /** Tasks Conductor: total DAG node count (orchestrator only) — board progress denominator that stays stable while children spawn lazily. */
   taskNodeCount?: number;
   /** Tasks Conductor: generate-time draft orchestrator. Hidden from the board until adopted (promoted) by createTask. */
@@ -392,6 +394,7 @@ export interface SessionHeader extends SessionPlanningFields {
   taskRunId?: string;
   /** Tasks Conductor: id of the DAG node this child session executes (child nodes only). */
   taskNodeId?: string;
+  taskNodeDispatchId?: string;
   /** Tasks Conductor: total DAG node count (orchestrator only) — board progress denominator that stays stable while children spawn lazily. */
   taskNodeCount?: number;
   /** Tasks Conductor: generate-time draft orchestrator. Hidden from the board until adopted (promoted) by createTask. */
@@ -498,6 +501,7 @@ export interface SessionMetadata extends SessionPlanningFields {
   taskRunId?: string;
   /** Tasks Conductor: id of the DAG node this child session executes (child nodes only). */
   taskNodeId?: string;
+  taskNodeDispatchId?: string;
   /** Tasks Conductor: total DAG node count (orchestrator only) — board progress denominator that stays stable while children spawn lazily. */
   taskNodeCount?: number;
   /** Tasks Conductor: generate-time draft orchestrator. Hidden from the board until adopted (promoted) by createTask. */

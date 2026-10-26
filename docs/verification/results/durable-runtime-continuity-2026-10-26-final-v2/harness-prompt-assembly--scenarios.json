@@ -1,0 +1,30 @@
+[
+  {
+    "id": "prompt-inspection-cli-reports-budgets-with-opt-in-content",
+    "passed": true
+  },
+  {
+    "id": "product-prompt-keeps-all-48-platform-feature-baselines",
+    "passed": true
+  },
+  {
+    "id": "compiled-sections-are-the-exact-public-system-prompt",
+    "passed": true
+  },
+  {
+    "id": "task-projection-reads-current-product-state-and-copies-dependencies",
+    "passed": true
+  },
+  {
+    "id": "task-metadata-is-volatile-data-not-permission-or-completion",
+    "passed": true
+  },
+  {
+    "id": "cleared-live-task-does-not-resurrect-initial-metadata",
+    "passed": true
+  },
+  {
+    "id": "dismissed-questions-do-not-grant-consent-and-debug-uses-live-shell",
+    "passed": true
+  }
+]

@@ -33,8 +33,11 @@ await verificationWorkflow('harness-capability', async evidence => {
   assert(nonVision.content.some(block => block.type === 'image'))
   assert.match(JSON.stringify(nonVision.content), /cannot consume these image blocks/)
   checks.push('HC04 unsupported image input is explicit without deleting canonical media')
-  const replay = canonicalContextToPiMessages({ cursor: 1, items: [{ kind: 'tool_result', seq: 1, operationId: 'op', toolCallId: 'call', toolName: 'query', result: view, isError: false }] } as never, {} as never)
-  assert.deepEqual((replay[0] as any).content, view.content)
+  const replay = canonicalContextToPiMessages({ cursor: 2, items: [
+    { kind: 'tool_call', eventId: 'call', seq: 1, operationId: 'op', toolOperationId: 'tool-op', toolCallId: 'call', toolName: 'query', args: {} },
+    { kind: 'tool_outcome', eventId: 'result', seq: 2, operationId: 'op', toolOperationId: 'tool-op', toolCallId: 'call', toolName: 'query', result: view, isError: false },
+  ] }, {} as never)
+  assert.deepEqual((replay[1] as any).content, view.content)
   checks.push('HC11 canonical replay preserves ordered model blocks')
   const native = { content: [{ type: 'text' as const, text: '[Showing lines 1-20 of 100. Use offset=21 to continue.]' }], details: { truncation: { truncated: true } } }
   const read = await prepareToolResultView({ result: native, toolName: 'Read', input: { path: 'reference.md' }, sessionPath: workspace, budgetChars: 10 })

@@ -12,6 +12,8 @@
 
 2026-10-16 用户批准的 G01–G08 存量治理已实施并完成本机验证：[实施报告](../verification/project-governance-implementation-2026-10-16.md)记录会话存储/删除、用量提交、搜索、MCP 和页面生命周期修复。完整测试现为 6,301 pass / 0 fail / 7 skip，原有 26 个失败归零；首导航超预算和 Windows server 分发限制仍保留。六个既有文档索引问题已按用户后续授权删除过期图标说明后消除，文档检查现已通过。
 
+2026-10-26 用户针对真实会话被 durable runtime 阻塞的问题授权完整修复。`codex/durable-runtime-continuity` 基于 `bc2f436a0` 实施前台生命周期与后台事实解耦、已知结果自动补写、输入消费关联、退出收尾和任务子会话复用；见[实施与验证记录](durable-runtime-continuity-implementation-2026-10-26.md)及[失败矩阵](../verification/durable-runtime-continuity-failure-matrix-2026-10-26.md)。不以人工 reconciliation 为普通继续条件，不改写真实会话数据，不将受控 provider 验证扩大为真实模型或发行结论。
+
 ## 1. 裁定依据
 
 | 依据 | 采用方式 |

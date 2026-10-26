@@ -43,7 +43,7 @@ import { PrivilegedExecutionBroker } from '@phaneris/server-core/services'
 import { planRangeError } from '@phaneris/shared/work-items'
 import { isValidWorkingDirectory } from '../utils/path-validation'
 import { InitGate } from '@phaneris/server-core/domain'
-import { createDurableRuntime, RuntimeCommitFailure, type DurableRuntime, type RuntimeSettled, type RuntimeQueueBatch } from '../durable-runtime/index'
+import { createDurableRuntime, type DurableRuntime, type RuntimeSettled, type RuntimeQueueBatch } from '../durable-runtime/index'
 import { TaskRuntimeFacts } from '../tasks/runtime-facts'
 import { importLegacyContext } from '../runtime-adapters/legacy-context'
 import { PiRuntimeDriver, bindPiRuntime, type PiAgentControls } from '../runtime-adapters/pi-driver'
@@ -758,6 +758,7 @@ interface ManagedSession {
   taskRunId?: string
   // Tasks Conductor: id of the DAG node this child session executes (child nodes only)
   taskNodeId?: string
+  taskNodeDispatchId?: string
   // Tasks Conductor: total DAG node count (orchestrator only) — stable board progress denominator
   taskNodeCount?: number
   // Tasks Conductor: hidden generate-time orchestrator awaiting validated adoption (off the board)
@@ -1354,6 +1355,18 @@ export class SessionManager implements ISessionManager {
    * Automatically notifies the power manager on transitions (true→false, false→true)
    * so callers don't need to remember to call onSessionStarted/onSessionStopped.
    */
+  private runtimeScopeFor(managed: ManagedSession) {
+    const ids = new Set<string>()
+    let previous = managed.handoffFromSessionId ?? managed.parentSessionId
+    while (previous && !ids.has(previous)) {
+      const ancestor = this.sessions.get(previous)
+      if (ancestor && ancestor.workspace.rootPath !== managed.workspace.rootPath) break
+      ids.add(previous)
+      previous = ancestor?.handoffFromSessionId ?? ancestor?.parentSessionId
+    }
+    return { sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath, recoverySessionIds: [...ids] }
+  }
+
   private registerManagedSession(managed: ManagedSession): void {
     managed.runtime = sessionRuntimeView(this.durableRuntime, managed.id)
     this.sessions.set(managed.id, managed)
@@ -1391,7 +1404,7 @@ export class SessionManager implements ISessionManager {
     const handle = this.execution.current(managed.id)
     if (handle) {
       const result = await this.execution.settleForReplacement(handle)
-      if (result.kind !== 'terminal' && result.kind !== 'idle') throw new Error('Runtime recovery is required before replacing this run')
+      if (result.kind === 'stale') throw new Error('Runtime generation changed while replacing the driver')
     }
   }
 
@@ -2818,9 +2831,11 @@ export class SessionManager implements ISessionManager {
       if (!dispatch) continue
       const message = managed.messages.find(item => item.toolUseId === dispatch.providerToolCallId)
       if (!message) continue
+      if (this.durableRuntime.queries.hasPendingReceipts(workspaceRoot, managed.id)
+        && message.toolResult && (message.toolStatus === 'completed' || message.toolStatus === 'error')) continue
       message.toolStatus = 'unknown'
       message.durableOperationId = dispatch.operationId
-      message.toolResult ||= 'Execution outcome is unknown after restart. Reconcile with the external system before retrying.'
+      message.toolResult ||= 'The previous tool result was not collected. Its effect remains unknown; existing outputs and receipts can be inspected while the conversation continues.'
     }
     for (const state of this.durableRuntime.queries.operations(workspaceRoot, managed.id)) {
       if (state.sessionId !== managed.id || state.phase !== 'recovery_parked') continue
@@ -2830,7 +2845,7 @@ export class SessionManager implements ISessionManager {
       managed.messages.push({
         id: `recovery-${currentModel.operationId}`,
         role: 'warning',
-        content: `A ${currentModel.provider ?? 'provider'} model request (${currentModel.model ?? 'unknown model'}) may have been billed, but its response was not durably committed. It will not be retried automatically.`,
+        content: `The previous ${currentModel.provider ?? 'provider'} response (${currentModel.model ?? 'unknown model'}) was not collected. The conversation can continue. Observed receipts are recovered automatically; billing for an unavailable response remains unknown.`,
         timestamp: state.updatedAt,
         durableOperationId: currentModel.operationId,
       })
@@ -3068,7 +3083,7 @@ export class SessionManager implements ISessionManager {
         nodeId: input.nodeId,
         attempt: input.attempt,
       },
-      recoveryMode: 'never_auto_retry',
+      recoveryMode: 'idempotent_keyed',
     })
     return {
       durableSessionId,
@@ -3139,7 +3154,30 @@ export class SessionManager implements ISessionManager {
     return getSessionStoragePath(managed.workspace.rootPath, sessionId)
   }
 
+  private readonly taskNodeCreations = new Map<string, Promise<Session>>()
+
   async createSession(
+    workspaceId: string,
+    options?: import('@phaneris/shared/protocol').CreateSessionOptions,
+    internal?: { emitCreatedEvent?: boolean },
+  ): Promise<Session> {
+    if (!options?.taskNodeDispatchId) return this.createSessionInternal(workspaceId, options, internal)
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    const key = `${workspace?.id ?? workspaceId}:${options.taskNodeDispatchId}`
+    const pending = this.taskNodeCreations.get(key)
+    if (pending) return pending
+    const existing = [...this.sessions.values()].find(session => session.workspace.id === workspace?.id
+      && session.taskNodeDispatchId === options.taskNodeDispatchId)
+    if (existing) {
+      const session = await this.getSession(existing.id)
+      if (session) return session
+    }
+    const creation = this.createSessionInternal(workspaceId, options, internal).finally(() => this.taskNodeCreations.delete(key))
+    this.taskNodeCreations.set(key, creation)
+    return creation
+  }
+
+  private async createSessionInternal(
     workspaceId: string,
     options?: import('@phaneris/shared/protocol').CreateSessionOptions,
     // Transport concern, deliberately NOT on the wire DTO: by default every created session is
@@ -3435,6 +3473,7 @@ export class SessionManager implements ISessionManager {
       taskSlug: options?.taskSlug,
       taskRunId: options?.taskRunId,
       taskNodeId: options?.taskNodeId,
+      taskNodeDispatchId: options?.taskNodeDispatchId,
       taskDraft: options?.taskDraft,
       // Persist only an EXPLICIT selection (e.g. a task's spec.sources on its subtasks).
       // The workspace-default fallback stays dynamic — freezing it into the header would
@@ -4056,9 +4095,7 @@ export class SessionManager implements ISessionManager {
       if (!validateHandoffDocument(document)) throw new Error('Saved handoff document is incomplete')
       await this.ensureMessagesLoaded(managed)
       const rootId = managed.handoffRootSessionId ?? managed.id
-      if (this.durableRuntime.queries.unsettledTools(managed.workspace.rootPath, undefined, managed.id).length) {
-        throw new Error('Context handoff requires reconciliation of pending tool effects before starting a successor.')
-      }
+      // Unknown historical effects travel as context; they do not veto handoff.
       // Look for an existing successor before creating one. Lineage is persisted
       // with the child, so a crash between child creation and the parent's own
       // write cannot produce a second successor on recovery.
@@ -4107,7 +4144,7 @@ export class SessionManager implements ISessionManager {
         && (message.isQueued === true || (cutoff >= 0 && index > cutoff)))
       const continuity = projectTaskContinuity({ task: buildSessionTaskContext(managed), messages: managed.messages,
         artifacts: sessionArtifactContext(managed.workspace.rootPath, managed.id) })
-      const seed = buildHandoffSeed({
+      let seed = buildHandoffSeed({
         document,
         rootSessionId: rootId,
         previousSessionId: managed.id,
@@ -4119,6 +4156,12 @@ export class SessionManager implements ISessionManager {
         lateMessages: late.map(message => `${message.content}\n${JSON.stringify(message.attachments ?? [])}`),
         continuity,
       })
+      const unknownActions = [...new Set([managed.id, ...this.runtimeScopeFor(managed).recoverySessionIds])].flatMap(sessionId =>
+        this.durableRuntime.queries.unsettledTools(managed.workspace.rootPath, undefined, sessionId).flatMap(item => item.dispatch
+          ? [{ sessionId, operationId: item.dispatch.operationId, toolCallId: item.dispatch.providerToolCallId,
+            tool: item.dispatch.toolName, argumentsHash: item.dispatch.canonicalArgsHash,
+            originalHistory: join(getSessionStoragePath(managed.workspace.rootPath, sessionId), 'session.jsonl'), outcome: 'unknown' }] : []))
+      if (unknownActions.length) seed += `\n\n<unconfirmed_actions>These are historical observations, not a request to repeat actions. Inspect existing outputs and receipts when relevant; independent work can continue.\n${JSON.stringify(unknownActions)}\n</unconfirmed_actions>`
       // The queue hands over with the task: the successor receives the messages
       // verbatim, so replaying them in the original session would duplicate them.
       const admission = Promise.withResolvers<void>()
@@ -4416,7 +4459,7 @@ onImageResize: async (filePath: string, maxSizeBytes: number): Promise<string | 
 resources: {
 mcpPool: managed.mcpPool,
 poolServerUrl,
-...bindPiRuntime(this.durableRuntime, { workspaceRootPath: managed.workspace.rootPath, sessionId: managed.id }, {
+...bindPiRuntime(this.durableRuntime, this.runtimeScopeFor(managed), {
           compatibilityMessages: () => managed.messages,
           auxiliarySettled: () => {
             this.applyDurableUsageProjection(managed)
@@ -6321,6 +6364,22 @@ initialSources: {
     return managed.messages.find(m => m.id === id)?.content
   }
 
+  async findTaskNodeSession(input: {
+    workspaceId: string; taskSlug: string; runId: string; nodeId: string; dispatchId: string; sessionId?: string; allowLegacy?: boolean
+  }): Promise<{ id: string; hasInput: boolean; processing: boolean; finalText?: string } | undefined> {
+    const candidates = [...this.sessions.values()].filter(session => session.workspace.id === input.workspaceId
+      && session.taskSlug === input.taskSlug && session.taskRunId === input.runId && session.taskNodeId === input.nodeId)
+    const managed = candidates.find(session => session.id === input.sessionId)
+      ?? candidates.find(session => session.taskNodeDispatchId === input.dispatchId)
+      ?? (input.allowLegacy && candidates.length === 1 && !candidates[0]!.taskNodeDispatchId ? candidates[0] : undefined)
+    if (!managed) return undefined
+    await this.ensureMessagesLoaded(managed)
+    const lastUser = managed.messages.findLastIndex(message => message.role === 'user')
+    const lastFinal = managed.messages.findLastIndex(message => message.role === 'assistant' && !message.isIntermediate && !message.isError)
+    return { id: managed.id, hasInput: lastUser >= 0, processing: managed.runtime.isProcessing,
+      ...(!managed.runtime.isProcessing && lastFinal > lastUser && lastUser >= 0 ? { finalText: managed.messages[lastFinal]!.content } : {}) }
+  }
+
   /**
    * Set which session the user is actively viewing.
    * Called when user navigates to a session. Used to determine whether to mark
@@ -6528,7 +6587,7 @@ initialSources: {
             lastUsedAt: Date.now(),
           },
           isHeadless: true,
-          ...bindPiRuntime(this.durableRuntime, { sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath }),
+          ...bindPiRuntime(this.durableRuntime, this.runtimeScopeFor(managed)),
         }, buildBackendHostRuntimeContext()))
         releaseTemporary = this.execution.retainDriver(temporaryDriver)
         agent = temporaryDriver.controls
@@ -7117,20 +7176,8 @@ initialSources: {
     }
 
     // A real late T2 can restore the durable checkpoint after a stop parked the
-    // foreground slot. Refresh from committed facts before consulting its cache.
-    // completeRun still refuses any unsettled model request or tool effect.
+    // foreground slot. Recover historical accounting without acquiring foreground ownership.
     this.execution.refreshRecovery(sessionId)
-    if (this.execution.view(sessionId).blocked) {
-      const pending = this.durableRuntime.queries.unsettledTools(managed.workspace.rootPath, undefined, sessionId)
-      for (const tool of pending) {
-        const dispatch = tool.dispatch
-        if (!dispatch || !['mcp__session__send_agent_message', 'send_agent_message'].includes(dispatch.toolName ?? '')) continue
-        try {
-          await this.queryAndReconcileTool(sessionId, dispatch.operationId, { type: 'system', id: 'runtime-message-delivery-recovery' })
-        } catch (error) { sessionLog.info(`Message delivery still requires reconciliation: ${String(error)}`) }
-      }
-    }
-    if (this.execution.view(sessionId).blocked) throw new Error('This session requires Runtime reconciliation before accepting another turn')
 
     // Claim only after admission succeeds, so a rejected attempt cannot consume
     // the dedup slot and silently discard a subsequent automatic resend.
@@ -9348,7 +9395,7 @@ initialSources: {
             lastUsedAt: Date.now(),
           },
           isHeadless: true,
-          ...bindPiRuntime(this.durableRuntime, { sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath }),
+          ...bindPiRuntime(this.durableRuntime, this.runtimeScopeFor(managed)),
         }, buildBackendHostRuntimeContext()))
         releaseTemporary = this.execution.retainDriver(temporaryDriver)
         agent = temporaryDriver.controls
@@ -9503,8 +9550,8 @@ initialSources: {
                 } : undefined,
                 createdAt: assistantMessage.timestamp,
               })
-          } catch (error) { throw new RuntimeCommitFailure(error) }
-          this.applyDurableUsageProjection(managed)
+          } catch (error) { sessionLog.warn('Assistant result retained in session history while Runtime bookkeeping recovers', error) }
+          if (assistantMessage.durableSeq !== undefined && !this.durableRuntime.queries.hasPendingReceipts(managed.workspace.rootPath, sessionId)) this.applyDurableUsageProjection(managed)
         }
         managed.messages.push(assistantMessage)
         managed.streamingText = ''
@@ -10581,7 +10628,7 @@ callbacks: {
 
 },
 resources: {
-...bindPiRuntime(this.durableRuntime, { sessionId: managed.id, workspaceRootPath })
+...bindPiRuntime(this.durableRuntime, this.runtimeScopeFor(managed))
 }
 }))
     const release = this.execution.retainDriver(driver)

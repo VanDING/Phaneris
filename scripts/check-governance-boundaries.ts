@@ -21,6 +21,8 @@ const piValuePorts = new Set(['agent/context-policy', 'agent/compaction-threshol
   'agent/llm-tool', 'agent/backend/pi/constants', 'config/models', 'config/llm-connections', 'decisions/types',
   // Dependency-free sanitizer shared by the SDK journal and immutable host facts.
   'utils/browser-input-privacy',
+  // Shared, narrowly scoped outcome receipts; no runtime coordinator or product/session dependencies.
+  'durable-runtime/identity', 'durable-runtime/receipt-storage',
   // Pure name/effect classifiers used for ordering only; transitive purity is checked below.
   'agent/mcp-tool-names', 'agent/browser-tool-effects'])
 const definitions = new Map<string, Map<string, Node>>()

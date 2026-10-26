@@ -1,0 +1,1182 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-26",
+  "branch": "codex/durable-runtime-continuity",
+  "base": "bc2f436a0533e37b3b97f73ce079d672ecd5ed94",
+  "source": [
+    {
+      "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+      "sha256": "84e3b9d04c87a3b2fa5cc0d9c4e8a6ab02998ac42997bc1cd523c947eb75e5cb",
+      "gitBlobSha256": "84e3b9d04c87a3b2fa5cc0d9c4e8a6ab02998ac42997bc1cd523c947eb75e5cb",
+      "normalizedSha256": "84e3b9d04c87a3b2fa5cc0d9c4e8a6ab02998ac42997bc1cd523c947eb75e5cb"
+    },
+    {
+      "path": "package.json",
+      "sha256": "f67a2c5d1f551b8123bb3952d05f0294e289d9cb24caba8cfb795de1edbb0296",
+      "gitBlobSha256": "f67a2c5d1f551b8123bb3952d05f0294e289d9cb24caba8cfb795de1edbb0296",
+      "normalizedSha256": "f67a2c5d1f551b8123bb3952d05f0294e289d9cb24caba8cfb795de1edbb0296"
+    },
+    {
+      "path": "packages/pi-agent-server/src/canonical-model-context.ts",
+      "sha256": "7e32fc918480cd7908a9eb269be41453769c137119384c1453c7f9b681ca9b5a",
+      "gitBlobSha256": "7e32fc918480cd7908a9eb269be41453769c137119384c1453c7f9b681ca9b5a",
+      "normalizedSha256": "7e32fc918480cd7908a9eb269be41453769c137119384c1453c7f9b681ca9b5a"
+    },
+    {
+      "path": "packages/pi-agent-server/src/durable-model-stream.ts",
+      "sha256": "8362a039b2eb07a5077e778554cf2b706443859302c6b9963a774cc4c527b13d",
+      "gitBlobSha256": "8362a039b2eb07a5077e778554cf2b706443859302c6b9963a774cc4c527b13d",
+      "normalizedSha256": "8362a039b2eb07a5077e778554cf2b706443859302c6b9963a774cc4c527b13d"
+    },
+    {
+      "path": "packages/pi-agent-server/src/index.ts",
+      "sha256": "97994283a7266b65b7d68b24498750b88287ebafb01d57ba742fc8bf5c0058d9",
+      "gitBlobSha256": "97994283a7266b65b7d68b24498750b88287ebafb01d57ba742fc8bf5c0058d9",
+      "normalizedSha256": "97994283a7266b65b7d68b24498750b88287ebafb01d57ba742fc8bf5c0058d9"
+    },
+    {
+      "path": "packages/pi-agent-server/src/input-consumption.ts",
+      "sha256": "18afffdd79a22c8d4da110e85f8e9e85fc3a9cfb5076905d1ac8c85a5f2bbf97",
+      "gitBlobSha256": "18afffdd79a22c8d4da110e85f8e9e85fc3a9cfb5076905d1ac8c85a5f2bbf97",
+      "normalizedSha256": "18afffdd79a22c8d4da110e85f8e9e85fc3a9cfb5076905d1ac8c85a5f2bbf97"
+    },
+    {
+      "path": "packages/pi-agent-server/src/messages.ts",
+      "sha256": "e9945ab22f559a812d12402ef364b101fc9fc5e41e4180af648b626de0121b50",
+      "gitBlobSha256": "e9945ab22f559a812d12402ef364b101fc9fc5e41e4180af648b626de0121b50",
+      "normalizedSha256": "e9945ab22f559a812d12402ef364b101fc9fc5e41e4180af648b626de0121b50"
+    },
+    {
+      "path": "packages/pi-agent-server/src/pending-replies.ts",
+      "sha256": "d3ddf78032cfd598dd42b7955fbae4d77347c8900024805413db4168e6983e71",
+      "gitBlobSha256": "d3ddf78032cfd598dd42b7955fbae4d77347c8900024805413db4168e6983e71",
+      "normalizedSha256": "d3ddf78032cfd598dd42b7955fbae4d77347c8900024805413db4168e6983e71"
+    },
+    {
+      "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      "sha256": "641d7c3ab5cb34a40b1925fa65132b0d69586fbddd593c6f17f9184f7a26cd8b",
+      "gitBlobSha256": "641d7c3ab5cb34a40b1925fa65132b0d69586fbddd593c6f17f9184f7a26cd8b",
+      "normalizedSha256": "641d7c3ab5cb34a40b1925fa65132b0d69586fbddd593c6f17f9184f7a26cd8b"
+    },
+    {
+      "path": "packages/pi-agent-server/src/session-event-adapter.ts",
+      "sha256": "2e60505edbf94d553530ac2be14f80c8a7a771ae2fb205b9cd9755350a471fdf",
+      "gitBlobSha256": "2e60505edbf94d553530ac2be14f80c8a7a771ae2fb205b9cd9755350a471fdf",
+      "normalizedSha256": "2e60505edbf94d553530ac2be14f80c8a7a771ae2fb205b9cd9755350a471fdf"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/api/runtime.ts",
+      "sha256": "ec09668f812484bf0675072c15162eb89d1c4c828fb653f22f5be0e8fe88932c",
+      "gitBlobSha256": "ec09668f812484bf0675072c15162eb89d1c4c828fb653f22f5be0e8fe88932c",
+      "normalizedSha256": "ec09668f812484bf0675072c15162eb89d1c4c828fb653f22f5be0e8fe88932c"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "sha256": "ad288b241c77766ce321aafadcfd6027fe3d894266dfc50bb11c93f201823b48",
+      "gitBlobSha256": "ad288b241c77766ce321aafadcfd6027fe3d894266dfc50bb11c93f201823b48",
+      "normalizedSha256": "ad288b241c77766ce321aafadcfd6027fe3d894266dfc50bb11c93f201823b48"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "sha256": "15c1ec7f2738d5683ed800831ebfcf9c25ec2d208d0f7953871c094445c16800",
+      "gitBlobSha256": "15c1ec7f2738d5683ed800831ebfcf9c25ec2d208d0f7953871c094445c16800",
+      "normalizedSha256": "15c1ec7f2738d5683ed800831ebfcf9c25ec2d208d0f7953871c094445c16800"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/execution/host.ts",
+      "sha256": "bf53b9aa6cc3bdb4bce3d717a75202f3e94e434e595f4cdf8bc690bf3dbb026d",
+      "gitBlobSha256": "bf53b9aa6cc3bdb4bce3d717a75202f3e94e434e595f4cdf8bc690bf3dbb026d",
+      "normalizedSha256": "bf53b9aa6cc3bdb4bce3d717a75202f3e94e434e595f4cdf8bc690bf3dbb026d"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/receipt-journal.ts",
+      "sha256": "54e1753514587c293b0aed50742f10fa7a4609dfd7a3e319710e0e117a2fc11c",
+      "gitBlobSha256": "54e1753514587c293b0aed50742f10fa7a4609dfd7a3e319710e0e117a2fc11c",
+      "normalizedSha256": "54e1753514587c293b0aed50742f10fa7a4609dfd7a3e319710e0e117a2fc11c"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "sha256": "be7229007d3000deac782c84afa85ecca18256a1dde4d9e0be04b658da3fb7ad",
+      "gitBlobSha256": "be7229007d3000deac782c84afa85ecca18256a1dde4d9e0be04b658da3fb7ad",
+      "normalizedSha256": "be7229007d3000deac782c84afa85ecca18256a1dde4d9e0be04b658da3fb7ad"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "sha256": "fe298694e69db677f7d270d6ab025ba563b1cb000b259466448fba005313f54c",
+      "gitBlobSha256": "fe298694e69db677f7d270d6ab025ba563b1cb000b259466448fba005313f54c",
+      "normalizedSha256": "fe298694e69db677f7d270d6ab025ba563b1cb000b259466448fba005313f54c"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/pi-driver.ts",
+      "sha256": "61dc9b711c01e18625db5012d454ad3180385c718f85bee501a10e6e5e7b783c",
+      "gitBlobSha256": "61dc9b711c01e18625db5012d454ad3180385c718f85bee501a10e6e5e7b783c",
+      "normalizedSha256": "61dc9b711c01e18625db5012d454ad3180385c718f85bee501a10e6e5e7b783c"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-input-recovery.ts",
+      "sha256": "447477cec850d131baea0b2a131770e077aea0dbab66b9cdc0222783283ea220",
+      "gitBlobSha256": "447477cec850d131baea0b2a131770e077aea0dbab66b9cdc0222783283ea220",
+      "normalizedSha256": "447477cec850d131baea0b2a131770e077aea0dbab66b9cdc0222783283ea220"
+    },
+    {
+      "path": "packages/server-core/src/sessions/SessionManager.ts",
+      "sha256": "f30046ac0851e49f602dde8d48afdeef9167855a4dba12305a5db3bd6ecba84f",
+      "gitBlobSha256": "f30046ac0851e49f602dde8d48afdeef9167855a4dba12305a5db3bd6ecba84f",
+      "normalizedSha256": "f30046ac0851e49f602dde8d48afdeef9167855a4dba12305a5db3bd6ecba84f"
+    },
+    {
+      "path": "packages/server-core/src/tasks/TaskRunner.ts",
+      "sha256": "ad8645027f499563285891b6f2580a832e5b14d56cd930e4d23dba99bcc604cd",
+      "gitBlobSha256": "ad8645027f499563285891b6f2580a832e5b14d56cd930e4d23dba99bcc604cd",
+      "normalizedSha256": "ad8645027f499563285891b6f2580a832e5b14d56cd930e4d23dba99bcc604cd"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "7bc424efb4841679a3993e194970f23843ef9be7fea99570523035a23cf31652",
+      "gitBlobSha256": "7bc424efb4841679a3993e194970f23843ef9be7fea99570523035a23cf31652",
+      "normalizedSha256": "7bc424efb4841679a3993e194970f23843ef9be7fea99570523035a23cf31652"
+    },
+    {
+      "path": "packages/shared/src/agent/pi-agent.ts",
+      "sha256": "06708ae7ad5d4834e29eb8bf0d121c1f77b31407dcd7997191a83f68251f1197",
+      "gitBlobSha256": "06708ae7ad5d4834e29eb8bf0d121c1f77b31407dcd7997191a83f68251f1197",
+      "normalizedSha256": "06708ae7ad5d4834e29eb8bf0d121c1f77b31407dcd7997191a83f68251f1197"
+    },
+    {
+      "path": "packages/shared/src/durable-runtime/identity.ts",
+      "sha256": "fe2eb250bd54606c8b4aeaaa6801cd6a751ef6d723798d09c1adc28c7e6dad85",
+      "gitBlobSha256": "fe2eb250bd54606c8b4aeaaa6801cd6a751ef6d723798d09c1adc28c7e6dad85",
+      "normalizedSha256": "fe2eb250bd54606c8b4aeaaa6801cd6a751ef6d723798d09c1adc28c7e6dad85"
+    },
+    {
+      "path": "packages/shared/src/durable-runtime/receipt-storage.ts",
+      "sha256": "c8f4bbd913e8811b52876cfbae88e24d371e9a40264a88f844608ba65263c31c",
+      "gitBlobSha256": "c8f4bbd913e8811b52876cfbae88e24d371e9a40264a88f844608ba65263c31c",
+      "normalizedSha256": "c8f4bbd913e8811b52876cfbae88e24d371e9a40264a88f844608ba65263c31c"
+    },
+    {
+      "path": "packages/shared/src/durable-runtime/redact.ts",
+      "sha256": "9505fbad58e3576deda939e4349aa68db507cbb84d732efe4f849e5896f7add0",
+      "gitBlobSha256": "fbfbc8c4f4c7cbf84014310418f7e09ed06fc7dd5485ad8f25b0ff2db4d33982",
+      "normalizedSha256": "fbfbc8c4f4c7cbf84014310418f7e09ed06fc7dd5485ad8f25b0ff2db4d33982"
+    },
+    {
+      "path": "packages/shared/src/durable-runtime/types.ts",
+      "sha256": "68e4c90e9b874dd074ef8b033ea9aa27b2348be89678c71fee99aad4ff07c07f",
+      "gitBlobSha256": "68e4c90e9b874dd074ef8b033ea9aa27b2348be89678c71fee99aad4ff07c07f",
+      "normalizedSha256": "68e4c90e9b874dd074ef8b033ea9aa27b2348be89678c71fee99aad4ff07c07f"
+    },
+    {
+      "path": "packages/shared/src/protocol/dto.ts",
+      "sha256": "ab2efc1db17e30c04e6bddf08c41a332f7c511daeff94541c196196437f01774",
+      "gitBlobSha256": "ab2efc1db17e30c04e6bddf08c41a332f7c511daeff94541c196196437f01774",
+      "normalizedSha256": "ab2efc1db17e30c04e6bddf08c41a332f7c511daeff94541c196196437f01774"
+    },
+    {
+      "path": "packages/shared/src/sessions/storage.ts",
+      "sha256": "5d78407203eadc06df0a9c3661168272fb130c46863cd7ddbe8c046ba3f19646",
+      "gitBlobSha256": "5d78407203eadc06df0a9c3661168272fb130c46863cd7ddbe8c046ba3f19646",
+      "normalizedSha256": "5d78407203eadc06df0a9c3661168272fb130c46863cd7ddbe8c046ba3f19646"
+    },
+    {
+      "path": "packages/shared/src/sessions/types.ts",
+      "sha256": "e35891a0d874fd79f1e3dc36bd6fa43849e51fb6198f7af93f60db5a13c2abc8",
+      "gitBlobSha256": "e35891a0d874fd79f1e3dc36bd6fa43849e51fb6198f7af93f60db5a13c2abc8",
+      "normalizedSha256": "e35891a0d874fd79f1e3dc36bd6fa43849e51fb6198f7af93f60db5a13c2abc8"
+    },
+    {
+      "path": "scripts/check-governance-boundaries.ts",
+      "sha256": "f87c6ee97ab24a711f21a8d10267fd85ffee16e268771cfbe283c8b7e0b9b8c0",
+      "gitBlobSha256": "f87c6ee97ab24a711f21a8d10267fd85ffee16e268771cfbe283c8b7e0b9b8c0",
+      "normalizedSha256": "f87c6ee97ab24a711f21a8d10267fd85ffee16e268771cfbe283c8b7e0b9b8c0"
+    },
+    {
+      "path": "scripts/verification/durable-continuation-pi-workflow.ts",
+      "sha256": "513715df2c509e88ad52fff6103d909b86a4a311e9a3f50426f2032cfbb33732",
+      "gitBlobSha256": "513715df2c509e88ad52fff6103d909b86a4a311e9a3f50426f2032cfbb33732",
+      "normalizedSha256": "513715df2c509e88ad52fff6103d909b86a4a311e9a3f50426f2032cfbb33732"
+    },
+    {
+      "path": "scripts/verification/durable-continuation-workflow.ts",
+      "sha256": "c1a0bfb389d65a245669a7ee6bd3a8729c6124a94df805bc7bf23a330a952840",
+      "gitBlobSha256": "c1a0bfb389d65a245669a7ee6bd3a8729c6124a94df805bc7bf23a330a952840",
+      "normalizedSha256": "c1a0bfb389d65a245669a7ee6bd3a8729c6124a94df805bc7bf23a330a952840"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-boundary-workflow.ts",
+      "sha256": "3a2fbcb9b60fab123ba0a3fa2679b6ab07b37ee1c39802175905d5838989fade",
+      "gitBlobSha256": "3a2fbcb9b60fab123ba0a3fa2679b6ab07b37ee1c39802175905d5838989fade",
+      "normalizedSha256": "3a2fbcb9b60fab123ba0a3fa2679b6ab07b37ee1c39802175905d5838989fade"
+    },
+    {
+      "path": "scripts/verification/durable-task-continuation-workflow.ts",
+      "sha256": "a9df89cba26df7103407b93be0c19be3e020647c1538d7c5872efba7e7391dd5",
+      "gitBlobSha256": "a9df89cba26df7103407b93be0c19be3e020647c1538d7c5872efba7e7391dd5",
+      "normalizedSha256": "a9df89cba26df7103407b93be0c19be3e020647c1538d7c5872efba7e7391dd5"
+    },
+    {
+      "path": "scripts/verification/harness-capability-workflow.ts",
+      "sha256": "e5420e086bed38c1c9ec2c5e33cdf0389efa5ab7fc835d5ba7b0b54316707c98",
+      "gitBlobSha256": "e5420e086bed38c1c9ec2c5e33cdf0389efa5ab7fc835d5ba7b0b54316707c98",
+      "normalizedSha256": "e5420e086bed38c1c9ec2c5e33cdf0389efa5ab7fc835d5ba7b0b54316707c98"
+    }
+  ],
+  "build": {
+    "path": "packages/pi-agent-server/dist/bundle.js",
+    "sha256": "d74b29dee0769173e0ba6ffb824a6b3ab144bbcd09a412cf56fd9b5ab863c080"
+  },
+  "harness": {
+    "passed": 173,
+    "workflows": [
+      {
+        "workflow": "model-harness-contract",
+        "passed": 21,
+        "exitCode": 0,
+        "directory": ".cache/verification/model-harness-contract-U6Q5oO",
+        "artifacts": [
+          "model-harness-contract--manifest.json",
+          "model-harness-contract--scenarios.json"
+        ],
+        "untested": [
+          "live model quality",
+          "native browser UI",
+          "external OAuth",
+          "Linux isolation",
+          "conflicting side effects"
+        ]
+      },
+      {
+        "workflow": "harness-tool-effects",
+        "passed": 17,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-tool-effects-CDXgBv",
+        "artifacts": [
+          "harness-tool-effects--manifest.json",
+          "harness-tool-effects--pure-ports-clean.json",
+          "harness-tool-effects--pure-ports-mutation.json",
+          "harness-tool-effects--scenarios.json",
+          "harness-tool-effects--scheduler-trace.json"
+        ],
+        "untested": [
+          "real provider APIs",
+          "native browser UI",
+          "cross-process resource locking"
+        ]
+      },
+      {
+        "workflow": "harness-prompt-assembly",
+        "passed": 7,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-prompt-assembly-aYCzku",
+        "artifacts": [
+          "harness-prompt-assembly--manifest.json",
+          "harness-prompt-assembly--compiled-prompt-budget.json",
+          "harness-prompt-assembly--product-prompt-matrix.json",
+          "harness-prompt-assembly--prompt-cli-summary.json",
+          "harness-prompt-assembly--scenarios.json",
+          "harness-prompt-assembly--task-context.json"
+        ],
+        "untested": [
+          "Live model quality or token billing",
+          "native browser and OAuth",
+          "complete execution-step state machine"
+        ]
+      },
+      {
+        "workflow": "harness-capability",
+        "passed": 11,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-capability-KuosRF",
+        "artifacts": [
+          "harness-capability--manifest.json",
+          "harness-capability--harness-capability.json"
+        ],
+        "untested": [
+          "live model quality",
+          "native cross-platform isolation",
+          "signed packaging"
+        ]
+      },
+      {
+        "workflow": "model-harness-pi",
+        "passed": 11,
+        "exitCode": 0,
+        "directory": ".cache/verification/model-harness-pi-tDPhyT",
+        "artifacts": [
+          "model-harness-pi--manifest.json",
+          "model-harness-pi--harness-pi.json.gz"
+        ],
+        "untested": [
+          "live provider APIs",
+          "native Windows/Linux execution",
+          "signed installer/release"
+        ]
+      },
+      {
+        "workflow": "harness-tool-order-pi",
+        "passed": 6,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-tool-order-pi-hTi4AE",
+        "artifacts": [
+          "harness-tool-order-pi--manifest.json",
+          "harness-tool-order-pi--tool-order-pi.json"
+        ],
+        "untested": [
+          "live provider APIs",
+          "native Windows/Linux execution",
+          "signed installer/release"
+        ]
+      },
+      {
+        "workflow": "harness-task-context-pi",
+        "passed": 4,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-task-context-pi-VYsEM6",
+        "artifacts": [
+          "harness-task-context-pi--manifest.json",
+          "harness-task-context-pi--task-context-pi.json"
+        ],
+        "untested": [
+          "Live model quality",
+          "automatic completion verification",
+          "complete execution-step state machine"
+        ]
+      },
+      {
+        "workflow": "harness-input-continuity",
+        "passed": 9,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-input-continuity-51V7rm",
+        "artifacts": [
+          "harness-input-continuity--manifest.json",
+          "harness-input-continuity--input-continuity.json"
+        ],
+        "untested": [
+          "live model quality",
+          "native UI steering during external effects",
+          "cross-platform packaging"
+        ]
+      },
+      {
+        "workflow": "harness-materials",
+        "passed": 5,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-materials-7kpBbB",
+        "artifacts": [
+          "harness-materials--manifest.json",
+          "harness-materials--materials.json"
+        ],
+        "untested": [
+          "Live model quality",
+          "Visual Office layout",
+          "Cross-platform packaging"
+        ]
+      },
+      {
+        "workflow": "harness-continuity",
+        "passed": 6,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-continuity-sgCLKq",
+        "artifacts": [
+          "harness-continuity--manifest.json",
+          "harness-continuity--continuity.json"
+        ],
+        "untested": [
+          "Live model recall/quality",
+          "External effects"
+        ]
+      },
+      {
+        "workflow": "harness-execution-readiness",
+        "passed": 3,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-execution-readiness-zdBAgg",
+        "artifacts": [
+          "harness-execution-readiness--manifest.json",
+          "harness-execution-readiness--execution-readiness.json"
+        ],
+        "untested": [
+          "External service effects",
+          "Live model quality"
+        ]
+      },
+      {
+        "workflow": "harness-artifact-feedback",
+        "passed": 5,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-artifact-feedback-Id2AIm",
+        "artifacts": [
+          "harness-artifact-feedback--manifest.json",
+          "harness-artifact-feedback--artifact-feedback.json"
+        ],
+        "untested": [
+          "Live model quality",
+          "Office visual layout and page rendering",
+          "Signed packaging"
+        ]
+      },
+      {
+        "workflow": "harness-compaction-authority",
+        "passed": 12,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-compaction-authority-aGZexO",
+        "artifacts": [
+          "harness-compaction-authority--manifest.json",
+          "harness-compaction-authority--checks.json",
+          "harness-compaction-authority--compaction.json"
+        ],
+        "untested": [
+          "Live model summary quality",
+          "Host delivery replay is covered separately by the input-continuity workflow"
+        ]
+      },
+      {
+        "workflow": "harness-system-ready-pi",
+        "passed": 15,
+        "exitCode": 0,
+        "directory": ".cache/verification/harness-system-ready-pi-ntGaMX",
+        "artifacts": [
+          "harness-system-ready-pi--manifest.json",
+          "harness-system-ready-pi--ready-report.json.gz"
+        ],
+        "untested": [
+          "Live model quality",
+          "Signed cross-platform packaging"
+        ]
+      },
+      {
+        "workflow": "durable-continuation",
+        "passed": 27,
+        "exitCode": 0,
+        "directory": ".cache/verification/durable-continuation-VccUWU",
+        "artifacts": [
+          "durable-continuation--manifest.json",
+          "durable-continuation--continuation.json",
+          "durable-continuation--model-delivery.json",
+          "durable-continuation--progress.json",
+          "durable-continuation--storage-recovery.json"
+        ],
+        "untested": [
+          "Live provider quality",
+          "Signed/cross-platform release"
+        ]
+      },
+      {
+        "workflow": "durable-continuation-pi",
+        "passed": 10,
+        "exitCode": 0,
+        "directory": ".cache/verification/durable-continuation-pi-buy2oo",
+        "artifacts": [
+          "durable-continuation-pi--manifest.json",
+          "durable-continuation-pi--pi-continuation.json.gz",
+          "durable-continuation-pi--shutdown.json"
+        ],
+        "untested": [
+          "Live model quality",
+          "Signed release",
+          "Other OS process cancellation"
+        ]
+      },
+      {
+        "workflow": "durable-task-continuation",
+        "passed": 4,
+        "exitCode": 0,
+        "directory": ".cache/verification/durable-task-continuation-MVEdY1",
+        "artifacts": [
+          "durable-task-continuation--manifest.json",
+          "durable-task-continuation--completed.json",
+          "durable-task-continuation--created-before-receipt.json",
+          "durable-task-continuation--fact-outage.json",
+          "durable-task-continuation--interrupted.json"
+        ],
+        "untested": [
+          "Controlled child host; actual TaskRunner scheduler, file scopes, JSONL, output files, restart and verification flow. Live model quality is not measured."
+        ]
+      }
+    ]
+  },
+  "boundary": {
+    "passed": 29,
+    "workflows": [
+      {
+        "workflow": "durable-runtime-boundary",
+        "passed": 15,
+        "exitCode": 0,
+        "directory": ".cache/verification/durable-runtime-boundary-Pdnz27",
+        "artifacts": [
+          "durable-runtime-boundary--manifest.json",
+          "durable-runtime-boundary--workflow.json.gz"
+        ],
+        "untested": [
+          "Windows/Linux native execution",
+          "live provider APIs",
+          "signed installer/release"
+        ]
+      },
+      {
+        "workflow": "durable-runtime-crash",
+        "passed": 8,
+        "exitCode": 0,
+        "directory": ".cache/verification/durable-runtime-crash-WwK1a9",
+        "artifacts": [
+          "durable-runtime-crash--manifest.json",
+          "durable-runtime-crash--crash.json"
+        ],
+        "untested": [
+          "Windows/Linux native execution",
+          "live provider APIs",
+          "signed installer/release"
+        ]
+      },
+      {
+        "workflow": "durable-runtime-pi",
+        "passed": 6,
+        "exitCode": 0,
+        "directory": ".cache/verification/durable-runtime-pi-vev9dj",
+        "artifacts": [
+          "durable-runtime-pi--manifest.json",
+          "durable-runtime-pi--independent-pi.json"
+        ],
+        "untested": [
+          "live provider APIs",
+          "native Windows/Linux execution",
+          "signed installer/release"
+        ]
+      }
+    ]
+  },
+  "baselineFailures": [
+    {
+      "workflow": "durable-continuation",
+      "passed": 0,
+      "exitCode": 1,
+      "directory": ".cache/verification/durable-continuation-NJvSoA",
+      "artifacts": [
+        "red-durable-continuation--manifest.json",
+        "red-durable-continuation--failure.json",
+        "red-durable-continuation--progress.json"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ]
+    },
+    {
+      "workflow": "durable-task-continuation",
+      "passed": 0,
+      "exitCode": 1,
+      "directory": ".cache/verification/durable-task-continuation-LxZDAn",
+      "artifacts": [
+        "red-durable-task-continuation--manifest.json",
+        "red-durable-task-continuation--failure.json"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ]
+    },
+    {
+      "workflow": "durable-continuation",
+      "passed": 0,
+      "exitCode": 1,
+      "directory": ".cache/verification/durable-continuation-gM63a0",
+      "artifacts": [
+        "red-model-wire-receipt--manifest.json",
+        "red-model-wire-receipt--failure.json",
+        "red-model-wire-receipt--model-delivery.json",
+        "red-model-wire-receipt--progress.json"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ]
+    }
+  ],
+  "liveSession": {
+    "summary": "live-session-summary.json",
+    "originalDataModified": false
+  },
+  "tests": {
+    "pi": {
+      "passed": 200,
+      "failed": 0
+    },
+    "server": {
+      "passed": 449,
+      "failed": 4,
+      "limit": "Existing fixture omits deltas initialization; unchanged fixture and unchanged queueDelta method verified against base.",
+      "fixtureNormalizedSha256": "bfc2df8a8eec6af5e8d09bd8abc2f50dd18f058b8474cd6023bff07b6c26a288",
+      "queueMethodSha256": "eb0fd13f4c3097d2b42a18b9726882bd70c399a9c80ac74436dddd649ab50805"
+    }
+  },
+  "gates": {
+    "typecheck": "pass",
+    "lint": "pass",
+    "i18n": "pass",
+    "identity": "pass",
+    "version": "pass",
+    "docs": "pass"
+  },
+  "untested": [
+    "Live model quality",
+    "Signed/installed release",
+    "Other operating systems",
+    "Bun 1.4.3 execution (local Bun 1.4.2)"
+  ],
+  "artifacts": [
+    {
+      "path": "model-harness-contract--manifest.json",
+      "bytes": 12655,
+      "sha256": "9a769a4429b372f960b28b6814b0cadcbb61973af9d19373093c85c948962957",
+      "original": ".cache/verification/model-harness-contract-U6Q5oO/manifest.json",
+      "originalSha256": "9a769a4429b372f960b28b6814b0cadcbb61973af9d19373093c85c948962957"
+    },
+    {
+      "path": "model-harness-contract--scenarios.json",
+      "bytes": 2160,
+      "sha256": "f55c4dac68670f7679bf2f46d5402022e90d91676c591ef13c361ef4ac4827e6",
+      "original": ".cache/verification/model-harness-contract-U6Q5oO/scenarios.json",
+      "originalSha256": "f55c4dac68670f7679bf2f46d5402022e90d91676c591ef13c361ef4ac4827e6"
+    },
+    {
+      "path": "harness-tool-effects--manifest.json",
+      "bytes": 13014,
+      "sha256": "d221ceb649de83d0b92f2f33fdc917795f392c5053c5f2667b0991ac38830e26",
+      "original": ".cache/verification/harness-tool-effects-CDXgBv/manifest.json",
+      "originalSha256": "d221ceb649de83d0b92f2f33fdc917795f392c5053c5f2667b0991ac38830e26"
+    },
+    {
+      "path": "harness-tool-effects--pure-ports-clean.json",
+      "bytes": 1941,
+      "sha256": "ec0a4f8fc9ba38599f91c6b88fc3cbc1433276d31e078b301957606e89d4dd7b",
+      "original": ".cache/verification/harness-tool-effects-CDXgBv/pure-ports-clean.json",
+      "originalSha256": "ec0a4f8fc9ba38599f91c6b88fc3cbc1433276d31e078b301957606e89d4dd7b"
+    },
+    {
+      "path": "harness-tool-effects--pure-ports-mutation.json",
+      "bytes": 2215,
+      "sha256": "c21399b0e12f69b4bcab42f1d3a930c959b414523c6b4c3d6cfdf0bd4a4dc598",
+      "original": ".cache/verification/harness-tool-effects-CDXgBv/pure-ports-mutation.json",
+      "originalSha256": "c21399b0e12f69b4bcab42f1d3a930c959b414523c6b4c3d6cfdf0bd4a4dc598"
+    },
+    {
+      "path": "harness-tool-effects--scenarios.json",
+      "bytes": 1902,
+      "sha256": "c8c9ebecced037dea700c8744f81815d9b840f2e30352a121645db06e2a038cb",
+      "original": ".cache/verification/harness-tool-effects-CDXgBv/scenarios.json",
+      "originalSha256": "c8c9ebecced037dea700c8744f81815d9b840f2e30352a121645db06e2a038cb"
+    },
+    {
+      "path": "harness-tool-effects--scheduler-trace.json",
+      "bytes": 174,
+      "sha256": "e211c1ccc4c9c8c4adace8bf5ac28d5c37ae5a87995343190756b4de0697ea91",
+      "original": ".cache/verification/harness-tool-effects-CDXgBv/scheduler-trace.json",
+      "originalSha256": "e211c1ccc4c9c8c4adace8bf5ac28d5c37ae5a87995343190756b4de0697ea91"
+    },
+    {
+      "path": "harness-prompt-assembly--manifest.json",
+      "bytes": 12835,
+      "sha256": "d3caefdbafdaeaf4cc23bd64712fdeb9c6e27c117b48d1ca487618015a54e3fe",
+      "original": ".cache/verification/harness-prompt-assembly-aYCzku/manifest.json",
+      "originalSha256": "d3caefdbafdaeaf4cc23bd64712fdeb9c6e27c117b48d1ca487618015a54e3fe"
+    },
+    {
+      "path": "harness-prompt-assembly--compiled-prompt-budget.json",
+      "bytes": 2885,
+      "sha256": "78171f1da0465996d6e5c597a7470d63f9793200f776469b81e0b27c76eda07d",
+      "original": ".cache/verification/harness-prompt-assembly-aYCzku/compiled-prompt-budget.json",
+      "originalSha256": "78171f1da0465996d6e5c597a7470d63f9793200f776469b81e0b27c76eda07d"
+    },
+    {
+      "path": "harness-prompt-assembly--product-prompt-matrix.json",
+      "bytes": 117979,
+      "sha256": "fc2376cd9101ec58b5144b0e0dccec9eb55f739d9313e1ca21f34911cc2de682",
+      "original": ".cache/verification/harness-prompt-assembly-aYCzku/product-prompt-matrix.json",
+      "originalSha256": "fc2376cd9101ec58b5144b0e0dccec9eb55f739d9313e1ca21f34911cc2de682"
+    },
+    {
+      "path": "harness-prompt-assembly--prompt-cli-summary.json",
+      "bytes": 2939,
+      "sha256": "59bc42c6ab5b299918c313728bebf73bc29dda394b57560a2e53e52c47b35c41",
+      "original": ".cache/verification/harness-prompt-assembly-aYCzku/prompt-cli-summary.json",
+      "originalSha256": "59bc42c6ab5b299918c313728bebf73bc29dda394b57560a2e53e52c47b35c41"
+    },
+    {
+      "path": "harness-prompt-assembly--scenarios.json",
+      "bytes": 705,
+      "sha256": "df3f36b89e0404ee23108fbd6d5a4e07a51f44be2ae9660d0ba72bb7a810c196",
+      "original": ".cache/verification/harness-prompt-assembly-aYCzku/scenarios.json",
+      "originalSha256": "df3f36b89e0404ee23108fbd6d5a4e07a51f44be2ae9660d0ba72bb7a810c196"
+    },
+    {
+      "path": "harness-prompt-assembly--task-context.json",
+      "bytes": 2912,
+      "sha256": "64b1d6d81a3e01bea10d0600b6a707206ea86d637166db3944e1f1ae40040ecf",
+      "original": ".cache/verification/harness-prompt-assembly-aYCzku/task-context.json",
+      "originalSha256": "64b1d6d81a3e01bea10d0600b6a707206ea86d637166db3944e1f1ae40040ecf"
+    },
+    {
+      "path": "harness-capability--manifest.json",
+      "bytes": 13514,
+      "sha256": "442d3db7efde690f748e2b8ed00849c1c7fb9a9713520219c626c1d7731580c6",
+      "original": ".cache/verification/harness-capability-KuosRF/manifest.json",
+      "originalSha256": "442d3db7efde690f748e2b8ed00849c1c7fb9a9713520219c626c1d7731580c6"
+    },
+    {
+      "path": "harness-capability--harness-capability.json",
+      "bytes": 2513,
+      "sha256": "4ba8c98fe25a7983ed6ee675dce4f03759abc08151f94837c5c1d0d9e53a7c11",
+      "original": ".cache/verification/harness-capability-KuosRF/harness-capability.json",
+      "originalSha256": "4ba8c98fe25a7983ed6ee675dce4f03759abc08151f94837c5c1d0d9e53a7c11"
+    },
+    {
+      "path": "model-harness-pi--manifest.json",
+      "bytes": 12098,
+      "sha256": "13b9934a6153d0233149c41542587d8368becd43dbdb1fc034eb1e0e4d0e394a",
+      "original": ".cache/verification/model-harness-pi-tDPhyT/manifest.json",
+      "originalSha256": "13b9934a6153d0233149c41542587d8368becd43dbdb1fc034eb1e0e4d0e394a"
+    },
+    {
+      "path": "model-harness-pi--harness-pi.json.gz",
+      "bytes": 29726,
+      "sha256": "7e95d025a59d53556bc4d71cf29edf93d9680f4f3d223e89f1a56fcb43bd9ead",
+      "original": ".cache/verification/model-harness-pi-tDPhyT/harness-pi.json",
+      "originalSha256": "f48247c104057eabc9ffa0a19ff38e7aa2f14a35f040e954dea64902d9b11f06",
+      "encoding": "gzip"
+    },
+    {
+      "path": "harness-tool-order-pi--manifest.json",
+      "bytes": 11909,
+      "sha256": "f44c328fdf290634e817709ff0efcb9eaaa8036ab05bf3a8d78ac84fe00bf233",
+      "original": ".cache/verification/harness-tool-order-pi-hTi4AE/manifest.json",
+      "originalSha256": "f44c328fdf290634e817709ff0efcb9eaaa8036ab05bf3a8d78ac84fe00bf233"
+    },
+    {
+      "path": "harness-tool-order-pi--tool-order-pi.json",
+      "bytes": 79134,
+      "sha256": "159c9f6f48825b225bf108e39a01d47d79f3efa845805f468e798b89dea8337b",
+      "original": ".cache/verification/harness-tool-order-pi-hTi4AE/tool-order-pi.json",
+      "originalSha256": "159c9f6f48825b225bf108e39a01d47d79f3efa845805f468e798b89dea8337b"
+    },
+    {
+      "path": "harness-task-context-pi--manifest.json",
+      "bytes": 12441,
+      "sha256": "6175e79a8549d6231c47a2174bc274d505def5975e36b951d60da64f9bc7967d",
+      "original": ".cache/verification/harness-task-context-pi-VYsEM6/manifest.json",
+      "originalSha256": "6175e79a8549d6231c47a2174bc274d505def5975e36b951d60da64f9bc7967d"
+    },
+    {
+      "path": "harness-task-context-pi--task-context-pi.json",
+      "bytes": 169637,
+      "sha256": "51cdb76367fe12678ce77bb7e5206da14ab95823e69e0c3af74e463d4b200dbe",
+      "original": ".cache/verification/harness-task-context-pi-VYsEM6/task-context-pi.json",
+      "originalSha256": "51cdb76367fe12678ce77bb7e5206da14ab95823e69e0c3af74e463d4b200dbe"
+    },
+    {
+      "path": "harness-input-continuity--manifest.json",
+      "bytes": 15547,
+      "sha256": "947b4a41473c876d98dca6eae078c6e65c702d725ace427a4807e1269ab8e7f4",
+      "original": ".cache/verification/harness-input-continuity-51V7rm/manifest.json",
+      "originalSha256": "947b4a41473c876d98dca6eae078c6e65c702d725ace427a4807e1269ab8e7f4"
+    },
+    {
+      "path": "harness-input-continuity--input-continuity.json",
+      "bytes": 2599,
+      "sha256": "527c69eb9fe76db97edfa11b23eac3409f255fb65486d82c56ddc7af6cbe8be7",
+      "original": ".cache/verification/harness-input-continuity-51V7rm/input-continuity.json",
+      "originalSha256": "527c69eb9fe76db97edfa11b23eac3409f255fb65486d82c56ddc7af6cbe8be7"
+    },
+    {
+      "path": "harness-materials--manifest.json",
+      "bytes": 12776,
+      "sha256": "c1838a04eabbd2dd012696f15c3a8910ccda4794b296c10f9ac4df509dc553fa",
+      "original": ".cache/verification/harness-materials-7kpBbB/manifest.json",
+      "originalSha256": "c1838a04eabbd2dd012696f15c3a8910ccda4794b296c10f9ac4df509dc553fa"
+    },
+    {
+      "path": "harness-materials--materials.json",
+      "bytes": 214874,
+      "sha256": "ca88d5214b3d07de5640b52f695bdad50b3d397269b3361c1e1e65f100ea4a90",
+      "original": ".cache/verification/harness-materials-7kpBbB/materials.json",
+      "originalSha256": "ca88d5214b3d07de5640b52f695bdad50b3d397269b3361c1e1e65f100ea4a90"
+    },
+    {
+      "path": "harness-continuity--manifest.json",
+      "bytes": 11913,
+      "sha256": "3453a4fcd052e29a208beeaa3e622dac31a964c9e1b92df123e803a204fa5b73",
+      "original": ".cache/verification/harness-continuity-sgCLKq/manifest.json",
+      "originalSha256": "3453a4fcd052e29a208beeaa3e622dac31a964c9e1b92df123e803a204fa5b73"
+    },
+    {
+      "path": "harness-continuity--continuity.json",
+      "bytes": 9255,
+      "sha256": "e751c5a8debe2cce7ad24c5a0ff934b3d47d5c0e2733728e5339b9086354f63e",
+      "original": ".cache/verification/harness-continuity-sgCLKq/continuity.json",
+      "originalSha256": "e751c5a8debe2cce7ad24c5a0ff934b3d47d5c0e2733728e5339b9086354f63e"
+    },
+    {
+      "path": "harness-execution-readiness--manifest.json",
+      "bytes": 12056,
+      "sha256": "2cc70105d892934e5c4df0aa5fe6322b2d51dbe8c22159376542878c938a5194",
+      "original": ".cache/verification/harness-execution-readiness-zdBAgg/manifest.json",
+      "originalSha256": "2cc70105d892934e5c4df0aa5fe6322b2d51dbe8c22159376542878c938a5194"
+    },
+    {
+      "path": "harness-execution-readiness--execution-readiness.json",
+      "bytes": 376,
+      "sha256": "c7edd3b6a2ee6b6592734e0dfce4c61f961898a1521a398f13a09072b1e74029",
+      "original": ".cache/verification/harness-execution-readiness-zdBAgg/execution-readiness.json",
+      "originalSha256": "c7edd3b6a2ee6b6592734e0dfce4c61f961898a1521a398f13a09072b1e74029"
+    },
+    {
+      "path": "harness-artifact-feedback--manifest.json",
+      "bytes": 13469,
+      "sha256": "9b6b5625f139aa7e9575d48ec4d0078284fcd977734a898dce24befc6a423a1e",
+      "original": ".cache/verification/harness-artifact-feedback-Id2AIm/manifest.json",
+      "originalSha256": "9b6b5625f139aa7e9575d48ec4d0078284fcd977734a898dce24befc6a423a1e"
+    },
+    {
+      "path": "harness-artifact-feedback--artifact-feedback.json",
+      "bytes": 8549,
+      "sha256": "e791e5e4f6f3d2ff31fdcae270ccc21db3d16428755024974f77b60b98e23c4b",
+      "original": ".cache/verification/harness-artifact-feedback-Id2AIm/artifact-feedback.json",
+      "originalSha256": "e791e5e4f6f3d2ff31fdcae270ccc21db3d16428755024974f77b60b98e23c4b"
+    },
+    {
+      "path": "harness-compaction-authority--manifest.json",
+      "bytes": 13806,
+      "sha256": "5a1ff967dc09031d86dea181a7a8cf35a6cfe99f2be458cf21c5b8cf6517b97d",
+      "original": ".cache/verification/harness-compaction-authority-aGZexO/manifest.json",
+      "originalSha256": "5a1ff967dc09031d86dea181a7a8cf35a6cfe99f2be458cf21c5b8cf6517b97d"
+    },
+    {
+      "path": "harness-compaction-authority--checks.json",
+      "bytes": 1291,
+      "sha256": "db4e13c94797d73088559726ffe21273e5fa194af7bb740c44ae08dd59dea579",
+      "original": ".cache/verification/harness-compaction-authority-aGZexO/checks.json",
+      "originalSha256": "db4e13c94797d73088559726ffe21273e5fa194af7bb740c44ae08dd59dea579"
+    },
+    {
+      "path": "harness-compaction-authority--compaction.json",
+      "bytes": 148,
+      "sha256": "8cfe71769efa58436cf12fe26258bee8ecebd7a1846b8a93c28452ba7ea121f8",
+      "original": ".cache/verification/harness-compaction-authority-aGZexO/compaction.json",
+      "originalSha256": "8cfe71769efa58436cf12fe26258bee8ecebd7a1846b8a93c28452ba7ea121f8"
+    },
+    {
+      "path": "harness-system-ready-pi--manifest.json",
+      "bytes": 14128,
+      "sha256": "c8a718f6ac7a06a287067956002b7128f16a1bf1a9c1648c1990f7562e6ac21f",
+      "original": ".cache/verification/harness-system-ready-pi-ntGaMX/manifest.json",
+      "originalSha256": "c8a718f6ac7a06a287067956002b7128f16a1bf1a9c1648c1990f7562e6ac21f"
+    },
+    {
+      "path": "harness-system-ready-pi--ready-report.json.gz",
+      "bytes": 514195,
+      "sha256": "2622e4b26e496f8a1a143d347ce9a39f76e0f6a61452c83e00c2697450d26f55",
+      "original": ".cache/verification/harness-system-ready-pi-ntGaMX/ready-report.json",
+      "originalSha256": "f4ec1b1e3ab64a35d71f85805c2d1c613fa6215b672711143328057e519c4924",
+      "encoding": "gzip"
+    },
+    {
+      "path": "durable-continuation--manifest.json",
+      "bytes": 16694,
+      "sha256": "fca3c9f8e8f9c59a9852736960734ea8bb9f0366ae6f12d1c9368805694e9bec",
+      "original": ".cache/verification/durable-continuation-VccUWU/manifest.json",
+      "originalSha256": "fca3c9f8e8f9c59a9852736960734ea8bb9f0366ae6f12d1c9368805694e9bec"
+    },
+    {
+      "path": "durable-continuation--continuation.json",
+      "bytes": 2535,
+      "sha256": "554fc8e336a796fe2303b923b6c48bb26b4e7aaba5a55b1fc649e59ee54b9dfa",
+      "original": ".cache/verification/durable-continuation-VccUWU/continuation.json",
+      "originalSha256": "554fc8e336a796fe2303b923b6c48bb26b4e7aaba5a55b1fc649e59ee54b9dfa"
+    },
+    {
+      "path": "durable-continuation--model-delivery.json",
+      "bytes": 1484,
+      "sha256": "17f6011520ea94b22f1794e0345ea677b685fafe2f99fbc792e254d364213d6c",
+      "original": ".cache/verification/durable-continuation-VccUWU/model-delivery.json",
+      "originalSha256": "17f6011520ea94b22f1794e0345ea677b685fafe2f99fbc792e254d364213d6c"
+    },
+    {
+      "path": "durable-continuation--progress.json",
+      "bytes": 492,
+      "sha256": "1a1edf57b7cc9afb33e2ed112eff5eff3f710043878085ed601487687b1e113b",
+      "original": ".cache/verification/durable-continuation-VccUWU/progress.json",
+      "originalSha256": "1a1edf57b7cc9afb33e2ed112eff5eff3f710043878085ed601487687b1e113b"
+    },
+    {
+      "path": "durable-continuation--storage-recovery.json",
+      "bytes": 530,
+      "sha256": "8362926cae9c8d3cbf23cb298fbf0cc56ee92d6a6f307c51fe80049ea7f9718d",
+      "original": ".cache/verification/durable-continuation-VccUWU/storage-recovery.json",
+      "originalSha256": "8362926cae9c8d3cbf23cb298fbf0cc56ee92d6a6f307c51fe80049ea7f9718d"
+    },
+    {
+      "path": "durable-continuation-pi--manifest.json",
+      "bytes": 13699,
+      "sha256": "e1575fe1750786569220a7752945ba25a9f0293adf7dbac8207eb4e8ce2df192",
+      "original": ".cache/verification/durable-continuation-pi-buy2oo/manifest.json",
+      "originalSha256": "e1575fe1750786569220a7752945ba25a9f0293adf7dbac8207eb4e8ce2df192"
+    },
+    {
+      "path": "durable-continuation-pi--pi-continuation.json.gz",
+      "bytes": 321955,
+      "sha256": "b5ab46c624e30b3f2a6760831c077ec4980dbe3290ad03fe7850c0eb49935f5b",
+      "original": ".cache/verification/durable-continuation-pi-buy2oo/pi-continuation.json",
+      "originalSha256": "0ee259b4e551aa5bcf1e9918992af91dedc350c8ca5a3146569c9a759188e49e",
+      "encoding": "gzip"
+    },
+    {
+      "path": "durable-continuation-pi--shutdown.json",
+      "bytes": 192,
+      "sha256": "8c7676d27af2a826c053bbf9ba28a1dea871176fff821c57612a4edf60e64e14",
+      "original": ".cache/verification/durable-continuation-pi-buy2oo/shutdown.json",
+      "originalSha256": "8c7676d27af2a826c053bbf9ba28a1dea871176fff821c57612a4edf60e64e14"
+    },
+    {
+      "path": "durable-task-continuation--manifest.json",
+      "bytes": 16203,
+      "sha256": "12fe9273cb6e7743562acc3135ffe143e281d1b4bc2adc80eaf7774babf7f338",
+      "original": ".cache/verification/durable-task-continuation-MVEdY1/manifest.json",
+      "originalSha256": "12fe9273cb6e7743562acc3135ffe143e281d1b4bc2adc80eaf7774babf7f338"
+    },
+    {
+      "path": "durable-task-continuation--completed.json",
+      "bytes": 4662,
+      "sha256": "7e84bb16f35aa37db083a6669fa741755226158273873e3af29244421cbe9c45",
+      "original": ".cache/verification/durable-task-continuation-MVEdY1/completed.json",
+      "originalSha256": "7e84bb16f35aa37db083a6669fa741755226158273873e3af29244421cbe9c45"
+    },
+    {
+      "path": "durable-task-continuation--created-before-receipt.json",
+      "bytes": 4710,
+      "sha256": "870d89da0d46d3830b5ba2b5a7c98e76b7a56bacb798940b5c6ed96c0f9a776c",
+      "original": ".cache/verification/durable-task-continuation-MVEdY1/created-before-receipt.json",
+      "originalSha256": "870d89da0d46d3830b5ba2b5a7c98e76b7a56bacb798940b5c6ed96c0f9a776c"
+    },
+    {
+      "path": "durable-task-continuation--fact-outage.json",
+      "bytes": 5236,
+      "sha256": "d084a2e0c7ff0a17eacb3de1df840bcf17cca6252f39e727d119f327619793c5",
+      "original": ".cache/verification/durable-task-continuation-MVEdY1/fact-outage.json",
+      "originalSha256": "d084a2e0c7ff0a17eacb3de1df840bcf17cca6252f39e727d119f327619793c5"
+    },
+    {
+      "path": "durable-task-continuation--interrupted.json",
+      "bytes": 5236,
+      "sha256": "cb0c6aa1e985f9473a35be04209ced57ee0e195ef86a7019928648a356c8dea8",
+      "original": ".cache/verification/durable-task-continuation-MVEdY1/interrupted.json",
+      "originalSha256": "cb0c6aa1e985f9473a35be04209ced57ee0e195ef86a7019928648a356c8dea8"
+    },
+    {
+      "path": "durable-runtime-boundary--manifest.json",
+      "bytes": 11937,
+      "sha256": "9063713dc842a126dd94c8490bd83c7ab35bf8760058607428cded10a2ae182b",
+      "original": ".cache/verification/durable-runtime-boundary-Pdnz27/manifest.json",
+      "originalSha256": "9063713dc842a126dd94c8490bd83c7ab35bf8760058607428cded10a2ae182b"
+    },
+    {
+      "path": "durable-runtime-boundary--workflow.json.gz",
+      "bytes": 32616,
+      "sha256": "05f803e379354ed3c1707c61cf1637bb2b68f16f78c3bafd7244041e7cfd6925",
+      "original": ".cache/verification/durable-runtime-boundary-Pdnz27/workflow.json",
+      "originalSha256": "c93b4159effdfa43dac67658ab62edb10a4ee52420c7337037347818cec1f356",
+      "encoding": "gzip"
+    },
+    {
+      "path": "durable-runtime-crash--manifest.json",
+      "bytes": 13027,
+      "sha256": "2bb3fbc325958868f1a21380f2864cf212d616afd5c63328cdcb2b1097991371",
+      "original": ".cache/verification/durable-runtime-crash-WwK1a9/manifest.json",
+      "originalSha256": "2bb3fbc325958868f1a21380f2864cf212d616afd5c63328cdcb2b1097991371"
+    },
+    {
+      "path": "durable-runtime-crash--crash.json",
+      "bytes": 86641,
+      "sha256": "21cdfdf207fd8f5b5ecb56ebbd176801aa94f064832c0506171aa78610f82d9c",
+      "original": ".cache/verification/durable-runtime-crash-WwK1a9/crash.json",
+      "originalSha256": "21cdfdf207fd8f5b5ecb56ebbd176801aa94f064832c0506171aa78610f82d9c"
+    },
+    {
+      "path": "durable-runtime-pi--manifest.json",
+      "bytes": 11870,
+      "sha256": "a780ecca0712fdf65b270d761e9a989c6cd66dc1247a969dccd1bd12f0941c4d",
+      "original": ".cache/verification/durable-runtime-pi-vev9dj/manifest.json",
+      "originalSha256": "a780ecca0712fdf65b270d761e9a989c6cd66dc1247a969dccd1bd12f0941c4d"
+    },
+    {
+      "path": "durable-runtime-pi--independent-pi.json",
+      "bytes": 55956,
+      "sha256": "7a6d0a3d018ac0a27a579bce351cd26610ff58ce570b072a25e725c86959900a",
+      "original": ".cache/verification/durable-runtime-pi-vev9dj/independent-pi.json",
+      "originalSha256": "7a6d0a3d018ac0a27a579bce351cd26610ff58ce570b072a25e725c86959900a"
+    },
+    {
+      "path": "red-durable-continuation--manifest.json",
+      "bytes": 2295,
+      "sha256": "b1c806c8b60161a9d99fda278f6698f49609be5de3268d822cb462836a888cb1",
+      "original": ".cache/verification/durable-continuation-NJvSoA/manifest.json",
+      "originalSha256": "b1c806c8b60161a9d99fda278f6698f49609be5de3268d822cb462836a888cb1"
+    },
+    {
+      "path": "red-durable-continuation--failure.json",
+      "bytes": 476,
+      "sha256": "167b7740b5603d9b243f4d91704c6569d76a94261fe48d7a8f48110ce8a1c366",
+      "original": ".cache/verification/durable-continuation-NJvSoA/failure.json",
+      "originalSha256": "167b7740b5603d9b243f4d91704c6569d76a94261fe48d7a8f48110ce8a1c366"
+    },
+    {
+      "path": "red-durable-continuation--progress.json",
+      "bytes": 158,
+      "sha256": "abb1fe69ccc67fcf3f882820d5b2ee055d5f61b0e423a55331eef3e48f09cad5",
+      "original": ".cache/verification/durable-continuation-NJvSoA/progress.json",
+      "originalSha256": "abb1fe69ccc67fcf3f882820d5b2ee055d5f61b0e423a55331eef3e48f09cad5"
+    },
+    {
+      "path": "red-durable-task-continuation--manifest.json",
+      "bytes": 9525,
+      "sha256": "403f7b1ef62a3f22fda92068212046fdcd949780fb126622fc6c0924b3b2faf3",
+      "original": ".cache/verification/durable-task-continuation-LxZDAn/manifest.json",
+      "originalSha256": "403f7b1ef62a3f22fda92068212046fdcd949780fb126622fc6c0924b3b2faf3"
+    },
+    {
+      "path": "red-durable-task-continuation--failure.json",
+      "bytes": 376,
+      "sha256": "5208b61235d42f5b6070a5ea83277a7c7d6919863cd55b90f8cb0df071ecd729",
+      "original": ".cache/verification/durable-task-continuation-LxZDAn/failure.json",
+      "originalSha256": "5208b61235d42f5b6070a5ea83277a7c7d6919863cd55b90f8cb0df071ecd729"
+    },
+    {
+      "path": "live-session-summary.json",
+      "bytes": 549,
+      "sha256": "5e6b90f1e17ddd6771683f3198d834cb9350a75d9b89612f318915f29bd6c305",
+      "original": ".cache/verification/live-session-continuation-1793000249314/summary.json",
+      "originalSha256": "5e6b90f1e17ddd6771683f3198d834cb9350a75d9b89612f318915f29bd6c305"
+    },
+    {
+      "path": "live-session-probe.ts.txt",
+      "bytes": 2438,
+      "sha256": "5001494c1414519a2bf4d07929e995b7b4890f91685dd08dbe1591f1b6d1696e",
+      "original": ".cache/durable-live-session-recovery.ts",
+      "originalSha256": "5001494c1414519a2bf4d07929e995b7b4890f91685dd08dbe1591f1b6d1696e"
+    },
+    {
+      "path": "task-session-identity-summary.json",
+      "bytes": 483,
+      "sha256": "108e91a87dd13535473bfbe39f075b65c2f01df006d6ceb9f8cb11c2a11720d2",
+      "original": ".cache/verification/task-session-identity-1793000289278/summary.json",
+      "originalSha256": "108e91a87dd13535473bfbe39f075b65c2f01df006d6ceb9f8cb11c2a11720d2"
+    },
+    {
+      "path": "task-session-identity-probe.ts.txt",
+      "bytes": 2977,
+      "sha256": "68e030f75b0d38541e50dd43ebd20d257d6cb66bf4eb0ce673365956b3841acd",
+      "original": ".cache/durable-task-identity-probe.ts",
+      "originalSha256": "68e030f75b0d38541e50dd43ebd20d257d6cb66bf4eb0ce673365956b3841acd"
+    },
+    {
+      "path": "red-model-wire-receipt--manifest.json",
+      "bytes": 13030,
+      "sha256": "b4ccae9600a9731b44bf31069915bcb5bf4c003044d03c82c2062ccc334fb8a8",
+      "original": ".cache/verification/durable-continuation-gM63a0/manifest.json",
+      "originalSha256": "b4ccae9600a9731b44bf31069915bcb5bf4c003044d03c82c2062ccc334fb8a8"
+    },
+    {
+      "path": "red-model-wire-receipt--failure.json",
+      "bytes": 578,
+      "sha256": "71aa749fcb51849dadd07830db11dfbe296b4848d946cdc97a530178e1b5e4c7",
+      "original": ".cache/verification/durable-continuation-gM63a0/failure.json",
+      "originalSha256": "71aa749fcb51849dadd07830db11dfbe296b4848d946cdc97a530178e1b5e4c7"
+    },
+    {
+      "path": "red-model-wire-receipt--model-delivery.json",
+      "bytes": 1484,
+      "sha256": "c162ba804a307cb0fae2aff9aa571429a4f58b71c0f79e290454543e49cc8635",
+      "original": ".cache/verification/durable-continuation-gM63a0/model-delivery.json",
+      "originalSha256": "c162ba804a307cb0fae2aff9aa571429a4f58b71c0f79e290454543e49cc8635"
+    },
+    {
+      "path": "red-model-wire-receipt--progress.json",
+      "bytes": 492,
+      "sha256": "1a1edf57b7cc9afb33e2ed112eff5eff3f710043878085ed601487687b1e113b",
+      "original": ".cache/verification/durable-continuation-gM63a0/progress.json",
+      "originalSha256": "1a1edf57b7cc9afb33e2ed112eff5eff3f710043878085ed601487687b1e113b"
+    },
+    {
+      "path": "fixture-native-draft.txt",
+      "bytes": 18,
+      "sha256": "5fa9394d8b73ba66c71bafff034c6781038edc7d7da92a79f49abe3bb65898cf",
+      "original": ".cache/verification/durable-continuation-pi-buy2oo/workspace/project/draft.txt",
+      "originalSha256": "5fa9394d8b73ba66c71bafff034c6781038edc7d7da92a79f49abe3bb65898cf"
+    },
+    {
+      "path": "gate-harness.log.txt",
+      "bytes": 11641,
+      "sha256": "0c4964b05461bf6d4d9246bc3211f0fe5c0197ca64df0d49079584edd6cbd84d",
+      "original": ".cache/durable-continuation-final-harness-v2.log",
+      "originalSha256": "0c4964b05461bf6d4d9246bc3211f0fe5c0197ca64df0d49079584edd6cbd84d"
+    },
+    {
+      "path": "gate-boundary.log.txt",
+      "bytes": 748,
+      "sha256": "cd699d7e543191cc2d07a477cfd50ec295265f386dfe135427bfbe212e082b08",
+      "original": ".cache/durable-continuation-final-boundary-v2.log",
+      "originalSha256": "cd699d7e543191cc2d07a477cfd50ec295265f386dfe135427bfbe212e082b08"
+    },
+    {
+      "path": "gate-types.log.txt",
+      "bytes": 1093,
+      "sha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308",
+      "original": ".cache/durable-continuation-final-types-v2.log",
+      "originalSha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308"
+    },
+    {
+      "path": "gate-lint.log.txt",
+      "bytes": 5061,
+      "sha256": "1b32acf0a296e8cf2620b3e8b22858ad362820980bbc17c01f3c60e52323db81",
+      "original": ".cache/durable-continuation-final-lint-v2.log",
+      "originalSha256": "1b32acf0a296e8cf2620b3e8b22858ad362820980bbc17c01f3c60e52323db81"
+    },
+    {
+      "path": "gate-product.log.txt",
+      "bytes": 720,
+      "sha256": "a31c83e78029fe9032a58ede02ef6626e531cced8c08c67a7d47c007aada87b2",
+      "original": ".cache/durable-continuation-final-product-gates.log",
+      "originalSha256": "a31c83e78029fe9032a58ede02ef6626e531cced8c08c67a7d47c007aada87b2"
+    },
+    {
+      "path": "gate-pi-tests.log.txt",
+      "bytes": 23490,
+      "sha256": "62fa371b90915c3bf56f64fb0a77ed22e2a5e73e470e23834bb5968d0dfbd0ca",
+      "original": ".cache/durable-pi-package-tests.log",
+      "originalSha256": "62fa371b90915c3bf56f64fb0a77ed22e2a5e73e470e23834bb5968d0dfbd0ca"
+    },
+    {
+      "path": "gate-server-tests.log.txt",
+      "bytes": 78803,
+      "sha256": "0f9220aee86f16ef3dfcac2b360cb283b4e02c335abcb620b92c28fe1a88201a",
+      "original": ".cache/durable-server-package-tests-final-v2.log",
+      "originalSha256": "0f9220aee86f16ef3dfcac2b360cb283b4e02c335abcb620b92c28fe1a88201a"
+    },
+    {
+      "path": "gate-docs.log.txt",
+      "bytes": 117,
+      "sha256": "81d9c3c7364e6882d163a62f108dd2d8f99e421733cb11408d3a15c6c9f17a8a",
+      "original": ".cache/durable-continuation-final-docs.log",
+      "originalSha256": "81d9c3c7364e6882d163a62f108dd2d8f99e421733cb11408d3a15c6c9f17a8a"
+    },
+    {
+      "path": "evidence-archive-script.ts.txt",
+      "bytes": 8670,
+      "sha256": "d6c99d136e466ab51ba93b63dcbcf087474795670e93e4034be87004cfca66ae",
+      "original": ".cache/archive-durable-continuation-evidence-v2.ts",
+      "originalSha256": "d6c99d136e466ab51ba93b63dcbcf087474795670e93e4034be87004cfca66ae"
+    }
+  ],
+  "sourceHashPolicy": "sha256 records exact tested working bytes; gitBlobSha256 records staged bytes; normalizedSha256 verifies equivalence under repository newline filters."
+}

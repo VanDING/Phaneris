@@ -1,0 +1,29 @@
+import assert from 'node:assert/strict'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+const directory=join(import.meta.dir,'verification',`task-session-identity-${Date.now()}`),config=join(directory,'config'),rootPath=join(directory,'workspace')
+mkdirSync(config,{recursive:true}); mkdirSync(rootPath,{recursive:true})
+process.env.PHANERIS_CONFIG_DIR=config;process.env.NODE_ENV='test'
+const workspace={id:'task-identity',name:'Task identity',rootPath,createdAt:1}
+writeFileSync(join(config,'config.json'),JSON.stringify({workspaces:[workspace],activeWorkspaceId:workspace.id,llmConnections:[],setupDeferred:true}))
+const {SessionManager,createManagedSession,setSessionPlatform}=await import('../packages/server-core/src/sessions/SessionManager')
+const {createHeadlessPlatform}=await import('../packages/server-core/src/runtime/platform-headless')
+const {createSession,listSessions}=await import('../packages/shared/src/sessions/storage')
+setSessionPlatform(createHeadlessPlatform())
+const manager=new SessionManager(),cold=new SessionManager(),checks:string[]=[]
+try {
+ const options={name:'Identity fixture',taskSlug:'task',taskRunId:'run',taskNodeId:'a',taskNodeDispatchId:'dispatch-a',permissionMode:'safe' as const}
+ const [first,duplicate]=await Promise.all([manager.createSession(workspace.id,options),manager.createSession(workspace.id,options)])
+ assert.equal(first.id,duplicate.id); checks.push('Concurrent same-identity creation returns one actual persisted child')
+ const metadata=listSessions(rootPath).find(session=>session.id===first.id)!
+ assert.equal(metadata.taskNodeDispatchId,'dispatch-a')
+ ;(cold as any).registerManagedSession(createManagedSession(metadata,workspace as any))
+ const query={workspaceId:workspace.id,taskSlug:'task',runId:'run',nodeId:'a',dispatchId:'dispatch-a'}
+ assert.equal((await cold.findTaskNodeSession(query))?.id,first.id);checks.push('Cold session registry restores dispatch identity from its actual persisted header')
+ const legacy=await createSession(rootPath,{name:'Legacy child',taskSlug:'task',taskRunId:'run',taskNodeId:'legacy'})
+ ;(cold as any).registerManagedSession(createManagedSession(legacy,workspace as any))
+ const legacyQuery={...query,nodeId:'legacy',dispatchId:'fresh-attempt'}
+ assert.equal(await cold.findTaskNodeSession(legacyQuery),undefined);checks.push('An explicitly new attempt cannot reuse an unrelated legacy completed child')
+ assert.equal((await cold.findTaskNodeSession({...legacyQuery,allowLegacy:true}))?.id,legacy.id);checks.push('Restart recovery can resolve a unique legacy child without creating another session')
+ const output=join(directory,'summary.json');writeFileSync(output,JSON.stringify({checks,passed:checks.length,scope:'Real SessionManager, session storage, concurrent creation and cold registry; no provider called'},null,2));console.log(JSON.stringify({output,passed:checks.length}))
+} finally {await manager.cleanup();await cold.cleanup()}

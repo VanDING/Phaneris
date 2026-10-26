@@ -1,6 +1,7 @@
 import { DurableToolAccounting } from './durable-tool-accounting';
 import { PiModelRuntimeOwner } from './model-runtime-owner';
 import { createSessionEventAdapter } from './session-event-adapter';
+import { NativeInputConsumption } from './input-consumption';
 import { protectBrowserJournal } from './browser-history-privacy.ts';
 import type { PromptSnapshot, PiCredential, CustomEndpointApi, InitMessage, RuntimeConfigUpdateMessage, InboundMessage, ProxyToolDef, ToolExecutionMetadata, EnrichedToolExecutionStartEvent, TrajectoryEventAttachments, OutboundAgentEvent, OutboundReady, OutboundEvent, OutboundPreToolUseReq, OutboundToolExecReq, OutboundToolExecCancel, OutboundDurableToolPrepareReq, OutboundDurableToolOutcomeReq, OutboundDurableModelPrepareReq, OutboundDurableModelOutcomeReq, OutboundSessionToolCompleted, OutboundMiniResult, OutboundLlmQueryResult, OutboundEnsureSessionReadyResult, OutboundCompactResult, OutboundSetAutoCompactionResult, OutboundRuntimeConfigUpdateResult, OutboundSetModelResult, OutboundThinkingLevelState, OutboundSessionIdUpdate, OutboundError, OutboundMessage } from './messages.ts';
 import { SessionLifecycle } from './session-lifecycle.ts';
@@ -13,6 +14,8 @@ import { isContextPolicy, type ContextPolicy } from '@phaneris/shared/agent/cont
 import { prepareRequestDiagnostics } from './request-diagnostics.ts';
 import { prepareToolResultView, readCapture, readFileWithEvidence } from './tool-result-view.ts';
 import { requestCapacity, ResultBudget } from './request-capacity.ts';
+import { retainRuntimeReceipt, type PendingRuntimeReceipt } from '@phaneris/shared/durable-runtime/receipt-storage';
+import { canonicalToolArgsHash, durableToolOperationId } from '@phaneris/shared/durable-runtime/identity';
 import { access as accessReadFile } from 'node:fs/promises';
 /**
  * Pi Agent Server
@@ -88,6 +91,7 @@ function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (
     const requestSeq = ++promptSnapshotSeq;
     const main = sessionLifecycle.current;
     const mainContext = !purpose && currentDurableModelRun()?.runOperationId === currentDurableRunOperationId && !!currentDurableRunOperationId;
+    const consumedInputIds = mainContext ? nativeInputs.snapshot() : [];
     const occupancy = main && mainContext ? readContextUsage(main) : undefined;
     const reserve = occupancy?.compactionSettings?.reserveTokens;
     const { canonicalRequestHash, contextSnapshot, systemPrompt } = prepareRequestDiagnostics(model, context, reserve, occupancy?.contextUsage?.tokens);
@@ -105,8 +109,9 @@ function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (
     return async message => {
       const committedSeq = await requestDurableModelOutcome({
         prepared, providerRequestId, provider: model.provider, model: model.id,
-        canonicalRequestHash, message, requestObservation, purpose, durableRun,
+        canonicalRequestHash, message, requestObservation, purpose, durableRun, consumedInputIds,
       });
+      if (!['error', 'aborted'].includes(message.stopReason)) nativeInputs.consumed(consumedInputIds);
       Object.assign(message, {
         durableOperationId: prepared.operationId,
         durableSeq: committedSeq,
@@ -234,6 +239,7 @@ let currentDurableRunOperationId: string | undefined;
 let currentDurableTurnId: string | undefined;
 let lastCanonicalContextCursor = 0;
 let lastCanonicalCoveredSeq = 0;
+const nativeInputs = new NativeInputConsumption();
 const durableModelRunStorage = new AsyncLocalStorage<{ runOperationId: string; turnId: string }>();
 
 function currentDurableModelRun(): { runOperationId: string; turnId: string } | undefined {
@@ -268,10 +274,20 @@ function sendThinkingLevelState(): void {
 // Pending promises for async handshakes
 const pendingPreToolUse = new PendingReplies<{ action: string; input?: Record<string, unknown>; reason?: string }>();
 const pendingToolExecutions = new PendingReplies<PiProxyToolResult>();
-const pendingDurableToolPrepares = new PendingReplies<{ ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; reason?: string }>();
-const pendingDurableToolOutcomes = new PendingReplies<{ ok: boolean; committedSeq?: number; reason?: string }>();
-const pendingDurableModelPrepares = new PendingReplies<{ ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }>();
-const pendingDurableModelOutcomes = new PendingReplies<{ ok: boolean; committedSeq?: number; reason?: string }>();
+type OutcomeReply = { ok: boolean; committedSeq?: number; deferred?: true; unavailable?: true; reason?: string };
+const unavailableReceipt = { ok: false, unavailable: true as const, reason: 'Runtime receipt unavailable or execution cancelled' };
+const pendingDurableToolPrepares = new PendingReplies<{ ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; unavailable?: true; reason?: string }>();
+const pendingDurableToolOutcomes = new PendingReplies<OutcomeReply>();
+const pendingDurableModelPrepares = new PendingReplies<{ ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; unavailable?: true; reason?: string }>();
+const pendingDurableModelOutcomes = new PendingReplies<OutcomeReply>();
+
+function retainPendingOutcome(receipt: PendingRuntimeReceipt): void {
+  if (!initConfig) throw new Error('Receipt storage is unavailable before initialization');
+  retainRuntimeReceipt(initConfig.workspaceRootPath, receipt);
+  send({ type: 'sdk_observation', observation: { observationId: `retained:${receipt.request.operationId}`, sessionId: receipt.request.sessionId,
+    runOperationId: receipt.request.runOperationId, turnId: receipt.request.turnId, event: 'outcome_receipt_retained', capturedAt: Date.now(),
+    data: { operationId: receipt.request.operationId } } });
+}
 const durableToolAccounting = new DurableToolAccounting();
 const toolExecutionScheduler = new ToolExecutionScheduler();
 const toolResultBudgets = new Map<string, ResultBudget>();
@@ -905,15 +921,15 @@ async function requestDurableToolPrepare(
   toolName: string,
   input: Record<string, unknown>,
   toolCallId: string,
+  signal?: AbortSignal,
+  readOnly = false,
 ): Promise<PreparedDurableTool> {
   if (!initConfig || !currentDurableRunOperationId || !currentDurableTurnId) {
     throw new Error(`Durable tool boundary is unavailable for "${toolName}"`);
   }
   const requestId = `pi-durable-t1-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const batch = durableToolAccounting.readBatch(toolCallId);
-  const responsePromise = new Promise<{ ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; reason?: string }>((resolve) => {
-    pendingDurableToolPrepares.register(requestId, resolve);
-  });
+  const responsePromise = pendingDurableToolPrepares.wait(requestId, unavailableReceipt, { signal });
   send({
     type: 'durable_tool_prepare_request',
     requestId,
@@ -924,9 +940,16 @@ async function requestDurableToolPrepare(
     ...batch,
     toolName,
     args: input,
+    ...(readOnly ? { recoveryMode: 'safe_replay' as const } : {}),
   });
   const response = await responsePromise;
   if (!response.ok || !response.prepared) {
+    if (response.unavailable) retainPendingOutcome({ kind: 'tool', request: {
+      sessionId: initConfig.sessionId, turnId: currentDurableTurnId, runOperationId: currentDurableRunOperationId,
+      operationId: durableToolOperationId(currentDurableRunOperationId, toolCallId), providerToolCallId: toolCallId,
+      toolName, canonicalArgsHash: canonicalToolArgsHash(toolName, input), ...batch,
+      result: { execution: { status: 'not_dispatched' }, reason: 'The client stopped before invoking the tool implementation.' }, isError: true,
+    } });
     throw new Error(response.reason || `Durable T1 failed for "${toolName}"`);
   }
   if (!response.prepared.created) {
@@ -945,15 +968,13 @@ async function requestDurableToolOutcome(
   toolCallId: string,
   result: unknown,
   isError: boolean,
-): Promise<number> {
+): Promise<number | undefined> {
   if (!initConfig || !currentDurableRunOperationId || !currentDurableTurnId) {
     throw new Error(`Durable tool outcome boundary is unavailable for "${toolName}"`);
   }
   const requestId = `pi-durable-t2-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const responsePromise = new Promise<{ ok: boolean; committedSeq?: number; reason?: string }>((resolve) => {
-    pendingDurableToolOutcomes.register(requestId, resolve);
-  });
-  send({
+  const responsePromise = pendingDurableToolOutcomes.wait(requestId, unavailableReceipt);
+  const request = {
     type: 'durable_tool_outcome_request',
     requestId,
     sessionId: initConfig.sessionId,
@@ -967,10 +988,11 @@ async function requestDurableToolOutcome(
     canonicalArgsHash: prepared.canonicalArgsHash,
     result,
     isError,
-  });
+  } satisfies OutboundDurableToolOutcomeReq;
+  send(request);
   const response = await responsePromise;
-  if (!response.ok) throw new Error(response.reason || `Durable T2 failed for "${toolName}"`);
-  if (response.committedSeq === undefined) throw new Error(`Durable T2 returned no commit sequence for "${toolName}"`);
+  if (!response.ok) { retainPendingOutcome({ kind: 'tool', request }); return undefined; }
+  if (response.committedSeq === undefined && !response.deferred) throw new Error(`Durable T2 returned no receipt for "${toolName}"`);
   durableToolAccounting.rememberCommit(toolCallId, {
     operationId: prepared.operationId,
     startSeq: prepared.committedSeq,
@@ -997,9 +1019,7 @@ async function requestDurableModelPrepare(
     throw new Error('Durable model boundary is unavailable');
   }
   const requestId = `pi-model-t1-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const responsePromise = new Promise<{ ok: boolean; prepared?: PreparedDurableModel & { created: boolean; status: string }; reason?: string }>((resolve) => {
-    pendingDurableModelPrepares.register(requestId, resolve);
-  });
+  const responsePromise = pendingDurableModelPrepares.wait(requestId, unavailableReceipt);
   send({
     type: 'durable_model_prepare_request',
     purpose,
@@ -1015,12 +1035,15 @@ async function requestDurableModelPrepare(
   const response = await responsePromise;
   if (!response.ok || !response.prepared) throw new Error(response.reason || 'Durable model T1 failed');
   if (!response.prepared.created) {
-    throw new Error(`Model operation ${response.prepared.operationId} already crossed T1 and requires recovery`);
+    const error = new Error(`Model operation ${response.prepared.operationId} already crossed T1; this exact attempt will not be replayed`);
+    error.name = 'DurableReplayBlocked';
+    throw error;
   }
   return response.prepared;
 }
 
 async function requestDurableModelOutcome(input: {
+  consumedInputIds?: string[];
   prepared: PreparedDurableModel;
   purpose?: 'cache_warm' | 'compaction';
   durableRun?: { runOperationId: string; turnId: string };
@@ -1030,7 +1053,7 @@ async function requestDurableModelOutcome(input: {
   canonicalRequestHash: string;
   message: AssistantMessage;
   requestObservation?: import('@phaneris/shared/durable-runtime/types').NativeRequestObservation;
-}): Promise<number> {
+}): Promise<number | undefined> {
   const metering = modelMetering(input.message, input.requestObservation);
   const completeMetering = metering.inputKnown && metering.outputKnown;
   const durableRun = input.durableRun ?? currentDurableModelRun();
@@ -1038,10 +1061,8 @@ async function requestDurableModelOutcome(input: {
     throw new Error('Durable model outcome boundary is unavailable');
   }
   const requestId = `pi-model-t2-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const responsePromise = new Promise<{ ok: boolean; committedSeq?: number; reason?: string }>((resolve) => {
-    pendingDurableModelOutcomes.register(requestId, resolve);
-  });
-  send({
+  const responsePromise = pendingDurableModelOutcomes.wait(requestId, unavailableReceipt);
+  const request = {
     type: 'durable_model_outcome_request',
     purpose: input.purpose,
     requestId,
@@ -1054,6 +1075,7 @@ async function requestDurableModelOutcome(input: {
     model: input.model,
     canonicalRequestHash: input.canonicalRequestHash,
     stopReason: input.message.stopReason,
+    consumedInputIds: input.consumedInputIds,
     responseId: input.message.responseId,
     requestObservation: input.requestObservation,
     content: input.purpose ? [] : input.message.content,
@@ -1074,11 +1096,11 @@ async function requestDurableModelOutcome(input: {
         providerThinkingLevel: input.message.providerThinkingLevel,
       },
     },
-  });
+  } satisfies OutboundDurableModelOutcomeReq;
+  send(request);
   const response = await responsePromise;
-  if (!response.ok || response.committedSeq === undefined) {
-    throw new Error(response.reason || 'Durable model T2 failed');
-  }
+  if (!response.ok) { retainPendingOutcome({ kind: 'model', request }); return undefined; }
+  if (response.committedSeq === undefined && !response.deferred) throw new Error('Durable model T2 returned no receipt');
   return response.committedSeq;
 }
 
@@ -1141,11 +1163,13 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
           throw new Error(`Read ${key} must be a positive integer; operation not dispatched.`);
         }
       }
-      const durable = await requestDurableToolPrepare(sdkToolName, inputObj, toolCallId);
+      const durable = await requestDurableToolPrepare(sdkToolName, inputObj, toolCallId, signal,
+        tool.name.startsWith('mcp__session__') && proxyToolDefs.some(def => def.name === tool.name && def.readOnly === true));
 
       // Execute original tool with (potentially modified) input. T2 commits before
       // the result is returned to Pi, so the next model request cannot outrun durability.
       let result: AgentToolResult<any>;
+      let implementationInvoked = false;
       const capturedRead: { path?: string; buffer?: Buffer } = {};
       try {
         const durableTool: DurableToolExecutionIdentity = {
@@ -1159,11 +1183,16 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         };
         const executionContext = attachDurableToolContext(ctx, durableTool) as typeof ctx;
         signal?.throwIfAborted();
+        implementationInvoked = true;
         result = await readCapture.run(capturedRead, () => originalExecute(toolCallId, inputObj, signal, onUpdate, executionContext));
       } catch (error) {
         // An aborted proxy may still be executing in the host/provider. Leave T1
         // pending for reconciliation rather than assert an unobserved T2 failure.
-        if (signal?.aborted) throw error;
+        if (signal?.aborted) {
+          if (!implementationInvoked) await requestDurableToolOutcome(durable, sdkToolName, toolCallId,
+            { execution: { status: 'not_dispatched' } }, true);
+          throw new Error(`Execution interrupted; ${implementationInvoked ? 'the external effect is unknown; inspect existing outputs or receipts before repeating it' : 'the implementation was not invoked'}. ${error instanceof Error ? error.message : String(error)}`);
+        }
         await requestDurableToolOutcome(
           durable,
           sdkToolName,
@@ -1200,13 +1229,18 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
       result = await (toolResultBudgets.get(toolCallId)?.project(toolCallId, prepareView) ?? prepareView(48_000));
 
       // Commit exactly the representation Pi will append to model context.
-      const outcomeSeq = await requestDurableToolOutcome(
+      let outcomeSeq: number | undefined;
+      try { outcomeSeq = await requestDurableToolOutcome(
         durable,
         sdkToolName,
         toolCallId,
         result,
         false,
-      );
+      ); } catch (error) {
+        // Even when both ledger and receipt storage are unavailable, preserve
+        // the actually observed tool result in the SDK transcript and UI.
+        debugLog(`Observed tool result could not be retained for ledger backfill: ${String(error)}`);
+      }
       // Public result details survive the SDK's tool-message journal adapter.
       // This receipt describes the represented outcome, never input delivery.
       result = { ...result, details: { ...result.details, phanerisDurableSeq: outcomeSeq,
@@ -1575,6 +1609,7 @@ async function runMiniCompletion(prompt: string): Promise<string | null> {
 // ============================================================
 
 const adaptSessionEvent = createSessionEventAdapter({
+  annotateInput: message => nativeInputs.stamp(message),
   currentSession: () => sessionLifecycle.current, send, debugLog, observeSdkLifecycle,
   clearCompactionFailure: () => {
     const controller = sessionLifecycle.current && compactionControllers.get(sessionLifecycle.current);
@@ -1625,6 +1660,7 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
   clearPromptSnapshots();
   lastCanonicalContextCursor = 0;
   lastCanonicalCoveredSeq = 0;
+  nativeInputs.reset();
 
   // Audit M-4: custom endpoint base URLs must use http/https. Reject other
   // schemes early and neutralize the config so the invalid URL is never
@@ -1729,10 +1765,12 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
 
     // Fire prompt — use followUp when session is already streaming so the
     // message is queued instead of throwing "Agent is already processing".
+    nativeInputs.register(msg.id, msg.message);
     const invokePrompt = () => session.prompt(msg.message, {
       images: msg.images && msg.images.length > 0 ? msg.images : undefined,
       streamingBehavior: 'followUp',
       preflightResult: (disposition) => {
+        if (disposition === 'handled') nativeInputs.discard(msg.id);
         received = true;
         send({ type: 'input_received', id: msg.id, disposition });
       },
@@ -1758,7 +1796,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     // reaches the UI.
 
     debugLog(`Prompt failed: ${errorMsg}`);
-    if (!received) send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: errorMsg });
+    if (!received) { nativeInputs.discard(msg.id); send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: errorMsg }); }
     send({ type: 'error', message: errorMsg, code: 'prompt_error' });
     // Prompt failed before Pi could establish a normal run, so synthesize the
     // same terminal boundary the SDK guarantees for started runs.
@@ -1827,7 +1865,7 @@ function handleDurableToolPrepareResponse(
 function handleDurableToolOutcomeResponse(
   msg: Extract<InboundMessage, { type: 'durable_tool_outcome_response' }>,
 ): void {
-  if (!pendingDurableToolOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableToolOutcomeResponse');
+  if (!pendingDurableToolOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, deferred: msg.deferred, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableToolOutcomeResponse');
 }
 
 function handleDurableModelPrepareResponse(
@@ -1839,7 +1877,7 @@ function handleDurableModelPrepareResponse(
 function handleDurableModelOutcomeResponse(
   msg: Extract<InboundMessage, { type: 'durable_model_outcome_response' }>,
 ): void {
-  if (!pendingDurableModelOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableModelOutcomeResponse');
+  if (!pendingDurableModelOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, deferred: msg.deferred, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableModelOutcomeResponse');
 }
 
 function handleCancelEphemeralQuery(
@@ -1857,6 +1895,10 @@ async function handleAbort(): Promise<void> {
   compactionEpoch++;
   // Release permission waits before awaiting the SDK, which drains active tools.
   pendingPreToolUse.cancelAll({ action: 'block', reason: 'Aborted' });
+  pendingDurableToolPrepares.cancelAll(unavailableReceipt);
+  pendingDurableModelPrepares.cancelAll(unavailableReceipt);
+  pendingDurableToolOutcomes.cancelAll(unavailableReceipt);
+  pendingDurableModelOutcomes.cancelAll(unavailableReceipt);
   try {
     if (sessionLifecycle.current) await sessionLifecycle.current.abort();
   } finally {
@@ -2136,6 +2178,9 @@ async function handleShutdown(): Promise<void> {
 
   // Abort utility sessions independently from the main chat session.
   ephemeralQueries.cancelAll(new EphemeralQueryCancelledError('Pi server shutting down'));
+  // Keep transport and result consumers alive while native tools acknowledge
+  // cancellation. Known late results can still commit or retain a receipt.
+  await handleAbort();
 
   // Unsubscribe events
   if (unsubscribeEvents) {
@@ -2285,10 +2330,12 @@ async function processMessage(msg: InboundMessage): Promise<void> {
       if (sessionLifecycle.current) {
         debugLog(`Steering with: "${msg.message.slice(0, 100)}"`);
         try {
+          if (msg.id) nativeInputs.register(msg.id, msg.message);
           const disposition = await sessionLifecycle.current.steer(msg.message);
+          if (msg.id && disposition === 'handled') nativeInputs.discard(msg.id);
           if (msg.id) send({ type: 'input_received', id: msg.id, disposition });
         } catch (error) {
-          if (msg.id) send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: String(error) });
+          if (msg.id) { nativeInputs.discard(msg.id); send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: String(error) }); }
         }
       } else {
         debugLog('Steer ignored — no active session');

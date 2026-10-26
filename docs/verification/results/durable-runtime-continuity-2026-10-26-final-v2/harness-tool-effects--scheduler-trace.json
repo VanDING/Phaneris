@@ -1,0 +1,12 @@
+{
+  "trace": [
+    "write-start",
+    "independent-read",
+    "cancelled",
+    "write-end",
+    "read-after-write",
+    "recovered",
+    "shell-end",
+    "after-shell"
+  ]
+}

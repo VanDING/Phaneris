@@ -1,0 +1,17 @@
+{
+  "notices": [
+    "Error: Runtime storage recovered automatically: RuntimeDatabaseError: Runtime database open/migrate failed (corrupt): file is not a database"
+  ],
+  "recovered": [
+    {
+      "workspaceRootPath": "E:\\Phaneris\\.cache\\verification\\durable-continuation-VccUWU\\broken",
+      "recoveredAt": 1793000252176,
+      "items": []
+    },
+    {
+      "workspaceRootPath": "E:\\Phaneris\\.cache\\verification\\durable-continuation-VccUWU\\healthy",
+      "recoveredAt": 1793000252211,
+      "items": []
+    }
+  ]
+}

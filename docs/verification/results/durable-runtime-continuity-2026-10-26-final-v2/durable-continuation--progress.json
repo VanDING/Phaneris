@@ -1,0 +1,29 @@
+[
+  {
+    "toolName": "Ls",
+    "settled": {
+      "kind": "parked",
+      "operationId": "r",
+      "reason": "interrupted"
+    },
+    "blocked": false
+  },
+  {
+    "toolName": "tool_search",
+    "settled": {
+      "kind": "parked",
+      "operationId": "r",
+      "reason": "interrupted"
+    },
+    "blocked": false
+  },
+  {
+    "toolName": "external_write",
+    "settled": {
+      "kind": "parked",
+      "operationId": "r",
+      "reason": "interrupted"
+    },
+    "blocked": false
+  }
+]

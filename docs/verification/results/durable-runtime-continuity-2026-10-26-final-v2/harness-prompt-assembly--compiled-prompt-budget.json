@@ -1,0 +1,99 @@
+{
+  "scope": "System prefix only; character/byte counts are not provider token usage",
+  "sha256": "c926c028269a7620269a978d57dc28cde1492d8ed6262809e3b98d73e24b1e70",
+  "characters": 10151,
+  "bytes": 10155,
+  "modules": [
+    {
+      "id": "identity",
+      "source": "product-contract",
+      "characters": 212,
+      "bytes": 212,
+      "sha256": "01c7c2b9f03b746e272b9f672091129a067ad7ceb662c31437d5ad31045de95c"
+    },
+    {
+      "id": "execution-contract",
+      "source": "product-contract",
+      "characters": 1946,
+      "bytes": 1946,
+      "sha256": "eb8393c205de5c3a9cd8dfdcc931c0288b0f8c1a36bc570cf40baf5341fbc1a7"
+    },
+    {
+      "id": "permissions",
+      "source": "product-contract",
+      "characters": 2432,
+      "bytes": 2432,
+      "sha256": "78837bffaad60f7a7adae434a8e9c969d5abed5788368f2c5419d880ce070213"
+    },
+    {
+      "id": "recovery",
+      "source": "product-contract",
+      "characters": 1353,
+      "bytes": 1353,
+      "sha256": "971fce156dc100d0e320cd11f40ae0d0e348540779a9a99c2073ff59898425a2"
+    },
+    {
+      "id": "questions",
+      "source": "product-workflows",
+      "characters": 1567,
+      "bytes": 1571,
+      "sha256": "f4ed7bbb5da1e3174e1fd655428c2a855d6168bef64ea5d3f2e13f652335c8ae"
+    },
+    {
+      "id": "communication",
+      "source": "product-workflows",
+      "characters": 906,
+      "bytes": 906,
+      "sha256": "b7491ffc61e46098c54f9e42fb6fc8ac411ba0c5ec1d75d9b98e02365fc85698"
+    },
+    {
+      "id": "resource-contract",
+      "source": "product-contract",
+      "characters": 452,
+      "bytes": 452,
+      "sha256": "d13e17c0cd64b1021bd858f3486051c0abbbf8b512de50d8ec588ef2736f3165"
+    },
+    {
+      "id": "capability-discovery",
+      "source": "product-contract",
+      "characters": 480,
+      "bytes": 480,
+      "sha256": "40cb8071df5bfa09c6aea284c19ef982ebcb22a87b7fba9b2a9717eeba67e537"
+    },
+    {
+      "id": "preferences",
+      "source": "user-preferences",
+      "characters": 27,
+      "bytes": 27,
+      "sha256": "3d56339b7024a961452d3380c01a11aee65a4b844b2b53141b63ee33cc3eef83"
+    },
+    {
+      "id": "project",
+      "source": "project-context",
+      "characters": 683,
+      "bytes": 683,
+      "sha256": "5e91dd378990934518cd999527bea03b19c73c1336f809cd4fbe6bdcca7ddf9a"
+    },
+    {
+      "id": "debug",
+      "source": "runtime-debug",
+      "characters": 0,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "project-instructions",
+      "source": "project-manifest",
+      "characters": 0,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "environment",
+      "source": "runtime-fact",
+      "characters": 93,
+      "bytes": 93,
+      "sha256": "9e6c08d1f2603cb9daaab4f74d1ab156191c8d64df01dc1a5a0d4f9d790e8288"
+    }
+  ]
+}

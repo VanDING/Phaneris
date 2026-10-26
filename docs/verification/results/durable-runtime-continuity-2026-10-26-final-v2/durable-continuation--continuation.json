@@ -1,0 +1,60 @@
+{
+  "checks": [
+    "RC01 Ls historical unknown releases foreground",
+    "RC01 Ls next input and model request are admitted",
+    "RC02 Ls missing result is a truthful provider-safe view",
+    "RC01 tool_search historical unknown releases foreground",
+    "RC01 tool_search next input and model request are admitted",
+    "RC02 tool_search missing result is a truthful provider-safe view",
+    "RC01 external_write historical unknown releases foreground",
+    "RC01 external_write next input and model request are admitted",
+    "RC02 external_write missing result is a truthful provider-safe view",
+    "RC12 repeated exact unknown non-idempotent action is locally restricted",
+    "RC08/RC12 successor inherits only its lineage unresolved-action guard",
+    "RC03 recovered storage does not leave accepted+blocked",
+    "RC04 successful model result survives a ledger commit failure",
+    "RC06 missing RPC acknowledgement has a bounded exit",
+    "RC06 cancellation clears correlation and ignores late ACK",
+    "RC05 known tool result is retained for deferred commit",
+    "RC05 next boundary automatically backfills exactly one outcome",
+    "RC07 uncertain unconsumed input is recovered without user review",
+    "RC11 late known model receipt survives terminal parent without settling newer turn",
+    "RC11 receipt identity mismatches are rejected, never acknowledged as deferred",
+    "RC05/RC11 model receipt dedup ignores ephemeral RPC correlation fields",
+    "RC04 known model receipt is retained during a real SQLite write outage",
+    "RC04/RC07 restart automatically backfills model response and consumed input once",
+    "RC04 inference and its actual terminal result survive preparation accounting failure",
+    "RC07 diagnostic and receipt write failures do not prevent SDK input delivery",
+    "RC09 one failed workspace cannot fail global initialization",
+    "RC09 affected workspace automatically uses recovery storage and preserves original"
+  ],
+  "results": [
+    {
+      "toolName": "Ls",
+      "settled": {
+        "kind": "parked",
+        "operationId": "r",
+        "reason": "interrupted"
+      },
+      "blocked": false
+    },
+    {
+      "toolName": "tool_search",
+      "settled": {
+        "kind": "parked",
+        "operationId": "r",
+        "reason": "interrupted"
+      },
+      "blocked": false
+    },
+    {
+      "toolName": "external_write",
+      "settled": {
+        "kind": "parked",
+        "operationId": "r",
+        "reason": "interrupted"
+      },
+      "blocked": false
+    }
+  ]
+}
