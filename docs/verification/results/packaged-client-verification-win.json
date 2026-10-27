@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-22T04:53:20.533Z",
+  "date": "2026-10-26T08:28:46.954Z",
   "arch": "x64",
   "expected": {
-    "version": "0.4.0",
+    "version": "0.5.0",
     "appId": "io.github.vanding.phaneris",
     "productName": "Phaneris",
     "scheme": "phaneris",
@@ -21,14 +21,14 @@
       "detail": null
     },
     {
-      "name": "exactly four canonical themes are bundled, with Default as the default theme",
+      "name": "exactly the canonical Default theme is bundled",
       "observation": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\dist\\resources\\themes",
       "status": "pass",
       "detail": null
     },
     {
       "name": "NSIS installer exists with the expected versioned name",
-      "observation": "Phaneris-0.4.0-win-x64.exe",
+      "observation": "Phaneris-0.5.0-win-x64.exe",
       "status": "pass",
       "detail": null
     },
@@ -78,21 +78,18 @@
   "scope": "full packaged artifacts",
   "legacyBridgeBundle": "absent",
   "themes": [
-    "cyberpunk-2077.json",
-    "default.json",
-    "geek.json",
-    "ink.json"
+    "default.json"
   ],
   "installer": {
-    "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.4.0-win-x64.exe",
-    "bytes": 198415777
+    "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.5.0-win-x64.exe",
+    "bytes": 198437825
   },
   "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "identity": {
     "productName": "Phaneris",
     "companyName": "VanDING",
-    "version": "0.4.0",
-    "fileVersion": "0.4.0",
+    "version": "0.5.0",
+    "fileVersion": "0.5.0",
     "fileDescription": "Phaneris"
   },
   "binary": "PE machine x64",

@@ -142,7 +142,7 @@ import { isSmallTalk, titleNoLongerFits, TITLE_DRIFT_RECENT_MESSAGES } from '../
 import { buildGuardedModeCheck } from '../decisions/guarded-mode'
 import { buildLargeResultFilter, noteLargeResultFileUse, finishLargeResultExcerpts } from '../decisions/large-result-filter'
 import { assessPermissionRisks } from '../decisions/permission-risks'
-import { wantsSuggestion, collectSuggestionCandidates, pickSuggestion, formatSuggestionHint, candidatesUsedBy, suggestionFollowUp, type SuggestionTrace } from '../decisions/suggestions'
+import { wantsSuggestion, collectSuggestionCandidates, pickSuggestion, formatSuggestionAdvice, candidatesUsedBy, suggestionFollowUp, type SuggestionTrace } from '../decisions/suggestions'
 import { setLargeResultFilter } from '@phaneris/shared/utils'
 import { setGuardedModeActiveResolver } from '@phaneris/shared/agent'
 import { listLabels, loadLabelConfig } from '@phaneris/shared/labels/storage'
@@ -11047,9 +11047,10 @@ resources: {
         sources: loadAllSources(managed.workspace.rootPath), activeSourceSlugs: managed.enabledSourceSlugs ?? [] })
       const { hint, trace } = await pickSuggestion(message, candidates, { ...capture.deps, sessionId: managed.id,
         log: line => sessionLog.info(line), signal: abort.signal, isCurrent: current })
+      const advice = hint ? await formatSuggestionAdvice(hint, getPersistedUiLanguage()) : null
       if (!current()) { capture.discard('obsolete_turn'); return }
       if (trace) managed.suggestionTrace = { trace, used: new Set() }
-      if (hint) this.sendEvent({ type: 'info', sessionId: managed.id, message: formatSuggestionHint(hint), level: 'info' }, managed.workspace.id)
+      if (advice) this.sendEvent({ type: 'info', sessionId: managed.id, message: advice, level: 'info' }, managed.workspace.id)
       capture.resolve(hint ? 'ui_suggestion' : 'none', !!hint)
     })().catch(error => { capture.discard('suggestion_failed'); sessionLog.warn('[suggestions] Advice failed:', error) })
       .finally(() => { if (managed.preTurnDecisionAbort === abort) managed.preTurnDecisionAbort = undefined })

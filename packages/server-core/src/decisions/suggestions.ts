@@ -16,6 +16,7 @@
 import { join } from 'node:path'
 import type { DecisionRequest, DecisionResult } from '@phaneris/shared/decisions'
 import type { LoadedSkill } from '@phaneris/shared/skills'
+import { setupI18n, ensureLocaleResources, i18n, type LanguageCode } from '@phaneris/shared/i18n'
 import { isSourceUsable, type LoadedSource } from '@phaneris/shared/sources'
 import { extractTagline } from '@phaneris/shared/sources/storage'
 import { FOREGROUND_MAX_DEADLINE_MS, openDecisionPoint, recordDecisionFollowUp, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
@@ -112,7 +113,7 @@ export interface SuggestionTrace {
   result: DecisionResult
   /** The model's pick, shown or held back; `null` when it picked none. */
   choice: SuggestionCandidate | null
-  /** Whether the agent got the hint. */
+  /** Whether the user saw the advice. */
   hinted: boolean
   candidates: readonly SuggestionCandidate[]
 }
@@ -132,7 +133,7 @@ export async function pickSuggestion(
 ): Promise<SuggestionPick> {
   const nothing: SuggestionPick = { hint: null, trace: null }
   if (!message.trim() || candidates.length === 0) return nothing
-  // The turn start waits for this answer.
+  // Advice resolves independently of the main request.
   const decide = await openDecisionPoint({ ...deps, feature: 'suggestions', record: 'suggestions', maxDeadlineMs: FOREGROUND_MAX_DEADLINE_MS })
   if (!decide) return nothing
   const result = await decide(buildSuggestionRequest(message, candidates), { candidates: candidates.length }, deps.signal)
@@ -209,10 +210,11 @@ export function suggestionFollowUp(trace: SuggestionTrace, used: ReadonlySet<str
   recordDecisionFollowUp(trace.result, other ? { result: 'none_used', detail: { option: other } } : { result: 'none_unused' })
 }
 
-/** One-turn hint for the agent. Never uses mention syntax, so it cannot register a skill or source. */
-export function formatSuggestionHint(candidate: SuggestionCandidate): string {
-  const suggestion = candidate.kind === 'skill'
-    ? `the skill "${candidate.name}" (slug: ${candidate.slug}). If it applies, read ${candidate.path} first and follow it.`
-    : `the source "${candidate.name}" (slug: ${candidate.slug}), which is not active in this session. If the request needs it, read its guide.md in ${candidate.path} and activate it with source_test.`
-  return `<system-reminder>A quick check by the decision model suggests this request may need ${suggestion} Ignore this if it does not fit.</system-reminder>`
+/** User-facing advice. Keep model instructions and internal paths out of the notice. */
+export async function formatSuggestionAdvice(candidate: SuggestionCandidate, language: LanguageCode = 'en'): Promise<string> {
+  setupI18n()
+  await ensureLocaleResources(language)
+  return candidate.kind === 'skill'
+    ? i18n.t('chat.suggestionSkill', { lng: language, name: candidate.name })
+    : i18n.t('chat.suggestionSource', { lng: language, name: candidate.name })
 }

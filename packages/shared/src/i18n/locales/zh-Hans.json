@@ -300,6 +300,8 @@
   "chat.sourcesTooltip": "数据源",
   "chat.stopResponse": "停止回复",
   "chat.stopTask": "停止任务",
+  "chat.suggestionSkill": "推荐技能：{{name}}。可输入 @ 选择使用。",
+  "chat.suggestionSource": "推荐数据源：{{name}}。可从数据源菜单中选择使用。",
   "chat.tapToType": "点击输入",
   "chat.taskOrphanedHint": "This background task was terminated when its turn ended.",
   "chat.taskStaleHint": "未收到完成更新。此任务可能仍在运行。",

@@ -300,6 +300,8 @@
   "chat.sourcesTooltip": "Források",
   "chat.stopResponse": "Válasz leállítása",
   "chat.stopTask": "Feladat leállítása",
+  "chat.suggestionSkill": "Javasolt készség: {{name}}. A kiválasztásához írja be a @ jelet.",
+  "chat.suggestionSource": "Javasolt forrás: {{name}}. A használatához válassza ki a források menüjéből.",
   "chat.tapToType": "Koppintson az íráshoz",
   "chat.taskOrphanedHint": "This background task was terminated when its turn ended.",
   "chat.taskStaleHint": "Nem érkezett befejezési frissítés. Lehet, hogy a feladat még fut.",

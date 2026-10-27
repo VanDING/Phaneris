@@ -106,8 +106,10 @@ function verifyNoLegacyBridge(resourcesDir) {
 
 function verifyBundledThemes(resourcesDir) {
   const dir = join(resourcesDir, 'app', 'dist', 'resources', 'themes')
-  const expected = ['cyberpunk-2077.json', 'default.json', 'geek.json', 'ink.json']
-  check('exactly four canonical themes are bundled, with Default as the default theme', dir, () => {
+  // The product ships one canonical theme since Default-only consolidation;
+  // legacy ids migrate to it at runtime (default-theme-refinement-workflow.ts D01).
+  const expected = ['default.json']
+  check('exactly the canonical Default theme is bundled', dir, () => {
     const files = readdirSync(dir).filter(file => file.endsWith('.json')).sort()
     assert(JSON.stringify(files) === JSON.stringify(expected), `unexpected bundled themes: ${files.join(', ')}`)
     for (const file of files) {

@@ -300,6 +300,8 @@
   "chat.sourcesTooltip": "ソース",
   "chat.stopResponse": "応答を停止",
   "chat.stopTask": "タスクを停止",
+  "chat.suggestionSkill": "おすすめのスキル：{{name}}。@ を入力して選択できます。",
+  "chat.suggestionSource": "おすすめのソース：{{name}}。ソースメニューから選択して使用できます。",
   "chat.tapToType": "タップして入力",
   "chat.taskOrphanedHint": "This background task was terminated when its turn ended.",
   "chat.taskStaleHint": "完了通知を受信していません。このタスクはまだ実行中の可能性があります。",

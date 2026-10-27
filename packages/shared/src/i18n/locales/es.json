@@ -300,6 +300,8 @@
   "chat.sourcesTooltip": "Fuentes",
   "chat.stopResponse": "Detener respuesta",
   "chat.stopTask": "Detener tarea",
+  "chat.suggestionSkill": "Habilidad sugerida: {{name}}. Escribe @ para seleccionarla.",
+  "chat.suggestionSource": "Fuente sugerida: {{name}}. Selecciónala en el menú de fuentes para usarla.",
   "chat.tapToType": "Toca para escribir",
   "chat.taskOrphanedHint": "This background task was terminated when its turn ended.",
   "chat.taskStaleHint": "No se recibió ninguna actualización de finalización. Es posible que esta tarea siga ejecutándose.",
