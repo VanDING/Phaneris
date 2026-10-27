@@ -5,7 +5,7 @@
  * the product tokens: surfaces, ink, borders, radii and type tiers come from the
  * theme; only the categorical data palette is local.
  *
- * Category colors retain the approved prototype's identities. Text labels and
+ * Category colors come from run-palette.css across every Run view. Text labels and
  * numeric values carry the same information without depending on color alone.
  * The default theme's surfaces and status tints match that prototype in both
  * modes; other themes keep their semantic surfaces, ink and status tokens.
@@ -29,13 +29,6 @@
   --run-danger: var(--destructive);
   --run-danger-bg: color-mix(in srgb, var(--destructive) 10%, var(--background));
 
-  --run-cat-system: #6366f1;
-  --run-cat-schemas: #f59e0b;
-  --run-cat-user: #22c55e;
-  --run-cat-inject: #a855f7;
-  --run-cat-skill: #f97316;
-  --run-cat-assistant: #3b82f6;
-  --run-cat-tool: #14b8a6;
   --run-cat-unknown: var(--run-strong-line);
 
   --run-font-micro: calc(var(--type-micro-size) * var(--ui-scale));
@@ -554,6 +547,7 @@
 .chartKeyItem:hover { color: var(--run-ink); }
 
 .trendChart {
+  --trend-gap: 4px;
   position: relative;
   display: flex;
   height: 175px;
@@ -601,7 +595,7 @@
   inset: 0;
   display: flex;
   align-items: flex-end;
-  gap: 4px;
+  gap: var(--trend-gap);
 }
 
 .chartCol {
@@ -657,13 +651,37 @@
   background: var(--cat);
 }
 
-.xLabel {
+/* Approved short-history layout: equal slots, with marks capped at 32px.
+ * Keep the full slot clickable; selection follows the visible mark instead of
+ * outlining a large empty column. Dense histories keep the existing geometry.
+ */
+.trendChart[data-short-history='true'] .barStack { max-width: 32px; }
+.trendChart[data-short-history='true'] .deltaBar { max-width: 32px; margin-inline: auto; }
+.trendChart[data-short-history='true'] .chartCol[data-selected='true']::after { content: none; }
+.trendChart[data-short-history='true'] .chartCol[data-selected='true'] .barStack,
+.trendChart[data-short-history='true'] .chartCol[data-selected='true'] .deltaBar {
+  outline: 1px solid var(--run-accent);
+  outline-offset: 2px;
+}
+
+.chartX {
   position: absolute;
+  inset-inline: 0;
   bottom: 0;
+  display: grid;
+  align-items: end;
+  height: 22px;
+  gap: var(--trend-gap);
+  pointer-events: none;
+}
+
+.xLabel {
+  justify-self: center;
   color: var(--run-muted);
   font-size: var(--run-font-micro);
   line-height: 16px;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .eventMarker {
@@ -699,6 +717,9 @@
 }
 
 .trendSelection strong { font-weight: 600; }
+.trendActions, .requestUsage { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.requestUsage { color: var(--run-muted); font-variant-numeric: tabular-nums; }
+.requestUsage > span { white-space: nowrap; }
 
 .chartFootnote {
   padding: 0 16px 12px;
@@ -1014,9 +1035,6 @@
 .contextTrend { margin-bottom: 16px; }
 .contextTrend .paperHead { min-height: 36px; padding-top: 8px; }
 .contextTrend .trendChart { height: 110px; margin-top: 5px; }
-.contextTrend .chartCol { padding-bottom: 20px; }
-.contextTrend .chartY { bottom: 20px; }
-.contextTrend .gridLines { bottom: 20px; }
 .contextTrend .trendSelection { margin-top: 8px; padding: 8px 0; }
 
 .contextHistoryTitle {
@@ -1828,7 +1846,7 @@
 @container run (max-width: 1100px) {
   .view { padding: 20px; }
   .overviewGrid { grid-template-columns: minmax(0, 1.55fr) minmax(285px, 1fr); }
-  .chartBars { gap: 3px; }
+  .trendChart { --trend-gap: 3px; }
 }
 
 @container run (max-width: 870px) {
@@ -1964,7 +1982,7 @@
     border-left: 0;
   }
   .metricValue { font-size: var(--run-font-title); }
-  .chartBars { gap: 2px; }
+  .trendChart { --trend-gap: 2px; }
   .compositionBody { column-gap: 12px; }
   .trendSelection { flex-wrap: wrap; }
   .chartKey { gap: 5px 9px; }

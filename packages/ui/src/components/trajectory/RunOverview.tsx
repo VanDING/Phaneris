@@ -24,6 +24,7 @@ import { categoryRows, decisionOutcomeColor, formatClock, formatCost, formatDura
 import { deriveRequestContextEvents, deriveRequestContexts, contextTotal, type TrajectoryContextCategory } from './trajectory-context'
 import { deriveTrajectoryPerformance } from './trajectory-performance'
 import { RunPerformanceChart, RunTrendChart, trendValueLabel } from './RunCharts'
+import { RunRequestUsage } from './RunRequestUsage'
 import css from './run-view.module.css'
 
 export interface RunOverviewProps {
@@ -98,6 +99,7 @@ export function RunOverview({
   const provider = activeContext?.provider
   const contextWindow = contextSummary?.contextWindow
   const latestContext = contexts.at(-1)
+  const estimatedInput = latestContext?.inputTokens === undefined
   const latestTotal = latestContext ? contextTotal(latestContext) : undefined
   const contextPercent = contextWindow && contextWindow > 0 && latestTotal !== undefined ? (latestTotal / contextWindow) * 100 : undefined
   const occupancyRows = categoryRows(latestContext)
@@ -221,12 +223,15 @@ export function RunOverview({
                 <div className={css.trendSelection}>
                   <span>
                     <strong>{t('run.requestNumber', { seq: activeContext?.requestSeq ?? 0 })}</strong>
-                    <span className={css.tabular}>{formatTokens(activeContext ? contextTotal(activeContext) : undefined)} tokens</span>
+                    <span className={css.tabular}>{activeContext?.inputTokens === undefined ? '≈' : ''}{formatTokens(activeContext ? contextTotal(activeContext) : undefined)} tokens</span>
                     <span className={css.muted}>{t('run.overview.turnOf', { turn: turnOf(snapshot, activeSeq) })}</span>
                   </span>
-                  <button type="button" className={`${css.textButton} craft-control`} onClick={() => onOpenContext(activeSeq)}>
-                    {t('run.overview.viewRequest')}<ArrowRight />
-                  </button>
+                  <div className={css.trendActions}>
+                    <RunRequestUsage context={activeContext} />
+                    <button type="button" className={`${css.textButton} craft-control`} onClick={() => onOpenContext(activeSeq)}>
+                      {t('run.overview.viewRequest')}<ArrowRight />
+                    </button>
+                  </div>
                 </div>
                 <p className={css.chartFootnote}>
                   {t('run.overview.estimateFootnote')}
@@ -236,7 +241,7 @@ export function RunOverview({
             ) : <p className={css.chartFootnote}>{t('run.overview.noContext')}</p>}
           </section>
 
-          <section className={css.paper} data-run-occupancy>
+          <section className={css.paper} data-run-occupancy data-context-total={latestTotal}>
             <div className={css.paperHead}>
               <h3>{t('run.overview.occupancy')}</h3>
               <span className={css.paperMeta}>{contextWindow
@@ -245,7 +250,7 @@ export function RunOverview({
             </div>
             <div className={css.compositionBody}>
               <div className={css.capacityLine}>
-                <strong>{formatTokens(latestTotal)}</strong>
+                <strong>{estimatedInput ? '≈' : ''}{formatTokens(latestTotal)}</strong>
                 <span>{contextWindow ? `/ ${formatTokens(contextWindow)} tokens` : 'tokens'}</span>
                 {contextPercent !== undefined && <span className={css.capacityPercent}>{contextPercent.toFixed(1)}%</span>}
               </div>
@@ -269,14 +274,14 @@ export function RunOverview({
               </div>
               <div className={css.compositionLegend}>
                 {occupancyRows.map(row => (
-                  <button key={row.category} type="button" className={`${css.legendItem} craft-control`} data-category-legend={row.category} onClick={() => onOpenContext(latestSeq, row.category)}>
+                  <button key={row.category} type="button" className={`${css.legendItem} craft-control`} data-category-legend={row.category} data-context-tokens={row.tokens} onClick={() => onOpenContext(latestSeq, row.category)}>
                     <i className={css.categoryDot} style={{ '--cat': row.color } as CSSProperties} />
                     <span>{t(row.labelKey)}</span>
                     <span>≈{formatTokens(row.tokens)}</span>
                   </button>
                 ))}
               </div>
-              <p className={css.miniNote}>{t('run.overview.occupancyNote')}</p>
+              <p className={css.miniNote}>{estimatedInput ? `${t('run.context.providerInputMissing')} · ` : ''}{t('run.overview.occupancyNote')}</p>
             </div>
           </section>
         </div>
@@ -428,7 +433,7 @@ export function RunOverview({
                 {shapeBuckets.map((bucket, index) => (
                   <span
                     key={`${bucket.first}-${index}`}
-                    style={{ background: bucket.kind === 'error' ? 'var(--run-danger)' : bucket.kind === 'tool' ? 'var(--run-cat-schemas)' : 'var(--run-cat-assistant)' }}
+                    style={{ background: bucket.kind === 'error' ? 'var(--run-danger)' : bucket.kind === 'tool' ? 'var(--run-cat-tool)' : 'var(--run-cat-assistant)' }}
                   />
                 ))}
               </button>

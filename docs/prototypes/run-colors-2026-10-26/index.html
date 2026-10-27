@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN" data-mode="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Run 配色与图表方案</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <aside class="review-panel">
+    <h1>Run 配色与图表方案</h1>
+    <p class="intro">先比较，再决定。这里的切换只影响演示，不修改产品配置。</p>
+    <div class="palette-options" role="group" aria-label="配色方案"></div>
+    <div class="review-controls">
+      <label><span>明暗模式</span><select id="mode"><option value="light">浅色</option><option value="dark">深色</option></select></label>
+      <label><span>请求数量</span><select id="count"><option value="3">3 次请求</option><option value="5" selected>5 次请求</option><option value="12">12 次请求</option><option value="113">113 次请求</option><option value="300">300 次请求</option></select></label>
+      <label><span>少请求时的布局</span><select id="layout"><option value="spaced">等距细柱 · 建议</option><option value="compact">紧凑靠左</option><option value="fill">均分填充 · 原版对照</option></select></label>
+      <label><span>预览宽度</span><select id="width"><option value="wide">宽屏</option><option value="panel">600px 面板</option></select></label>
+    </div>
+    <div class="review-notes"><strong id="scheme-name"></strong><p id="scheme-description"></p><p>固定界面底色、文字与状态色，只比较分类色。三种视图使用同一组颜色。</p></div>
+    <p class="sample-note">示例数据，仅用于比较配色与布局。分项 token 为演示估算。</p>
+  </aside>
+  <main class="preview-ground">
+    <div class="preview-toolbar"><span id="current-label"></span><button id="compare" type="button">与原版对照</button></div>
+    <div class="workspace" data-width="wide">
+      <nav class="run-tabs" role="tablist" aria-label="Run 视图">
+        <button type="button" role="tab" data-view="overview" aria-selected="true">Overview</button>
+        <button type="button" role="tab" data-view="trajectory" aria-selected="false">Trajectory</button>
+        <button type="button" role="tab" data-view="context" aria-selected="false">Context</button>
+        <span class="run-state">Completed</span><span class="run-scope"></span>
+      </nav>
+      <div id="view" role="tabpanel"></div>
+    </div>
+    <p class="layout-note" id="layout-note"></p>
+    <div class="category-reference" aria-label="分类配色明细"></div>
+  </main>
+</body>
+</html>

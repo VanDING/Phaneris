@@ -36,13 +36,12 @@ await verificationWorkflow('run-redesign', async run => {
   const prototypeLight = parseColors(prototypeCss.match(/:root\{([^}]+)\}/)![1]!)
   const prototypeDark = { ...prototypeLight, ...parseColors(prototypeCss.match(/:root\[data-theme=dark\]\{([^}]+)\}/)![1]!) }
   const paletteNames = ['surface', 'canvas', 'subtle', 'line', 'strong-line', 'ink', 'muted', 'accent', 'accent-bg', 'accent-text', 'success', 'success-bg', 'warning', 'warning-bg', 'danger', 'danger-bg']
-  const categoryNames = ['system', 'schemas', 'user', 'inject', 'skill', 'assistant', 'tool']
   const paletteOf = (page: import('playwright').Page) => page.locator('[data-run-view]').evaluate((node, names) => {
     const style = getComputedStyle(node)
     return Object.fromEntries(names.map(name => [name, style.getPropertyValue(`--run-${name}`).trim().toLowerCase()]))
-  }, [...paletteNames, ...categoryNames.map(name => `cat-${name}`)])
+  }, paletteNames)
   const expectedPalette = (colors: Record<string, string>) => Object.fromEntries([
-    ...paletteNames.map(name => [name, colors[name]]), ...categoryNames.map(name => [`cat-${name}`, colors[name]]),
+    ...paletteNames.map(name => [name, colors[name]]),
   ])
 
   const server = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/run-redesign.tsx' })
@@ -158,7 +157,7 @@ await verificationWorkflow('run-redesign', async run => {
       return tabs
     })
 
-    await check('A00 default Run palette matches the approved HTML prototype', async () => {
+    await check('A00 default Run surfaces and status colors match the approved HTML prototype', async () => {
       const colors = await paletteOf(page)
       assert.deepEqual(colors, expectedPalette(prototypeLight))
       return colors
@@ -253,7 +252,7 @@ await verificationWorkflow('run-redesign', async run => {
         await page.getByRole('button', { name: 'Expand calls', exact: true }).click()
         await visiblePanel(page).locator('[data-role-kind="tool"]').first().waitFor()
         const colors = await trajectoryPalette(page)
-        assert.deepEqual(colors.spans, { user: [34, 197, 94], system: [99, 102, 241], message: [59, 130, 246], tool: [20, 184, 166] })
+        assert.deepEqual(colors.spans, { user: [99, 179, 117], system: [149, 104, 227], message: [76, 150, 224], tool: [40, 178, 164] })
         assert.deepEqual(colors.ink, [34, 38, 48])
         assert.deepEqual(colors.surface, [255, 255, 255])
         for (const badge of colors.badges) assert(badge.contrast >= 4.5, `${badge.kind} contrast ${badge.contrast}`)
@@ -785,7 +784,7 @@ await verificationWorkflow('run-redesign', async run => {
       await dark.getByRole('button', { name: '展开调用', exact: true }).click()
       await visiblePanel(dark).locator('[data-role-kind="tool"]').first().waitFor()
       const colors = await trajectoryPalette(dark)
-      assert.deepEqual(colors.spans, { user: [34, 197, 94], system: [99, 102, 241], message: [59, 130, 246], tool: [20, 184, 166] })
+      assert.deepEqual(colors.spans, { user: [138, 212, 152], system: [185, 154, 239], message: [130, 184, 239], tool: [101, 213, 198] })
       assert.deepEqual(colors.ink, [238, 240, 246])
       assert.deepEqual(colors.surface, [30, 34, 43])
       for (const badge of colors.badges) assert(badge.contrast >= 4.5, `${badge.kind} dark contrast ${badge.contrast}`)

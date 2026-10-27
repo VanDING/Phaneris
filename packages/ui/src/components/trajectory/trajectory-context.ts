@@ -51,6 +51,7 @@ export interface TrajectoryContextGroup {
   category: TrajectoryContextCategory
   items: readonly TrajectoryContextItem[]
   chars: number
+  /** Approximate allocation of provider input, or a character estimate without usage. */
   estimatedTokens: number
   /** Sum of the other groups, for a share that cannot exceed 100%. */
   share: number
@@ -66,6 +67,8 @@ export interface TrajectoryRequestContext {
   promptVersion: number
   /** Exact provider input tokens when recorded; category values remain estimates. */
   inputTokens?: number
+  /** Provider cache reads; cache writes are input, but are not cache hits. */
+  cacheReadTokens?: number
   groups: readonly TrajectoryContextGroup[]
   totalChars: number
   estimatedTokens: number
@@ -103,6 +106,26 @@ function tokenEstimate(content: string): number {
 
 function charsToTokens(chars: number): number {
   return chars === 0 ? 0 : Math.max(1, Math.ceil(chars / 4))
+}
+
+/**
+ * The manifest's serialized characters are composition weights, not metered
+ * tokens (they can include image data and tool metadata). Allocate the recorded
+ * input proportionally so every view uses one accounting basis. Largest
+ * remainders keep the integer parts nonnegative and their sum exactly equal to
+ * input, without assigning rounding residue to an empty category.
+ */
+function allocateInput(groups: TrajectoryContextGroup[], inputTokens: number | undefined): TrajectoryContextGroup[] {
+  const weight = groups.reduce((sum, group) => sum + group.estimatedTokens, 0)
+  if (inputTokens === undefined || weight === 0) return groups
+  const allocations = groups.map((group, index) => {
+    const exact = inputTokens * (group.estimatedTokens / weight)
+    return { index, tokens: Math.floor(exact), remainder: exact - Math.floor(exact) }
+  })
+  const remaining = inputTokens - allocations.reduce((sum, entry) => sum + entry.tokens, 0)
+  const ranked = [...allocations].sort((a, b) => b.remainder - a.remainder || a.index - b.index)
+  for (let index = 0; index < remaining; index += 1) ranked[index]!.tokens += 1
+  return groups.map((group, index) => ({ ...group, estimatedTokens: allocations[index]!.tokens }))
 }
 
 function safeJson(value: unknown): string {
@@ -215,7 +238,8 @@ function manifestCharsByRole(manifest: Message['contextSnapshot'], roles: readon
  * one exists. `inject`, `skill` and `tool` are reconstructed from the persisted
  * messages: the manifest records only a role and a char count for those, so a
  * split between them would otherwise have to be invented. Every category value
- * stays an estimate; the displayed total uses provider usage when available.
+ * stays an estimate. When usage exists the estimates are allocated within that
+ * measured input, so category sums and request totals use the same basis.
  */
 export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly TrajectoryRequestContext[] {
   const contexts: TrajectoryRequestContext[] = []
@@ -269,7 +293,9 @@ export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly Tr
       const skillChars = manifestToolChars !== undefined && toolSplit > 0
         ? Math.round(manifestToolChars * (skillItemChars / toolSplit))
         : undefined
-      const groups = CONTEXT_CATEGORY_ORDER.map(category => {
+      const measured = message.usage ? message.usage.input + message.usage.cacheRead + message.usage.cacheWrite : undefined
+      const inputTokens = measured !== undefined && Number.isFinite(measured) && measured >= 0 ? Math.round(measured) : undefined
+      const groups = allocateInput(CONTEXT_CATEGORY_ORDER.map(category => {
         const items = allItems.filter(entry => entry.category === category)
         const itemChars = items.reduce((sum, entry) => sum + entry.chars, 0)
         const chars = category === 'system'
@@ -295,14 +321,15 @@ export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly Tr
           estimatedTokens: charsToTokens(chars),
           share: 0,
         }
-      }).filter(group => group.items.length > 0 || group.chars > 0)
+      }).filter(group => group.items.length > 0 || group.chars > 0), inputTokens)
       const estimated = groups.reduce((sum, group) => sum + group.estimatedTokens, 0)
       contexts.push({
         id: message.id,
         requestSeq: requestOrdinal,
         sourceRequestSeq: message.requestSeq,
         promptVersion,
-        inputTokens: message.usage ? message.usage.input + message.usage.cacheRead + message.usage.cacheWrite : undefined,
+        inputTokens,
+        cacheReadTokens: message.usage?.cacheRead,
         groups: groups.map(group => ({ ...group, share: estimated > 0 ? group.estimatedTokens / estimated : 0 })),
         totalChars: groups.reduce((sum, group) => sum + group.chars, 0),
         estimatedTokens: estimated,

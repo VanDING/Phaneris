@@ -468,6 +468,13 @@ store.set(setPrimarySurfaceRouteAtom, `allSessions/session/${sessionId}`)
 Object.assign(window, {
   runRedesignFixture: {
     ready: true,
+    evidence: (id: string, evidenceMessages: Message[], contextWindow = 1_000_000, recordedUsage?: unknown) => {
+      const value = { ...(session as Record<string, unknown>), id, messages: evidenceMessages,
+        messageCount: evidenceMessages.length, tokenUsage: recordedUsage ?? { ...tokenUsage, contextWindow } }
+      sessions[id] = value
+      store.set(replaceLoadedSessionAtom, value as never)
+      store.set(setPrimarySurfaceRouteAtom, `allSessions/session/${id}`)
+    },
     language: (language: string) => i18next.changeLanguage(language),
     select: (id: string) => store.set(setPrimarySurfaceRouteAtom, `allSessions/session/${id}`),
     activate: (id: string) => store.set(activateForegroundSessionAtom, id),

@@ -117,6 +117,14 @@ export function categoryLabelKey(category: string): string {
   return `run.category.${category}`
 }
 
+/** Per-request cache reads / all input. A missing or zero denominator is unknown. */
+export function cacheHitRate(context: TrajectoryRequestContext | undefined): number | undefined {
+  const input = context?.inputTokens, read = context?.cacheReadTokens
+  if (input === undefined || read === undefined || !Number.isFinite(input) || !Number.isFinite(read)
+    || input <= 0 || read < 0 || read > input) return undefined
+  return read / input
+}
+
 /**
  * Build bounded trend bars. A run with at most `maximumBars` requests keeps one
  * bar per request; a longer run covers the entire range and retains the total

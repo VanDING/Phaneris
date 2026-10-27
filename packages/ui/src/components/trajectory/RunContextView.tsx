@@ -29,6 +29,7 @@ import { RunTrendChart, trendValueLabel } from './RunCharts'
 import { ContextEntry } from './RunContextEntry'
 import { contextItemChanges, type ContextContentMode, type ContextReadItem } from './RunContextChanges'
 import { RunContextList } from './RunContextList'
+import { RunRequestUsage } from './RunRequestUsage'
 import css from './run-view.module.css'
 
 export interface RunContextViewProps {
@@ -172,17 +173,13 @@ export function RunContextView({ snapshot, focusedRequestSeq, focusCategory, onR
           />
           <div className={css.trendSelection}>
             <span>
-              <strong className={css.tabular}>{formatTokens(currentTotal)} tokens</strong>
+              <strong className={css.tabular}>{exact ? '' : '≈'}{formatTokens(currentTotal)} tokens</strong>
               <span className={`${css.statusBadge} ${current.captured ? css.statusSuccess : css.statusWarning}`}>
                 <span className={css.statusDot} />{current.captured ? t('run.context.captured') : t('run.context.reconstructed')}
               </span>
               <span className={css.muted}>{t('run.context.deltaFromPrevious', { delta: formatDelta(delta) })}</span>
             </span>
-            <span className={css.muted}>
-              {exact
-                ? t('run.context.providerInput', { input: formatExactTokens(current.inputTokens) })
-                : t('run.context.providerInputMissing')}
-            </span>
+            <RunRequestUsage context={current} />
           </div>
         </section>
 
@@ -205,11 +202,13 @@ export function RunContextView({ snapshot, focusedRequestSeq, focusCategory, onR
             </div>
           </div>
           <div className={css.foldBrowserBody}>
-            <div className={css.foldRequestLine}>
+            <div className={css.foldRequestLine} data-context-total={currentTotal}>
               <strong>{current.requestSeq === latestSeq && latestSeq !== undefined
                 ? t('run.context.requestLatest', { seq: current.requestSeq })
                 : t('run.requestNumber', { seq: current.requestSeq })}</strong>
-              <span className={css.tabular}>{t('run.context.estimatedTotal', { tokens: formatTokens(current.estimatedTokens) })}</span>
+              <span className={css.tabular}>{exact
+                ? t('run.context.providerInput', { input: formatExactTokens(current.inputTokens) })
+                : t('run.context.estimatedTotal', { tokens: formatTokens(current.estimatedTokens) })}</span>
               {current.provider && <span>{current.provider}{current.model ? ` · ${current.model}` : ''}</span>}
             </div>
             <div className={css.foldComposition} role="img" aria-label={t('run.context.compositionLabel', { seq: current.requestSeq })}>
@@ -239,6 +238,7 @@ export function RunContextView({ snapshot, focusedRequestSeq, focusCategory, onR
                     className={css.contextFold}
                     open={open}
                     data-context-category={group.category}
+                    data-context-tokens={group.estimatedTokens}
                     onToggle={event => {
                       const next = (event.currentTarget as HTMLDetailsElement).open
                       if (next !== open) toggleCategory(group.category)

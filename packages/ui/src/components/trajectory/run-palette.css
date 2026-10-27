@@ -1,0 +1,26 @@
+/* User-approved A / 清透原色 (2026-10-26), shared by all Run views.
+ * Exact colors from docs/prototypes/run-colors-2026-10-26/app.js.
+ * Status and selection retain their separate product semantic tokens. Violet
+ * system prompts leave blue to assistant replies; gold definitions and pink
+ * skills have separate hues. Slate identifies injected context. Dark mode raises
+ * luminance without changing the clear, bright category identities.
+ */
+.trajectory-root {
+  --run-cat-system: #9568e3;
+  --run-cat-schemas: #dda129;
+  --run-cat-user: #63b375;
+  --run-cat-inject: #8f9eb7;
+  --run-cat-skill: #e479ab;
+  --run-cat-assistant: #4c96e0;
+  --run-cat-tool: #28b2a4;
+}
+
+:root.dark .trajectory-root {
+  --run-cat-system: #b99aef;
+  --run-cat-schemas: #ecc16a;
+  --run-cat-user: #8ad498;
+  --run-cat-inject: #aebbd1;
+  --run-cat-skill: #f0a1ca;
+  --run-cat-assistant: #82b8ef;
+  --run-cat-tool: #65d5c6;
+}

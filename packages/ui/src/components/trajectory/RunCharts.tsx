@@ -37,19 +37,18 @@ export function RunTrendChart({
     : formatTokens(tick)
   const stride = Math.max(1, Math.ceil(bars.length / 7))
   return (
-    <div className={css.trendChart} role="group" aria-label={label}>
+    <div className={css.trendChart} role="group" aria-label={label} data-short-history={bars.length <= 12}>
       <div className={css.chartY} aria-hidden>
         {ticks.map(tick => <span key={tick}>{tickLabel(tick)}</span>)}
       </div>
       <div className={css.plot}>
         <div className={css.gridLines} aria-hidden>{ticks.map(tick => <i key={tick} />)}</div>
         <div className={css.chartBars}>
-          {bars.map((bar, index) => {
+          {bars.map(bar => {
             const selected = bar.range ? selectedSeq >= bar.range.start && selectedSeq <= bar.range.end : bar.requestSeq === selectedSeq
             const hasMarker = mode === 'total' && (bar.range
               ? [...markerSeqs].some(seq => seq >= bar.range!.start && seq <= bar.range!.end)
               : markerSeqs.has(bar.requestSeq))
-            const showLabel = bars.length <= 8 || index === 0 || index === bars.length - 1 || index % stride === 0
             const heightPercent = mode === 'delta' ? 0 : Math.min(100, (bar.total / axisMaximum) * 100)
             const change = bar.change ?? 0
             const deltaRatio = Math.min(1, Math.abs(change) / axisMaximum) / 2
@@ -68,9 +67,9 @@ export function RunTrendChart({
                 {mode === 'total' ? (
                   <span className={css.barStack} style={{ height: `${heightPercent}%` }} aria-hidden>
                     {(() => {
-                      // The bar height is the measured request total; the stack
-                      // splits it by the estimated category shares. Splitting by
-                      // estimate/measured would leave a visibly empty bar.
+                      // Categories allocate the same request total. Without a
+                      // manifest the known weights can be incomplete, so retain
+                      // the empty-composition fallback below.
                       const estimate = bar.parts.reduce((sum, part) => sum + part.tokens, 0)
                       return bar.parts.length > 0 && estimate > 0
                         ? bar.parts.map((part, partIndex) => (
@@ -98,10 +97,16 @@ export function RunTrendChart({
                   />
                 )}
                 {hasMarker && <span className={css.eventMarker}>{markerLabel}</span>}
-                <span className={css.xLabel}>{showLabel ? (bar.range ? `${bar.range.start}–${bar.range.end}` : bar.requestSeq) : ''}</span>
               </button>
             )
           })}
+        </div>
+        <div className={css.chartX} data-trend-axis aria-hidden style={{ gridTemplateColumns: `repeat(${bars.length}, minmax(0, 1fr))` }}>
+          {bars.map((bar, index) => (bars.length <= 8 || index === 0 || index === bars.length - 1 || index % stride === 0) && (
+            <span key={bar.key} className={css.xLabel} style={{ gridColumn: index + 1 }}>
+              {index === 0 ? bar.range?.start ?? bar.requestSeq : bar.range?.end ?? bar.requestSeq}
+            </span>
+          ))}
         </div>
       </div>
     </div>

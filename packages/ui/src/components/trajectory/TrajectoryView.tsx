@@ -31,6 +31,7 @@ import type { RunDecisionSummary, RunReliabilityFacts } from './run-model'
 import type { TrajectorySessionMap } from './trajectory-session-map'
 import css from './run-view.module.css'
 import './trajectory-theme.css'
+import './run-palette.css'
 
 const DURATION_PREFERENCE_KEY = 'craft.trajectory.duration'
 const VIEW_PREFERENCE_KEY = 'craft.trajectory.view'
