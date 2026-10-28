@@ -1,6 +1,6 @@
 # Phaneris (RE) documentation
 
-当前本地工作树收尾与验收：[M0 最终记录](process/m0-closeout-implementation-2026-10-28.md)（2026-10-29，本机 Windows 候选，尚未提交或发布）。[2026-10-21 main 整合记录](verification/main-consolidation-2026-10-21.md)保留为历史；下文列出各阶段实施与验证。
+当前本地工作树收尾与验收：[M0 最终记录](process/m0-closeout-implementation-2026-10-28.md)（2026-10-29，本机 Windows 验证快照）。[2026-10-21 main 整合记录](verification/main-consolidation-2026-10-21.md)保留为历史；下文列出各阶段实施与验证。
 
 This index is the only entry point to `docs/`. Everything here is reachable from this page; `bun run check:docs` enforces that, along with link validity and the status rules below.
 
@@ -20,7 +20,7 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
-M0 收尾：[实施与验证](process/m0-closeout-implementation-2026-10-28.md)、[先行失败矩阵](verification/m0-closeout-failure-matrix-2026-10-28.md) — accepted（2026-10-29，本机 Windows 候选）；完整 CI/critical、Harness 与实际打包应用通过，未安装或发布。
+M0 收尾：[实施与验证](process/m0-closeout-implementation-2026-10-28.md)、[先行失败矩阵](verification/m0-closeout-failure-matrix-2026-10-28.md) — accepted（2026-10-29，本机 Windows 候选）；完整 CI/critical、Harness 与实际打包应用通过；已纳入 [0.5.5 发布准备](../apps/electron/resources/release-notes/0.5.5.md)，本机安装版不自动替换。
 
 阶段评估与开发建议：[2026-10-28 治理方向评估与后续路线](process/governance-review-and-development-direction-2026-10-28.md) — M0 本地收尾完成，M1–M3 仍为 proposed；评估 0.3.0 至 0.5.4 的投入与验证边界，建议有限稳定性收尾后转向成果反馈、实际交付和项目接续。
 

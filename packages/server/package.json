@@ -1,6 +1,6 @@
 {
   "name": "@phaneris/server",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Standalone headless Phaneris server (Bun runtime)",
   "type": "module",
   "main": "src/index.ts",

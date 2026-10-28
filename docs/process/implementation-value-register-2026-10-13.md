@@ -16,7 +16,7 @@
 
 ## 1. 裁定依据
 
-2026-10-28 用户授权[阶段评估](governance-review-and-development-direction-2026-10-28.md)中的 M0：收口启动阻塞、已记录关键验收及同一 Windows 桌面候选验证；[先行失败矩阵](../verification/m0-closeout-failure-matrix-2026-10-28.md)。2026-10-29 已完成本机 Windows 候选收尾，见[最终实施与验收](m0-closeout-implementation-2026-10-28.md)，未安装或发布。M1–M3 仍为提案。
+2026-10-28 用户授权[阶段评估](governance-review-and-development-direction-2026-10-28.md)中的 M0：收口启动阻塞、已记录关键验收及同一 Windows 桌面候选验证；[先行失败矩阵](../verification/m0-closeout-failure-matrix-2026-10-28.md)。2026-10-29 已完成本机 Windows 候选收尾，见[最终实施与验收](m0-closeout-implementation-2026-10-28.md)，本机安装版未替换；用户随后明确授权提交、推送、`v0.5.5` 标签及本地重新打包。M1–M3 仍为提案。
 
 | 依据 | 采用方式 |
 | --- | --- |
