@@ -25,13 +25,11 @@ import {
   MAX_LOGGED_BODY_CHARS,
   debugLog,
   isRichToolDescriptionsEnabled,
-  isExtendedPromptCacheEnabled,
   setStoredError,
   toolMetadataStore,
   displayNameSchema,
   intentSchema,
 } from './interceptor-common.ts';
-import { FEATURE_FLAGS } from './feature-flags.ts';
 import { resolveRequestContext } from './interceptor-request-utils.ts';
 
 // Type alias for fetch's HeadersInit
@@ -252,8 +250,6 @@ function getConfiguredBaseUrl(): string {
   return process.env.ANTHROPIC_BASE_URL?.trim() || 'https://api.anthropic.com';
 }
 
-const FAST_MODE_BETA = 'fast-mode-2026-02-01';
-
 /**
  * Strip cache_control from empty text blocks in API request bodies.
  *
@@ -286,174 +282,6 @@ export function sanitizeEmptyTextCacheControl(body: Record<string, unknown>): nu
     debugLog(`[Anthropic] Stripped cache_control from ${stripped} empty text block(s)`);
   }
   return stripped;
-}
-
-/**
- * Strip explicit TTL from all ephemeral cache_control blocks.
- *
- * When extendedPromptCache is disabled, the SDK may still send ttl: "1h"
- * natively (via prompt-caching-scope beta). This function removes the ttl
- * field so blocks fall back to the API default (5 min).
- *
- * Walks tools, system, message content, and top-level cache_control. The
- * Anthropic API processes blocks in order `tools → system → messages` and
- * rejects requests where a 1h block appears after a 5m block, so the tools
- * walk must stay in sync with the upgrade path below.
- */
-function stripPromptCacheTtl(body: Record<string, unknown>): number {
-  let stripped = 0;
-
-  const tools = body.tools as Array<Record<string, unknown>> | undefined;
-  if (Array.isArray(tools)) {
-    for (const tool of tools) {
-      const cc = tool.cache_control as Record<string, unknown> | undefined;
-      if (cc?.type === 'ephemeral' && 'ttl' in cc) {
-        delete cc.ttl;
-        stripped++;
-      }
-    }
-  }
-
-  const system = body.system as Array<Record<string, unknown>> | undefined;
-  if (Array.isArray(system)) {
-    for (const block of system) {
-      const cc = block.cache_control as Record<string, unknown> | undefined;
-      if (cc?.type === 'ephemeral' && 'ttl' in cc) {
-        delete cc.ttl;
-        stripped++;
-      }
-    }
-  }
-
-  const messages = body.messages as Array<{ content?: unknown }> | undefined;
-  if (messages) {
-    for (const message of messages) {
-      if (!Array.isArray(message.content)) continue;
-      for (const block of message.content as Array<Record<string, unknown>>) {
-        const cc = block.cache_control as Record<string, unknown> | undefined;
-        if (cc?.type === 'ephemeral' && 'ttl' in cc) {
-          delete cc.ttl;
-          stripped++;
-        }
-      }
-    }
-  }
-
-  const topLevel = body.cache_control as Record<string, unknown> | undefined;
-  if (topLevel?.type === 'ephemeral' && 'ttl' in topLevel) {
-    delete topLevel.ttl;
-    stripped++;
-  }
-
-  if (stripped > 0) {
-    debugLog(`[Anthropic] Stripped TTL from ${stripped} cache_control block(s) (extendedPromptCache=false)`);
-  }
-  return stripped;
-}
-
-/**
- * Upgrade all cache_control blocks from 5m (default) to 1h TTL.
- * Only active when extendedPromptCache is enabled in config.
- * When disabled, actively strips any SDK-injected TTL so blocks
- * fall back to the API default (5 min).
- *
- * Walks tools, system prompt blocks, message content blocks, and the
- * top-level cache_control field (auto-caching mode). Only upgrades blocks
- * with type: "ephemeral" — leaves other types untouched.
- *
- * The tools walk is required for correctness, not just completeness: the
- * Anthropic API processes blocks in order `tools → system → messages` and
- * rejects requests where a 1h cache_control block appears after a 5m one.
- * If we upgrade only system+messages, a 5m block on a tool (added by the
- * SDK or user) ahead of a 1h block on system produces a 400 with message
- * "a ttl='1h' cache_control block must not come after a ttl='5m' cache_control block."
- *
- * @deprecated Legacy interceptor TTL rewrite. Pi native cacheRetention is authoritative; this is retained for API/unit-test compatibility and is no longer invoked by modifyRequest.
- * Exported for focused unit tests.
- */
-export function upgradePromptCacheTtl(body: Record<string, unknown>): number {
-  if (!isExtendedPromptCacheEnabled()) return stripPromptCacheTtl(body);
-
-  let upgraded = 0;
-
-  // Upgrade tool cache_control (must run first — tools is processed before
-  // system, and a stale 5m block here would invalidate any later 1h upgrade).
-  const tools = body.tools as Array<Record<string, unknown>> | undefined;
-  if (Array.isArray(tools)) {
-    for (const tool of tools) {
-      if (tool.cache_control && (tool.cache_control as Record<string, unknown>).type === 'ephemeral') {
-        (tool.cache_control as Record<string, unknown>).ttl = '1h';
-        upgraded++;
-      }
-    }
-  }
-
-  // Upgrade system prompt cache_control
-  const system = body.system as Array<Record<string, unknown>> | undefined;
-  if (Array.isArray(system)) {
-    for (const block of system) {
-      if (block.cache_control && (block.cache_control as Record<string, unknown>).type === 'ephemeral') {
-        (block.cache_control as Record<string, unknown>).ttl = '1h';
-        upgraded++;
-      }
-    }
-  }
-
-  // Upgrade message content cache_control
-  const messages = body.messages as Array<{ content?: unknown }> | undefined;
-  if (messages) {
-    for (const message of messages) {
-      if (!Array.isArray(message.content)) continue;
-      for (const block of message.content as Array<Record<string, unknown>>) {
-        if (block.cache_control && (block.cache_control as Record<string, unknown>).type === 'ephemeral') {
-          (block.cache_control as Record<string, unknown>).ttl = '1h';
-          upgraded++;
-        }
-      }
-    }
-  }
-
-  // Upgrade top-level cache_control (auto-caching mode)
-  const topLevel = body.cache_control as Record<string, unknown> | undefined;
-  if (topLevel?.type === 'ephemeral') {
-    topLevel.ttl = '1h';
-    upgraded++;
-  }
-
-  if (upgraded > 0) {
-    debugLog(`[Anthropic] Upgraded ${upgraded} cache_control block(s) to 1h TTL`);
-  }
-  return upgraded;
-}
-
-/**
- * Check if fast mode should be enabled for this request.
- * Only activates for Opus 4.7 on Anthropic's API when the feature flag is on.
- */
-function shouldEnableFastMode(model: unknown): boolean {
-  if (!FEATURE_FLAGS.fastMode) return false;
-  return typeof model === 'string' && model === 'claude-opus-4-7';
-}
-
-/**
- * Append a beta value to the anthropic-beta header, preserving existing values.
- */
-function appendBetaHeader(headers: HeadersInitType | undefined, beta: string): Record<string, string> {
-  let headerObj: Record<string, string> = {};
-  if (headers instanceof Headers) {
-    headers.forEach((value, key) => { headerObj[key] = value; });
-  } else if (Array.isArray(headers)) {
-    for (const [key, value] of headers) {
-      headerObj[key as string] = value as string;
-    }
-  } else if (headers) {
-    headerObj = { ...headers };
-  }
-
-  const existing = headerObj['anthropic-beta'];
-  headerObj['anthropic-beta'] = existing ? `${existing},${beta}` : beta;
-
-  return headerObj;
 }
 
 /**
@@ -798,18 +626,6 @@ const anthropicAdapter: ApiAdapter = {
       headers: stripBetaHeader(init?.headers as HeadersInitType | undefined, 'context-1m-2025-08-07'),
     };
 
-    const fastMode = shouldEnableFastMode(body.model);
-    if (fastMode) {
-      body.speed = 'fast';
-      debugLog(`[Fast Mode] Enabled for model=${body.model}`);
-      return {
-        init: {
-          ...init,
-          headers: appendBetaHeader(init?.headers as HeadersInitType | undefined, FAST_MODE_BETA),
-        },
-        body,
-      };
-    }
     return { init, body };
   },
 };

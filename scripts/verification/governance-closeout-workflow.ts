@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { ESLint } from 'eslint'
-import { criticalTestGroups, criticalWorkflows } from '../critical-scenarios'
+import { criticalTestGroups, criticalWorkflows, nativeWorkflows } from '../critical-scenarios'
 import { UV_VERSION } from '../build/common'
 import { verificationWorkflow } from './verification-artifacts'
 
@@ -38,13 +38,23 @@ await verificationWorkflow('governance-closeout', async run => {
     await command(id!, 'scripts/check-governance.ts', [`--workflow=${path}`])
   }
   for (const [id, registry] of [
-    ['missing-critical-workflow', { workflows: criticalWorkflows.filter(row => row.id !== 'plugin-transaction'), groups: criticalTestGroups }],
-    ['missing-critical-group', { workflows: criticalWorkflows, groups: criticalTestGroups.slice(1) }],
+    ['missing-critical-entry', { workflows: [{ ...criticalWorkflows[0], entry: 'scripts/verification/absent-workflow.ts' }], groups: criticalTestGroups, nativeWorkflows }],
+    ['empty-critical-groups', { workflows: criticalWorkflows, groups: [], nativeWorkflows }],
+    ['empty-critical-workflows', { workflows: [], groups: criticalTestGroups, nativeWorkflows }],
+    ['duplicate-critical-id', { workflows: [criticalWorkflows[0], criticalWorkflows[0]], groups: criticalTestGroups, nativeWorkflows }],
+    ['zero-critical-scenes', { workflows: [{ ...criticalWorkflows[0], minimum: 0 }], groups: criticalTestGroups, nativeWorkflows }],
+    ['empty-required-artifacts', { workflows: [{ ...criticalWorkflows[0], required: [] }], groups: criticalTestGroups, nativeWorkflows }],
   ] as const) {
     const path = join(run.directory, `${id}.json`)
     writeFileSync(path, JSON.stringify(registry))
     await command(id, 'scripts/check-governance.ts', [`--registry=${path}`])
   }
+  const reordered = join(run.directory, 'reordered-registry.json')
+  writeFileSync(reordered, JSON.stringify({ workflows: [...criticalWorkflows].reverse(), groups: criticalTestGroups, nativeWorkflows }))
+  await command('registry-order-is-not-policy', 'scripts/check-governance.ts', [`--registry=${reordered}`], 0)
+  const renamed = join(run.directory, 'renamed-step.yml')
+  writeFileSync(renamed, workflow.replace('name: Run validation suite', 'name: Validate repository behavior'))
+  await command('step-display-name-is-not-policy', 'scripts/check-governance.ts', [`--workflow=${renamed}`], 0)
   await command('strict-final-tree', 'scripts/check-identity.ts', ['--strict'], 0)
   await command('rpc-census-gate', 'scripts/contract-inventory.ts', [], 0)
   const census = JSON.parse(readFileSync(join(root, 'scripts/rpc-contract-inventory.json'), 'utf8')) as {

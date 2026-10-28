@@ -89,6 +89,8 @@ openclaw-*/
 docs/verification/results/**/trace.zip
 docs/verification/results/**/*.webm
 
-# Verification outputs are generated locally and never committed.
+# New runs belong in .cache/verification and are never committed.
+# Previously tracked results are frozen historical archives; new archival
+# conclusions require an explicit review (see docs/verification/README.md).
 docs/verification/results/
 docs/prototypes/**/verification/

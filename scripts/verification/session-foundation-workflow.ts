@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
+import { Database } from 'bun:sqlite'
 import type { AgentEvent, Message } from '@phaneris/core/types'
 import { verificationWorkflow } from './verification-artifacts'
 
@@ -26,7 +27,8 @@ await verificationWorkflow('session-foundation', async run => {
   const manager = new SessionManager(runtime)
   type FixturePort = {
     loadSessionsFromDisk(): void
-    sessions: Map<string, { id: string; messages: Message[] }>
+    sessions: Map<string, { id: string; messages: Message[]; messagesLoaded: boolean; name?: string; enabledSourceSlugs?: string[]; hasUnread?: boolean; lastReadMessageId?: string }>
+    persistSession(managed: unknown): void
     processEvent(managed: unknown, event: AgentEvent): Promise<void>
   }
   const port = manager as unknown as FixturePort
@@ -98,6 +100,67 @@ await verificationWorkflow('session-foundation', async run => {
         { id: 'unverified-history', type: 'assistant', content: 'Retained product history', timestamp: 3 }] })
       const restored = await reload()
       assert.equal(restored.messages.find(message => message.id === 'unverified-history')?.content, 'Retained product history')
+    })
+    await scene('hydration-does-not-persist-parity-telemetry', async () => {
+      const databasePath = join(rootPath, 'runtime', 'runtime.db')
+      const database = new Database(databasePath, { readonly: true })
+      try {
+        const observations = () => database.query('SELECT * FROM projection_parity_observations ORDER BY session_id, cursor').all()
+        const before = observations()
+        assert.deepEqual(before, [])
+        await reload()
+        await reload()
+        assert.deepEqual(observations(), before)
+        run.json('parity-telemetry.json', { before, after: observations() })
+      } finally { database.close() }
+    })
+    await scene('cold-persist-keeps-memory-metadata-and-synchronous-load', async () => {
+      await saveSession(full)
+      const reader = new SessionManager(runtime)
+      const cold = reader as unknown as FixturePort
+      cold.loadSessionsFromDisk()
+      const managed = cold.sessions.get(stored.id)!
+      assert.equal(managed.messagesLoaded, false)
+      managed.name = 'Changed while cold'
+      managed.enabledSourceSlugs = []
+      managed.hasUnread = false
+      managed.lastReadMessageId = ''
+      cold.persistSession(managed)
+      assert.equal(managed.messagesLoaded, true)
+      assert(managed.messages.some(message => message.id === identity))
+      await sessionPersistenceQueue.flush(stored.id)
+      const persisted = loadSession(rootPath, stored.id)!
+      assert.equal(persisted.name, 'Changed while cold')
+      assert.deepEqual(persisted.enabledSourceSlugs, [])
+      assert.equal(persisted.hasUnread, false)
+      assert.equal(persisted.lastReadMessageId, '')
+      run.json('cold-hydration.json', persisted)
+    })
+    await scene('canonical-rollback-and-canary-preserve-routing', async () => {
+      const beforeMode = process.env.PHANERIS_DURABLE_SESSION_READ
+      const beforeCanary = process.env.PHANERIS_DURABLE_SESSION_CANARY
+      const results = []
+      try {
+        for (const [mode, canary, expected] of [
+          ['canonical', '', true], ['legacy', '', false], ['shadow', '', false],
+          ['canonical', 'another-session', false], ['canonical', stored.id, true],
+        ] as const) {
+          process.env.PHANERIS_DURABLE_SESSION_READ = mode
+          process.env.PHANERIS_DURABLE_SESSION_CANARY = canary
+          await saveSession({ ...full, messages: full.messages.filter(message => message.type === 'user') })
+          const restored = await reload()
+          const recovered = restored.messages.some(message => message.id === identity)
+          assert.equal(recovered, expected, `${mode}/${canary}`)
+          assert(restored.messages.some(message => message.id === user.id))
+          results.push({ mode, canary, recovered })
+        }
+      } finally {
+        if (beforeMode === undefined) delete process.env.PHANERIS_DURABLE_SESSION_READ
+        else process.env.PHANERIS_DURABLE_SESSION_READ = beforeMode
+        if (beforeCanary === undefined) delete process.env.PHANERIS_DURABLE_SESSION_CANARY
+        else process.env.PHANERIS_DURABLE_SESSION_CANARY = beforeCanary
+      }
+      run.json('session-read-routing.json', results)
     })
     await scene('committed-tool-without-product-snapshot', async () => {
       const session = await manager.createSession(workspace.id, { name: 'Tool recovery fixture' })

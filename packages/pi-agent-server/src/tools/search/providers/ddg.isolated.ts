@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'bun:test';
-import { DDGSearchProvider } from './ddg.ts';
+import { PublicWebSearchProvider } from './ddg.ts';
 import { normalizeSearchOutput } from '../types.ts';
 
 const originalFetch = globalThis.fetch;
@@ -8,7 +8,7 @@ afterEach(() => {
   globalThis.fetch = originalFetch;
 });
 
-describe('DDGSearchProvider public fallback', () => {
+describe('PublicWebSearchProvider public fallback', () => {
   it('uses 360 Search when DuckDuckGo endpoints are unreachable', async () => {
     globalThis.fetch = (async (input: RequestInfo | URL) => {
       const url = String(input);
@@ -25,7 +25,7 @@ describe('DDGSearchProvider public fallback', () => {
       throw new Error('endpoint unavailable');
     }) as typeof fetch;
 
-    const response = normalizeSearchOutput(await new DDGSearchProvider().search('craft agents', 5));
+    const response = normalizeSearchOutput(await new PublicWebSearchProvider().search('craft agents', 5));
 
     expect(response.engines).toEqual(['so360']);
     expect(response.results).toEqual([{
@@ -55,7 +55,7 @@ describe('DDGSearchProvider public fallback', () => {
       throw new Error('sogou offline');
     }) as typeof fetch;
 
-    const response = normalizeSearchOutput(await new DDGSearchProvider().search(
+    const response = normalizeSearchOutput(await new PublicWebSearchProvider().search(
       'example',
       5,
       { engines: ['bing', 'baidu', 'sogou'] },
@@ -100,7 +100,7 @@ describe('DDGSearchProvider public fallback', () => {
       throw new Error(`unexpected endpoint: ${url}`);
     }) as typeof fetch;
 
-    const response = normalizeSearchOutput(await new DDGSearchProvider().search(
+    const response = normalizeSearchOutput(await new PublicWebSearchProvider().search(
       'craft',
       4,
       { engines: ['csdn', 'juejin'] },
@@ -117,7 +117,7 @@ describe('DDGSearchProvider public fallback', () => {
       throw new Error('offline');
     }) as typeof fetch;
 
-    await expect(new DDGSearchProvider().search('craft agents', 5)).rejects.toThrow(
+    await expect(new PublicWebSearchProvider().search('craft agents', 5)).rejects.toThrow(
       'All public search endpoints failed',
     );
   });

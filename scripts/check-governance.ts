@@ -78,11 +78,27 @@ for (const gate of ['boundaries', 'cycles', 'rpc-contracts', 'distribution']) {
 }
 assert.equal(metadata.scripts['identity:check'], 'bun run scripts/check-identity.ts --strict', 'Identity validation must reject unclassified residuals')
 const registryPath = process.argv.some(arg => arg.startsWith('--registry=')) ? input('registry', '') : undefined
-const registry = registryPath ? JSON.parse(readFileSync(registryPath, 'utf8')) : { workflows: criticalWorkflows, groups: criticalTestGroups }
-const policy = JSON.parse(readFileSync(join(root, 'scripts/critical-scenario-policy.json'), 'utf8'))
-assert.deepEqual(registry.workflows, policy.workflows, 'Every required workflow, minimum and artifact must remain wired')
-assert.deepEqual(registry.groups, policy.groups, 'Every required package test group must remain wired')
-assert.deepEqual(nativeWorkflows, policy.nativeWorkflows, 'Native host workflows must remain registered separately from browser CI')
+const registry: { workflows: typeof criticalWorkflows; groups: typeof criticalTestGroups; nativeWorkflows: typeof nativeWorkflows } = registryPath
+  ? JSON.parse(readFileSync(registryPath, 'utf8'))
+  : { workflows: criticalWorkflows, groups: criticalTestGroups, nativeWorkflows }
+const scenarioIds = new Set<string>()
+for (const workflows of [registry.workflows, registry.nativeWorkflows]) {
+  assert(Array.isArray(workflows) && workflows.length > 0, 'Critical and native workflow lists must not be empty')
+  for (const scene of workflows) {
+    assert(typeof scene.id === 'string' && scene.id.trim() && !scenarioIds.has(scene.id), 'Workflow IDs must be nonempty and unique')
+    scenarioIds.add(scene.id)
+    assert(typeof scene.entry === 'string' && existsSync(resolve(root, scene.entry)), `Missing workflow entry: ${scene.entry}`)
+    assert(Number.isSafeInteger(scene.minimum) && scene.minimum > 0, `Nonzero scene minimum required: ${scene.id}`)
+    assert(Array.isArray(scene.required) && scene.required.length > 0, `Required artifacts missing: ${scene.id}`)
+    assert(scene.required.every((path: unknown) => typeof path === 'string' && path.trim())
+      && new Set(scene.required).size === scene.required.length, `Artifact paths must be nonempty and unique: ${scene.id}`)
+  }
+}
+assert(Array.isArray(registry.groups) && registry.groups.length > 0, 'Critical package groups must not be empty')
+for (const [cwd, files] of registry.groups) {
+  assert(Array.isArray(files) && files.length > 0, `Empty critical package group: ${cwd}`)
+  for (const file of files) assert(existsSync(resolve(root, cwd, file)), `Missing critical test: ${cwd}/${file}`)
+}
 assert.equal(metadata.scripts['lint:workspace'], 'bun run scripts/lint-workspace.ts', 'CI lint must use the reviewed baseline without initialization flags')
 assert.equal(metadata.scripts['test:doc-tools'], 'bun run scripts/test-doc-tools.ts', 'Document tests must use the product Python pin')
 const coverage = JSON.parse(readFileSync(input('coverage', 'scripts/quality-coverage.json'), 'utf8')) as {

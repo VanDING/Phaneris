@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
 import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
 import type { RuntimeUsageRow } from './store.js'
-import { auditModelUsage } from './model-usage-audit.js'
+import { auditModelUsage } from '../../../../scripts/verification/model-usage-audit.js'
 
 const usage = { input: 10, output: 5, cacheRead: 100, cacheWrite: 20, reasoning: 3,
   totalTokens: 135, cost: { input: 1, output: 2, cacheRead: 3, cacheWrite: 4, total: 10 } }

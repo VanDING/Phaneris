@@ -28,8 +28,7 @@
  *     a thrown stream commits nothing `:57-67`; abort-before-dispatch commits a known zero `:32-45`.
  *   - each SDK auto-retry uses a NEW `providerRequestId` (`index.ts:80-83`) → its own row.
  *   - read back via `runtime.queries.usage(workspace, { sessionId | operationId })`
- *     (`api/runtime.ts:63`), parity detector `model-usage-audit.ts:5-63` attached to the
- *     `agent_settled` sdk_observation at `coordinator.ts:688-700`.
+ *     (`api/runtime.ts:63`), parity detector `scripts/verification/model-usage-audit.ts`, computed by this workflow.
  *   - retry classification: `packages/pi-agent-server/src/session-settings.ts:32-54`
  *     (provider level 408/409/429/5xx), enforced by
  *     `node_modules/@earendil-works/pi-ai/dist/utils/provider-retry.js:9-21`.
@@ -197,8 +196,8 @@ try {
     typeof import('../../packages/server-core/src/durable-runtime')
   const { PiRuntimeDriver, bindPiRuntime } = await import(join(root, 'packages/server-core/src/runtime-adapters/pi-driver.ts')) as
     typeof import('../../packages/server-core/src/runtime-adapters/pi-driver')
-  const { auditModelUsage } = await import(join(root, 'packages/server-core/src/durable-runtime/model-usage-audit.ts')) as
-    typeof import('../../packages/server-core/src/durable-runtime/model-usage-audit')
+  const { auditModelUsage } = await import(join(root, 'scripts/verification/model-usage-audit.ts')) as
+    typeof import('./model-usage-audit')
 
   const durable = createDurableRuntime()
   runtime = durable
@@ -255,24 +254,9 @@ try {
     }
     return agent
   }
-  const audits = new Map<string, { observationId: string; seq: number; audit: unknown }>()
-  /**
-   * The parity audit is only computed when an `agent_settled` observation reaches the
-   * active run (coordinator.ts:688-700). The harness issues that observation at run
-   * completion through the same production boundary; the subprocess does not emit one
-   * for a main session in this configuration (its own observation needs the durable
-   * model run scope).
-   */
-  function attachAuditObservation(sessionId: string, operationId: string) {
-    const observationId = `usage-ledger:${operationId}:agent_settled`
-    const seq = durable.effects.recordSdkObservation(workspace, { observationId, sessionId, turnId: `${operationId}-user`,
-      runOperationId: operationId, event: 'agent_settled', capturedAt: Date.now(),
-      data: { aborted: false, scope: 'all_sdk_session_entries', costSource: 'pi_sdk_estimate', issuer: 'workflow_run_completion' } })
-    const persisted = durable.queries.events(workspace, { sessionId }).find(event => event.eventId === `${operationId}:sdk:${observationId}`)
-    assert(persisted, `The agent_settled observation for ${operationId} was not persisted`)
-    const audit = (persisted.payload as { modelUsageAudit?: unknown }).modelUsageAudit
-    assert(audit, `The parity audit was not attached to the agent_settled observation for ${operationId}`)
-    audits.set(operationId, { observationId, seq, audit })
+  const audits = new Map<string, { audit: ReturnType<typeof auditModelUsage> }>()
+  function captureUsageAudit(operationId: string) {
+    audits.set(operationId, { audit: directAudit(operationId) })
   }
   async function turn(sessionId: string, operationId: string, prompt: string, onComplete?: () => Promise<void> | void) {
     const driver = await durable.execution.ensureDriver(sessionId, async () => new PiRuntimeDriver(agents.get(sessionId)!))
@@ -297,7 +281,7 @@ try {
   // ==========================================================================
   const L1 = { sessionId: 'l1-success', operationId: 'l1-run', prompt: 'L1 acceptance call' }
   agents.set(L1.sessionId, assemble(L1.sessionId))
-  await turn(L1.sessionId, L1.operationId, L1.prompt, () => attachAuditObservation(L1.sessionId, L1.operationId))
+  await turn(L1.sessionId, L1.operationId, L1.prompt, () => captureUsageAudit(L1.operationId))
   {
     const operation = operationRows(L1.operationId)
     const session = sessionRows(L1.sessionId)
@@ -346,7 +330,7 @@ try {
     assert.deepEqual(requests[0]!.responseUsage, { prompt_tokens: 1234, completion_tokens: 57, total_tokens: 1291 })
     assert.equal(requests[0]!.responseText, 'L1_LEDGER_ACCEPTED')
     assert.match(requests[0]!.path, /\/chat\/completions$/)
-    assertCleanAudit(audits.get(L1.operationId)!.audit, 1, 'L1 attached audit')
+    assertCleanAudit(audits.get(L1.operationId)!.audit, 1, 'L1 query audit')
     assertCleanAudit(directAudit(L1.operationId), 1, 'L1 direct audit')
     evidence.json('usage-success.json', { scene: 'L1', sessionId: L1.sessionId, operationId: L1.operationId,
       providerRequests: requests, configuredCostRatesPerMillionTokens: COST_RATES, expectedCostUsdFromRates: derived(1234, 57),
@@ -355,8 +339,8 @@ try {
       ledgerRows: operation, ledgerRowsForSession: session,
       durableEvents: { dispatch: dispatch.map(event => event.eventId), outcome: outcomes.map(event => event.eventId),
         usageCommitted: usageEvents.map(event => event.eventId), assistant: assistant.map(event => event.eventId) },
-      audit: { attached: audits.get(L1.operationId), direct: directAudit(L1.operationId),
-        attachment: 'durable.effects.recordSdkObservation(event agent_settled) at run completion (coordinator.ts:688-700)' },
+      audit: { queried: audits.get(L1.operationId), direct: directAudit(L1.operationId),
+        source: 'runtime.queries.events/usage at run completion; verification-side persistence parity' },
       assertions: ['one row per operation and per session', "provider token numbers verbatim", 'cost derived from configured rates',
         'costSource pi_sdk_estimate', 'one dispatch/outcome/usage_committed fact', 'parity audit reports no issues'] })
     scenes.push('L1-success-recorded-once-with-provider-numbers')
@@ -367,7 +351,7 @@ try {
   // ==========================================================================
   const L2 = { sessionId: 'l2-retry', operationId: 'l2-run', prompt: 'L2 acceptance call' }
   agents.set(L2.sessionId, assemble(L2.sessionId))
-  await turn(L2.sessionId, L2.operationId, L2.prompt, () => attachAuditObservation(L2.sessionId, L2.operationId))
+  await turn(L2.sessionId, L2.operationId, L2.prompt, () => captureUsageAudit(L2.operationId))
   {
     const requests = seen.filter(request => request.label === 'L2')
     const failed = requests.filter(request => request.status === 503)
@@ -401,7 +385,7 @@ try {
     assert.equal(factsOf(L2.operationId, 'model_recovery_decided').length, 0, 'L2: no reconciliation verdict was needed')
     assert.equal(factsOf(L2.operationId, 'usage_committed').length, 1)
     assert.equal((factsOf(L2.operationId, 'assistant_message_committed')[0]!.payload as { content?: string }).content, 'L2_RETRY_ACCEPTED')
-    assertCleanAudit(audits.get(L2.operationId)!.audit, 1, 'L2 attached audit')
+    assertCleanAudit(audits.get(L2.operationId)!.audit, 1, 'L2 query audit')
     assertCleanAudit(directAudit(L2.operationId), 1, 'L2 direct audit')
     evidence.json('usage-retry.json', { scene: 'L2', sessionId: L2.sessionId, operationId: L2.operationId,
       providerRequests: requests, configuredCostRatesPerMillionTokens: COST_RATES, expectedCostUsdFromRates: derived(4321, 89),
@@ -413,7 +397,7 @@ try {
       attemptToRow: [{ attempt: 1, providerRequestId: '1', providerHttpRequests: requests.map(request => request.seq),
         providerHttpStatuses: requests.map(request => request.status), billed: true, usageId: row.usageId, recorded: true }],
       billedProviderRequests: billed.length, ledgerRows: operation, ledgerRowsForSession: sessionRows(L2.sessionId),
-      audit: { attached: audits.get(L2.operationId), direct: directAudit(L2.operationId) },
+      audit: { queried: audits.get(L2.operationId), direct: directAudit(L2.operationId) },
       assertions: ['the row carries the successful attempt numbers', 'no fabricated zero row for the failed request',
         'rows equal billed provider requests', 'no duplicate/missing/mismatch/pending_outcome issue'] })
     scenes.push('L2-retry-accounted-from-actually-billed-attempt')
@@ -443,7 +427,7 @@ try {
       originalCommittedSeq: outcomesBefore[0]!.seq, outcomeReplay: committed,
       rowsBefore: JSON.parse(before), rowsAfter: JSON.parse(after), rowsUnchanged: before === after,
       factsBefore: factsBefore.length, factsAfter: factsAfter.length, factsUnchanged: JSON.stringify(factsBefore) === JSON.stringify(factsAfter) }
-    attachAuditObservation(L3.sessionId, L3.operationId)
+    captureUsageAudit(L3.operationId)
   })
   {
     assert(replay, 'L3: the replay ran while the run was still open')
@@ -476,7 +460,7 @@ try {
       replaySemantics: { guard: 'commitModelOutcome short-circuits on the existing outcome event (coordinator.ts:814-815)',
         secondGuard: 'appendUsage content comparison (store.ts:996-1004) is unreachable while the outcome event exists; recorded as untested' },
       ledgerRows: operationRows(L3.operationId),
-      audit: { attached: audits.get(L3.operationId), direct: directAudit(L3.operationId) },
+      audit: { queried: audits.get(L3.operationId), direct: directAudit(L3.operationId) },
       assertions: ['prepare replay reports outcome_committed/created=false', 'commit replay returns the original committedSeq',
         'still exactly one row', 'no new durable facts', 'no duplicate parity issue'] })
     scenes.push('L3-replay-same-providerRequestId-single-row')
@@ -488,7 +472,7 @@ try {
   // ==========================================================================
   const F1 = { sessionId: 'f1-agent-retry', operationId: 'f1-run', prompt: 'F1 acceptance call' }
   agents.set(F1.sessionId, assemble(F1.sessionId))
-  await turn(F1.sessionId, F1.operationId, F1.prompt, () => attachAuditObservation(F1.sessionId, F1.operationId))
+  await turn(F1.sessionId, F1.operationId, F1.prompt, () => captureUsageAudit(F1.operationId))
   {
     const requests = seen.filter(request => request.label === 'F1')
     const failed = requests.filter(request => request.status === 503)
@@ -530,7 +514,7 @@ try {
       'F1: no reconciliation verdict exists for the unbilled attempt')
     // The parity detector compares the ledger with the committed outcomes, so a
     // fabricated zero row is internally consistent and invisible to it.
-    assertCleanAudit(audits.get(F1.operationId)!.audit, 2, 'F1 attached audit')
+    assertCleanAudit(audits.get(F1.operationId)!.audit, 2, 'F1 query audit')
     assertCleanAudit(directAudit(F1.operationId), 2, 'F1 direct audit')
     assert.equal(operation.length, billed.length + 1, 'F1: one ledger row has no billed provider request behind it')
     evidence.json('usage-agent-retry-deviation.json', { scene: 'F1', sessionId: F1.sessionId, operationId: F1.operationId,
@@ -544,7 +528,7 @@ try {
         billedProviderRequests: index === 0 ? 0 : 1, recorded: Boolean(operation[index]) })),
       billedProviderRequests: billed.length, ledgerRows: operation,
       metering: { unavailable: zero, known: real, projected },
-      audit: { attached: audits.get(F1.operationId), direct: directAudit(F1.operationId) },
+      audit: { queried: audits.get(F1.operationId), direct: directAudit(F1.operationId) },
       assertions: ['agent-level retry ran with the pinned policy', 'two attempt identities, two rows',
         'the failed attempt is retained with unavailable metering, not a fabricated zero'] })
     scenes.push('F1-agent-retry-retains-unavailable-metering-separately')
@@ -557,7 +541,7 @@ try {
     expected: [{ prompt: 2000, completion: 30 }, { prompt: 2100, completion: 31 }, { prompt: 2200, completion: 32 }] }
   agents.set(L4.sessionId, assemble(L4.sessionId))
   for (const [index, operationId] of L4.operations.entries()) {
-    await turn(L4.sessionId, operationId, `L4 acceptance call ${index + 1}`, () => attachAuditObservation(L4.sessionId, operationId))
+    await turn(L4.sessionId, operationId, `L4 acceptance call ${index + 1}`, () => captureUsageAudit(operationId))
     const rows = operationRows(operationId)
     assert.equal(rows.length, 1, `L4: call ${index + 1} must record exactly one usage row`)
     assert.match(rows[0]!.usageId, new RegExp(`^model:${operationId}:\\d+$`),
@@ -819,7 +803,7 @@ try {
     resolvedIssue: { id: 'usage-ledger-unmetered-failure-recorded-as-zero', status: 'fixed',
       evidence: ['usage-agent-retry-deviation.json', 'usage-x0.json', 'usage-xm.json', 'usage-xe.json', 'usage-xp.json', 'usage-pre-dispatch-abort.json', 'usage-stream-abort.json', 'usage-compaction.json', 'usage-recovery.json'],
       statement: 'Attempts and outcomes are retained; unknown fields stay nullable, explicit provider zero stays known, partial/error usage survives, and history is not rewritten.' },
-    limitations: ['the agent_settled observation used for the audit attachment is issued by the workflow at run completion; the subprocess does not emit one for a main session in this harness configuration',
+    limitations: ['persistence parity is computed by the workflow from canonical events and ledger rows; it is not provider billing reconciliation',
       'the conflicting-content branch of appendUsage (store.ts:1000-1002) is unreachable while the outcome event exists'],
   })
 

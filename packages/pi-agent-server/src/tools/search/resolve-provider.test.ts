@@ -3,7 +3,7 @@ import { resolveSearchProvider } from './resolve-provider.ts';
 import { ResponsesApiSearchProvider } from './providers/openai.ts';
 import { ChatGPTBackendSearchProvider } from './providers/chatgpt.ts';
 import { GoogleSearchProvider } from './providers/google.ts';
-import { DDGSearchProvider } from './providers/ddg.ts';
+import { PublicWebSearchProvider } from './providers/ddg.ts';
 
 /** Build a minimal JWT with a chatgpt_account_id claim. */
 function makeJwt(accountId: string): string {
@@ -36,7 +36,7 @@ describe('resolveSearchProvider', () => {
       apiBase: 'https://example.test/v1',
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   it('does not infer native search support from a custom Responses protocol', () => {
@@ -46,7 +46,7 @@ describe('resolveSearchProvider', () => {
       apiBase: 'https://example.test/v1/',
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   // --- ChatGPT Plus (OAuth) ---
@@ -87,7 +87,7 @@ describe('resolveSearchProvider', () => {
       },
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   it('falls back to DDG for openai-codex + api_key with malformed non-JWT token', () => {
@@ -96,7 +96,7 @@ describe('resolveSearchProvider', () => {
       credential: { type: 'api_key', key: 'not-a-jwt' },
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   // --- OpenRouter ---
@@ -135,7 +135,7 @@ describe('resolveSearchProvider', () => {
       },
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   it('falls back to DDG when provider is unknown', () => {
@@ -144,7 +144,7 @@ describe('resolveSearchProvider', () => {
       credential: { type: 'api_key', key: 'x' },
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   it('falls back to DDG when key is empty', () => {
@@ -153,12 +153,12 @@ describe('resolveSearchProvider', () => {
       credential: { type: 'api_key', key: '' },
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   it('falls back to DDG when no piAuth is provided', () => {
-    expect(resolveSearchProvider()).toBeInstanceOf(DDGSearchProvider);
-    expect(resolveSearchProvider(undefined)).toBeInstanceOf(DDGSearchProvider);
+    expect(resolveSearchProvider()).toBeInstanceOf(PublicWebSearchProvider);
+    expect(resolveSearchProvider(undefined)).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   it('falls back to DDG for github-copilot (no search API available)', () => {
@@ -172,7 +172,7 @@ describe('resolveSearchProvider', () => {
       },
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 
   it('falls back to DDG for vercel-ai-gateway (not yet wired for provider-native search)', () => {
@@ -181,6 +181,6 @@ describe('resolveSearchProvider', () => {
       credential: { type: 'api_key', key: 'vercel-test-key' },
     });
 
-    expect(provider).toBeInstanceOf(DDGSearchProvider);
+    expect(provider).toBeInstanceOf(PublicWebSearchProvider);
   });
 });

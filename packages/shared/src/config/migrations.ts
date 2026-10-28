@@ -314,10 +314,6 @@ function withUpdatedModelEntry(
   return nextEntry;
 }
 
-function modelEntryForDefault(_connection: LlmConnection, modelId: string): ModelDefinition | string {
-  return modelId;
-}
-
 /**
  * Migrate deprecated Opus 4.5/4.6 IDs and previous direct-Anthropic Opus 4.7 defaults to the current default Opus model.
  * Custom/compat endpoints are intentionally skipped because provider-specific aliases may differ.
@@ -365,7 +361,7 @@ function migrateLegacyOpusToDefaultOpus(config: StoredConfig): boolean {
       }
 
       if (connection.defaultModel && !seen.has(connection.defaultModel)) {
-        nextModels.unshift(modelEntryForDefault(connection, connection.defaultModel));
+        nextModels.unshift(connection.defaultModel);
         connectionModelsChanged = true;
       }
 

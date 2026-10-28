@@ -216,29 +216,6 @@ describe('DurableRuntimeStore', () => {
     store.close()
   })
 
-  test('persists parity observations as rollout/dashboard evidence', () => {
-    const store = createStore()
-    store.recordProjectionParity({
-      projection: 'canonical/sessions', sessionId: 'session-1', cursor: 7,
-      canonicalFacts: 4, legacyMessages: 4, issueCount: 0,
-      issueCounts: { missing_legacy_message: 0 }, parityRatio: 1, observedAt: 100,
-    })
-    store.recordProjectionParity({
-      projection: 'canonical/sessions', sessionId: 'session-1', cursor: 7,
-      canonicalFacts: 4, legacyMessages: 5, issueCount: 1,
-      issueCounts: { legacy_fact_missing: 1 }, parityRatio: 0.75, observedAt: 101,
-    })
-
-    expect(store.listProjectionParity('session-1')).toEqual([expect.objectContaining({
-      cursor: 7,
-      issueCount: 1,
-      issueCounts: { legacy_fact_missing: 1 },
-      parityRatio: 0.75,
-      observedAt: 101,
-    })])
-    store.close()
-  })
-
   test('classifies actionable SQLite lifecycle failures', () => {
     expect(classifyRuntimeDatabaseFailure(new Error('database is locked'))).toBe('busy')
     expect(classifyRuntimeDatabaseFailure(new Error('attempt to write a readonly database'))).toBe('readonly')

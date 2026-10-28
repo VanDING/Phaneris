@@ -153,18 +153,6 @@ export interface RuntimeDatabaseMaintenanceResult {
   maintainedAt: number
 }
 
-export interface ProjectionParityObservation {
-  projection: string
-  sessionId: string
-  cursor: number
-  canonicalFacts: number
-  legacyMessages: number
-  issueCount: number
-  issueCounts: Record<string, number>
-  parityRatio: number
-  observedAt: number
-}
-
 export function classifyRuntimeDatabaseFailure(error: unknown): RuntimeDatabaseFailureKind {
   const candidate = error as { code?: string; errno?: string | number; message?: string }
   const text = `${candidate.code ?? ''} ${candidate.errno ?? ''} ${candidate.message ?? String(error)}`.toLowerCase()
@@ -611,63 +599,6 @@ export class DurableRuntimeStore {
       payload: row.payload_json ? JSON.parse(row.payload_json) : undefined,
       createdAt: row.created_at,
     }
-  }
-
-  recordProjectionParity(observation: ProjectionParityObservation): void {
-    this.databaseOperation('record projection parity', () => {
-      this.db.prepare(`
-        INSERT INTO projection_parity_observations (
-          projection, session_id, cursor, canonical_facts, legacy_messages,
-          issue_count, issue_counts_json, parity_ratio, observed_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(projection, session_id, cursor) DO UPDATE SET
-          canonical_facts = excluded.canonical_facts,
-          legacy_messages = excluded.legacy_messages,
-          issue_count = excluded.issue_count,
-          issue_counts_json = excluded.issue_counts_json,
-          parity_ratio = excluded.parity_ratio,
-          observed_at = excluded.observed_at
-      `).run(
-        observation.projection,
-        observation.sessionId,
-        observation.cursor,
-        observation.canonicalFacts,
-        observation.legacyMessages,
-        observation.issueCount,
-        canonicalJson(observation.issueCounts),
-        observation.parityRatio,
-        observation.observedAt,
-      )
-    })
-  }
-
-  listProjectionParity(sessionId?: string): ProjectionParityObservation[] {
-    const rows = this.db.prepare(`
-      SELECT * FROM projection_parity_observations
-      ${sessionId ? 'WHERE session_id = ?' : ''}
-      ORDER BY observed_at DESC, projection ASC, session_id ASC
-    `).all(...(sessionId ? [sessionId] : [])) as Array<{
-      projection: string
-      session_id: string
-      cursor: number
-      canonical_facts: number
-      legacy_messages: number
-      issue_count: number
-      issue_counts_json: string
-      parity_ratio: number
-      observed_at: number
-    }>
-    return rows.map(row => ({
-      projection: row.projection,
-      sessionId: row.session_id,
-      cursor: row.cursor,
-      canonicalFacts: row.canonical_facts,
-      legacyMessages: row.legacy_messages,
-      issueCount: row.issue_count,
-      issueCounts: JSON.parse(row.issue_counts_json) as Record<string, number>,
-      parityRatio: row.parity_ratio,
-      observedAt: row.observed_at,
-    }))
   }
 
   getMaterializedProjection<TSnapshot = unknown>(projection: string): MaterializedProjection<TSnapshot> | undefined {

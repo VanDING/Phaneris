@@ -101,7 +101,6 @@ mock.module('../../../feature-flags.ts', () => ({
     get developerFeedback() {
       return false;
     },
-    fastMode: false,
   },
 }));
 

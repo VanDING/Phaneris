@@ -79,8 +79,8 @@ describe('temporary title agents', () => {
     })
     // Exercise the real factory's model resolver too: the preserved selection
     // must survive resolution, not merely arrive at the factory stub.
-    expect(backend.resolveModelForProvider(
-      'pi', createAgent.mock.calls[0]![1].model, config.getLlmConnection('chatgpt-plus-test'),
+    expect(backend.resolveConnectionModel(
+      createAgent.mock.calls[0]![1].model, config.getLlmConnection('chatgpt-plus-test'),
     )).toBe('pi/gpt-5.4')
     expect(agent.regenerateTitle).toHaveBeenCalledWith(['Fix ChatGPT title regeneration'], '', { language: 'English' })
     expect(agent.destroy).toHaveBeenCalledTimes(1)

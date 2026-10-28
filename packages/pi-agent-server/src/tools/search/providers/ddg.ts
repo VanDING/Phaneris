@@ -629,6 +629,3 @@ export class PublicWebSearchProvider implements WebSearchProvider {
     }
   }
 }
-
-/** @deprecated Use PublicWebSearchProvider. Kept for source compatibility. */
-export { PublicWebSearchProvider as DDGSearchProvider };

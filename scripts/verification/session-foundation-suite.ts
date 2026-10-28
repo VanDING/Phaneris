@@ -6,7 +6,7 @@ import { verificationWorkflow, verifyVerificationDirectory } from './verificatio
 
 await verificationWorkflow('session-foundation-suite', async run => {
   const workflows = [
-    { id: 'session-foundation', minimum: 7, required: ['messages.json', 'tool-recovery.json'] },
+    { id: 'session-foundation', minimum: 10, required: ['messages.json', 'tool-recovery.json', 'parity-telemetry.json', 'cold-hydration.json', 'session-read-routing.json'] },
     { id: 'session-branch', minimum: 6, required: ['session-branch.json'] },
     { id: 'session-transfer', minimum: 5, required: ['transfer.json'] },
     { id: 'session-metadata', minimum: 6, required: ['metadata.json'] },

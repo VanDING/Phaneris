@@ -32,7 +32,6 @@ import {
   createBackendFromConnection,
   resolveBackendContext,
   cleanupSourceRuntimeArtifacts,
-  providerTypeToAgentProvider,
   type BackendHostRuntimeContext,
   type PostInitResult,
 } from '@phaneris/shared/agent/backend'
@@ -2268,25 +2267,7 @@ export class SessionManager implements ISessionManager {
     sessionLog.debug(`Cold-load triggered for persistSession on ${managed.id}`)
     const stored = this.productRepository.load(managed.workspace.rootPath, managed.id)
     if (stored) {
-      managed.messages = (stored.messages || []).map(storedToMessage)
-      managed.pendingPlanExecution = stored.pendingPlanExecution
-      this.applyDurableRecoveryStatus(managed)
-      managed.tokenUsage = stored.tokenUsage
-      this.applyDurableUsageProjection(managed)
-      // Deferred-load fields (intentionally undefined after startup, see
-      // loadSessionsFromDisk). Populate from disk only if not already set in
-      // memory — a caller may have mutated them via setSessionSources etc.
-      if (managed.enabledSourceSlugs === undefined) managed.enabledSourceSlugs = stored.enabledSourceSlugs
-      if (managed.lastReadMessageId === undefined) managed.lastReadMessageId = stored.lastReadMessageId
-      if (managed.hasUnread === undefined) managed.hasUnread = stored.hasUnread
-      if (managed.sharedUrl === undefined) managed.sharedUrl = stored.sharedUrl
-      if (managed.sharedId === undefined) managed.sharedId = stored.sharedId
-      if (managed.transferredSessionSummary === undefined) managed.transferredSessionSummary = stored.transferredSessionSummary
-      if (managed.transferredSessionSummaryApplied === undefined) managed.transferredSessionSummaryApplied = stored.transferredSessionSummaryApplied
-
-      const recovered = recoverSessionQueue(this.durableRuntime,
-        { sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath }, managed.messages)
-      if (recovered.queued && !managed.runtime.isProcessing) this.execution.resumeQueue(managed.id)
+      this.restoreStoredSession(managed, stored, 'cold-persist')
       sessionLog.debug(`Cold-hydrated ${managed.messages.length} messages for session ${managed.id}`)
     }
     managed.messagesLoaded = true
@@ -2755,41 +2736,56 @@ export class SessionManager implements ISessionManager {
   private async loadMessagesFromDisk(managed: ManagedSession): Promise<void> {
     const storedSession = this.productRepository.load(managed.workspace.rootPath, managed.id)
     if (storedSession) {
-      managed.messages = (storedSession.messages || []).map(storedToMessage)
-      managed.pendingPlanExecution = storedSession.pendingPlanExecution
-      this.applyDurableRecoveryStatus(managed)
-      managed.tokenUsage = storedSession.tokenUsage
-      this.applyDurableUsageProjection(managed)
-      managed.lastReadMessageId = storedSession.lastReadMessageId
-      managed.hasUnread = storedSession.hasUnread  // Explicit unread flag for NEW badge state machine
-      managed.enabledSourceSlugs = storedSession.enabledSourceSlugs
-      managed.sharedUrl = storedSession.sharedUrl
-      managed.sharedId = storedSession.sharedId
-      // Sync name from disk - ensures title persistence across lazy loading
-      managed.name = storedSession.name
-      // Restore LLM connection state - ensures correct provider on resume
-      if (storedSession.llmConnection) {
-        managed.llmConnection = storedSession.llmConnection
-      }
-      if (storedSession.connectionLocked) {
-        managed.connectionLocked = storedSession.connectionLocked
-      }
-      // Sync transferred session summary state from disk
-      managed.transferredSessionSummary = storedSession.transferredSessionSummary
-      managed.transferredSessionSummaryApplied = storedSession.transferredSessionSummaryApplied
+      this.restoreStoredSession(managed, storedSession, 'lazy-read')
       sessionLog.debug(`Lazy-loaded ${managed.messages.length} messages for session ${managed.id}`)
-
-      const recovered = recoverSessionQueue(this.durableRuntime,
-        { sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath }, managed.messages)
-      if (recovered.queued && !managed.runtime.isProcessing) this.execution.resumeQueue(managed.id)
-
     }
     managed.messagesLoaded = true
   }
 
+  /** Restore product state synchronously; cold writes retain caller-owned metadata. */
+  private restoreStoredSession(managed: ManagedSession, stored: StoredSession, mode: 'cold-persist' | 'lazy-read'): void {
+    managed.messages = (stored.messages || []).map(storedToMessage)
+    managed.pendingPlanExecution = stored.pendingPlanExecution
+    this.applyDurableRecoveryStatus(managed)
+    managed.tokenUsage = stored.tokenUsage
+    this.applyDurableUsageProjection(managed)
+    if (mode === 'cold-persist') {
+      // Deferred-load fields (intentionally undefined after startup, see
+      // loadSessionsFromDisk). Populate from disk only if not already set in
+      // memory — a caller may have mutated them via setSessionSources etc.
+      if (managed.enabledSourceSlugs === undefined) managed.enabledSourceSlugs = stored.enabledSourceSlugs
+      if (managed.lastReadMessageId === undefined) managed.lastReadMessageId = stored.lastReadMessageId
+      if (managed.hasUnread === undefined) managed.hasUnread = stored.hasUnread
+      if (managed.sharedUrl === undefined) managed.sharedUrl = stored.sharedUrl
+      if (managed.sharedId === undefined) managed.sharedId = stored.sharedId
+      if (managed.transferredSessionSummary === undefined) managed.transferredSessionSummary = stored.transferredSessionSummary
+      if (managed.transferredSessionSummaryApplied === undefined) managed.transferredSessionSummaryApplied = stored.transferredSessionSummaryApplied
+    } else {
+      managed.lastReadMessageId = stored.lastReadMessageId
+      managed.hasUnread = stored.hasUnread  // Explicit unread flag for NEW badge state machine
+      managed.enabledSourceSlugs = stored.enabledSourceSlugs
+      managed.sharedUrl = stored.sharedUrl
+      managed.sharedId = stored.sharedId
+      // Sync name from disk - ensures title persistence across lazy loading
+      managed.name = stored.name
+      // Restore LLM connection state - ensures correct provider on resume
+      if (stored.llmConnection) {
+        managed.llmConnection = stored.llmConnection
+      }
+      if (stored.connectionLocked) {
+        managed.connectionLocked = stored.connectionLocked
+      }
+      // Sync transferred session summary state from disk
+      managed.transferredSessionSummary = stored.transferredSessionSummary
+      managed.transferredSessionSummaryApplied = stored.transferredSessionSummaryApplied
+    }
+    const recovered = recoverSessionQueue(this.durableRuntime,
+      { sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath }, managed.messages)
+    if (recovered.queued && !managed.runtime.isProcessing) this.execution.resumeQueue(managed.id)
+  }
+
   /** Project unknown T1 tails into the legacy message cache for current UI clients. */
   private applyDurableRecoveryStatus(managed: ManagedSession): void {
-    this.execution.refreshRecovery(managed.id)
     this.execution.recoverSession({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
     const workspaceRoot = managed.workspace.rootPath
     let canonicalProjectionReady = false
@@ -2843,26 +2839,6 @@ export class SessionManager implements ISessionManager {
           managed.messages = recovered
           parity = recoveredParity
         }
-      }
-      try {
-        this.durableRuntime.evidence.recordProjectionParity(workspaceRoot, {
-          projection: 'canonical/sessions',
-          sessionId: managed.id,
-          cursor: events.reduce((max, event) => Math.max(max, event.seq ?? 0), 0),
-          canonicalFacts: parity.canonicalFacts,
-          legacyMessages: parity.legacyMessages,
-          issueCount: parity.issueCount,
-          issueCounts: parity.issueCounts,
-          parityRatio: parity.parityRatio,
-          observedAt: Date.now(),
-        })
-      } catch (error) {
-        // Parity observations are disposable diagnostics. A metrics write must
-        // never prevent the authoritative event stream from being read.
-        sessionLog.warn('Failed to persist durable projection parity observation', {
-          sessionId: managed.id,
-          error: error instanceof Error ? error.message : String(error),
-        })
       }
       if (parity.issueCount > 0) {
         sessionLog.warn('Legacy session cache diverges from canonical runtime facts', {

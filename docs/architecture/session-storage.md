@@ -64,6 +64,14 @@ SessionManager 对元数据、消息及待执行计划维护同一份产品状�
 - 迁移只处理明确的草稿条目和成果私有路径，不移动用户原始文件。任何复制、校验或持久化错误均可见，不把失败当作迁移成功。
 - 本次实现不运行用户数据批量迁移或清理。部署前使用现有工作区备份保留完整快照；回滚旧版应恢复迁移前快照/原始清单与草稿备份。迁移后新增内容继续保留在 Session 目录中，恢复旧快照不会自动把这些新增内容合并回旧版索引。
 
-## 验证
+## canonical 读取与回滚
+
+`PHANERIS_DURABLE_SESSION_READ` 默认 `canonical`，仅在 canonical projection 可用且 parity 安全时使用事实投影；允许从已提交事实补全缺失的产品消息，保留仅存在于产品快照中的历史。`legacy` 与 `shadow` 均保留兼容快照读取和 parity 计算/日志，不停用 durable runtime 或改变副作用恢复判定。parity 观测不再额外写入 SQLite；旧观测表保留用于历史兼容。
+
+`PHANERIS_DURABLE_SESSION_CANARY` 可按逗号配置 Session ID、workspace ID 或根路径；空列表表示全部，非匹配会话走兼容读取。切换仅影响读取路由。回滚前保留工作区快照，不能把此开关当作撤销配置/草稿/成果迁移的操作。
+
+source activation 续接仍由服务端持有，pending slot 同时承担重复请求去重、隐藏重试载荷与清理时机控制。当前握手按协议 major 校验，未以产品版本号取消旧客户端支持；不能仅删除旧 renderer 后就移除整个 pending 生命周期。
+
+## 验证入口
 
 运行 `bun run verify:session-foundation`。每个流程使用隔离配置与工作区，在 `.cache/verification/` 输出独立目录、结构化结果和包含源码身份及文件哈希的 manifest。真实 provider、Office 视觉渲染等未验证范围在各 manifest 中明确记录。

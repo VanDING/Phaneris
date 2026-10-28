@@ -1,5 +1,5 @@
 import type { DurableModelOutcomeRequest, RuntimeEvent } from '@phaneris/shared/durable-runtime'
-import type { RuntimeUsageRow } from './store.js'
+import type { RuntimeUsageRow } from '../../packages/server-core/src/durable-runtime/store.js'
 
 /** Persistence parity only; neither SDK session totals nor provider billing reconciliation. */
 export function auditModelUsage(events: RuntimeEvent[], rows: RuntimeUsageRow[]) {

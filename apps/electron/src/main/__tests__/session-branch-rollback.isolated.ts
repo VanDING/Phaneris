@@ -164,7 +164,6 @@ mock.module('@phaneris/shared/agent/backend', () => ({
     throw new Error('not used in this test')
   },
   cleanupSourceRuntimeArtifacts: async () => {},
-  providerTypeToAgentProvider: () => 'pi',
   fetchBackendModels: async () => ({ models: [] }),
   initializeBackendHostRuntime: () => {},
   resolveBackendHostTooling: () => ({

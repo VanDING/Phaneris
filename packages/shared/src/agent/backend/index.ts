@@ -53,8 +53,6 @@ export { AbortReason } from './types.ts';
 export {
   createBackend,
   createAgent,
-  getAvailableProviders,
-  isProviderAvailable,
   // LLM Connection support
   normalizeBackendAuthType,
   resolveSessionConnection,
@@ -68,11 +66,8 @@ export {
   resolveBackendHostTooling,
   fetchBackendModels,
   validateStoredBackendConnection,
-  providerTypeToAgentProvider,
   // Capabilities and utilities
-  BACKEND_CAPABILITIES,
-  resolveModelForProvider,
-  getDefaultAuthType,
+  resolveConnectionModel,
   cleanupSourceRuntimeArtifacts,
   testBackendConnection,
   // Connection validation

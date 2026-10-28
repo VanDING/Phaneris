@@ -176,9 +176,6 @@ export { getBundledDocs };
 // Re-export source guides utilities (parsing only - bundled guides removed)
 export {
   parseSourceGuide,
-  getSourceGuide,
-  getSourceGuideForDomain,
-  getSourceKnowledge,
   extractDomainFromSource,
   extractDomainFromUrl,
   type ParsedSourceGuide,

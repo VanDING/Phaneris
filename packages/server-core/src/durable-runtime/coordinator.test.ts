@@ -6,7 +6,7 @@ import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { DurableRuntimeCoordinator } from './coordinator.js'
-import { auditModelUsage } from './model-usage-audit.js'
+import { auditModelUsage } from '../../../../scripts/verification/model-usage-audit.js'
 
 const roots: string[] = []
 afterEach(() => {
@@ -48,8 +48,8 @@ describe('DurableRuntimeCoordinator', () => {
     expect(record.modelVisible).toBe(false)
     expect(record.payload).toMatchObject({
       sdkSessionId: 'pi-session', data: { authorization: '[REDACTED]' },
-      modelUsageAudit: { scope: 'model_outcomes_vs_usage_ledger', issueCount: 0 },
     })
+    expect(record.payload).not.toHaveProperty('modelUsageAudit')
     expect(() => boundary.recordObservation!({ ...observation, sessionId: 'other' })).toThrow('owning active run')
     expect(store.listEvents({ operationId: 'unrelated' })).toHaveLength(0)
     coordinator.closeAll()

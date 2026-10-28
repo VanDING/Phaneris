@@ -17,7 +17,6 @@ import type {
   AgentBackend,
   BackendConfig,
   AgentProvider,
-  LlmProviderType,
   LlmAuthType,
   CoreBackendConfig,
   BackendHostRuntimeContext,
@@ -32,7 +31,7 @@ import {
 import { parseValidationError, type LlmValidationResult } from '../../config/llm-validation.ts';
 import type { ModelFetchResult } from '../../config/model-fetcher.ts';
 // Model resolution utilities
-import { getModelProvider, normalizeDeprecatedModelId } from '../../config/models.ts';
+import { normalizeDeprecatedModelId } from '../../config/models.ts';
 import { homedir } from 'node:os';
 import { rm } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -41,7 +40,6 @@ import type {
   BackendModelFetchCredentials,
   BackendProviderOptions,
   BackendResolutionContext,
-  ProviderDriver,
   ResolvedBackendConfig,
   StoredConnectionValidationResult,
 } from './internal/driver-types.ts';
@@ -49,25 +47,6 @@ import { getDefaultProviderType } from './internal/driver-types.ts';
 import { resolveBackendRuntimePaths, resolveBackendHostTooling as resolveHostToolingPaths } from './internal/runtime-resolver.ts';
 import { piDriver } from './internal/drivers/pi.ts';
 import { PiAgent } from '../pi-agent.ts';
-const DRIVER_REGISTRY: Record<AgentProvider, ProviderDriver> = { pi: piDriver };
-
-function getProviderDriver(provider: AgentProvider): ProviderDriver {
-  const driver = DRIVER_REGISTRY[provider];
-  if (!driver) {
-    throw new Error(`No backend driver registered for provider: ${provider}`);
-  }
-  return driver;
-}
-
-function resolveDriverRuntime(
-  provider: AgentProvider,
-  hostRuntime: BackendHostRuntimeContext,
-) {
-  const driver = getProviderDriver(provider);
-  const resolvedPaths = resolveBackendRuntimePaths(hostRuntime);
-  return { driver, resolvedPaths };
-}
-
 /**
  * Create the appropriate backend based on configuration.
  *
@@ -97,7 +76,7 @@ export const createAgent = createBackend;
 
 /**
  * Create backend from a pre-resolved context and provider-agnostic core config.
- * Provider-specific runtime resolution happens via internal driver registry.
+ * Pi runtime resolution stays behind the concrete driver boundary.
  */
 export function createBackendFromResolvedContext(args: {
   context: ResolvedBackendContext;
@@ -106,7 +85,7 @@ export function createBackendFromResolvedContext(args: {
   providerOptions?: BackendProviderOptions;
 }): AgentBackend {
   const { context, coreConfig, hostRuntime, providerOptions } = args;
-  const { driver, resolvedPaths } = resolveDriverRuntime(context.provider, hostRuntime);
+  const resolvedPaths = resolveBackendRuntimePaths(hostRuntime);
 
   const buildArgs = {
     context,
@@ -116,14 +95,14 @@ export function createBackendFromResolvedContext(args: {
     providerOptions,
   };
 
-  driver.prepareRuntime?.(buildArgs);
-  const runtime = driver.buildRuntime(buildArgs);
+  piDriver.prepareRuntime?.(buildArgs);
+  const runtime = piDriver.buildRuntime(buildArgs);
 
   const config: ResolvedBackendConfig = {
     ...coreConfig,
     provider: context.provider,
     providerType: context.connection?.providerType ?? getDefaultProviderType(context.provider),
-    authType: context.authType || getDefaultAuthType(context.provider),
+    authType: context.authType || 'api_key',
     model: context.resolvedModel,
     connectionSlug: context.connection?.slug,
     runtime,
@@ -141,10 +120,7 @@ export function initializeBackendHostRuntime(args: {
 }): void {
   const { hostRuntime } = args;
 
-  for (const provider of getAvailableProviders()) {
-    const { driver, resolvedPaths } = resolveDriverRuntime(provider, hostRuntime);
-    driver.initializeHostRuntime?.({ hostRuntime, resolvedPaths });
-  }
+  piDriver.initializeHostRuntime?.({ hostRuntime, resolvedPaths: resolveBackendRuntimePaths(hostRuntime) });
 }
 
 /**
@@ -156,41 +132,6 @@ export function resolveBackendHostTooling(args: {
   ripgrepPath?: string;
 } {
   return resolveHostToolingPaths(args.hostRuntime);
-}
-
-/**
- * Get list of currently available providers.
- *
- * @returns Array of provider identifiers that have working implementations
- */
-export function getAvailableProviders(): AgentProvider[] {
-  return ['pi'];
-}
-
-/**
- * Check if a provider is available for use.
- *
- * @param provider - Provider to check
- * @returns true if the provider has a working implementation
- */
-export function isProviderAvailable(provider: AgentProvider): boolean {
-  return getAvailableProviders().includes(provider);
-}
-
-// ============================================================
-// LLM Connection Support
-// ============================================================
-
-/**
- * Map LlmProviderType to AgentProvider (SDK selection).
- *
- * All provider types resolve to 'pi'.
- *
- * @param providerType - The full provider type from LLM connection
- * @returns The agent provider for SDK selection
- */
-export function providerTypeToAgentProvider(providerType: LlmProviderType): AgentProvider {
-  return 'pi';
 }
 
 /**
@@ -265,22 +206,20 @@ export function resolveBackendContext(args: {
     args.workspaceDefaultConnectionSlug
   );
 
-  const provider = connection
-    ? providerTypeToAgentProvider(connection.providerType || 'pi')
-    : 'pi';
+  const provider = 'pi';
 
   const authType = connection
     ? normalizeBackendAuthType(connection.authType)
     : undefined;
 
-  const resolvedModel = resolveModelForProvider(provider, args.managedModel, connection);
+  const resolvedModel = resolveConnectionModel(args.managedModel, connection);
 
   return {
     connection,
     provider,
     authType,
     resolvedModel,
-    capabilities: BACKEND_CAPABILITIES[provider],
+    capabilities: PI_BACKEND_CAPABILITIES,
   };
 }
 
@@ -322,20 +261,19 @@ export async function fetchBackendModels(args: {
   hostRuntime: BackendHostRuntimeContext;
   timeoutMs?: number;
 }): Promise<ModelFetchResult> {
-  const provider = providerTypeToAgentProvider(args.connection.providerType);
-  const { driver, resolvedPaths } = resolveDriverRuntime(provider, args.hostRuntime);
+  const resolvedPaths = resolveBackendRuntimePaths(args.hostRuntime);
   const timeoutMs = args.timeoutMs ?? 30_000;
 
-  driver.initializeHostRuntime?.({
+  piDriver.initializeHostRuntime?.({
     hostRuntime: args.hostRuntime,
     resolvedPaths,
   });
 
-  if (!driver.fetchModels) {
-    throw new Error(`Model discovery not implemented for provider: ${provider}`);
+  if (!piDriver.fetchModels) {
+    throw new Error(`Model discovery not implemented for provider: pi`);
   }
 
-  return driver.fetchModels({
+  return piDriver.fetchModels({
     connection: args.connection,
     credentials: args.credentials,
     hostRuntime: args.hostRuntime,
@@ -369,19 +307,18 @@ export async function validateStoredBackendConnection(args: {
       return { success: false, error: 'No credentials configured' };
     }
 
-    const provider = providerTypeToAgentProvider(connection.providerType);
-    const { driver, resolvedPaths } = resolveDriverRuntime(provider, args.hostRuntime);
+    const resolvedPaths = resolveBackendRuntimePaths(args.hostRuntime);
 
-    driver.initializeHostRuntime?.({
+    piDriver.initializeHostRuntime?.({
       hostRuntime: args.hostRuntime,
       resolvedPaths,
     });
 
-    if (!driver.validateStoredConnection) {
+    if (!piDriver.validateStoredConnection) {
       return { success: true };
     }
 
-    return driver.validateStoredConnection({
+    return piDriver.validateStoredConnection({
       slug: args.slug,
       connection,
       credentialManager,
@@ -407,7 +344,7 @@ export function createConfigFromConnection(
 ): BackendConfig {
   // providerType wins; fall back to 'pi' for the Pi-only backend
   const providerType = connection.providerType ?? 'pi';
-  const provider = providerTypeToAgentProvider(providerType);
+  const provider = 'pi';
 
   return {
     ...baseConfig,
@@ -451,14 +388,13 @@ export function createBackendFromConnection(
 
   const context: ResolvedBackendContext = {
     connection,
-    provider: providerTypeToAgentProvider(connection.providerType || 'pi'),
+    provider: 'pi',
     authType: normalizeBackendAuthType(connection.authType),
-    resolvedModel: resolveModelForProvider(
-      providerTypeToAgentProvider(connection.providerType || 'pi'),
+    resolvedModel: resolveConnectionModel(
       baseConfig.model,
       connection
     ),
-    capabilities: BACKEND_CAPABILITIES[providerTypeToAgentProvider(connection.providerType || 'pi')],
+    capabilities: PI_BACKEND_CAPABILITIES,
   };
 
   if (hostRuntime) {
@@ -485,64 +421,33 @@ export function createBackendFromConnection(
  * Declarative capabilities for each backend provider.
  * Used by the session layer to make decisions without checking provider strings.
  */
-export const BACKEND_CAPABILITIES: Record<AgentProvider, {
-  /** Whether the backend needs an HTTP pool server (external subprocess can't access McpClientPool directly) */
-  needsHttpPoolServer: boolean;
-}> = {
-  pi: { needsHttpPoolServer: false },
-};
-
-// ============================================================
-// Auth Type Resolution
-// ============================================================
-
-/**
- * Get the default auth type for a provider when none is explicitly specified.
- *
- * - pi: 'api_key'
- */
-export function getDefaultAuthType(provider: AgentProvider): LlmAuthType | undefined {
-  switch (provider) {
-    case 'pi':        return 'api_key';
-    default:          return undefined;
-  }
-}
+const PI_BACKEND_CAPABILITIES = { needsHttpPoolServer: false };
 
 // ============================================================
 // Model Resolution
 // ============================================================
 
 /**
- * Resolve the model ID for a given provider, validating against the connection's model list.
+ * Resolve a model ID against the connection's model list.
  *
  * Each provider has different defaults and validation:
  * - Pi: falls back to empty string (Pi selects model internally)
  *
- * @param provider - The agent provider
  * @param managedModel - The model selected by managed model config (if any)
  * @param connection - The LLM connection (may be null)
  * @returns The resolved model ID string
  */
-export function resolveModelForProvider(
-  provider: AgentProvider,
+export function resolveConnectionModel(
   managedModel: string | undefined,
   connection: LlmConnection | null
 ): string {
-  // Cross-provider guard: if the model belongs to a different provider, fall back
-  // to the connection's default. This prevents e.g. sending a Claude model to Pi.
-  if (managedModel) {
-    managedModel = normalizeDeprecatedModelId(managedModel);
-    const modelProvider = getModelProvider(managedModel);
-    if (modelProvider && modelProvider !== provider) {
-      managedModel = undefined; // Clear — will fall through to connection default
-    }
-  }
+  if (managedModel) managedModel = normalizeDeprecatedModelId(managedModel);
 
   let connectionDefault = connection?.defaultModel
     ? normalizeDeprecatedModelId(connection.defaultModel)
     : undefined;
 
-  if (provider === 'pi' && connection?.models?.length) {
+  if (connection?.models?.length) {
     const connectionModelIds = connection.models.map(m => typeof m === 'string' ? m : m.id);
     if (managedModel && !connectionModelIds.includes(managedModel)) {
       managedModel = undefined;
@@ -625,12 +530,12 @@ export async function testBackendConnection(args: {
       provider: args.provider,
       authType,
       resolvedModel: testModel,
-      capabilities: BACKEND_CAPABILITIES[args.provider],
+      capabilities: PI_BACKEND_CAPABILITIES,
     };
 
-    const { driver, resolvedPaths } = resolveDriverRuntime(args.provider, args.hostRuntime);
-    if (driver.testConnection) {
-      const driverResult = await driver.testConnection({
+    const resolvedPaths = resolveBackendRuntimePaths(args.hostRuntime);
+    if (piDriver.testConnection) {
+      const driverResult = await piDriver.testConnection({
         provider: args.provider,
         apiKey: trimmedKey,
         model: testModel,

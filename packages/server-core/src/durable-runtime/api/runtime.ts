@@ -1,6 +1,5 @@
 import type { RuntimeEvent, DurableToolPrepareRequest, DurableToolOutcomeRequest, DurableModelPrepareRequest, DurableModelOutcomeRequest } from '@phaneris/shared/durable-runtime'
 import { DurableRuntimeCoordinator } from '../coordinator.js'
-import type { ProjectionParityObservation } from '../store.js'
 import { RuntimeHost } from '../execution/host.js'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
@@ -111,7 +110,6 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
     queryAndReconcileTool: bind('queryAndReconcileTool'), registerReconciliationAdapter: bind('registerReconciliationAdapter'),
     decisionRecordingSince: guarded((workspace: string, since: number) => kernel.storeFor(workspace).decisionRecordingSince(since)),
     deleteDecisionEvidence: guarded((workspace: string, sessionId: string) => kernel.storeFor(workspace).deleteDecisionEvidence(sessionId)),
-    recordProjectionParity: guarded((workspace: string, observation: ProjectionParityObservation) => kernel.storeFor(workspace).recordProjectionParity(observation)),
     // Extension facts cannot synthesize dispatch, outcome, usage or terminal evidence.
     appendExternalFacts: guarded((workspace: string, events: RuntimeEvent[]) => {
       for (const event of events) {
