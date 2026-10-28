@@ -1,8 +1,7 @@
 import type { RuntimeEvent, DurableToolPrepareRequest, DurableToolOutcomeRequest, DurableModelPrepareRequest, DurableModelOutcomeRequest } from '@phaneris/shared/durable-runtime'
 import { DurableRuntimeCoordinator } from '../coordinator.js'
 import { RuntimeHost } from '../execution/host.js'
-import { existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { maintainDailyBackups } from '../daily-backups.js'
 import { withinDeadline } from '../execution/deadline.js'
 import { RuntimeReceiptJournal } from '../receipt-journal.js'
 import { RuntimeDatabaseError } from '../store.js'
@@ -125,10 +124,7 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
   })
   const execution = new RuntimeHost(commands, queries, effects, deadlineMs)
   const maintain = (workspace: string) => {
-    const day = new Date().toISOString().slice(0, 10)
-    const backup = join(workspace, 'runtime', 'backups', `runtime-${day}.db`)
-    const fresh = !existsSync(backup)
-    if (fresh) kernel.backupDatabase(workspace, backup)
+    const fresh = maintainDailyBackups(workspace, destination => { kernel.backupDatabase(workspace, destination) })
     kernel.maintainDatabase(workspace, { projectionRetentionMs: 30 * 24 * 60 * 60 * 1000, vacuum: fresh && new Date().getUTCDay() === 0 })
   }
   const admin = Object.freeze({

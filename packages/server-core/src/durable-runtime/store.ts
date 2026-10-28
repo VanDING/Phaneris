@@ -1,4 +1,5 @@
-import { existsSync, mkdirSync } from 'node:fs'
+import { existsSync, mkdirSync, linkSync, unlinkSync } from 'node:fs'
+import { randomUUID } from 'node:crypto'
 import { dirname, join, resolve } from 'node:path'
 import {
   resolveToolRecovery,
@@ -232,13 +233,19 @@ export class DurableRuntimeStore {
     if (destination === resolve(this.databasePath)) throw new Error('Runtime database backup destination must differ from the source')
     if (existsSync(destination)) throw new Error(`Runtime database backup already exists: ${destination}`)
     mkdirSync(dirname(destination), { recursive: true, mode: 0o700 })
-    const sqlPath = destination.replaceAll("'", "''")
+    const staged = `${destination}.${randomUUID()}.tmp`
+    const sqlPath = staged.replaceAll("'", "''")
     try {
       this.db.exec('PRAGMA wal_checkpoint(FULL)')
       this.db.exec(`VACUUM INTO '${sqlPath}'`)
+      // Same-directory hard-link publication is atomic and refuses an existing
+      // destination, including a snapshot concurrently published by another host.
+      linkSync(staged, destination)
       return destination
     } catch (error) {
       throw new RuntimeDatabaseError(classifyRuntimeDatabaseFailure(error), 'backup', error)
+    } finally {
+      if (existsSync(staged)) unlinkSync(staged)
     }
   }
 
