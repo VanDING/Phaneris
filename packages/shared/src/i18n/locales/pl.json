@@ -1536,6 +1536,7 @@
   "settings.ai.decisions.apiKey": "Klucz API",
   "settings.ai.decisions.apiKeyDesc": "Klucz uzyskasz pod adresem {{url}}. Przechowywany w zaszyfrowanym lokalnym magazynie poświadczeń.",
   "settings.ai.decisions.apiKeyDescGeneric": "Przechowywany w zaszyfrowanym lokalnym magazynie poświadczeń.",
+  "settings.ai.decisions.apiKeyOptional": "Klucz API (opcjonalnie)",
   "settings.ai.decisions.apiKeySaved": "Dla tego dostawcy zapisano klucz.",
   "settings.ai.decisions.baseUrl": "Bazowy URL",
   "settings.ai.decisions.baseUrlDesc": "Twój serwer zgodny z Jev. /v1/systemone jest dodawane automatycznie.",

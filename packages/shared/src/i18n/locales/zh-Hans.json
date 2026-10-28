@@ -1536,6 +1536,7 @@
   "settings.ai.decisions.apiKey": "API 密钥",
   "settings.ai.decisions.apiKeyDesc": "在 {{url}} 获取密钥。加密保存在本地凭据库中。",
   "settings.ai.decisions.apiKeyDescGeneric": "加密保存在本地凭据库中。",
+  "settings.ai.decisions.apiKeyOptional": "API 密钥（可选）",
   "settings.ai.decisions.apiKeySaved": "此提供商已保存密钥。",
   "settings.ai.decisions.baseUrl": "基础 URL",
   "settings.ai.decisions.baseUrlDesc": "你自己的 Jev 兼容服务器。会自动追加 /v1/systemone。",

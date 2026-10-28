@@ -1536,6 +1536,7 @@
   "settings.ai.decisions.apiKey": "Clave de API",
   "settings.ai.decisions.apiKeyDesc": "Obtén una clave en {{url}}. Se guarda cifrada en el almacén local de credenciales.",
   "settings.ai.decisions.apiKeyDescGeneric": "Se guarda cifrada en el almacén local de credenciales.",
+  "settings.ai.decisions.apiKeyOptional": "Clave de API (opcional)",
   "settings.ai.decisions.apiKeySaved": "Hay una clave guardada para este proveedor.",
   "settings.ai.decisions.baseUrl": "URL base",
   "settings.ai.decisions.baseUrlDesc": "Tu servidor compatible con Jev. /v1/systemone se añade automáticamente.",

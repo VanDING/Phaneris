@@ -1536,6 +1536,7 @@
   "settings.ai.decisions.apiKey": "API-kulcs",
   "settings.ai.decisions.apiKeyDesc": "Kulcsot itt kérhetsz: {{url}}. Titkosítva tároljuk a helyi hitelesítőadat-tárban.",
   "settings.ai.decisions.apiKeyDescGeneric": "Titkosítva tároljuk a helyi hitelesítőadat-tárban.",
+  "settings.ai.decisions.apiKeyOptional": "API-kulcs (nem kötelező)",
   "settings.ai.decisions.apiKeySaved": "Ehhez a szolgáltatóhoz már van mentett kulcs.",
   "settings.ai.decisions.baseUrl": "Alap URL",
   "settings.ai.decisions.baseUrlDesc": "A saját Jev-kompatibilis szervered. A /v1/systemone automatikusan hozzáadódik.",

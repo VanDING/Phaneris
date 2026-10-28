@@ -784,9 +784,12 @@ export default function AiSettingsPage() {
     ]
   }, [decisionStatus, t])
   const decisionHasStoredKey = !!decisionStatus && decisionStatus.providersWithKey.includes(decisionStatus.settings.provider)
+  const decisionApiKeyLabel = decisionPreset?.requiresKey === false
+    ? t("settings.ai.decisions.apiKeyOptional")
+    : t("settings.ai.decisions.apiKey")
   const decisionKeyHelpUrl = decisionPreset?.dashboardUrl ?? decisionPreset?.docsUrl
   const decisionUsesConnection = !!decisionStatus?.settings.connectionSlug
-  // Local presets (Laya, custom) expose the base URL and a server probe instead of a key hint.
+  // Local presets (Laya, custom) expose the base URL and a probe alongside optional authentication.
   const decisionUsesLocalProvider = !!decisionPreset?.local && !decisionUsesConnection
   const decisionUsesCustomProvider = decisionStatus?.settings.provider === 'custom' && !decisionUsesConnection
 
@@ -1044,10 +1047,10 @@ export default function AiSettingsPage() {
                         <code className="font-mono text-meta text-text-secondary select-all">{decisionPreset.installHint}</code>
                       </p>
                     )}
-                    {!decisionUsesConnection && decisionPreset?.requiresKey !== false && (
+                    {!decisionUsesConnection && (
                       decisionHasStoredKey ? (
                         <SettingsRow
-                          label={t("settings.ai.decisions.apiKey")}
+                          label={decisionApiKeyLabel}
                           description={t("settings.ai.decisions.apiKeySaved")}
                         >
                           <Button
@@ -1062,8 +1065,8 @@ export default function AiSettingsPage() {
                         <SettingsInput
                           inCard
                           type="password"
-                          label={t("settings.ai.decisions.apiKey")}
-                          description={decisionKeyHelpUrl
+                          label={decisionApiKeyLabel}
+                          description={decisionKeyHelpUrl && decisionPreset?.requiresKey !== false
                             ? t("settings.ai.decisions.apiKeyDesc", { url: decisionKeyHelpUrl })
                             : t("settings.ai.decisions.apiKeyDescGeneric")}
                           value={decisionKeyDraft}

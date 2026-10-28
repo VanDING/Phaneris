@@ -1536,6 +1536,7 @@
   "settings.ai.decisions.apiKey": "API キー",
   "settings.ai.decisions.apiKeyDesc": "キーは {{url}} で取得できます。ローカルの資格情報ストアに暗号化して保存されます。",
   "settings.ai.decisions.apiKeyDescGeneric": "ローカルの資格情報ストアに暗号化して保存されます。",
+  "settings.ai.decisions.apiKeyOptional": "API キー（任意）",
   "settings.ai.decisions.apiKeySaved": "このプロバイダーのキーは保存済みです。",
   "settings.ai.decisions.baseUrl": "ベース URL",
   "settings.ai.decisions.baseUrlDesc": "Jev 互換の自前サーバー。/v1/systemone は自動的に付加されます。",

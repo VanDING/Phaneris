@@ -1536,6 +1536,7 @@
   "settings.ai.decisions.apiKey": "API key",
   "settings.ai.decisions.apiKeyDesc": "Get a key at {{url}}. Stored encrypted in the local credential vault.",
   "settings.ai.decisions.apiKeyDescGeneric": "Stored encrypted in the local credential vault.",
+  "settings.ai.decisions.apiKeyOptional": "API key (optional)",
   "settings.ai.decisions.apiKeySaved": "A key is stored for this provider.",
   "settings.ai.decisions.baseUrl": "Base URL",
   "settings.ai.decisions.baseUrlDesc": "Your Jev-compatible server. /v1/systemone is appended automatically.",

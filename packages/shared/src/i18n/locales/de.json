@@ -1536,6 +1536,7 @@
   "settings.ai.decisions.apiKey": "API-Schlüssel",
   "settings.ai.decisions.apiKeyDesc": "Schlüssel erhältst du unter {{url}}. Wird verschlüsselt im lokalen Schlüsselspeicher abgelegt.",
   "settings.ai.decisions.apiKeyDescGeneric": "Wird verschlüsselt im lokalen Schlüsselspeicher abgelegt.",
+  "settings.ai.decisions.apiKeyOptional": "API-Schlüssel (optional)",
   "settings.ai.decisions.apiKeySaved": "Für diesen Anbieter ist ein Schlüssel gespeichert.",
   "settings.ai.decisions.baseUrl": "Basis-URL",
   "settings.ai.decisions.baseUrlDesc": "Dein Jev-kompatibler Server. /v1/systemone wird automatisch angehängt.",
