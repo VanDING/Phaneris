@@ -83,13 +83,13 @@ describe('custom endpoint provider icons', () => {
     )).toBe(providerIcons.deepseek)
   })
 
-  it('infers a known model vendor when the custom endpoint domain is neutral', () => {
+  it('keeps an unknown gateway independent of the model vendor', () => {
     expect(getProviderIcon(
       'pi_compat',
       'https://llm.example.com/v1',
       'openai',
       'deepseek-reasoner',
-    )).toBe(providerIcons.deepseek)
+    )).toBeNull()
   })
 
   it('uses the neutral fallback for an unknown custom endpoint', () => {
@@ -114,6 +114,6 @@ describe('custom endpoint provider icons', () => {
       'https://llm.example.com/v1',
       'openai',
       'grok-4',
-    )).toBe(providerIcons.xai)
+    )).toBeNull()
   })
 })

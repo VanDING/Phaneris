@@ -52,7 +52,7 @@ describe('custom endpoint model discovery', () => {
     expect(model).toMatchObject({
       id: 'gpt-test',
       contextWindow: 400_000,
-      maxTokens: 64_000,
+      maxTokens: 16_384,
       supportsThinking: true,
       supportedThinkingLevels: ['off', 'low', 'xhigh'],
       thinkingLevelMap: { xhigh: 'xhigh' },

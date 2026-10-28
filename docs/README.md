@@ -24,6 +24,8 @@ Session 基础架构收敛：[存储与生命周期契约](architecture/session-
 
 启动与会话稳定性：[2026-10-28 调查与修复记录](verification/startup-and-session-stability-investigation-2026-10-28.md) — 已完成 UUID 能力兼容、子框架加载隔离和中断工具消息配对的三处最小修复；历史白屏归因与未验证边界见记录。
 
+API 接入与 AI 设置：[2026-10-28 修订与验收](verification/api-connection-setup.md) — 接入动画、模型自动发现、辅助模型、连接图标、百分比压缩阈值、图像兼容端点与输出预算。
+
 Run 上下文与图表：[2026-10-26 失败矩阵](verification/run-context-accounting-failure-matrix-2026-10-26.md)、[配色与少请求图表评审](prototypes/run-colors-2026-10-26/README.md) — 保留已确认方案与回归口径。
 
 Default 主题收敛：[2026-10-23 修复与验证](verification/default-theme-refinement-2026-10-23.md) — 仅保留 Default，统一派生算法、颜色职责与启动/运行时契约；旧配置保留模式和字体，用户主题文件不删除。

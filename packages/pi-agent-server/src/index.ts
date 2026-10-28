@@ -75,6 +75,7 @@ import { registerPiSdkRuntime } from './sdk-registration.ts';
 import type { StreamFn } from '@earendil-works/pi-agent-core';
 import { wrapDurableModelStream } from './durable-model-stream.ts';
 import { installCacheWarmingAccounting } from './cache-warming-accounting.ts';
+import { withCustomEndpointOutputPolicy } from './custom-endpoint-output-policy.ts';
 import { streamSimple } from '@earendil-works/pi-ai/compat';
 
 /**
@@ -85,7 +86,7 @@ import { streamSimple } from '@earendil-works/pi-ai/compat';
 let piCacheRetention: CacheRetention = 'short';
 
 function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (() => 'compaction' | undefined)): StreamFn {
-  return wrapDurableModelStream(stream, async (model, context, requestObservation) => {
+  return withCustomEndpointOutputPolicy(wrapDurableModelStream(stream, async (model, context, requestObservation) => {
     const purpose = typeof purposeInput === 'function' ? purposeInput() : purposeInput;
     const contextScope = initConfig ? JSON.stringify([initConfig.workspaceRootPath, initConfig.sessionId]) : undefined;
     const requestSeq = ++promptSnapshotSeq;
@@ -120,7 +121,7 @@ function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (
       });
       if (!purpose) rememberDurableToolBatch(message, prepared.operationId, capacity);
     };
-  }, () => piCacheRetention);
+  }, () => piCacheRetention));
 }
 
 registerPiSdkRuntime(withDurableAccounting(streamSimple));

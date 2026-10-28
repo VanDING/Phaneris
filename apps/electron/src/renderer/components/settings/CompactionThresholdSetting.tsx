@@ -1,43 +1,48 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SettingsInput } from './SettingsInput'
+import type { CompactionThreshold } from '@phaneris/shared/agent/compaction-threshold'
+import { SettingsMenuSelectRow } from './SettingsMenuSelect'
 import { Button } from '@/components/ui/button'
 
-/** Blank retains the SDK default; changes apply at the next request. */
+/** Percentages follow the active model; legacy token limits remain readable. */
 export function CompactionThresholdSetting({ disabled = false }: { disabled?: boolean }) {
   const { t } = useTranslation()
-  const [draft, setDraft] = useState('')
-  const [saved, setSaved] = useState<number | null>(null)
+  const [saved, setSaved] = useState<CompactionThreshold>(null)
   const [loaded, setLoaded] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<'invalid' | 'load' | 'save' | null>(null)
+  const [error, setError] = useState<'load' | 'save' | null>(null)
   const [loadAttempt, setLoadAttempt] = useState(0)
   const pending = useRef(false)
   useEffect(() => {
     let cancelled = false
-    void Promise.resolve().then(() => window.electronAPI.getCompactionThreshold()).then(value => {
-      if (cancelled) return
-      setSaved(value); setDraft(value === null ? '' : String(value)); setLoaded(true)
+    window.electronAPI.getCompactionThreshold().then(value => {
+      if (!cancelled) { setSaved(value); setLoaded(true) }
     }).catch(() => { if (!cancelled) setError('load') })
     return () => { cancelled = true }
   }, [loadAttempt])
-  const commit = async () => {
-    if (!loaded || pending.current || disabled) return
-    const text = draft.trim(), value = text ? Number(text) : null
-    if (value !== null && (!/^\d+$/.test(text) || !Number.isSafeInteger(value) || value < 4096)) { setError('invalid'); return }
-    if (value === saved) { setError(null); return }
+  const value = saved === null ? 'default' : typeof saved === 'number' ? 'legacy' : String(saved.percent)
+  const percentages = [50, 60, 70, 75, 80, 85, 90, 95]
+  if (saved && typeof saved !== 'number' && !percentages.includes(saved.percent)) percentages.push(saved.percent)
+  const commit = async (selection: string) => {
+    if (!loaded || pending.current || disabled || selection === 'legacy') return
+    const threshold = selection === 'default' ? null : { percent: Number(selection) }
     pending.current = true; setSaving(true); setError(null)
-    try {
-      await window.electronAPI.setCompactionThreshold(value)
-      setSaved(value); setDraft(value === null ? '' : String(value))
-    } catch { setError('save') }
-    finally { pending.current = false; setSaving(false) }
+    await window.electronAPI.setCompactionThreshold(threshold).then(() => setSaved(threshold))
+      .catch(() => setError('save'))
+    pending.current = false; setSaving(false)
   }
-  return <SettingsInput inCard id="compaction-threshold-input" label={t('settings.ai.context.threshold')}
-    description={t('settings.ai.context.thresholdDesc')} value={draft}
-    onChange={value => { setDraft(value); setError(null) }} onBlur={() => void commit()}
-    onKeyDown={event => { if (event.key === 'Enter' && event.currentTarget instanceof HTMLElement) event.currentTarget.blur() }}
-    placeholder={t('settings.ai.context.thresholdDefault')} disabled={disabled || !loaded || saving}
-    action={error === 'load' ? <Button variant="ghost" size="sm" onClick={() => { setError(null); setLoadAttempt(value => value + 1) }}>{t('common.retry')}</Button> : undefined}
-    error={error === 'invalid' ? t('settings.ai.context.thresholdInvalid') : error === 'load' ? t('settings.ai.context.thresholdLoadFailed') : error === 'save' ? t('settings.ai.context.thresholdSaveFailed') : undefined} />
+  return <>
+    <SettingsMenuSelectRow id="compaction-threshold-select" label={t('settings.ai.context.threshold')}
+      description={t('settings.ai.context.thresholdDesc')} value={value}
+      onValueChange={selection => void commit(selection)} disabled={disabled || !loaded || saving}
+      options={[
+        { value: 'default', label: t('settings.ai.context.thresholdDefault') },
+        ...percentages.sort((a, b) => a - b).map(percent => ({ value: String(percent), label: `${percent}%` })),
+        ...(typeof saved === 'number' ? [{ value: 'legacy', label: t('settings.ai.context.thresholdLegacy', { tokens: saved }) }] : []),
+      ]} />
+    {error && <div role="alert" className="px-4 pb-4 text-meta text-destructive">
+      {t(error === 'load' ? 'settings.ai.context.thresholdLoadFailed' : 'settings.ai.context.thresholdSaveFailed')}
+      {error === 'load' && <Button variant="ghost" size="sm" onClick={() => { setError(null); setLoadAttempt(attempt => attempt + 1) }}>{t('common.retry')}</Button>}
+    </div>}
+  </>
 }

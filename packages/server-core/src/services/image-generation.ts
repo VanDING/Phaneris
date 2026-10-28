@@ -51,7 +51,7 @@ export interface OpenAIImageProviderConfig {
 }
 
 export interface ImageProviderConfig extends OpenAIImageProviderConfig {
-  provider: 'openai' | 'openrouter';
+  provider: 'openai' | 'openrouter' | 'openai-compatible';
 }
 
 export interface ImageApiClient {
@@ -75,13 +75,17 @@ function createClient(config: OpenAIImageProviderConfig): ImageApiClient {
 }
 
 export function getDefaultImageModel(connection: LlmConnection): string {
+  if (connection.providerType === 'pi_compat') return '';
   return connection.piAuthProvider === 'openrouter' ? 'google/gemini-2.5-flash-image' : DEFAULT_IMAGE_GENERATION_MODEL;
 }
 
 export async function getImageModels(connection: LlmConnection): Promise<Array<{ id: string; name: string }>> {
+  // Chat catalog entries do not prove image output capability. Custom image
+  // models are selected explicitly in settings or in the tool call.
+  if (connection.providerType === 'pi_compat') return [];
   if (connection.piAuthProvider === 'openai') return [
     { id: 'gpt-image-2', name: 'GPT Image 2' }, { id: 'gpt-image-1.5', name: 'GPT Image 1.5' },
-    { id: 'gpt-image-1', name: 'GPT Image 1' }, { id: 'gpt-image-1-mini', name: 'GPT Image 1 Mini' },
+    { id: 'gpt-image-1-mini', name: 'GPT Image 1 Mini' },
   ];
   const { getBuiltinImageModels } = await import('@earendil-works/pi-ai/providers/all');
   return getBuiltinImageModels('openrouter').map(model => ({ id: model.id, name: model.name }));
@@ -103,6 +107,7 @@ export async function resolveConfiguredImageGeneration(input: ImageResolutionOpt
   const selected = await resolveImageGenerationConnection({ ...input, explicitSlug: explicitSlug || settings.connectionSlug });
   // A one-off account override also uses that account's model default.
   const model = input.model?.trim() || (!explicitSlug || explicitSlug === settings.connectionSlug ? settings.model : undefined) || getDefaultImageModel(selected.connection);
+  if (!model) throw new Error('Choose an image model ID for the OpenAI-compatible Images API in AI Settings.');
   return { ...selected, model };
 }
 
@@ -111,7 +116,7 @@ export async function getImageGenerationStatus(input: Partial<Pick<ImageResoluti
   const getApiKey = input.getApiKey ?? (slug => getCredentialManager().getLlmApiKey(slug));
   const status: ImageGenerationStatus = { settings, connections: [] };
   for (const connection of connections.filter(supportsNativeImageGeneration)) {
-    status.connections.push({ slug: connection.slug, name: connection.name, provider: connection.piAuthProvider as 'openai' | 'openrouter',
+    status.connections.push({ slug: connection.slug, name: connection.name, provider: connection.providerType === 'pi_compat' ? 'openai-compatible' : connection.piAuthProvider as 'openai' | 'openrouter',
       available: !!await getApiKey(connection.slug), models: await getImageModels(connection) });
   }
   try {
@@ -145,11 +150,14 @@ export async function resolveImageGenerationConnection(input: {
 
   for (const connection of candidates) {
     if (!supportsNativeImageGeneration(connection)) continue;
+    // Unknown gateways are opt-in. Automatic selection must not send a paid
+    // image request to an arbitrary chat-compatible endpoint.
+    if (!explicitSlug && connection.providerType === 'pi_compat') continue;
     const apiKey = await input.getApiKey(connection.slug);
     if (apiKey) return { connection, apiKey };
     if (explicitSlug) throw new Error(`Image provider API key is missing for connection "${connection.slug}".`);
   }
-  throw new Error('No image-capable API-key connection is configured. Add an OpenAI or OpenRouter API connection in AI Settings.');
+  throw new Error('No image-capable API-key connection is configured. Add OpenAI, OpenRouter, or an OpenAI-compatible Images API connection in AI Settings.');
 }
 
 function decodeBase64Image(value: string): Buffer {
@@ -182,7 +190,7 @@ function assertImageSignature(bytes: Buffer, format: GeneratedImageFormat): void
  * image so one paid operation maps to one managed Artifact review decision.
  */
 export async function generateImageWithOpenAI(
-  config: OpenAIImageProviderConfig,
+  config: OpenAIImageProviderConfig & { compatible?: boolean },
   request: GenerateImageRequest,
   client: ImageApiClient = createClient(config),
 ): Promise<GeneratedImage> {
@@ -199,11 +207,13 @@ export async function generateImageWithOpenAI(
   if (background === 'transparent' && outputFormat === 'jpeg') {
     throw new Error('Transparent backgrounds require PNG or WebP output.');
   }
-  if (background === 'transparent' && (model === 'gpt-image-2' || model === 'gpt-image-2-2026-04-21')) {
-    throw new Error(`${model} does not support transparent backgrounds.`);
-  }
 
-  const params: ImageGenerateParamsNonStreaming = {
+  const params: ImageGenerateParamsNonStreaming = config.compatible ? {
+    prompt, model, n: 1, response_format: 'b64_json',
+    ...(request.size && request.size !== 'auto' ? { size: request.size } : {}),
+    ...(request.quality && request.quality !== 'auto' ? { quality: request.quality } : {}),
+    ...(request.background && request.background !== 'auto' ? { background: request.background } : {}),
+  } : {
     prompt,
     model,
     n: 1,
@@ -217,20 +227,33 @@ export async function generateImageWithOpenAI(
   const response = await (client.images.generate as (params: ImageGenerateParamsNonStreaming, options?: { signal?: AbortSignal }) => Promise<ImagesResponse>)(params, { signal: config.signal });
   const usage = response.usage ? { inputTokens: response.usage.input_tokens, outputTokens: response.usage.output_tokens } : undefined;
   try {
-  const image = response.data?.[0];
+  if (response.data?.length !== 1) throw new Error('The image provider must return exactly one image.');
+  const image = response.data[0];
   if (!image?.b64_json) {
     throw new Error('The image provider returned no inline image data.');
   }
   const bytes = decodeBase64Image(image.b64_json);
-  const actualFormat = response.output_format ?? outputFormat;
+  const actualFormat = config.compatible
+    ? bytes.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff])) ? 'jpeg'
+      : bytes.subarray(0, 4).toString('ascii') === 'RIFF' ? 'webp' : 'png'
+    : response.output_format ?? outputFormat;
   assertImageSignature(bytes, actualFormat);
+  let output = bytes;
+  let format: GeneratedImageFormat = actualFormat;
+  if (config.compatible && request.outputFormat && actualFormat !== request.outputFormat) {
+    if (request.outputFormat === 'webp') throw new Error('This compatible endpoint did not return WebP. Choose PNG or JPEG output.');
+    const { convertGeneratedImage } = await import('./image-utils');
+    output = await convertGeneratedImage(bytes, request.outputFormat);
+    format = request.outputFormat;
+    assertImageSignature(output, format);
+  }
   return {
-    bytes,
+    bytes: output,
     model,
-    format: actualFormat,
+    format,
     revisedPrompt: image.revised_prompt,
     providerCreatedAt: response.created,
-    provider: 'openai',
+    provider: config.compatible ? 'openai-compatible' : 'openai',
     usage,
     costStatus: 'unknown',
   };
@@ -240,6 +263,10 @@ export async function generateImageWithOpenAI(
 /** Native Pi image models remain separate from the chat catalog. Auth is explicit. */
 export async function generateImage(config: ImageProviderConfig, request: GenerateImageRequest): Promise<GeneratedImage> {
   if (config.provider === 'openai') return generateImageWithOpenAI(config, request);
+  if (config.provider === 'openai-compatible') {
+    if (!config.baseUrl?.trim()) throw new Error('An OpenAI-compatible Images API requires an endpoint URL.');
+    return generateImageWithOpenAI({ ...config, compatible: true }, request);
+  }
   if ((request.size && request.size !== 'auto') || (request.quality && request.quality !== 'auto')
     || (request.background && request.background !== 'auto') || request.outputFormat === 'webp') {
     throw new Error('This Pi image adapter does not support explicit size, quality, background, or WebP conversion. Use an OpenAI image connection for those controls.');

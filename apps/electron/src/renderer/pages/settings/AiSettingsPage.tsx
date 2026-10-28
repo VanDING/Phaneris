@@ -64,6 +64,8 @@ import { useDecisionLayerSettings } from './useDecisionLayerSettings'
 import { usePerformanceSettings } from './usePerformanceSettings'
 import { useImageSettings } from './useImageSettings'
 import { useConnectionRename } from './useConnectionRename'
+import { UtilityModelSettings } from './UtilityModelSettings'
+import { ImageGenerationModelSetting } from './ImageGenerationModelSetting'
 import { OnboardingWizard, type ApiSetupMethod } from '@/components/onboarding'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { useAppShellContext } from '@/context/AppShellContext'
@@ -183,7 +185,7 @@ function ConnectionRow({ connection, usedForImages, isLastConnection, onRenameCl
   const imageUnderstanding = connectionImageUnderstanding(connection)
   const capabilities = [t("settings.ai.capabilityChat"),
     imageUnderstanding === 'all' ? t("settings.ai.capabilityImageInput") : imageUnderstanding === 'some' ? t("settings.ai.capabilityImageInputSome") : null,
-    supportsNativeImageGeneration(connection) ? t("settings.ai.capabilityImageGeneration") : null,
+    (connection.providerType === 'pi_compat' ? usedForImages : supportsNativeImageGeneration(connection)) ? t("settings.ai.capabilityImageGeneration") : null,
   ].filter(Boolean)
   const identity = connection.authType === 'oauth' && connection.oauthAccountEmail
     ? [connection.oauthAccountEmail, connection.oauthOrganizationName].filter(Boolean).join(' · ') : null
@@ -569,11 +571,6 @@ export default function AiSettingsPage() {
       // IPC method may not exist if app wasn't restarted after code change
     }
 
-    // Build model string from connection's models array
-    const modelStr = connection.models
-      ?.map((m: string | ModelDefinition) => typeof m === 'string' ? m : m.id)
-      .join(', ') || connection.defaultModel || ''
-
     // Set initial values before opening overlay so ApiKeyInput mounts with them
     const modelIds = connection.models
       ?.map((m: string | ModelDefinition) => typeof m === 'string' ? m : m.id)
@@ -584,7 +581,7 @@ export default function AiSettingsPage() {
     setEditInitialValues({
       apiKey,
       baseUrl: connection.baseUrl,
-      connectionDefaultModel: isCustomEndpointConnection ? modelStr : connection.defaultModel,
+      connectionDefaultModel: connection.defaultModel,
       utilityModel: connection.utilityModel,
       activePreset: isCustomEndpointConnection ? 'custom' : (connection.piAuthProvider || undefined),
       models: modelIds,
@@ -760,7 +757,7 @@ export default function AiSettingsPage() {
   // A remote server on an older version reports fewer features: show and count only what it knows.
   const decisionReportedGroups = decisionStatus
     ? decisionFeatureGroups
-      .map(group => ({ ...group, toggles: group.toggles.filter(({ feature }) => feature in decisionStatus.settings.features) }))
+      .map(group => ({ ...group, toggles: group.toggles.filter(({ feature }) => feature in decisionStatus.settings.features && !RETIRED_DECISION_FEATURES.includes(feature)) }))
       .filter(group => group.toggles.length > 0)
     : []
   const decisionKeySourceValue = decisionStatus?.settings.connectionSlug
@@ -825,7 +822,7 @@ export default function AiSettingsPage() {
   const imageSelectedName = imageSelected?.name || llmConnections.find(c => c.slug === imageStatus?.settings.connectionSlug)?.name || imageStatus?.settings.connectionSlug
   const imageEffective = imageStatus?.effective
   const imageUnconfigured = !!imageStatus && !imageStatus.settings.connectionSlug && !imageStatus.settings.model && !imageStatus.connections.length
-  const imageStatusError = imageUnconfigured ? undefined : imageStatus?.error
+  const imageStatusError = imageUnconfigured || (imageSelected?.provider === 'openai-compatible' && !imageStatus?.settings.model) ? undefined : imageStatus?.error
   const imageModelConnection = imageSelected || (!imageStatus?.settings.connectionSlug ? imageStatus?.connections.find(c => c.slug === imageEffective?.connectionSlug)
     || imageStatus?.connections.find(c => c.available && c.slug === defaultConnection?.slug) || imageStatus?.connections.find(c => c.available) : undefined)
   const imageSummary = imageSettingsError ? t("settings.ai.statusUnavailable") : !imageStatus ? t("common.loading")
@@ -950,6 +947,7 @@ export default function AiSettingsPage() {
                   </SettingsRow>
                 </SettingsCard></div>}
               </SettingsSection></div>
+              <UtilityModelSettings connections={llmConnections} onSaved={refreshLlmConnections} />
               <div data-ai-settings-section="advanced"><SettingsSection title={t("settings.ai.advanced")}>
                 <div className="space-y-3">
                   <div data-ai-advanced="images" data-image-generation-settings>
@@ -961,11 +959,7 @@ export default function AiSettingsPage() {
                           options={[{ value: 'automatic', label: t("settings.ai.images.automatic"), description: imageEffective ? `${imageEffective.connectionName} · ${imageEffective.model}` : t("settings.ai.images.automaticDesc") },
                             ...(imageStatus.settings.connectionSlug && !imageSelected ? [{ value: imageStatus.settings.connectionSlug, label: imageSelectedName || imageStatus.settings.connectionSlug, description: t("settings.ai.notAuthenticated") }] : []),
                             ...imageStatus.connections.map(c => ({ value: c.slug, label: c.name, description: c.available ? c.provider : t("settings.ai.notAuthenticated") }))]} />
-                        {imageModelConnection && <SettingsMenuSelectRow label={t("settings.ai.model")} value={imageStatus.settings.model || 'provider-default'} disabled={savingImages}
-                          onValueChange={model => void saveImageSettings({ ...imageStatus.settings, ...(model === 'provider-default' ? { model: undefined } : { model }) })}
-                          options={[{ value: 'provider-default', label: t("settings.ai.useConnectionDefault"), description: imageEffective?.model },
-                            ...(imageStatus.settings.model && !imageModelConnection.models.some(m => m.id === imageStatus.settings.model) ? [{ value: imageStatus.settings.model, label: imageStatus.settings.model, description: t("settings.ai.unavailableModel") }] : []),
-                            ...imageModelConnection.models.map(model => ({ value: model.id, label: model.name }))]} />}
+                        <ImageGenerationModelSetting connection={imageModelConnection} settings={imageStatus.settings} disabled={savingImages} onSave={saveImageSettings} effectiveModel={imageEffective?.model} />
                         {imageStatus.settings.connectionSlug && <p className="px-4 pb-4 text-meta text-text-secondary">{t("settings.ai.images.selectionNote")}</p>}
                       </> : !imageStatus && !imageSettingsError ? <SettingsRow label={t("settings.ai.images.effective")} description={t("common.loading")} /> : null}
                       {imageStatus && !imageStatus.connections.length && !imageStatus.settings.connectionSlug && <SettingsRow label={t("settings.ai.images.notConfigured")} description={t("settings.ai.images.setupGuidance")}>
@@ -1126,8 +1120,8 @@ export default function AiSettingsPage() {
                                     label={label}
                                     description={description}
                                     tooltip={tooltip}
-                                    checked={RETIRED_DECISION_FEATURES.includes(feature) ? false : decisionStatus.settings.features[feature] ?? false}
-                                    disabled={savingDecisions || RETIRED_DECISION_FEATURES.includes(feature)}
+                                    checked={decisionStatus.settings.features[feature] ?? false}
+                                    disabled={savingDecisions}
                                     onCheckedChange={(checked) => { void updateDecisionSettings({ features: { [feature]: checked } }) }}
                                   />
                                 ))}
@@ -1250,7 +1244,7 @@ export default function AiSettingsPage() {
                   onCancelOAuth={apiSetupOnboarding.handleCancelOAuth}
                   copilotDeviceCode={apiSetupOnboarding.copilotDeviceCode}
                   editInitialValues={editInitialValues}
-                  allowedApiKeyPresets={imageConnectionSetup ? ['openai', 'openrouter'] : undefined}
+                  allowedApiKeyPresets={imageConnectionSetup ? ['openai', 'openrouter', 'custom'] : undefined}
                   className="h-full"
                 />
                 <div

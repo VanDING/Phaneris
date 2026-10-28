@@ -72,8 +72,13 @@ export function RunOverview({
   const turnCount = turns.filter(turn => turn.turn !== null).length
   const failedTools = toolRecords.filter(record => record.cell.isError)
   const cost = contextSummary?.costUsd ?? snapshot.totalUsage?.cost.total
-  const costLabel = formatCost(cost)
   const unknownCosts = contextSummary?.unknownCostRequests ?? 0
+  // Aggregation starts at zero even when every price is missing. Only display
+  // that zero when a request actually reported it; retain legacy positive totals.
+  const hasKnownCost = contextSummary?.knownCostRequests !== undefined
+    ? contextSummary.knownCostRequests > 0
+    : cost !== undefined && (unknownCosts === 0 || cost > 0)
+  const costLabel = hasKnownCost ? formatCost(cost) : null
   const inputTokens = snapshot.totalUsage
     ? snapshot.totalUsage.input + snapshot.totalUsage.cacheRead + snapshot.totalUsage.cacheWrite
     : undefined

@@ -708,6 +708,7 @@ interface ManagedSession extends SessionPlanningFields {
     totalTokens: number
     contextTokens: number
     costUsd: number
+    knownCostRequests?: number
     unknownCostRequests?: number
     estimatedCostRequests?: number
     cacheReadTokens?: number
@@ -2893,6 +2894,7 @@ export class SessionManager implements ISessionManager {
       totalTokens: usage.totalTokens,
       contextTokens: managed.tokenUsage?.contextTokens ?? usage.contextTokens,
       costUsd: usage.costUsd,
+      knownCostRequests: usage.knownCostRequests,
       unknownCostRequests: usage.unknownCostRequests,
       estimatedCostRequests: usage.estimatedCostRequests,
       full: usage.full,
@@ -5330,7 +5332,7 @@ initialSources: {
             background: input.background,
             outputFormat,
           }
-          const provider = selected.connection.piAuthProvider as 'openai' | 'openrouter'
+          const provider = selected.connection.providerType === 'pi_compat' ? 'openai-compatible' as const : selected.connection.piAuthProvider as 'openai' | 'openrouter'
           const generated = await auxiliaryModelEffect(this.durableRuntime, {
             workspaceRoot: managed.workspace.rootPath, sessionId: managed.id, purpose: 'image_generation', provider,
             model: selected.model, request, signal: controller.signal,

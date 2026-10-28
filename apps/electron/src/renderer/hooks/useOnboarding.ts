@@ -10,6 +10,7 @@
  * 5. Complete
  */
 import { useState, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import type {
   OnboardingState,
   OnboardingStep,
@@ -180,6 +181,8 @@ export function apiSetupMethodToConnectionSetup(
         defaultModel: options.connectionDefaultModel,
         utilityModel: options.utilityModel,
         models: options.models,
+        piAuthProvider: options.piAuthProvider,
+        modelSelectionMode: options.modelSelectionMode,
         customEndpoint: options.customEndpoint,
       }
     case 'claude_oauth':
@@ -227,6 +230,7 @@ export function useOnboarding({
   editingSlug = null,
   existingSlugs = new Set(),
 }: UseOnboardingOptions): UseOnboardingReturn {
+  const { t } = useTranslation()
   // Main wizard state
   const [state, setState] = useState<OnboardingState>({
     step: initialStep,
@@ -475,7 +479,7 @@ export function useOnboarding({
         provider: setupTestProvider,
         apiKey: data.apiKey,
         baseUrl: data.baseUrl,
-        model: data.models?.[0],
+        model: data.connectionDefaultModel ?? data.models?.[0],
         piAuthProvider: data.piAuthProvider,
         customEndpoint: data.customEndpoint,
         // Editing: the key field may still hold the masked placeholder; the server
@@ -489,7 +493,8 @@ export function useOnboarding({
         setState(s => ({
           ...s,
           credentialStatus: 'error',
-          errorMessage: testResult.error || 'Connection test failed',
+          errorMessage: testResult.errorCode === 'model_discovery_failed'
+            ? t('apiSetup.discoveryUnavailable') : testResult.error || 'Connection test failed',
         }))
         return
       }
@@ -497,9 +502,9 @@ export function useOnboarding({
       const saved = await handleSaveConfig(data.apiKey, {
         baseUrl: data.baseUrl,
         brandId: data.brandId,
-        connectionDefaultModel: data.connectionDefaultModel,
+        connectionDefaultModel: data.connectionDefaultModel ?? testResult.defaultModel,
         utilityModel: data.utilityModel,
-        models: data.models,
+        models: data.models ?? testResult.models,
         piAuthProvider: data.piAuthProvider,
         modelSelectionMode: data.modelSelectionMode,
         customEndpoint: data.customEndpoint,
@@ -522,7 +527,7 @@ export function useOnboarding({
         errorMessage: error instanceof Error ? error.message : 'Validation failed',
       }))
     }
-  }, [handleSaveConfig, editingSlug])
+  }, [handleSaveConfig, editingSlug, t])
 
   // Save config, validate the connection, and update state accordingly.
   // Shared by all OAuth flows after tokens are captured.

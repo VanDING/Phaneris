@@ -130,11 +130,17 @@ function findKnownModel(id: string, knownModels: ModelDefinition[]): ModelDefini
 export function parseDiscoveredModels(
   payload: unknown,
   knownModels: ModelDefinition[] = [],
+  api?: CustomEndpointApi,
 ): ModelDefinition[] {
   const seen = new Set<string>();
   const models: ModelDefinition[] = [];
 
   for (const row of extractRows(payload)) {
+    // Gateway catalogs can also contain Messages-only, image, or decision
+    // models. Only auto-select models served by the configured chat protocol.
+    const endpoint = api === 'anthropic-messages' ? '/messages' : api === 'openai-responses' ? '/responses' : '/chat/completions';
+    if (api && Array.isArray(row.supported_endpoints)
+      && !row.supported_endpoints.some(route => typeof route === 'string' && route.endsWith(endpoint))) continue;
     const idValue = row.id ?? row.model ?? row.name;
     if (typeof idValue !== 'string' || !idValue.trim()) continue;
     const id = idValue.trim();
@@ -169,10 +175,10 @@ export function parseDiscoveredModels(
         row.max_output_tokens,
         row.maxOutputTokens,
         row.max_completion_tokens,
+        row.max_tokens,
         row.maxTokens,
         topProvider?.max_completion_tokens,
-        known?.maxTokens,
-      ),
+      ) ?? 16_384,
       supportsThinking,
       supportedThinkingLevels,
       ...(known?.thinkingLevelMap ? { thinkingLevelMap: known.thinkingLevelMap } : {}),
@@ -204,7 +210,7 @@ export async function discoverCustomEndpointModels(options: DiscoveryOptions): P
         errors.push(`${url}: HTTP ${response.status}`);
         continue;
       }
-      const models = parseDiscoveredModels(await response.json(), options.knownModels);
+      const models = parseDiscoveredModels(await response.json(), options.knownModels, options.api);
       if (models.length > 0) return models;
       errors.push(`${url}: empty model list`);
     } catch (error) {

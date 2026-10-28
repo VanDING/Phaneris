@@ -816,17 +816,21 @@ export function getContextPolicy(): import('../agent/context-policy').ContextPol
   return policy === 'handoff' || policy === 'manual' ? policy : 'compact'
 }
 
-export function getCompactionThreshold(): number | null {
-  const value = loadStoredConfig()?.compactionThresholdTokens;
+export function getCompactionThreshold(): import('../agent/compaction-threshold').CompactionThreshold {
+  const config = loadStoredConfig();
+  const percent = config?.compactionThresholdPercent;
+  if (typeof percent === 'number' && Number.isInteger(percent) && percent >= 1 && percent <= 99) return { percent };
+  const value = config?.compactionThresholdTokens;
   return typeof value === 'number' && Number.isSafeInteger(value) && value >= 4096 ? value : null;
 }
 
-export function setCompactionThreshold(value: number | null): void {
-  if (value !== null && (!Number.isSafeInteger(value) || value < 4096)) throw new Error('Invalid compaction threshold');
+export function setCompactionThreshold(value: import('../agent/compaction-threshold').CompactionThreshold): void {
   const config = loadStoredConfig();
   if (!config) throw new Error('Configuration unavailable');
-  if (value === null) delete config.compactionThresholdTokens;
-  else config.compactionThresholdTokens = value;
+  delete config.compactionThresholdTokens;
+  delete config.compactionThresholdPercent;
+  if (typeof value === 'number') config.compactionThresholdTokens = value;
+  else if (value) config.compactionThresholdPercent = value.percent;
   saveConfig(config);
 }
 

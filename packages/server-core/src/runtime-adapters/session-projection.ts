@@ -145,6 +145,7 @@ export interface DurableUsageProjection {
   totalTokens: number
   contextTokens: number
   costUsd: number
+  knownCostRequests: number
   unknownCostRequests: number
   estimatedCostRequests: number
   cacheReadTokens: number
@@ -189,6 +190,11 @@ export function projectDurableUsage(rows: RuntimeUsageRow[]): DurableUsageProjec
     totalTokens: full.totalTokens,
     contextTokens: lastFullUsage?.totalTokens ?? 0,
     costUsd: full.cost.total,
+    knownCostRequests: ordered.filter(row => {
+      const payload = row.payload as { usage?: PiUsage } | undefined
+      const cost = row.costUsd ?? payload?.usage?.cost?.total
+      return typeof cost === 'number' && Number.isFinite(cost)
+    }).length,
     unknownCostRequests: ordered.filter(row => {
       const payload = row.payload as { metering?: { status: string }; usage?: PiUsage } | undefined
       return ['partial', 'unavailable'].includes(payload?.metering?.status ?? '')

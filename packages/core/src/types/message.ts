@@ -520,6 +520,8 @@ export interface TokenUsage {
   costUsd: number;
   /** Requests whose price was not supplied. costUsd is only the known subtotal. */
   unknownCostRequests?: number;
+  /** Requests with a reported or estimated numeric cost, including a real zero. */
+  knownCostRequests?: number;
   estimatedCostRequests?: number;
   cacheReadTokens?: number;
   cacheCreationTokens?: number;

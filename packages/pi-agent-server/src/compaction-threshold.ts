@@ -1,3 +1,4 @@
+import type { CompactionThreshold } from '@phaneris/shared/agent/compaction-threshold'
 import { compact, convertToLlm, SettingsManager, type AgentSession, type ExtensionAPI } from '@earendil-works/pi-coding-agent';
 import type { Model } from '@earendil-works/pi-ai';
 import { effectiveCompactionReserve, isCompactionThreshold } from '@phaneris/shared/agent/compaction-threshold';
@@ -5,7 +6,7 @@ import { effectiveCompactionReserve, isCompactionThreshold } from '@phaneris/sha
 /** Public SDK settings + extension; no SDK/private-field or node_modules edits. */
 export class CompactionThresholdController {
   private readonly baseline: SettingsManager;
-  private threshold: number | null = null;
+  private threshold: CompactionThreshold = null;
   failure: string | undefined;
 
   constructor(settings: SettingsManager, private readonly session: () => AgentSession | undefined,
@@ -13,8 +14,8 @@ export class CompactionThresholdController {
     this.baseline = SettingsManager.inMemory({ compaction: structuredClone(settings.getSettings().compaction ?? {}) });
   }
 
-  async update(value: number | null, model?: Pick<Model<any>, 'id' | 'provider' | 'contextWindow'>): Promise<void> {
-    if (!isCompactionThreshold(value)) throw new Error('Compaction threshold must be null or an integer of at least 4096 tokens');
+  async update(value: CompactionThreshold, model?: Pick<Model<any>, 'id' | 'provider' | 'contextWindow'>): Promise<void> {
+    if (!isCompactionThreshold(value)) throw new Error('Invalid compaction threshold');
     if (model) {
       const original = this.baseline.getCompactionSettings(model);
       const reserveTokens = effectiveCompactionReserve(model.contextWindow, original.reserveTokens, value);

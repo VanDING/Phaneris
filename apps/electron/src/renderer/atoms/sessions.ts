@@ -66,6 +66,7 @@ export interface SessionMeta {
     outputTokens: number
     totalTokens: number
     costUsd: number
+    knownCostRequests?: number
     unknownCostRequests?: number
     estimatedCostRequests?: number
     contextTokens: number

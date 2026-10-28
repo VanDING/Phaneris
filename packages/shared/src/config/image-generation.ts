@@ -10,10 +10,12 @@ export interface ImageGenerationStatus {
   settings: ImageGenerationSettings;
   effective?: { connectionSlug: string; connectionName: string; model: string };
   error?: string;
-  connections: Array<{ slug: string; name: string; provider: 'openai' | 'openrouter'; available: boolean; models: Array<{ id: string; name: string }> }>;
+  connections: Array<{ slug: string; name: string; provider: 'openai' | 'openrouter' | 'openai-compatible'; available: boolean; models: Array<{ id: string; name: string }> }>;
 }
 
-export function supportsNativeImageGeneration(connection: Pick<LlmConnection, 'providerType' | 'piAuthProvider' | 'authType'>): boolean {
+export function supportsNativeImageGeneration(connection: Pick<LlmConnection, 'providerType' | 'piAuthProvider' | 'authType' | 'customEndpoint' | 'baseUrl'>): boolean {
+  if (connection.providerType === 'pi_compat') return connection.customEndpoint?.api === 'openai-completions'
+    && !!connection.baseUrl && connection.authType === 'api_key_with_endpoint';
   return connection.providerType === 'pi'
     && (connection.piAuthProvider === 'openai' || connection.piAuthProvider === 'openrouter')
     && connection.authType === 'api_key';

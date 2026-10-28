@@ -1,3 +1,4 @@
+import type { CompactionThreshold } from '../compaction-threshold'
 /**
  * Backend Abstraction Types
  *
@@ -171,7 +172,8 @@ export interface BackendHostRuntimeContext {
  */
 export interface CoreBackendConfig {
   contextPolicy?: import('../context-policy').ContextPolicy;
-  compactionThresholdTokens?: number | null;
+  /** Historical wire name; percentage overrides are represented as { percent }. */
+  compactionThresholdTokens?: CompactionThreshold;
   /** Workspace configuration */
   workspace: Workspace;
 
@@ -518,7 +520,7 @@ export interface AgentBackend {
    */
   updateExtendedPromptCache?(enabled: boolean): void;
   updateContextPolicy?(policy: import('../context-policy').ContextPolicy): Promise<void>;
-  updateCompactionThreshold?(value: number | null): Promise<void>;
+  updateCompactionThreshold?(value: CompactionThreshold): Promise<void>;
   /** Make the next model request produce a handoff document instead of an answer. */
   forceContextHandoff?(): Promise<void>;
   updatePromptCacheWarming?(enabled: boolean): void;

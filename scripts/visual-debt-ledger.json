@@ -14,16 +14,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "2dade517aba6e7fab2290b73c36eff6c23b9a2d8af4c620aab191f04a9603fe6",
-      "count": 2,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-menu/MobileMenuItem.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -3738,26 +3728,6 @@
       "rule": "theme-contracts/roles",
       "message": "control",
       "fingerprint": "ecf94c946477454f906f2662068d780cedf532f79404477f90db305cf149cbaa",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "f944b4bb7e427d0413a36b8336cf8ad54bb61ad6bb9922467f36e57d88f9e4c7",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "65ab2006574623a6695d7ce36737d5a9d8259e979fb458ddb3c1fcca2df95060",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",

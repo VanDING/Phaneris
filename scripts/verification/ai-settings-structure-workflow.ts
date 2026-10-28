@@ -2,15 +2,14 @@
 import { strict as assert } from 'node:assert'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { createServer } from 'vite'
-import { chromium } from 'playwright'
+import { buildFixturePage } from './fixture-bundle'
+import { launchWorkflowBrowser } from './workflow-browser'
 const root = resolve(import.meta.dir, '../..'), output = resolve(root, '.cache/ai-settings-structure')
 mkdirSync(output, { recursive: true })
 writeFileSync(resolve(output, 'settings.html'), '<!doctype html><html><head><meta charset="utf-8"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/ai-settings-structure.tsx"></script></body></html>')
-const server = await createServer({ configFile: resolve(root, 'apps/electron/vite.config.ts'), root, server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**'] } } })
-await server.listen()
-const address = server.httpServer!.address() as { port: number }, base = `http://127.0.0.1:${address.port}/.cache/ai-settings-structure/settings.html`
-const browser = await chromium.launch({ headless: true, channel: process.env.PHANERIS_TEST_BROWSER_CHANNEL })
+const server = await buildFixturePage({ runDirectory: output, entry: 'scripts/verification/fixtures/ai-settings-structure.tsx' })
+const base = server.url
+const launched = await launchWorkflowBrowser(), browser = launched.browser
 const page = await browser.newPage({ viewport: { width: 1040, height: 1000 } })
 page.setDefaultTimeout(5000)
 const records: Array<{ id: string; pass: boolean; error?: string }> = [], errors: string[] = []
@@ -29,9 +28,9 @@ async function load(query = '') {
 }
 async function choose(control: ReturnType<typeof page.locator>, label: string) { await control.click(); await options.filter({ hasText: new RegExp('^' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) }).click() }
 try {
-  await check('Connections, conversation, advanced; no tabs and independent collapsed summaries', async () => {
+  await check('Connections, conversation, utility, advanced; no tabs and independent collapsed summaries', async () => {
     await load()
-    assert.deepEqual(await page.locator('[data-ai-settings-section]').evaluateAll(nodes => nodes.map(n => n.getAttribute('data-ai-settings-section'))), ['connections', 'conversation', 'advanced'])
+    assert.deepEqual(await page.locator('[data-ai-settings-section]').evaluateAll(nodes => nodes.map(n => n.getAttribute('data-ai-settings-section'))), ['connections', 'conversation', 'utility', 'advanced'])
     assert.equal(await page.getByRole('tablist').count(), 0)
     for (const id of ['images', 'decisions', 'performance']) { assert.equal(await toggle(id).getAttribute('aria-expanded'), 'false'); assert((await toggle(id).innerText()).trim().length > 15); await toggle(id).click() }
     for (const id of ['images', 'decisions', 'performance']) assert.equal(await toggle(id).getAttribute('aria-expanded'), 'true')
@@ -52,6 +51,26 @@ try {
     await page.evaluate(() => { (window as any).aiStructureState().failContext = true })
     await choose(control, 'Manual'); await page.waitForFunction(() => document.getElementById('context-policy-select')?.textContent?.includes('Auto compact'))
     assert.equal(await page.evaluate(() => (window as any).aiStructureState().contextPolicy), 'compact')
+  })
+  await check('Auxiliary models and percentage compaction are available in system AI settings', async () => {
+    await load()
+    const utility = page.locator('[data-ai-settings-section="utility"]')
+    await choose(utility.getByRole('button', { name: 'Default model for call_llm', exact: true }), 'GPT-5.4')
+    await page.waitForFunction(() => (window as any).aiStructureState().connections[0].utilityModel === 'gpt-5.4')
+    await choose(utility.getByRole('button', { name: 'Default model for call_llm', exact: true }), 'Automatic')
+    await page.waitForFunction(() => !(window as any).aiStructureState().connections[0].utilityModel)
+    await choose(page.locator('#compaction-threshold-select'), '85%')
+    await page.waitForFunction(() => (window as any).aiStructureState().compactionThreshold?.percent === 85)
+    await choose(page.locator('#context-policy-select'), 'Manual')
+    assert(await page.locator('#compaction-threshold-select').isDisabled())
+  })
+  await check('Custom image endpoints expose an Images API model field and save it', async () => {
+    await load('scenario=compatible'); await toggle('images').click()
+    await choose(advanced('images').getByRole('button', { name: 'Connection', exact: true }), 'Image Gateway')
+    const model = advanced('images').getByPlaceholder('Image model ID supplied by this endpoint')
+    await model.fill('gateway-image-model'); await page.keyboard.press('Tab')
+    await page.waitForFunction(() => (window as any).aiStructureState().image.model === 'gateway-image-model')
+    assert((await advanced('images').innerText()).includes('/images/generations'))
   })
   await check('Workspace editor is owned by Workspace; switching connection clears a foreign model in one write', async () => {
     await load(); assert.equal(await page.getByRole('button', { name: /Writing|Design/ }).count(), 0)
@@ -101,7 +120,7 @@ try {
     await page.locator('[data-testid="api-key-preset-trigger"]').click()
     const menu = page.getByRole('menu')
     assert((await menu.innerText()).includes('OpenAI')); assert((await menu.innerText()).includes('OpenRouter'))
-    assert(!(await menu.innerText()).includes('Anthropic')); assert(!(await menu.innerText()).includes('Minimax')); assert(!(await menu.innerText()).includes('ChatGPT'))
+    assert(!(await menu.innerText()).includes('Anthropic')); assert(!(await menu.innerText()).includes('Minimax')); assert((await menu.innerText()).includes('Custom')); assert(!(await menu.innerText()).includes('ChatGPT'))
     assert.equal(await page.evaluate(() => (window as any).aiStructureState().calls.filter((c: any) => c.method === 'saveLlmConnection').length), 0)
     await page.keyboard.press('Escape'); await page.locator('[data-onboarding-close]').click()
     await page.getByRole('button', { name: '+ Add Connection', exact: true }).click()
@@ -158,8 +177,11 @@ try {
     await load(); await toggle('decisions').click()
     assert.equal(await advanced('decisions').getByLabel('Provider / key source', { exact: true }).count(), 1)
     assert.equal(await advanced('decisions').getByRole('switch').count(), 4)
+    for (const label of ['Adaptive thinking', 'Large tool results', 'Mid-turn messages']) {
+      assert.equal(await advanced('decisions').getByText(label, { exact: true }).count(), 0)
+    }
     assert((await advanced('decisions').innerText()).includes('Guarded'))
-    assert.equal(await page.locator('[data-ai-settings-section]').count(), 3)
+    assert.equal(await page.locator('[data-ai-settings-section]').count(), 4)
     assert.equal(await page.locator('[data-decision-usage]').count(), 0)
     assert.equal(await page.evaluate(() => (window as any).aiStructureState().calls.filter((call: any) => call.method === 'getDecisionUsage').length), 0)
   })

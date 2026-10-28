@@ -219,6 +219,7 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
               contextTokens: contextUsage.inputTokens,
               contextWindow: contextUsage.contextWindow,
               costUsd: meta?.tokenUsage?.costUsd,
+              knownCostRequests: meta?.tokenUsage?.knownCostRequests,
               unknownCostRequests: meta?.tokenUsage?.unknownCostRequests,
               estimatedCostRequests: meta?.tokenUsage?.estimatedCostRequests,
               workspaceName: workspace?.name,

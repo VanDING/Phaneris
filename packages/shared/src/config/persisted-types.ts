@@ -48,6 +48,7 @@ export interface StoredConfig {
   // Prompt caching & context
   contextPolicy?: import('../agent/context-policy').ContextPolicy;
   compactionThresholdTokens?: number;
+  compactionThresholdPercent?: number;
   promptCacheWarming?: boolean; // Cost-aware warming during active tool runs (default: false)
   extendedPromptCache?: boolean;  // Use long-lived prompt cache retention where supported (default: false)
   // Token optimization

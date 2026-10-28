@@ -10,6 +10,7 @@ import azureIcon from '@/assets/provider-icons/azure.svg'
 import cerebrasIcon from '@/assets/provider-icons/cerebras.svg'
 import claudeIcon from '@/assets/provider-icons/claude.svg'
 import copilotIcon from '@/assets/provider-icons/copilot.svg'
+import commandcodeIcon from '@/assets/provider-icons/commandcode.ico'
 import deepseekIcon from '@/assets/provider-icons/deepseek.svg'
 import googleIcon from '@/assets/provider-icons/google.svg'
 import groqIcon from '@/assets/provider-icons/groq.svg'
@@ -20,6 +21,8 @@ import minimaxIcon from '@/assets/provider-icons/minimax.svg'
 import mistralIcon from '@/assets/provider-icons/mistral.svg'
 import ollamaIcon from '@/assets/provider-icons/ollama.svg'
 import openaiIcon from '@/assets/provider-icons/openai.svg'
+// Official logomark from the OpenCode brand kit (opencode.ai/brand).
+import opencodeIcon from '@/assets/provider-icons/opencode.svg'
 import openrouterIcon from '@/assets/provider-icons/openrouter.svg'
 import piIcon from '@/assets/provider-icons/pi.svg'
 import vercelIcon from '@/assets/provider-icons/vercel.svg'
@@ -42,6 +45,7 @@ export const providerIcons = {
   azure: azureIcon,
   cerebras: cerebrasIcon,
   copilot: copilotIcon,
+  commandcode: commandcodeIcon,
   deepseek: deepseekIcon,
   google: googleIcon,
   groq: groqIcon,
@@ -61,6 +65,7 @@ export const providerIcons = {
   mistral: mistralIcon,
   ollama: ollamaIcon,
   openai: openaiIcon,
+  opencode: opencodeIcon,
   openrouter: openrouterIcon,
   pi: piIcon,
   vercel: vercelIcon,
@@ -75,7 +80,7 @@ export type ProviderIconKey = keyof typeof providerIcons
 const monochromeProviderIcons = new Set<string>([
   awsIcon, azureIcon, cerebrasIcon, copilotIcon, deepseekIcon, googleIcon, groqIcon,
   huggingfaceIcon, kimiIcon, minimaxIcon, mistralIcon, ollamaIcon, openaiIcon,
-  openrouterIcon, piIcon, vercelIcon, xaiIcon, zaiIcon,
+  opencodeIcon, openrouterIcon, piIcon, vercelIcon, xaiIcon, zaiIcon,
 ])
 
 export function isMonochromeProviderIcon(icon: string | null | undefined): boolean {
@@ -86,7 +91,10 @@ export function isMonochromeProviderIcon(icon: string | null | undefined): boole
  * Detect provider from base URL
  */
 function detectProviderFromUrl(baseUrl: string): ProviderIconKey | null {
-  const url = baseUrl.toLowerCase()
+  const url = URL.canParse(baseUrl) ? new URL(baseUrl).hostname.toLowerCase() : ''
+
+  if (url === 'opencode.ai' || url.endsWith('.opencode.ai')) return 'opencode'
+  if (url === 'commandcode.ai' || url.endsWith('.commandcode.ai')) return 'commandcode'
 
   if (url.includes('openrouter.ai')) return 'openrouter'
   if (url.includes('ollama')) return 'ollama'
@@ -105,9 +113,8 @@ function detectProviderFromUrl(baseUrl: string): ProviderIconKey | null {
   if (url.includes('groq.com')) return 'groq'
   if (url.includes('cerebras.ai')) return 'cerebras'
   if (url.includes('manifest.build')) return 'manifest'
-  // `.z.ai` / `//z.ai` rather than a bare `z.ai`, which would also match hosts
-  // like `fizz.ai`.
-  if (url.includes('//z.ai') || url.includes('.z.ai')) return 'zai'
+  // Match domain boundaries so an unrelated host such as fizz.ai stays neutral.
+  if (url === 'z.ai' || url.endsWith('.z.ai')) return 'zai'
 
   return null
 }
@@ -149,6 +156,9 @@ function piAuthProviderToIcon(piAuthProvider: string): ProviderIconKey | null {
       return 'copilot'
     case 'openrouter':
       return 'openrouter'
+    case 'opencode':
+    case 'opencode-go':
+      return 'opencode'
     case 'google':
       return 'google'
     case 'kimi-coding':
@@ -198,7 +208,7 @@ export function getProviderIcon(
   providerType: LlmProviderType | string,
   baseUrl?: string | null,
   piAuthProvider?: string | null,
-  modelId?: string | null,
+  _modelId?: string | null,
   brandId?: string | null,
 ): string | null {
   if (brandId) {
@@ -212,8 +222,8 @@ export function getProviderIcon(
     if (detectedProvider) {
       return providerIcons[detectedProvider]
     }
-    const modelProvider = detectProviderFromModel(modelId)
-    if (modelProvider) return providerIcons[modelProvider]
+    // A gateway can serve many model vendors. Its default model never identifies
+    // the gateway; let ConnectionIcon resolve its endpoint logo or use initials.
   }
 
   // Map provider type to icon

@@ -1308,7 +1308,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 791,
+          "line": 831,
           "args": [
             "args?: { state?: string }"
           ],
@@ -1329,7 +1329,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 747,
+          "line": 787,
           "args": [
             "args: {\n    flowId: string\n    code: string\n    state: string\n  }"
           ],
@@ -1350,7 +1350,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 803,
+          "line": 843,
           "args": [
             "connectionSlug: string"
           ],
@@ -1371,7 +1371,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 831,
+          "line": 871,
           "args": [
             "connectionSlug: string"
           ],
@@ -1392,7 +1392,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 722,
+          "line": 762,
           "args": [
             "connectionSlug: string"
           ],
@@ -1413,7 +1413,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 917,
+          "line": 957,
           "args": [],
           "result": "Promise<{ success: boolean }>",
           "owner": "authenticated host or handler-specific policy"
@@ -1443,7 +1443,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 927,
+          "line": 967,
           "args": [
             "connectionSlug: string"
           ],
@@ -1464,7 +1464,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 944,
+          "line": 984,
           "args": [
             "connectionSlug: string"
           ],
@@ -1485,7 +1485,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 848,
+          "line": 888,
           "args": [
             "connectionSlug: string"
           ],
@@ -2439,7 +2439,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 576,
+          "line": 616,
           "args": [
             "slug: string"
           ],
@@ -2460,7 +2460,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 511,
+          "line": 551,
           "args": [
             "slug: string"
           ],
@@ -2481,7 +2481,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 516,
+          "line": 556,
           "args": [
             "slug: string"
           ],
@@ -2502,7 +2502,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 489,
+          "line": 529,
           "args": [],
           "result": "Promise<LlmConnection[]>",
           "owner": "authenticated host or handler-specific policy"
@@ -2521,7 +2521,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 494,
+          "line": 534,
           "args": [],
           "result": "Promise<LlmConnectionWithStatus[]>",
           "owner": "authenticated host or handler-specific policy"
@@ -2540,7 +2540,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 680,
+          "line": 720,
           "args": [
             "slug: string"
           ],
@@ -2561,7 +2561,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 526,
+          "line": 566,
           "args": [
             "connection: LlmConnection"
           ],
@@ -2582,7 +2582,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 628,
+          "line": 668,
           "args": [
             "slug: string"
           ],
@@ -2603,7 +2603,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 644,
+          "line": 684,
           "args": [
             "workspaceId: string",
             "slug: string | null"
@@ -2625,7 +2625,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 600,
+          "line": 640,
           "args": [
             "slug: string"
           ],
@@ -4767,7 +4767,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 453,
+          "line": 493,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -4786,7 +4786,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 458,
+          "line": 498,
           "args": [
             "provider: string"
           ],
@@ -4807,7 +4807,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 463,
+          "line": 503,
           "args": [
             "provider: string"
           ],
@@ -4828,7 +4828,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 959,
+          "line": 999,
           "args": [
             "connectionSlug: string"
           ],
@@ -4849,7 +4849,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 1139,
+          "line": 1179,
           "args": [
             "connectionSlug: string",
             "code: string"
@@ -6558,7 +6558,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
-          "line": 390,
+          "line": 406,
           "args": [
             "params: import('@phaneris/shared/protocol').TestLlmConnectionParams"
           ],

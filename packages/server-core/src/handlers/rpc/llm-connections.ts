@@ -122,6 +122,19 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
       }
 
       const updates: Partial<LlmConnection> = {}
+      const modelSourceChanged = !!existing && (
+        (transport && transport.providerType !== existing.providerType)
+        || (setup.piAuthProvider !== undefined && setup.piAuthProvider !== existing.piAuthProvider)
+        || (!!setup.customEndpoint && (
+          setup.customEndpoint.api !== existing.customEndpoint?.api
+          || setup.baseUrl?.trim() !== existing.baseUrl?.trim()
+        ))
+      )
+      if (modelSourceChanged) {
+        updates.models = []
+        updates.defaultModel = undefined
+        updates.utilityModel = undefined
+      }
       if (setup.baseUrl !== undefined) {
         // Persisted for the edit form and for custom endpoints. It is *not*
         // what decides the provider type — see resolveConnectionTransport().
@@ -177,9 +190,9 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
         // Seed the provider's own catalog when the user didn't pick models.
         // A base URL is no longer a signal of anything here: native providers
         // have one, and the presets prefill it.
-        if (!setup.models?.length) {
+        if (!setup.models?.length && (isNewConnection || modelSourceChanged || !connection.models?.length)) {
           updates.models = getDefaultModelsForConnection('pi', setup.piAuthProvider)
-          updates.defaultModel = getDefaultModelForConnection('pi', setup.piAuthProvider)
+          updates.defaultModel = setup.defaultModel ?? getDefaultModelForConnection('pi', setup.piAuthProvider)
           updates.modelSelectionMode ??= 'automaticallySyncedFromProvider'
         }
       }
@@ -224,6 +237,9 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
         }
         if (updates.defaultModel) {
           updates.defaultModel = toPiModelId(updates.defaultModel)
+        }
+        if (updates.utilityModel) {
+          updates.utilityModel = toPiModelId(updates.utilityModel)
         }
       }
 
@@ -417,7 +433,29 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
 
     const startedAt = Date.now()
     try {
-      const testModel = model || getDefaultModelForConnection(provider, piAuthProvider)
+      // Discover custom endpoints before sending a completion. Using a native
+      // provider's fallback here made an optional model field effectively required.
+      let testModel = model
+      let models: string[] | undefined
+      if (!testModel && hint.providerType === 'pi_compat') {
+        const discovered = await fetchBackendModels({
+          connection: {
+            slug: '__setup-discovery',
+            name: 'API setup',
+            authType: allowEmptyApiKey ? 'none' : 'api_key_with_endpoint',
+            createdAt: Date.now(),
+            ...hint,
+            baseUrl,
+          },
+          credentials: { apiKey: trimmedKey },
+          hostRuntime: buildBackendHostRuntimeContext(deps.platform),
+          timeoutMs: 15000,
+        })
+        models = discovered.models.map(model => model.id)
+        testModel = discovered.serverDefault ?? models[0]
+        if (!testModel) return { success: false, errorCode: 'model_discovery_failed', error: 'This endpoint returned no models. Check its model-list API or expand the optional manual model configuration.' }
+      }
+      testModel ??= getDefaultModelForConnection(provider, piAuthProvider)
       const agentProvider: AgentProvider = 'pi'
       const result = await testBackendConnection({
         provider: agentProvider,
@@ -437,12 +475,14 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
         return { success: false, error: parseTestConnectionError(result.error || 'Unknown error') }
       }
       deps.platform.logger?.info(`[testLlmConnectionSetup] Elapsed: ${elapsed}ms, success=true`)
-      return { success: true }
+      return { success: true, defaultModel: testModel, models }
     } catch (error) {
       const elapsed = Date.now() - startedAt
       const msg = error instanceof Error ? error.message : String(error)
       deps.platform.logger?.info(`[testLlmConnectionSetup] Elapsed: ${elapsed}ms, threw: ${msg.slice(0, 1000)}`)
-      return { success: false, error: parseTestConnectionError(msg) }
+      const discoveryUnavailable = !model && hint.providerType === 'pi_compat'
+        && /model discovery|returned no models/i.test(msg) && !/HTTP (401|403)|fetch failed/i.test(msg)
+      return { success: false, error: parseTestConnectionError(msg), ...(discoveryUnavailable ? { errorCode: 'model_discovery_failed' as const } : {}) }
     }
   })
 

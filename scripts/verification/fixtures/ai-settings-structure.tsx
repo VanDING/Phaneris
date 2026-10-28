@@ -30,22 +30,24 @@ const catalog: any[] = [
 const workspaces = ['Research', 'Writing', 'Design'].map((name, index) => ({ id: `workspace-${index}`, name, rootPath: `/fixture/${name}` }))
 const state = {
   connections: scenario === 'subscription' ? [{ ...catalog[2], isDefault: true }] : catalog,
+  compactionThreshold: null as { percent: number } | number | null, failThreshold: false,
   activeWorkspaceId: 'workspace-0', contextPolicy: 'compact', thinking: 'medium', extendedCache: false, warming: false, rtk: false,
   failContext: false, failImages: false, failWorkspace: false, failWorkspaceLoad: scenario === 'workspace-error', failCache: false,
   failDecisions: scenario === 'decision-error', failImageLoad: scenario === 'image-error', delayWorkspace: false,
   image: (scenario === 'broken' ? { connectionSlug: 'openai', model: 'gpt-image-2' } : scenario === 'deleted' ? { connectionSlug: 'deleted-account', model: 'gpt-image-2' } : {}) as { connectionSlug?: string; model?: string },
   workspaceById: Object.fromEntries(workspaces.map(w => [w.id, { name: w.name, permissionMode: 'ask', ...(w.id === 'workspace-0' ? { defaultLlmConnection: 'router', model: 'anthropic/claude-sonnet-4.6' } : {}) }])) as Record<string, any>,
   calls: [] as Array<{ method: string; args: any[] }>,
-  decision: { settings: { enabled: false, provider: 'typesafe', model: 'jev', features: { guardedMode: true, suggestions: true, smartTitles: true } }, providersWithKey: [], reusableConnections: [], guardedMode: { available: false, reason: 'disabled' }, presets: [{ id: 'typesafe', label: 'TypeSafe', requiresKey: true, baseUrl: 'https://api.typesafe.ai', defaultModel: 'jev', keyPlaceholder: 'API key' }] } as any,
+  decision: { settings: { enabled: false, provider: 'typesafe', model: 'jev', features: { guardedMode: true, suggestions: true, smartTitles: true, adaptiveThinking: true, midTurnMessages: true, largeResults: true } }, providersWithKey: [], reusableConnections: [], guardedMode: { available: false, reason: 'disabled' }, presets: [{ id: 'typesafe', label: 'TypeSafe', requiresKey: true, baseUrl: 'https://api.typesafe.ai', defaultModel: 'jev', keyPlaceholder: 'API key' }] } as any,
 }
 if (scenario === 'broken') state.connections[0] = { ...state.connections[0], isAuthenticated: false }
+if (scenario === 'compatible') state.connections.push({ slug: 'compatible', name: 'Image Gateway', providerType: 'pi_compat', piAuthProvider: 'openai', authType: 'api_key_with_endpoint', customEndpoint: { api: 'openai-completions' }, baseUrl: 'https://gateway.example/v1', isAuthenticated: true, defaultModel: 'chat', models: ['chat'] })
 const clone = (value: any) => JSON.parse(JSON.stringify(value))
 const refresh = () => window.dispatchEvent(new Event('fixture-refresh'))
 const imageStatus = () => {
-  const connections = state.connections.filter(c => c.authType === 'api_key' && ['openai', 'openrouter'].includes(c.piAuthProvider)).map(c => ({ slug: c.slug, name: c.name, available: c.isAuthenticated, provider: c.piAuthProvider,
-    models: [{ id: c.piAuthProvider === 'openai' ? 'gpt-image-2' : 'google/gemini-2.5-flash-image', name: c.piAuthProvider === 'openai' ? 'GPT Image 2' : 'Gemini Flash Image' }] }))
+  const connections = state.connections.filter(c => c.providerType === 'pi_compat' || c.authType === 'api_key' && ['openai', 'openrouter'].includes(c.piAuthProvider)).map(c => ({ slug: c.slug, name: c.name, available: c.isAuthenticated, provider: c.providerType === 'pi_compat' ? 'openai-compatible' : c.piAuthProvider,
+    models: c.providerType === 'pi_compat' ? [] : [{ id: c.piAuthProvider === 'openai' ? 'gpt-image-2' : 'google/gemini-2.5-flash-image', name: c.piAuthProvider === 'openai' ? 'GPT Image 2' : 'Gemini Flash Image' }] }))
   const selected = state.image.connectionSlug ? connections.find(c => c.slug === state.image.connectionSlug) : connections.find(c => c.available)
-  return clone({ settings: state.image, connections, ...(selected?.available ? { effective: { connectionSlug: selected.slug, connectionName: selected.name, model: state.image.model ?? selected.models[0].id } } : state.image.connectionSlug ? { error: 'The selected image account is unavailable. Update its key or choose another connection.' } : { error: 'No image-capable API-key connection is configured. Add an OpenAI or OpenRouter API connection in AI Settings.' }) })
+  return clone({ settings: state.image, connections, ...(selected?.available ? { effective: { connectionSlug: selected.slug, connectionName: selected.name, model: state.image.model ?? selected.models[0]?.id } } : state.image.connectionSlug ? { error: 'The selected image account is unavailable. Update its key or choose another connection.' } : { error: 'No image-capable API-key connection is configured. Add an OpenAI or OpenRouter API connection in AI Settings.' }) })
 }
 const handlers: Record<string, (...args: any[]) => any> = {
   checkGitBash: () => ({ platform: 'darwin', found: true }), getWorkspaces: () => workspaces,
@@ -58,7 +60,7 @@ const handlers: Record<string, (...args: any[]) => any> = {
   getDefaultThinkingLevel: () => state.thinking, setDefaultThinkingLevel: value => { state.thinking = value; return { success: true } },
   getExtendedPromptCache: () => state.extendedCache, setExtendedPromptCache: value => { if (state.failCache) throw Error('Fixture cache save failed'); state.extendedCache = value },
   getPromptCacheWarming: () => state.warming, setPromptCacheWarming: value => { if (state.failCache) throw Error('Fixture cache save failed'); state.warming = value },
-  getCompactionThreshold: () => null, setCompactionThreshold: () => {},
+  getCompactionThreshold: () => state.compactionThreshold, setCompactionThreshold: value => { if (state.failThreshold) throw Error('Fixture threshold save failed'); state.compactionThreshold = value },
   getContextPolicy: () => state.contextPolicy, setContextPolicy: policy => { if (state.failContext) throw Error('Fixture save failed'); state.contextPolicy = policy },
   getRtkEnabled: () => state.rtk, setRtkEnabled: value => { if (state.failCache) throw Error('Fixture RTK save failed'); state.rtk = value },
   getRtkStatus: () => ({ installed: true, path: '/fixture/rtk', version: '0.31.0', outdated: false }), getRtkGain: () => null, getCredentialHealth: () => ({ issues: [], healthy: true }),
@@ -74,7 +76,7 @@ const handlers: Record<string, (...args: any[]) => any> = {
   saveLlmConnection: c => { state.connections = state.connections.map(old => old.slug === c.slug ? { ...old, ...c } : old); refresh(); return { success: true } },
   renameLlmConnection: (slug, name) => { state.connections = state.connections.map(c => c.slug === slug ? { ...c, name } : c); refresh(); return { success: true } },
   testLlmConnectionSetup: () => ({ success: true }),
-  setupLlmConnection: setup => { state.connections = [...state.connections, { ...catalog[0], slug: setup.slug, name: 'Image API', isDefault: false, piAuthProvider: setup.piAuthProvider }]; refresh(); return { success: true } },
+  setupLlmConnection: setup => { if (setup.updateOnly) { const c = state.connections.find(c => c.slug === setup.slug); if (!c) return { success: false }; c.utilityModel = setup.utilityModel ?? undefined; refresh(); return { success: true } }; state.connections = [...state.connections, { ...catalog[0], slug: setup.slug, name: 'Image API', isDefault: false, piAuthProvider: setup.piAuthProvider }]; refresh(); return { success: true } },
   getLlmConnectionApiKey: () => '', deleteLlmConnection: slug => { state.connections = state.connections.filter(c => c.slug !== slug); refresh(); return { success: true } },
 }
 Object.assign(window, {

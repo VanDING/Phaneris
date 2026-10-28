@@ -307,6 +307,7 @@ export const piDriver: ProviderDriver = {
         console.warn(`[piDriver] Custom endpoint listing unavailable; enriching ${connection.models.length} configured model(s)`);
       }
       const merged = new Map(discovered.map(model => [model.id, model]));
+      const discoveredIds = new Set(merged.keys());
 
       for (const configured of connection.models ?? []) {
         const id = typeof configured === 'string' ? configured : configured.id;
@@ -315,7 +316,11 @@ export const piDriver: ProviderDriver = {
         if (!existing) continue;
         merged.set(id, typeof configured === 'string'
           ? existing
-          : { ...existing, ...configured, id });
+          : { ...existing, ...configured, id,
+              // A different provider's same-named model can have another output
+              // ceiling. Live endpoint discovery must replace that cached cap.
+              ...(discoveredIds.has(id) ? { maxTokens: existing.maxTokens } : {}),
+            });
       }
 
       const models = [...merged.values()];

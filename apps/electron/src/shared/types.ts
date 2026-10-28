@@ -1,3 +1,4 @@
+import type { CompactionThreshold } from '@phaneris/shared/agent/compaction-threshold'
 // =============================================================================
 // Protocol re-exports (channels, DTOs, events, wire types)
 // =============================================================================
@@ -766,8 +767,8 @@ export interface ElectronAPI {
   // Prompt caching & context
   getExtendedPromptCache(): Promise<boolean>
   getContextPolicy(): Promise<import('@phaneris/shared/agent/context-policy').ContextPolicy>
-  getCompactionThreshold(): Promise<number | null>
-  setCompactionThreshold(value: number | null): Promise<void>
+  getCompactionThreshold(): Promise<CompactionThreshold>
+  setCompactionThreshold(value: CompactionThreshold): Promise<void>
   setContextPolicy(policy: import('@phaneris/shared/agent/context-policy').ContextPolicy): Promise<void>
   getPromptCacheWarming(): Promise<boolean>
   setExtendedPromptCache(enabled: boolean): Promise<void>

@@ -749,6 +749,10 @@ export interface TestLlmConnectionParams {
 export interface TestLlmConnectionResult {
   success: boolean
   error?: string
+  errorCode?: 'model_discovery_failed'
+  /** Models discovered before validation, so setup saves the model actually tested. */
+  models?: string[]
+  defaultModel?: string
 }
 
 // ---------------------------------------------------------------------------

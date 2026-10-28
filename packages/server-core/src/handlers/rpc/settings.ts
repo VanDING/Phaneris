@@ -68,8 +68,8 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
     const settings = normalizeImageGenerationSettings(input);
     if (settings.connectionSlug) {
       const connection = getLlmConnection(settings.connectionSlug);
-      if (!connection || !supportsNativeImageGeneration(connection)) throw new Error('Select an OpenAI or OpenRouter API-key connection for image generation.');
-      if (settings.model && !(await getImageModels(connection)).some(model => model.id === settings.model)) throw new Error('Select an image generation model supported by this connection.');
+      if (!connection || !supportsNativeImageGeneration(connection)) throw new Error('Select an OpenAI, OpenRouter, or OpenAI-compatible Images API connection.');
+      if (connection.providerType !== 'pi_compat' && settings.model && !(await getImageModels(connection)).some(model => model.id === settings.model)) throw new Error('Select an image generation model supported by this connection.');
     } else if (settings.model) throw new Error('Choose an image connection before overriding its model.');
     setImageGenerationSettings(settings);
     return getImageGenerationStatus();

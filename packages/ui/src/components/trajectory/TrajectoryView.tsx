@@ -121,6 +121,7 @@ export interface TrajectoryContextSummary {
   /** Model context window when the host knows it; the occupancy ratio stays hidden otherwise. */
   contextWindow?: number
   costUsd?: number
+  knownCostRequests?: number
   unknownCostRequests?: number
   estimatedCostRequests?: number
   /** Workspace identity for the run breadcrumb. */
