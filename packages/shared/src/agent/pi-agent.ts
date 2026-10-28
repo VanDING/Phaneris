@@ -264,6 +264,7 @@ export class PiAgent extends BaseAgent {
 
   // Subprocess process handle
   private subprocess: ChildProcess | null = null;
+  private subprocessCwd: string | null = null;
   private readline: ReadlineInterface | null = null;
   private subprocessReady: Promise<void> | null = null;
   private subprocessReadyResolve: (() => void) | null = null;
@@ -672,6 +673,7 @@ export class PiAgent extends BaseAgent {
     });
 
     this.subprocess = child;
+    this.subprocessCwd = cwd;
     this.syncedProxyToolsSignature = null;
     this.stderrBuffer = [];
     this.stderrBufferBytes = 0;
@@ -747,7 +749,7 @@ export class PiAgent extends BaseAgent {
       ? getSessionPath(this.config.workspace.rootPath, sessionId)
       : '';
     const plansFolderPath = getSessionPlansPath(this.config.workspace.rootPath, sessionId);
-    const workingDirectory = this.config.session?.workingDirectory || cwd;
+    const workingDirectory = cwd;
 
     // Send init command (flat structure matching subprocess InboundMessage type)
     this.send({
@@ -1619,7 +1621,7 @@ export class PiAgent extends BaseAgent {
       workspaceId: workspaceSlug,
       plansFolderPath,
       dataFolderPath,
-      workingDirectory: this.config.session?.workingDirectory,
+      workingDirectory: this.subprocessCwd ?? this.resolvedCwd(),
       activeSourceSlugs: Array.from(this.sourceManager.getActiveSlugs()),
       allSourceSlugs: this.sourceManager.getAllSources().map(s => s.config.slug),
       hasSourceActivation: !!this.onSourceActivationRequest,
@@ -2589,6 +2591,11 @@ export class PiAgent extends BaseAgent {
     attachments?: FileAttachment[],
     options?: ChatOptions
   ): AsyncGenerator<AgentEvent> {
+    // Tools close over their cwd. Restart between turns, retaining the session's
+    // transcript directory, rather than changing permission checks under a live turn.
+    if (this.subprocessCwd && this.subprocessCwd !== this.resolvedCwd()) {
+      await this.killSubprocessGracefully();
+    }
     let message = messageParam;
     const compactMatch = message.trim().match(/^\/compact(?:\s+([\s\S]+))?$/i);
     const compactEpoch = this.compactionEpoch;
@@ -3406,6 +3413,7 @@ export class PiAgent extends BaseAgent {
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.subprocessCwd = null;
     this.pendingAbortDrains.clear();
     this.rejectPendingSourceActivationStops();
     this.subprocessEpoch++;

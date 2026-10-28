@@ -24,6 +24,7 @@ export type {
 
 // Field constants
 export { SESSION_PERSISTENT_FIELDS } from './types.ts';
+export { resolveSessionWorkingDirectory } from './paths.ts';
 
 // Storage functions
 export {

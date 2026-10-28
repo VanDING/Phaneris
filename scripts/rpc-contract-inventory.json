@@ -56,7 +56,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 150,
+          "line": 151,
           "args": [
             "workspaceId: string",
             "artifactId: string"
@@ -78,7 +78,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 162,
+          "line": 163,
           "args": [
             "workspaceId: string",
             "artifactId: string",
@@ -102,7 +102,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 105,
+          "line": 106,
           "args": [
             "workspaceId: string",
             "artifactId: string",
@@ -136,7 +136,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 98,
+          "line": 99,
           "args": [
             "workspaceId: string",
             "input: CreateArtifactDraftInput"
@@ -158,7 +158,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 156,
+          "line": 157,
           "args": [
             "workspaceId: string",
             "artifactId: string"
@@ -180,7 +180,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 79,
+          "line": 80,
           "args": [
             "workspaceId: string",
             "artifactId: string"
@@ -202,7 +202,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 116,
+          "line": 117,
           "args": [
             "workspaceId: string",
             "artifactId: string",
@@ -225,7 +225,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 72,
+          "line": 73,
           "args": [
             "workspaceId: string",
             "filter?: ArtifactListFilter"
@@ -247,7 +247,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 83,
+          "line": 84,
           "args": [
             "workspaceId: string",
             "input: RegisterCurrentArtifactInput"
@@ -269,7 +269,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 175,
+          "line": 176,
           "args": [
             "workspaceId: string",
             "artifactId: string",
@@ -292,7 +292,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 144,
+          "line": 145,
           "args": [
             "workspaceId: string",
             "artifactId: string"
@@ -314,7 +314,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
-          "line": 129,
+          "line": 130,
           "args": [
             "workspaceId: string",
             "artifactId: string",
@@ -2039,7 +2039,7 @@
             "relativeTo?: string"
           ],
           "result": "inferred by TypeScript; see handler return",
-          "owner": "validated file target / existing path policy"
+          "owner": "explicit destination workspace"
         }
       ]
     },

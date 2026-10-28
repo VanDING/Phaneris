@@ -72,6 +72,7 @@ import {
   getPendingPlanExecution as getStoredPendingPlanExecution,
   getSessionAttachmentsPath,
   getSessionPath as getSessionStoragePath,
+  resolveSessionWorkingDirectory,
   generateSessionId,
   getHeaderMetadataSignature,
   serializeSession,
@@ -3682,7 +3683,8 @@ export class SessionManager implements ISessionManager {
   /** Resolved working directory of a live session (used by the Tasks Conductor so child
    *  sessions inherit the orchestrator's cwd). Undefined if the session has none or is unknown. */
   getSessionWorkingDirectory(sessionId: string): string | undefined {
-    return this.sessions.get(sessionId)?.workingDirectory
+    const managed = this.sessions.get(sessionId)
+    return managed ? resolveSessionWorkingDirectory(managed.workspace.rootPath, sessionId, managed.workingDirectory) : undefined
   }
 
   /** Retain a small warm set, but never evict active or uncommitted work. */
@@ -5172,7 +5174,7 @@ initialSources: {
       }
 
       const sessionArtifactScope = (): ArtifactStorageScope => {
-        const contentRootPath = managed.workingDirectory || managed.workspace.rootPath
+        const contentRootPath = resolveSessionWorkingDirectory(managed.workspace.rootPath, managed.id, managed.workingDirectory)
         return {
           workspaceRootPath: managed.workspace.rootPath,
           workspaceId: managed.workspace.id,

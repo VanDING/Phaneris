@@ -62,7 +62,9 @@ const agent = assembleSessionAgent({
   hostRuntime: { appRootPath: moduleRoot, isPackaged: !!distribution, resourcesPath: distribution ? join(moduleRoot, 'resources') : undefined, nodeRuntimePath: distribution ? join(moduleRoot, 'vendor/bun/bun') : process.execPath },
   config: { model: 'pi/fixture', miniModel: 'pi/fixture',
   workspace: { id: 'independent', slug: 'independent', createdAt: 1, name: 'Independent runtime fixture', rootPath: workspace },
-  session: { id: sessionId, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1 }, isHeadless: true,
+  // This scene orders two writes to the same workspace file. Select that root
+  // explicitly; an unselected session now correctly executes in its own folder.
+  session: { id: sessionId, workspaceRootPath: workspace, workingDirectory: workspace, createdAt: 1, lastUsedAt: 1 }, isHeadless: true,
   envOverrides: { PHANERIS_CONFIG_DIR: process.env.PHANERIS_CONFIG_DIR!, HOME: fixture, USERPROFILE: fixture, NODE_ENV: 'test' },
   },
   callbacks: {}, resources: bindPiRuntime(runtime, scope),

@@ -19,6 +19,7 @@ import {
   type RegisterCurrentArtifactInput,
 } from '@phaneris/shared/artifacts'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
+import { resolveSessionWorkingDirectory } from '@phaneris/shared/sessions'
 import { getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -49,7 +50,7 @@ function scopeForSession(deps: HandlerDeps, workspaceId: string, sessionId: stri
   const rootPath = workspaceRoot(workspaceId)
   const session = deps.sessionManager.getSessions(workspaceId).find((candidate) => candidate.id === sessionId)
   if (!session) throw new Error(`Artifact session not found in workspace: ${sessionId}`)
-  const contentRootPath = session.workingDirectory || rootPath
+  const contentRootPath = resolveSessionWorkingDirectory(rootPath, sessionId, session.workingDirectory)
   return {
     workspaceRootPath: rootPath,
     workspaceId,

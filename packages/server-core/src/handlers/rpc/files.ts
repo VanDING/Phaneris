@@ -7,7 +7,7 @@ import { randomUUID } from 'crypto'
 import { RPC_CHANNELS, type FileAttachment, type DirectoryListingResult } from '@phaneris/shared/protocol'
 import type { StoredAttachment } from '@phaneris/core/types'
 import { readFileAttachment, validateImageForClaudeAPI, IMAGE_LIMITS } from '@phaneris/shared/utils'
-import { getSessionAttachmentsPath, validateSessionId } from '@phaneris/shared/sessions'
+import { getSessionAttachmentsPath, resolveSessionWorkingDirectory, validateSessionId } from '@phaneris/shared/sessions'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { getAllSessionDrafts } from '@phaneris/shared/sessions';
 import { resizeImageForAPI, inspectImageBuffer, decodeHeicToJpeg, needsHeicTranscode } from '@phaneris/server-core/services'
@@ -54,10 +54,10 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
       await deps.sessionManager.waitForInit()
       const session = deps.sessionManager.getSessions(workspaceId ?? undefined).find(candidate => candidate.id === sessionId && candidate.workspaceId === workspaceId)
       if (!session) throw new Error('File session not found in the current workspace')
-      if (session.workingDirectory) {
-        baseDirectory = session.workingDirectory
-        allowedDirectories.push(session.workingDirectory)
-      }
+      const workspace = getWorkspaceByNameOrId(workspaceId!)
+      if (!workspace) throw new Error('File workspace not found')
+      baseDirectory = resolveSessionWorkingDirectory(workspace.rootPath, sessionId, session.workingDirectory)
+      allowedDirectories.push(baseDirectory)
     }
     return resolveFileTarget(path, { baseDirectory, allowedDirectories, relativeTo })
   })

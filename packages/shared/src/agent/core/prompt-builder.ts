@@ -21,7 +21,8 @@ import {
   formatStableGitDeveloperContext,
   formatVolatileGitDeveloperContext,
 } from '../../prompts/developer-context.ts';
-import { getSessionPlansPath, getSessionDataPath, getSessionPath } from '../../sessions/storage.ts';
+import { getSessionPlansPath, getSessionDataPath } from '../../sessions/storage.ts';
+import { resolveSessionWorkingDirectory } from '../../sessions/paths.ts';
 import type {
   PromptBuilderConfig,
   ContextBlockOptions,
@@ -225,9 +226,8 @@ export class PromptBuilder {
    * directory, otherwise the session's own folder.
    */
   getSelectedWorkingDirectory(): string | undefined {
-    const sessionId = this.config.session?.id;
-    return this.config.session?.workingDirectory ??
-      (sessionId ? getSessionPath(this.workspaceRootPath, sessionId) : undefined);
+    const session = this.config.session;
+    return session ? resolveSessionWorkingDirectory(this.workspaceRootPath, session.id, session.workingDirectory) : undefined;
   }
 
   /**
@@ -257,8 +257,7 @@ export class PromptBuilder {
 
     return getWorkingDirectoryContext(
       this.getSelectedWorkingDirectory(),
-      isSessionRoot,
-      this.config.session?.sdkCwd
+      isSessionRoot
     );
   }
 

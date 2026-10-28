@@ -19,6 +19,7 @@ import { join } from 'node:path';
 import type { AgentEvent } from '@phaneris/core/types';
 import type { FileAttachment } from '../utils/files.ts';
 import { expandPath } from '../utils/paths.ts';
+import { resolveSessionWorkingDirectory } from '../sessions/paths.ts';
 import { buildTransferredSessionContext } from './conversation-summary.ts';
 import type { ThinkingLevel } from './thinking-levels.ts';
 import { DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from './thinking-levels.ts';
@@ -275,8 +276,7 @@ export abstract class BaseAgent implements AgentBackend {
 
   constructor(config: BackendConfig, defaultModel: string, contextWindow?: number) {
     this.config = config;
-    // Use session's workingDirectory if set (user-changeable), fallback to workspace root
-    this.workingDirectory = config.session?.workingDirectory ?? config.workspace.rootPath ?? process.cwd();
+    this.workingDirectory = resolveSessionWorkingDirectory(config.workspace.rootPath, config.session?.id, config.session?.workingDirectory);
     this._sessionId = config.session?.id || `agent-${Date.now()}`;
     this._model = config.model || defaultModel;
     this._thinkingLevel = normalizeThinkingLevel(config.thinkingLevel) ?? DEFAULT_THINKING_LEVEL;
@@ -557,7 +557,7 @@ export abstract class BaseAgent implements AgentBackend {
    * Also persists to session config.
    */
   updateWorkingDirectory(path: string): void {
-    this.workingDirectory = path;
+    this.workingDirectory = resolveSessionWorkingDirectory(this.config.workspace.rootPath, this.config.session?.id, path);
     // Persist to session config for storage and consistency
     if (this.config.session) {
       this.config.session.workingDirectory = path;

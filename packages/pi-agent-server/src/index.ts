@@ -1123,7 +1123,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     const sdkToolName = PI_TOOL_NAME_MAP[tool.name] || tool.name;
     let inputObj: Record<string, unknown> = { ...(params as Record<string, unknown>) };
     const resources = toolExecutionResources(tool.name, params as Record<string, unknown>,
-      initConfig?.workingDirectory || initConfig?.workspaceRootPath || process.cwd(),
+      resolvedCwd(),
       tool.name.startsWith('mcp__session__') && proxyToolDefs.some(def => def.name === tool.name && def.readOnly === true));
     const preflight = async () => {
       // Normalize Pi SDK parameter names: path → file_path
@@ -1147,7 +1147,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         inputObj.path = inputObj.file_path;
       }
       const approvedResources = toolExecutionResources(tool.name, inputObj,
-        initConfig?.workingDirectory || initConfig?.workspaceRootPath || process.cwd(),
+        resolvedCwd(),
         tool.name.startsWith('mcp__session__') && proxyToolDefs.some(def => def.name === tool.name && def.readOnly === true));
       if (JSON.stringify(approvedResources) !== JSON.stringify(resources)) {
         throw new Error(`Execution target changed during preflight; operation not dispatched. Retry using the approved target ${String(inputObj.path ?? inputObj.file_path ?? '')}.`);

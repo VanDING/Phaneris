@@ -26,6 +26,7 @@ await verificationWorkflow('session-artifacts', async run => {
   const scope = { workspaceRootPath: workspace.rootPath, workspaceId: workspace.id,
     contentRootPath: run.directory, allowedRoots: [run.directory] }
   try {
+    await manager.initialize()
     const session = await manager.createSession('source', { name: 'Artifact owner' })
     const sessionDir = getSessionPath(workspace.rootPath, session.id)
     const draft = artifacts.createArtifactDraft(scope, { sessionId: session.id, sourcePath, kind: 'text', initialText: 'Private draft' })
@@ -98,6 +99,28 @@ await verificationWorkflow('session-artifacts', async run => {
     assert.equal(readFileSync(acceptedPath, 'utf8'), 'Accepted external file')
     if (process.platform !== 'win32') assert.equal(statSync(acceptedPath).mode & 0o777, statSync(sourcePath).mode & 0o777)
     checks.push('external-materialization-keeps-user-file-policy')
+    // Relative file links and artifact registration must use the same default
+    // directory as the real Pi tools, even when a same-name root file exists.
+    const defaultOwner = await manager.createSession('source', { name: 'Default cwd owner', workingDirectory: 'none' })
+    const defaultDir = getSessionPath(workspace.rootPath, defaultOwner.id)
+    writeFileSync(join(workspace.rootPath, 'relative-report.md'), 'Wrong workspace file')
+    writeFileSync(join(defaultDir, 'relative-report.md'), 'Correct session file')
+    const handlers = new Map<string, (...args: any[]) => any>()
+    const transport = { handle: (channel: string, handler: (...args: any[]) => any) => handlers.set(channel, handler), push: () => {} }
+    const { RPC_CHANNELS } = await import('../../packages/shared/src/protocol')
+    const { registerFilesHandlers } = await import('../../packages/server-core/src/handlers/rpc/files')
+    const { registerArtifactHandlers } = await import('../../packages/server-core/src/handlers/rpc/artifacts')
+    registerFilesHandlers(transport as any, { sessionManager: manager } as any)
+    registerArtifactHandlers(transport as any, { sessionManager: manager } as any)
+    const resolved = await handlers.get(RPC_CHANNELS.file.RESOLVE)!({ workspaceId: workspace.id }, 'relative-report.md', defaultOwner.id)
+    assert.equal(resolved.path, join(defaultDir, 'relative-report.md'))
+    checks.push('relative-file-rpc-defaults-to-session-directory')
+    const registered = await handlers.get(RPC_CHANNELS.artifacts.REGISTER_CURRENT)!({}, workspace.id,
+      { sessionId: defaultOwner.id, sourcePath: 'relative-report.md', kind: 'text' })
+    assert.equal(registered.artifact.sourcePath, join(defaultDir, 'relative-report.md'))
+    assert.equal(readFileSync(registered.activePath, 'utf8'), 'Correct session file')
+    checks.push('relative-artifact-rpc-defaults-to-session-directory')
+    await manager.deleteSession(defaultOwner.id)
     await manager.deleteSession(session.id)
     await manager.deleteSession(legacySession.id)
     assert(!existsSync(sessionDir))

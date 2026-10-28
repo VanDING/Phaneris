@@ -3,6 +3,7 @@ import { existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { getWorkspaceSessionsPath } from '../workspaces/storage.ts';
 import { sanitizeSessionId } from './validation.ts';
+import { expandPath } from '../utils/paths.ts';
 // ============================================================
 // Directory Utilities
 // ============================================================
@@ -29,6 +30,11 @@ export function getSessionPath(workspaceRootPath: string, sessionId: string): st
   // Defense-in-depth: strip any path components from sessionId
   const safeSessionId = sanitizeSessionId(sessionId);
   return join(getWorkspaceSessionsPath(workspaceRootPath), safeSessionId);
+}
+
+/** Execution, prompts and file tools must agree; sdkCwd is storage metadata. */
+export function resolveSessionWorkingDirectory(workspaceRootPath: string, sessionId?: string, workingDirectory?: string): string {
+  return expandPath(workingDirectory || (sessionId ? getSessionPath(workspaceRootPath, sessionId) : workspaceRootPath));
 }
 
 /**
