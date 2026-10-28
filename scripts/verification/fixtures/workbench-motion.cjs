@@ -1,3 +1,4 @@
+const { firstBusinessWindow } = require('./electron-windows.cjs')
 const assert = require('node:assert/strict')
 const { readFileSync, writeFileSync } = require('node:fs')
 const { join } = require('node:path')
@@ -177,7 +178,7 @@ if (require.main === module) (async () => {
   const app = await _electron.launch({ args: [join(fixture.root, 'apps/electron')], cwd: fixture.root, env, timeout: 60_000, recordVideo: { dir: fixture.output, size: { width: 1640, height: 1000 } } })
   let video
   try {
-    const page = await app.firstWindow({ timeout: 60_000 })
+    const page = await firstBusinessWindow(app, { timeout: 60_000 })
     video = page.video()
     const window = await app.browserWindow(page)
     await window.evaluate(window => window.setContentSize(1640, 1000))

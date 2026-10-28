@@ -1,3 +1,4 @@
+import { firstBusinessWindow } from './fixtures/electron-windows.cjs'
 /**
  * B5 packaged E2E. Failure conditions were written in the Pi 1.1.0 failure matrix
  * before implementation: missing RPC, stale renderer, misleading cost/disabled
@@ -63,7 +64,7 @@ async function check(id: string, action: () => unknown | Promise<unknown>) {
 try {
   const started = performance.now()
   application = await _electron.launch({ executablePath: executable, args: ['--disable-gpu'], env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)), timeout: 90_000 })
-  const page = await application.firstWindow()
+  const page = await firstBusinessWindow(application)
   page.on('pageerror', error => errors.push(error.message))
   await page.waitForLoadState('domcontentloaded')
   await page.waitForFunction(() => typeof (window as any).electronAPI?.getDecisionUsage === 'function')

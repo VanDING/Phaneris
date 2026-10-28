@@ -57,7 +57,7 @@ if (process.argv[2] === '--interrupt') {
   assert.equal(readFileSync(join(restored, 'materials/report.txt'), 'utf8'), 'checkout survives recovery'); assert(!existsSync(join(workspace, 'materials/report.txt')))
   checks.push('artifact-revisions-checkout-accept-only-restored-copy')
   const reopened = createDurableRuntime()
-  reopened.admin.start([restored], (_root, error) => { throw error })
+  await reopened.admin.start([restored], (_root, error) => { throw error })
   const operations = reopened.queries.operations(restored, session.id)
   assert(operations.some(op => op.phase === 'recovery_parked'))
   const events = reopened.queries.events(restored, { sessionId: session.id })

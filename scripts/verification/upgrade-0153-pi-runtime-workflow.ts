@@ -56,6 +56,7 @@ interface ProviderRequest {
   model?: string
   maxTokensField: 'max_tokens' | 'max_completion_tokens' | null
   maxTokens?: number
+  summaryKind?: 'history' | 'turn-prefix'
   messageCount: number
   roles: string[]
   toolCount: number
@@ -190,6 +191,7 @@ try {
         sha256: sha256(raw),
         contains: Object.fromEntries(probes.map(needle => [needle, probe(needle)])),
       }
+      if (record.kind === 'compaction') record.summaryKind = raw.includes('## Original Request') ? 'turn-prefix' : 'history'
       const toolMessages = messages
         .filter((message: any) => message?.role === 'tool')
         .map((message: any) => typeof message.content === 'string' ? message.content : JSON.stringify(message.content))
@@ -470,6 +472,7 @@ try {
     status: record.status,
     model: record.model,
     outputCap: { field: record.maxTokensField, value: record.maxTokens },
+    summaryKind: record.summaryKind,
     messageCount: record.messageCount,
     roles: record.roles,
     toolCount: record.toolCount,
@@ -517,7 +520,7 @@ try {
       const firstSettled = await settleTurn(agent, first, 'pc-01 turn 1')
       const [requestA] = sceneRequests('pc-01')
       assert.equal(requestA?.model, MODEL_A.id, 'the first provider request must carry model A')
-      assert.equal(requestA?.maxTokens, MODEL_A.maxTokens, 'model A must cap output at its own maxTokens')
+      assert.equal(requestA?.maxTokensField, null, 'ordinary custom chat must omit the SDK default output cap')
       assert.equal(firstSettled.event.aborted, false)
       assert(wireRows(agent).some(row => JSON.stringify(row).includes('PC01_PRIVATE_MODEL_A_THINKING')), 'the first model must actually emit thinking before switching')
 
@@ -553,7 +556,7 @@ try {
       const requestsAfterSwitch = sceneRequests('pc-01')
       assert.equal(requestsAfterSwitch.length, 2, 'exactly one provider request per turn')
       assert.equal(requestsAfterSwitch[1]!.model, MODEL_B.id, 'the second provider request must carry model B')
-      assert.equal(requestsAfterSwitch[1]!.maxTokens, MODEL_B.maxTokens, 'the cap must follow the switched model')
+      assert.equal(requestsAfterSwitch[1]!.maxTokensField, null, 'switching models must preserve the ordinary custom chat output policy')
       assert.equal(requestsAfterSwitch[1]!.contains.PC01_PRIVATE_MODEL_A_THINKING, false, 'model A thinking must not leak into the switched model B request')
       // The subprocess also re-reports occupancy at every boundary; after the
       // switch that snapshot is taken through the new model (session-event-adapter.ts:203-210).
@@ -599,7 +602,7 @@ try {
           { turn: 1, aborted: firstSettled.event.aborted, contextWindow: firstSettled.event.contextUsage?.contextWindow ?? null },
           { turn: 2, aborted: secondSettled.event.aborted, contextWindow: secondSettled.event.contextUsage?.contextWindow ?? null },
         ],
-        observation: 'Every provider request in this scene used the output-cap field production picked for a loopback custom endpoint.',
+        observation: 'Ordinary custom chat requests omit SDK default output caps before and after model switches.',
         pids: pidEvidence(),
         pid,
       })
@@ -755,8 +758,9 @@ try {
       assert.equal(settled.event.aborted, true, 'the SDK must report the turn as aborted')
       assert.equal(agent.isProcessing(), false)
 
-      // No partial answer is published as a final message.
+      // Preserve the observed partial without presenting it as a final answer.
       assert.equal(finalTexts(turn.events).length, 0, 'an aborted turn must not publish a final text_complete')
+      assert(turn.events.some(event => event.type === 'text_complete' && event.isIntermediate === true && event.text.includes('PC03_PARTIAL_ALPHA')), 'the observed partial must remain available as intermediate text')
 
       // Exactly one provider request for the aborted turn, and none afterwards.
       assert.equal(sceneRequests('pc-03').length, 1)
@@ -1000,7 +1004,7 @@ try {
   }
 
   // ==========================================================================
-  // PC-05 — the per-model output cap follows the selected model, compaction included.
+  // PC-05 — ordinary custom chat omits defaults; explicit compaction budgets follow the model.
   // ==========================================================================
   {
     scene = 'pc-05'
@@ -1020,10 +1024,10 @@ try {
       assert.equal(underA.length, 2)
       for (const request of underA) {
         assert.equal(request.model, MODEL_A.id)
-        assert.equal(request.maxTokens, MODEL_A.maxTokens, 'the request cap must be model A\'s maxTokens')
+        assert.equal(request.maxTokensField, null, 'ordinary custom chat must omit the SDK default output cap')
       }
       assert.equal(underA[0]!.maxTokensField, underA[1]!.maxTokensField,
-        'production must use the same output-cap field for every request')
+        'ordinary requests must consistently omit the default output-cap field')
 
       // Manual compaction through the production RPC (`chatImpl`'/compact'
       // branch calls exactly this method: pi-agent.ts:2589).
@@ -1061,7 +1065,7 @@ try {
       assert.equal(underB.length, 2)
       for (const request of underB) {
         assert.equal(request.model, MODEL_B.id, 'the requests after the switch must carry model B')
-        assert.equal(request.maxTokens, MODEL_B.maxTokens, 'the request cap must be model B\'s maxTokens')
+        assert.equal(request.maxTokensField, null, 'ordinary custom chat must omit the SDK default output cap after switching')
       }
 
       const compactB = await agent.requestCompact('PC05 compaction under model B')
@@ -1093,7 +1097,7 @@ try {
         chatRequests: sceneRequests('pc-05').filter(request => request.kind === 'chat').map(requestView),
         compactionRequests: summaryRequests.map(requestView),
         derivations: {
-          chat: 'pi-ai buildBaseOptions: maxTokens = clampMaxTokensToContext(model, context, model.maxTokens) = min(model.maxTokens, contextWindow - estimatedContext - 4096) (api/simple-options.js:5-23); with these contexts the model cap binds, which is why the observed value equals maxTokens.',
+          chat: 'withCustomEndpointOutputPolicy removes implicit SDK max_tokens/max_completion_tokens for ordinary custom chat; the endpoint owns its default budget. Explicit per-call compaction budgets remain intact.',
           compaction: 'pi-coding-agent generateSummaryWithUsage: maxTokens = min(floor(0.8 * reserveTokens), model.maxTokens > 0 ? model.maxTokens : Infinity) (core/compaction/compaction.js:511-512). reserveTokens is read through the session\'s current model (pi-agent-server/src/context-usage.ts:24-30) and reported back in compact_result.',
           observed: {
             modelA: { reserveTokens: reserveA, modelMaxTokens: MODEL_A.maxTokens, expected: expectedA, observed: summaryA[0]!.maxTokens },
@@ -1188,7 +1192,9 @@ try {
       evidence.json('pi-compaction-auto-probe.json', { auto: auto.map(requestView), requests: requests.slice(beforeAuto).map(requestView), events: eventRows(agent, beforeEvents) })
       assert(auto.length >= 1 && auto.length <= 2, 'earlier threshold compacts without an unbounded loop')
       assert(auto.every(row => [8192, 13_107].includes(row.maxTokens!)), 'original SDK history (80%) and split-turn prefix (50%) budgets remain bounded')
-      assert(auto.some(row => row.maxTokens === 13_107), 'history summary still uses the original SDK reserve')
+      // SDK reuses the previous summary when there is no new history to summarize
+      // (compaction.js:690-701), so an automatic split can issue prefix requests only.
+      for (const row of auto) assert.equal(row.maxTokens, Math.floor((row.summaryKind === 'turn-prefix' ? 0.5 : 0.8) * 16_384), 'each emitted summary must retain its original SDK budget')
       assert(eventRows(agent, beforeEvents, 'compaction_start').some(row => row.event.reason === 'threshold'))
       snapshots.auto = auto.map(requestView)
       scenes.push('pc-06-real-automatic-threshold')

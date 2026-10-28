@@ -46,7 +46,11 @@ await verificationWorkflow('theme-domains', async run => {
         if (state === 'error') assert(await page.getByTestId('domain-decision').locator('button').count() > 0, 'Error state offers retry')
         const sample = await page.getByTestId('domain-decision').evaluate(element => ({ color: getComputedStyle(element).color, text: element.textContent?.slice(0, 300) }))
         samples.push({ id, mode, state, decision: sample })
-        assert(sample.text?.length); assert.deepEqual(await page.evaluate(() => window.themeDomains.pdfErrors), [])
+        if (state === 'loading') {
+          const status = page.getByTestId('domain-decision').getByRole('status')
+          assert(await status.isVisible()); assert((await status.getAttribute('aria-label'))?.length)
+        } else assert(sample.text?.length)
+        assert.deepEqual(await page.evaluate(() => window.themeDomains.pdfErrors), [])
       })
       await check(`TC14-terminal-${id}-${mode}`, async () => {
         const value = await page.getByTestId('domain-terminal').locator('pre').evaluate(element => {

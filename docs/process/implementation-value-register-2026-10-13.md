@@ -6,7 +6,7 @@
 
 **本文件是实施裁定、收口状态与后续条件事项的唯一当前入口。** 已接受的架构、制作指南、所有权清单和验收规范继续有效；历史规划中的“下一步”、工期、OPEN 和旧版本缺口不再自动生成待办。
 
-2026-10-26 用户明确授权[Harness 系统演进方案](../architecture/harness-system-evolution-2026-10-25.md)实施。独立分支 `codex/harness-system-evolution` 基于 `ab0282111` 完成任务准备、能力暴露、材料反馈、共同容量口径、原生压缩所有权、接续与执行链收敛，本机 132 个 harness 场景及静态门禁通过；记录见[实施与验证边界](harness-system-evolution-implementation-2026-10-26.md)与[事先失败矩阵](../verification/harness-system-evolution-failure-matrix-2026-10-26.md)。未合并或发布，真实模型质量尚未对照；不重开通用评测平台、多代理控制面或自动语义干预项目。
+2026-10-26 用户明确授权[Harness 系统演进方案](../architecture/harness-system-evolution-2026-10-25.md)实施。独立分支 `codex/harness-system-evolution` 基于 `ab0282111` 完成任务准备、能力暴露、材料反馈、共同容量口径、原生压缩所有权、接续与执行链收敛，本机 132 个 harness 场景及静态门禁通过；记录见[实施与验证边界](harness-system-evolution-implementation-2026-10-26.md)与[事先失败矩阵](../verification/harness-system-evolution-failure-matrix-2026-10-26.md)。已通过 `1214ba504` 合入 main 并纳入 0.5.0，真实模型质量尚未对照；不重开通用评测平台、多代理控制面或自动语义干预项目。
 
 2026-10-15 用户批准的 Craft 0.15.0 / 0.15.1 非 UI 吸收已完成 B1–B6。[实施记录](../verification/upstream-0.15-non-ui-implementation-2026-10-15.md)及[机器结果](../verification/results/upstream-0.15-non-ui-2026-10-15.json)记录 33 项新增流程通过、静态门禁与生产构建通过，以及全量旧测试未全绿的明确限制；实施遵循[事先失败矩阵](../verification/upstream-0.15-non-ui-failure-matrix-2026-10-15.md)。保留现有 Pi 1.2.0 与视觉体系；不重开已关闭的原生 MCP 全面替换、Claude SDK、网关或通用记忆系统计划。
 
@@ -15,6 +15,8 @@
 2026-10-26 用户针对真实会话被 durable runtime 阻塞的问题授权完整修复。`codex/durable-runtime-continuity` 基于 `bc2f436a0` 实施前台生命周期与后台事实解耦、已知结果自动补写、输入消费关联、退出收尾和任务子会话复用；见[实施与验证记录](durable-runtime-continuity-implementation-2026-10-26.md)及[失败矩阵](../verification/durable-runtime-continuity-failure-matrix-2026-10-26.md)。不以人工 reconciliation 为普通继续条件，不改写真实会话数据，不将受控 provider 验证扩大为真实模型或发行结论。
 
 ## 1. 裁定依据
+
+2026-10-28 用户授权[阶段评估](governance-review-and-development-direction-2026-10-28.md)中的 M0：收口启动阻塞、已记录关键验收及同一 Windows 桌面候选验证；[先行失败矩阵](../verification/m0-closeout-failure-matrix-2026-10-28.md)。2026-10-29 已完成本机 Windows 候选收尾，见[最终实施与验收](m0-closeout-implementation-2026-10-28.md)，未安装或发布。M1–M3 仍为提案。
 
 | 依据 | 采用方式 |
 | --- | --- |

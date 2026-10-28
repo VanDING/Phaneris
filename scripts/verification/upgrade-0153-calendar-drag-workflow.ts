@@ -378,11 +378,15 @@ await verificationWorkflow('upgrade-0153-calendar-drag', async run => {
       assert(after.buttons.some(text => text === '新建日程'), `the New Schedule control must be translated (${JSON.stringify(after.buttons)})`)
       assert.deepEqual(after.radios, ['日', '周', '月'], `the view switcher must be translated (${JSON.stringify(after.radios)})`)
       assert(after.weekdays.some(day => day.includes('周')), `the day headers must be translated (${JSON.stringify(after.weekdays)})`)
-      assert.match(after.title, /年/,
-        `the header title is a translated label and must re-render with the language: DOM "${after.title}" while FullCalendar itself holds "${after.libraryTitle}" (see cal-04-language.json titleAndCursor)`)
+      // Chinese ranges spanning two months can use 2026/10 – 2026/11.
+      // The contract is the live localized library title, not a literal 年 suffix.
+      assert.notEqual(after.title, before.title, 'changing locale must update the title')
+      assert.equal(after.title, after.libraryTitle, 'the localized header must track the live FullCalendar title')
       assert.deepEqual(after.entries, before.entries, 'the events must survive the language switch')
       assert.equal(after.gridCells, before.gridCells, 'the grid must keep its structure across the switch')
       assert(restoredSwitched, `the calendar never returned to English (${JSON.stringify(restored)})`)
+      assert.equal(restored.title, before.title, 'switching back must restore the original localized title')
+      assert.equal(restored.title, restored.libraryTitle)
       assert(restored.buttons.some(text => text === 'Today'), `the chrome must return to English (${JSON.stringify(restored.buttons)})`)
       assert.deepEqual(restored.entries, before.entries, 'the events must survive the switch back')
       // The header must track the library on plain navigation too (this is the

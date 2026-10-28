@@ -6415,7 +6415,7 @@
       "sites": [
         {
           "file": "apps/electron/src/main/index.ts",
-          "line": 1345,
+          "line": 1354,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6434,7 +6434,7 @@
       "sites": [
         {
           "file": "apps/electron/src/main/index.ts",
-          "line": 1367,
+          "line": 1376,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6516,7 +6516,7 @@
       "sites": [
         {
           "file": "apps/electron/src/main/index.ts",
-          "line": 1350,
+          "line": 1359,
           "args": [
             "config: unknown"
           ],

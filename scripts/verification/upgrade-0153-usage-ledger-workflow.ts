@@ -70,6 +70,7 @@ interface FixtureRequest {
 }
 
 const agents = new Map<string, any>()
+const seen: FixtureRequest[] = []
 let runtime: ReturnType<typeof import('../../packages/server-core/src/durable-runtime/index')['createDurableRuntime']> | undefined
 let provider: { url: URL; stop(closeActiveConnections?: boolean): void } | undefined
 let database: Database | undefined
@@ -128,7 +129,6 @@ try {
     { label: 'XC', outcome: 'ok', prompt: 2000, completion: 25, text: 'DURABLY_METERED_SUMMARY' },
     { label: 'XC', outcome: 'ok', prompt: 1200, completion: 15, text: 'AFTER_METERED_SUMMARY' })
   const stalledStreams: (() => void)[] = []
-  const seen: FixtureRequest[] = []
   let served = 0, unscripted = 0
   const server = Bun.serve({
     hostname: '127.0.0.1', port: 0, idleTimeout: 30,
@@ -223,6 +223,7 @@ try {
       assert(!shape.issues.some(issue => issue.kind === kind), `${what}: unexpected ${kind} issue`)
   }
   function assemble(sessionId: string, sdkSessionId?: string, branchFromSessionPath?: string, compactionThresholdTokens?: number) {
+    mkdirSync(join(workspace, 'sessions', sessionId), { recursive: true })
     const agent = assembleSessionAgent({
       context: { provider: 'pi', authType: 'api_key', resolvedModel: 'pi/fixture', capabilities: { needsHttpPoolServer: true },
         connection: { slug: 'usage-fixture', name: 'Usage fixture', providerType: 'pi_compat', authType: 'api_key', createdAt: 1,
@@ -289,6 +290,7 @@ try {
     const outcomes = factsOf(L1.operationId, 'model_outcome_committed')
     const usageEvents = factsOf(L1.operationId, 'usage_committed')
     const assistant = factsOf(L1.operationId, 'assistant_message_committed')
+    evidence.json('l1-diagnostics.json', { wire: rows(L1.sessionId), facts: facts(L1.operationId), operation, seen })
     assert.equal(operation.length, 1, 'L1: exactly one usage row for the operation')
     assert.equal(session.length, 1, 'L1: exactly one usage row for the session')
     assert.equal(dispatch.length, 1, 'L1: exactly one durable model dispatch')
@@ -821,6 +823,7 @@ try {
 } catch (error) {
   failure = error
 } finally {
+  evidence.json('provider-requests.json', seen)
   for (const agent of agents.values()) {
     try { await agent.disposeForRestart?.() } catch { /* teardown only */ }
     try { agent.destroy?.() } catch { /* teardown only */ }

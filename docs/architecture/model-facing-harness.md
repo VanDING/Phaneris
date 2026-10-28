@@ -2,7 +2,7 @@
 
 Status: accepted — implementation baseline on the working branch; merge and release are separate.
 
-日期：2026-10-22。状态：已在 `codex/model-harness-implementation` 实施并进行本地验证，未合并或发布。逐批证据与未验证范围见[实施记录](../process/model-harness-implementation-2026-10-22.md)。
+日期：2026-10-22；当前状态更新于 2026-10-28。状态：accepted — 已合入 main，后续系统演进随 0.5.0 交付；原分支的实施与验收记录保留当时口径。逐批证据与未验证范围见[实施记录](../process/model-harness-implementation-2026-10-22.md)。
 
 2026-10-23 的能力契约与条件指导增量见[后续实施记录](../process/harness-capability-implementation-2026-10-23.md)；下文保留本基线的历史范围与验证事实。
 

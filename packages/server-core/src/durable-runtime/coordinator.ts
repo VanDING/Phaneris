@@ -31,6 +31,7 @@ import { createHash } from 'node:crypto'
 import { copyFileSync, existsSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { DurableRuntimeStore, type RuntimeDatabaseIntegrity, type RuntimeUsageRow } from './store.js'
+import { runDatabaseTask } from './database-maintenance.js'
 import { DurableProjectionRunner, ProjectionSchemaMismatchError } from './projection-runner.js'
 import {
   projectDurableSession,
@@ -119,7 +120,7 @@ export class DurableRuntimeCoordinator {
   private readonly reconciliationAdapters = new Map<string, ToolReconciliationAdapter>()
   private readonly recoveredStorage = new Map<string, { databasePath: string; reason: string }>()
 
-  storeFor(workspaceRootPath: string): DurableRuntimeStore {
+  storeFor(workspaceRootPath: string, deferIntegrity = false): DurableRuntimeStore {
     let store = this.stores.get(workspaceRootPath)
     if (!store) {
       let databasePath: string | undefined
@@ -133,8 +134,10 @@ export class DurableRuntimeCoordinator {
       } catch { /* Recover from the original store or its verified backups. */ }
       try {
         store = new DurableRuntimeStore(workspaceRootPath, { databasePath })
-        const integrity = store.checkIntegrity()
-        if (!integrity.ok) throw new Error(integrity.messages.join('; '))
+        if (!deferIntegrity) {
+          const integrity = store.checkIntegrity()
+          if (!integrity.ok) throw new Error(integrity.messages.join('; '))
+        }
       } catch (error) {
         try { store?.close() } catch { /* Preserve the original failure. */ }
         store = this.openRecoveryStorage(workspaceRootPath, error)
@@ -142,6 +145,23 @@ export class DurableRuntimeCoordinator {
       this.stores.set(workspaceRootPath, store)
     }
     return store
+  }
+
+  /** Bootstrap awaits this before RPC/admission opens. Lazy/offline callers
+   * retain the synchronous checked open; no verification result is cached on disk. */
+  async initializeWorkspace(workspace: string, signal?: AbortSignal): Promise<void> {
+    if (this.stores.has(workspace)) return
+    const store = this.storeFor(workspace, true)
+    if (store.databasePath === ':memory:') return
+    try {
+      const integrity = await runDatabaseTask<RuntimeDatabaseIntegrity>(store.databasePath, { kind: 'integrity' }, signal)
+      if (!integrity.ok) throw new Error(integrity.messages.join('; '))
+    } catch (error) {
+      store.close()
+      this.stores.delete(workspace)
+      if (signal?.aborted) throw error
+      this.stores.set(workspace, this.openRecoveryStorage(workspace, error))
+    }
   }
 
   storageStatus(workspaceRootPath: string) {

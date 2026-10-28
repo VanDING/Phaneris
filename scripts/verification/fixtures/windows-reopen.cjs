@@ -1,3 +1,4 @@
+const { firstBusinessWindow } = require('./electron-windows.cjs')
 /** Native Electron lifecycle and second process; only disposable profiles are used. */
 const assert = require('node:assert/strict')
 const { spawn, spawnSync } = require('node:child_process')
@@ -33,7 +34,7 @@ function seed(name) {
 }
 async function open(profile) {
   const app = await _electron.launch({ executablePath: fixture.executable, args: profile.args, cwd: fixture.root, env: profile.env, timeout: 60_000 })
-  const page = await app.firstWindow({ timeout: 60_000 })
+  const page = await firstBusinessWindow(app, { timeout: 60_000 })
   await page.locator('.sidebar-navigation').waitFor({ timeout: 60_000 })
   return { app, page }
 }

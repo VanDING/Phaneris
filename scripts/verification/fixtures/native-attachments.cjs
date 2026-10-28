@@ -1,3 +1,4 @@
+const { firstBusinessWindow } = require('./electron-windows.cjs')
 const assert = require('node:assert/strict')
 const { readFileSync, writeFileSync } = require('node:fs')
 const { join } = require('node:path')
@@ -14,7 +15,7 @@ const { _electron } = require('playwright')
   }
   let page
   try {
-    page = await app.firstWindow()
+    page = await firstBusinessWindow(app)
     page.on('pageerror', error => errors.push(error.message))
     await page.context().tracing.start({ screenshots: true, snapshots: true })
     await page.getByText('Attachment session', { exact: true }).first().waitFor({ timeout: 60000 })

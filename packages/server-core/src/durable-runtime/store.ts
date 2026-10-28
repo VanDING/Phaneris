@@ -1,6 +1,5 @@
-import { existsSync, mkdirSync, linkSync, unlinkSync } from 'node:fs'
-import { randomUUID } from 'node:crypto'
-import { dirname, join, resolve } from 'node:path'
+import { existsSync, mkdirSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import {
   resolveToolRecovery,
   type DurableOperationState,
@@ -12,6 +11,8 @@ import {
 } from '@phaneris/shared/durable-runtime'
 import { canonicalJson } from './canonical-json.js'
 import { openSqliteDatabase, type SqliteDatabase } from './sqlite-driver.js'
+
+import { performDatabaseTask } from './database-maintenance.js'
 
 const SCHEMA_VERSION = 4
 
@@ -217,68 +218,20 @@ export class DurableRuntimeStore {
   }
 
   checkIntegrity(): RuntimeDatabaseIntegrity {
-    try {
-      const rows = this.db.prepare('PRAGMA integrity_check').all() as Array<Record<string, unknown>>
-      const messages = rows.map(row => String(row.integrity_check ?? Object.values(row)[0] ?? 'unknown'))
-      return { ok: messages.length === 1 && messages[0]!.toLowerCase() === 'ok', messages, checkedAt: Date.now() }
-    } catch (error) {
-      throw new RuntimeDatabaseError(classifyRuntimeDatabaseFailure(error), 'integrity check', error)
-    }
+    try { return performDatabaseTask(this.db, this.databasePath, { kind: 'integrity' }) as RuntimeDatabaseIntegrity }
+    catch (error) { throw new RuntimeDatabaseError(classifyRuntimeDatabaseFailure(error), 'integrity check', error) }
   }
 
-  /** Create a transactionally consistent standalone copy without overwriting an existing backup. */
-  backupTo(destinationPath: string): string {
-    if (this.databasePath === ':memory:') throw new Error('In-memory runtime databases cannot be backed up to disk')
-    const destination = resolve(destinationPath)
-    if (destination === resolve(this.databasePath)) throw new Error('Runtime database backup destination must differ from the source')
-    if (existsSync(destination)) throw new Error(`Runtime database backup already exists: ${destination}`)
-    mkdirSync(dirname(destination), { recursive: true, mode: 0o700 })
-    const staged = `${destination}.${randomUUID()}.tmp`
-    const sqlPath = staged.replaceAll("'", "''")
-    try {
-      this.db.exec('PRAGMA wal_checkpoint(FULL)')
-      this.db.exec(`VACUUM INTO '${sqlPath}'`)
-      // Same-directory hard-link publication is atomic and refuses an existing
-      // destination, including a snapshot concurrently published by another host.
-      linkSync(staged, destination)
-      return destination
-    } catch (error) {
-      throw new RuntimeDatabaseError(classifyRuntimeDatabaseFailure(error), 'backup', error)
-    } finally {
-      if (existsSync(staged)) unlinkSync(staged)
-    }
+  /** Atomic publication refuses to overwrite an existing recovery point. */
+  backupTo(destination: string): string {
+    try { return performDatabaseTask(this.db, this.databasePath, { kind: 'backup', destination }) as string }
+    catch (error) { throw new RuntimeDatabaseError(classifyRuntimeDatabaseFailure(error), 'backup', error) }
   }
 
-  /**
-   * Maintain only rebuildable/physical state. Immutable semantic facts and the
-   * usage ledger are deliberately outside retention.
-   */
+  /** Retains semantic facts and usage; only rebuildable projections expire. */
   maintain(options: { projectionRetentionMs?: number; vacuum?: boolean } = {}): RuntimeDatabaseMaintenanceResult {
-    const maintainedAt = Date.now()
-    try {
-      this.db.exec('PRAGMA wal_checkpoint(FULL)')
-      const removedProjections: string[] = []
-      if (options.projectionRetentionMs !== undefined) {
-        if (!Number.isFinite(options.projectionRetentionMs) || options.projectionRetentionMs < 0) {
-          throw new Error('projectionRetentionMs must be a non-negative finite number')
-        }
-        const cutoff = maintainedAt - options.projectionRetentionMs
-        const rows = this.db.prepare('SELECT projection FROM projection_snapshots WHERE updated_at < ?')
-          .all(cutoff) as Array<{ projection: string }>
-        this.db.transaction(() => {
-          for (const row of rows) {
-            this.db.prepare('DELETE FROM projection_snapshots WHERE projection = ?').run(row.projection)
-            this.db.prepare('DELETE FROM projection_cursors WHERE projection = ?').run(row.projection)
-            removedProjections.push(row.projection)
-          }
-        })()
-      }
-      if (options.vacuum) this.db.exec('VACUUM')
-      this.db.exec('PRAGMA optimize')
-      return { removedProjections, vacuumed: options.vacuum === true, maintainedAt }
-    } catch (error) {
-      throw new RuntimeDatabaseError(classifyRuntimeDatabaseFailure(error), 'maintenance', error)
-    }
+    try { return performDatabaseTask(this.db, this.databasePath, { kind: 'maintain', ...options }) as RuntimeDatabaseMaintenanceResult }
+    catch (error) { throw new RuntimeDatabaseError(classifyRuntimeDatabaseFailure(error), 'maintenance', error) }
   }
 
   appendEvents(events: RuntimeEvent[]): number[] {

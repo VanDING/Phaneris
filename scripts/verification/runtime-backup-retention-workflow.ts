@@ -23,7 +23,8 @@ await verificationWorkflow('runtime-backup-retention', async evidence => {
     const stale = 'runtime-2000-01-01.db.00000000-0000-0000-0000-000000000000.tmp'
     writeFileSync(join(backups, stale), 'interrupted staging')
     writeFileSync(join(backups, 'manual.db'), 'user backup')
-    runtime.admin.start([workspace], (_workspace, error) => errors.push(String(error)))
+    await runtime.admin.start([workspace], (_workspace, error) => errors.push(String(error)))
+    await runtime.admin.maintainWorkspace(workspace)
     assert.equal(errors.length, 0)
     const database = new Database(join(backups, current), { readonly: true })
     assert.deepEqual(database.query('PRAGMA quick_check').all(), [{ quick_check: 'ok' }])
@@ -38,7 +39,8 @@ await verificationWorkflow('runtime-backup-retention', async evidence => {
     assert.equal(readFileSync(join(backups, 'manual.db'), 'utf8'), 'user backup')
     scenes.push('unmanaged backup files remain untouched')
     const before = readFileSync(join(backups, current))
-    runtime.admin.start([workspace], (_workspace, error) => errors.push(String(error)))
+    await runtime.admin.start([workspace], (_workspace, error) => errors.push(String(error)))
+    await runtime.admin.maintainWorkspace(workspace)
     assert.equal(errors.length, 0)
     assert(readFileSync(join(backups, current)).equals(before))
     assert.throws(() => runtime.admin.backupDatabase(workspace, join(backups, current)))
@@ -51,8 +53,8 @@ await verificationWorkflow('runtime-backup-retention', async evidence => {
     for (const date of ['2000-01-01', '2000-01-02', '2000-01-03']) copyFileSync(original, join(failedBackups, `runtime-${date}.db`))
     const failed = createDurableRuntime(), failedErrors: string[] = []
     try {
-      failed.admin.start([failedWorkspace], (_workspace, error) => failedErrors.push(String(error)))
-      assert(failedErrors.length > 0, 'An unexpected directory at the daily backup path must report an error')
+      await failed.admin.start([failedWorkspace], (_workspace, error) => failedErrors.push(String(error)))
+      await assert.rejects(failed.admin.maintainWorkspace(failedWorkspace), /not a regular file/)
       assert.equal(readdirSync(failedBackups).filter(name => name.startsWith('runtime-2000')).length, 3)
       scenes.push('failed replacement never prunes previous recovery points')
     } finally { await failed.close() }

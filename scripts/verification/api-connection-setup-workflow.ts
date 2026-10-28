@@ -26,7 +26,9 @@ await verificationWorkflow('api-connection-setup', async run => {
   registerPiModelResolver(provider => provider ? getPiModelsForAuthProvider(provider) : getAllPiModels())
   const logs: unknown[] = [], providerRequests: Array<{ path: string; body?: Record<string, unknown> }> = []
   const logger = Object.fromEntries(['info', 'warn', 'debug', 'error'].map(level => [level, (...args: unknown[]) => logs.push({ level, args })]))
-  const platform = { appRootPath: root, isPackaged: false, logger } as unknown as PlatformServices
+  const resources = process.env.PHANERIS_VERIFY_PI_RESOURCES
+  const platform = { ...(resources ? { appRootPath: join(resources, 'app'), resourcesPath: resources, isPackaged: true }
+    : { appRootPath: root, isPackaged: false }), logger } as unknown as PlatformServices
   setFetcherPlatform(platform)
   const refresh = initModelRefreshService(async slug => ({ apiKey: await getCredentialManager().getLlmApiKey(slug) ?? undefined }))
   const handlers = new Map<string, (context: unknown, ...args: unknown[]) => unknown>()

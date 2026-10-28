@@ -1,3 +1,4 @@
+const { firstBusinessWindow } = require('./electron-windows.cjs')
 /** Actual Electron main/preload/business renderer in a disposable profile. Runs under Node for native pipes. */
 const assert = require('node:assert/strict')
 const { readFileSync, writeFileSync, watch } = require('node:fs')
@@ -18,19 +19,25 @@ async function waitForCondition(page, predicate, argument) {
   const env = { ...process.env, PHANERIS_CONFIG_DIR: fixture.config, PHANERIS_RPC_PORT: '0',
     PHANERIS_DISABLE_MESSAGING: '1', PHANERIS_TELEMETRY_ENABLED: '0', NODE_ENV: 'production' }
   delete env.ELECTRON_RUN_AS_NODE; delete env.VITE_DEV_SERVER_URL
-  const app = await _electron.launch({ args: [join(fixture.root, 'apps/electron')], cwd: fixture.root, env, timeout: 30_000 })
+  const app = await _electron.launch({
+    ...(fixture.executablePath ? { executablePath: fixture.executablePath, args: [] } : { args: [join(fixture.root, 'apps/electron')] }),
+    cwd: fixture.root, env, timeout: 30_000,
+  })
   const checks = [], errors = [], consoleTrace = []
   let mainDiagnostics = '', fatalExitVerified = false
   app.process().stderr.on('data', data => { mainDiagnostics += data.toString() })
   const draftWrites = []
-  const draftWatcher = watch(fixture.config, (_event, file) => {
-    if (String(file) !== 'drafts.json') return
-    try { draftWrites.push({ time: Date.now(), value: JSON.parse(readFileSync(join(fixture.config, 'drafts.json'), 'utf8')) }) } catch {}
+  const draftDirectory = join(fixture.recovery.workspace, 'sessions', fixture.session)
+  const draftWatcher = watch(draftDirectory, (_event, file) => {
+    if (String(file) !== 'draft.json') return
+    try { draftWrites.push({ time: Date.now(), value: JSON.parse(readFileSync(join(draftDirectory, 'draft.json'), 'utf8')) }) } catch {}
   })
   let page
   let tracing = false
   try {
-    page = await app.firstWindow({ timeout: 30_000 })
+    page = await firstBusinessWindow(app, { timeout: 60000 })
+    assert(!app.windows().some(candidate => candidate.url().startsWith('data:')), 'Startup feedback must close before workspace interaction')
+    checks.push('startup feedback hands off to the workspace without a residual window')
     await page.context().tracing.start({ screenshots: true, snapshots: true }); tracing = true
     page.on('pageerror', error => errors.push(error.message))
     page.on('console', message => consoleTrace.push({ type: message.type(), text: message.text().slice(0, 2000) }))
@@ -40,6 +47,10 @@ async function waitForCondition(page, predicate, argument) {
     checks.push('native main/preload initializes transport before business renderer')
     assert((await page.evaluate(() => window.electronAPI.getSessions())).some(item => item.id === fixture.session))
     checks.push('native RPC facade reads the same persisted domain fixture')
+    const connectionProbe = await page.evaluate(params => window.electronAPI.testLlmConnectionSetup(params), fixture.connectionProbe)
+    writeFileSync(join(fixture.output, 'native-connection-probe.json'), JSON.stringify(connectionProbe, null, 2))
+    assert.equal(connectionProbe.success, true, JSON.stringify(connectionProbe))
+    checks.push('native main/preload/RPC validates a provider through the real Pi subprocess')
     await page.getByText('Governance session', { exact: true }).first().click()
     const input = page.locator('[contenteditable="true"]').first()
     await input.waitFor()
@@ -70,8 +81,9 @@ async function waitForCondition(page, predicate, argument) {
     await page.getByText('Second workspace session', { exact: true }).first().waitFor()
     assert.equal(await page.evaluate(() => window.electronAPI.getWindowWorkspace()), 'second')
     checks.push('native workspace switch updates the host binding')
-    assert.equal((await page.evaluate(id => window.electronAPI.getDraft(id), fixture.session)).text, 'Native pending draft')
-    checks.push('native rapid workspace switch flushes pending composer and persistence timers')
+    await assert.rejects(() => page.evaluate(id => window.electronAPI.getDraft(id), fixture.session), /not found in workspace/)
+    assert.equal(JSON.parse(readFileSync(join(draftDirectory, 'draft.json'), 'utf8')).text, 'Native pending draft')
+    checks.push('native rapid workspace switch flushes the session-owned draft and rejects cross-workspace reads')
     await page.evaluate(() => window.electronAPI.reconnectTransport())
     await waitForCondition(page, async () => (await window.electronAPI.getTransportConnectionState()).status === 'connected')
     assert.equal(await page.evaluate(() => window.electronAPI.getWindowWorkspace()), 'second')
@@ -82,6 +94,7 @@ async function waitForCondition(page, predicate, argument) {
     await page.getByRole('menuitem', { name: 'Governance workspace' }).click()
     await page.getByText('Governance session', { exact: true }).first().click()
     await page.waitForFunction(() => document.querySelector('[contenteditable="true"]')?.textContent === 'Native pending draft')
+    assert.equal((await page.evaluate(id => window.electronAPI.getDraft(id), fixture.session)).text, 'Native pending draft')
     checks.push('native returning workspace restores its draft')
     await page.evaluate(() => window.electronAPI.reconnectTransport())
     await waitForCondition(page, async () => (await window.electronAPI.getTransportConnectionState()).status === 'connected')
@@ -94,30 +107,19 @@ async function waitForCondition(page, predicate, argument) {
     // are internal surfaces, not OS-level phaneris:// entry points.
     const openRoute = route => page.evaluate(route => window.dispatchEvent(new CustomEvent('phaneris-navigate', { detail: { route } })), route)
     await page.getByRole('button', { name: 'Run', exact: true }).click()
-    await page.locator('[data-runtime-reliability]').waitFor()
-    await page.locator('[data-runtime-reliability] summary').click()
-    assert((await page.locator('[data-runtime-reliability]').innerText()).includes('Unsettled T1 effects'))
-    const reportPath = join(fixture.output, 'native-reliability-export.json')
-    // Electron owns native downloads; its session event is independent from a
-    // Playwright browser context's download event. Choose only this fixture path.
-    await app.evaluate(({ BrowserWindow }, path) => {
-      globalThis.__nativeExport = null
-      BrowserWindow.getAllWindows()[0].webContents.session.once('will-download', (_event, item) => {
-        item.setSavePath(path)
-        item.once('done', (_doneEvent, state) => { globalThis.__nativeExport = state })
-      })
-    }, reportPath)
-    await page.getByRole('button', { name: 'Export facts', exact: true }).click()
-    const exportDeadline = Date.now() + 30_000
-    while (!await app.evaluate(() => globalThis.__nativeExport)) {
-      if (Date.now() >= exportDeadline) throw new Error('Native reliability export did not complete')
-      await new Promise(resolve => setTimeout(resolve, 50))
-    }
-    assert.equal(await app.evaluate(() => globalThis.__nativeExport), 'completed')
-    const reliability = JSON.parse(readFileSync(reportPath, 'utf8'))
+    // The consolidated Run view replaced the former reliability details/export UI.
+    await page.getByRole('tab', { name: 'Overview', exact: true }).click()
+    await page.locator('[data-run-diagnostics]').waitFor()
+    await page.waitForFunction(() => document.querySelector('[data-run-diagnostics]')?.textContent.includes('/ 1'))
+    const reliability = (await page.evaluate(id => window.electronAPI.getSessionDecisions(id), fixture.session)).reliability
+    assert.equal(reliability.state, 'available')
+    assert.equal(reliability.unsettled.count, 1)
+    assert.equal(reliability.unsettled.toolCount, 1)
+    assert.equal(reliability.unsettled.modelCount, 0)
     assert.deepEqual(reliability.unsettled.operationIds, [fixture.recovery.toolOperationId]); assert.equal(reliability.userAcceptance, 'unknown')
+    writeFileSync(join(fixture.output, 'native-reliability-report.json'), JSON.stringify(reliability, null, 2))
     await page.screenshot({ path: join(fixture.output, 'native-recovery-run.png') })
-    checks.push('restored production desktop parks T1 without T2 and shows Run facts')
+    checks.push('restored production desktop retains unknown tool facts in RPC and Run diagnostics')
     await openRoute(`artifact/${fixture.recovery.artifactId}`)
     const workbench = page.getByTestId('artifact-workbench')
     await workbench.waitFor(); await page.getByTestId('artifact-edit').click()
@@ -178,10 +180,35 @@ async function waitForCondition(page, predicate, argument) {
     })
     const exitCode = await closed
     assert.equal(exitCode, 1)
-    assert(mainDiagnostics.includes('governance-native-fatal') && mainDiagnostics.includes('governance-native-first-cause'), 'Native first failure and cause must survive shutdown')
+    if (!fixture.executablePath) assert(mainDiagnostics.includes('governance-native-fatal') && mainDiagnostics.includes('governance-native-first-cause'), 'Native first failure and cause must survive shutdown')
     fatalExitVerified = true
     writeFileSync(join(fixture.output, 'native-fatal.json'), JSON.stringify({ exitCode, elapsedMs: Date.now() - started, diagnostics: mainDiagnostics }, null, 2))
-    checks.push('native main fatal rejection preserves its cause and exits nonzero within the original deadline')
+    checks.push('native main fatal rejection exits nonzero within the original deadline')
+    if (fixture.executablePath) {
+      // Packaged defaults deliberately disable file/console logs. Verify the
+      // original cause-retention contract in the supported --debug mode too.
+      const diagnosticApp = await _electron.launch({ executablePath: fixture.executablePath,
+        args: ['--', '--debug'], cwd: fixture.root, env, timeout: 30000 })
+      let diagnostics = '', exited = false
+      diagnosticApp.process().stderr.on('data', data => { diagnostics += data.toString() })
+      try {
+        await firstBusinessWindow(diagnosticApp, { timeout: 60000 })
+        const fatalStarted = Date.now()
+        const diagnosticExit = new Promise((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error('Diagnostic fatal shutdown exceeded 13000ms')), 13000)
+          diagnosticApp.process().once('close', code => { clearTimeout(timer); resolve(code) })
+        })
+        await diagnosticApp.evaluate(() => {
+          setTimeout(() => { void Promise.reject(new Error('governance-native-fatal', { cause: new Error('governance-native-first-cause') })) }, 50)
+        })
+        const diagnosticCode = await diagnosticExit; exited = true
+        assert.equal(diagnosticCode, 1)
+        assert(diagnostics.includes('governance-native-fatal') && diagnostics.includes('governance-native-first-cause'), 'Diagnostic first failure and cause must survive shutdown')
+        writeFileSync(join(fixture.output, 'native-fatal-diagnostic.json'), JSON.stringify({ exitCode: diagnosticCode,
+          elapsedMs: Date.now() - fatalStarted, diagnostics }, null, 2))
+        checks.push('packaged diagnostic mode preserves the first fatal cause and bounded nonzero shutdown')
+      } finally { if (!exited) await diagnosticApp.close() }
+    }
   } finally {
     if (page && tracing) await page.context().tracing.stop({ path: join(fixture.output, 'native-trace.zip') }).catch(() => {})
     if (page) await page.screenshot({ path: join(fixture.output, 'native-final.png'), fullPage: true }).catch(() => {})

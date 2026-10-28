@@ -144,7 +144,7 @@ await verificationWorkflow('durable-continuation', async evidence => {
       check('RC04 known model receipt is retained during a real SQLite write outage', () => { assert.equal(result.deferred, true); assert.equal(rt.queries.hasPendingReceipts(workspace, 's'), true) })
       await rt.execution.finish(handle, 'complete'); await rt.close()
       sql.exec('DROP TRIGGER fail_model_receipt'); sql.close()
-      rt = createDurableRuntime(); rt.admin.start([workspace], () => {})
+      rt = createDurableRuntime(); await rt.admin.start([workspace], () => {})
       rt.commands.acceptRun({ ...scope, operationId: 'next', turnId: 'next-u', userMessageId: 'next-u', userMessage: 'Continue.' })
       await rt.effects.prepareModel(workspace, { ...request, runOperationId: 'next', providerRequestId: 'next-q' })
       check('RC04/RC07 restart automatically backfills model response and consumed input once', () => {
@@ -187,7 +187,7 @@ await verificationWorkflow('durable-continuation', async evidence => {
     const original = readFileSync(join(broken, 'runtime/runtime.db')), rt = createDurableRuntime()
     try {
       const notices: string[] = []
-      const recovered = rt.admin.start([broken, healthy], (_workspace, error) => notices.push(String(error)))
+      const recovered = await rt.admin.start([broken, healthy], (_workspace, error) => notices.push(String(error)))
       check('RC09 one failed workspace cannot fail global initialization', () => assert.equal(recovered.length, 2))
       rt.commands.acceptRun({ workspaceRootPath: broken, sessionId: 's', turnId: 'u', operationId: 'r', userMessageId: 'u', userMessage: 'Continue.' })
       check('RC09 affected workspace automatically uses recovery storage and preserves original', () => {

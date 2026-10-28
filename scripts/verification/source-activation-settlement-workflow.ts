@@ -62,6 +62,7 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
     const requests: Array<Record<string, any>> = []
     const toolEffects: string[] = []
     let activated = false
+    let activationRequestId: string | undefined
     let delayedT2 = false
     const t2Started = Promise.withResolvers<void>()
     const t2Release = Promise.withResolvers<void>()
@@ -85,11 +86,12 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
       const tools = (body.tools ?? []).map((t: any) => t.function.name) as string[]
       const call = (name: string, args: unknown, index = 0) => ({ index, id: `${id}-call-${requests.length}-${index}`, type: 'function', function: { name, arguments: JSON.stringify(args) } })
       let reply: string
-      if (mode !== 'plain' && requests.length === 1) {
+      if (mode !== 'plain' && !activated) {
         const name = tools.find(t => t.endsWith('source_test'))
-        assert(name, 'Real source_test is missing')
         const slugs = mode === 'parallel' ? ['alpha', 'beta'] : ['alpha']
-        reply = chunk({ tool_calls: slugs.map((sourceSlug, index) => call(name, { sourceSlug }, index)) }, 'tool_calls')
+        reply = name
+          ? chunk({ tool_calls: slugs.map((sourceSlug, index) => call(name, { sourceSlug }, index)) }, 'tool_calls')
+          : chunk({ tool_calls: [call('tool_search', { query: 'source_test', limit: 1 })] }, 'tool_calls')
       } else if (mode !== 'plain' && !JSON.stringify(body.messages).includes('activated]')) {
         // Force the real next request to be in flight before releasing tool results
         // to PiAgent's drain controller. Its cancellation produces a real T2.
@@ -134,7 +136,11 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
       callbacks: {}, resources: { ...resources, mcpPool: sourceResources.pool, poolServerUrl: sourceResources.url,
         durableModelBoundary: { ...boundary, prepare: async request => {
           const prepared = await boundary.prepare(request)
-          if (mode === 'before-dispatch' && activated && request.providerRequestId === '2') {
+          if (activated && !activationRequestId) {
+            activationRequestId = request.providerRequestId
+            note('activation-prepare', requests.length)
+          }
+          if (mode === 'before-dispatch' && request.providerRequestId === activationRequestId) {
             // T1 exists, but the SDK still awaits permission to call the provider.
             holdEvents = false
             flushEvents()
@@ -142,7 +148,7 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
           }
           return prepared
         }, commitOutcome: async request => {
-        if (mode !== 'plain' && activated && request.providerRequestId === '2') {
+        if (mode !== 'plain' && activated && request.providerRequestId === activationRequestId) {
           delayedT2 = true
           note('t2-held')
           t2Started.resolve()
@@ -240,7 +246,12 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
       if (mode.startsWith('legacy-')) assert(retry.content.includes('CORRECTION_FOR_ACTIVATION_RETRY'))
       assert(!f.managed.messages.some(m => m.content.includes('CANCELLED_FRAGMENT')))
       assert(f.toolEffects.some(path => path.endsWith('/evidence')), 'The real newly activated API tool must execute')
-      if (mode === 'before-dispatch') assert(!f.trace.some(e => e.kind === 'provider-request' && e.at < f.trace.find(e => e.kind === 'abort-ack')!.at && e.detail === 2), 'Cancellation before provider dispatch must not call the provider')
+      if (mode === 'before-dispatch') {
+        const prepared = f.trace.find(e => e.kind === 'activation-prepare')!
+        const ack = f.trace.find(e => e.kind === 'abort-ack')!
+        assert(!f.trace.some(e => e.kind === 'provider-request' && e.at >= prepared.at && e.at < ack.at
+          && Number(e.detail) > Number(prepared.detail)), 'Cancellation before provider dispatch must not call the provider')
+      }
       const facts = f.runtime.queries.events(f.managed.workspace.rootPath, { sessionId: f.managed.id })
       assert.equal(facts.filter(e => e.type === 'model_recovery_decided').length, 0)
       assert.equal(facts.filter(e => e.type === 'tool_outcome_committed' && (e.payload as { toolName?: string }).toolName?.endsWith('source_test')).length, mode === 'parallel' ? 2 : 1)
@@ -270,9 +281,13 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
         assert.equal(f.runtime.queries.operations(ws, id).length, 0)
         assert(f.managed.messages.some(m => m.content === 'SOURCE_RESTART_COMPLETE'))
       } else {
-        await assert.rejects(f.manager.sendMessage(id, 'Do not replay unknown effects'), /reconciliation/)
-        assert.equal(f.runtime.execution.view(id).blocked, true)
-        assert.equal(f.requests.length, 0)
+        await f.manager.sendMessage(id, 'Inspect and continue independent work')
+        assert.equal(f.runtime.execution.view(id).blocked, false)
+        assert(f.requests.length > 0)
+        if (kind === 'unknown-tool') {
+          assert.equal(f.runtime.queries.unsettledTools(ws, 'old-run').length, 1)
+          await assert.rejects(f.runtime.effects.prepareTool(ws, { sessionId: id, runOperationId: 'old-run', providerToolCallId: 'repeat-write', toolName: 'Write', args: { path: 'unknown.txt' } }), /unconfirmed outcome/)
+        }
       }
     } finally { await f.close() }
   })
@@ -285,6 +300,7 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
       f.runtime.execution.accept(h, { operationId: 'unknown-run', userMessageId: 'original', userMessage: 'Original task' })
       await f.runtime.effects.prepareModel(f.managed.workspace.rootPath, { sessionId: id, runOperationId: 'unknown-run', providerRequestId: 'unknown', provider: 'fixture', model: 'fixture', canonicalRequestHash: 'fixture' })
       await f.runtime.execution.finish(h, 'interrupted')
+      f.manager.sendMessage = async () => { throw new Error('fixture retry admission unavailable') }
       await f.internal.processEvent(f.managed, { type: 'source_activated', sourceSlug: 'alpha', originalMessage: 'Original task' })
       await pause(250)
       assert(f.ui.some(e => e.type === 'error'), 'Failed auto-resend must reach the UI')

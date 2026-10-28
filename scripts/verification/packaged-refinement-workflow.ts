@@ -1,3 +1,4 @@
+import { firstBusinessWindow } from './fixtures/electron-windows.cjs'
 /** Actual packaged app shell, renderer and IPC with a disposable profile and loopback provider. */
 import { strict as assert } from 'node:assert'
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
@@ -29,7 +30,7 @@ async function check(id: string, action: () => Promise<void>) {
 }
 try {
   application = await _electron.launch({ executablePath: join(app, 'Contents/MacOS/Phaneris'), args: ['--disable-gpu'], env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)), timeout: 60_000 })
-  const page = await application.firstWindow()
+  const page = await firstBusinessWindow(application)
   page.on('pageerror', error => errors.push(error.message))
   await page.waitForLoadState('domcontentloaded')
   await page.waitForFunction(() => typeof (window as any).electronAPI?.getContextPolicy === 'function')

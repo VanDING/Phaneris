@@ -191,7 +191,7 @@ export function RunDecisionView({
         </div></div>
       )
     }
-    return <div className={css.view}><div className={css.viewInner}><DecisionSkeleton /></div></div>
+    return <div className={css.view} role="status" aria-label={t('common.loading')}><div className={css.viewInner}><DecisionSkeleton /></div></div>
   }
 
   const ledgerLoading = view.state === 'loading' && !report

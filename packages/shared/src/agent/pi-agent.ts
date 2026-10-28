@@ -1,4 +1,4 @@
-import type { CompactionThreshold } from './compaction-threshold'
+import { isCompactionThreshold, type CompactionThreshold } from './compaction-threshold'
 /**
  * Pi Backend (Subprocess RPC Client)
  *
@@ -3034,6 +3034,8 @@ export class PiAgent extends BaseAgent {
   }
 
   async updateCompactionThreshold(value: CompactionThreshold): Promise<void> {
+    // JSON turns non-finite numbers into null; reject before equality/IPC.
+    if (!isCompactionThreshold(value)) throw new Error('Invalid compaction threshold');
     const previous = this.config.compactionThresholdTokens ?? null;
     if (JSON.stringify(previous) === JSON.stringify(value)) return;
     this.config.compactionThresholdTokens = value;

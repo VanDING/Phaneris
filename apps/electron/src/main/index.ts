@@ -247,6 +247,7 @@ let pendingDeepLink: string | null = null
 let isQuitting = false
 let relaunchQueued = false
 let startupWindowsReady = false
+let startupWindow: BrowserWindow | null = null
 
 // Set app name early (before app.whenReady) to ensure correct macOS menu bar title
 // Supports multi-instance dev: PHANERIS_APP_NAME env var (e.g., "Phaneris [1]")
@@ -643,6 +644,14 @@ app.whenReady().then(async () => {
     // Skip server-side initialization (SessionManager, model refresh, platform injection).
     const isClientOnly = !!process.env.PHANERIS_SERVER_URL
     const isHeadless = !!process.env.PHANERIS_HEADLESS
+    if (!isHeadless && !isClientOnly) {
+      const { getThemePreferences } = await import('@phaneris/shared/config')
+      const { createStartupWindow } = await import('./startup-window')
+      const mode = getThemePreferences().mode
+      startupWindow = createStartupWindow(PRODUCT_NAME, i18n.t('common.loading'),
+        mode === 'system' ? nativeTheme.shouldUseDarkColors : mode === 'dark')
+      startupWindow.once('closed', () => { startupWindow = null })
+    }
 
     if (isClientOnly) {
       mainLog.info(`Client-only mode: PHANERIS_SERVER_URL=${process.env.PHANERIS_SERVER_URL} (server initialization skipped)`)
@@ -1443,6 +1452,8 @@ app.whenReady().then(async () => {
     if (!isHeadless) {
       await createInitialWindows()
       startupWindowsReady = true
+      startupWindow?.destroy()
+      startupWindow = null
     }
 
     // Run credential health check at startup to detect issues early
@@ -1584,6 +1595,7 @@ app.on('window-all-closed', () => {
  */
 function captureAndSaveWindowState(reason: 'before-quit' | 'pre-update'): number {
   if (!windowManager) return -1
+  if (!startupWindowsReady && !windowManager.hasWindows()) return 0
   const windows = windowManager.getWindowStates()
   const focusedWindow = BrowserWindow.getFocusedWindow()
   const lastFocusedWorkspaceId = focusedWindow

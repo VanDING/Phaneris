@@ -1,3 +1,4 @@
+const { firstBusinessWindow } = require('./electron-windows.cjs')
 /** Production Electron main + preload + renderer; no fake browser theme delivery. */
 const assert = require('node:assert/strict')
 const { readFileSync, writeFileSync } = require('node:fs')
@@ -12,7 +13,7 @@ const { createServer } = require('node:http')
   const checks = [], samples = [], errors = []
   const website = createServer((_request, response) => { response.setHeader('Content-Type', 'text/html'); response.end('<!doctype html><body>Owned website content</body>') })
   await new Promise(resolve => website.listen(0, '127.0.0.1', resolve))
-  const page = await app.firstWindow({ timeout: 60_000 }); page.on('pageerror', error => errors.push(error.message))
+  const page = await firstBusinessWindow(app, { timeout: 60_000 }); page.on('pageerror', error => errors.push(error.message))
   const mainWindow = await app.browserWindow(page)
   const viewStates = () => app.evaluate(async ({ webContents }) => {
     const views = webContents.getAllWebContents().filter(view => /browser-(?:toolbar|empty-state)\.html/.test(view.getURL()))

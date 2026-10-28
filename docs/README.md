@@ -1,6 +1,6 @@
 # Phaneris (RE) documentation
 
-当前 main 整合与验收：[2026-10-21 合并记录](verification/main-consolidation-2026-10-21.md)。升级、主题、字体与前端治理在本轮组合验收；下文保留各自实施历史。
+当前本地工作树收尾与验收：[M0 最终记录](process/m0-closeout-implementation-2026-10-28.md)（2026-10-29，本机 Windows 候选，尚未提交或发布）。[2026-10-21 main 整合记录](verification/main-consolidation-2026-10-21.md)保留为历史；下文列出各阶段实施与验证。
 
 This index is the only entry point to `docs/`. Everything here is reachable from this page; `bun run check:docs` enforces that, along with link validity and the status rules below.
 
@@ -19,6 +19,10 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 ---
 
 ## Start here
+
+M0 收尾：[实施与验证](process/m0-closeout-implementation-2026-10-28.md)、[先行失败矩阵](verification/m0-closeout-failure-matrix-2026-10-28.md) — accepted（2026-10-29，本机 Windows 候选）；完整 CI/critical、Harness 与实际打包应用通过，未安装或发布。
+
+阶段评估与开发建议：[2026-10-28 治理方向评估与后续路线](process/governance-review-and-development-direction-2026-10-28.md) — M0 本地收尾完成，M1–M3 仍为 proposed；评估 0.3.0 至 0.5.4 的投入与验证边界，建议有限稳定性收尾后转向成果反馈、实际交付和项目接续。
 
 Session 基础架构收敛：[存储与生命周期契约](architecture/session-storage.md)、[实施与验证记录](process/session-foundation-implementation.md) — 消息身份与恢复、文件分支/传输、产品写入、草稿与成果归属及旧数据兼容。
 
@@ -40,7 +44,7 @@ Harness 目标设计：[2026-10-23 系统设计方案](architecture/harness-desi
 
 Harness 能力实施：[2026-10-23 实施与验收](process/harness-capability-implementation-2026-10-23.md)、[实施前失败矩阵](verification/harness-capability-failure-matrix-2026-10-23.md) — 独立分支已完成结果与交付契约、能力家族和条件指导、输入投递、非阻塞建议与交接连续性；2026-10-24 本地通过 84 个 harness 场景，真实模型质量与发布尚未验证。
 
-Harness 系统演进：[2026-10-25 系统方案](architecture/harness-system-evolution-2026-10-25.md)、[实施记录](process/harness-system-evolution-implementation-2026-10-26.md)、[实施前失败矩阵](verification/harness-system-evolution-failure-matrix-2026-10-26.md) — 2026-10-26 已完成分支实施与本机 132 个 harness 场景，覆盖任务准备、能力暴露、材料操作、原生压缩所有权及长期任务连续性；质量对照与发行边界见实施记录。
+Harness 系统演进：[2026-10-25 系统方案](architecture/harness-system-evolution-2026-10-25.md)、[实施记录](process/harness-system-evolution-implementation-2026-10-26.md)、[实施前失败矩阵](verification/harness-system-evolution-failure-matrix-2026-10-26.md) — 已随 0.5.0 合入 main；2026-10-26 的分支验收为本机 132 个 harness 场景，覆盖任务准备、能力暴露、材料操作、原生压缩所有权及长期任务连续性；质量对照与发行边界见实施记录。
 
 Durable Runtime 连续性：[2026-10-26 修复与验证](process/durable-runtime-continuity-implementation-2026-10-26.md) — 历史未知调用、后台记录失败与人工核对退出会话主路径；覆盖输入、实际结果、停止/退出、存储故障和任务节点恢复，真实工作区保留。
 

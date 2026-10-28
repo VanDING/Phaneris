@@ -1897,12 +1897,15 @@ async function handleAbort(): Promise<void> {
   // Release permission waits before awaiting the SDK, which drains active tools.
   pendingPreToolUse.cancelAll({ action: 'block', reason: 'Aborted' });
   pendingDurableToolPrepares.cancelAll(unavailableReceipt);
-  pendingDurableModelPrepares.cancelAll(unavailableReceipt);
-  pendingDurableToolOutcomes.cancelAll(unavailableReceipt);
-  pendingDurableModelOutcomes.cancelAll(unavailableReceipt);
   try {
     if (sessionLifecycle.current) await sessionLifecycle.current.abort();
   } finally {
+    // Let the SDK drain an acknowledged T1 and its cancellation T2 first.
+    // PendingReplies already bounds an unavailable host; clearing these before
+    // abort destroys proof of non-dispatch and drops observed final receipts.
+    pendingDurableModelPrepares.cancelAll(unavailableReceipt);
+    pendingDurableToolOutcomes.cancelAll(unavailableReceipt);
+    pendingDurableModelOutcomes.cancelAll(unavailableReceipt);
     // Clear speculative prefetch even when the SDK could not confirm its stop.
     prefetchCache.clear();
   }

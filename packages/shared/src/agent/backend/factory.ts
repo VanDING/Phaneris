@@ -32,8 +32,9 @@ import { parseValidationError, type LlmValidationResult } from '../../config/llm
 import type { ModelFetchResult } from '../../config/model-fetcher.ts';
 // Model resolution utilities
 import { normalizeDeprecatedModelId } from '../../config/models.ts';
-import { homedir } from 'node:os';
-import { rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import { join } from 'node:path';
 import { getCredentialManager } from '../../credentials/index.ts';
 import type {
@@ -497,7 +498,8 @@ export async function testBackendConnection(args: {
     return { success: false, error: 'API key is required' };
   }
 
-  const tempSlug = `__test-${Date.now()}`;
+  const tempSlug = `__test-${randomUUID()}`;
+  let testWorkspace: string | undefined;
   const cm = getCredentialManager();
   if (trimmedKey) {
     await cm.setLlmApiKey(tempSlug, trimmedKey);
@@ -549,12 +551,14 @@ export async function testBackendConnection(args: {
       if (driverResult !== null) return driverResult;
     }
 
-    const cwd = homedir();
+    // Connection probes bypass SessionManager. Own a real disposable directory
+    // instead of relying on a persisted session or using the user's home.
+    const cwd = testWorkspace = await mkdtemp(join(tmpdir(), 'phaneris-connection-'));
     const agent = createBackendFromResolvedContext({
       context,
       coreConfig: {
         workspace: { id: '__test', name: 'Connection Test', slug: '__test', rootPath: cwd, createdAt: 0 },
-        session: { id: `test-${now}`, workspaceRootPath: cwd, createdAt: 0, lastUsedAt: 0 },
+        session: { id: tempSlug.slice(2), workspaceRootPath: cwd, workingDirectory: cwd, createdAt: 0, lastUsedAt: 0 },
         isHeadless: true,
         miniModel: testModel,
         envOverrides: undefined,
@@ -573,12 +577,13 @@ export async function testBackendConnection(args: {
       return `${message}\n--- subprocess stderr (last ~8KB) ---\n${stderr}`;
     };
 
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     try {
       const timeoutMs = args.timeoutMs ?? 20000;
       const text = await Promise.race([
         agent.runMiniCompletion('Say ok'),
         new Promise<never>((_, reject) =>
-          setTimeout(
+          timeout = setTimeout(
             () => reject(new Error(withStderrContext(`Connection test timed out after ${timeoutMs}ms`))),
             timeoutMs
           )
@@ -594,7 +599,8 @@ export async function testBackendConnection(args: {
       const enriched = base.includes('subprocess stderr') ? base : withStderrContext(base);
       return { success: false, error: enriched };
     } finally {
-      agent.destroy();
+      if (timeout) clearTimeout(timeout);
+      try { await agent.disposeForRestart?.(); } finally { agent.destroy(); }
     }
   } catch (error) {
     return {
@@ -603,6 +609,7 @@ export async function testBackendConnection(args: {
     };
   } finally {
     await cm.deleteLlmApiKey(tempSlug).catch(() => {});
+    if (testWorkspace) await rm(testWorkspace, { recursive: true, force: true });
   }
 }
 

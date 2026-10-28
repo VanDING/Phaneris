@@ -10,7 +10,7 @@
 
 Run capable AI agents across your files, tools, services, and documents — with a desktop workspace that makes every important action reviewable.
 
-[![Version](https://img.shields.io/badge/version-0.4.0-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.4.0.md)
+[![Version](https://img.shields.io/badge/version-0.5.4-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.5.4.md)
 [![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.3.0-5b7cfa?style=flat-square)](docs/guides/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.3-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
@@ -78,7 +78,7 @@ Markdown drafts support visual editing when serialization preserves the source, 
 
 Connected MCP tools retain output schemas and structured results. `tool_search` discovers deferred tools, and sandboxed `codemode` calls each tool through the host permission and durable execution boundary. Its model access is disabled. See the [capability adoption guide](docs/architecture/capability-adoption-2026-10.md) for configuration, accounting, and migration decisions, and the [completion record](docs/archive/capability-completion-2026-10-04.md) for measured benefits and verification scope.
 
-Pi SDK 1.1.0 is pinned across the runtime. The [upgrade implementation record](docs/archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) records verification, selected Craft 0.14.1 changes, and the remaining requirements for native MCP, classifiers, and model routing.
+Pi SDK 1.3.0 is pinned across the runtime. The historical [1.1.0 upgrade implementation record](docs/archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) records verification, selected Craft 0.14.1 changes, and the remaining requirements for native MCP, classifiers, and model routing.
 
 ## Personal by design
 

@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
 import { verificationWorkflow } from './verification-artifacts'
 import { seedConversationFixture, verifyConversationDurability } from './fixtures/conversation-model'
@@ -47,14 +47,18 @@ await verificationWorkflow('native-client', async run => {
   restoreWorkspaceBackup(backup, restored); workspace = restored; conversation.relocate(restored)
   const storedConfig = JSON.parse(readFileSync(join(config, 'config.json'), 'utf8')); storedConfig.workspaces[0].rootPath = restored; writeFileSync(join(config, 'config.json'), JSON.stringify(storedConfig))
   run.json('recovery-before-start.json', { manifest, originalHashes, artifactId: artifact.artifact.id, toolOperationId: unknown.operationId })
-  const renderer = 'apps/electron/dist/renderer'
-  const builds = ['apps/electron/dist/main.cjs', 'apps/electron/dist/bootstrap-preload.cjs', 'apps/electron/dist/interceptor.cjs',
-    'apps/electron/resources/pi-agent-server/index.js', 'apps/electron/resources/pi-agent-server/bundle.js', `${renderer}/index.html`,
+  const executablePath = process.env.PHANERIS_VERIFY_ELECTRON_EXECUTABLE
+  const appRoot = executablePath ? join(dirname(executablePath), 'resources/app') : resolve('apps/electron')
+  const resources = executablePath ? join(dirname(executablePath), 'resources') : resolve('apps/electron/resources')
+  const renderer = join(appRoot, 'dist/renderer')
+  const builds = [join(appRoot, 'dist/main.cjs'), join(appRoot, 'dist/bootstrap-preload.cjs'), join(appRoot, 'dist/interceptor.cjs'),
+    join(resources, 'pi-agent-server/index.js'), join(resources, 'pi-agent-server/bundle.js'), `${renderer}/index.html`,
     ...readdirSync(resolve(renderer), { recursive: true, encoding: 'utf8' }).map(file => file.toString()).filter(file => /\.(?:js|css|wasm)$/.test(file)).map(file => `${renderer}/${file.replaceAll('\\', '/')}`)]
   run.json('build-hashes.json', Object.fromEntries(builds.map(file => [file, hash(resolve(file))])))
   const fixture = join(run.directory, 'native-fixture.json')
   writeFileSync(fixture, JSON.stringify({ root: resolve(import.meta.dir, '../..'), output: run.directory, config, session: session.id, other: other.id,
-    recovery: { workspace, artifactId: artifact.artifact.id, toolOperationId: unknown.operationId },
+    executablePath, connectionProbe: { provider: conversation.connection.providerType, apiKey: 'governance-fixture-only-api-key',
+      baseUrl: conversation.connection.baseUrl, model: conversation.connection.defaultModel, customEndpoint: conversation.connection.customEndpoint }, recovery: { workspace, artifactId: artifact.artifact.id, toolOperationId: unknown.operationId },
     conversation: { name: conversation.name, session: conversation.session, filePath: conversation.filePath, planPath: conversation.planPath } }))
   const child = Bun.spawn(['node', join(import.meta.dir, 'fixtures/native-client.cjs'), fixture], { stdout: 'pipe', stderr: 'pipe' })
   const timer = setTimeout(() => child.kill(), 300_000)

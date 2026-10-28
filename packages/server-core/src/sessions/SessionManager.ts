@@ -2118,7 +2118,7 @@ export class SessionManager implements ISessionManager {
       // client connect. This is critical for headless servers where no UI may
       // ever connect, yet scheduled/event-driven automations must still fire.
       const workspaces = getWorkspaces()
-      const recoveries = this.durableRuntime.admin.start(workspaces.map(workspace => workspace.rootPath),
+      const recoveries = await this.durableRuntime.admin.start(workspaces.map(workspace => workspace.rootPath),
         (workspace, error) => sessionLog.error(`Durable Runtime maintenance failed for ${workspace}:`, error))
       for (let index = 0; index < workspaces.length; index++) {
         const workspace = workspaces[index]!

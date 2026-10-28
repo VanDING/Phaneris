@@ -38,7 +38,8 @@ const isWindows = process.platform === 'win32'
 // `darwin` keeps the historical filename; other platforms get their own artifact
 // so one platform's run never overwrites another's evidence.
 const ARTIFACT_SUFFIX = { win32: '-win' }[process.platform] ?? ''
-const OUTPUT = join(ROOT, 'docs/verification/results', `packaged-client-verification${ARTIFACT_SUFFIX}.json`)
+const OUTPUT = resolve(process.argv.find(arg => arg.startsWith('--output='))?.slice('--output='.length)
+  ?? join(ROOT, 'docs/verification/results', `packaged-client-verification${ARTIFACT_SUFFIX}.json`))
 
 const argArch = process.argv.find((a) => a.startsWith('--arch='))?.slice('--arch='.length) ?? 'x64'
 const expectSigned = process.argv.includes('--expect-signed')

@@ -17,7 +17,7 @@ function isCompletedBackup(path: string): boolean {
 
 /** Keep today's completed snapshot and the latest previous one. Never prune
  * recovery points until a new snapshot has been successfully published. */
-export function maintainDailyBackups(workspace: string, createBackup: (destination: string) => void): boolean {
+export async function maintainDailyBackups(workspace: string, createBackup: (destination: string) => Promise<void>): Promise<boolean> {
   const directory = join(workspace, 'runtime', 'backups'), day = new Date().toISOString().slice(0, 10)
   const name = `runtime-${day}.db`, destination = join(directory, name)
   const fresh = !existsSync(destination) || !isCompletedBackup(destination)
@@ -28,7 +28,7 @@ export function maintainDailyBackups(workspace: string, createBackup: (destinati
       incomplete = `${destination}.${randomUUID()}.invalid`
       renameSync(destination, incomplete)
     }
-    try { createBackup(destination) }
+    try { await createBackup(destination) }
     catch (error) {
       if (incomplete) renameSync(incomplete, destination)
       throw error

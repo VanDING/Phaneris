@@ -1,3 +1,4 @@
+import { firstBusinessWindow } from './fixtures/electron-windows.cjs'
 /** Actual Electron main/preload/built-renderer acceptance with a disposable profile.
  * --app=<unpacked directory> runs an existing build.
  * --stage-from=<unpacked directory> copies its runtime/resources to a fresh directory
@@ -79,7 +80,7 @@ let application: Awaited<ReturnType<typeof _electron.launch>> | undefined
 try {
   application = await _electron.launch({ executablePath: process.platform === 'win32' ? join(app, 'Phaneris.exe') : join(app, 'Contents/MacOS/Phaneris'),
     args: ['--disable-gpu'], env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)), timeout: 60000 })
-  const page = await application.firstWindow(); page.on('pageerror', error => errors.push(error.message)); page.setDefaultTimeout(15000)
+  const page = await firstBusinessWindow(application); page.on('pageerror', error => errors.push(error.message)); page.setDefaultTimeout(15000)
   await page.waitForLoadState('domcontentloaded')
   await page.waitForFunction(() => typeof (window as any).electronAPI?.getSessionDecisions === 'function')
   const route = async (value: string) => page.evaluate(route => window.dispatchEvent(new CustomEvent('phaneris-navigate', { detail: { route }, bubbles: true })), value)

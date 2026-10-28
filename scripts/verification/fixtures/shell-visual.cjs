@@ -1,3 +1,4 @@
+const { firstBusinessWindow } = require('./electron-windows.cjs')
 /** Actual native app; no mocked shell components or theme delivery. */
 const assert = require('node:assert/strict')
 const { readFileSync, writeFileSync } = require('node:fs')
@@ -11,7 +12,7 @@ const { _electron } = require('playwright')
   const app = await _electron.launch({ args: [join(fixture.root, 'apps/electron')], cwd: fixture.root, env, timeout: 60_000,
     recordVideo: { dir: fixture.output, size: { width: 1440, height: 1000 } } })
   const checks = [], targets = [], samples = [], errors = []
-  const page = await app.firstWindow({ timeout: 60_000 })
+  const page = await firstBusinessWindow(app, { timeout: 60_000 })
   const video = page.video()
   const nativeWindow = await app.browserWindow(page)
   page.on('pageerror', error => errors.push(error.message))

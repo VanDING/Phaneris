@@ -1,3 +1,4 @@
+import { firstBusinessWindow } from './fixtures/electron-windows.cjs'
 /**
  * Files panel in the actual packaged app.
  *
@@ -96,7 +97,7 @@ try {
     env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)),
     timeout: 60_000,
   })
-  const page = await application.firstWindow()
+  const page = await firstBusinessWindow(application)
   page.on('pageerror', error => pageErrors.push(error.message))
   await page.waitForLoadState('domcontentloaded')
   await page.waitForFunction(() => typeof (window as any).electronAPI?.getSessionFiles === 'function')

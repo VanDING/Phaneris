@@ -35,6 +35,8 @@ export const criticalTestGroups: [string, string[]][] = [
 
 
 export const criticalWorkflows = [
+  { id: 'connection-probe', entry: 'scripts/verification/connection-probe-workflow.ts', minimum: 5, required: ['probe.json'] },
+  { id: 'runtime-startup', entry: 'scripts/verification/runtime-startup-workflow.ts', minimum: 5, required: ['startup.json'] },
   { id: 'upstream-015-core', entry: 'scripts/verification/upstream-015-core-workflow.ts', minimum: 11, required: ['upstream-015-core.json', 'mcp-protocol.json', 'project-memory.json', 'guide-reading.json'] },
   { id: 'upstream-015-orchestration', entry: 'scripts/verification/upstream-015-orchestration-workflow.ts', minimum: 5, required: ['upstream-015-orchestration.json', 'oauth-flows.json', 'task-stopped.json'] },
   { id: 'upstream-015-browser', entry: 'scripts/verification/upstream-015-browser-workflow.ts', minimum: 11, required: ['upstream-015-browser.json', 'native-browser.json', 'hidden-current-frame.png', 'privacy-facts.json'] },
@@ -70,23 +72,31 @@ export const criticalWorkflows = [
   { id: 'session-owners', entry: 'scripts/verification/session-owners-workflow.ts', minimum: 8, required: ['session-owners.json'] },
   { id: 'client-platform', entry: 'scripts/verification/client-platform-workflow.ts', minimum: 24, required: ['client-platform.json', 'webui-420.png', 'webui-1280.png', 'web-conversation.json', 'web-file-preview.png', 'web-plan.png', 'conversation-provider.json', 'web-conversation-runtime.json', 'web-conversation.db'] },
   { id: 'markdown-popout', entry: 'scripts/verification/markdown-popout-workflow.ts', minimum: 18, required: ['markdown-popout.json', 'message-light.png', 'source-light.png', 'source-dark.png', 'source-390.png', 'trace.zip'] },
-  { id: 'theme-foundation', entry: 'scripts/verification/theme-foundation-workflow.ts', minimum: 115,
+  // faa7174aa retired 14 custom-theme/scenic watcher scenes and replaced them
+  // with 2 user-file preservation/fallback scenes. All 101 other scenes remain.
+  { id: 'theme-foundation', entry: 'scripts/verification/theme-foundation-workflow.ts', minimum: 103,
     required: ['theme-foundation.json', 'source-hashes.json', 'build-hashes.json', 'web-cold.png', 'web-persisted.png',
       'electron-light.png', 'electron-dark.png', 'ui-light.png', 'viewer-dark.png', 'webui-390.png', 'controls-trace.zip', 'web-trace.zip'] },
-  { id: 'theme-contract', entry: 'scripts/verification/theme-contract-workflow.ts', minimum: 119,
-    required: ['theme-contract.json', 'source-hashes.json', 'electron-ink-light.png', 'ui-ink-light.png',
-        'viewer-ink-light.png', 'webui-ink-light.png', 'viewer-code-light.png', 'viewer-code-dark.png', 'code-overlay-dark.png', 'trace.zip',
+  // Three retired palettes × four hosts × two modes × parity/contrast = 48
+  // retired combinations. Default, invalid-input, code and P2 coverage stays.
+  { id: 'theme-contract', entry: 'scripts/verification/theme-contract-workflow.ts', minimum: 71,
+    required: ['theme-contract.json', 'source-hashes.json', 'electron-default-light.png', 'ui-default-light.png',
+        'viewer-default-light.png', 'webui-default-light.png', 'viewer-code-light.png', 'viewer-code-dark.png', 'code-overlay-dark.png', 'trace.zip',
         'p2-reduced-light.png', 'p2-reduced-dark-390.png', 'p2-1x-trace.zip', 'p2-2x-trace.zip', 'p2-3x-trace.zip'] },
   { id: 'theme-roles', entry: 'scripts/verification/theme-roles-workflow.ts', minimum: 76,
     required: ['theme-roles.json', 'source-hashes.json', 'electron-390.png', 'webui-320.png', 'viewer-1280.png', 'trace.zip'] },
-  { id: 'theme-domains', entry: 'scripts/verification/theme-domains-workflow.ts', minimum: 56,
+  // Six state/ownership scenes × two modes; three retired palettes remove 36.
+  // Keyboard/touch/reflow/error scenes remain: 56 - 36 = 20.
+  { id: 'theme-domains', entry: 'scripts/verification/theme-domains-workflow.ts', minimum: 20,
     required: ['theme-domains.json', 'source-hashes.json', 'domains-320.png', 'domains-390.png', 'domains-1280.png', 'trace.zip'] },
-  { id: 'theme-browser-host', entry: 'scripts/verification/theme-browser-host-workflow.ts', minimum: 23,
+  // Three retired palettes × two modes × two hosts = twelve retired combinations.
+  { id: 'theme-browser-host', entry: 'scripts/verification/theme-browser-host-workflow.ts', minimum: 11,
     required: ['theme-browser-host.json', 'source-hashes.json', 'toolbar-light.png', 'toolbar-dark.png', 'empty-light.png', 'empty-dark.png', 'trace.zip'] },
   { id: 'theme-login', entry: 'scripts/verification/theme-login-workflow.ts', minimum: 5,
     required: ['theme-login.json', 'source-hashes.json', 'login-light.png', 'login-dark.png', 'trace.zip'] },
-  { id: 'theme-design', entry: 'scripts/verification/theme-design-workflow.ts', minimum: 36,
-    required: ['theme-design.json', 'source-hashes.json', 'index.html', 'rows-default-light-40-expanded.png', 'width-ink-light-768.png', 'text-200-default-light.png', 'trace.zip'] },
+  // Two current modes × fourteen layout candidates; Ink's fourteen retired.
+  { id: 'theme-design', entry: 'scripts/verification/theme-design-workflow.ts', minimum: 28,
+    required: ['theme-design.json', 'source-hashes.json', 'index.html', 'rows-default-light-40-expanded.png', 'width-default-light-768.png', 'text-200-default-light.png', 'trace.zip'] },
   { id: 'theme-governance', entry: 'scripts/verification/theme-governance-workflow.ts', minimum: 49,
     required: ['theme-governance.json'] },
   { id: 'distribution-inputs', entry: 'scripts/verification/distribution-inputs-workflow.ts', minimum: 10, required: ['distribution-inputs.json'] },
@@ -126,8 +136,9 @@ export const criticalWorkflows = [
     required: ['boot.json', 'chat-starters-landing.json', 'landing.png', 'landing-source-failure.png'] },
   { id: 'upgrade-0153-workspace-isolation', entry: 'scripts/verification/upgrade-0153-workspace-isolation-workflow.ts', minimum: 5,
     required: ['boot.json', 'workspace-isolation.json', 'workspace-isolation.png'] },
-  { id: 'upgrade-0153-model-form', entry: 'scripts/verification/upgrade-0153-model-form-workflow.ts', minimum: 7,
-    required: ['model-form.json', 'model-form-opencode.png'] },
+  // The legacy model-form entry delegates to the current 14-scene setup workflow.
+  { id: 'api-connection-setup', entry: 'scripts/verification/api-connection-setup-workflow.ts', minimum: 14,
+    required: ['acceptance.json', 'compaction-runtime.json', 'custom-setup.png', 'settings-dark-narrow.png', 'trace.zip'] },
   { id: 'upgrade-0153-session-info-scroll', entry: 'scripts/verification/upgrade-0153-session-info-workflow.ts', minimum: 4,
     required: ['session-info-scroll.json', 'drawer-layout.json', 'drawer-wheel.json', 'popover-long-light.png', 'drawer-long-390-scrolled.png'] },
   { id: 'upgrade-0153-calendar-drag', entry: 'scripts/verification/upgrade-0153-calendar-drag-workflow.ts', minimum: 5,

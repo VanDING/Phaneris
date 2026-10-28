@@ -72,7 +72,7 @@ await verificationWorkflow('durable-continuation-pi', async evidence => {
   }
   try {
     const draft = join(project, 'draft.txt')
-    rt.admin.start([workspace], () => {})
+    await rt.admin.start([workspace], () => {})
     const sql = new Database(join(workspace, 'runtime/runtime.db'))
     sql.exec("CREATE TRIGGER fail_t2 BEFORE INSERT ON runtime_events WHEN NEW.event_type='tool_outcome_committed' BEGIN SELECT RAISE(ABORT, 'fixture tool outcome failure'); END")
     call = { name: 'write', id: 'write-once', args: { path: draft, content: 'KNOWN_NATIVE_DRAFT' } }
@@ -128,7 +128,7 @@ await verificationWorkflow('durable-continuation-pi', async evidence => {
     await Bun.sleep(4300)
     check('RC10 normal shutdown drains the native process tree before teardown', () => assert.equal(existsSync(late), false))
     evidence.json('shutdown.json', { elapsedMs: Date.now() - beforeClose, started, lateOutputExists: existsSync(late), platform: process.platform })
-    rt = createDurableRuntime(); rt.admin.start([workspace], () => {}); agent = makeAgent()
+    rt = createDurableRuntime(); await rt.admin.start([workspace], () => {}); agent = makeAgent()
     await turn('Continue the original task from the existing draft after restart.')
     check('RC01 RC08 restart continues the original session without manual reconciliation', () => {
       assert(JSON.stringify(requests.at(-1)).includes('KNOWN_NATIVE_DRAFT') || JSON.stringify(requests.at(-1)).includes('draft.txt'))

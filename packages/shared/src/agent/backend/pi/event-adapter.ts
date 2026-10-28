@@ -652,7 +652,7 @@ export class PiEventAdapter extends BaseEventAdapter {
         const textContent = this.extractTextFromMessage(event.message);
         // Pi SDK stopReason: 'toolUse' means the model will call tools next (intermediate commentary),
         // 'stop'/'end_turn' means final response. Same logic as Claude's stop_reason === 'tool_use'.
-        const isIntermediate = msg.stopReason === 'toolUse' || isLengthLimited || !textContent;
+        const isIntermediate = msg.stopReason === 'toolUse' || msg.stopReason === 'aborted' || isLengthLimited || !textContent;
         // Preserve usage/request metadata even for tool-only or thinking-only responses.
         if ((textContent || msg.usage) && (isIntermediate || !this.hasEmittedFinalText)) {
           // Zero text with output tokens on a final turn means the output budget
