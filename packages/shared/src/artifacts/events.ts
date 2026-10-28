@@ -49,6 +49,17 @@ export function parseArtifactEvent(text: string | undefined): ArtifactEventSnaps
   }
 }
 
+/** Only rewrite actual artifact cards; arbitrary user text and other IDs remain untouched. */
+export function rebindArtifactEvent(text: string | undefined, identities: ReadonlyMap<string, string>, sessionId: string): string | undefined {
+  const event = parseArtifactEvent(text);
+  const artifactId = event ? identities.get(event.artifactId) : undefined;
+  if (!text || !event || !artifactId) return text;
+  const start = text.indexOf(ARTIFACT_EVENT_PREFIX);
+  const end = text.indexOf('\n', start);
+  return text.slice(0, start) + ARTIFACT_EVENT_PREFIX + JSON.stringify({ ...event, artifactId, sessionId })
+    + (end < 0 ? '' : text.slice(end));
+}
+
 export function artifactRevision(descriptor: Pick<ArtifactDescriptor, 'draftRevision' | 'currentRevision'>): string | null {
   return descriptor.draftRevision ?? descriptor.currentRevision;
 }

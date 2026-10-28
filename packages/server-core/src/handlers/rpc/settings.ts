@@ -2,7 +2,8 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname } from 'path'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import { getPreferencesPath } from '@phaneris/shared/config';
-import { getSessionDraft, setSessionDraft, deleteSessionDraft, getAllSessionDrafts } from '@phaneris/shared/config/drafts';
+import { getSessionDraft, setSessionDraft, deleteSessionDraft, getAllSessionDrafts } from '@phaneris/shared/sessions';
+import type { RequestContext } from '@phaneris/server-core/transport'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { getDefaultThinkingLevel, setDefaultThinkingLevel } from '@phaneris/shared/config/connections';
 import { isValidThinkingLevel, normalizeThinkingLevel, THINKING_LEVEL_IDS } from '@phaneris/shared/agent/thinking-levels'
@@ -254,24 +255,33 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
   // Session Drafts (persisted input text)
   // ============================================================
 
+  const draftWorkspace = async (ctx: RequestContext, sessionId?: string) => {
+    await deps.sessionManager.waitForInit()
+    const workspaceId = ctx.workspaceId ?? deps.windowManager?.getWorkspaceForWindow(ctx.webContentsId!)
+    const workspace = getWorkspaceOrThrow(workspaceId ?? '')
+    if (sessionId && !deps.sessionManager.getSessions(workspace.id).some(session => session.id === sessionId)) {
+      throw new Error(`Session ${sessionId} not found in workspace`)
+    }
+    return workspace.rootPath
+  }
   // Get draft for a session (text + attachment refs)
-  server.handle(RPC_CHANNELS.drafts.GET, async (_ctx, sessionId: string) => {
-    return getSessionDraft(sessionId)
+  server.handle(RPC_CHANNELS.drafts.GET, async (ctx, sessionId: string) => {
+    return getSessionDraft(await draftWorkspace(ctx, sessionId), sessionId)
   })
 
   // Set draft for a session (empty drafts are cleared)
-  server.handle(RPC_CHANNELS.drafts.SET, async (_ctx, sessionId: string, draft: import('@phaneris/shared/config').SessionDraft) => {
-    setSessionDraft(sessionId, draft)
+  server.handle(RPC_CHANNELS.drafts.SET, async (ctx, sessionId: string, draft: import('@phaneris/shared/config').SessionDraft) => {
+    setSessionDraft(await draftWorkspace(ctx, sessionId), sessionId, draft)
   })
 
   // Delete draft for a session
-  server.handle(RPC_CHANNELS.drafts.DELETE, async (_ctx, sessionId: string) => {
-    deleteSessionDraft(sessionId)
+  server.handle(RPC_CHANNELS.drafts.DELETE, async (ctx, sessionId: string) => {
+    deleteSessionDraft(await draftWorkspace(ctx, sessionId), sessionId)
   })
 
   // Get all drafts (for loading on app start)
-  server.handle(RPC_CHANNELS.drafts.GET_ALL, async () => {
-    return getAllSessionDrafts()
+  server.handle(RPC_CHANNELS.drafts.GET_ALL, async (ctx) => {
+    return getAllSessionDrafts(await draftWorkspace(ctx))
   })
 
   // ============================================================

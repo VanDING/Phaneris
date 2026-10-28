@@ -85,8 +85,21 @@ export interface RequestContextSnapshot {
   capturedAt: number;
   provider: string;
   model: string;
-  system: { hash: string; chars: number };
-  messages: Array<{ role: string; hash: string; chars: number }>;
+  system: { hash: string; chars: number; textChars?: number };
+  messages: Array<{
+    role: string;
+    /** Legacy diagnostic digest/size includes transport data and runtime metadata. */
+    hash: string;
+    chars: number;
+    toolCallId?: string;
+    /** Semantic model content only. Binary data is hashed, never counted as text. */
+    content?: {
+      hash: string;
+      textChars: number;
+      imageCount: number;
+      toolCalls?: Array<{ id: string; hash: string; textChars: number }>;
+    };
+  }>;
   tools: Array<{
     name: string;
     description?: string;

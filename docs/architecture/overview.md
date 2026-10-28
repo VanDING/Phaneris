@@ -289,7 +289,9 @@ packages/shared ── electron 132 · webui 2 · viewer 1 · cli 2
 │       │   └── runtime.db         ★ 权威：SQLite/WAL，schema v4
 │       ├── sessions/
 │       │   └── <sessionId>/
-│       │       ├── session.jsonl      兼容缓存：第 1 行 header，其余为消息
+│       │       ├── session.jsonl      产品元数据与富消息；执行语义受 Runtime 事实约束
+│       │       ├── draft.json         会话输入草稿与草稿附件
+│       │       ├── artifacts/         会话成果清单、私有修订、工作副本和预览
 │       │       ├── .pi-sessions/      provider 续跑状态（Pi SDK JSONL）
 │       │       ├── attachments/  plans/  data/
 │       │       ├── long_responses/    因超限被摘要的完整工具结果
@@ -302,9 +304,12 @@ packages/shared ── electron 132 · webui 2 · viewer 1 · cli 2
 
 | 存储 | 地位 |
 | --- | --- |
-| `runtime/runtime.db` | **唯一权威**。`runtime_events`（只追加语义事实）、`operations`（可变，带 durable 程序计数器）、`tool_operations`（子操作）、`usage_ledger`、投影游标/快照 |
-| `session.jsonl` | UI / 导出缓存。分歧只记录，**runtime 绝不从缓存修复权威事实** |
+| `runtime/runtime.db` | **执行事实权威**。`runtime_events`（只追加语义事实）、`operations`（可变，带 durable 程序计数器）、`tool_operations`（子操作）、`usage_ledger`、投影游标/快照 |
+| `session.jsonl` | 产品元数据与富消息。已提交语义内容可由 Runtime 修复；展示信息和用户产品信息有自己的来源。导入历史只作为明确标记的未验证上下文，不能生成执行或副作用证据 |
+| `draft.json`、`artifacts/` | Session 自有产品内容；跟随目录导出、移动和删除。草稿不随历史分支复制；成果分支重新绑定身份与引用 |
 | `.pi-sessions` | provider 续跑缓存 |
+
+完整的字段归属、迁移兼容、分支/导入/删除规则见 [Session 存储契约](./session-storage.md)。
 
 ### durable execution 具体是什么
 

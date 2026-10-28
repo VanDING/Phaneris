@@ -69,21 +69,17 @@ import {
   saveSession as saveStoredSession,
   createSession as createStoredSession,
   deleteSession as deleteStoredSession,
-  updateSessionMetadata,
   canUpdateSdkCwd,
-  setPendingPlanExecution as setStoredPendingPlanExecution,
-  markCompactionComplete as markStoredCompactionComplete,
-  markPendingPlanExecutionDispatched as markStoredPendingPlanExecutionDispatched,
-  clearPendingPlanExecution as clearStoredPendingPlanExecution,
   getPendingPlanExecution as getStoredPendingPlanExecution,
   getSessionAttachmentsPath,
   getSessionPath as getSessionStoragePath,
-  ensureSessionDir,
-  getSessionFilePath,
   generateSessionId,
   getHeaderMetadataSignature,
-  writeSessionJsonl,
   serializeSession,
+  copySessionContent,
+  sessionFromBundle,
+  restoreSessionBundle,
+  getSessionDraft,
   validateBundle,
   type SessionBundle,
   type DispatchMode,
@@ -92,6 +88,7 @@ import {
   type SessionMetadata,
   type SessionStatus,
   type SessionHeader,
+  type SessionPlanningFields,
   pickSessionFields,
 } from '@phaneris/shared/sessions'
 import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager, serializeHeaderCredential } from '@phaneris/shared/sources'
@@ -104,6 +101,9 @@ import {
   getArtifact,
   inspectArtifact,
   listArtifacts,
+  migrateSessionArtifacts,
+  rebindSessionArtifactCopy,
+  rebindArtifactEvent,
   serializeArtifactEvent,
   submitArtifact,
   type ArtifactStorageScope,
@@ -118,7 +118,7 @@ import { buildDecisionToolCallbacks } from '../decisions/tool-callbacks'
 import { buildServersFromSources as buildServersFromSourcesShared } from '../sources/build-servers'
 import { toolMetadataStore, getLastApiError } from '@phaneris/shared/interceptor'
 import { isParentTaskTool } from '@phaneris/shared/utils/toolNames'
-import { restoreFiles } from '@phaneris/shared/utils/bundle-files'
+import { archiveLegacySessionDraft } from '@phaneris/shared/config/drafts'
 import { getCredentialManager } from '@phaneris/shared/credentials'
 import { CraftMcpClient, McpClientPool, McpPoolServer } from '@phaneris/shared/mcp'
 import { type Session, type SessionEvent, type FileAttachment, type SendMessageOptions, type UnreadSummary, type RemoteSessionTransferPayload, type ImportRemoteSessionTransferResult, RPC_CHANNELS, generateMessageId } from '@phaneris/shared/protocol'
@@ -656,7 +656,8 @@ interface RunningBackgroundTask {
   agentsCompleted?: number
 }
 
-interface ManagedSession {
+interface ManagedSession extends SessionPlanningFields {
+  pendingPlanExecution?: StoredSession['pendingPlanExecution']
   contextPolicy?: ContextPolicy
   contextHandoff?: ContextHandoffState
   handoffRootSessionId?: string
@@ -743,13 +744,6 @@ interface ManagedSession {
   projectId?: string
   // Parent session id — when set, this session is a subtask of the parent (undefined = top-level task)
   parentSessionId?: string
-  description?: string
-  acceptanceCriteria?: string
-  startAt?: string
-  dueAt?: string
-  progress?: number
-  dependencySessionIds?: string[]
-  isMilestone?: boolean
   // Kanban board column id ('todo' | 'in-progress' | 'done'); independent of sessionStatus
   kanbanColumn?: string
   // Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes)
@@ -1701,12 +1695,7 @@ export class SessionManager implements ISessionManager {
       // Prevent stale pending writes from reverting externally-updated metadata.
       this.productRepository.cancel(sessionId)
       this.persistSession(managed)
-      this.syncPrimaryWorkItem(managed, {
-        title: managed.name?.trim() || 'Untitled task',
-        projectId: managed.projectId ?? null,
-        statusId: managed.sessionStatus ?? 'todo',
-        columnId: managed.kanbanColumn ?? null,
-      })
+      this.broadcastPlanningChanged(managed.workspace.id)
     }
 
     return changed
@@ -1962,19 +1951,6 @@ export class SessionManager implements ISessionManager {
         this.eventSink?.(RPC_CHANNELS.calendar.CHANGED, { to: 'workspace', workspaceId: id }, id)
       }
     }, PLANNING_CHANGED_COALESCE_MS)
-  }
-
-  /** Notify compatibility projections after Session metadata changes. */
-  private syncPrimaryWorkItem(managed: ManagedSession, _patch: unknown): void {
-    this.broadcastPlanningChanged(managed.workspace.id)
-  }
-
-  private ensurePrimaryWorkItem(managed: ManagedSession): void {
-    this.syncPrimaryWorkItem(managed, {})
-  }
-
-  private detachSessionWorkItems(managed: ManagedSession): void {
-    this.syncPrimaryWorkItem(managed, {})
   }
 
   private broadcastAutomationsChanged(workspaceId: string): void {
@@ -2293,6 +2269,7 @@ export class SessionManager implements ISessionManager {
     const stored = this.productRepository.load(managed.workspace.rootPath, managed.id)
     if (stored) {
       managed.messages = (stored.messages || []).map(storedToMessage)
+      managed.pendingPlanExecution = stored.pendingPlanExecution
       this.applyDurableRecoveryStatus(managed)
       managed.tokenUsage = stored.tokenUsage
       this.applyDurableUsageProjection(managed)
@@ -2690,6 +2667,7 @@ export class SessionManager implements ISessionManager {
 
     // Lazy-load messages from disk if not yet loaded
     await this.ensureMessagesLoaded(m)
+    migrateSessionArtifacts(m.workspace.rootPath, m.id)
 
     return managedToSession(m, { messages: m.messages })
   }
@@ -2778,6 +2756,7 @@ export class SessionManager implements ISessionManager {
     const storedSession = this.productRepository.load(managed.workspace.rootPath, managed.id)
     if (storedSession) {
       managed.messages = (storedSession.messages || []).map(storedToMessage)
+      managed.pendingPlanExecution = storedSession.pendingPlanExecution
       this.applyDurableRecoveryStatus(managed)
       managed.tokenUsage = storedSession.tokenUsage
       this.applyDurableUsageProjection(managed)
@@ -2852,7 +2831,19 @@ export class SessionManager implements ISessionManager {
     }
     const events = this.durableRuntime.queries.events(workspaceRoot, { sessionId: managed.id })
     if (events.length > 0) {
-      const parity = reportLegacyProjectionParity(events, managed.messages)
+      let parity = reportLegacyProjectionParity(events, managed.messages)
+      // Recover committed semantic records missing from the product snapshot.
+      // Never discard product-only history or a cursor that is ahead of the ledger.
+      if (canonicalProjectionReady && this.shouldUseCanonicalSessionRead(managed)
+        && parity.issueCount > 0
+        && parity.issues.every(issue => issue.kind === 'missing_legacy_message' || issue.kind === 'outcome_not_reflected')) {
+        const recovered = projectCanonicalSessionMessages(events, managed.messages)
+        const recoveredParity = reportLegacyProjectionParity(events, recovered)
+        if (recoveredParity.issueCount === 0) {
+          managed.messages = recovered
+          parity = recoveredParity
+        }
+      }
       try {
         this.durableRuntime.evidence.recordProjectionParity(workspaceRoot, {
           projection: 'canonical/sessions',
@@ -3483,65 +3474,79 @@ export class SessionManager implements ISessionManager {
 
     // Branch: copy messages from source session up to and including the branch point
     if (validatedBranch) {
-      const branchedStored = this.productRepository.load(workspaceRootPath, storedSession.id)
-      if (!branchedStored) {
-        throw new Error(`Failed to load newly created session ${storedSession.id} for branch copy`)
-      }
-
-      const sourceMessages = validatedBranch.sourceSession.messages.slice(0, validatedBranch.branchIdx + 1)
-
-      // Re-map embedded paths: source messages were loaded with expandSessionPath(sourceDir),
-      // so they contain absolute paths to the *source* session directory. When saved to the
-      // branch session, makeSessionPathPortable uses the *branch* dir — which won't match.
-      // Fix: replace source dir paths with branch dir paths so tokenization works on save.
-      const sourceDir = normalizePath(getSessionStoragePath(workspaceRootPath, validatedBranch.sourceSessionId))
-      const branchDir = normalizePath(getSessionStoragePath(workspaceRootPath, storedSession.id))
-      if (sourceDir !== branchDir) {
-        branchedStored.messages = sourceMessages.map(m => {
-          const json = JSON.stringify(m)
-          if (!json.includes(sourceDir)) return m
-          return JSON.parse(json.replaceAll(sourceDir, branchDir)) as StoredMessage
-        })
-      } else {
-        branchedStored.messages = sourceMessages
-      }
-
-      branchedStored.branchFromMessageId = validatedBranch.sourceMessageId
-      branchedStored.branchFromSessionId = validatedBranch.sourceSessionId
-      if (validatedBranch.branchContextStrategy === 'sdk-fork') {
-        branchedStored.branchFromSdkSessionId = validatedBranch.branchFromSdkSessionId
-        branchedStored.branchFromSessionPath = validatedBranch.branchFromSessionPath
-        branchedStored.branchFromSdkCwd = validatedBranch.branchFromSdkCwd
-        branchedStored.branchFromSdkTurnId = validatedBranch.branchFromSdkTurnId
-      } else {
-        delete branchedStored.branchFromSdkSessionId
-        delete branchedStored.branchFromSessionPath
-        delete branchedStored.branchFromSdkCwd
-        delete branchedStored.branchFromSdkTurnId
-      }
-      await saveStoredSession(branchedStored)
-
-      // Propagate the Pi turn-anchor sidecar into the branch so a downstream
-      // branch can still resolve anchors for messages copied here from the
-      // source. Without this step, branch-of-branch silently falls back to
-      // full-history fork — see craft-agents-oss#782.
-      if (
-        validatedBranch.branchContextStrategy === 'sdk-fork' &&
-        validatedBranch.sourceProvider === 'pi'
-      ) {
-        try {
-          await copyPiTurnAnchorsForBranch(
-            sourceDir,
-            branchDir,
-            branchedStored.messages.map((m) => m.id),
-          )
-        } catch (err) {
-          sessionLog.warn('Failed to copy Pi turn-anchors sidecar to branch', {
-            err,
-            sourceSessionId: validatedBranch.sourceSessionId,
-            branchSessionId: storedSession.id,
-          })
+      try {
+        const branchedStored = this.productRepository.load(workspaceRootPath, storedSession.id)
+        if (!branchedStored) {
+          throw new Error(`Failed to load newly created session ${storedSession.id} for branch copy`)
         }
+
+        const sourceMessages = validatedBranch.sourceSession.messages.slice(0, validatedBranch.branchIdx + 1)
+
+        // Re-map embedded paths: source messages were loaded with expandSessionPath(sourceDir),
+        // so they contain absolute paths to the *source* session directory. When saved to the
+        // branch session, makeSessionPathPortable uses the *branch* dir — which won't match.
+        // Fix: replace source dir paths with branch dir paths so tokenization works on save.
+        const sourceDir = normalizePath(getSessionStoragePath(workspaceRootPath, validatedBranch.sourceSessionId))
+        const branchDir = normalizePath(getSessionStoragePath(workspaceRootPath, storedSession.id))
+        migrateSessionArtifacts(workspaceRootPath, validatedBranch.sourceSessionId)
+        await copySessionContent(sourceDir, branchDir)
+        const artifactIds = rebindSessionArtifactCopy(branchDir, workspaceRootPath, workspaceId, storedSession.id, true)
+        if (sourceDir !== branchDir) {
+          branchedStored.messages = sourceMessages.map(m => {
+            const json = JSON.stringify(m)
+            if (!json.includes(sourceDir)) return m
+            return JSON.parse(json.replaceAll(sourceDir, branchDir)) as StoredMessage
+          })
+        } else {
+          branchedStored.messages = sourceMessages
+        }
+        branchedStored.messages = branchedStored.messages.map(message => ({ ...message,
+          content: rebindArtifactEvent(message.content, artifactIds, storedSession.id) ?? '',
+          toolResult: rebindArtifactEvent(message.toolResult, artifactIds, storedSession.id),
+          durableOperationId: undefined, durableSeq: undefined,
+        }))
+
+        branchedStored.branchFromMessageId = validatedBranch.sourceMessageId
+        branchedStored.branchFromSessionId = validatedBranch.sourceSessionId
+        if (validatedBranch.branchContextStrategy === 'sdk-fork') {
+          branchedStored.branchFromSdkSessionId = validatedBranch.branchFromSdkSessionId
+          branchedStored.branchFromSessionPath = validatedBranch.branchFromSessionPath
+          branchedStored.branchFromSdkCwd = validatedBranch.branchFromSdkCwd
+          branchedStored.branchFromSdkTurnId = validatedBranch.branchFromSdkTurnId
+        } else {
+          delete branchedStored.branchFromSdkSessionId
+          delete branchedStored.branchFromSessionPath
+          delete branchedStored.branchFromSdkCwd
+          delete branchedStored.branchFromSdkTurnId
+        }
+        await saveStoredSession(branchedStored)
+
+        // Propagate the Pi turn-anchor sidecar into the branch so a downstream
+        // branch can still resolve anchors for messages copied here from the
+        // source. Without this step, branch-of-branch silently falls back to
+        // full-history fork — see craft-agents-oss#782.
+        if (
+          validatedBranch.branchContextStrategy === 'sdk-fork' &&
+          validatedBranch.sourceProvider === 'pi'
+        ) {
+          try {
+            await copyPiTurnAnchorsForBranch(
+              sourceDir,
+              branchDir,
+              branchedStored.messages.map((m) => m.id),
+            )
+          } catch (err) {
+            sessionLog.warn('Failed to copy Pi turn-anchors sidecar to branch', {
+              err,
+              sourceSessionId: validatedBranch.sourceSessionId,
+              branchSessionId: storedSession.id,
+            })
+          }
+        }
+      } catch (error) {
+        try { await this.productRepository.cancelAndWait(storedSession.id) }
+        finally { deleteStoredSession(workspaceRootPath, storedSession.id) }
+        throw error
       }
     }
 
@@ -3672,7 +3677,7 @@ export class SessionManager implements ISessionManager {
 
     // Keep Kanban connected to ordinary top-level conversations as well as
     // explicit Task flows. Idempotency lives in ensureWorkItemForSession.
-    this.ensurePrimaryWorkItem(managed)
+    this.broadcastPlanningChanged(managed.workspace.id)
 
     // Announce by default so the renderer hydrates full metadata (name, parentSessionId, …)
     // instead of fabricating a titleless "New Chat" from the first streamed event. Emitted at
@@ -5916,7 +5921,7 @@ initialSources: {
     const managed = this.sessions.get(sessionId)
     if (managed) {
       managed.sessionStatus = sessionStatus
-      this.syncPrimaryWorkItem(managed, { statusId: sessionStatus })
+      this.broadcastPlanningChanged(managed.workspace.id)
       this.setMetadataWriteGuard(managed)
       // Persist in-memory state directly to avoid race with pending queue writes
       this.persistSession(managed)
@@ -5976,8 +5981,12 @@ initialSources: {
   async setPendingPlanExecution(sessionId: string, planPath: string, draftInputSnapshot?: string, planMessageId?: string): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (managed) {
+      await this.ensureMessagesLoaded(managed)
       const approvalSnapshot = buildPlanApproval(managed.messages, planPath, planMessageId)
-      await setStoredPendingPlanExecution(managed.workspace.rootPath, sessionId, planPath, draftInputSnapshot, approvalSnapshot)
+      managed.pendingPlanExecution = { planPath, draftInputSnapshot, approvalMessageSnapshot: approvalSnapshot,
+        awaitingCompaction: true, executionDispatched: false }
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
       sessionLog.info(`Session ${sessionId}: set pending plan execution for ${planPath}`)
     }
   }
@@ -5990,7 +5999,11 @@ initialSources: {
   async markCompactionComplete(sessionId: string): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (managed) {
-      await markStoredCompactionComplete(managed.workspace.rootPath, sessionId)
+      await this.ensureMessagesLoaded(managed)
+      if (!managed.pendingPlanExecution) return
+      managed.pendingPlanExecution.awaitingCompaction = false
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
       sessionLog.info(`Session ${sessionId}: compaction marked complete for pending plan`)
     }
   }
@@ -6012,9 +6025,20 @@ initialSources: {
       sessionLog.info(`Session ${sessionId}: pending plan dispatch claim rejected (missing or busy)`)
       return false
     }
-    const claimed = await markStoredPendingPlanExecutionDispatched(managed.workspace.rootPath, sessionId)
-    sessionLog.info(`Session ${sessionId}: pending plan execution dispatch claim ${claimed ? 'accepted' : 'rejected'}`)
-    return claimed
+    await this.ensureMessagesLoaded(managed)
+    const pending = managed.pendingPlanExecution
+    if (!pending || pending.awaitingCompaction || pending.executionDispatched || managed.runtime.isProcessing) return false
+    // Claim synchronously before the durability barrier, so concurrent windows cannot both win.
+    pending.executionDispatched = true
+    try {
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
+    } catch (error) {
+      if (managed.pendingPlanExecution === pending) pending.executionDispatched = false
+      throw error
+    }
+    sessionLog.info(`Session ${sessionId}: pending plan execution dispatch claim accepted`)
+    return true
   }
 
   /**
@@ -6025,7 +6049,11 @@ initialSources: {
   async clearPendingPlanExecution(sessionId: string): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (managed) {
-      await clearStoredPendingPlanExecution(managed.workspace.rootPath, sessionId)
+      await this.ensureMessagesLoaded(managed)
+      if (!managed.pendingPlanExecution) return
+      managed.pendingPlanExecution = undefined
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
       sessionLog.info(`Session ${sessionId}: cleared pending plan execution`)
     }
   }
@@ -6037,7 +6065,9 @@ initialSources: {
   getPendingPlanExecution(sessionId: string): { planPath: string; draftInputSnapshot?: string; approvalMessageSnapshot?: string; awaitingCompaction: boolean; executionDispatched: boolean } | null {
     const managed = this.sessions.get(sessionId)
     if (!managed) return null
-    return getStoredPendingPlanExecution(managed.workspace.rootPath, sessionId)
+    if (!managed.messagesLoaded) return getStoredPendingPlanExecution(managed.workspace.rootPath, sessionId)
+    const pending = managed.pendingPlanExecution
+    return pending ? { ...structuredClone(pending), executionDispatched: pending.executionDispatched ?? false } : null
   }
 
   /**
@@ -6119,11 +6149,8 @@ initialSources: {
       // Store shared info in session
       managed.sharedUrl = data.url
       managed.sharedId = data.id
-      const workspaceRootPath = managed.workspace.rootPath
-      await updateSessionMetadata(workspaceRootPath, sessionId, {
-        sharedUrl: data.url,
-        sharedId: data.id,
-      })
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
 
       sessionLog.info(`Session ${sessionId} shared at ${data.url}`)
       // Notify all windows for this workspace
@@ -6228,14 +6255,12 @@ initialSources: {
         return { success: false, error: 'Failed to revoke share' }
       }
 
+      await this.ensureMessagesLoaded(managed)
       // Clear shared info
       delete managed.sharedUrl
       delete managed.sharedId
-      const workspaceRootPath = managed.workspace.rootPath
-      await updateSessionMetadata(workspaceRootPath, sessionId, {
-        sharedUrl: undefined,
-        sharedId: undefined,
-      })
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
 
       sessionLog.info(`Session ${sessionId} share revoked`)
       // Notify all windows for this workspace
@@ -6425,15 +6450,15 @@ initialSources: {
     // (user is viewing but we want to wait for processing to complete)
     if (managed.runtime.isProcessing) return
 
+    await this.ensureMessagesLoaded(managed)
+    if (managed.runtime.isProcessing) return
     let needsPersist = false
-    const updates: { lastReadMessageId?: string; hasUnread?: boolean } = {}
 
     // Update lastReadMessageId for legacy/manual unread functionality
     if (managed.messages.length > 0) {
       const lastFinalId = this.getLastFinalAssistantMessageId(managed.messages)
       if (lastFinalId && managed.lastReadMessageId !== lastFinalId) {
         managed.lastReadMessageId = lastFinalId
-        updates.lastReadMessageId = lastFinalId
         needsPersist = true
       }
     }
@@ -6441,14 +6466,13 @@ initialSources: {
     // Clear hasUnread flag (primary source of truth for NEW badge)
     if (managed.hasUnread) {
       managed.hasUnread = false
-      updates.hasUnread = false
       needsPersist = true
     }
 
     // Persist changes
     if (needsPersist) {
-      const workspaceRootPath = managed.workspace.rootPath
-      await updateSessionMetadata(workspaceRootPath, sessionId, updates)
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
       this.emitUnreadSummaryChanged()
     }
   }
@@ -6460,11 +6484,12 @@ initialSources: {
   async markSessionUnread(sessionId: string): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (managed) {
+      await this.ensureMessagesLoaded(managed)
       managed.hasUnread = true
       managed.lastReadMessageId = undefined
       // Persist to disk
-      const workspaceRootPath = managed.workspace.rootPath
-      await updateSessionMetadata(workspaceRootPath, sessionId, { hasUnread: true, lastReadMessageId: undefined })
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
       this.emitUnreadSummaryChanged()
     }
   }
@@ -6481,9 +6506,8 @@ initialSources: {
       if (managed.runtime.isProcessing) continue
       if (!managed.hasUnread) continue
       managed.hasUnread = false
-      updates.push(
-        updateSessionMetadata(managed.workspace.rootPath, managed.id, { hasUnread: false })
-      )
+      this.persistSession(managed)
+      updates.push(this.productRepository.flush(managed.id))
     }
     if (updates.length > 0) {
       await Promise.all(updates)
@@ -6497,7 +6521,7 @@ initialSources: {
       managed.name = name
       managed.autoTitle = undefined
       managed.titleDeferred = false
-      this.syncPrimaryWorkItem(managed, { title: name })
+      this.broadcastPlanningChanged(managed.workspace.id)
       this.persistSession(managed)
       // Notify renderer of the name change
       this.sendEvent({ type: 'title_generated', sessionId, title: name }, managed.workspace.id)
@@ -6622,7 +6646,7 @@ initialSources: {
         managed.name = title
         managed.autoTitle = title
         managed.titleDeferred = false
-        this.syncPrimaryWorkItem(managed, { title })
+        this.broadcastPlanningChanged(managed.workspace.id)
         this.persistSession(managed)
         // title_generated will also clear isRegeneratingTitle via the event handler
         this.sendEvent({ type: 'title_generated', sessionId, title }, managed.workspace.id)
@@ -6732,11 +6756,8 @@ initialSources: {
       }
 
       managed.model = model ?? undefined
-      const updates: { model?: string; llmConnection?: string } = { model: model ?? undefined }
-      if (connectionChanged && connection) {
-        updates.llmConnection = connection
-      }
-      await updateSessionMetadata(managed.workspace.rootPath, sessionId, updates)
+      this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
 
       if (connectionChanged) {
         await this.tryRefreshAgentRuntime(managed, 'session connection switch')
@@ -6984,6 +7005,8 @@ initialSources: {
     // before removing its directory.
     await this.productRepository.cancelAndWait(sessionId)
 
+    migrateSessionArtifacts(workspaceRootPath, sessionId)
+    archiveLegacySessionDraft(sessionId)
     if (!deleteStoredSession(workspaceRootPath, sessionId)) {
       throw new Error(`Failed to delete session ${sessionId} from disk`)
     }
@@ -7016,7 +7039,7 @@ initialSources: {
     }
 
     this.durableRuntime.evidence.deleteDecisionEvidence(workspaceRootPath, sessionId)
-    this.detachSessionWorkItems(managed)
+    this.broadcastPlanningChanged(managed.workspace.id)
 
     // Revoke the remote copy only after local deletion has succeeded.
     if (managed.sharedId) {
@@ -7151,7 +7174,7 @@ initialSources: {
     // Clear any pending plan execution state when a new user message is sent.
     // This acts as a safety valve - if the user moves on, we don't want to
     // auto-execute an old plan later.
-    await clearStoredPendingPlanExecution(managed.workspace.rootPath, sessionId)
+    await this.clearPendingPlanExecution(sessionId)
 
     // Ensure messages are loaded before we try to add new ones
     await this.ensureMessagesLoaded(managed)
@@ -7367,7 +7390,7 @@ initialSources: {
         const initialTitle = sanitized.slice(0, 50) + (sanitized.length > 50 ? '…' : '')
         managed.name = initialTitle
         managed.autoTitle = initialTitle
-        this.syncPrimaryWorkItem(managed, { title: initialTitle })
+        this.broadcastPlanningChanged(managed.workspace.id)
         this.persistSession(managed)
         // Flush immediately so disk is authoritative before notifying renderer
         await this.flushSession(managed.id)
@@ -7388,7 +7411,7 @@ initialSources: {
       && this.decisionFeatureActive('smartTitles')) void this.generateTitleUnlessSmallTalk(managed, message)
 
     // Register only after the chat has content; empty placeholders never reach Kanban.
-    this.ensurePrimaryWorkItem(managed)
+    this.broadcastPlanningChanged(managed.workspace.id)
 
     // Evaluate auto-label rules against the user message (common path for both
     // fresh and queued messages). Scans regex patterns configured on labels,
@@ -8072,7 +8095,8 @@ initialSources: {
         // User is not watching - mark as unread for NEW badge
         if (!managed.hasUnread) {
           managed.hasUnread = true
-          await updateSessionMetadata(managed.workspace.rootPath, sessionId, { hasUnread: true })
+          this.persistSession(managed)
+          await this.productRepository.flush(sessionId)
           this.emitUnreadSummaryChanged()
         }
       }
@@ -8695,7 +8719,7 @@ initialSources: {
 
     const existing = itemOf(managed.labels)
     if (existing) {
-      this.ensurePrimaryWorkItem(managed)
+      this.broadcastPlanningChanged(managed.workspace.id)
       return { labelId: existing }
     }
 
@@ -8709,13 +8733,13 @@ initialSources: {
         itemId = ensureTaskItemLabel(rootPath, parent.name || 'task').itemId
         await this.setSessionLabels(parent.id, withItemEntry(parent.labels, itemId))
       }
-      this.ensurePrimaryWorkItem(parent)
+      this.broadcastPlanningChanged(parent.workspace.id)
     } else {
       itemId = ensureTaskItemLabel(rootPath, managed.name || 'task').itemId
     }
 
     await this.setSessionLabels(sessionId, withItemEntry(managed.labels, itemId))
-    this.ensurePrimaryWorkItem(managed)
+    this.broadcastPlanningChanged(managed.workspace.id)
     return { labelId: itemId }
   }
 
@@ -8728,7 +8752,7 @@ initialSources: {
     const managed = this.sessions.get(sessionId)
     if (managed) {
       managed.projectId = projectId ?? undefined
-      this.syncPrimaryWorkItem(managed, { projectId })
+      this.broadcastPlanningChanged(managed.workspace.id)
       this.setMetadataWriteGuard(managed)
 
       this.sendEvent({
@@ -8752,7 +8776,7 @@ initialSources: {
     const managed = this.sessions.get(sessionId)
     if (managed) {
       managed.kanbanColumn = column ?? undefined
-      this.syncPrimaryWorkItem(managed, { columnId: column })
+      this.broadcastPlanningChanged(managed.workspace.id)
       this.setMetadataWriteGuard(managed)
 
       this.persistSession(managed)
@@ -8851,7 +8875,7 @@ initialSources: {
     this.persistSession(managed)
     await this.flushSession(managed.id)
     this.sendEvent({ type: 'session_metadata_changed', sessionId, changes: normalized }, managed.workspace.id)
-    this.syncPrimaryWorkItem(managed, {})
+    this.broadcastPlanningChanged(managed.workspace.id)
     const watcher = this.configWatchers.get(managed.workspace.rootPath)
     watcher?.notifyFileChange(`sessions/${sessionId}/session.jsonl`)
   }
@@ -8931,10 +8955,7 @@ initialSources: {
     if (connectionChanged) managed.llmConnection = reconcile!.llmConnection
     const renamed = Boolean(reconcile?.name && reconcile.name !== managed.name)
     if (renamed) managed.name = reconcile!.name!
-    this.syncPrimaryWorkItem(managed, {
-      ...(renamed ? { title: managed.name! } : {}),
-      ...(reconcile?.projectId !== undefined ? { projectId: reconcile.projectId } : {}),
-    })
+    this.broadcastPlanningChanged(managed.workspace.id)
 
     // Route model / cwd / permission mode through the canonical mutators so the LIVE agent, caches,
     // and per-field events stay consistent — not just the on-disk metadata (the split-brain the
@@ -9021,10 +9042,7 @@ initialSources: {
     if (connectionChanged) managed.llmConnection = reconcile!.llmConnection
     const renamed = Boolean(reconcile?.name && reconcile.name !== managed.name)
     if (renamed) managed.name = reconcile!.name!
-    this.syncPrimaryWorkItem(managed, {
-      ...(renamed ? { title: managed.name! } : {}),
-      ...(reconcile?.projectId !== undefined ? { projectId: reconcile.projectId } : {}),
-    })
+    this.broadcastPlanningChanged(managed.workspace.id)
 
     // Route model / cwd / permission mode through the canonical mutators so the LIVE agent, caches,
     // and per-field events stay consistent — not just the on-disk metadata (the split-brain the
@@ -9427,7 +9445,7 @@ initialSources: {
         managed.name = title
         managed.autoTitle = title
         managed.titleDeferred = false
-        this.syncPrimaryWorkItem(managed, { title })
+        this.broadcastPlanningChanged(managed.workspace.id)
         this.persistSession(managed)
         // Flush immediately to ensure disk is up-to-date before notifying renderer.
         // This prevents race condition where lazy loading reads stale disk data
@@ -9502,8 +9520,11 @@ initialSources: {
         // Flush any pending deltas before sending complete (ensures renderer has all content)
         this.flushDelta(sessionId, workspaceId)
 
+        const committedModelId = event.durableOperationId?.startsWith('modelop_')
+          ? `model:${event.durableOperationId}` : undefined
+        if (committedModelId && managed.messages.some(message => message.id === committedModelId)) break
         const assistantMessage: Message = {
-          id: generateMessageId(),
+          id: committedModelId ?? generateMessageId(),
           role: 'assistant',
           content: event.text,
           timestamp: this.monotonic(),
@@ -9932,7 +9953,7 @@ initialSources: {
           // This is done here (backend) rather than in the renderer so it's
           // not affected by CMD+R during compaction. The frontend reload
           // recovery will see awaitingCompaction=false and trigger execution.
-          void markStoredCompactionComplete(managed.workspace.rootPath, sessionId)
+          await this.markCompactionComplete(sessionId)
           sessionLog.info(`Session ${sessionId}: compaction complete, marked pending plan ready`)
 
           // No usage_update here: the fresh context_usage snapshot that
@@ -10735,6 +10756,8 @@ resources: {
     this.persistSession(managed)
     await this.productRepository.flush(sessionId)
 
+    getSessionDraft(managed.workspace.rootPath, sessionId)
+    migrateSessionArtifacts(managed.workspace.rootPath, sessionId)
     const bundle = serializeSession(managed.workspace.rootPath, sessionId)
     if (!bundle) {
       sessionLog.error(`[dispatch] Failed to serialize session ${sessionId}`)
@@ -10786,40 +10809,10 @@ resources: {
       throw new Error(`Session ${sessionId} already exists in target workspace`)
     }
 
-    // Create session directory with all subdirectories
-    const sessionDir = ensureSessionDir(workspaceRootPath, sessionId)
-
     // Build the stored session from bundle data
     const header = bundle.session.header
-    const storedSession: StoredSession = {
-      id: sessionId,
-      workspaceRootPath,
-      sdkSessionId: header.sdkSessionId, // Preserved initially; fork logic below may clear it
-      // Always regenerate sdkCwd for the target workspace.
-      // The source sdkCwd points to a path on the originating server
-      // which doesn't exist here (cross-server transfer).
-      sdkCwd: getSessionStoragePath(workspaceRootPath, sessionId),
-      name: header.name,
-      createdAt: header.createdAt,
-      lastUsedAt: Date.now(),
-      lastMessageAt: header.lastMessageAt,
-      isFlagged: header.isFlagged,
-      permissionMode: header.permissionMode,
-      previousPermissionMode: header.previousPermissionMode,
-      sessionStatus: header.sessionStatus,
-      labels: this.canonicalLabels(workspaceRootPath, header.labels),
-      enabledSourceSlugs: header.enabledSourceSlugs,
-      workingDirectory: header.workingDirectory,
-      model: header.model,
-      llmConnection: header.llmConnection,
-      connectionLocked: header.connectionLocked,
-      thinkingLevel: header.thinkingLevel,
-      hidden: header.hidden,
-      transferredSessionSummary: header.transferredSessionSummary,
-      transferredSessionSummaryApplied: header.transferredSessionSummaryApplied,
-      messages: bundle.session.messages,
-      tokenUsage: header.tokenUsage ?? DEFAULT_TOKEN_USAGE,
-    }
+    const storedSession = sessionFromBundle(bundle, workspaceRootPath, sessionId)
+    storedSession.labels = this.canonicalLabels(workspaceRootPath, storedSession.labels)
 
     // Fork-specific: set up SDK branching if branchInfo provided
     if (mode === 'fork' && bundle.branchInfo) {
@@ -10891,14 +10884,14 @@ resources: {
       sessionLog.info('[import] No LLM connection in bundle — will use default')
     }
 
-    // Write JSONL file (after compatibility checks so remapped values are persisted)
-    const sessionFile = getSessionFilePath(workspaceRootPath, sessionId)
-    sessionLog.info(`[import] Writing JSONL: ${sessionFile} (llmConnection=${storedSession.llmConnection ?? 'default'}, messages=${storedSession.messages.length})`)
-    writeSessionJsonl(sessionFile, storedSession)
-
-    // Write all bundle files (attachments, plans, data, downloads, etc.)
-    // Uses restoreFiles() for path traversal, size, and base64 validation.
-    restoreFiles(sessionDir, bundle.files)
+    restoreSessionBundle(storedSession, bundle.files, directory => {
+      const artifactIds = rebindSessionArtifactCopy(directory, workspaceRootPath, workspaceId, sessionId, mode === 'fork')
+      storedSession.messages = storedSession.messages.map(message => ({ ...message,
+        content: rebindArtifactEvent(message.content, artifactIds, sessionId) ?? '',
+        toolResult: rebindArtifactEvent(message.toolResult, artifactIds, sessionId),
+      }))
+      importLegacyContext(this.durableRuntime, workspaceRootPath, sessionId, storedSession.messages.map(storedToMessage))
+    })
 
     // Register in-memory — pass session metadata without messages to avoid
     // StoredMessage[] vs Message[] type mismatch, then convert messages separately

@@ -18,7 +18,10 @@ export function contextItemChanges(current: readonly TrajectoryContextItem[], pr
   for (const item of current) {
     const old = before.get(identity(item))
     if (!old) changes.push({ ...item, change: 'added' })
-    else if (old.chars !== item.chars || old.content !== item.content) changes.push({ ...item, change: 'modified', previousItem: old })
+    else if (old.chars !== item.chars || old.content !== item.content
+      || (old.contentHash !== undefined && item.contentHash !== undefined && old.contentHash !== item.contentHash)) {
+      changes.push({ ...item, change: 'modified', previousItem: old })
+    }
   }
   for (const item of previous) {
     if (!after.has(identity(item))) changes.push({ ...item, change: 'removed' })

@@ -37,7 +37,9 @@ interface ModelRequest {
   messages?: { role: string; content: unknown }[]
   tools?: { function: { name: string } }[]
 }
-const text = (value: unknown): string => typeof value === 'string' ? value : JSON.stringify(value)
+const text = (value: unknown): string => typeof value === 'string' ? value
+  : Array.isArray(value) ? value.flatMap(block => block?.type === 'text' && typeof block.text === 'string' ? [block.text] : []).join('\n')
+    : JSON.stringify(value)
 
 export async function seedConversationFixture(config: string, workspace: string) {
   assert.equal(process.env.PHANERIS_CONFIG_DIR, config, 'Set the isolated config before importing its consumers')
@@ -47,7 +49,7 @@ export async function seedConversationFixture(config: string, workspace: string)
   let filePath = join(workspace, 'governance 报告.txt'), planPath = join(workspace, 'sessions', session.id, 'plans', 'governance.md')
   mkdirSync(dirname(planPath), { recursive: true })
   writeFileSync(planPath, '# Governance fixture plan\n\nGOVERNANCE_PLAN_BODY\n\n1. Verify a finite platform port.\n')
-  const requests: { mode: string; tools: string[]; toolResult: boolean }[] = []
+  const requests: { mode: string; tools: string[]; toolResult: boolean; fixtureRequest: string }[] = []
   const streams = new Set<ReturnType<typeof setInterval>>()
   const api = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
     if (request.method === 'GET') return Response.json({ object: 'list', data: [{ id: 'fixture', object: 'model', owned_by: 'fixture' }] })
@@ -55,10 +57,14 @@ export async function seedConversationFixture(config: string, workspace: string)
     const messages = body.messages ?? [], tools = (body.tools ?? []).map(tool => tool.function.name)
     const lastUser = messages.findLastIndex(message => message.role === 'user')
     const user = text(messages[lastUser]?.content ?? '')
+    // Product continuity includes quoted historical requests. Classify only the
+    // latest explicit fixture request, which the production prompt appends last.
+    const fixtureRequest = user.split('\n').findLast(line => line.startsWith('GOVERNANCE_')) ?? user
     const toolResult = messages.slice(lastUser + 1).some(message => message.role === 'tool')
-    const mode = tools.length === 0 ? 'utility' : user.includes('GOVERNANCE_THINKING_CANCEL') ? 'thinking-cancel' : user.includes('GOVERNANCE_THINKING') ? 'thinking' : user.includes('GOVERNANCE_PERMISSION') ? 'permission'
-      : user.includes('GOVERNANCE_PLAN_REQUEST') ? 'plan' : user.includes('GOVERNANCE_CANCEL') ? 'cancel' : 'continuation'
-    requests.push({ mode, tools, toolResult })
+    const mode = tools.length === 0 ? 'utility' : fixtureRequest.includes('GOVERNANCE_THINKING_CANCEL') ? 'thinking-cancel' : fixtureRequest.includes('GOVERNANCE_THINKING') ? 'thinking' : fixtureRequest.includes('GOVERNANCE_PERMISSION') ? 'permission'
+      : fixtureRequest.includes('GOVERNANCE_PLAN_REQUEST') ? 'plan' : fixtureRequest.includes('GOVERNANCE_CANCEL') ? 'cancel' : 'continuation'
+    requests.push({ mode, tools, toolResult, fixtureRequest })
+    writeFileSync(join(config, 'conversation-provider-requests.json'), JSON.stringify(requests, null, 2))
     const chunk = (delta: unknown, finish: string | null = null) => `data: ${JSON.stringify({ id: `ui-${requests.length}`, object: 'chat.completion.chunk',
       created: 1, model: 'fixture', choices: [{ index: 0, delta, finish_reason: finish }],
       ...(finish ? { usage: { prompt_tokens: 100, completion_tokens: 10, total_tokens: 110 } } : {}) })}\n\n`

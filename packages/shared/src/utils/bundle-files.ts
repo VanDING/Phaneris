@@ -72,6 +72,7 @@ export function validateBundleFile(file: BundleFile): string | null {
   if (file.relativePath.includes('\\')) {
     return `Backslash path separator not allowed: ${file.relativePath}`
   }
+  if (file.relativePath.includes(':')) return `Drive or alternate stream path not allowed: ${file.relativePath}`
 
   // Check for empty segments (double slashes)
   if (file.relativePath.includes('//')) {
@@ -108,6 +109,10 @@ export interface CollectOptions {
   skipFiles?: Set<string>
   /** Directory names to skip (exact match, e.g., 'tmp') */
   skipDirs?: Set<string>
+  /** Session bundles also own hidden SDK journals; other resource bundles keep their existing policy. */
+  includeHidden?: ReadonlySet<string>
+  /** A Session transfer must fail visibly instead of publishing missing owned content. */
+  strict?: boolean
 }
 
 /**
@@ -130,7 +135,7 @@ export function collectDirectoryFiles(dir: string, options?: CollectOptions): Bu
     const entries = readdirSync(currentDir, { withFileTypes: true })
     for (const entry of entries) {
       // Skip hidden files and directories
-      if (entry.name.startsWith('.')) continue
+      if (entry.name.startsWith('.') && !options?.includeHidden?.has(entry.name)) continue
 
       const fullPath = join(currentDir, entry.name)
 
@@ -148,10 +153,11 @@ export function collectDirectoryFiles(dir: string, options?: CollectOptions): Bu
           files.push({
             relativePath: toPortableRelPath(relPath),
             contentBase64: content.toString('base64'),
-            size: stat.size,
+            size: content.byteLength,
             ...((stat.mode & 0o111) ? { executable: true } : {}),
           })
         } catch (err) {
+          if (options?.strict) throw err
           debug(`[bundle-files] Failed to read file ${fullPath}:`, err)
           // Skip unreadable files rather than failing the entire collection
         }

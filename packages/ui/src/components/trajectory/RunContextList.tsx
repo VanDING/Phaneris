@@ -14,9 +14,8 @@ function previewOf(item: ContextReadItem): string {
   return item.label || item.content.replace(/\s+/g, ' ').slice(0, 160)
 }
 
-export function RunContextList({ items, tokenScale, limit, openId, onOpenChange, onLoadMore, renderItem }: {
+export function RunContextList({ items, limit, openId, onOpenChange, onLoadMore, renderItem }: {
   items: readonly ContextReadItem[]
-  tokenScale: number
   limit: number
   openId?: string
   onOpenChange: (id: string | undefined) => void
@@ -54,7 +53,7 @@ export function RunContextList({ items, tokenScale, limit, openId, onOpenChange,
               <span className={css.contextRowPreview} title={preview}>{preview}</span>
               {item.change && <span className={`${css.contextChangeTag} ${item.change === 'removed' ? css.changeNegative : css.changePositive}`}>{t(`run.context.change.${item.change}`)}</span>}
               {item.timestamp !== undefined && <time className={css.contextRowTime} dateTime={new Date(item.timestamp).toISOString()}>{time.format(item.timestamp)}</time>}
-              <span className={css.entryTokens}>≈{formatTokens(item.estimatedTokens * tokenScale)}</span>
+              <span className={css.entryTokens} data-context-item-tokens={item.estimatedTokens}>≈{formatTokens(item.estimatedTokens)}</span>
             </button>
             {open && <div id={bodyId} className={css.contextRowDetails}>{renderItem(item)}</div>}
           </div>

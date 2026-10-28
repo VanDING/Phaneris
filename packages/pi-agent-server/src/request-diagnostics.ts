@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { requestCapacity } from './request-capacity.ts';
+import { requestContentMetrics } from './request-content-metrics.ts';
 import {
   getCurrentSystemPrompt,
   getCurrentTools,
@@ -36,7 +37,11 @@ export function prepareRequestDiagnostics(model: Model<any>, context: Transcript
     const serialized = JSON.stringify(message) ?? 'null';
     if (index) hash.update(',');
     hash.update(serialized);
-    return { role: typeof message.role === 'string' ? message.role : 'unknown', ...digest(serialized) };
+    return {
+      role: typeof message.role === 'string' ? message.role : 'unknown', ...digest(serialized),
+      ...('toolCallId' in message ? { toolCallId: message.toolCallId as string } : {}),
+      content: requestContentMetrics(message),
+    };
   });
   hash.update('],"tools":[');
   tools.forEach((tool, index) => {
@@ -59,7 +64,7 @@ export function prepareRequestDiagnostics(model: Model<any>, context: Transcript
         const provenance = (message as unknown as { details?: { phanerisResult?: { modelView?: { sha256: string }; coverage?: unknown } } }).details?.phanerisResult;
         return provenance ? [{ toolCallId: message.toolCallId, viewHash: provenance.modelView?.sha256, coverage: provenance.coverage }] : [];
       }),
-      system: digest(JSON.stringify(systemPrompt)),
+      system: { ...digest(JSON.stringify(systemPrompt)), textChars: systemPrompt.length },
       messages,
       tools: tools.map(tool => {
         const schema = digest(JSON.stringify(tool.parameters) ?? '');

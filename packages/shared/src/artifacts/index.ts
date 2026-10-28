@@ -47,6 +47,8 @@ export {
   putArtifactTextPreview,
   reviseArtifact,
   submitArtifact,
+  migrateSessionArtifacts,
+  rebindSessionArtifactCopy,
 } from './storage.ts';
 export {
   ARTIFACT_EVENT_PREFIX,
@@ -54,4 +56,5 @@ export {
   createArtifactEventSnapshot,
   parseArtifactEvent,
   serializeArtifactEvent,
+  rebindArtifactEvent,
 } from './events.ts';

@@ -1,6 +1,7 @@
-/** drafts ownership. config.json writes belong exclusively to repository.ts. */
+/** Legacy draft compatibility and migration backups. Product drafts belong to sessions/drafts.ts. */
 
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync } from 'fs';
+import { createHash } from 'node:crypto';
 
 import { join } from 'path';
 
@@ -57,7 +58,7 @@ function isDraftAttachmentRef(value: unknown): value is DraftAttachmentRef {
   return true;
 }
 
-function isSessionDraft(value: unknown): value is SessionDraft {
+export function isSessionDraft(value: unknown): value is SessionDraft {
   if (!value || typeof value !== 'object') return false;
   const candidate = value as SessionDraft;
   if (typeof candidate.text !== 'string') return false;
@@ -68,7 +69,7 @@ function isSessionDraft(value: unknown): value is SessionDraft {
   return true;
 }
 
-function isEmptyDraft(draft: SessionDraft): boolean {
+export function isEmptyDraft(draft: SessionDraft): boolean {
   return !draft.text && (!draft.attachments || draft.attachments.length === 0);
 }
 
@@ -127,7 +128,7 @@ export function setSessionDraft(sessionId: string, draft: SessionDraft): void {
   saveDraftsData(data);
 }
 
-function normalizeDraftAttachment(ref: DraftAttachmentRef): DraftAttachmentRef {
+export function normalizeDraftAttachment(ref: DraftAttachmentRef): DraftAttachmentRef {
   const base: DraftAttachmentRef = { path: ref.path, name: ref.name };
   if (ref.content && isDraftAttachmentContent(ref.content)) {
     const c = ref.content;
@@ -155,4 +156,15 @@ export function deleteSessionDraft(sessionId: string): void {
 export function getAllSessionDrafts(): Record<string, SessionDraft> {
   const data = loadDraftsData();
   return data.drafts;
+}
+
+/** Preserve exact legacy bytes before removing a successfully migrated/deleted entry. */
+export function archiveLegacySessionDraft(sessionId: string): void {
+  if (!getSessionDraft(sessionId)) return;
+  const raw = readFileSync(DRAFTS_FILE, 'utf8');
+  const directory = join(CONFIG_DIR, 'drafts-backups');
+  mkdirSync(directory, { recursive: true, mode: 0o700 });
+  const backup = join(directory, `${createHash('sha256').update(raw).digest('hex')}.json`);
+  if (!existsSync(backup)) atomicWriteFileSync(backup, raw, { mode: 0o600 });
+  deleteSessionDraft(sessionId);
 }

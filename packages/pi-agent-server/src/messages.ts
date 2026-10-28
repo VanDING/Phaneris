@@ -286,13 +286,5 @@ export type OutboundMessage =
 export interface PromptSnapshot {
   seq: number;
   prompt: string;
-  contextSnapshot?: {
-    version: 1;
-    capturedAt: number;
-    provider: string;
-    model: string;
-    system: { hash: string; chars: number };
-    messages: Array<{ role: string; hash: string; chars: number }>;
-    tools: Array<{ name: string; description?: string; hash: string; schemaChars: number }>;
-  };
+  contextSnapshot?: import('@phaneris/core/types').RequestContextSnapshot;
 }

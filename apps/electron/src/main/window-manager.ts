@@ -397,12 +397,17 @@ export class WindowManager {
     // In dev mode, retry the Vite dev server (it may not be ready yet) instead of falling back
     // to file:// which doesn't exist during development.
     let failLoadRetries = 0
-    window.webContents.on('did-fail-load', (_event, errorCode, errorDescription) => {
+    const maxFailLoadRetries = VITE_DEV_SERVER_URL ? 5 : 1
+    window.webContents.on('did-fail-load', (_event, errorCode, errorDescription, _validatedURL, isMainFrame) => {
+      // A failed child frame or cancelled navigation does not invalidate the app shell.
+      if (!isMainFrame || errorCode === -3) return // ERR_ABORTED
       windowLog.warn('Failed to load renderer:', errorCode, errorDescription)
-      if (VITE_DEV_SERVER_URL && failLoadRetries < 5) {
-        failLoadRetries++
+      if (window.isDestroyed() || failLoadRetries >= maxFailLoadRetries) return
+      failLoadRetries++
+      if (VITE_DEV_SERVER_URL) {
         windowLog.info(`Retrying Vite dev server (attempt ${failLoadRetries}/5)...`)
         setTimeout(() => {
+          if (window.isDestroyed()) return
           const params = new URLSearchParams({ workspaceId }).toString()
           window.loadURL(`${VITE_DEV_SERVER_URL}?${params}`)
         }, 1000)

@@ -65,9 +65,9 @@ await verificationWorkflow('run-context-accounting', async run => {
       await page.locator('[data-run-state]').waitFor()
       await mount(page, `accounting-${mode}`, evidence)
       await tab(page, 'Context')
-      await check(`${mode}: provider input owns total and category sum`, async () => {
+      await check(`${mode}: provider input and text estimates stay independent`, async () => {
         const tokens = await amounts(page, '[data-context-category]')
-        assert.equal(tokens.length, 7)
+        assert.equal(tokens.length, 8)
         assert.equal(tokens.reduce((a, b) => a + b, 0), 184_900)
         assert(tokens.every(value => Number.isInteger(value) && value >= 0))
         assert.equal(await active(page).locator('[data-context-total]').getAttribute('data-context-total'), '184900')
@@ -84,15 +84,15 @@ await verificationWorkflow('run-context-accounting', async run => {
         await tab(page, 'Context')
         await active(page).getByRole('button', { name: 'Net change', exact: true }).click()
         assert.match(await active(page).locator('[data-trend-bar="2"]').getAttribute('aria-label') ?? '', /\+4\.9K/)
-        await active(page).getByRole('button', { name: 'Cumulative composition', exact: true }).click()
+        await active(page).getByRole('button', { name: 'Composition', exact: true }).click()
         await shot(page, `accounting-context-${mode}`)
-        return { tokens, sum: 184_900 }
+        return { tokens, providerInput: 184_900 }
       })
       await check(`${mode}: approved palette shared across all views with readable badges`, async () => {
-        const contextColors = await active(page).locator('[data-context-category] [class*="categoryDot"]').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).backgroundColor))
+        const contextColors = await active(page).locator('[data-context-category]:not([data-context-category="unknown"]) [class*="categoryDot"]').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).backgroundColor))
         assert.equal(new Set(contextColors).size, 7)
         await tab(page, 'Overview')
-        const overviewColors = await active(page).locator('[data-category-legend] [class*="categoryDot"]').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).backgroundColor))
+        const overviewColors = await active(page).locator('[data-category-legend]:not([data-category-legend="unknown"]) [class*="categoryDot"]').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).backgroundColor))
         assert.deepEqual(overviewColors, contextColors)
         await tab(page, 'Trajectory')
         await active(page).getByRole('button', { name: 'Expand calls', exact: true }).click()
@@ -176,7 +176,7 @@ await verificationWorkflow('run-context-accounting', async run => {
               await active(page).getByRole('button', { name: 'Net change', exact: true }).click()
               const deltaWidths = await chart.locator('[class*="deltaBar"]').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().width))
               assert(deltaWidths.every(value => value <= 32.1))
-              await active(page).getByRole('button', { name: 'Cumulative composition', exact: true }).click()
+              await active(page).getByRole('button', { name: 'Composition', exact: true }).click()
             }
           }
         }
@@ -237,7 +237,7 @@ await verificationWorkflow('run-context-accounting', async run => {
       await mount(page, 'missing-input', missing)
       await tab(page, 'Context')
       const sum = (await amounts(page, '[data-context-category]')).reduce((a, b) => a + b, 0)
-      assert(sum > 2_000_000)
+      assert(sum > 0 && sum < 20_000)
       assert.match(await active(page).locator('[data-run-context-history]').innerText(), /≈.*tokens[\s\S]*Provider input not recorded/)
       assert.match(await active(page).locator('[data-run-cache-hit]').innerText(), /Cache hit —/)
       await tab(page, 'Overview')

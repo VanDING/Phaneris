@@ -143,7 +143,7 @@ await verificationWorkflow('upstream-015-core', async run => {
       run.json('mcp-protocol.json', { calls, listing, bounded, saved, resourcesOnly: true })
     } finally { await pool.disconnectAll(); server.stop(true) }
   })
-  await check('U15-20-real-shell-guide-read-success-only', async () => {
+  await check('U15-20-real-shell-output-is-not-delivery-evidence', async () => {
     const { PrerequisiteManager } = await import('../../packages/shared/src/agent/core/prerequisite-manager')
     const guide = join(workspace,'guide.md'), shellPath = guide.replaceAll('\\','/')
     writeFileSync(guide,'GUIDE_CONTENT_015\n')
@@ -162,7 +162,9 @@ await verificationWorkflow('upstream-015-core', async run => {
       const [out,err,code] = await Promise.all([new Response(child.stdout).text(),new Response(child.stderr).text(),child.exited])
       assert.equal(code,0,err)
       manager.trackSuccessfulBashRead(fixture.command)
-      assert.equal(manager.hasRead(guide),fixture.read,fixture.command)
+      // Current delivery policy requires native Read version/range evidence.
+      // Successful arbitrary shell output must never acknowledge the prerequisite.
+      assert.equal(manager.hasRead(guide),false,fixture.command)
       if(fixture.read) { assert(before.allowed); assert(out.includes('GUIDE_CONTENT_015')) }
       report.push({...fixture,before,exitCode:code})
     }

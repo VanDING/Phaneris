@@ -70,7 +70,8 @@ describe('deriveRequestContexts', () => {
     const context = deriveRequestContexts(snapshot)[0]!
     expect(context.captured).toBe(true)
     expect(context.provider).toBe('anthropic')
-    expect(context.groups.find(group => group.category === 'user')?.chars).toBe(120)
+    // Legacy JSON sizes cannot stand in for unavailable user text.
+    expect(context.groups.find(group => group.category === 'user')).toBeUndefined()
     expect(context.groups.find(group => group.category === 'schemas')?.items[0]?.label).toContain('Read')
   })
 })

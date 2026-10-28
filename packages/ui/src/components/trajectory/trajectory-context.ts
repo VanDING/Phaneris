@@ -1,10 +1,11 @@
 import type { Message } from '@phaneris/core/types'
 import type { TrajectorySnapshot } from './trajectory-contract'
+import { attributeContextTokens } from './trajectory-context-accounting'
 
 /**
  * Context categories the Run view reports.
  *
- * Seven categories, each with a distinct source, so the composition answers
+ * Seven content categories plus an unattributed metering remainder, so the composition answers
  * "what occupies the context" instead of collapsing everything into one
  * "tools" bucket:
  *   · system    — the captured system prompt (exact text + manifest chars)
@@ -19,7 +20,7 @@ import type { TrajectorySnapshot } from './trajectory-contract'
  * records definitions separately from results. `skill` is derived only from a
  * recorded read of a `SKILL.md` file; nothing is inferred from a name alone.
  */
-export type TrajectoryContextCategory = 'system' | 'schemas' | 'user' | 'inject' | 'skill' | 'assistant' | 'tool'
+export type TrajectoryContextCategory = 'system' | 'schemas' | 'user' | 'inject' | 'skill' | 'assistant' | 'tool' | 'unknown'
 
 export interface TrajectoryContextItem {
   id: string
@@ -29,8 +30,11 @@ export interface TrajectoryContextItem {
   /** Secondary source descriptor (file basename, tool name, prompt version). */
   source?: string
   content: string
+  /** Request-time semantic fingerprint, when captured separately from retained text. */
+  contentHash?: string
   chars: number
   estimatedTokens: number
+  imageCount?: number
   messageId?: string
   callId?: string
   filePath?: string
@@ -51,9 +55,13 @@ export interface TrajectoryContextGroup {
   category: TrajectoryContextCategory
   items: readonly TrajectoryContextItem[]
   chars: number
-  /** Approximate allocation of provider input, or a character estimate without usage. */
+  /** Independent text estimate; never rescaled to provider input. */
   estimatedTokens: number
-  /** Sum of the other groups, for a share that cannot exceed 100%. */
+  /** Metered-total attribution; null means insufficient evidence to classify. */
+  attributedTokens?: number | null
+  /** Images are counted separately; input deltas may constrain their category's cost. */
+  imageCount: number
+  /** Share of attributed input, or of text estimates when metering is missing. */
   share: number
 }
 
@@ -97,8 +105,12 @@ export interface TrajectoryContextEvent {
 }
 
 export const CONTEXT_CATEGORY_ORDER: readonly TrajectoryContextCategory[] = [
-  'system', 'schemas', 'user', 'inject', 'skill', 'assistant', 'tool',
+  'system', 'schemas', 'user', 'inject', 'skill', 'assistant', 'tool', 'unknown',
 ]
+
+export function contextGroupTokens(group: TrajectoryContextGroup): number | undefined {
+  return group.attributedTokens === null ? undefined : group.attributedTokens ?? group.estimatedTokens
+}
 
 function tokenEstimate(content: string): number {
   return content.length === 0 ? 0 : Math.max(1, Math.ceil(content.length / 4))
@@ -106,26 +118,6 @@ function tokenEstimate(content: string): number {
 
 function charsToTokens(chars: number): number {
   return chars === 0 ? 0 : Math.max(1, Math.ceil(chars / 4))
-}
-
-/**
- * The manifest's serialized characters are composition weights, not metered
- * tokens (they can include image data and tool metadata). Allocate the recorded
- * input proportionally so every view uses one accounting basis. Largest
- * remainders keep the integer parts nonnegative and their sum exactly equal to
- * input, without assigning rounding residue to an empty category.
- */
-function allocateInput(groups: TrajectoryContextGroup[], inputTokens: number | undefined): TrajectoryContextGroup[] {
-  const weight = groups.reduce((sum, group) => sum + group.estimatedTokens, 0)
-  if (inputTokens === undefined || weight === 0) return groups
-  const allocations = groups.map((group, index) => {
-    const exact = inputTokens * (group.estimatedTokens / weight)
-    return { index, tokens: Math.floor(exact), remainder: exact - Math.floor(exact) }
-  })
-  const remaining = inputTokens - allocations.reduce((sum, entry) => sum + entry.tokens, 0)
-  const ranked = [...allocations].sort((a, b) => b.remainder - a.remainder || a.index - b.index)
-  for (let index = 0; index < remaining; index += 1) ranked[index]!.tokens += 1
-  return groups.map((group, index) => ({ ...group, estimatedTokens: allocations[index]!.tokens }))
 }
 
 function safeJson(value: unknown): string {
@@ -195,8 +187,13 @@ function messageItems(message: Message): TrajectoryContextItem[] {
       const content = [message.content, ...attachments].filter(Boolean).join('\n')
       return [item('user', message, firstLine(message.content), content)]
     }
-    case 'assistant':
-      return [item('assistant', message, firstLine(message.content), message.content)]
+    case 'assistant': {
+      const blocks = message.outputBlocks?.filter(block => block.type === 'text' || block.type === 'thinking') ?? []
+      const parts = blocks.map(block => block.content)
+      if (!blocks.some(block => block.type === 'text') && message.content) parts.push(message.content)
+      const content = parts.join('\n\n')
+      return [item('assistant', message, firstLine(message.content || content), content)]
+    }
     case 'tool': {
       const skill = skillPath(message.toolInput)
       const input = safeJson(message.toolInput)
@@ -226,26 +223,22 @@ function messageItems(message: Message): TrajectoryContextItem[] {
   }
 }
 
-function manifestCharsByRole(manifest: Message['contextSnapshot'], roles: readonly string[]): number | undefined {
-  if (!manifest?.messages) return undefined
-  return manifest.messages.reduce((sum, entry) => roles.includes(entry.role) ? sum + entry.chars : sum, 0)
-}
-
 /**
  * Reconstruct the observable request context from persisted session evidence.
  *
- * `system`, `schemas`, `user` and `assistant` use the request-time manifest when
- * one exists. `inject`, `skill` and `tool` are reconstructed from the persisted
- * messages: the manifest records only a role and a char count for those, so a
- * split between them would otherwise have to be invented. Every category value
- * stays an estimate. When usage exists the estimates are allocated within that
- * measured input, so category sums and request totals use the same basis.
+ * Metering and content are independent. New manifests count semantic text and
+ * images separately. Legacy manifests serialized entire messages, including
+ * binary encodings and metadata, so only their retained text is safe to estimate.
+ * No category or retained item is normalized to a request's measured input.
+ * Retained output and input increments constrain attribution; uncertainty stays
+ * in a visible remainder rather than changing unrelated categories.
  */
 export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly TrajectoryRequestContext[] {
   const contexts: TrajectoryRequestContext[] = []
   const accumulated: TrajectoryContextItem[] = []
   const promptVersions = new Map<string, number>()
   let requestOrdinal = 0
+  let previousRequest: Message | undefined
 
   for (const message of snapshot.messages) {
     if (message.role === 'assistant' && message.requestSeq !== undefined) {
@@ -274,56 +267,55 @@ export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly Tr
           category: 'schemas',
           label: tool.name,
           content: description,
+          contentHash: tool.hash,
           chars: tool.schemaChars + description.length,
           estimatedTokens: charsToTokens(tool.schemaChars + description.length),
           introducedSeq: requestOrdinal,
         }
       })
-      const allItems = [systemItem, ...registeredTools, ...accumulated]
-      const manifestUserChars = manifestCharsByRole(manifest, ['user'])
-      const manifestAssistantChars = manifestCharsByRole(manifest, ['assistant'])
-      const manifestToolChars = manifestCharsByRole(manifest, ['tool', 'toolResult', 'tool_result'])
-      const itemCharsOf = (category: TrajectoryContextCategory) => allItems
-        .reduce((sum, entry) => entry.category === category ? sum + entry.chars : sum, 0)
-      // The manifest records one total for tool results; the split between a
-      // tool result and a SKILL.md read is a share of that measured total.
-      const skillItemChars = itemCharsOf('skill')
-      const toolItemChars = itemCharsOf('tool')
-      const toolSplit = skillItemChars + toolItemChars
-      const skillChars = manifestToolChars !== undefined && toolSplit > 0
-        ? Math.round(manifestToolChars * (skillItemChars / toolSplit))
-        : undefined
+      const hasContentMetrics = manifest?.system.textChars !== undefined && manifest.messages.every(entry => entry.content !== undefined)
+      const observedCalls = new Map(manifest?.messages.filter(entry => entry.toolCallId && entry.content)
+        .map(entry => [entry.toolCallId, entry.content!]))
+      const toolCalls = hasContentMetrics ? manifest.messages.flatMap(entry => entry.content?.toolCalls ?? []) : []
+      const argumentsByCall = new Map(toolCalls.map(call => [call.id, call]))
+      const retained = accumulated.map(entry => {
+        const observed = entry.callId ? observedCalls.get(entry.callId) : undefined
+        const args = entry.callId ? argumentsByCall.get(entry.callId) : undefined
+        return observed ? { ...entry, contentHash: `${observed.hash}:${args?.hash ?? ''}`,
+          estimatedTokens: charsToTokens(observed.textChars) + charsToTokens(args?.textChars ?? 0), imageCount: observed.imageCount } : entry
+      })
+      const allItems = [systemItem, ...registeredTools, ...retained]
+      const callCategories = new Map(retained.filter(entry => entry.callId).map(entry => [entry.callId, entry.category]))
+      const observedCategory = (entry: NonNullable<Message['contextSnapshot']>['messages'][number]): TrajectoryContextCategory | undefined => {
+        if (entry.role === 'user' || entry.role === 'assistant') return entry.role
+        if (['tool', 'toolResult', 'tool_result'].includes(entry.role)) return entry.toolCallId ? callCategories.get(entry.toolCallId) ?? 'tool' : 'tool'
+        return undefined
+      }
       const measured = message.usage ? message.usage.input + message.usage.cacheRead + message.usage.cacheWrite : undefined
       const inputTokens = measured !== undefined && Number.isFinite(measured) && measured >= 0 ? Math.round(measured) : undefined
-      const groups = allocateInput(CONTEXT_CATEGORY_ORDER.map(category => {
+      const groups = CONTEXT_CATEGORY_ORDER.map(category => {
         const items = allItems.filter(entry => entry.category === category)
         const itemChars = items.reduce((sum, entry) => sum + entry.chars, 0)
+        const observed = hasContentMetrics && !['system', 'schemas', 'inject'].includes(category)
+          ? manifest.messages.filter(entry => observedCategory(entry) === category) : undefined
+        const calls = toolCalls.filter(call => (callCategories.get(call.id) ?? 'tool') === category)
+        const argumentChars = calls.reduce((sum, call) => sum + call.textChars, 0)
         const chars = category === 'system'
-          ? (manifest?.system?.chars ?? itemChars)
-          : category === 'schemas'
-            ? (manifest?.tools?.length ? items.reduce((sum, entry) => {
-              const tool = manifest.tools?.find(candidate => candidate.name === entry.label)
-              return sum + (tool ? tool.schemaChars + (tool.description?.length ?? 0) : entry.chars)
-            }, 0) : itemChars)
-            : category === 'user'
-              ? (manifestUserChars ?? itemChars)
-              : category === 'assistant'
-                ? (manifestAssistantChars ?? itemChars)
-                : category === 'skill' && skillChars !== undefined
-                  ? skillChars
-                  : category === 'tool' && manifestToolChars !== undefined
-                    ? Math.max(0, manifestToolChars - (skillChars ?? 0))
-                    : itemChars
+          ? manifest?.system.textChars ?? itemChars
+          : observed ? observed.reduce((sum, entry) => sum + entry.content!.textChars, argumentChars) : itemChars
         return {
           category,
           items,
           chars,
-          estimatedTokens: charsToTokens(chars),
+          estimatedTokens: observed ? observed.reduce((sum, entry) => sum + charsToTokens(entry.content!.textChars), calls.reduce((sum, call) => sum + charsToTokens(call.textChars), 0))
+            : category === 'system' ? charsToTokens(chars) : items.reduce((sum, entry) => sum + entry.estimatedTokens, 0),
+          imageCount: observed ? observed.reduce((sum, entry) => sum + entry.content!.imageCount, 0)
+            : items.reduce((sum, entry) => sum + (entry.imageCount ?? 0), 0),
           share: 0,
         }
-      }).filter(group => group.items.length > 0 || group.chars > 0), inputTokens)
+      }).filter(group => group.items.length > 0 || group.chars > 0 || group.imageCount > 0)
       const estimated = groups.reduce((sum, group) => sum + group.estimatedTokens, 0)
-      contexts.push({
+      const context: TrajectoryRequestContext = {
         id: message.id,
         requestSeq: requestOrdinal,
         sourceRequestSeq: message.requestSeq,
@@ -336,7 +328,10 @@ export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly Tr
         captured: manifest !== undefined,
         provider: manifest?.provider,
         model: manifest?.model,
-      })
+      }
+      context.groups = attributeContextTokens(context, contexts.at(-1), message, previousRequest)
+      contexts.push(context)
+      previousRequest = message
     }
     // The message lands after this request's snapshot, so it first becomes
     // visible in the request that follows (ordinal + 1).
@@ -384,6 +379,7 @@ export function requestContextDelta(
   previous: TrajectoryRequestContext | undefined,
 ): number | undefined {
   if (!previous) return undefined
+  if ((current.inputTokens === undefined) !== (previous.inputTokens === undefined)) return undefined
   const currentValue = current.inputTokens ?? current.estimatedTokens
   const previousValue = previous.inputTokens ?? previous.estimatedTokens
   return currentValue - previousValue

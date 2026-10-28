@@ -23,6 +23,17 @@ import {
 import type { RpcClient, RpcCallback, CapabilityHandler } from './types'
 import { serializeEnvelope, deserializeEnvelope } from './codec'
 
+function createMessageId(): string {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID()
+
+  // Preload can run in about:blank before navigation, where randomUUID is unavailable.
+  const bytes = crypto.getRandomValues(new Uint8Array(16))
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+}
+
 // ---------------------------------------------------------------------------
 // Pending request state
 // ---------------------------------------------------------------------------
@@ -187,7 +198,7 @@ export class WsRpcClient implements RpcClient {
         return
       }
 
-      const id = crypto.randomUUID()
+      const id = createMessageId()
       const timeout = setTimeout(() => {
         this.pending.delete(id)
         reject(new Error(`Request timeout: ${channel} (${this.requestTimeout}ms)`))
@@ -439,7 +450,7 @@ export class WsRpcClient implements RpcClient {
 
       // Send handshake (includes reconnection info if available)
       const handshake: MessageEnvelope = {
-        id: crypto.randomUUID(),
+        id: createMessageId(),
         type: 'handshake',
         protocolVersion: PROTOCOL_VERSION,
         workspaceId: this.workspaceId,
@@ -870,7 +881,7 @@ export class WsRpcClient implements RpcClient {
     this.ackTimer = setInterval(() => {
       if (this.connected && this.lastSeenSeq > 0) {
         const ack: MessageEnvelope = {
-          id: crypto.randomUUID(),
+          id: createMessageId(),
           type: 'sequence_ack',
           lastSeq: this.lastSeenSeq,
         }

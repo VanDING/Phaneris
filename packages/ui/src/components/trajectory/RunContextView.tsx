@@ -6,9 +6,8 @@
  * Categories contain compact rows; only the selected row renders its content.
  * A single system prompt reads directly, without a redundant item disclosure.
  *
- * Values keep the two accounting rules from the projection: provider input is a
- * measurement; category and item token counts are estimates. Where the provider
- * total was not recorded the view says so instead of deriving one.
+ * History uses provider input when recorded. Stable content attribution and an
+ * explicit remainder fill that total; content badges never depend on estimates.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -18,6 +17,7 @@ import { ChevronRight, FileText, Layers, Zap } from 'lucide-react'
 import type { TrajectorySnapshot } from './trajectory-contract'
 import {
   contextTotal,
+  contextGroupTokens,
   deriveRequestContextEvents,
   deriveRequestContexts,
   CONTEXT_CATEGORY_ORDER,
@@ -123,7 +123,7 @@ export function RunContextView({ snapshot, focusedRequestSeq, focusCategory, onR
     const active = current.groups.find(group => group.category === category)
     if (active) return [active]
     const old = mode === 'changes' ? previous?.groups.find(group => group.category === category) : undefined
-    return old ? [{ ...old, items: [], chars: 0, estimatedTokens: 0, share: 0 }] : []
+    return old ? [{ ...old, items: [], chars: 0, estimatedTokens: 0, attributedTokens: 0, imageCount: 0, share: 0 }] : []
   })
   const renderItem = (item: ContextReadItem, embedded: boolean) => (
     <ContextEntry key={item.id} item={item} embedded={embedded}
@@ -216,29 +216,25 @@ export function RunContextView({ snapshot, focusedRequestSeq, focusCategory, onR
                 <span
                   key={group.category}
                   style={{ '--cat': categoryColor(group.category), width: `${group.share * 100}%` } as CSSProperties}
-                  title={`${t(categoryLabelKey(group.category))} · ≈${formatTokens(group.estimatedTokens)}`}
+                  title={`${t(categoryLabelKey(group.category))} · ≈${formatTokens(contextGroupTokens(group))}`}
                 />
               ))}
             </div>
             <div className={css.contextFolds}>
               {groups.map(group => {
                 const previousGroup = previous?.groups.find(entry => entry.category === group.category)
-                const items = mode === 'changes' ? contextItemChanges(group.items, previousGroup?.items ?? []) : group.items
-                const countChange = previous ? group.items.length - (previousGroup?.items.length ?? 0) : 0
-                const tokenChange = previous ? group.estimatedTokens - (previousGroup?.estimatedTokens ?? 0) : 0
+                const changes = previous ? contextItemChanges(group.items, previousGroup?.items ?? []) : []
+                const items = mode === 'changes' ? changes : group.items
                 const open = expandedCategories.has(group.category)
                 const limit = visibleLimits[group.category] ?? MAX_ITEMS_PER_CATEGORY
-                // Retained entries can be previews of what the provider saw, so
-                // their tokens are presented as this category's estimated split.
-                const itemEstimate = group.items.reduce((sum, entry) => sum + entry.estimatedTokens, 0)
-                const tokenScale = itemEstimate > 0 ? group.estimatedTokens / itemEstimate : 1
+                const tokens = contextGroupTokens(group)
                 return (
                   <details
                     key={group.category}
                     className={css.contextFold}
                     open={open}
                     data-context-category={group.category}
-                    data-context-tokens={group.estimatedTokens}
+                    data-context-tokens={tokens}
                     onToggle={event => {
                       const next = (event.currentTarget as HTMLDetailsElement).open
                       if (next !== open) toggleCategory(group.category)
@@ -249,19 +245,23 @@ export function RunContextView({ snapshot, focusedRequestSeq, focusCategory, onR
                         <ChevronRight />
                         <i className={css.categoryDot} style={{ '--cat': categoryColor(group.category) } as CSSProperties} />
                         <strong>{t(categoryLabelKey(group.category))}</strong>
-                        <span className={css.foldCount}>{t('run.context.itemCount', { count: group.items.length })}</span>
-                        {countChange !== 0 && <ChangeChip value={countChange} />}
+                        {group.category !== 'unknown' && <span className={css.foldCount}>{t('run.context.itemCount', { count: group.items.length })}</span>}
+                        {(['added', 'removed', 'modified'] as const).map(kind => {
+                          const count = changes.filter(item => item.change === kind).length
+                          return count > 0 ? <ChangeChip key={kind} count={count} kind={kind} label={t(`run.context.change.${kind}`)} /> : null
+                        })}
                       </span>
                       <span className={css.foldRowValues}>
-                        {tokenChange !== 0 && <ChangeChip value={tokenChange} />}
-                        <span className={css.foldTokens}>≈{formatTokens(group.estimatedTokens)}</span>
-                        <span className={css.foldShare}>{(group.share * 100).toFixed(1)}%</span>
+                        {group.imageCount > 0 && <span className={css.foldCount}>{t('run.context.imageCount', { count: group.imageCount })}</span>}
+                        <span className={css.foldTokens}>{tokens === undefined ? '—' : `${group.category === 'unknown' ? '' : '≈'}${formatTokens(tokens)}`}</span>
+                        <span className={css.foldShare}>{tokens === undefined ? '—' : `${(group.share * 100).toFixed(1)}%`}</span>
                       </span>
                     </summary>
                     {open && <div className={css.foldCategoryBody}>
-                      {items.length === 0 ? <p className={css.foldCategoryNote}>{t(mode === 'changes' ? 'run.context.noContentChanges' : 'run.context.groupWithoutItems')}</p>
+                      {group.category === 'unknown' ? <p className={css.foldCategoryNote}>{t('run.context.unattributedNote')}</p>
+                        : items.length === 0 ? <p className={css.foldCategoryNote}>{t(mode === 'changes' ? 'run.context.noContentChanges' : 'run.context.groupWithoutItems')}</p>
                         : group.category === 'system' ? items.map(item => renderItem(item, false))
-                          : <RunContextList items={items} tokenScale={tokenScale} limit={limit}
+                          : <RunContextList items={items} limit={limit}
                             openId={openEntries[group.category]}
                             onOpenChange={id => setOpenEntries(entries => ({ ...entries, [group.category]: id }))}
                             onLoadMore={() => setVisibleLimits(limits => ({ ...limits, [group.category]: limit + MAX_ITEMS_PER_CATEGORY }))}
@@ -298,10 +298,10 @@ export function RunContextView({ snapshot, focusedRequestSeq, focusCategory, onR
   )
 }
 
-function ChangeChip({ value }: { value: number }) {
+function ChangeChip({ count, kind, label }: { count: number; kind: 'added' | 'removed' | 'modified'; label: string }) {
   return (
-    <span className={`${css.changeChip} ${value > 0 ? css.changePositive : css.changeNegative}`}>
-      {value > 0 ? '+' : '−'}{formatTokens(Math.abs(value))}
+    <span className={`${css.changeChip} ${kind === 'removed' ? css.changeNegative : css.changePositive}`} data-context-change={kind} aria-label={`${label}: ${count}`} title={label}>
+      {kind === 'added' ? '+' : kind === 'removed' ? '−' : `${label} `}{count}
     </span>
   )
 }

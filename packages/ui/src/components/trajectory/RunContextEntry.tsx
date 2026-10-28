@@ -65,8 +65,8 @@ export function ContextEntry({ item, categoryLabel, mode, copied, copyError, pre
         <div className={css.readerContent}>
           {comparing ? <>
             <p className={css.miniNote}>{t('run.context.diffChanged', { before: item.previousItem!.chars, after: item.chars })}</p>
-            <div className={`${css.contextChangeBlock} ${css.contextChangeBefore}`} data-change-before><strong>{t('run.requestNumber', { seq: previousSeq })}</strong><pre>{preview(before)}</pre></div>
-            <div className={`${css.contextChangeBlock} ${css.contextChangeAfter}`} data-change-after><strong>{t('run.requestNumber', { seq: requestSeq })}</strong><pre>{shownText}</pre></div>
+            <div className={`${css.contextChangeBlock} ${css.contextChangeBefore}`} data-change-before><strong>{t('run.requestNumber', { seq: previousSeq })}</strong><pre>{preview(before)}{item.category === 'schemas' && item.previousItem!.contentHash ? `\n\n${t('run.context.schemaFingerprint')}: ${item.previousItem!.contentHash}` : ''}</pre></div>
+            <div className={`${css.contextChangeBlock} ${css.contextChangeAfter}`} data-change-after><strong>{t('run.requestNumber', { seq: requestSeq })}</strong><pre>{shownText}{item.category === 'schemas' && item.contentHash ? `\n\n${t('run.context.schemaFingerprint')}: ${item.contentHash}` : ''}</pre></div>
           </> : (tool && !/^\s*(#{1,6}\s|```|[-*]\s|\d+\.\s|\|)/m.test(shownText)) ? <pre>{shownText}</pre>
               : shownText.trim() ? <Markdown mode="minimal" className={css.contextMarkdown} onFileClick={onOpenFile}>{shownText}</Markdown>
                 : <p className={css.miniNote}>{t('run.context.emptyContent')}</p>}

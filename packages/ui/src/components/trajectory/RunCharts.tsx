@@ -1,8 +1,8 @@
 /**
  * Chart primitives shared by Run → Overview and Run → Context.
  *
- * Both charts are plain CSS/SVG: the trend stacks estimated category tokens per
- * request, and the performance line leaves a hole where a request has no
+ * Both charts are plain CSS/SVG: category attribution and its visible remainder
+ * fill the measured input. The performance line leaves a hole where a request has no
  * comparable rate. Neither interpolates a missing sample.
  */
 
@@ -66,23 +66,9 @@ export function RunTrendChart({
               >
                 {mode === 'total' ? (
                   <span className={css.barStack} style={{ height: `${heightPercent}%` }} aria-hidden>
-                    {(() => {
-                      // Categories allocate the same request total. Without a
-                      // manifest the known weights can be incomplete, so retain
-                      // the empty-composition fallback below.
-                      const estimate = bar.parts.reduce((sum, part) => sum + part.tokens, 0)
-                      return bar.parts.length > 0 && estimate > 0
-                        ? bar.parts.map((part, partIndex) => (
-                          <i
-                            key={`${part.category}-${partIndex}`}
-                            style={{
-                              ...categoryVar(part.category),
-                              height: `${(part.tokens / estimate) * 100}%`,
-                            }}
-                          />
-                        ))
-                        : <i style={{ ...categoryVar('unknown'), height: '100%' }} />
-                    })()}
+                    {bar.parts.filter(part => part.tokens > 0).map(part => (
+                      <i key={part.category} data-trend-category={part.category} style={{ ...categoryVar(part.category), height: `${bar.total > 0 ? (part.tokens / bar.total) * 100 : 0}%` }} />
+                    ))}
                   </span>
                 ) : (
                   <span

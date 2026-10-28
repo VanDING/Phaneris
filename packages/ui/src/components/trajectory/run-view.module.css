@@ -638,7 +638,7 @@
 .barStack > i {
   display: block;
   width: 100%;
-  min-height: 1px;
+  flex-shrink: 0;
   background: var(--cat);
 }
 

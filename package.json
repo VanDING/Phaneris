@@ -1,6 +1,6 @@
 {
   "name": "phaneris",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "license": "Apache-2.0",
   "description": "Open-source desktop and server agent workspace powered by the Pi SDK",
   "type": "module",
@@ -32,6 +32,7 @@
     "apps/*"
   ],
   "scripts": {
+    "verify:session-foundation": "bun run scripts/verification/session-foundation-suite.ts",
     "verify:conversation-start": "bun run scripts/verification/conversation-start-fix-workflow.ts",
     "verify:model-harness": "bun run scripts/verification/model-harness-contract-workflow.ts && bun run scripts/verification/harness-tool-effects-workflow.ts && bun run scripts/verification/harness-prompt-assembly-workflow.ts && bun run scripts/verification/harness-capability-workflow.ts && bun run server:build:subprocess && bun run scripts/verification/model-harness-pi-workflow.ts && bun run scripts/verification/harness-tool-order-pi-workflow.ts && bun run scripts/verification/harness-task-context-pi-workflow.ts && bun run scripts/verification/harness-input-continuity-workflow.ts && bun run scripts/verification/harness-materials-workflow.ts && bun run scripts/verification/harness-continuity-workflow.ts && bun run scripts/verification/harness-execution-readiness-workflow.ts && bun run scripts/verification/harness-artifact-feedback-workflow.ts && bun run scripts/verification/harness-compaction-authority-workflow.ts && bun run scripts/verification/harness-system-ready-pi-workflow.ts && bun run scripts/verification/durable-continuation-workflow.ts && bun run scripts/verification/durable-continuation-pi-workflow.ts && bun run scripts/verification/durable-task-continuation-workflow.ts",
     "verify:capabilities": "bun run scripts/verification/run-capability-integration.ts",
@@ -90,7 +91,7 @@
     "check:themes": "bun run scripts/generate-theme-contract.ts --check",
     "test:doc-tools": "bun run scripts/test-doc-tools.ts",
     "validate:dev": "bun run typecheck:all && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table",
-    "validate:ci": "bun run runtime:provision:validation && bun run typecheck:all && bun run lint && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table && bun run lint:i18n:parity && bun run lint:i18n:sorted && bun run lint:i18n:coverage && bun run lint:i18n:dead-keys && bun run check:docs && bun run check:fonts && bun run identity:check && bun run version:check && bun run runtime:check && bun run electron-pin:check",
+    "validate:ci": "bun run runtime:provision:validation && bun run typecheck:all && bun run verify:session-foundation && bun run lint && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table && bun run lint:i18n:parity && bun run lint:i18n:sorted && bun run lint:i18n:coverage && bun run lint:i18n:dead-keys && bun run check:docs && bun run check:fonts && bun run identity:check && bun run version:check && bun run runtime:check && bun run electron-pin:check",
     "validate:full": "bun run validate:ci && bun run test",
     "lint:electron": "cd apps/electron && bun run lint",
     "lint:shared": "cd packages/shared && bun run eslint .",

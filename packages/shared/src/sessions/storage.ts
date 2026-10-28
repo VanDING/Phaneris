@@ -315,17 +315,10 @@ export function listSessions(workspaceRootPath: string): SessionMetadata[] {
   const sessions: SessionMetadata[] = [];
 
   for (const entry of entries) {
-    if (entry.isDirectory()) {
+    if (entry.isDirectory() && !entry.name.startsWith('.')) {
       const sessionId = entry.name;
       const sessionDir = join(sessionsDir, sessionId);
       const jsonlFile = join(sessionDir, 'session.jsonl');
-
-      // Clean up orphaned .tmp files from crashed atomic writes.
-      // These are harmless but waste disk space.
-      const tmpFile = jsonlFile + '.tmp';
-      if (existsSync(tmpFile)) {
-        try { unlinkSync(tmpFile); } catch { /* ignore */ }
-      }
 
       if (existsSync(jsonlFile)) {
         const header = readSessionHeader(jsonlFile);
@@ -510,33 +503,35 @@ export async function updateSessionMetadata(
     activePlugin?: string | null;
   }
 ): Promise<void> {
-  const session = loadSession(workspaceRootPath, sessionId);
-  if (!session) return;
+  await sessionPersistenceQueue.updateMetadata(sessionId, () => {
+    const session = loadSession(workspaceRootPath, sessionId);
+    if (!session) return null;
 
-  if (updates.isFlagged !== undefined) session.isFlagged = updates.isFlagged;
-  if (updates.name !== undefined) session.name = updates.name;
-  if (updates.sessionStatus !== undefined) session.sessionStatus = updates.sessionStatus;
-  if (updates.labels !== undefined) session.labels = updates.labels;
-  if (updates.enabledSourceSlugs !== undefined) session.enabledSourceSlugs = updates.enabledSourceSlugs;
-  // `null` clears the slot, `undefined` leaves it untouched — the distinction is
-  // what lets a caller deactivate a plugin without a separate code path.
-  if (updates.activePlugin !== undefined) {
-    session.activePlugin = updates.activePlugin === null ? undefined : updates.activePlugin;
-  }
-  if (updates.workingDirectory !== undefined) session.workingDirectory = updates.workingDirectory;
-  if (updates.sdkCwd !== undefined) session.sdkCwd = updates.sdkCwd;
-  if (updates.permissionMode !== undefined) session.permissionMode = updates.permissionMode;
-  if ('lastReadMessageId' in updates) session.lastReadMessageId = updates.lastReadMessageId;
-  if ('hasUnread' in updates) session.hasUnread = updates.hasUnread;
-  if ('sharedUrl' in updates) session.sharedUrl = updates.sharedUrl;
-  if ('sharedId' in updates) session.sharedId = updates.sharedId;
-  if (updates.model !== undefined) session.model = updates.model;
-  if (updates.llmConnection !== undefined) session.llmConnection = updates.llmConnection;
-  if (updates.isArchived !== undefined) session.isArchived = updates.isArchived;
-  if ('archivedAt' in updates) session.archivedAt = updates.archivedAt;
-  if ('projectId' in updates) session.projectId = updates.projectId;
+    if (updates.isFlagged !== undefined) session.isFlagged = updates.isFlagged;
+    if (updates.name !== undefined) session.name = updates.name;
+    if (updates.sessionStatus !== undefined) session.sessionStatus = updates.sessionStatus;
+    if (updates.labels !== undefined) session.labels = updates.labels;
+    if (updates.enabledSourceSlugs !== undefined) session.enabledSourceSlugs = updates.enabledSourceSlugs;
+    // `null` clears the slot, `undefined` leaves it untouched — the distinction is
+    // what lets a caller deactivate a plugin without a separate code path.
+    if (updates.activePlugin !== undefined) {
+      session.activePlugin = updates.activePlugin === null ? undefined : updates.activePlugin;
+    }
+    if (updates.workingDirectory !== undefined) session.workingDirectory = updates.workingDirectory;
+    if (updates.sdkCwd !== undefined) session.sdkCwd = updates.sdkCwd;
+    if (updates.permissionMode !== undefined) session.permissionMode = updates.permissionMode;
+    if ('lastReadMessageId' in updates) session.lastReadMessageId = updates.lastReadMessageId;
+    if ('hasUnread' in updates) session.hasUnread = updates.hasUnread;
+    if ('sharedUrl' in updates) session.sharedUrl = updates.sharedUrl;
+    if ('sharedId' in updates) session.sharedId = updates.sharedId;
+    if (updates.model !== undefined) session.model = updates.model;
+    if (updates.llmConnection !== undefined) session.llmConnection = updates.llmConnection;
+    if (updates.isArchived !== undefined) session.isArchived = updates.isArchived;
+    if ('archivedAt' in updates) session.archivedAt = updates.archivedAt;
+    if ('projectId' in updates) session.projectId = updates.projectId;
 
-  await saveSession(session);
+    return session;
+  });
 }
 
 /**

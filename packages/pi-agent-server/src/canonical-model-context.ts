@@ -101,6 +101,8 @@ export function completeToolResultContext(messages: readonly AgentMessage[]): Ag
     }
     output.push(message);
     if (message.role !== 'assistant') continue;
+    // The SDK discards these messages; completing their calls would leave orphan results.
+    if (message.stopReason === 'aborted' || message.stopReason === 'error') continue;
     for (const call of message.content) {
       if (call.type !== 'toolCall') continue;
       const found = results.get(call.id)?.find(result => result.index > index && !used.has(result.index));

@@ -13,39 +13,18 @@ interface PendingWrite {
   timer: ReturnType<typeof setTimeout>
 }
 
-interface HeaderMetadataSignature {
-  name?: string
-  labels?: string[]
-  isFlagged?: boolean
-  sessionStatus?: string
-  permissionMode?: string
-  hasUnread?: boolean
-  lastReadMessageId?: string
-}
+/** Fields protected when an external editor changes a Session header. */
+const EXTERNAL_METADATA_FIELDS = ['name', 'labels', 'isFlagged', 'sessionStatus', 'permissionMode',
+  'hasUnread', 'lastReadMessageId', 'projectId', 'kanbanColumn'] as const satisfies readonly (keyof SessionHeader)[]
 
 function getHeaderMetadataSignature(header: SessionHeader): string {
-  const signature: HeaderMetadataSignature = {
-    name: header.name,
-    labels: header.labels,
-    isFlagged: header.isFlagged,
-    sessionStatus: header.sessionStatus,
-    permissionMode: header.permissionMode,
-    hasUnread: header.hasUnread,
-    lastReadMessageId: header.lastReadMessageId,
-  }
-  return JSON.stringify(signature)
+  return JSON.stringify(Object.fromEntries(EXTERNAL_METADATA_FIELDS.map(field => [field, header[field]])))
 }
 
 function mergeHeaderWithExternalMetadata(localHeader: SessionHeader, diskHeader: SessionHeader): SessionHeader {
   return {
     ...localHeader,
-    name: diskHeader.name,
-    labels: diskHeader.labels,
-    isFlagged: diskHeader.isFlagged,
-    sessionStatus: diskHeader.sessionStatus,
-    permissionMode: diskHeader.permissionMode,
-    hasUnread: diskHeader.hasUnread,
-    lastReadMessageId: diskHeader.lastReadMessageId,
+    ...Object.fromEntries(EXTERNAL_METADATA_FIELDS.map(field => [field, diskHeader[field]])),
   }
 }
 
@@ -61,6 +40,7 @@ function mergeHeaderWithExternalMetadata(localHeader: SessionHeader, diskHeader:
 class SessionPersistenceQueue {
   private pending = new Map<string, PendingWrite>()
   private writeInProgress = new Map<string, Promise<void>>()
+  private metadataFailures = new WeakSet<Promise<void>>()
   private lastWrittenHeaderSignature = new Map<string, string>()
   private debounceMs: number
 
@@ -107,10 +87,33 @@ class SessionPersistenceQueue {
     this.pending.delete(sessionId)
     clearTimeout(entry.timer)
 
+    return this.serializeWrite(sessionId, () => this.performWrite(sessionId, entry), true)
+  }
+
+  /** Metadata utilities are external product editors: retain the owner signature for watcher reconciliation. */
+  updateMetadata(sessionId: string, readUpdated: () => StoredSession | null): Promise<void> {
+    // Drain accepted product content without replacing its pending snapshot.
+    if (this.pending.has(sessionId)) void this.write(sessionId)
+    const writePromise = this.serializeWrite(sessionId, async () => {
+      try {
+        const snapshot = readUpdated()
+        if (snapshot) await this.performWrite(sessionId, { data: snapshot }, 'metadata')
+      } catch (error) {
+        this.metadataFailures.add(writePromise)
+        throw error
+      }
+    })
+    return writePromise
+  }
+
+  private serializeWrite(sessionId: string, perform: () => void | Promise<void>, recoverFailure = false): Promise<void> {
     const prev = this.writeInProgress.get(sessionId) ?? Promise.resolve()
-    const perform = () => this.performWrite(sessionId, entry)
     // A failed snapshot must not prevent a newer snapshot from being saved.
-    const writePromise = prev.then(perform, perform)
+    const writePromise = prev.then(perform, error => {
+      // Metadata may retry its own failed edit, but cannot bypass an unsaved product snapshot.
+      if (recoverFailure || this.metadataFailures.has(prev)) return perform()
+      throw error
+    })
     this.writeInProgress.set(sessionId, writePromise)
     void writePromise.then(() => {
       // Only clear the slot if this is still the latest write for the session —
@@ -122,7 +125,7 @@ class SessionPersistenceQueue {
     return writePromise
   }
 
-  private async performWrite(sessionId: string, entry: PendingWrite): Promise<void> {
+  private async performWrite(sessionId: string, entry: Pick<PendingWrite, 'data'>, writeOrigin: 'product' | 'metadata' = 'product'): Promise<void> {
     try {
       const data = typeof entry.data === 'function' ? entry.data() : entry.data
       ensureSessionsDir(data.workspaceRootPath)
@@ -155,13 +158,13 @@ class SessionPersistenceQueue {
       // signature, which indicates an external mutation.
       const hasMetadataMismatch = !!diskHeader && !!diskSig && diskSig !== localSig
       const hasExternalMetadataChange = !!diskHeader && !!diskSig && !!previousSig && diskSig !== previousSig
-      const header = hasExternalMetadataChange && diskHeader
+      const header = writeOrigin === 'product' && hasExternalMetadataChange && diskHeader
         ? mergeHeaderWithExternalMetadata(localHeader, diskHeader)
         : localHeader
 
       if (hasMetadataMismatch) {
         const baseline = previousSig ? `, previousSig=${previousSig.slice(0, 12)}` : ', previousSig=<none>'
-        const mode = hasExternalMetadataChange ? 'disk preserved' : 'local preserved'
+        const mode = writeOrigin === 'product' && hasExternalMetadataChange ? 'disk preserved' : 'local preserved'
         debug(`[PersistenceQueue] Session ${sessionId} metadata mismatch detected (${mode}${baseline})`)
       }
 
@@ -209,12 +212,14 @@ class SessionPersistenceQueue {
       // the fsynced .tmp available for startup recovery.
       // Publish the signature just before replacement so watcher events recognize
       // self-writes. A failed replacement must not become the next merge baseline.
-      this.lastWrittenHeaderSignature.set(sessionId, getHeaderMetadataSignature(header))
+      if (writeOrigin === 'product') this.lastWrittenHeaderSignature.set(sessionId, getHeaderMetadataSignature(header))
       try {
         await rename(tmpFile, filePath)
       } catch (error) {
-        if (previousSig === undefined) this.lastWrittenHeaderSignature.delete(sessionId)
-        else this.lastWrittenHeaderSignature.set(sessionId, previousSig)
+        if (writeOrigin === 'product') {
+          if (previousSig === undefined) this.lastWrittenHeaderSignature.delete(sessionId)
+          else this.lastWrittenHeaderSignature.set(sessionId, previousSig)
+        }
         throw error
       }
       // Windows does not support fsync on directory handles (EPERM). The file

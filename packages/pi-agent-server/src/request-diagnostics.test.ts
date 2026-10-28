@@ -21,8 +21,9 @@ test('derives prompt and tools from the transcript instead of listing system mes
   expect(getCurrentSystemPrompt(context.messages)).toBe(result.systemPrompt);
   // The leading system message carries the prompt and the tool declarations, so
   // the manifest reports them as `system` + `tools` and lists conversation only.
-  expect(result.contextSnapshot.messages).toEqual([
-    { role: 'user', hash: hashOf(context.messages[1]), chars: JSON.stringify(context.messages[1]).length },
+  expect(result.contextSnapshot.messages).toMatchObject([
+    { role: 'user', hash: hashOf(context.messages[1]), chars: JSON.stringify(context.messages[1]).length,
+      content: { textChars: '🙂 hello'.length, imageCount: 0 } },
   ]);
   expect(result.contextSnapshot.system.hash).toBe(hashOf('你好\n"quoted"'));
   expect(result.contextSnapshot.tools).toEqual([

@@ -103,7 +103,7 @@ export function RunOverview({
   const latestTotal = latestContext ? contextTotal(latestContext) : undefined
   const contextPercent = contextWindow && contextWindow > 0 && latestTotal !== undefined ? (latestTotal / contextWindow) * 100 : undefined
   const occupancyRows = categoryRows(latestContext)
-  // Measured occupancy owns the fill; the estimated category shares only split it.
+  // Attribution and the visible remainder sum to the same metered capacity.
   const occupancyFill = contextWindow && latestTotal !== undefined ? Math.min(1, latestTotal / contextWindow) : 1
   const compactionSeqs = new Set(contextEvents.filter(event => event.kind === 'compaction').map(event => event.requestSeq))
 
@@ -194,19 +194,6 @@ export function RunOverview({
                 {t('run.overview.inspectContext')}<ArrowRight />
               </button>
             </div>
-            <div className={css.chartKey}>
-              {categoryRows(latestContext).map(row => (
-                <button
-                  key={row.category}
-                  type="button"
-                  className={`${css.chartKeyItem} craft-control`}
-                  data-chart-category={row.category}
-                  onClick={() => onOpenContext(latestSeq, row.category)}
-                >
-                  <i className={css.categoryDot} style={{ '--cat': row.color } as CSSProperties} />{t(row.labelKey)}
-                </button>
-              ))}
-            </div>
             {bars.length > 0 ? (
               <>
                 <RunTrendChart
@@ -260,8 +247,9 @@ export function RunOverview({
                     key={row.category}
                     type="button"
                     data-context-segment={row.category}
+                    data-context-occupancy-fill
                     style={{ '--cat': row.color, width: `${Math.max(0, row.share * occupancyFill * 100)}%` } as CSSProperties}
-                    title={`${t(row.labelKey)} · ≈${formatTokens(row.tokens)}`}
+                    title={`${t(row.labelKey)} · ${row.tokens === undefined ? '—' : `≈${formatTokens(row.tokens)}`}`}
                     aria-label={t('run.overview.jumpCategory', { category: t(row.labelKey) })}
                     onClick={() => onOpenContext(latestSeq, row.category)} className="craft-control"
                   />
@@ -277,7 +265,7 @@ export function RunOverview({
                   <button key={row.category} type="button" className={`${css.legendItem} craft-control`} data-category-legend={row.category} data-context-tokens={row.tokens} onClick={() => onOpenContext(latestSeq, row.category)}>
                     <i className={css.categoryDot} style={{ '--cat': row.color } as CSSProperties} />
                     <span>{t(row.labelKey)}</span>
-                    <span>≈{formatTokens(row.tokens)}</span>
+                    <span>{row.tokens === undefined ? '—' : `${row.category === 'unknown' ? '' : '≈'}${formatTokens(row.tokens)}`}</span>
                   </button>
                 ))}
               </div>

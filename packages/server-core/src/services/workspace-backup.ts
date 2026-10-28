@@ -284,7 +284,7 @@ function rebaseRestoredWorkspace(staging: string, manifest: WorkspaceBackupManif
         const next = rebase(header[key]); if (next !== header[key]) { header[key] = next; changed = true; }
       }
       if (changed) writeFileSync(path, JSON.stringify(header) + (end < 0 ? '' : text.slice(end)));
-    } else if (file.path === 'artifacts/manifest.json') {
+    } else if (file.path === 'artifacts/manifest.json' || /^sessions\/[^/]+\/artifacts\/manifest\.json$/.test(file.path)) {
       const store = JSON.parse(readFileSync(path, 'utf8'));
       if (store.version !== 1 || !Array.isArray(store.artifacts)) throw new Error('Invalid Artifact manifest during restore');
       for (const artifact of store.artifacts) {
@@ -292,6 +292,10 @@ function rebaseRestoredWorkspace(staging: string, manifest: WorkspaceBackupManif
         for (const deliverable of artifact.deliverables ?? []) deliverable.path = rebase(deliverable.path);
       }
       writeFileSync(path, JSON.stringify(store, null, 2) + '\n');
+    } else if (/^sessions\/[^/]+\/draft\.json$/.test(file.path)) {
+      const draft = JSON.parse(readFileSync(path, 'utf8'));
+      for (const attachment of draft.attachments ?? []) attachment.path = rebase(attachment.path);
+      writeFileSync(path, JSON.stringify(draft, null, 2) + '\n');
     } else if (file.path === 'config.json' || /^sources\/[^/]+\/config\.json$/.test(file.path)) {
       const config = JSON.parse(readFileSync(path, 'utf8'));
       let changed = false;

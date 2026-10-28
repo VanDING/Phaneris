@@ -2,7 +2,7 @@
 /** V12: real SessionManager/Host/storage; provider and pool endpoints are controlled ports. */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { verificationWorkflow } from './verification-artifacts'
@@ -16,6 +16,7 @@ await verificationWorkflow('session-branch', async evidence => {
   const { SessionManager } = await import('../../packages/server-core/src/sessions/SessionManager')
   const { PiRuntimeDriver } = await import('../../packages/server-core/src/runtime-adapters/pi-driver')
   const { createDurableRuntime } = await import('../../packages/server-core/src/durable-runtime')
+  const { createArtifactDraft, listArtifacts, serializeArtifactEvent } = await import('../../packages/shared/src/artifacts')
   const ws = join(fixture, 'workspace')
   mkdirSync(ws, { recursive: true })
   const workspace = { id: 'branch-fixture', slug: 'branch-fixture', createdAt: 1, name: 'Branch fixture', rootPath: ws }
@@ -24,8 +25,14 @@ await verificationWorkflow('session-branch', async evidence => {
   const parent = await createSession(ws, { name: 'Parent', model: 'pi/gpt-5', permissionMode: 'ask' })
   const storedParent = loadSession(ws, parent.id)
   assert(storedParent, 'Parent must exist in real storage before branching')
+  const parentDir = getSessionPath(ws, parent.id)
+  const ownedFiles = ['attachments/input.txt', 'plans/plan.md', 'data/table.json', 'downloads/output.bin', 'long_responses/tool.txt', 'notes.md']
+  for (const path of ownedFiles) writeFileSync(join(parentDir, path), `session-owned fixture: ${path}`)
+  const artifactScope = { workspaceRootPath: ws, workspaceId: workspace.id, allowedRoots: [ws] }
+  const parentArtifact = createArtifactDraft(artifactScope, { sessionId: parent.id, kind: 'text',
+    sourcePath: join(parentDir, 'notes.md'), initialText: 'Branch-owned artifact draft' })
   await saveSession({ ...storedParent, sdkSessionId: 'fixture-parent-sdk', messages: [
-    { id: 'm1', type: 'user', content: 'Original parent input', timestamp: 1 },
+    { id: 'm1', type: 'user', content: `Original parent input ${parentDir.replaceAll('\\', '/')}/attachments/input.txt\n${serializeArtifactEvent(parentArtifact)}`, timestamp: 1 },
     { id: 'm2', type: 'assistant', content: 'Original parent answer', timestamp: 2 },
   ] })
   const sdkless = await createSession(ws, { name: 'Parent without SDK context', model: 'pi/gpt-5', permissionMode: 'ask' })
@@ -75,6 +82,19 @@ await verificationWorkflow('session-branch', async evidence => {
     assert(runtime.execution.view(branch.id).driver, 'Successful branch remains owned by Host')
     assert.equal(parentHash(), before)
     record('successful-preflight')
+    const branched = loadSession(ws, branch.id)!
+    const branchDir = getSessionPath(ws, branch.id)
+    for (const path of ownedFiles) assert.equal(readFileSync(join(branchDir, path), 'utf8'), readFileSync(join(parentDir, path), 'utf8'))
+    assert(branched.messages[0]!.content.includes(branchDir.replaceAll('\\', '/')))
+    writeFileSync(join(branchDir, ownedFiles[0]!), 'branch-private edit')
+    assert.notEqual(readFileSync(join(branchDir, ownedFiles[0]!), 'utf8'), readFileSync(join(parentDir, ownedFiles[0]!), 'utf8'))
+    record('owned-files-copied-and-independent')
+    const branchArtifacts = listArtifacts(artifactScope, { sessionId: branch.id })
+    assert.equal(branchArtifacts.length, 1)
+    assert.notEqual(branchArtifacts[0]!.artifact.id, parentArtifact.artifact.id)
+    assert(branched.messages[0]!.content.includes(branchArtifacts[0]!.artifact.id))
+    assert(branchArtifacts[0]!.editablePath!.startsWith(branchDir))
+    record('artifact-owner-and-card-rebound')
     await manager.deleteSession(branch.id)
     assert(disposed && poolStopped && mcpDisconnected)
     assert.equal(childView?.driver, null)
@@ -85,7 +105,8 @@ await verificationWorkflow('session-branch', async evidence => {
     evidence.complete(checks.map(check => check.id), ['live Pi SDK branch initialization', 'native Windows/Linux filesystem'])
   } finally {
     await runtime.close()
-    evidence.json('session-branch.json', { fixture, checks, parentUnchanged: parentHash() === before, parentSha256: before })
+    evidence.json('session-branch.json', { fixture, checks, parentUnchanged: parentHash() === before, parentSha256: before,
+      files: ownedFiles.map(path => ({ path, sha256: createHash('sha256').update(readFileSync(join(parentDir, path))).digest('hex') })) })
   }
   console.log(JSON.stringify({ passed: checks.length, output: join(evidence.directory, 'session-branch.json') }))
 })

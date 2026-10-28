@@ -9,7 +9,7 @@ import type { StoredAttachment } from '@phaneris/core/types'
 import { readFileAttachment, validateImageForClaudeAPI, IMAGE_LIMITS } from '@phaneris/shared/utils'
 import { getSessionAttachmentsPath, validateSessionId } from '@phaneris/shared/sessions'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
-import { getAllSessionDrafts } from '@phaneris/shared/config/drafts';
+import { getAllSessionDrafts } from '@phaneris/shared/sessions';
 import { resizeImageForAPI, inspectImageBuffer, decodeHeicToJpeg, needsHeicTranscode } from '@phaneris/server-core/services'
 import { sanitizeFilename, validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import type { RpcServer } from '@phaneris/server-core/transport'
@@ -197,9 +197,9 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
   })
 
   // Read a user-attached file. Used only by renderer draft hydration: the path was
-  // written to drafts.json by a previous user-initiated OS-picker / Finder-drag attach.
+  // written to its Session draft by a previous user-initiated OS-picker / Finder-drag attach.
   // SECURITY (H-7): the path is only trusted because that attach action recorded it in
-  // drafts.json, so we enforce provenance — the requested path must be one of the
+  // the Session draft, so we enforce provenance — the requested path must be one of the
   // attachment paths referenced by a draft of a session in the calling workspace.
   // A compromised renderer can therefore re-read files the user explicitly attached,
   // never arbitrary files on disk (~/.ssh/id_rsa, ~/.aws/credentials, …).
@@ -212,22 +212,18 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
 
       // Provenance: collect every absolute path recorded in the workspace's drafts.
       const workspaceId = ctx.workspaceId ?? deps.windowManager?.getWorkspaceForWindow(ctx.webContentsId!)
-      const drafts = getAllSessionDrafts()
+      const workspace = workspaceId ? getWorkspaceByNameOrId(workspaceId) : null
+      if (!workspace) return null
+      const drafts = getAllSessionDrafts(workspace.rootPath)
       const allowedPaths = new Set<string>()
       const addDraftPaths = (draft: { attachments?: Array<{ path: string }> }) => {
         for (const ref of draft.attachments ?? []) {
           if (ref.path && isAbsolute(ref.path)) allowedPaths.add(ref.path)
         }
       }
-      if (workspaceId) {
-        // Drafts are keyed by sessionId app-wide; narrow to this workspace's sessions.
-        const sessionIds = new Set(deps.sessionManager.getSessions(workspaceId).map(s => s.id))
-        for (const [sessionId, draft] of Object.entries(drafts)) {
-          if (sessionIds.has(sessionId)) addDraftPaths(draft)
-        }
-      } else {
-        // No window/workspace context — fall back to all drafts (still user-consented paths only).
-        for (const draft of Object.values(drafts)) addDraftPaths(draft)
+      const sessionIds = new Set(deps.sessionManager.getSessions(workspace.id).map(session => session.id))
+      for (const [sessionId, draft] of Object.entries(drafts)) {
+        if (sessionIds.has(sessionId)) addDraftPaths(draft)
       }
       if (!allowedPaths.has(path)) {
         deps.platform.logger.warn(`[readUserAttachment] path not recorded in drafts, denying read: ${path}`)

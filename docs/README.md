@@ -20,6 +20,12 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
+Session 基础架构收敛：[存储与生命周期契约](architecture/session-storage.md)、[实施与验证记录](process/session-foundation-implementation.md) — 消息身份与恢复、文件分支/传输、产品写入、草稿与成果归属及旧数据兼容。
+
+启动与会话稳定性：[2026-10-28 调查与修复记录](verification/startup-and-session-stability-investigation-2026-10-28.md) — 已完成 UUID 能力兼容、子框架加载隔离和中断工具消息配对的三处最小修复；历史白屏归因与未验证边界见记录。
+
+Run 上下文与图表：[2026-10-26 失败矩阵](verification/run-context-accounting-failure-matrix-2026-10-26.md)、[配色与少请求图表评审](prototypes/run-colors-2026-10-26/README.md) — 保留已确认方案与回归口径。
+
 Default 主题收敛：[2026-10-23 修复与验证](verification/default-theme-refinement-2026-10-23.md) — 仅保留 Default，统一派生算法、颜色职责与启动/运行时契约；旧配置保留模式和字体，用户主题文件不删除。
 
 Harness 审查与实施：[系统职责及审查结论](architecture/model-facing-harness.md)、[2026-10-22 实施记录](process/model-harness-implementation-2026-10-22.md) — 新分支覆盖调用契约、检索、效果排序、任务连续性和 prompt 组装；保留 skill 显式选用设计，真实模型及原生环境验证限制见记录。

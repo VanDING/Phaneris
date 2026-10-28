@@ -328,52 +328,9 @@ export const replaceLoadedSessionAtom = atom(
   }
 )
 
-/**
- * Action atom: append message to session (for streaming)
- * Optimized to only update the specific session
- * Note: Does NOT update lastMessageAt - caller must handle timestamp updates
- * to avoid session list jumping on intermediate/tool messages
- */
-export const appendMessageAtom = atom(
-  null,
-  (get, set, sessionId: string, message: Message) => {
-    const sessionAtom = sessionAtomFamily(sessionId)
-    const session = get(sessionAtom)
-    if (session) {
-      set(sessionAtom, {
-        ...session,
-        messages: [...session.messages, message],
-        // Don't update lastMessageAt here - only user messages and final responses should update it
-      })
-    }
-  }
-)
 
-/**
- * Action atom: update streaming content for a session
- * For text_delta events - appends to the last streaming message
- */
-export const updateStreamingContentAtom = atom(
-  null,
-  (get, set, sessionId: string, content: string, turnId?: string) => {
-    const sessionAtom = sessionAtomFamily(sessionId)
-    const session = get(sessionAtom)
-    if (!session) return
 
-    const messages = [...session.messages]
-    const lastMsg = messages[messages.length - 1]
 
-    // Append to existing streaming message
-    if (lastMsg?.role === 'assistant' && lastMsg.isStreaming &&
-        (!turnId || lastMsg.turnId === turnId)) {
-      messages[messages.length - 1] = {
-        ...lastMsg,
-        content: lastMsg.content + content,
-      }
-      set(sessionAtom, { ...session, messages })
-    }
-  }
-)
 
 /**
  * Action atom: initialize sessions from loaded data
@@ -562,78 +519,7 @@ export const removeSessionAtom = atom(
   }
 )
 
-/**
- * Action atom: sync React state to per-session atoms
- *
- * This is the key to the hybrid approach:
- * - React state (sessions array) remains the source of truth
- * - This atom syncs changes to per-session atoms automatically
- * - Components using useSession(id) get isolated updates
- * - Jotai's referential equality prevents unnecessary re-renders
- *
- * IMPORTANT: During streaming, the atom is the source of truth.
- * Streaming events (text_delta, tool_start, tool_result) update atoms directly
- * and bypass React state for performance. We must NOT overwrite atoms for
- * sessions that are processing, or we lose streaming data (tool calls, text).
- * Once a "handoff" event (complete, error, etc.) occurs, React state catches up
- * and sync works normally again.
- */
-export const syncSessionsToAtomsAtom = atom(
-  null,
-  (get, set, sessions: Session[]) => {
-    const loadedSessions = get(loadedSessionsAtom)
 
-    // Update each session atom
-    for (const session of sessions) {
-      const sessionAtom = sessionAtomFamily(session.id)
-      const atomSession = get(sessionAtom)
-
-      // CRITICAL: If the atom's session is processing, it has streaming updates
-      // that React state doesn't know about yet. Don't overwrite - atom is
-      // source of truth during streaming. The handoff event will reconcile.
-      if (atomSession?.isProcessing) {
-        continue
-      }
-
-      // CRITICAL: If session messages were lazy-loaded, atom has full messages
-      // but React state may have empty array. Only skip if React would lose messages.
-      // Allow sync when React has MORE messages (e.g., user just sent a message).
-      if (loadedSessions.has(session.id) && atomSession) {
-        const atomMessageCount = atomSession.messages?.length ?? 0
-        const reactMessageCount = session.messages?.length ?? 0
-        // Skip sync only if React has fewer messages (would lose data)
-        if (reactMessageCount < atomMessageCount) {
-          continue
-        }
-      }
-
-      // Only update if the session object is different (referential check)
-      // This prevents unnecessary re-renders when the session hasn't changed
-      if (atomSession !== session) {
-        set(sessionAtom, session)
-      }
-    }
-
-    // Update metadata map for list display
-    // Note: We still update metadata from React state, which is fine because
-    // metadata doesn't include messages - the streaming content we're protecting
-    const metaMap = new Map<string, SessionMeta>()
-    for (const session of sessions) {
-      const meta = extractSessionMeta(session)
-      // Preserve isProcessing from atom if atom is processing
-      // React state may have stale isProcessing: false during streaming
-      const atomSession = get(sessionAtomFamily(session.id))
-      if (atomSession?.isProcessing) {
-        meta.isProcessing = true
-      }
-      metaMap.set(session.id, meta)
-    }
-    set(sessionMetaMapAtom, metaMap)
-
-    // Update ordered IDs (preserve order from React state)
-    set(sessionIdsAtom, sessions.map(s => s.id))
-  }
-)
 
 // loadedSessionsAtom moved up before sessionsAtom (needed for self-syncing)
 

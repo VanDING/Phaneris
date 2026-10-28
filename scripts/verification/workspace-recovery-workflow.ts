@@ -22,6 +22,8 @@ if (process.argv[2] === '--interrupt') {
   mkdirSync(join(workspace, 'materials'), { recursive: true })
   const session = await createSession(workspace, { name: 'Representative recovery session', permissionMode: 'safe', workingDirectory: join(workspace, 'materials') })
   const attachment = join(workspace, 'sessions', session.id, 'attachments', 'evidence.txt')
+  writeFileSync(join(workspace, 'sessions', session.id, 'draft.json'), JSON.stringify({ text: 'Retained draft',
+    attachments: [{ name: 'report.txt', path: join(workspace, 'materials/report.txt') }] }))
   mkdirSync(join(workspace, 'sessions', session.id, 'attachments'), { recursive: true }); writeFileSync(attachment, 'synthetic attachment\n')
   const saved = loadSession(workspace, session.id)!; saved.messages.push({ id: 'm1', type: 'user', content: 'Synthetic recoverable work', timestamp: 1 }); await saveSession(saved)
   writeFileSync(join(workspace, 'config.json'), JSON.stringify({ defaults: { workingDirectory: join(workspace, 'materials') } }))
@@ -43,6 +45,8 @@ if (process.argv[2] === '--interrupt') {
   assert.equal(loaded.workspaceRootPath, restored); assert.equal(loaded.workingDirectory, join(restored, 'materials'))
   assert.equal(loaded.messages[0]?.content, 'Synthetic recoverable work'); checks.push('session-and-owned-paths-restored')
   assert.equal(readFileSync(join(restored, 'sessions', session.id, 'attachments/evidence.txt'), 'utf8'), 'synthetic attachment\n'); checks.push('attachment-bytes-preserved')
+  assert.equal(JSON.parse(readFileSync(join(restored, 'sessions', session.id, 'draft.json'), 'utf8')).attachments[0].path,
+    join(restored, 'materials/report.txt')); checks.push('draft-workspace-reference-restored')
   const restoredArtifact = getArtifact({ workspaceRootPath: restored }, artifact.artifact.id)
   assert.equal(listArtifacts({ workspaceRootPath: restored }).length, 1)
   assert.equal(readFileSync(restoredArtifact.editablePath!, 'utf8'), 'checkout survives recovery')

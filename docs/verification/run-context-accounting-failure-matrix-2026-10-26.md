@@ -1,5 +1,11 @@
 # Run context accounting and palette regression
 
+The proportional category-allocation rules below are historical. They are
+superseded by [content and metering integrity](run-context-integrity-failure-matrix-2026-10-27.md):
+provider input owns totals; attribution preserves unchanged content and exposes
+an unattributed remainder. The palette,
+axis geometry and cache-accounting requirements still apply.
+
 ## Failure cases recorded before implementation
 
 | Case | Expected behavior |

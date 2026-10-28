@@ -10,7 +10,7 @@
 
 import type { SessionDecisionOutcome, SessionDecisionTotals } from '@phaneris/shared/decisions/session'
 import type { TrajectoryRequestContext } from './trajectory-context'
-import { contextTotal, CONTEXT_CATEGORY_ORDER } from './trajectory-context'
+import { contextTotal, contextGroupTokens, requestContextDelta, CONTEXT_CATEGORY_ORDER } from './trajectory-context'
 
 export type { SessionDecisionOutcome }
 
@@ -49,7 +49,7 @@ export interface RunTrendBar {
   requestSeq: number
   /** Display label for bucketed ranges (both endpoints differ). */
   range?: { start: number; end: number }
-  /** Category estimates; empty in the net-change mode. */
+  /** Content attribution plus an explicit remainder of measured input. */
   parts: ReadonlyArray<{ category: string; tokens: number }>
   total: number
   /** Net change for the delta mode; undefined in the cumulative mode. */
@@ -138,6 +138,7 @@ export function buildTrendBars(
   if (contexts.length === 0) return []
   const count = Math.min(contexts.length, Math.max(1, Math.floor(maximumBars)))
   const totals = contexts.map(contextTotal)
+  const changes = contexts.map((context, index) => requestContextDelta(context, index > 0 ? contexts[index - 1] : undefined))
   const bars: RunTrendBar[] = []
   for (let index = 0; index < count; index += 1) {
     const startIndex = Math.floor((index * contexts.length) / count)
@@ -145,17 +146,17 @@ export function buildTrendBars(
     const entries = contexts.slice(startIndex, endIndex)
     let selectedIndex = startIndex
     const magnitude = (entryIndex: number) => mode === 'total' ? totals[entryIndex]!
-      : entryIndex > 0 ? Math.abs(totals[entryIndex]! - totals[entryIndex - 1]!) : -1
+      : changes[entryIndex] !== undefined ? Math.abs(changes[entryIndex]!) : -1
     for (let entryIndex = startIndex + 1; entryIndex < endIndex; entryIndex += 1) {
       if (magnitude(entryIndex) >= magnitude(selectedIndex)) selectedIndex = entryIndex
     }
     const peak = contexts[selectedIndex]!
-    const change = mode === 'delta' && selectedIndex > 0 ? totals[selectedIndex]! - totals[selectedIndex - 1]! : undefined
+    const change = mode === 'delta' ? changes[selectedIndex] : undefined
     bars.push({
       key: `${peak.id}:${index}`,
       requestSeq: peak.requestSeq,
       range: entries.length > 1 ? { start: entries[0]!.requestSeq, end: entries.at(-1)!.requestSeq } : undefined,
-      parts: mode === 'delta' ? [] : peak.groups.map(group => ({ category: group.category, tokens: group.estimatedTokens })),
+      parts: peak.groups.map(group => ({ category: group.category, tokens: contextGroupTokens(group) ?? 0 })),
       total: contextTotal(peak),
       change,
     })
@@ -183,7 +184,7 @@ export interface RunCategoryRow {
   category: string
   labelKey: string
   color: string
-  tokens: number
+  tokens: number | undefined
   share: number
   count: number
 }
@@ -191,7 +192,6 @@ export interface RunCategoryRow {
 /** One row per category present in a context, in the shared category order. */
 export function categoryRows(context: TrajectoryRequestContext | undefined): readonly RunCategoryRow[] {
   if (!context) return []
-  const total = Math.max(1, context.estimatedTokens)
   return CATEGORY_ORDER.flatMap(category => {
     const group = context.groups.find(entry => entry.category === category)
     if (!group) return []
@@ -199,8 +199,8 @@ export function categoryRows(context: TrajectoryRequestContext | undefined): rea
       category,
       labelKey: categoryLabelKey(category),
       color: categoryColor(category),
-      tokens: group.estimatedTokens,
-      share: group.estimatedTokens / total,
+      tokens: contextGroupTokens(group),
+      share: group.share,
       count: group.items.length,
     }]
   })

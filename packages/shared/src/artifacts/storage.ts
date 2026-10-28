@@ -6,6 +6,7 @@ import {
   mkdirSync,
   openSync,
   readFileSync,
+  readdirSync,
   realpathSync,
   renameSync,
   statSync,
@@ -32,6 +33,9 @@ import type {
   ResolvedArtifact,
 } from './types.ts';
 import { resolveFileFormat } from './file-formats.ts';
+import { getSessionPath } from '../sessions/paths.ts';
+import { validateSessionId } from '../sessions/validation.ts';
+import { makeSessionPathPortable, expandSessionPath } from '../sessions/jsonl.ts';
 
 const STORE_VERSION = 1;
 const STORE_DIR = 'artifacts';
@@ -58,6 +62,8 @@ interface StoredArtifact extends Omit<ArtifactDescriptor, 'revisions' | 'preview
 
 interface ArtifactStoreFile {
   version: typeof STORE_VERSION;
+  /** Session manifests use paths relative to their owning Session directory. */
+  scope?: 'session';
   artifacts: StoredArtifact[];
 }
 
@@ -268,12 +274,13 @@ function assertStoredArtifact(stored: StoredArtifact): void {
   }
 }
 
-function readStore(workspaceRootPath: string): ArtifactStoreFile {
-  const path = manifestPath(workspaceRootPath);
+function readStoreFile(path: string, sessionDir?: string): ArtifactStoreFile {
   if (!existsSync(path)) return { version: STORE_VERSION, artifacts: [] };
   let parsed: ArtifactStoreFile;
   try {
-    parsed = readJsonFileSync<ArtifactStoreFile>(path);
+    parsed = sessionDir
+      ? JSON.parse(expandSessionPath(readFileSync(path, 'utf8'), sessionDir)) as ArtifactStoreFile
+      : readJsonFileSync<ArtifactStoreFile>(path);
   } catch (error) {
     throw new Error(`Unable to read artifact store: ${path}`, { cause: error });
   }
@@ -289,18 +296,124 @@ function readStore(workspaceRootPath: string): ArtifactStoreFile {
   return parsed;
 }
 
-function saveStore(workspaceRootPath: string, store: ArtifactStoreFile): void {
-  store.artifacts.forEach(assertStoredArtifact);
-  mkdirSync(join(workspaceRootPath, STORE_DIR), { recursive: true });
-  atomicWriteFileSync(manifestPath(workspaceRootPath), `${JSON.stringify(store, null, 2)}\n`);
+function visitPrivatePaths(artifact: StoredArtifact, map: (path: string) => string): void {
+  for (const revision of artifact.revisions) revision.relativePath = map(revision.relativePath);
+  for (const preview of artifact.previews) if (preview.relativePath) preview.relativePath = map(preview.relativePath);
+  if (artifact.checkoutRelativePath) artifact.checkoutRelativePath = map(artifact.checkoutRelativePath);
 }
 
-function atomicWriteBuffer(path: string, content: Uint8Array): void {
-  mkdirSync(dirname(path), { recursive: true });
+function privateSessionPath(sessionId: string, path: string): string {
+  validateSessionId(sessionId);
+  const normalized = path.replaceAll('\\', '/');
+  if (!normalized.startsWith('artifacts/') || normalized.includes('..') || normalized.includes(':')) {
+    throw new Error(`Invalid Session artifact path: ${path}`);
+  }
+  return join('sessions', sessionId, normalized);
+}
+
+/** Workspace listing is a projection of Session manifests plus not-yet-migrated legacy entries. */
+function readStore(workspaceRootPath: string, sessionId?: string): ArtifactStoreFile {
+  if (sessionId) validateSessionId(sessionId);
+  const legacy = readStoreFile(manifestPath(workspaceRootPath));
+  const artifacts = new Map(legacy.artifacts.filter(artifact => !sessionId || artifact.sessionId === sessionId)
+    .map(artifact => [artifact.id, artifact]));
+  const ownedIds = new Set<string>();
+  const sessions = join(workspaceRootPath, 'sessions');
+  const sessionIds = sessionId ? [sessionId] : existsSync(sessions)
+    ? readdirSync(sessions, { withFileTypes: true }).filter(entry => entry.isDirectory() && !entry.name.startsWith('.')).map(entry => entry.name) : [];
+  for (const owner of sessionIds) {
+    const sessionDir = getSessionPath(workspaceRootPath, owner);
+    const path = join(sessionDir, STORE_FILE);
+    if (!existsSync(path)) continue;
+    const store = readStoreFile(path, sessionDir);
+    if (store.scope !== 'session') throw new Error(`Invalid Session artifact scope: ${path}`);
+    for (const artifact of store.artifacts) {
+      if (artifact.sessionId !== owner || ownedIds.has(artifact.id)) throw new Error(`Conflicting Session artifact owner: ${artifact.id}`);
+      ownedIds.add(artifact.id);
+      visitPrivatePaths(artifact, value => privateSessionPath(owner, value));
+      artifacts.set(artifact.id, artifact);
+    }
+  }
+  return { version: STORE_VERSION, artifacts: [...artifacts.values()] };
+}
+
+function retireLegacySession(workspaceRootPath: string, sessionId: string): void {
+  const path = manifestPath(workspaceRootPath), legacy = readStoreFile(path);
+  if (!legacy.artifacts.some(artifact => artifact.sessionId === sessionId)) return;
+  const raw = readFileSync(path, 'utf8');
+  const directory = join(workspaceRootPath, STORE_DIR, 'legacy-manifests');
+  mkdirSync(directory, { recursive: true, mode: 0o700 });
+  const backup = join(directory, `${hashBuffer(Buffer.from(raw))}.json`);
+  if (!existsSync(backup)) atomicWriteFileSync(backup, raw, { mode: 0o600 });
+  legacy.artifacts = legacy.artifacts.filter(artifact => artifact.sessionId !== sessionId);
+  atomicWriteFileSync(path, `${JSON.stringify(legacy, null, 2)}\n`, { mode: 0o600 });
+}
+
+function saveStore(workspaceRootPath: string, store: ArtifactStoreFile, sessionId: string): void {
+  const sessionDir = getSessionPath(workspaceRootPath, sessionId);
+  validateSessionId(sessionId);
+  const owned = store.artifacts.filter(artifact => artifact.sessionId === sessionId);
+  const prefix = `sessions/${sessionId}/`;
+  for (const artifact of owned) {
+    assertStoredArtifact(artifact);
+    visitPrivatePaths(artifact, path => {
+      const normalized = path.replaceAll('\\', '/');
+      if (normalized.startsWith(prefix)) return privateSessionPath(sessionId, normalized.slice(prefix.length));
+      const next = privateSessionPath(sessionId, normalized);
+      // Publish metadata only after every private revision/checkout has a durable copy.
+      const source = join(workspaceRootPath, path), target = join(workspaceRootPath, next);
+      if (!existsSync(target)) atomicWriteBuffer(target, readFileSync(source), true);
+      else if (fileHash(source) !== fileHash(target)) throw new Error(`Artifact migration content conflict: ${path}`);
+      return next;
+    });
+  }
+  const portable = structuredClone(owned);
+  for (const artifact of portable) visitPrivatePaths(artifact, path => path.replaceAll('\\', '/').slice(prefix.length));
+  mkdirSync(join(sessionDir, STORE_DIR), { recursive: true, mode: 0o700 });
+  atomicWriteFileSync(join(sessionDir, STORE_FILE), makeSessionPathPortable(JSON.stringify({
+    version: STORE_VERSION, scope: 'session', artifacts: portable,
+  }, null, 2) + '\n', sessionDir), { mode: 0o600 });
+  retireLegacySession(workspaceRootPath, sessionId);
+}
+
+/** Lazy, recoverable migration: old private files and an exact old manifest backup remain available. */
+export function migrateSessionArtifacts(workspaceRootPath: string, sessionId: string): void {
+  if (readStoreFile(manifestPath(workspaceRootPath)).artifacts.some(artifact => artifact.sessionId === sessionId)) {
+    saveStore(workspaceRootPath, readStore(workspaceRootPath, sessionId), sessionId);
+  }
+}
+
+/** Rebind a staged import/branch before publication, retaining revision bytes and external source files. */
+export function rebindSessionArtifactCopy(directory: string, workspaceRootPath: string, workspaceId: string,
+  sessionId: string, fork: boolean): Map<string, string> {
+  const path = join(directory, STORE_FILE), identities = new Map<string, string>();
+  if (!existsSync(path)) return identities;
+  const target = getSessionPath(workspaceRootPath, sessionId);
+  const store = readStoreFile(path, target);
+  if (store.scope !== 'session') throw new Error('Imported Artifact store is not Session-owned');
+  for (const artifact of store.artifacts) {
+    const oldId = artifact.id;
+    if (fork) artifact.id = randomUUID();
+    identities.set(oldId, artifact.id);
+    artifact.workspaceId = workspaceId;
+    artifact.sessionId = sessionId;
+    delete artifact.lease;
+    visitPrivatePaths(artifact, value => {
+      privateSessionPath(sessionId, value);
+      return value;
+    });
+    assertStoredArtifact(artifact);
+  }
+  atomicWriteFileSync(path, makeSessionPathPortable(JSON.stringify(store, null, 2) + '\n', target), { mode: 0o600 });
+  return identities;
+}
+
+function atomicWriteBuffer(path: string, content: Uint8Array, privateFile = false): void {
+  mkdirSync(dirname(path), { recursive: true, ...(privateFile ? { mode: 0o700 } : {}) });
   const tempPath = join(dirname(path), `.${basename(path)}.${randomUUID()}.tmp`);
   let fd: number | undefined;
   try {
-    fd = openSync(tempPath, 'wx');
+    fd = openSync(tempPath, 'wx', privateFile ? 0o600 : undefined);
     writeFileSync(fd, content);
     fsyncSync(fd);
     closeSync(fd);
@@ -341,8 +454,8 @@ function storeRevision(
             : artifact.kind === 'text'
               ? '.txt'
               : '.bin';
-  const relativePath = join(REVISION_DIR, artifact.id, `${hash}${extension}`);
-  atomicWriteBuffer(join(scope.workspaceRootPath, relativePath), content);
+  const relativePath = privateSessionPath(artifact.sessionId, join(REVISION_DIR, artifact.id, `${hash}${extension}`));
+  atomicWriteBuffer(join(scope.workspaceRootPath, relativePath), content, true);
   const revision: StoredRevision = {
     id: hash,
     contentHash: hash,
@@ -524,7 +637,7 @@ function syncCheckoutRevision(
 
 export function listArtifacts(scope: Pick<ArtifactStorageScope, 'workspaceRootPath'>, filter: ArtifactListFilter = {}): ResolvedArtifact[] {
   const statuses = filter.statuses?.length ? new Set(filter.statuses) : undefined;
-  return readStore(scope.workspaceRootPath).artifacts
+  return readStore(scope.workspaceRootPath, filter.sessionId).artifacts
     .filter((artifact) => !filter.sessionId || artifact.sessionId === filter.sessionId)
     .filter((artifact) => !statuses || statuses.has(artifact.status))
     .sort((left, right) => right.updatedAt - left.updatedAt)
@@ -546,7 +659,7 @@ export function registerCurrentArtifact(
   const content = readFileSync(sourcePath);
   const kind = input.kind ?? inferArtifactKind(sourcePath);
   const mimeType = mimeTypeFor(kind, sourcePath, input.mimeType);
-  const store = readStore(scope.workspaceRootPath);
+  const store = readStore(scope.workspaceRootPath, input.sessionId);
   let artifact = [...store.artifacts].reverse().find((candidate) => (
     candidate.sessionId === input.sessionId
     && candidate.sourcePath === sourcePath
@@ -601,7 +714,7 @@ export function registerCurrentArtifact(
   }];
   artifact.validation = undefined;
   artifact.updatedAt = now;
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -624,8 +737,8 @@ export function putArtifactTextPreview(
   const kind = input.kind ?? 'markdown';
   const extension = kind === 'html' ? '.html' : kind === 'markdown' ? '.md' : '.txt';
   const mimeType = input.mimeType ?? (kind === 'html' ? 'text/html' : kind === 'markdown' ? 'text/markdown' : 'text/plain');
-  const relativePath = join(PREVIEW_DIR, artifact.id, `${input.revision}${extension}`);
-  atomicWriteBuffer(join(scope.workspaceRootPath, relativePath), Buffer.from(input.text, 'utf8'));
+  const relativePath = privateSessionPath(artifact.sessionId, join(PREVIEW_DIR, artifact.id, `${input.revision}${extension}`));
+  atomicWriteBuffer(join(scope.workspaceRootPath, relativePath), Buffer.from(input.text, 'utf8'), true);
   const preview: StoredPreview = {
     id: `render:${kind}:${input.revision}`,
     revision: input.revision,
@@ -638,7 +751,7 @@ export function putArtifactTextPreview(
     preview,
   ];
   artifact.updatedAt = Date.now();
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -662,7 +775,7 @@ export function createArtifactDraft(scope: ArtifactStorageScope, input: CreateAr
   const id = randomUUID();
   const engineId = optionalText(input.engineId) ?? 'native-file';
   const mimeType = mimeTypeFor(input.kind, sourcePath, input.mimeType);
-  const checkoutRelativePath = join(CHECKOUT_DIR, id, basename(sourcePath) || 'artifact.bin');
+  const checkoutRelativePath = privateSessionPath(input.sessionId.trim(), join(CHECKOUT_DIR, id, basename(sourcePath) || 'artifact.bin'));
   const artifact: StoredArtifact = {
     id,
     workspaceId: scope.workspaceId,
@@ -689,16 +802,16 @@ export function createArtifactDraft(scope: ArtifactStorageScope, input: CreateAr
     updatedAt: now,
   };
   if (!artifact.sessionId) throw new Error('Artifact sessionId must not be empty');
-  atomicWriteBuffer(join(scope.workspaceRootPath, checkoutRelativePath), content);
+  atomicWriteBuffer(join(scope.workspaceRootPath, checkoutRelativePath), content, true);
   if (sourceContent) {
     artifact.currentRevision = storeRevision(scope, artifact, sourceContent, 'create').id;
   }
   const revision = storeRevision(scope, artifact, content, 'create');
   artifact.draftRevision = revision.id;
   artifact.previews = [previewFor(artifact.sourcePath, artifact.mimeType, revision.id)];
-  const store = readStore(scope.workspaceRootPath);
+  const store = readStore(scope.workspaceRootPath, input.sessionId);
   store.artifacts.push(artifact);
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -737,13 +850,13 @@ export function applyArtifactDraft(
       break;
     }
   }
-  atomicWriteBuffer(checkoutPath, Buffer.from(next, 'utf8'));
+  atomicWriteBuffer(checkoutPath, Buffer.from(next, 'utf8'), true);
   const revision = storeRevision(scope, artifact, Buffer.from(next, 'utf8'), 'apply');
   artifact.draftRevision = revision.id;
   artifact.previews = [previewFor(artifact.sourcePath, artifact.mimeType, revision.id)];
   artifact.validation = undefined;
   artifact.updatedAt = Date.now();
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -764,7 +877,7 @@ export function inspectArtifact(
   const content = readFileSync(join(scope.workspaceRootPath, revision.relativePath));
   artifact.validation = validateContent(artifact.kind, artifact.sourcePath, artifact.mimeType, revision.id, content);
   artifact.updatedAt = Date.now();
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -790,13 +903,13 @@ export function submitArtifact(
     readFileSync(join(scope.workspaceRootPath, revision.relativePath)),
   );
   if (!artifact.validation.valid) {
-    saveStore(scope.workspaceRootPath, store);
+    saveStore(scope.workspaceRootPath, store, artifact.sessionId);
     throw new Error(`Artifact validation failed: ${artifact.validation.errors.join(' ')}`);
   }
   artifact.status = 'ready';
   artifact.lease = undefined;
   artifact.updatedAt = Date.now();
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -811,7 +924,7 @@ export function reviseArtifact(
   if (artifact.status !== 'ready') throw new Error(`Artifact ${artifactId} must be ready before revise`);
   artifact.status = 'draft';
   artifact.updatedAt = Date.now();
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -829,7 +942,7 @@ export function acceptArtifact(
     artifact.status = 'conflict';
     artifact.updatedAt = Date.now();
     artifact.lease = undefined;
-    saveStore(scope.workspaceRootPath, store);
+    saveStore(scope.workspaceRootPath, store, artifact.sessionId);
     return {
       artifact: resolvedArtifact(scope, artifact),
       accepted: false,
@@ -853,7 +966,7 @@ export function acceptArtifact(
     path: artifact.sourcePath,
     mimeType: artifact.mimeType,
   }];
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return { artifact: resolvedArtifact(scope, artifact), accepted: true };
 }
 
@@ -872,7 +985,7 @@ export function discardArtifact(
   artifact.discardedAt = Date.now();
   artifact.updatedAt = artifact.discardedAt;
   artifact.lease = undefined;
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -900,7 +1013,7 @@ export function acquireArtifactLease(
     expiresAt: now + Math.min(MAX_LEASE_MS, Math.max(1_000, Math.round(durationMs))),
   };
   artifact.updatedAt = now;
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }
 
@@ -917,6 +1030,6 @@ export function releaseArtifactLease(
   if (lease && lease.id !== leaseId) throw new Error(`Artifact ${artifactId} lease token does not match`);
   artifact.lease = undefined;
   artifact.updatedAt = Date.now();
-  saveStore(scope.workspaceRootPath, store);
+  saveStore(scope.workspaceRootPath, store, artifact.sessionId);
   return resolvedArtifact(scope, artifact);
 }

@@ -172,6 +172,7 @@ await verificationWorkflow('client-platform', async run => {
     run.json('client-platform.json', { checks, errors, consoleTrace, expectedNetworkErrors, traces, server: child.url })
     run.complete(checks, ['live external provider and OAuth'])
   } finally {
+    run.json('conversation-provider.json', conversation.report())
     run.json('client-diagnostics.json', { checks, errors, errorStacks, consoleTrace, traces })
     await launched.close(); await child.stop(); conversation.stop()
     run.json('server-output.json', { stdout: child.stdout(), stderr: child.stderr() })

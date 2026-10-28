@@ -126,7 +126,12 @@ export type {
 export {
   serializeSession,
   validateBundle,
+  copySessionContent,
+  sessionFromBundle,
+  restoreSessionBundle,
   MAX_BUNDLE_SIZE_BYTES,
 } from './bundle.ts';
+
+export { getSessionDraft, setSessionDraft, deleteSessionDraft, getAllSessionDrafts } from './drafts.ts';
 
 

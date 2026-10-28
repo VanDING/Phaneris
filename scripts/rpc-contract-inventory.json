@@ -16,7 +16,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 332,
+          "line": 342,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -35,7 +35,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 338,
+          "line": 348,
           "args": [
             "enabled: boolean"
           ],
@@ -1049,7 +1049,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 364,
+          "line": 374,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -1068,7 +1068,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 360,
+          "line": 370,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -1087,7 +1087,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 348,
+          "line": 358,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -1106,7 +1106,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 383,
+          "line": 393,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -1125,7 +1125,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 368,
+          "line": 378,
           "args": [
             "value: unknown"
           ],
@@ -1146,7 +1146,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 375,
+          "line": 385,
           "args": [
             "policy: unknown"
           ],
@@ -1167,7 +1167,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 354,
+          "line": 364,
           "args": [
             "enabled: boolean"
           ],
@@ -1188,7 +1188,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 388,
+          "line": 398,
           "args": [
             "enabled: boolean"
           ],
@@ -1762,7 +1762,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 112,
+          "line": 113,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -1781,7 +1781,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 268,
+          "line": 278,
           "args": [
             "sessionId: string"
           ],
@@ -1802,7 +1802,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 258,
+          "line": 268,
           "args": [
             "sessionId: string"
           ],
@@ -1823,7 +1823,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 273,
+          "line": 283,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -1842,7 +1842,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 263,
+          "line": 273,
           "args": [
             "sessionId: string",
             "draft: import('@phaneris/shared/config').SessionDraft"
@@ -1864,7 +1864,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/files.ts",
-          "line": 261,
+          "line": 257,
           "args": [
             "base64: string",
             "_mimeType: string"
@@ -2016,7 +2016,7 @@
             "path: string"
           ],
           "result": "inferred by TypeScript; see handler return",
-          "owner": "validated file target / existing path policy"
+          "owner": "explicit destination workspace"
         }
       ]
     },
@@ -2055,7 +2055,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/files.ts",
-          "line": 277,
+          "line": 273,
           "args": [
             "sessionId: string",
             "attachment: FileAttachment"
@@ -2077,7 +2077,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/files.ts",
-          "line": 642,
+          "line": 638,
           "args": [
             "dirPath: string"
           ],
@@ -2098,7 +2098,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/files.ts",
-          "line": 557,
+          "line": 553,
           "args": [
             "basePath: string",
             "query: string"
@@ -2232,7 +2232,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 282,
+          "line": 292,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -2251,7 +2251,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 294,
+          "line": 304,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -2270,7 +2270,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 306,
+          "line": 316,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -2289,7 +2289,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 288,
+          "line": 298,
           "args": [
             "enabled: boolean"
           ],
@@ -2310,7 +2310,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 300,
+          "line": 310,
           "args": [
             "key: 'enter' | 'cmd-enter'"
           ],
@@ -2331,7 +2331,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 312,
+          "line": 322,
           "args": [
             "enabled: boolean"
           ],
@@ -4991,7 +4991,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 322,
+          "line": 332,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5031,7 +5031,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 232,
+          "line": 233,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5050,7 +5050,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 241,
+          "line": 242,
           "args": [
             "content: string"
           ],
@@ -5381,7 +5381,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 400,
+          "line": 410,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5400,7 +5400,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 418,
+          "line": 428,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5419,7 +5419,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 412,
+          "line": 422,
           "args": [
             "opts?: { forceRecheck?: boolean }"
           ],
@@ -5440,7 +5440,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 406,
+          "line": 416,
           "args": [
             "enabled: boolean"
           ],
@@ -5616,7 +5616,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 100,
+          "line": 101,
           "args": [
             "sessionId: string",
             "_workspaceId: string"
@@ -5638,7 +5638,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 106,
+          "line": 107,
           "args": [
             "sessionId: string",
             "workspaceId: string",
@@ -6358,7 +6358,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 80,
+          "line": 81,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6377,7 +6377,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 60,
+          "line": 61,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6396,7 +6396,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 443,
+          "line": 453,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6453,7 +6453,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 84,
+          "line": 85,
           "args": [
             "level: string"
           ],
@@ -6474,7 +6474,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 64,
+          "line": 65,
           "args": [
             "input: unknown"
           ],
@@ -7835,7 +7835,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 427,
+          "line": 437,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -7854,7 +7854,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 432,
+          "line": 442,
           "args": [
             "enabled: boolean"
           ],
@@ -8614,7 +8614,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 125,
+          "line": 126,
           "args": [
             "workspaceId: string"
           ],
@@ -8635,7 +8635,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/settings.ts",
-          "line": 152,
+          "line": 153,
           "args": [
             "workspaceId: string",
             "key: string",

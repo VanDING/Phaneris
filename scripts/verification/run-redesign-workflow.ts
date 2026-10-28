@@ -282,15 +282,15 @@ await verificationWorkflow('run-redesign', async run => {
       return selection.replace(/\s+/g, ' ')
     })
 
-    await check('R06 context lists seven categories and their estimated shares', async () => {
+    await check('R06 context lists seven content categories and an explicit remainder', async () => {
       await page.locator('select[aria-label="Select model request"]').selectOption('12')
       await settle(page)
       const folds = page.locator('[data-context-category]')
-      assert.equal(await folds.count(), 7)
+      assert.equal(await folds.count(), 8)
       const categories = await folds.evaluateAll(nodes => nodes.map(node => node.getAttribute('data-context-category')))
-      assert.deepEqual(categories, ['system', 'schemas', 'user', 'inject', 'skill', 'assistant', 'tool'])
+      assert.deepEqual(categories, ['system', 'schemas', 'user', 'inject', 'skill', 'assistant', 'tool', 'unknown'])
       const composition = await page.locator('[data-run-context-browser] [class*="foldComposition"] span').count()
-      assert.equal(composition, 7)
+      assert.equal(composition, 8)
       const shares = await folds.evaluateAll(nodes => nodes.map(node => node.textContent ?? ''))
       assert(shares.every(text => /\d+(\.\d)?%/.test(text)), `every category states a share: ${shares.join(' | ')}`)
       return { categories, composition }
@@ -348,7 +348,7 @@ await verificationWorkflow('run-redesign', async run => {
       assert.equal(await page.locator('[data-run-context-history] [class*="deltaBar"]').count(), 12)
       await bar.click()
       await page.waitForFunction(() => (document.querySelector('select[aria-label="Select model request"]') as HTMLSelectElement | null)?.value === '9')
-      await page.getByRole('button', { name: 'Cumulative composition', exact: true }).click()
+      await page.getByRole('button', { name: 'Composition', exact: true }).click()
       return label
     })
 
@@ -364,15 +364,15 @@ await verificationWorkflow('run-redesign', async run => {
       return texts
     })
 
-    await check('R10 overview occupancy uses provider metering and estimated splits', async () => {
+    await check('R10 overview occupancy and attribution use one metered total', async () => {
       await tab(page, 'Overview')
       const occupancy = page.locator('[data-run-occupancy]')
       const text = await occupancy.innerText()
       assert.match(text, /41\.3K/)
       assert.match(text, /32\.3%/)
       assert.match(text, /Free 86\.7K/)
-      assert.equal(await occupancy.locator('[data-context-segment]').count(), 7)
-      assert.equal(await occupancy.locator('[data-category-legend]').count(), 7)
+      assert.equal(await occupancy.locator('[data-context-segment]').count(), 8)
+      assert.equal(await occupancy.locator('[data-category-legend]').count(), 8)
       assert.match(text, /provider metering/)
       await shot(page, 'wide-overview-light')
       // A category in the occupancy legend opens Context with that fold revealed.
@@ -402,7 +402,7 @@ await verificationWorkflow('run-redesign', async run => {
         assert.match(text, /41\.3K/)
         assert.match(text, /Free 86\.7K/)
         assert(!text.includes('112K'), 'compaction threshold must not be used as the full window')
-        const fill = await card.locator('[data-context-segment]').evaluateAll(nodes => {
+        const fill = await card.locator('[data-context-occupancy-fill]').evaluateAll(nodes => {
           const bar = nodes[0]!.parentElement!.getBoundingClientRect().width
           return nodes.reduce((sum, node) => sum + node.getBoundingClientRect().width, 0) / bar
         })

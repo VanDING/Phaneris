@@ -1,5 +1,6 @@
 import type { Message } from '@phaneris/core/types'
 import type { RuntimeEvent, ToolOutcome } from '@phaneris/shared/durable-runtime'
+import { indexSessionMessages } from './session-projection.js'
 
 export interface ProjectionAuditIssue {
   kind: 'missing_legacy_message' | 'legacy_fact_missing' | 'legacy_cursor_ahead' | 'outcome_not_reflected'
@@ -19,7 +20,7 @@ export interface ProjectionParityReport {
 /** Compare the canonical fact log with the legacy JSONL/UI cache. Read-only. */
 export function auditLegacyProjection(events: RuntimeEvent[], messages: Message[]): ProjectionAuditIssue[] {
   const issues: ProjectionAuditIssue[] = []
-  const byMessageId = new Map(messages.map(message => [message.id, message]))
+  const byMessageId = indexSessionMessages(events, messages)
   const byToolCallId = new Map(messages.filter(message => message.toolUseId).map(message => [message.toolUseId!, message]))
   let maxSeq = 0
   const representedMessages = new Set<unknown>()
@@ -33,6 +34,7 @@ export function auditLegacyProjection(events: RuntimeEvent[], messages: Message[
       representedTools.add(identityPayload.toolCallId)
     } else if (event.type === 'user_message_committed' || event.type === 'assistant_message_committed') {
       representedMessages.add(identityPayload.messageId)
+      if (typeof identityPayload.messageId === 'string') representedMessages.add(byMessageId.get(identityPayload.messageId)?.id)
     } else if (event.type === 'tool_call_observed') {
       representedTools.add(identityPayload.providerToolCallId)
     }

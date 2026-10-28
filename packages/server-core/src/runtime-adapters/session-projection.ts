@@ -3,13 +3,39 @@ import type { PiUsage, Message } from '@phaneris/core/types'
 import type { RuntimeEvent, ToolOutcome } from '@phaneris/shared/durable-runtime'
 import type { RuntimeUsageRow } from '../durable-runtime/index.js'
 
+/** Historical product IDs stay stable; a committed cursor supplies an unambiguous alias. */
+export function indexSessionMessages(events: RuntimeEvent[], messages: Message[]): Map<string, Message> {
+  const indexed = new Map(messages.map(message => [message.id, message]))
+  const byCursor = new Map<string, Message[]>()
+  for (const message of messages) {
+    if (message.role !== 'assistant' || !message.durableOperationId || message.durableSeq === undefined) continue
+    const key = `${message.durableOperationId}:${message.durableSeq}`
+    byCursor.set(key, [...byCursor.get(key) ?? [], message])
+  }
+  const byEventId = new Map(events.map(event => [event.eventId, event]))
+  for (const event of events) {
+    if (event.type !== 'assistant_message_committed') continue
+    const payload = event.payload as { messageId?: string; modelOperationId?: string }
+    if (!payload.messageId || indexed.has(payload.messageId) || !payload.modelOperationId) continue
+    const outcome = byEventId.get(`${payload.modelOperationId}:outcome`)
+    const request = outcome?.payload as { providerRequestId?: string } | undefined
+    // commitModelOutcome returns the last event in its transaction, including usage.
+    const usage = request?.providerRequestId
+      ? byEventId.get(`model:${event.operationId}:${request.providerRequestId}:committed`) : undefined
+    const matches = new Set([event.seq, usage?.seq].flatMap(cursor =>
+      cursor === undefined ? [] : byCursor.get(`${event.operationId}:${cursor}`) ?? []))
+    if (matches.size === 1) indexed.set(payload.messageId, [...matches][0]!)
+  }
+  return indexed
+}
+
 /**
  * Reorder and overwrite the model-visible portion of the rich legacy UI cache
  * from canonical facts. Rich UI-only metadata remains a compatibility overlay;
  * execution order, content, tool input and settled outcome come from runtime.db.
  */
 export function projectCanonicalSessionMessages(events: RuntimeEvent[], legacy: Message[]): Message[] {
-  const byMessageId = new Map(legacy.map(message => [message.id, message]))
+  const byMessageId = indexSessionMessages(events, legacy)
   const byToolCallId = new Map(legacy.filter(message => message.toolUseId).map(message => [message.toolUseId!, message]))
   const canonical: Message[] = []
   const canonicalToolIndex = new Map<string, number>()
@@ -24,35 +50,35 @@ export function projectCanonicalSessionMessages(events: RuntimeEvent[], legacy: 
       }
       if ((payload.kind === 'user' || payload.kind === 'assistant') && typeof payload.messageId === 'string' && typeof payload.content === 'string') {
         const cached = byMessageId.get(payload.messageId)
-        if (cached) canonical.push({ ...cached, content: payload.content, durableOperationId: event.operationId, durableSeq: event.seq })
+        canonical.push({ id: payload.messageId, role: payload.kind, timestamp: event.createdAt, turnId: event.turnId,
+          ...cached, content: payload.content, durableOperationId: event.operationId, durableSeq: event.seq })
       } else if (payload.kind === 'tool' && typeof payload.toolCallId === 'string' && typeof payload.toolName === 'string') {
         const cached = byToolCallId.get(payload.toolCallId)
-        if (cached) {
-          canonicalToolIndex.set(payload.toolCallId, canonical.length)
-          canonical.push({
-            ...cached,
-            toolName: payload.toolName,
-            toolInput: payload.args && typeof payload.args === 'object' && !Array.isArray(payload.args) ? payload.args as Record<string, unknown> : cached.toolInput,
-            toolResult: payload.hasOutcome === true
-              ? (typeof payload.result === 'string' ? payload.result : JSON.stringify(payload.result))
-              : cached.toolResult,
-            toolStatus: payload.hasOutcome === true ? (payload.isError === true ? 'error' : 'completed') : cached.toolStatus,
-            isError: payload.hasOutcome === true ? payload.isError === true : cached.isError,
-            durableOperationId: event.operationId,
-            durableSeq: event.seq,
-          })
-        }
+        canonicalToolIndex.set(payload.toolCallId, canonical.length)
+        canonical.push({
+          id: `tool:${payload.toolCallId}`, role: 'tool', content: '', timestamp: event.createdAt,
+          turnId: event.turnId, toolUseId: payload.toolCallId, ...cached,
+          toolName: payload.toolName,
+          toolInput: payload.args && typeof payload.args === 'object' && !Array.isArray(payload.args) ? payload.args as Record<string, unknown> : cached?.toolInput,
+          toolResult: payload.hasOutcome === true
+            ? (typeof payload.result === 'string' ? payload.result : JSON.stringify(payload.result))
+            : cached?.toolResult,
+          toolStatus: payload.hasOutcome === true ? (payload.isError === true ? 'error' : 'completed') : cached?.toolStatus ?? 'unknown',
+          isError: payload.hasOutcome === true ? payload.isError === true : cached?.isError,
+          durableOperationId: event.operationId,
+          durableSeq: event.seq,
+        })
       }
       continue
     }
 
     if (event.type === 'user_message_committed' || event.type === 'assistant_message_committed') {
-      const payload = event.payload as { messageId?: unknown; content?: unknown }
+      const payload = event.payload as { messageId?: unknown; content?: unknown; isIntermediate?: boolean }
       if (typeof payload.messageId !== 'string' || typeof payload.content !== 'string') continue
       const cached = byMessageId.get(payload.messageId)
-      if (!cached) continue
       canonical.push({
-        ...cached,
+        id: payload.messageId, timestamp: event.createdAt, turnId: event.turnId,
+        isIntermediate: payload.isIntermediate, ...cached,
         role: event.type === 'user_message_committed' ? 'user' : 'assistant',
         content: payload.content,
         durableOperationId: event.operationId,
@@ -64,16 +90,16 @@ export function projectCanonicalSessionMessages(events: RuntimeEvent[], legacy: 
       const payload = event.payload as { providerToolCallId?: unknown; toolName?: unknown; args?: unknown; toolOperationId?: unknown }
       if (typeof payload.providerToolCallId !== 'string' || typeof payload.toolName !== 'string') continue
       const cached = byToolCallId.get(payload.providerToolCallId)
-      if (!cached) continue
       canonicalToolIndex.set(payload.providerToolCallId, canonical.length)
       canonical.push({
-        ...cached,
+        id: `tool:${payload.toolOperationId ?? payload.providerToolCallId}`, role: 'tool', content: '',
+        timestamp: event.createdAt, turnId: event.turnId, toolStatus: 'unknown', ...cached,
         toolUseId: payload.providerToolCallId,
         toolName: payload.toolName,
         toolInput: payload.args && typeof payload.args === 'object' && !Array.isArray(payload.args)
           ? payload.args as Record<string, unknown>
-          : cached.toolInput,
-        durableOperationId: typeof payload.toolOperationId === 'string' ? payload.toolOperationId : cached.durableOperationId,
+          : cached?.toolInput,
+        durableOperationId: typeof payload.toolOperationId === 'string' ? payload.toolOperationId : cached?.durableOperationId,
         durableSeq: event.seq,
       })
       continue
