@@ -1,5 +1,6 @@
-# Build artifacts for DMG packaging
-vendor/
+# Build artifacts for DMG packaging. Anchored so nested source directories named
+# `vendor` (e.g. the vendored startup component) are tracked normally.
+/vendor/
 packages/
 release/
 node_modules/@anthropic-ai/
