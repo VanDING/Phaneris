@@ -7,16 +7,19 @@ import type { RpcServer, HandlerFn } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { registerFilesHandlers } from './files'
 
-// Drafts fixture: getWorkspaceByNameOrId resolves a temp dir; getAllSessionDrafts
-// returns a controllable record (never touches the real ~/.phaneris/drafts.json).
+// The authoritative workspace and Session draft owners are isolated here.
 let drafts: Record<string, { text: string; attachments?: Array<{ path: string; name: string }> }> = {}
 let workspaceSessionIds: string[] = []
+let workspaceRoot: string
 
-mock.module('@phaneris/shared/config', () => ({
-  getWorkspaceByNameOrId: () => null,
+const sessions = await import('@phaneris/shared/sessions')
+mock.module('@phaneris/shared/sessions', () => ({ ...sessions,
   getAllSessionDrafts: () => drafts,
-
-  migrateRemoteServerTokens: async () => 0,
+}))
+const selection = await import('@phaneris/shared/config/workspace-selection')
+mock.module('@phaneris/shared/config/workspace-selection', () => ({ ...selection,
+  getWorkspaceByNameOrId: (id: string) => id === 'ws-test'
+    ? { id, name: 'Draft fixture', rootPath: workspaceRoot, createdAt: 1 } : null,
 }))
 
 function createTestHarness() {
@@ -57,6 +60,7 @@ describe('file READ_USER_ATTACHMENT provenance (H-7)', () => {
   let attachedFile: string
   beforeEach(() => {
     dir = mkdtempSync(join(tmpdir(), 'phaneris-draft-'))
+    workspaceRoot = dir
     attachedFile = join(dir, 'report.pdf')
     writeFileSync(attachedFile, 'dummy bytes')
     workspaceSessionIds = ['ws-test-session-1']
@@ -114,7 +118,7 @@ describe('file READ_USER_ATTACHMENT provenance (H-7)', () => {
     expect(result).toBeNull()
   })
 
-  it('falls back to all drafts when no workspace context is available', async () => {
+  it('denies recorded attachments when no workspace context is available', async () => {
     workspaceSessionIds = []
     const { readUserAttachment } = createTestHarness()
     const otherFile = drafts['ws-test-session-2'].attachments![0].path
@@ -123,7 +127,7 @@ describe('file READ_USER_ATTACHMENT provenance (H-7)', () => {
       { clientId: 'c', workspaceId: null, webContentsId: null },
       otherFile,
     )
-    expect(result).not.toBeNull()
+    expect(result).toBeNull()
   })
 
   it('still rejects non-draft paths with no workspace context', async () => {

@@ -2,12 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, jest } from 'bun:test'
 import type { AgentEvent } from '@phaneris/core/types'
 import type { SessionEvent } from '@phaneris/shared/protocol'
 import { SessionManager, createManagedSession } from './SessionManager.ts'
+import { SessionDeltaBatcher } from './session-deltas'
 
 type ManagedSession = ReturnType<typeof createManagedSession>
 type EventHarness = {
   processEvent(managed: ManagedSession, event: AgentEvent): Promise<void>
-  pendingDeltas: Map<string, { delta: string; turnId?: string }>
-  deltaFlushTimers: Map<string, ReturnType<typeof setTimeout>>
+  deltas: SessionDeltaBatcher
   sendEvent(event: SessionEvent, workspaceId?: string): void
   persistSession(managed: ManagedSession): void
   monotonic(): number
@@ -17,9 +17,8 @@ type EventHarness = {
 function harness() {
   const manager = Object.create(SessionManager.prototype) as EventHarness
   const events: SessionEvent[] = []
-  manager.pendingDeltas = new Map()
-  manager.deltaFlushTimers = new Map()
   manager.sendEvent = event => { events.push(event) }
+  manager.deltas = new SessionDeltaBatcher((event, workspaceId) => manager.sendEvent(event, workspaceId))
   manager.persistSession = () => {}
   manager.monotonic = () => Date.now()
   const managed = createManagedSession({ id: 'retry-test' }, {
@@ -47,8 +46,7 @@ describe('Pi retry streaming boundaries', () => {
     ])
     expect(managed.streamingText).toBe('')
     expect(managed.streamingTurnId).toBeUndefined()
-    expect(manager.pendingDeltas.size).toBe(0)
-    expect(manager.deltaFlushTimers.size).toBe(0)
+    expect(jest.getTimerCount()).toBe(0)
     expect(managed.messages).toHaveLength(0)
   })
 
@@ -100,8 +98,7 @@ describe('Pi retry streaming boundaries', () => {
     jest.advanceTimersByTime(100)
     expect(managed.streamingText).toBe('')
     expect(managed.messages).toHaveLength(0)
-    expect(manager.pendingDeltas.size).toBe(0)
-    expect(manager.deltaFlushTimers.size).toBe(0)
+    expect(jest.getTimerCount()).toBe(0)
     expect(events.filter(e => e.type === 'text_discard')).toHaveLength(3)
     expect(events.filter(e => e.type === 'text_delta')).toEqual([
       { type: 'text_delta', sessionId: managed.id, delta: 'Partial 1', turnId: 'attempt-1' },

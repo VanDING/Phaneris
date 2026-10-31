@@ -247,7 +247,7 @@ let pendingDeepLink: string | null = null
 let isQuitting = false
 let relaunchQueued = false
 let startupWindowsReady = false
-let startupWindow: BrowserWindow | null = null
+let startupWindow: import('./startup-window').StartupPresentation | null = null
 
 // Set app name early (before app.whenReady) to ensure correct macOS menu bar title
 // Supports multi-instance dev: PHANERIS_APP_NAME env var (e.g., "Phaneris [1]")
@@ -644,13 +644,11 @@ app.whenReady().then(async () => {
     // Skip server-side initialization (SessionManager, model refresh, platform injection).
     const isClientOnly = !!process.env.PHANERIS_SERVER_URL
     const isHeadless = !!process.env.PHANERIS_HEADLESS
-    if (!isHeadless && !isClientOnly) {
-      const { getThemePreferences } = await import('@phaneris/shared/config')
+    if (!isHeadless) {
       const { createStartupWindow } = await import('./startup-window')
-      const mode = getThemePreferences().mode
-      startupWindow = createStartupWindow(PRODUCT_NAME, i18n.t('common.loading'),
-        mode === 'system' ? nativeTheme.shouldUseDarkColors : mode === 'dark')
-      startupWindow.once('closed', () => { startupWindow = null })
+      startupWindow = createStartupWindow(PRODUCT_NAME)
+      windowManager.setStartupPresentation(startupWindow)
+      startupWindow.window.once('closed', () => { startupWindow = null })
     }
 
     if (isClientOnly) {
@@ -683,6 +681,8 @@ app.whenReady().then(async () => {
     ipcMain.on('__get-web-contents-id', (e) => {
       e.returnValue = e.sender.id
     })
+    ipcMain.handle('__startup:ready', event => windowManager?.completeStartup(event.sender.id) ?? false)
+    ipcMain.on('__startup:managed', event => { event.returnValue = windowManager?.isStartupManaged(event.sender.id) ?? false })
     ipcMain.on('__get-workspace-id', (e) => {
       e.returnValue = windowManager?.getWorkspaceForWindow(e.sender.id) ?? ''
     })
@@ -1452,8 +1452,6 @@ app.whenReady().then(async () => {
     if (!isHeadless) {
       await createInitialWindows()
       startupWindowsReady = true
-      startupWindow?.destroy()
-      startupWindow = null
     }
 
     // Run credential health check at startup to detect issues early

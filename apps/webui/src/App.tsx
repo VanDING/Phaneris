@@ -17,6 +17,7 @@ import { createClientPlatform, initializeClient } from '@/platform/client'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { windowWorkspaceIdAtom } from '@/atoms/sessions'
 import { Toaster } from '@/components/ui/sonner'
+import { StartupBoundary } from '@/components/SplashScreen'
 
 // Lazy-load the Electron App after window.electronAPI is set up.
 // This prevents any Electron component from accessing window.electronAPI
@@ -30,9 +31,9 @@ function ConnectedApp() {
   const workspaceId = useAtomValue(windowWorkspaceIdAtom)
   return (
     <ThemeProvider activeWorkspaceId={workspaceId}>
-      <Suspense fallback={<LoadingScreen />}>
-        <ElectronApp />
-      </Suspense>
+      <StartupBoundary>{onReady => <Suspense fallback={<LoadingScreen />}>
+        <ElectronApp onReady={onReady} />
+      </Suspense>}</StartupBoundary>
       <Toaster />
     </ThemeProvider>
   )

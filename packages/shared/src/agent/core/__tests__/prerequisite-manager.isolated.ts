@@ -309,8 +309,8 @@ describe('PrerequisiteManager', () => {
   // ============================================================
 
   describe('trackBashSkillRead', () => {
-    it('clears skill prerequisite when Bash command contains the skill path', () => {
-      const skillPath = '/test/workspace/skills/my-skill/SKILL.md';
+    it('permits a matching Bash recovery read and clears only after delivery', () => {
+      const skillPath = resolve(WORKSPACE_ROOT, 'skills/my-skill/SKILL.md');
       manager.registerSkillPrerequisites([skillPath]);
 
       // WebSearch should be blocked (skill prerequisite pending)
@@ -320,11 +320,13 @@ describe('PrerequisiteManager', () => {
       manager.resetReadState();
       manager.registerSkillPrerequisites([skillPath]);
 
-      // Bash cat targeting the skill path should clear the prerequisite
+      // Command text permits recovery but does not acknowledge delivered content.
       const result = manager.trackBashSkillRead({ command: `cat ${skillPath}` });
       expect(result).toBe(true);
 
-      // Now other tools should be allowed
+      expect(manager.hasRead(skillPath)).toBe(false);
+      manager.trackReadTool({ file_path: skillPath });
+      // Successful content delivery clears the prerequisite.
       expect(manager.checkPrerequisites('WebSearch').allowed).toBe(true);
     });
 
@@ -347,9 +349,9 @@ describe('PrerequisiteManager', () => {
       expect(result).toBe(false);
     });
 
-    it('clears multiple skill prerequisites from a single command', () => {
-      const skill1 = '/test/workspace/skills/alpha/SKILL.md';
-      const skill2 = '/test/workspace/skills/beta/SKILL.md';
+    it('permits multiple recovery reads and waits for delivery of both skills', () => {
+      const skill1 = resolve(WORKSPACE_ROOT, 'skills/alpha/SKILL.md');
+      const skill2 = resolve(WORKSPACE_ROOT, 'skills/beta/SKILL.md');
       manager.registerSkillPrerequisites([skill1, skill2]);
 
       // Command that contains both paths
@@ -358,16 +360,21 @@ describe('PrerequisiteManager', () => {
       });
       expect(result).toBe(true);
 
-      // Both should be cleared
+      expect(manager.hasRead(skill1)).toBe(false);
+      expect(manager.hasRead(skill2)).toBe(false);
+      manager.trackReadTool({ file_path: skill1 });
+      manager.trackReadTool({ file_path: skill2 });
       expect(manager.checkPrerequisites('WebSearch').allowed).toBe(true);
     });
 
-    it('logs debug message when clearing via Bash', () => {
-      const skillPath = '/test/workspace/skills/my-skill/SKILL.md';
+    it('logs skill delivery only after the content read is acknowledged', () => {
+      const skillPath = resolve(WORKSPACE_ROOT, 'skills/my-skill/SKILL.md');
       manager.registerSkillPrerequisites([skillPath]);
 
       manager.trackBashSkillRead({ command: `cat ${skillPath}` });
-      expect(debugMessages.some(m => m.includes('cleared skill prerequisite via Bash'))).toBe(true);
+      expect(debugMessages.some(m => m.includes('cleared skill prerequisite'))).toBe(false);
+      manager.trackReadTool({ file_path: skillPath });
+      expect(debugMessages.some(m => m.includes('cleared skill prerequisite'))).toBe(true);
     });
   });
 

@@ -415,6 +415,10 @@ export interface ElectronAPI {
   }>
 
   // Window management
+  /** Returns true when the early native surface owns the startup animation. */
+  completeStartup?(): Promise<boolean>
+  /** Initial renderer is covered by the sandboxed native presentation. */
+  startupManaged?: boolean
   getWindowWorkspace(): Promise<string | null>
   getWindowMode(): Promise<string | null>
   openWorkspace(workspaceId: string): Promise<void>

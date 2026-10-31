@@ -98,6 +98,11 @@ for (const doc of docs) {
     }
 
     const target = resolve(dirname(doc.abs), decodeURIComponent(withoutHash));
+    // A warm developer checkout must not certify links that disappear in CI.
+    if (posix(relative(ROOT, target)).startsWith('.cache/')) {
+      failures.push(`${doc.rel}: link targets untracked local cache -> ${raw}; record the local path as code and provide a rerun command`);
+      continue;
+    }
     if (!existsSync(target)) {
       const exception = artifactExceptions.find(value => value.source === doc.rel && value.target === posix(relative(ROOT, target)));
       const digest = createHash('sha256').update(readFileSync(doc.abs)).digest('hex');

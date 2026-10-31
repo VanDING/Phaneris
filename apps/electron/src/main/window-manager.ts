@@ -9,6 +9,7 @@ import { classifyExternalUrl, formatBlockedUrlError } from '@phaneris/shared/uti
 import { RPC_CHANNELS, type WindowCloseRequestSource } from '../shared/types'
 import type { SavedWindow, WindowBounds } from './window-state'
 import { defaultWindowBounds, fitWindowBounds } from './window-geometry'
+import type { StartupPresentation } from './startup-window'
 
 // Vite dev server URL for hot reload
 const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
@@ -57,6 +58,19 @@ export interface CreateWindowOptions {
 }
 
 export class WindowManager {
+  private startupPresentation: StartupPresentation | null = null
+
+  setStartupPresentation(presentation: StartupPresentation): void {
+    this.startupPresentation = presentation
+  }
+
+  completeStartup(webContentsId: number): boolean {
+    return this.startupPresentation?.ready(webContentsId) ?? false
+  }
+
+  isStartupManaged(webContentsId: number): boolean {
+    return this.startupPresentation?.manages(webContentsId) ?? false
+  }
   private windows: Map<number, ManagedWindow> = new Map()  // webContents.id → ManagedWindow
   private focusedModeWindows: Set<number> = new Set()  // webContents.id of windows in focused mode
   private pendingCloseTimeouts: Map<number, NodeJS.Timeout> = new Map()  // Fallback timeouts for window close
@@ -277,10 +291,11 @@ export class WindowManager {
       }
     })
 
-    // Show window when first paint is ready (faster perceived startup)
+    const startupManaged = this.startupPresentation?.attach(window, !!options.maximized) ?? false
+    // Initial windows wait behind the continuous startup surface until the UI is ready.
     window.once('ready-to-show', () => {
       if (options.maximized) window.maximize()
-      window.show()
+      if (!startupManaged) window.show()
     })
 
     // Diagnostics for "the process is running but nothing appeared": without
@@ -402,7 +417,11 @@ export class WindowManager {
       // A failed child frame or cancelled navigation does not invalidate the app shell.
       if (!isMainFrame || errorCode === -3) return // ERR_ABORTED
       windowLog.warn('Failed to load renderer:', errorCode, errorDescription)
-      if (window.isDestroyed() || failLoadRetries >= maxFailLoadRetries) return
+      if (window.isDestroyed()) return
+      if (failLoadRetries >= maxFailLoadRetries) {
+        this.startupPresentation?.fail(window)
+        return
+      }
       failLoadRetries++
       if (VITE_DEV_SERVER_URL) {
         windowLog.info(`Retrying Vite dev server (attempt ${failLoadRetries}/5)...`)
@@ -709,6 +728,7 @@ export class WindowManager {
    */
   focusWindow(window: BrowserWindow): BrowserWindow {
     if (window.isDestroyed()) return window
+    if (this.startupPresentation?.focusPending(window)) return window
     if (window.isMinimized()) {
       window.restore()
     }

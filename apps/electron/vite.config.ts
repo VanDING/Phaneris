@@ -33,6 +33,11 @@ export default defineConfig({
       transformIndexHtml: {
         order: 'pre' as const,
         handler(html: string, ctx: { server?: unknown }) {
+          // The sandboxed startup document has no RPC or external resources.
+          // Only Vite's development refresh script and socket need extra access.
+          if (html.includes('src="/startup.tsx"')) return ctx.server
+            ? html.replace("script-src 'self'", "script-src 'self' 'unsafe-inline'").replace("connect-src 'self'", "connect-src 'self' ws:")
+            : html
           if (ctx.server) return html
           return html
             .replace(/\n?\s*<script src="\.\/react-devtools\.js"><\/script>/, '')
@@ -68,6 +73,7 @@ export default defineConfig({
     rolldownOptions: {
       input: {
         main: resolve(import.meta.dirname, 'src/renderer/index.html'),
+        startup: resolve(import.meta.dirname, 'src/renderer/startup.html'),
         // The component playground is developer tooling and is deliberately NOT a
         // packaging input: it used to ship a 752 KB chunk plus a 1.8 MB source map
         // into every installer, referenced by nothing. `vite dev` serves

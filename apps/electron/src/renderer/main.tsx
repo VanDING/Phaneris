@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { init as sentryInit, type ErrorEvent } from '@sentry/electron/renderer'
 import * as Sentry from '@sentry/react'
@@ -14,6 +14,7 @@ import { redactSensitiveHeadersInPlace, redactSensitiveKeysInPlace } from '@phan
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import './index.css'
+import { StartupBoundary } from './components/SplashScreen'
 
 // Initialize i18n before any React rendering
 setupI18n([LanguageDetector, initReactI18next])
@@ -83,6 +84,7 @@ sentryInit(
  * Sentry.ErrorBoundary captures the error and sends it to Sentry automatically.
  */
 function CrashFallback() {
+  useEffect(() => { void window.electronAPI?.completeStartup?.() }, [])
   return (
     <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
       <p className="text-reading font-medium">{i18n.t('crash.somethingWentWrong')}</p>
@@ -107,7 +109,7 @@ function Root() {
 
   return (
     <ThemeProvider activeWorkspaceId={workspaceId}>
-      <React.Suspense fallback={null}><App /></React.Suspense>
+      <StartupBoundary>{onReady => <React.Suspense fallback={null}><App onReady={onReady} /></React.Suspense>}</StartupBoundary>
       <Toaster />
     </ThemeProvider>
   )

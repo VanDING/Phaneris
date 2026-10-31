@@ -36,7 +36,7 @@ async function waitForCondition(page, predicate, argument) {
   let tracing = false
   try {
     page = await firstBusinessWindow(app, { timeout: 60000 })
-    assert(!app.windows().some(candidate => candidate.url().startsWith('data:')), 'Startup feedback must close before workspace interaction')
+    assert(!app.windows().some(candidate => /\/startup\.html(?:[?#]|$)/.test(candidate.url())), 'Startup feedback must close before workspace interaction')
     checks.push('startup feedback hands off to the workspace without a residual window')
     await page.context().tracing.start({ screenshots: true, snapshots: true }); tracing = true
     page.on('pageerror', error => errors.push(error.message))

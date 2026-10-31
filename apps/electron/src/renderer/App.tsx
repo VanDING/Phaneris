@@ -20,7 +20,6 @@ import type { AppShellContextType } from '@/context/AppShellContext'
 import { OnboardingWizard, ReauthScreen } from '@/components/onboarding'
 import { WorkspacePicker } from '@/components/workspace'
 import { ResetConfirmationDialog } from '@/components/ResetConfirmationDialog'
-import { SplashScreen } from '@/components/SplashScreen'
 import { RtkUpdatePrompt } from '@/components/RtkUpdateDialog'
 import { TooltipProvider } from '@phaneris/ui'
 import { FocusProvider } from '@/context/FocusContext'
@@ -105,15 +104,6 @@ type SessionListRefreshOptions = {
 }
 
 const SESSION_REFRESH_LOG_ID_LIMIT = 25
-
-/**
- * Minimum time the splash stays up before its exit animation starts.
- *
- * Sized to the mark's entrance in SplashScreen: 1600ms trace + 900ms delay +
- * 1100ms ink ≈ 2.0s, rounded up so the finished logo is held for a beat rather
- * than fading the instant the last fill lands.
- */
-const SPLASH_MIN_VISIBLE_MS = 2200
 
 /**
  * UTF-8 byte size of the serialized RPC args (the wire payload minus the
@@ -308,7 +298,7 @@ function SessionLoadErrorScreen({
   )
 }
 
-export default function App() {
+export default function App({ onReady }: { onReady?: () => void }) {
   const { t } = useTranslation()
   const startupTranslateRef = useRef(t)
   useEffect(() => { startupTranslateRef.current = t }, [t])
@@ -457,8 +447,6 @@ export default function App() {
   // Splash screen state - tracks when app is fully ready (all data loaded)
   const [sessionsLoaded, setSessionsLoaded] = useState(false)
   const [sessionLoadError, setSessionLoadError] = useState<string | null>(null)
-  const [splashExiting, setSplashExiting] = useState(false)
-  const [splashHidden, setSplashHidden] = useState(false)
 
   // Notifications enabled state (from app settings)
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
@@ -483,32 +471,13 @@ export default function App() {
 
   // Reveal only after final theme geometry and its fonts have settled. The
   // startup cache can differ from config.json or the workspace's theme.
-  const isFullyReady = appState === 'ready' && sessionsLoaded && themeStartupReady && themeFontsReady
+  const isFullyReady = themeStartupReady && themeFontsReady && workspaceDraftRestore !== 'loading'
+    && (workspaceDraftRestore === 'failed' || (appState !== 'loading' && (appState !== 'ready' || sessionsLoaded)))
 
-  // Trigger splash exit animation when fully ready.
-  //
-  // Held for a floor of SPLASH_MIN_VISIBLE_MS so the mark's entrance (1600ms
-  // trace + 900ms ink delay, see SplashScreen) is never cut off mid-draw. On a
-  // cold start the app is almost always slower than this floor, so it rarely
-  // adds any wait; it only matters on warm restarts, where the alternative is a
-  // half-drawn logo flashing past.
-  const splashShownAtRef = useRef(Date.now())
+  // Readiness belongs to the UI, not the first paint or a simulated startup timer.
   useEffect(() => {
-    if (!isFullyReady || splashExiting) return
-    const elapsed = Date.now() - splashShownAtRef.current
-    const remaining = SPLASH_MIN_VISIBLE_MS - elapsed
-    if (remaining <= 0) {
-      setSplashExiting(true)
-      return
-    }
-    const timer = setTimeout(() => setSplashExiting(true), remaining)
-    return () => clearTimeout(timer)
-  }, [isFullyReady, splashExiting])
-
-  // Handler for when splash exit animation completes
-  const handleSplashExitComplete = useCallback(() => {
-    setSplashHidden(true)
-  }, [])
+    if (isFullyReady) onReady?.()
+  }, [isFullyReady, onReady])
 
   // Ref for sessionOptions to access current value in event handlers without re-registering
   const sessionOptionsRef = useRef(sessionOptions)
@@ -2199,7 +2168,7 @@ export default function App() {
     </div>
   }
   if (appState === 'loading' || workspaceDraftRestore === 'loading') {
-    return <SplashScreen isExiting={false} />
+    return null
   }
 
   // Reauth state - session expired, need to re-login
@@ -2275,9 +2244,6 @@ export default function App() {
     )
   }
 
-  // Show splash until exit animation completes
-  const showSplash = !splashHidden
-
   // Ready state - main app with splash overlay during data loading
   return (
     <PlatformProvider actions={platformActions}>
@@ -2310,14 +2276,6 @@ export default function App() {
             Cmd+W closes the dialog before the window.
           */}
           <ConfirmDialogHost />
-
-          {/* Splash screen overlay - fades out when fully ready */}
-          {showSplash && (
-            <SplashScreen
-              isExiting={splashExiting}
-              onExitComplete={handleSplashExitComplete}
-            />
-          )}
 
           {/* Main UI - always rendered, splash fades away to reveal it */}
           <div

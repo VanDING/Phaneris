@@ -111,6 +111,6 @@
     "@types/ws": "^8.18.2",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "jotai-babel": "^0.3.0",
-    "electron": "^44.9.0"
+    "electron": "^44.9.1"
   }
 }

@@ -174,7 +174,7 @@
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
     "zod": "^4.6.7",
-    "electron": "^44.9.0"
+    "electron": "^44.9.1"
   },
   "devDependencies": {
     "@types/shell-quote": "^1.7.5"

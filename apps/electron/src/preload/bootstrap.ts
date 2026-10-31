@@ -212,6 +212,8 @@ client.handleCapability(CLIENT_BROWSER_INVOKE, async (req: BrowserCapabilityRequ
 // ---------------------------------------------------------------------------
 
 const api = buildClientApi(client, CHANNEL_MAP, (ch) => client.isChannelAvailable(ch))
+api.completeStartup = () => ipcRenderer.invoke('__startup:ready')
+api.startupManaged = ipcRenderer.sendSync('__startup:managed')
 
 api.registerPageDocument = (input) => ipcRenderer.invoke('__pages:registerDocument', input)
 api.releasePageDocument = (url) => ipcRenderer.invoke('__pages:releaseDocument', url)

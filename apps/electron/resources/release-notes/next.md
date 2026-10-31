@@ -6,6 +6,10 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- Combine startup feedback into a white character background, reveal the Phaneris mark only after the application is ready, and transition directly into the workspace.
+
 ## Bug Fixes
+
+- Make desktop API connection checks use the selected runtime and allow the complete server-side probe time budget.
 
 ## Breaking Changes

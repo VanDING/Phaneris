@@ -17,7 +17,7 @@ const { createServer } = require('node:http')
   const mainWindow = await app.browserWindow(page)
   const viewStates = () => app.evaluate(async ({ webContents }) => {
     const views = webContents.getAllWebContents().filter(view => /browser-(?:toolbar|empty-state)\.html/.test(view.getURL()))
-    return Promise.all(views.map(async view => ({ url: view.getURL(), value: await view.executeJavaScript(`({id: document.documentElement.dataset.theme, status: document.documentElement.dataset.themeStatus, mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light', revision: document.documentElement.dataset.themeRevision, color: getComputedStyle(document.body).color})`) })))
+    return Promise.all(views.map(async view => ({ url: view.getURL(), value: await view.executeJavaScript(`({id: document.documentElement.dataset.theme ?? 'default', status: document.documentElement.dataset.themeStatus, mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light', revision: document.documentElement.dataset.themeRevision, color: getComputedStyle(document.body).color})`) })))
   })
   const waitViews = async (id, mode) => {
     const deadline = Date.now() + 30000
@@ -30,15 +30,19 @@ const { createServer } = require('node:http')
   try {
     await page.waitForFunction(() => document.documentElement.dataset.clientPlatform === 'electron', null, { timeout: 90_000 })
     await page.waitForFunction(() => window.electronAPI?.getThemePreferences, null, { timeout: 30_000 })
-    await page.evaluate(() => window.electronAPI.setThemePreferences({ mode: 'light', colorTheme: 'ink', font: 'inter' }))
-    await page.waitForFunction(() => document.documentElement.dataset.theme === 'ink' && document.documentElement.dataset.themeStatus === 'ready')
+    await page.evaluate(() => window.electronAPI.setThemePreferences({ mode: 'light', colorTheme: 'default', font: 'inter' }))
+    await page.waitForFunction(() => !document.documentElement.dataset.theme && document.documentElement.dataset.themeStatus === 'ready'
+      && !document.documentElement.classList.contains('dark'))
     checks.push('native authoritative preferences apply before acceptance')
     const id = await page.evaluate(() => window.electronAPI.browserPane.create({ workspaceId: 'fixture', show: false }))
-    samples.push(await waitViews('ink', 'light')); checks.push('real main preload deliver initial theme to toolbar and empty state')
+    samples.push(await waitViews('default', 'light')); checks.push('real main preload deliver initial theme to toolbar and empty state')
     for (const theme of ['default', 'ink', 'geek', 'cyberpunk-2077']) for (const mode of ['light', 'dark']) {
-      await page.evaluate(({ theme, mode }) => window.electronAPI.setThemePreferences({ mode, colorTheme: theme, font: 'inter' }), { theme, mode })
-      const actual = theme === 'geek' || theme === 'cyberpunk-2077' ? 'dark' : mode
-      samples.push({ theme, mode, views: await waitViews(theme, actual) }); checks.push(`native theme delivery ${theme}/${mode}`)
+      const preferences = await page.evaluate(({ theme, mode }) => window.electronAPI.setThemePreferences({ mode, colorTheme: theme, font: 'inter' }), { theme, mode })
+      assert.equal(preferences.colorTheme, 'default'); assert.equal(preferences.mode, mode)
+      await page.waitForFunction(mode => !document.documentElement.dataset.theme && document.documentElement.dataset.themeStatus === 'ready'
+        && document.documentElement.classList.contains('dark') === (mode === 'dark'), mode)
+      samples.push({ requestedTheme: theme, preferences, views: await waitViews('default', mode) })
+      checks.push(`native theme delivery ${theme}/${mode} resolves to default/${mode}`)
     }
     await mainWindow.evaluate(window => { window.setContentSize(1280, 900); window.webContents.setZoomFactor(2) })
     // Native resize and Chromium zoom reach the renderer asynchronously; two

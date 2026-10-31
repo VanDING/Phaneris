@@ -17,7 +17,7 @@ await verificationWorkflow('native-client', async run => {
   writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [
     { id: 'fixture', name: 'Governance workspace', rootPath: workspace, createdAt: 1 },
     { id: 'second', name: 'Second workspace', rootPath: secondWorkspace, createdAt: 2 },
-  ], activeWorkspaceId: 'fixture', setupDeferred: true, llmConnections: [conversation.connection], defaultLlmConnection: 'fixture' }))
+  ], activeWorkspaceId: 'fixture', activeSessionId: null, setupDeferred: true, llmConnections: [conversation.connection], defaultLlmConnection: 'fixture' }))
   const { createSession, loadSession, saveSession } = await import('../../packages/shared/src/sessions/storage')
   const session = await createSession(workspace, { name: 'Governance session' })
   const other = await createSession(workspace, { name: 'Other governance session' })

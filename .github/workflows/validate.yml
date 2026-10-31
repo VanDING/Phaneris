@@ -79,6 +79,9 @@ jobs:
       - name: Critical path tests
         run: xvfb-run --auto-servernum bun run test:critical
 
+      - name: Connection probe RPC deadline
+        run: bun run scripts/verification/rpc-probe-deadline-workflow.ts
+
       # Computed-style contract for the control primitives: the audit's root
       # cause was class strings that looked right while the browser painted a
       # different size/colour, which no static gate can see.

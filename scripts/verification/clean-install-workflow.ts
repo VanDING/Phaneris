@@ -53,6 +53,7 @@ await verificationWorkflow('clean-install', async run => {
       rmSync(join(checkout, dirname(file), 'node_modules'), { recursive: true, force: true })
     }
     await execute(['install', '--frozen-lockfile'], 'install', cache, 0)
+    await execute(['run', 'check:docs'], 'docs-clean-checkout', cache, 0)
     await execute(['run', 'build:runtime'], 'runtime-build', cache, 0)
     await execute(['run', 'electron:build:main'], 'desktop-main-build', cache, 0)
   assert.equal(hash('bun.lock'), before.lock, 'Frozen install may not rewrite the lock')
@@ -60,7 +61,7 @@ await verificationWorkflow('clean-install', async run => {
     'packages/messaging-whatsapp-worker/dist/worker.cjs', 'apps/electron/dist/main.cjs'].map(path => ({ path, sha256: hash(path) }))
   run.json('clean-install.json', { directory, checkout, cache, cacheInitiallyEmpty: true, before, commands, resources,
     baseHead: git(['rev-parse', 'HEAD']).trim(), sourceFiles: files.length })
-  run.complete(['real frozen install rejects an absent patch', 'independent checkout and empty cache', 'frozen install preserves lock', 'real Pi and worker build from clean dependencies', 'desktop main builds without undeclared optional S3 SDK'],
+  run.complete(['real frozen install rejects an absent patch', 'independent checkout and empty cache', 'documentation resolves without local verification cache', 'frozen install preserves lock', 'real Pi and worker build from clean dependencies', 'desktop main builds without undeclared optional S3 SDK'],
     ['container Linux runtime', 'signed native installers'])
   } finally { rmSync(directory, { recursive: true, force: true }) }
 })

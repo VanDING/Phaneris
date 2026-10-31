@@ -47,13 +47,13 @@ OpenAI Chat Completions 的输出上限参数可省略；Anthropic Messages 仍�
 
 | 检查 | 结果与证据 |
 | --- | --- |
-| 接入链路 | 14 项通过；[JSON](../../.cache/verification/api-connection-setup-5Nkh9x/acceptance.json)、[manifest](../../.cache/verification/api-connection-setup-5Nkh9x/manifest.json)、[trace](../../.cache/verification/api-connection-setup-5Nkh9x/trace.zip)。包含浏览器、真实 RPC handler、SDK、本地 HTTP 端点及持久化配置。 |
-| 完整 AI 设置页面 | 22 项通过；[结果](../../.cache/ai-settings-structure/results.json)。包含中文、深浅主题、窄屏、辅助模型、百分比选项及兼容图像模型编辑。 |
-| 百分比、计费与真实 WebSocket RPC | 完整工作流 12 项通过；[结果](../../.cache/verification/upgrade-0153-followup-browser-SLeLyk/followup-browser.json)、[manifest](../../.cache/verification/upgrade-0153-followup-browser-SLeLyk/manifest.json)、[费用显示证据](../../.cache/verification/upgrade-0153-followup-browser-SLeLyk/metering-ui.json)。包含非法值拒绝、保存失败恢复、重试、新服务进程读取和计价区分。 |
+| 接入链路 | 14 项本机检查通过；产物目录 `.cache/verification/api-connection-setup-5Nkh9x/`，内含 `acceptance.json`、`manifest.json`、`trace.zip`。包含浏览器、真实 RPC handler、SDK、本地 HTTP 端点及持久化配置。 |
+| 完整 AI 设置页面 | 22 项本机检查通过；结果 `.cache/ai-settings-structure/results.json`。包含中文、深浅主题、窄屏、辅助模型、百分比选项及兼容图像模型编辑。 |
+| 百分比、计费与真实 WebSocket RPC | 完整工作流 12 项本机检查通过；产物目录 `.cache/verification/upgrade-0153-followup-browser-SLeLyk/`，内含 `followup-browser.json`、`manifest.json`、`metering-ui.json`。包含非法值拒绝、保存失败恢复、重试、新服务进程读取和计价区分。 |
 | 已有相关测试 | 51 项通过；覆盖连接表单参数、图标、图像服务、模型传递、运行时配置签名及用量投影。 |
 | 静态与构建 | `typecheck:all`、完整 `lint`、四项 i18n gate、Electron main 与 renderer 构建通过。 |
 
-可重复运行：
+上述 `.cache` 产物仅保留于生成它们的本机或 CI artifact，不随 Git 仓库分发。可重复运行：
 
 ```powershell
 bun run scripts/verification/api-connection-setup-workflow.ts

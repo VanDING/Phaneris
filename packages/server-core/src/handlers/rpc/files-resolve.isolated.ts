@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it } from 'bun:test'
+import { afterAll, beforeAll, expect, it, mock } from 'bun:test'
 import { mkdtemp, realpath, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -8,6 +8,11 @@ import type { HandlerDeps } from '../handler-deps'
 import { registerFilesHandlers } from './files'
 
 let root: string
+const selection = await import('@phaneris/shared/config/workspace-selection')
+mock.module('@phaneris/shared/config/workspace-selection', () => ({ ...selection,
+  getWorkspaceByNameOrId: (id: string) => id === 'file-rpc-workspace'
+    ? { id, name: 'File RPC workspace', rootPath: root, createdAt: 1 } : null,
+}))
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), 'craft-file-rpc-')))
   await writeFile(join(root, '报告.md'), 'session file')

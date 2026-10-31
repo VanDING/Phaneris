@@ -13,6 +13,7 @@ import type { RpcResult } from '@phaneris/shared/protocol';
 import {
   PROTOCOL_VERSION,
   REQUEST_TIMEOUT_MS,
+  RPC_CHANNELS,
   SEQUENCE_ACK_INTERVAL_MS,
   MAX_MESSAGE_PAYLOAD_BYTES,
   MAX_MESSAGE_PAYLOAD_MARGIN_BYTES,
@@ -199,10 +200,16 @@ export class WsRpcClient implements RpcClient {
       }
 
       const id = createMessageId()
+      // Setup can spend 15s discovering models and 45s probing the real backend.
+      // Let the server's 60s handler deadline respond before this call expires.
+      // Ordinary RPC and capability calls retain their configured deadline.
+      const requestTimeout = channel === RPC_CHANNELS.settings.TEST_LLM_CONNECTION_SETUP
+        ? Math.max(this.requestTimeout, 75_000)
+        : this.requestTimeout
       const timeout = setTimeout(() => {
         this.pending.delete(id)
-        reject(new Error(`Request timeout: ${channel} (${this.requestTimeout}ms)`))
-      }, this.requestTimeout)
+        reject(new Error(`Request timeout: ${channel} (${requestTimeout}ms)`))
+      }, requestTimeout)
 
       this.pending.set(id, { channel, resolve, reject, timeout })
 

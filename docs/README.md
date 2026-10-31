@@ -28,6 +28,10 @@ Session 基础架构收敛：[存储与生命周期契约](architecture/session-
 
 启动与会话稳定性：[2026-10-28 调查与修复记录](verification/startup-and-session-stability-investigation-2026-10-28.md) — 已完成 UUID 能力兼容、子框架加载隔离和中断工具消息配对的三处最小修复；历史白屏归因与未验证边界见记录。
 
+白色字符启动界面：[2026-10-30 实施与验证](verification/startup-letter-glitch-2026-10-30.md) — 加载仅显示字符，实际就绪后播放 Logo，再交接工作区；Windows 原生启动工作流 13 项通过。
+
+CI 修复：[2026-10-31 失败矩阵与验收](verification/ci-repair-2026-10-31.md) — 主题验收、缓存产物链接、连接探测时限与依赖安全更新。
+
 API 接入与 AI 设置：[2026-10-28 修订与验收](verification/api-connection-setup.md) — 接入动画、模型自动发现、辅助模型、连接图标、百分比压缩阈值、图像兼容端点与输出预算。
 
 Run 上下文与图表：[2026-10-26 失败矩阵](verification/run-context-accounting-failure-matrix-2026-10-26.md)、[配色与少请求图表评审](prototypes/run-colors-2026-10-26/README.md) — 保留已确认方案与回归口径。

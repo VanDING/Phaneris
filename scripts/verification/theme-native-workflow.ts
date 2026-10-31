@@ -8,7 +8,8 @@ await verificationWorkflow('theme-native', async run => {
   const root = resolve(import.meta.dir, '../..'), config = join(run.directory, 'config'), workspace = join(run.directory, 'workspace')
   mkdirSync(config); mkdirSync(workspace)
   writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [{ id: 'fixture', name: 'Theme workspace', rootPath: workspace, createdAt: 1 }],
-    activeWorkspaceId: 'fixture', setupDeferred: true, llmConnections: [], appearance: { mode: 'light', colorTheme: 'ink', font: 'inter' } }))
+    activeWorkspaceId: 'fixture', activeSessionId: null, setupDeferred: true, llmConnections: [],
+    themeMode: 'light', colorTheme: 'default', themeFont: 'inter' }))
   const input = join(run.directory, 'native-fixture.json'); writeFileSync(input, JSON.stringify({ root, config, output: run.directory }))
   const hashes: Record<string, string> = {}
   for (const file of ['apps/electron/dist/main.cjs', 'apps/electron/dist/browser-toolbar-preload.cjs']) hashes[file] = createHash('sha256').update(readFileSync(join(root, file))).digest('hex')

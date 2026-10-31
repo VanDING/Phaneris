@@ -9,7 +9,7 @@ extends: ./identity.generated.yml
 # literal rather than the `electron` range in package.json, so it must be bumped
 # by hand whenever that dependency moves — scripts/check-electron-pin.ts fails
 # otherwise, because a stale pin silently ships the previous runtime.
-electronVersion: "44.9.0"
+electronVersion: "44.9.1"
 
 # Native addons ship as prebuilt N-API binaries via extraResources — node-pty's
 # prebuilds/<platform>-<arch>/*.node below, whose node-gyp build/** output is

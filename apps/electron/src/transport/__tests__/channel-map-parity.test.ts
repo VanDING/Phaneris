@@ -24,6 +24,7 @@ type ApiToChannelMapKeys = Exclude<
   | 'isChannelAvailable'
   | 'getSystemWarnings' // reads env var set at startup — no IPC needed
   | 'relaunchApp' // direct IPC to main process — not through WS RPC
+  | 'completeStartup' // native startup handoff — direct IPC, never routed to a server
   | 'removeWorkspace' // direct IPC to main process — modifies local config
   | 'invokeOnServer' // direct IPC to main process — cross-server RPC
   | 'sendResourcesToRemote' // direct IPC to main process — main resolves remote url/token from workspace config (H-15)

@@ -855,13 +855,8 @@ html.dark[data-scenic] .fullscreen-overlay-background {
    LOGO MARK ENTRANCE
 
    The Phaneris mark draws itself: the outline traces first, the fill inks in
-   behind it. Used by the empty-session landing (components/chat/NewSessionLanding.tsx)
-   and by the app splash screen (components/SplashScreen.tsx), which differ only
-   in timing and in whether the mark keeps breathing afterwards.
-
-   Timings are per-caller through custom properties, because the two contexts want
-   opposite things: the landing answers a session switch and must feel prompt,
-   while the splash is the app's first impression and is allowed to take its time.
+   behind it. Used by the empty-session landing (components/chat/NewSessionLanding.tsx).
+   The native startup presentation has its own readiness-driven motion stylesheet.
 
      --logo-draw-duration   outline trace          (default 900ms)
      --logo-ink-delay       when the fill starts   (default 420ms)

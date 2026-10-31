@@ -27,3 +27,9 @@ https://github.com/material-extensions/vscode-material-icon-theme
 Thinking indicator: SVG Spinners, blocks-wave (MIT), Utkarsh Verma.
 https://github.com/n3r4zzurr0/svg-spinners
 Full license texts are bundled in resources/licenses/.
+
+Startup character background: React Bits Letter Glitch, Copyright (c) 2026
+David Haz. Adapted for startup readiness, pause and reduced motion.
+https://www.reactbits.dev/backgrounds/letter-glitch
+This component is licensed under MIT + Commons Clause, independently of the
+application's Apache-2.0 license. Full terms: resources/licenses/react-bits-LICENSE.md.
