@@ -14,7 +14,7 @@ import { useState, useCallback, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as ContextMenu from '@radix-ui/react-context-menu'
 import { Check, Copy, ExternalLink, FolderOpen, type LucideIcon } from 'lucide-react'
-import { PreviewHeader, PreviewHeaderBadge, type PreviewBadgeVariant } from '../ui/PreviewHeader'
+import { PreviewHeader, PreviewHeaderBadge, PreviewHeaderIconButton, type PreviewBadgeVariant } from '../ui/PreviewHeader'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -220,17 +220,12 @@ export function FullscreenOverlayBaseHeader({
   const rightActions = (
     <>
       {copyContent != null && (
-        <button
+        <PreviewHeaderIconButton
           onClick={handleCopy}
-          className={cn(
-            'p-1.5 rounded-shape-md bg-background shadow-minimal cursor-pointer',
-            'opacity-70 hover:opacity-100 transition-opacity',
-            'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-          )}
           title={copied ? t('common.copied') : t('common.copyAll')}
         >
           {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-        </button>
+        </PreviewHeaderIconButton>
       )}
       {headerActions}
     </>

@@ -90,7 +90,7 @@ async function connectToBrowserServer(endpoint: string): Promise<Browser> {
  * Bridged fallback: launch the browser server from Node, connect over WebSocket.
  * Only used when a direct launch fails (older Bun builds on Windows).
  */
-async function launchViaBrowserServer(
+export async function launchViaBrowserServer(
   channel: string | undefined,
   cause: unknown,
 ): Promise<{ browser: Browser; close: () => Promise<void> }> {

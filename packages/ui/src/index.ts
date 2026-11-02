@@ -404,6 +404,8 @@ export {
 export * from './components/chat/turn-utils'
 
 // Icons
+export { StaticMarkdownContext } from './components/markdown/static-render-context'
+export { PreviewHeaderIconButton } from './components/ui/PreviewHeader'
 export {
   FileKindIcon,
   Icon_Folder,

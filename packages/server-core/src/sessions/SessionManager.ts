@@ -6501,8 +6501,9 @@ initialSources: {
       managed.name = name
       managed.autoTitle = undefined
       managed.titleDeferred = false
-      this.broadcastPlanningChanged(managed.workspace.id)
       this.persistSession(managed)
+      await this.productRepository.flush(sessionId)
+      this.broadcastPlanningChanged(managed.workspace.id)
       // Notify renderer of the name change
       this.sendEvent({ type: 'title_generated', sessionId, title: name }, managed.workspace.id)
       // Workaround: Bun's fs.watch({ recursive: true }) on Linux doesn't track

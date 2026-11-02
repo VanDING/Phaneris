@@ -14,6 +14,8 @@ import { useSetAtom } from 'jotai'
 import { cn } from '@/lib/utils'
 import { X, ChevronLeft } from 'lucide-react'
 import { parseRouteToNavigationState } from '../../../shared/route-parser'
+import type { ViewRoute } from '../../../shared/routes'
+import { navigate } from '@/lib/navigate'
 import {
   activateForegroundSessionAtom,
   focusedSurfaceEntryIdAtom,
@@ -22,6 +24,7 @@ import {
 } from '@/atoms/workbench'
 import { useAppShellContext, AppShellProvider } from '@/context/AppShellContext'
 import { PanelHeaderCenterButton } from '@/components/ui/PanelHeaderCenterButton'
+import { PreviewHeaderIconButton } from '@phaneris/ui'
 import { MainContentPanel } from './MainContentPanel'
 import { BoundPanelContent, isBoundPanelType } from '@/components/content-panels/bound-panel-content'
 import { RADIUS_EDGE, RADIUS_INNER } from './panel-constants'
@@ -72,16 +75,18 @@ export function SurfaceSlot({
 
   // Build close button for PanelHeader (via context override)
   const closeButton = useMemo(() => {
-    if (!(isConversationGroup && entry.sessionId)) return undefined
+    if (!entry.sessionId || (!isConversationGroup && window.electronAPI.getRuntimeEnvironment?.() !== 'electron')) return undefined
     return (
-      <PanelHeaderCenterButton
-        icon={<X className="h-4 w-4" />}
-        onClick={() => removeForegroundSession(entry.sessionId!)}
+      <PreviewHeaderIconButton
+        onClick={() => {
+          if (!removeForegroundSession(entry.sessionId!)) navigate(entry.route.replace(/\/session\/.*$/, '') as ViewRoute, { skipAutoSelect: true })
+        }}
         onPointerDown={(event) => event.stopPropagation()}
         tooltip={t("common.close")}
-      />
+        aria-label={t("common.close")}
+      ><X className="h-4 w-4" /></PreviewHeaderIconButton>
     )
-  }, [entry.sessionId, isConversationGroup, removeForegroundSession, t])
+  }, [entry.sessionId, entry.route, isConversationGroup, removeForegroundSession, t])
 
   // Build back button for compact mode — closes the panel to reveal the session list.
   // Same PanelHeaderCenterButton style as X and share, just on the left side.

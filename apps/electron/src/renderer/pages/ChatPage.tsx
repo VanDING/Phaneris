@@ -9,13 +9,17 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { selectAtom } from 'jotai/utils'
-import { AlertCircle, Globe, Copy, RefreshCw, Link2Off, Info, Pencil } from 'lucide-react'
+import { AlertCircle, Globe, Copy, RefreshCw, Link2Off, Info, Pencil, MoreHorizontal, Send } from 'lucide-react'
 import { ChatDisplay, type ChatDisplayHandle } from '@/components/app-shell/ChatDisplay'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
 import { SessionMenu } from '@/components/app-shell/SessionMenu'
 import { CompactSessionMenu } from '@/components/app-shell/CompactSessionMenu'
 import { SessionInfoPopover } from '@/components/app-shell/SessionInfoPopover'
+import { InlineSessionTitle } from '@/components/chat/InlineSessionTitle'
 import { RenameDialog } from '@/components/ui/rename-dialog'
+import { collectShareMessages, type ShareMessage } from '@/lib/share-messages'
+import { PreviewHeaderIconButton } from '@phaneris/ui'
+const SharePanel = React.lazy(() => import('@/components/chat/SharePanel'))
 import { toast } from 'sonner'
 import { PanelHeaderCenterButton } from '@/components/ui/PanelHeaderCenterButton'
 import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -387,22 +391,31 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   // Use isAsyncOperationOngoing for shimmer effect (sharing, updating share, revoking, title regeneration)
   const isAsyncOperationOngoing = session?.isAsyncOperationOngoing || sessionMeta?.isAsyncOperationOngoing || false
 
-  // Rename dialog state
-  const [renameDialogOpen, setRenameDialogOpen] = React.useState(false)
+  const isDesktopClient = window.electronAPI.getRuntimeEnvironment?.() === 'electron'
+  const canShareImages = isDesktopClient && !!window.electronAPI.shareImages
+  const [editingTitle, setEditingTitle] = React.useState(false)
   const [renameName, setRenameName] = React.useState('')
-
-  // Session action handlers
-  const handleRename = React.useCallback(() => {
-    setRenameName(displayTitle)
-    setRenameDialogOpen(true)
-  }, [displayTitle])
-
-  const handleRenameSubmit = React.useCallback(() => {
-    if (renameName.trim() && renameName.trim() !== displayTitle) {
-      onRenameSession(sessionId, renameName.trim())
-    }
-    setRenameDialogOpen(false)
-  }, [sessionId, renameName, displayTitle, onRenameSession])
+  const [shareSnapshot, setShareSnapshot] = React.useState<{
+    sessionId: string; title: string; messages: ShareMessage[]; initialMessageId?: string
+  } | null>(null)
+  const shareOrigin = React.useRef<HTMLElement | null>(null)
+  const shareContext = React.useRef({ session, sessionId, displayTitle, messagesReady: messageLoadState.messagesReady })
+  shareContext.current = { session, sessionId, displayTitle, messagesReady: messageLoadState.messagesReady }
+  const handleRename = React.useCallback(() => { setRenameName(displayTitle); setEditingTitle(true) }, [displayTitle])
+  React.useEffect(() => { setEditingTitle(false); setShareSnapshot(null) }, [sessionId])
+  const openImageShare = React.useCallback((initialMessageId?: string) => {
+    const { session, sessionId, displayTitle, messagesReady } = shareContext.current
+    if (!session || !messagesReady) return
+    const messages = collectShareMessages(session.messages, !!session.isProcessing)
+    if (!messages.length) return
+    shareOrigin.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    setShareSnapshot({ sessionId, title: displayTitle, messages,
+      initialMessageId: messages.some(message => message.id === initialMessageId) ? initialMessageId : undefined })
+  }, [])
+  const closeImageShare = React.useCallback(() => {
+    setShareSnapshot(null)
+    requestAnimationFrame(() => shareOrigin.current?.focus({ preventScroll: true }))
+  }, [])
 
   const handleFlag = React.useCallback(() => {
     onFlagSession(sessionId)
@@ -568,7 +581,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   }, [isTaskOrchestrator, handleEditTask, t])
 
   const primaryHeaderAction = isCompactMode ? compactInfoButton : shareButton
-  const headerActions = editTaskButton ? (
+  const legacyHeaderActions = editTaskButton ? (
     <div className="flex items-center gap-1.5">
       {editTaskButton}
       {primaryHeaderAction}
@@ -579,7 +592,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   // Desktop uses Radix DropdownMenu via PanelHeader; compact mode uses a
   // vaul Drawer (CompactSessionMenu) so submenus aren't clipped by the
   // panel container query on narrow viewports.
-  const titleMenu = React.useMemo(() => (sessionMeta && !isCompactMode) ? (
+  const titleMenu = React.useMemo(() => (sessionMeta && (!isCompactMode || isDesktopClient)) ? (
     <SessionMenu
       item={sessionMeta}
       sessionStatuses={sessionStatuses ?? []}
@@ -598,6 +611,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   ) : null, [
     sessionMeta,
     isCompactMode,
+    isDesktopClient,
     sessionStatuses,
     labels,
     handleLabelsChange,
@@ -649,6 +663,35 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     handleDelete,
   ])
 
+  const inlineTitle = isDesktopClient ? (
+    <InlineSessionTitle title={displayTitle} editing={editingTitle} onEditingChange={setEditingTitle}
+      onRename={name => onRenameSession(sessionId, name)} />
+  ) : undefined
+  const legacyRenameDialog = !isDesktopClient && <RenameDialog open={editingTitle} onOpenChange={setEditingTitle}
+    title={t('chat.renameSession')} value={renameName} onValueChange={setRenameName} placeholder={t('chat.enterSessionName')}
+    onSubmit={() => {
+      if (renameName.trim() && renameName.trim() !== displayTitle) onRenameSession(sessionId, renameName.trim())
+      setEditingTitle(false)
+    }} />
+  const headerActions = isDesktopClient ? (
+    <div className="flex items-center gap-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <PreviewHeaderIconButton tooltip={t('chat.imageShare.more')} aria-label={t('chat.imageShare.more')}><MoreHorizontal className="w-4 h-4" /></PreviewHeaderIconButton>
+        </DropdownMenuTrigger>
+        <StyledDropdownMenuContent align="end" sideOffset={8} onCloseAutoFocus={event => { if (editingTitle) event.preventDefault() }}>
+          {titleMenu}
+          {isTaskOrchestrator && <><StyledDropdownMenuSeparator /><StyledDropdownMenuItem onClick={handleEditTask}><Pencil className="w-3.5 h-3.5" />{t('kanban.editTask')}</StyledDropdownMenuItem></>}
+          {isCompactMode && compactInfoButton}
+        </StyledDropdownMenuContent>
+      </DropdownMenu>
+      {canShareImages && <PreviewHeaderIconButton tooltip={t('chat.imageShare.share')} aria-label={t('chat.imageShare.share')}
+        disabled={!messageLoadState.messagesReady || !session?.messages.length} onClick={() => openImageShare()}>
+        <Send className="w-4 h-4" />
+      </PreviewHeaderIconButton>}
+    </div>
+  ) : legacyHeaderActions
+
   // Handle missing session - loading or deleted
   if (!session) {
     if (sessionMeta) {
@@ -669,8 +712,9 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
 
       return (
         <>
+          {legacyRenameDialog}
           <div className="h-full flex flex-col">
-            <PanelHeader title={displayTitle} titleMenu={titleMenu} compactTitleMenu={compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
+            <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? 2 : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
             <div className="flex-1 flex flex-col min-h-0">
               <ChatDisplay
                 ref={chatDisplayRef}
@@ -720,15 +764,6 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
               />
             </div>
           </div>
-          <RenameDialog
-            open={renameDialogOpen}
-            onOpenChange={setRenameDialogOpen}
-            title={t('chat.renameSession')}
-            value={renameName}
-            onValueChange={setRenameName}
-            onSubmit={handleRenameSubmit}
-            placeholder={t('chat.enterSessionName')}
-          />
         </>
       )
     }
@@ -747,12 +782,14 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
 
   return (
     <>
-      <div className="h-full flex flex-col">
-        <PanelHeader title={displayTitle} titleMenu={titleMenu} compactTitleMenu={compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
+      <div className="h-full flex flex-col relative">
+        <div className="h-full flex flex-col min-h-0" inert={shareSnapshot?.sessionId === sessionId ? true : undefined}>
+        <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? 2 : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
         <div className="flex-1 flex flex-col min-h-0">
           <ChatDisplay
             ref={chatDisplayRef}
             session={session}
+            onShareMessage={canShareImages ? openImageShare : undefined}
             onSendMessage={(message, attachments, skillSlugs) => {
               if (session) {
                 return onSendMessage(session.id, message, attachments, skillSlugs)
@@ -806,16 +843,14 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
             enableCompactModelPicker={!!isCompactMode}
           />
         </div>
+        </div>
+        {shareSnapshot?.sessionId === sessionId && (
+          <React.Suspense fallback={<div className="absolute inset-0 bg-background flex items-center justify-center text-label">{t('chat.imageShare.preparing')}</div>}>
+            <SharePanel {...shareSnapshot} onClose={closeImageShare} />
+          </React.Suspense>
+        )}
       </div>
-      <RenameDialog
-        open={renameDialogOpen}
-        onOpenChange={setRenameDialogOpen}
-        title={t('chat.renameSession')}
-        value={renameName}
-        onValueChange={setRenameName}
-        onSubmit={handleRenameSubmit}
-        placeholder={t('chat.enterSessionName')}
-      />
+      {legacyRenameDialog}
     </>
   )
 })

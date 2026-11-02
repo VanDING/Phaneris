@@ -64,6 +64,11 @@ function compactTitleInset(controlCount: number): number {
 export interface PanelHeaderProps {
   /** Header title (undefined hides with animation) */
   title?: string
+  /** Custom inline heading, used by session rename without changing other panels. */
+  titleContent?: React.ReactNode
+  titleAlignment?: 'center' | 'start'
+  /** Number of controls in the actions slot for compact title collision avoidance. */
+  actionCount?: number
   /** Optional badge element (e.g., agent badge) */
   badge?: React.ReactNode
   /** Optional secondary line rendered below the title (e.g., a bound session). */
@@ -114,6 +119,9 @@ export interface PanelHeaderProps {
  */
 export function PanelHeader({
   title,
+  titleContent: customTitleContent,
+  titleAlignment = 'center',
+  actionCount = 1,
   badge,
   subtitle,
   titleMenu,
@@ -221,13 +229,15 @@ export function PanelHeader({
     </DropdownMenu>
   ) : titleContent
 
-  const titleNode = (isCompactMode && compactTitleMenu) ? compactTitleMenu : desktopTitleNode
+  const titleNode = customTitleContent
+    ? <TitleHeading className="min-w-0 max-w-full">{customTitleContent}</TitleHeading>
+    : ((isCompactMode && compactTitleMenu) ? compactTitleMenu : desktopTitleNode)
 
   // Compact (mobile) layout puts the title in an absolute-positioned overlay.
   // The side insets are based on the actual number of control slots so a long
   // title truncates before the right-side action cluster instead of overlapping it.
   const compactLeadingControlCount = leadingAction ? 1 : 0
-  const compactTrailingControlCount = [centerButton, actions, resolvedExpandButton, resolvedTrailingAction].filter(Boolean).length
+  const compactTrailingControlCount = [centerButton, resolvedExpandButton, resolvedTrailingAction].filter(Boolean).length + (actions ? actionCount : 0)
   const compactTitleInsetStyle = isCompactMode
     ? {
         left: compactTitleInset(compactLeadingControlCount),
@@ -264,7 +274,7 @@ export function PanelHeader({
         </div>
       )}
       <div
-        className="absolute inset-y-0 flex items-center justify-center pointer-events-none"
+        className={cn("absolute inset-y-0 flex items-center pointer-events-none", titleAlignment === 'start' ? 'justify-start' : 'justify-center')}
         style={compactTitleInsetStyle}
       >
         <div className="max-w-full overflow-hidden pointer-events-auto">
@@ -292,7 +302,7 @@ export function PanelHeader({
         </div>
       )}
       <div className="flex-1 min-w-0 flex items-center select-none">
-        <div className={cn("max-w-full overflow-hidden", !leadingAction && "mx-auto")}>
+        <div className={cn("max-w-full overflow-hidden", !leadingAction && titleAlignment === 'center' && "mx-auto")}>
           {titleNode}
         </div>
       </div>

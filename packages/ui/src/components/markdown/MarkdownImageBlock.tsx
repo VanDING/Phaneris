@@ -22,6 +22,7 @@
  */
 
 import * as React from 'react'
+import { StaticMarkdownContext } from './static-render-context'
 import { Maximize2 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { CodeBlock } from './CodeBlock'
@@ -79,6 +80,7 @@ function detectImageRatio(src: string): Promise<number | null> {
 }
 
 export function MarkdownImageBlock({ code, className, onCreateRegionAnnotation: _onCreateRegionAnnotation }: MarkdownImageBlockProps) {
+  const staticRender = React.useContext(StaticMarkdownContext)
   const { t } = useTranslation()
   const { onReadFileDataUrl } = usePlatform()
 
@@ -219,6 +221,15 @@ export function MarkdownImageBlock({ code, className, onCreateRegionAnnotation: 
 
   if (!safeActiveItem) {
     return fallback
+  }
+
+  if (staticRender) {
+    return <div data-share-resource-state={error ? 'error' : items.every(item => contentCache[item.src]) ? 'ready' : 'loading'}>
+      {items.map(item => contentCache[item.src] && <figure key={item.src}>
+        <img src={contentCache[item.src]} alt={item.label ?? item.src.split('/').pop()} />
+        {item.label && <figcaption>{item.label}</figcaption>}
+      </figure>)}
+    </div>
   }
 
   return (

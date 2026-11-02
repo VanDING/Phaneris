@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { StaticMarkdownContext } from './static-render-context'
 import ReactMarkdown, { defaultUrlTransform, type Components } from 'react-markdown'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
@@ -636,6 +637,7 @@ export function Markdown({
   hideFirstMermaidExpand = true,
   disablePreviewBlocks,
 }: MarkdownProps) {
+  const staticRender = React.useContext(StaticMarkdownContext)
   // Get collapsible context if enabled
   const collapsibleContext = useCollapsibleMarkdown()
 
@@ -684,13 +686,15 @@ export function Markdown({
   const renderedContent = React.useMemo(() => (
       <ReactMarkdown
         remarkPlugins={remarkPlugins}
-        rehypePlugins={[rehypeKatex, rehypeRaw, rehypeFileLinks, [rehypeSanitize, markdownSanitizeSchema]]}
+        rehypePlugins={staticRender
+          ? [rehypeRaw, rehypeFileLinks, [rehypeSanitize, markdownSanitizeSchema], rehypeKatex]
+          : [rehypeKatex, rehypeRaw, rehypeFileLinks, [rehypeSanitize, markdownSanitizeSchema]]}
         components={components}
         urlTransform={markdownUrlTransform}
       >
         {processedContent}
       </ReactMarkdown>
-  ), [processedContent, remarkPlugins, components])
+  ), [processedContent, remarkPlugins, components, staticRender])
 
   return (
     <div className={cn('markdown-content', className)}>

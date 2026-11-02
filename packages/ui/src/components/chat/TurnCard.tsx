@@ -22,7 +22,6 @@ import {
   ListTodo,
   Pencil,
   FilePenLine,
-  GitBranch,
   CircleAlert,
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
@@ -103,12 +102,7 @@ import { useAnnotationCancelRestore } from '../annotations/use-annotation-cancel
 import { DocumentFormattedMarkdownOverlay } from '../overlay'
 import { AcceptPlanDropdown } from './AcceptPlanDropdown'
 import { CompactAcceptPlanDrawer } from './CompactAcceptPlanDrawer'
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  StyledDropdownMenuContent,
-  StyledDropdownMenuItem,
-} from '../ui/StyledDropdown'
+import { BranchDropdown, ResponseShareButton } from './ResponseActions'
 
 // ============================================================================
 // Utilities
@@ -341,6 +335,8 @@ export interface TurnCardProps {
   compactMode?: boolean
   /** Callback to branch the session from a specific message */
   onBranch?: (messageId: string, options?: { newPanel?: boolean }) => void
+  /** Desktop image sharing entry; omitted by other hosts. */
+  onShare?: (messageId: string) => void
   /** Open trusted evidence review for an unresolved durable tool operation. */
   onReviewRecovery?: (activity: ActivityItem) => void
   /** Callback to add an annotation to a response message */
@@ -1056,6 +1052,7 @@ export interface ResponseCardProps {
   compactMode?: boolean
   /** Callback to branch the session from this response */
   onBranch?: (options?: { newPanel?: boolean }) => void
+  onShare?: () => void
   /** Callback to add annotation from selected text */
   onAddAnnotation?: (messageId: string, annotation: AnnotationV1) => void
   /** Callback to remove persisted annotation */
@@ -1074,47 +1071,6 @@ export interface ResponseCardProps {
   annotationInteractionMode?: AnnotationInteractionMode
 }
 
-interface BranchDropdownProps {
-  onBranch: (options?: { newPanel?: boolean }) => void
-}
-
-function BranchDropdown({ onBranch }: BranchDropdownProps) {
-  const { t } = useTranslation()
-  const handleBranchClick = () => {
-    onBranch({ newPanel: true })
-  }
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          aria-label={t('chat.branchOptions')}
-          title={t('chat.branch')}
-          className={cn(
-            "p-1 rounded-shape-sm transition-colors select-none",
-            "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
-            "data-[state=open]:text-foreground data-[state=open]:bg-foreground/5",
-            "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          )}
-        >
-          <GitBranch className={SIZE_CONFIG.iconSize} />
-        </button>
-      </DropdownMenuTrigger>
-
-      <StyledDropdownMenuContent align="end" minWidth="min-w-64" sideOffset={6}>
-        <StyledDropdownMenuItem onClick={handleBranchClick} className="items-start py-2">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-body leading-tight">{t('chat.branchFromThisMessage')}</span>
-            <span className="max-w-[220px] whitespace-normal text-meta leading-tight text-muted-foreground">
-              {t('chat.branchFromThisMessageDescription')}
-            </span>
-          </div>
-        </StyledDropdownMenuItem>
-      </StyledDropdownMenuContent>
-    </DropdownMenu>
-  )
-}
 
 const MAX_HEIGHT = 540
 
@@ -1307,6 +1263,7 @@ export function ResponseCard({
   showAcceptPlan = true,
   compactMode = false,
   onBranch,
+  onShare,
   onAddAnnotation,
   onRemoveAnnotation,
   onUpdateAnnotation,
@@ -2220,6 +2177,7 @@ export function ResponseCard({
                     />
                   </div>
                 )}
+                <ResponseShareButton onClick={!isStreaming ? onShare : undefined} />
                 {onBranch && <BranchDropdown onBranch={onBranch} />}
               </div>
             </div>
@@ -2509,6 +2467,7 @@ export const TurnCard = React.memo(function TurnCard({
   animateResponse = false,
   compactMode = false,
   onBranch,
+  onShare,
   onReviewRecovery,
   onAddAnnotation,
   onRemoveAnnotation,
@@ -2948,6 +2907,7 @@ export const TurnCard = React.memo(function TurnCard({
                 onAcceptWithCompact={onAcceptPlanWithCompact}
                 isLastResponse={isLastResponse}
                 compactMode={compactMode}
+                onShare={isComplete && response?.messageId && onShare ? () => onShare(response.messageId!) : undefined}
                 onBranch={safeOnBranch && response?.messageId ? (options?: { newPanel?: boolean }) => safeOnBranch(response.messageId!, options) : undefined}
                 sendMessageKey={sendMessageKey}
                 hasActiveFollowUpAnnotations={hasActiveFollowUpAnnotations}
@@ -2981,6 +2941,7 @@ export const TurnCard = React.memo(function TurnCard({
             onAcceptWithCompact={onAcceptPlanWithCompact}
             isLastResponse={isLastResponse}
             compactMode={compactMode}
+            onShare={isComplete && response?.messageId && onShare ? () => onShare(response.messageId!) : undefined}
             onBranch={safeOnBranch && response?.messageId ? (options?: { newPanel?: boolean }) => safeOnBranch(response.messageId!, options) : undefined}
             sendMessageKey={sendMessageKey}
             hasActiveFollowUpAnnotations={hasActiveFollowUpAnnotations}
@@ -3013,6 +2974,7 @@ export const TurnCard = React.memo(function TurnCard({
 
   // Re-render if compactMode changed (affects ResponseCard footer rendering)
   if (prev.compactMode !== next.compactMode) return false
+  if (prev.onShare !== next.onShare) return false
 
   // Re-render if annotation interaction mode changed (interactive vs tooltip-only)
   if (prev.annotationInteractionMode !== next.annotationInteractionMode) return false

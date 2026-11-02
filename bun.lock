@@ -224,6 +224,7 @@
         "unist-util-visit": "^5.1.0",
         "vaul": "^1.1.2",
         "ws": "^8.22.0",
+        "zod": "^4.6.7",
       },
       "devDependencies": {
         "@tanstack/table-core": "^9.2.4",

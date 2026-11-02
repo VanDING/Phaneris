@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { StaticMarkdownContext } from './static-render-context'
 import { useTranslation } from 'react-i18next'
 import { codeHighlightKey, requestCodeHighlight } from './code-highlight'
 import { cn } from '../../lib/utils'
@@ -43,6 +44,7 @@ const LANGUAGE_ALIASES: Record<string, string> = {
  * Lazy-loads highlighting and caches results for performance.
  */
 export function CodeBlock({ code, language = 'text', className, mode = 'full', forcedTheme }: CodeBlockProps) {
+  const staticRender = React.useContext(StaticMarkdownContext)
   const { t } = useTranslation()
   const [highlight, setHighlight] = React.useState<{ key: string; html: string | null } | null>(null)
   const elementRef = React.useRef<HTMLElement | null>(null)
@@ -69,7 +71,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
     const start = () => { cancel = requestCodeHighlight(code, resolvedLang, theme, html => setHighlight({ key, html }), revision) }
     // Text is readable immediately. Expensive work begins only near the viewport,
     // including nested response panes and panels temporarily hidden with CSS.
-    if (typeof IntersectionObserver === 'undefined' || !elementRef.current) {
+    if (staticRender || typeof IntersectionObserver === 'undefined' || !elementRef.current) {
       start()
       return () => cancel?.()
     }
@@ -81,7 +83,13 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
     }, { rootMargin: '200px' })
     observer.observe(elementRef.current)
     return () => { observer.disconnect(); cancel?.() }
-  }, [code, resolvedLang, theme, revision, key, mode])
+  }, [code, resolvedLang, theme, revision, key, mode, staticRender])
+
+  React.useLayoutEffect(() => {
+    if (staticRender && elementRef.current) {
+      elementRef.current.dataset.shareResourceState = mode === 'terminal' || highlight?.key === key ? 'ready' : 'loading'
+    }
+  }, [staticRender, highlight, key, mode])
 
   const handleCopy = React.useCallback(async () => {
     try {

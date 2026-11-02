@@ -9,6 +9,7 @@ import { createHash, randomUUID } from 'crypto'
 import { spawnSync } from 'child_process'
 import { hostname, homedir } from 'os'
 import { join, resolve } from 'path'
+import { registerShareImageIpc } from './share-image'
 
 // Product identity — single source of truth is phaneris.identity.json at the
 // repository root; these constants are generated from it. Never inline the app
@@ -634,6 +635,13 @@ app.whenReady().then(async () => {
   try {
     // Initialize window manager
     windowManager = new WindowManager()
+    registerShareImageIpc({
+      trusted: isTrustedWindowSender,
+      workspace: webContentsId => {
+        const id = windowManager?.getWorkspaceForWindow(webContentsId)
+        return id ? getWorkspaceByNameOrId(id) : null
+      },
+    })
 
     // Create the application menu (needs windowManager for New Window action)
     createApplicationMenu(windowManager)

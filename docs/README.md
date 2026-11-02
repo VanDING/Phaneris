@@ -144,6 +144,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | Document | Status | Scope |
 | --- | --- | --- |
 | [Pi SDK 1.2.0 upgrade](verification/pi-sdk-1.2.0-upgrade.md) | Implemented; Windows kernel verification passed; full-suite baseline exceptions recorded | Exact SDK graph, codemode result compatibility, real 1.1.0 history recovery, bundled runtime hashes and verification limits. |
+| [Session title and image sharing](verification/session-image-sharing.md) | Implemented; Windows client and browser verified | Inline rename, shared header controls, per-message image export, memory-only preview/copy and explicit session-local save. |
 | [Theme and frontend visual audit failure matrix](verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md) | Written before audit probes; audit evidence recorded | Independent theme/CSS/interaction checks and remaining real-host E2E. [Reproduction evidence](verification/results/frontend-theme-visual-audit-2026-10-12/README.md). |
 | [Scale & theme consistency failure matrix](verification/scale-theme-consistency-failure-matrix.md) | Written before implementation; evidence status per row | 20 failure modes for scale tiers, theme radius/density, hairlines, masks, motion collapse, IME and sash guards. |
 | [State matrix](verification/state-matrix.md) | Maintained | Five states × ten surfaces; recovery path required for every cell. |

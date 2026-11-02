@@ -135,6 +135,7 @@ function getTurnKey(turn: Turn): string {
 }
 
 interface ChatDisplayProps {
+  onShareMessage?: (messageId: string) => void
   session: Session | null
   onSendMessage: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void | Promise<boolean | void>
   onOpenFile: (path: string) => void
@@ -296,6 +297,7 @@ export interface ChatDisplayHandle {
  * Shows empty state when no session is selected
  */
 export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>(function ChatDisplay({
+  onShareMessage,
   session,
   onSendMessage,
   onOpenFile,
@@ -1675,6 +1677,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                         )}
                       >
                       <TurnCard
+                        onShare={onShareMessage}
                         sessionId={session.id}
                         sessionFolderPath={session.sessionFolderPath}
                         hasActiveFollowUpAnnotations={pendingFollowUpAnnotations.length > 0}

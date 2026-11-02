@@ -236,6 +236,11 @@ api.respondConfirmDialog = (id, response) =>
   ipcRenderer.invoke('__dialog:respondConfirm', { id, response }) as Promise<{ ok: boolean }>
 
 ;(api as ElectronAPI).getRuntimeEnvironment = (): 'electron' | 'web' => 'electron'
+;(api as ElectronAPI).shareImages = {
+  copy: base64 => ipcRenderer.invoke('__shareImage:copy', base64),
+  save: request => ipcRenderer.invoke('__shareImage:save', request),
+  readFont: url => ipcRenderer.invoke('__shareImage:font', url),
+}
 
 // ---------------------------------------------------------------------------
 // Transport connection state logging (for remote connections)

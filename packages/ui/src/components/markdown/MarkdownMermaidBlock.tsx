@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { StaticMarkdownContext } from './static-render-context'
 import { Maximize2 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { CodeBlock } from './CodeBlock'
@@ -58,6 +59,7 @@ interface MarkdownMermaidBlockProps {
 }
 
 export function MarkdownMermaidBlock({ code, className, showExpandButton = true, tapToOpen = true, minHeight }: MarkdownMermaidBlockProps) {
+  const staticRender = React.useContext(StaticMarkdownContext)
   const { t } = useTranslation()
   // Mermaid + its layout engine are heavy (elkjs alone is >1 MB). Keep them
   // out of the initial renderer graph and render the diagram after the block
@@ -178,6 +180,7 @@ export function MarkdownMermaidBlock({ code, className, showExpandButton = true,
 
   // Fallback: if SVG is null (should be caught by error above, but just in case)
   if (!svg) {
+    if (staticRender) return <div data-share-resource-state="loading"><CodeBlock code={code} language="mermaid" mode="full" className={className} /></div>
     return <CodeBlock code={code} language="mermaid" mode="full" className={className} />
   }
 
@@ -191,7 +194,7 @@ export function MarkdownMermaidBlock({ code, className, showExpandButton = true,
   return (
     <>
       {/* Wrapper with group class so the expand button shows on hover */}
-      <div className={cn('relative group', className)} style={minHeightStyle}>
+      <div className={cn('relative group', className)} style={minHeightStyle} data-share-resource-state={staticRender ? 'ready' : undefined}>
         {/* Expand button — matches code block expand button style (TurnCard pattern).
             Hidden when showExpandButton is false (first block in message, where
             TurnCard's own fullscreen button occupies the same top-right position). */}

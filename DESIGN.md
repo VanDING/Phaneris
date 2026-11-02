@@ -426,6 +426,63 @@ contract, `text-` + a Tailwind scale word is drift.
 - **Panel chrome** — one chrome row per panel, ≤75px from the panel top to its
   content. Filters share the view-tab row; a second bar has to earn its height.
 
+### Electron session header
+
+- The title is an inline edit trigger. Enter or blur commits a trimmed,
+  non-empty title; Escape cancels. IME composition must finish before Enter can
+  commit. There is no separate pencil button or rename dialog in Electron.
+- Keep **More → Share → Close** on the right, including a single primary
+  session. Share uses the paper-airplane `Send` glyph. All three use the same
+  `PreviewHeaderIconButton` as fullscreen previews, including its surface,
+  elevation, focus treatment and tooltip. Close removes the open view and
+  preserves the session and its draft.
+
+### Session image sharing
+
+This Electron-only flow formats existing messages locally; it does not ask a
+model to rewrite or summarize them. The header entry starts with no selection;
+an answer's Share action preselects that completed answer. Questions and answers
+remain independently selectable, in source order, with visible omission markers
+between non-contiguous selections. Activities and unfinished answers do not
+become share content.
+
+The export is a fixed light document using the Default palette, neutral question
+surfaces and light syntax highlighting, even when the app is dark. It is laid
+out at **720 CSS px** and rendered at **2×** for a **1440px-wide PNG**. Page
+padding is **36px top / 40px sides / 26px bottom**. Preview scaling fits this
+document into the available panel; it must not reflow or change the export.
+
+The approved document scale is scoped to `.share-page` in `share-images.css`.
+It is independent of interface density, `--ui-scale` and `--reading-scale`, and
+does not add tiers to the app's canonical frontmatter scale:
+
+| Scoped token | CSS size | Use |
+| --- | --- | --- |
+| `--share-type-meta` | 11px | Role labels, counts and page metadata |
+| `--share-type-code` | 12px | Code and the brand wordmark |
+| `--share-type-table` | 13px | Table content |
+| `--share-type-question` | 15px | Question text |
+| `--share-type-body` | 16px | Answer prose |
+| `--share-type-heading` | 18px | Content headings |
+| `--share-type-title` | 24px | Session title |
+
+Use the bundled Inter Variable / Noto Sans SC Variable stack and JetBrains Mono
+Variable for code. Prose has a 1.85 line height; content headings use 1.55 and
+the session title uses 1.5. Static exports show complete rich content without
+interactive buttons, scroll fades or entrance motion. Keep headings with their
+next block, repeat table headers across row splits, and preserve code lines and
+oversized rich blocks across continuations.
+
+Automatic layout splits documents taller than **12,000 output px** using a
+**4,800 output px** page budget. Single-image layout has a **24,000 output px**
+height limit; any export has a **32-page** limit. These are output-pixel limits,
+not CSS-pixel dimensions.
+
+Preview and Copy retain image data in memory. Copy takes the page most visible
+in the preview; Save explicitly keeps every page in reading order under the
+session's `exports/shares` directory. Identical image batches reuse their saved
+export rather than creating duplicate files.
+
 ## Rules and their gates
 
 Every rule above that can be checked mechanically is checked. This table is the

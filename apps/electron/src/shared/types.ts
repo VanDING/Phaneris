@@ -307,6 +307,12 @@ export interface PluginsListResult {
 }
 
 export interface ElectronAPI {
+  /** Native-only image sharing. Preview/Copy do not create session files. */
+  shareImages?: {
+    copy(base64: string): Promise<void>
+    save(request: import('./share-image').ShareImageSaveRequest): Promise<import('./share-image').ShareImageSaveResult>
+    readFont(url: string): Promise<string>
+  }
   createTerminal(options: TerminalCreateOptions): Promise<TerminalInfo>
   getTerminalForWorkspace(workspaceId: string): Promise<TerminalInfo | null>
   writeTerminal(id: string, data: string): Promise<void>

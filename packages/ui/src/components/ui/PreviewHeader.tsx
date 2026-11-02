@@ -12,6 +12,22 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { X, type LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip'
+
+/** The control shared by fullscreen previews and session headers. */
+export const PreviewHeaderIconButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement> & { tooltip?: React.ReactNode }>(
+  ({ className, type = 'button', tooltip, ...props }, ref) => {
+    const button = <button ref={ref} type={type} className={cn(
+      'craft-icon-button p-1.5 rounded-shape-md bg-background shadow-minimal cursor-pointer',
+      'opacity-70 hover:opacity-100 transition-opacity',
+      'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+      'disabled:pointer-events-none disabled:opacity-50',
+      className,
+    )} {...props} />
+    return tooltip ? <Tooltip><TooltipTrigger asChild>{button}</TooltipTrigger><TooltipContent>{tooltip}</TooltipContent></Tooltip> : button
+  },
+)
+PreviewHeaderIconButton.displayName = 'PreviewHeaderIconButton'
 
 /**
  * Badge variants using semantic colors
@@ -151,17 +167,13 @@ export function PreviewHeader({
       <div className="flex-1 min-w-[70px] flex items-center gap-2 justify-end" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
         {rightActions}
         {onClose && (
-          <button
+          <PreviewHeaderIconButton
             onClick={onClose}
-            className={cn(
-              'p-1.5 rounded-shape-md bg-background shadow-minimal cursor-pointer',
-              'opacity-70 hover:opacity-100 transition-opacity',
-              'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-            )}
             title={t('common.closeEsc')}
+            aria-label={t('common.closeEsc')}
           >
             <X className="w-4 h-4" />
-          </button>
+          </PreviewHeaderIconButton>
         )}
       </div>
     </div>
