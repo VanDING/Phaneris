@@ -1,8 +1,6 @@
-# Build artifacts for DMG packaging
-vendor/
-# The bundled startup effect is application source, not a packaging artifact.
-!src/renderer/components/startup/vendor/
-!src/renderer/components/startup/vendor/*
+# Build artifacts for DMG packaging. Anchored so nested source directories named
+# `vendor` (e.g. the vendored startup component) are tracked normally.
+/vendor/
 packages/
 release/
 node_modules/@anthropic-ai/

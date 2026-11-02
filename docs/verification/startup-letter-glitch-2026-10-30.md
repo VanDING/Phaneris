@@ -60,7 +60,7 @@ bun run scripts/verification/startup-feedback-workflow.ts
 - 采用第二版演示的 `#4c296f`，7 个字母直接占用背景 atlas 的中央单元；字号、字重、间距、背景配色与参数不变。
 - 呼吸周期 3.2 秒，透明度 0.30–0.64；指针、热度和随机替换不改写字母。应用就绪后淡出字样，200 ms 后开始原有 Logo 动画，同一 canvas 保留。
 - WebGL 降级显示居中单词，减少动态效果时停止呼吸并立即清除就绪字样。
-- 修正 `apps/electron/.gitignore` 的通用 `vendor/` 规则误排除启动源码的问题，仅为启动组件目录设置例外，并保留第三方许可与来源说明。
+- 修正 `apps/electron/.gitignore` 的通用 `vendor/` 规则误排除启动源码的问题；合并远程修复后将 DMG 的忽略规则限定为应用根目录 `/vendor/`，并保留启动源码的第三方许可与来源说明。
 - Windows 原生启动工作流 13 项通过，覆盖真实深色工作区、白色首次引导、连续背景、呼吸与颜色、减少动态效果、WebGL 降级和原有窗口生命周期。Electron/脚本类型检查、修改文件 ESLint、生产构建、资源校验及视觉、尺寸、字体、分发、文档检查通过。
 
 本次产物：`.cache/verification/startup-feedback-ze3Ktm/`，包含 `manifest.json`、`build-hashes.json`、`feedback.json`、`loading-word.json`、截图和原生诊断日志。`loading-word.json` 从实际 WebGL 程序读取单词映射、颜色、居中偏差和呼吸样本，没有向产品注入测试接口。
