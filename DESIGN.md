@@ -439,21 +439,29 @@ contract, `text-` + a Tailwind scale word is drift.
 
 ### Session image sharing
 
-This Electron-only flow formats existing messages locally; it does not ask a
-model to rewrite or summarize them. The header entry starts with no selection;
-an answer's Share action preselects that completed answer. Questions and answers
-remain independently selectable, in source order, with visible omission markers
-between non-contiguous selections. Activities and unfinished answers do not
-become share content.
+This Electron-only flow formats existing finalized messages locally. The header
+entry enables selection in the original transcript with no initial selection;
+an answer's entry preselects only that final answer. Questions and final answers
+remain independently selectable. Activities, attachments as independent messages,
+and unfinished answers are not selectable. Selection is by message ID across
+history, including eligible messages outside mounted rows. The preview is a frozen
+snapshot and does not acquire later streamed content.
 
-The export is a fixed light document using the Default palette, neutral question
-surfaces and light syntax highlighting, even when the app is dark. Its layout
-uses a **720 CSS px short edge**, rendered at **2×**. Page padding is **36px
-top / 40px sides / 26px bottom**. Preview scaling fits the page into the
-available panel; it must not reflow or change the export.
+Selection uses one LEFT gutter for questions and answers. The checkbox sits
+outside the original message surface, aligned along the same vertical axis.
+Selected content receives a restrained neutral fill; there is no ink outline
+around the bubble or response card. Original rich content and component state
+stay mounted. Links, text selection and code-copy controls keep their own actions.
+The bottom input surface is temporarily covered by Select all / Clear / Cancel /
+Image preview, preserving the composer, draft and reading position. Back from
+preview restores selection and export settings; Close ends sharing and restores
+entry focus. Escape returns from preview, then exits selection.
 
-The page is available in **A4, 3:4, 9:16 and 1:1**, in **portrait or landscape**.
-The 720 px short edge is fixed; the long edge follows the ratio:
+The export is a fixed light document using Default colours, Inter Variable /
+Noto Sans SC Variable, and JetBrains Mono Variable for code. App density and
+reading scale do not change exported geometry. Headings use the same font family
+as prose. Every page has a **720 CSS px short edge**, rendered at **2×**, with
+padding **36px top / 40px sides / 26px bottom**.
 
 | Ratio | Portrait CSS | Portrait PNG | Landscape CSS | Landscape PNG |
 | --- | --- | --- | --- | --- |
@@ -462,66 +470,58 @@ The 720 px short edge is fixed; the long edge follows the ratio:
 | 9:16 | 720 × 1280 | 1440 × 2560 | 1280 × 720 | 2560 × 1440 |
 | 1:1 | 720 × 720 | 1440 × 1440 | 720 × 720 | 1440 × 1440 |
 
-A4 portrait is the initial page format. The UI does not print “default” on the
-tile; the selected state carries that meaning.
+A4 portrait is initially selected. **Joined pages** paginates at the chosen page
+size, then joins every page left-to-right into ONE PNG without resizing the
+pages. **Long image** is a continuous 720 CSS px wide document, also ONE PNG.
+Ratio and orientation describe an individual page, not the overall joined image;
+these controls remain visible but disabled for long images. All settings are
+flat and expanded. Ratio, orientation and metadata options reuse the product's
+outline Button and its control radius; do not introduce square option boxes.
+Copy/Save feedback uses the existing unified toaster. Wide panels place settings beside preview; below 680px of
+container width they form a grid above it.
 
-The approved document scale is scoped to `.share-page` in `share-images.css`.
-It is independent of interface density, `--ui-scale` and `--reading-scale`, and
-does not add tiers to the app's canonical frontmatter scale:
+The document typography is scoped to `.share-page`, independent of the app scale:
 
-| Scoped token | CSS size | Use |
+| Token | CSS size | Use |
 | --- | --- | --- |
-| `--share-type-meta` | 11px | Role labels, timestamps, model/date and page metadata |
-| `--share-type-code` | 12px | Code and the brand wordmark |
-| `--share-type-table` | 13px | Table content |
-| `--share-type-question` | 15px | Question text |
+| `--share-type-meta` | 11px | Roles, timestamps, model/date and folios |
+| `--share-type-code` | 12px | Code and brand wordmark |
+| `--share-type-table` | 13px | Tables |
+| `--share-type-question` | 15px | Questions |
 | `--share-type-body` | 16px | Answer prose |
 | `--share-type-heading` | 18px | Content headings |
 | `--share-type-title` | 24px | Session title |
 
-Use the bundled Inter Variable / Noto Sans SC Variable stack and JetBrains Mono
-Variable for code. Prose has a 1.7 line height; content headings use 1.55 and
-the session title uses 1.5. Static exports show complete rich content without
-interactive buttons, scroll fades or entrance motion. Keep headings with their
-next block, repeat table headers across row splits, and preserve code lines and
-oversized rich blocks across continuations.
+Prose line height is **1.6**, content headings **1.55**, title **1.4**. Normal
+paginated blocks use **12px** separation and message starts **24px**. First/last
+child margins do not add duplicate block whitespace. Header bottom padding is
+**12px**, followed by **16px** separation; table cells have **6px vertical / 8px
+horizontal** padding. Keep headings with their following block, repeat table
+headers and preserve all code lines/oversized rich blocks across continuations.
 
-The first page has a fixed composition. Top-left carries the Phaneris mark and
-wordmark, top-right “Conversation excerpt”; below the rule are the session title
-and a single model · date line. The date is the session creation date, not the
-export date. There is no message count, no session-label row, no template picker
-and no model in the footer. The footer carries only “Exported by Phaneris” and
-the folio; the folio is `01` on a one-page export and `01 / 03` on a multipage
-export.
+Page one carries the mark, wordmark and excerpt label, followed by the session
+title and model · session-creation-date line. Its footer carries the export
+credit and folio. Continuation pages omit the header and export credit, keeping
+only the folio. There is no template picker or rewritten/summarized content.
 
-Continuation pages omit the header entirely: no brand, excerpt, title or
-model/date line. They start with the continued content and carry only the folio
-in the footer. The header is page-one furniture, not a running header; repeating
-it steals a quarter of every page.
+Preview shows the joined result with horizontal/vertical scrolling. Fit page
+fits an individual page's width rather than shrinking the entire strip; Actual
+size shows original PNG pixels. Neither affects the export. PNG preparation is
+part of preview, with quiet disabled export buttons until ready and an inline
+retry on failure. Copy and Save reuse the exact same prepared PNG. Scrolling
+never changes the copied content. No separate progress screen or per-page
+processing UI is shown.
 
-**Split** always paginates at the selected page height, from the first page; the
-old 12,000 output px trigger is retired. One page may not exceed **4,800 output
-px** and an export may not exceed **32 pages**. **Single image** is one
-continuous page **720 CSS px / 1440 PNG px** wide with a **24,000 output px**
-height limit. Single image ignores page ratio and direction; those controls are
-disabled rather than silently ineffective.
+Limits apply before canvas allocation and native image decoding: output width
+**1440–24,000px**, height **1–24,000px**, total area **34,560,000 pixels**, encoded
+PNG **12 MiB**. Pagination also retains **32 pages** and **4,800 output px per-page
+height** limits. Oversized output asks the user to select less content or change
+the layout; it is never silently truncated or downscaled.
 
-Settings use one selection language everywhere: bordered tile, ink selected
-state and a right-side check. Page ratio, page direction and the four metadata
-tags (timestamp, date, page number, model) are all the same tile; there are no
-checkboxes in settings. Tags show their titles only; the values are written into
-the page. A4 is selected initially but is not labelled “default”.
-
-The selection surface is 760 px wide, flat rows with a hairline and a neutral
-selected fill, never tinted cards. Type is 13 px title, 12 px message body, 11 px
-role, 10 px time; headings inside a row are flattened to 12 px. Rows clamp at
-four lines, expose a rich-content summary and an expand control. Both phases use
-a 56 px bottom action bar; the header carries only back, title and step.
-
-Preview and Copy retain image data in memory. Copy takes the page most visible
-in the preview; Save explicitly keeps every page in reading order under the
-session's `exports/shares` directory. Identical image batches reuse their saved
-export rather than creating duplicate files.
+Preview and Copy retain image data only in memory. Save explicitly retains the
+single PNG under the session's `exports/shares` directory; identical output reuses
+its saved export. Native IPC keeps trusted-frame, local-workspace, path and
+symlink checks.
 
 ## Rules and their gates
 

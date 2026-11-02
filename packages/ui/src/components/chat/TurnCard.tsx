@@ -103,6 +103,7 @@ import { DocumentFormattedMarkdownOverlay } from '../overlay'
 import { AcceptPlanDropdown } from './AcceptPlanDropdown'
 import { CompactAcceptPlanDrawer } from './CompactAcceptPlanDrawer'
 import { BranchDropdown, ResponseShareButton } from './ResponseActions'
+import { ShareSelectableMessage } from './ShareSelection'
 
 // ============================================================================
 // Utilities
@@ -2047,7 +2048,8 @@ export function ResponseCard({
 
     return (
       <>
-        <div className="bg-background shadow-minimal rounded-shape-lg overflow-hidden relative group">
+        <ShareSelectableMessage messageId={messageId} messageRole="assistant" content={text}
+          className="bg-background shadow-minimal rounded-shape-lg overflow-hidden relative group">
           {/* Fullscreen button - desktop only; compact mode keeps message chrome minimal */}
           {!compactMode && (
           <button
@@ -2202,7 +2204,7 @@ export function ResponseCard({
               />
             </div>
           )}
-        </div>
+        </ShareSelectableMessage>
 
         {/* Fullscreen overlay for reading/annotating response and plan content. */}
         <DocumentFormattedMarkdownOverlay

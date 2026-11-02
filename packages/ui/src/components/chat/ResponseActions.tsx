@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next'
+import { useContext } from 'react'
+import { ShareSelectionContext } from './ShareSelection'
 import { GitBranch, Send } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip'
@@ -54,10 +56,12 @@ export function BranchDropdown({ onBranch }: BranchDropdownProps) {
 
 export function ResponseShareButton({ onClick }: { onClick?: () => void }) {
   const { t } = useTranslation()
+  const selection = useContext(ShareSelectionContext)
   if (!onClick) return null
   return <Tooltip><TooltipTrigger asChild>
     <button type="button" onClick={onClick} aria-label={t('chat.imageShare.share')}
-      className="craft-icon-button p-1 rounded-shape-sm text-muted-foreground hover:text-foreground">
+      disabled={!!selection} aria-hidden={selection ? true : undefined} tabIndex={selection ? -1 : undefined}
+      className={cn('craft-icon-button p-1 rounded-shape-sm text-muted-foreground hover:text-foreground', selection && 'invisible')}>
       <Send className="w-3.5 h-3.5" />
     </button>
   </TooltipTrigger><TooltipContent>{t('chat.imageShare.share')}</TooltipContent></Tooltip>

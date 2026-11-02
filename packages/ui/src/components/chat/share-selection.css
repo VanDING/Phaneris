@@ -1,0 +1,26 @@
+.share-selection-shell, .share-selection-content { display: contents; }
+.share-selection-shell.is-selectable {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  width: 100%;
+}
+.is-selectable > .share-selection-content {
+  display: flex;
+  min-width: 0;
+  padding: 12px;
+  border-radius: var(--shape-lg);
+}
+.is-selectable[data-share-selected="true"] > .share-selection-content { background: var(--secondary); }
+.is-selectable[data-share-message-role="user"] > .share-selection-content { justify-content: flex-end; }
+.is-selectable[data-share-message-role="assistant"] > .share-selection-content > div { width: 100%; min-width: 0; background: transparent; box-shadow: none; }
+.share-selection-gutter { display: flex; justify-content: center; padding-top: 24px; }
+.share-inline-check {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.share-inline-check:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }

@@ -52,6 +52,7 @@ export function MessageBubble({
   if (message.role === 'user') {
     return (
       <UserMessageBubble
+        messageId={message.id}
         content={message.content}
         attachments={message.attachments}
         badges={message.badges}

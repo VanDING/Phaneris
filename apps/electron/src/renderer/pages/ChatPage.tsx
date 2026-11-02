@@ -18,7 +18,10 @@ import { SessionInfoPopover } from '@/components/app-shell/SessionInfoPopover'
 import { InlineSessionTitle } from '@/components/chat/InlineSessionTitle'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { collectShareMessages, type ShareMessage } from '@/lib/share-messages'
-import { PreviewHeaderIconButton } from '@phaneris/ui'
+import { PreviewHeaderIconButton, ShareSelectionContext } from '@phaneris/ui'
+import { Button } from '@/components/ui/button'
+import { DEFAULT_SHARE_OPTIONS, type ShareOptions } from '../../shared/share-image'
+import '@/components/chat/share-images.css'
 const SharePanel = React.lazy(() => import('@/components/chat/SharePanel'))
 import { toast } from 'sonner'
 import { PanelHeaderCenterButton } from '@/components/ui/PanelHeaderCenterButton'
@@ -400,6 +403,30 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     sessionId: string; title: string; messages: ShareMessage[]; initialMessageId?: string
     modelName?: string; createdAt: number
   } | null>(null)
+  const [shareSelected, setShareSelected] = React.useState<ReadonlySet<string>>(new Set())
+  const [sharePreview, setSharePreview] = React.useState(false)
+  const [shareOptions, setShareOptions] = React.useState<ShareOptions>(DEFAULT_SHARE_OPTIONS)
+  const shareRoot = React.useRef<HTMLDivElement>(null)
+  const selectedShareMessages = React.useMemo(() => shareSnapshot?.messages.filter(message => shareSelected.has(message.id)) ?? [], [shareSnapshot, shareSelected])
+  const shareSelection = React.useMemo(() => shareSnapshot ? {
+    eligible: new Set(shareSnapshot.messages.map(message => message.id)), selected: shareSelected,
+    onToggle: (id: string) => setShareSelected(previous => {
+      const next = new Set(previous)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    }),
+  } : null, [shareSnapshot, shareSelected])
+  React.useEffect(() => {
+    if (!shareSnapshot || sharePreview) return
+    const frame = requestAnimationFrame(() => {
+      const target = shareSnapshot.initialMessageId
+        ? shareRoot.current?.querySelector<HTMLInputElement>(`[data-share-select-id="${CSS.escape(shareSnapshot.initialMessageId)}"] input`)
+        : shareRoot.current?.querySelector<HTMLButtonElement>('.share-selection-actions button')
+      target?.focus({ preventScroll: true })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [shareSnapshot, sharePreview])
   const shareOrigin = React.useRef<HTMLElement | null>(null)
   const shareModelName = React.useMemo(() => {
     if (!effectiveModel) return undefined
@@ -422,7 +449,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     modelName: shareModelName, createdAt: session?.createdAt ?? sessionMeta?.createdAt ?? Date.now(),
   }
   const handleRename = React.useCallback(() => { setRenameName(displayTitle); setEditingTitle(true) }, [displayTitle])
-  React.useEffect(() => { setEditingTitle(false); setShareSnapshot(null) }, [sessionId])
+  React.useEffect(() => { setEditingTitle(false); setShareSnapshot(null); setSharePreview(false); setShareSelected(new Set()) }, [sessionId])
   const openImageShare = React.useCallback((initialMessageId?: string) => {
     const { session, sessionId, displayTitle, messagesReady, modelName, createdAt } = shareContext.current
     if (!session || !messagesReady) return
@@ -431,11 +458,26 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     shareOrigin.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
     setShareSnapshot({ sessionId, title: displayTitle, messages, modelName, createdAt,
       initialMessageId: messages.some(message => message.id === initialMessageId) ? initialMessageId : undefined })
+    setShareSelected(new Set(messages.some(message => message.id === initialMessageId) ? [initialMessageId!] : []))
+    setSharePreview(false)
+    setShareOptions(DEFAULT_SHARE_OPTIONS)
   }, [])
   const closeImageShare = React.useCallback(() => {
     setShareSnapshot(null)
+    setSharePreview(false)
+    setShareSelected(new Set())
     requestAnimationFrame(() => shareOrigin.current?.focus({ preventScroll: true }))
   }, [])
+  React.useEffect(() => {
+    if (!shareSnapshot || sharePreview) return
+    const node = shareRoot.current
+    if (!node) return
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !event.defaultPrevented && !event.isComposing) { event.preventDefault(); closeImageShare() }
+    }
+    node.addEventListener('keydown', escape)
+    return () => node.removeEventListener('keydown', escape)
+  }, [shareSnapshot, sharePreview, closeImageShare])
 
   const handleFlag = React.useCallback(() => {
     onFlagSession(sessionId)
@@ -705,8 +747,8 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
           {isCompactMode && compactInfoButton}
         </StyledDropdownMenuContent>
       </DropdownMenu>
-      {canShareImages && <PreviewHeaderIconButton tooltip={t('chat.imageShare.share')} aria-label={t('chat.imageShare.share')}
-        disabled={!messageLoadState.messagesReady || !session?.messages.length} onClick={() => openImageShare()}>
+      {canShareImages && <PreviewHeaderIconButton tooltip={t('chat.imageShare.share')} aria-label={t('chat.imageShare.share')} aria-pressed={!!shareSnapshot}
+        disabled={!messageLoadState.messagesReady || !session?.messages.length} onClick={() => shareSnapshot ? closeImageShare() : openImageShare()}>
         <Send className="w-4 h-4" />
       </PreviewHeaderIconButton>}
     </div>
@@ -802,14 +844,24 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
 
   return (
     <>
-      <div className="h-full flex flex-col relative">
-        <div className="h-full flex flex-col min-h-0" inert={shareSnapshot?.sessionId === sessionId ? true : undefined}>
+      <ShareSelectionContext.Provider value={shareSelection}>
+      <div ref={shareRoot} className="h-full flex flex-col relative">
+        <div className="h-full flex flex-col min-h-0" inert={sharePreview ? true : undefined}>
         <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? (canShareImages ? 2 : 1) : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
         <div className="flex-1 flex flex-col min-h-0">
           <ChatDisplay
             ref={chatDisplayRef}
             session={session}
             onShareMessage={canShareImages ? openImageShare : undefined}
+            shareSelectionBar={shareSnapshot && <footer className="share-selection-bar" aria-label={t('chat.imageShare.select')}>
+              <span className="text-label font-medium tabular-nums" aria-live="polite">{t('chat.imageShare.selected', { count: shareSelected.size })}</span>
+              <div className="share-selection-actions">
+                <Button variant="ghost" size="sm" onClick={() => setShareSelected(new Set(shareSnapshot.messages.map(message => message.id)))}>{t('chat.imageShare.all')}</Button>
+                <Button variant="ghost" size="sm" onClick={() => setShareSelected(new Set())}>{t('chat.imageShare.clear')}</Button>
+                <Button variant="ghost" size="sm" onClick={closeImageShare}>{t('common.cancel')}</Button>
+                <Button size="sm" disabled={!shareSelected.size} onClick={() => setSharePreview(true)}>{t('chat.imageShare.preview')}</Button>
+              </div>
+            </footer>}
             onSendMessage={(message, attachments, skillSlugs) => {
               if (session) {
                 return onSendMessage(session.id, message, attachments, skillSlugs)
@@ -864,12 +916,13 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
           />
         </div>
         </div>
-        {shareSnapshot?.sessionId === sessionId && (
-          <React.Suspense fallback={<div className="absolute inset-0 bg-background flex items-center justify-center text-label">{t('chat.imageShare.preparing')}</div>}>
-            <SharePanel {...shareSnapshot} onClose={closeImageShare} />
+        {shareSnapshot?.sessionId === sessionId && sharePreview && (
+          <React.Suspense fallback={<div className="absolute inset-0 bg-background" aria-busy="true" />}>
+            <SharePanel {...shareSnapshot} messages={selectedShareMessages} options={shareOptions} onOptionsChange={setShareOptions} onBack={() => setSharePreview(false)} onClose={closeImageShare} />
           </React.Suspense>
         )}
       </div>
+      </ShareSelectionContext.Provider>
       {legacyRenameDialog}
     </>
   )

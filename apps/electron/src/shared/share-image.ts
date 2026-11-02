@@ -48,10 +48,25 @@ export const SHARE_IMAGE = {
   pageBudget: 4_800,
   /** Hard cap for a single long image, in output pixels. */
   maxHeight: 24_000,
+  maxWidth: 24_000,
+  /** Preserve the existing long-image pixel budget for every output shape. */
+  maxPixels: 1440 * 24_000,
   maxPages: 32,
   maxPngBytes: 12 * 1024 * 1024,
   maxBatchBytes: 64 * 1024 * 1024,
 } as const
+
+export function isShareImageSizeAllowed(width: number, height: number): boolean {
+  return Number.isSafeInteger(width) && Number.isSafeInteger(height)
+    && width >= SHARE_IMAGE.outputWidth && width <= SHARE_IMAGE.maxWidth
+    && height >= 1 && height <= SHARE_IMAGE.maxHeight
+    && width * height <= SHARE_IMAGE.maxPixels
+}
+
+export const DEFAULT_SHARE_OPTIONS: ShareOptions = {
+  layout: 'auto', ratio: 'a4', orientation: 'portrait',
+  include: { time: true, date: true, page: true, model: true },
+}
 
 /**
  * Page geometry is defined by a 720 CSS px short edge.

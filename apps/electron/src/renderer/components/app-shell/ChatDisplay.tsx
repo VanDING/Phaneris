@@ -136,6 +136,7 @@ function getTurnKey(turn: Turn): string {
 
 interface ChatDisplayProps {
   onShareMessage?: (messageId: string) => void
+  shareSelectionBar?: React.ReactNode
   session: Session | null
   onSendMessage: (message: string, attachments?: FileAttachment[], skillSlugs?: string[]) => void | Promise<boolean | void>
   onOpenFile: (path: string) => void
@@ -298,6 +299,7 @@ export interface ChatDisplayHandle {
  */
 export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>(function ChatDisplay({
   onShareMessage,
+  shareSelectionBar,
   session,
   onSendMessage,
   onOpenFile,
@@ -383,7 +385,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
   // Input is only disabled when explicitly disabled (e.g., agent needs activation)
   // User can type during streaming - submitting will stop the stream and send
-  const isInputDisabled = disabled
+  const isSelectingShare = !!shareSelectionBar
+  const isInputDisabled = disabled || isSelectingShare
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
   const scrollViewportRef = React.useRef<HTMLDivElement>(null)
   // Programmatic scrolls resolve their behavior through the shared policy so an
@@ -947,8 +950,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     }
 
     const content = viewport.firstElementChild
-    if (content) return observeChatScrollAnchor(viewport, content, isStickToBottomRef)
-  }, [session?.id])
+    if (content && !isSelectingShare) return observeChatScrollAnchor(viewport, content, isStickToBottomRef)
+  }, [session?.id, isSelectingShare])
 
   // Commit-time auto-scroll for new user messages.
   // This complements submit-time scrolling and covers cases where attachments delay
@@ -974,6 +977,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     prevMessageCountRef.current = messageCount
 
     if (!messageActuallyChanged || !countIncreased) return
+    if (isSelectingShare) return
     if (lastMessageRole !== 'user') return
 
     // Sending a message should always re-stick to bottom.
@@ -984,7 +988,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
         behavior: isFocusedPanelRef.current ? scrollBehavior('follow') : 'instant',
       })
     })
-  }, [session?.id, messageCount, lastMessageId, lastMessageRole, scrollBehavior])
+  }, [session?.id, messageCount, lastMessageId, lastMessageRole, scrollBehavior, isSelectingShare])
 
   // Handle message submission from InputContainer
   // Backend handles interruption and queueing if currently processing
@@ -1897,6 +1901,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
               onSelect={handleRunChatStarter}
             />
           )}
+          <div className="relative shrink-0">
+          <div style={{ visibility: shareSelectionBar ? 'hidden' : undefined }} inert={shareSelectionBar ? true : undefined} aria-hidden={shareSelectionBar ? true : undefined}>
           <ChatInputZone
             compactMode={compactMode}
             permissionMode={permissionMode}
@@ -1959,6 +1965,9 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
               onFollowUpIndexClick: handleFollowUpIndexClick,
             }}
           />
+          </div>
+          {shareSelectionBar && <div className="absolute inset-x-0 bottom-0">{shareSelectionBar}</div>}
+          </div>
           </div>
 
 

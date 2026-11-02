@@ -21,6 +21,7 @@ import { FileTypeIcon, getFileTypeLabel } from './attachment-helpers'
 import { FileKindIcon } from '../icons/FileKindIcon'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '../tooltip'
 import { useTranslation } from 'react-i18next'
+import { ShareSelectableMessage } from './ShareSelection'
 
 // Fallback text icons for badges without iconDataUrl
 // Using simple characters since SVG rendering may not work in all contexts
@@ -268,6 +269,7 @@ function renderContentWithBadges(
 }
 
 export interface UserMessageBubbleProps {
+  messageId?: string
   /** Message content (markdown supported) */
   content: string
   /** Additional className for the outer container */
@@ -296,6 +298,7 @@ export interface UserMessageBubbleProps {
 const QUEUED_MIN_VISIBLE_MS = 2500
 
 export function UserMessageBubble({
+  messageId,
   content,
   className,
   onUrlClick,
@@ -457,7 +460,7 @@ export function UserMessageBubble({
           separate pill below — keeps the chat to one bubble per message
           while the chip and pulsing icon make the waiting state obvious
           (#616 follow-up). */}
-      <div
+      <ShareSelectableMessage messageId={messageId} messageRole="user" content={displayContent}
         className={cn(
           "max-w-[80%] bg-user-message-bubble rounded-bubble break-words min-w-0 select-text animate-bubble-enter [&_p]:m-0",
           compactMode ? "px-4 py-2" : "px-5 py-3.5"
@@ -492,7 +495,7 @@ export function UserMessageBubble({
             </Markdown>
           )
         }
-      </div>
+      </ShareSelectableMessage>
     </div>
   )
 }

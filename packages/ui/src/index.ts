@@ -26,6 +26,7 @@ export {
 } from './context'
 
 // Chat components
+export { ShareSelectionContext, ShareSelectableMessage } from './components/chat/ShareSelection'
 export {
   SessionViewer,
   TurnCard,

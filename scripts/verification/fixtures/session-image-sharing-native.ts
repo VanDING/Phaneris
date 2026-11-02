@@ -83,6 +83,24 @@ try {
     await assert.rejects(call('save', { sessionId: 'blocked-export', images: [png] }))
     assert.deepEqual(await readdir(outside), ['session.jsonl'])
   })
+  await check('N08-joined-and-landscape-image-boundary', async () => {
+    const wide = nativeImage.createFromBitmap(Buffer.alloc(4320 * 64 * 4, 255), { width: 4320, height: 64 }).toPNG().toString('base64')
+    await call('copy', wide)
+    const items = await clipboard.read()
+    const image = items.find(item => item.types.includes('image/png'))!
+    const copied = Buffer.from(await (await image.getType('image/png')).arrayBuffer())
+    assert.equal(nativeImage.createFromBuffer(copied).getSize().width, 4320)
+    const result = await call('save', { sessionId: 'fixture-session', images: [wide] })
+    assert.equal(result.paths.length, 1)
+    assert.equal((await readFile(result.paths[0])).toString('base64'), wide)
+    for (const [width, height] of [[24001, 32], [1440, 24001], [24000, 24000]]) {
+      const invalid = Buffer.from(png, 'base64')
+      invalid.writeUInt32BE(width, 16); invalid.writeUInt32BE(height, 20)
+      await assert.rejects(call('copy', invalid.toString('base64')))
+    }
+    const landscape = nativeImage.createFromBitmap(Buffer.alloc(2036 * 1440 * 4, 255), { width: 2036, height: 1440 }).toPNG().toString('base64')
+    await call('save', { sessionId: 'fixture-session', images: [landscape] })
+  })
   await check('N07-bundled-font-only', async () => {
     assert.equal(await call('font', pathToFileURL(join(assets, 'fixture.woff2')).href), 'data:font/woff2;base64,' + Buffer.from('font-fixture').toString('base64'))
     await assert.rejects(call('font', pathToFileURL(join(session, 'session.jsonl')).href))

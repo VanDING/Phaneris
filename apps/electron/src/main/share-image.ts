@@ -5,7 +5,7 @@ import { extname, join, relative, isAbsolute } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { z } from 'zod'
 import { getSessionPath } from '@phaneris/shared/sessions/paths'
-import { SHARE_IMAGE, type ShareImageSaveResult } from '../shared/share-image'
+import { SHARE_IMAGE, isShareImageSizeAllowed, type ShareImageSaveResult } from '../shared/share-image'
 
 const pngPayload = z.string().min(32).max(Math.ceil(SHARE_IMAGE.maxPngBytes * 4 / 3) + 4)
 const saveRequest = z.object({
@@ -19,8 +19,7 @@ function decodePng(value: string): Buffer {
   if (buffer.length > SHARE_IMAGE.maxPngBytes || buffer.length < 33
     || buffer.subarray(0, 8).toString('hex') !== '89504e470d0a1a0a'
     || buffer.toString('ascii', 12, 16) !== 'IHDR'
-    || buffer.readUInt32BE(16) !== SHARE_IMAGE.outputWidth
-    || buffer.readUInt32BE(20) < 1 || buffer.readUInt32BE(20) > SHARE_IMAGE.maxHeight) {
+    || !isShareImageSizeAllowed(buffer.readUInt32BE(16), buffer.readUInt32BE(20))) {
     throw new Error('Invalid or oversized share image')
   }
   if (nativeImage.createFromBuffer(buffer).isEmpty()) throw new Error('PNG could not be decoded')
