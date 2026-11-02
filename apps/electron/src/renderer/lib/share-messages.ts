@@ -5,6 +5,8 @@ export interface ShareMessage {
   id: string
   role: 'user' | 'assistant'
   content: string
+  /** Turn timestamp; shown when the timestamp tag is enabled. */
+  timestamp: number
   /** Position in the original message sequence, used to mark omissions. */
   position: number
 }
@@ -18,10 +20,10 @@ export function collectShareMessages(messages: Message[], isProcessing: boolean)
       let content = turn.message.content
       const editBadges = (turn.message.badges ?? []).filter(badge => badge.type === 'context' && badge.rawText?.includes('<edit_request>')).sort((a, b) => b.start - a.start)
       for (const badge of editBadges) content = content.slice(0, badge.start) + content.slice(badge.end)
-      if (content.trim()) result.push({ id: turn.message.id, role: 'user', content: content.trim(), position })
+      if (content.trim()) result.push({ id: turn.message.id, role: 'user', content: content.trim(), timestamp: turn.timestamp, position })
     }
     if (turn.type === 'assistant' && turn.isComplete && turn.response?.messageId && turn.response.text.trim()) {
-      result.push({ id: turn.response.messageId, role: 'assistant', content: turn.response.text, position })
+      result.push({ id: turn.response.messageId, role: 'assistant', content: turn.response.text, timestamp: turn.timestamp, position })
     }
   }
   return result

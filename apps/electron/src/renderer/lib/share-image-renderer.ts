@@ -1,4 +1,4 @@
-import { SHARE_IMAGE } from '../../shared/share-image'
+import { SHARE_IMAGE, type SharePageSpec } from '../../shared/share-image'
 
 export class ShareImageError extends Error {
   constructor(public readonly reason: 'resource' | 'tooLong' | 'tooMany' | 'encode') { super(reason) }
@@ -81,7 +81,9 @@ export async function renderSharePng(page: HTMLElement, resources = new Map<stri
     if (!promise) { promise = resourceData(url); resources.set(url, promise); void promise.catch(() => resources.delete(url)) }
     return promise
   }
-  const height = Math.ceil(page.getBoundingClientRect().height / (Number(page.dataset.previewScale) || 1))
+  const width = Number(page.dataset.shareWidth) || SHARE_IMAGE.cssWidth
+  const height = Number(page.dataset.shareHeight)
+    || Math.ceil(page.getBoundingClientRect().height / (Number(page.dataset.previewScale) || 1))
   if (height * SHARE_IMAGE.scale > SHARE_IMAGE.maxHeight) throw new ShareImageError('tooLong')
   const clone = page.cloneNode(true) as HTMLElement
   const originals = [page, ...page.querySelectorAll('*')]
@@ -120,7 +122,7 @@ export async function renderSharePng(page: HTMLElement, resources = new Map<stri
   clone.style.setProperty('margin', '0')
   clone.style.setProperty('box-shadow', 'none')
   clone.style.setProperty('height', height + 'px')
-  clone.style.setProperty('width', SHARE_IMAGE.cssWidth + 'px')
+  clone.style.setProperty('width', width + 'px')
   clone.querySelectorAll('button').forEach(node => {
     if (node.querySelector('img')) node.replaceWith(...node.childNodes)
     else node.remove()
@@ -145,13 +147,13 @@ export async function renderSharePng(page: HTMLElement, resources = new Map<stri
   const style = document.createElement('style')
   style.textContent = embedded.join('\n')
   wrapper.append(style, clone)
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + SHARE_IMAGE.cssWidth + '" height="' + height +
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height +
     '"><foreignObject width="100%" height="100%">' + new XMLSerializer().serializeToString(wrapper) + '</foreignObject></svg>'
   const image = new Image()
   image.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
   await image.decode().catch(() => { throw new ShareImageError('encode') })
   const canvas = document.createElement('canvas')
-  canvas.width = SHARE_IMAGE.outputWidth
+  canvas.width = Math.ceil(width * SHARE_IMAGE.scale)
   canvas.height = Math.ceil(height * SHARE_IMAGE.scale)
   const context = canvas.getContext('2d')
   if (!context) throw new ShareImageError('encode')
@@ -165,33 +167,46 @@ export async function renderSharePng(page: HTMLElement, resources = new Map<stri
 }
 
 /** Pages are assembled from semantic blocks; the source remains untouched. */
-export function paginateShareContent(source: HTMLElement, mount: HTMLElement, layout: 'auto' | 'long', continuation: string): HTMLElement[] {
+export function paginateShareContent(source: HTMLElement, mount: HTMLElement, page: SharePageSpec, continuation: string): HTMLElement[] {
   const fullHeight = source.getBoundingClientRect().height
-  if (layout === 'long' && fullHeight * SHARE_IMAGE.scale > SHARE_IMAGE.maxHeight) throw new ShareImageError('tooLong')
-  const paginate = layout === 'auto' && fullHeight * SHARE_IMAGE.scale > SHARE_IMAGE.autoHeight
-  const pageLimit = paginate ? SHARE_IMAGE.pageHeight / SHARE_IMAGE.scale : SHARE_IMAGE.maxHeight / SHARE_IMAGE.scale
   mount.replaceChildren()
-  const pages: HTMLElement[] = []
-  const makePage = () => {
-    if (pages.length >= SHARE_IMAGE.maxPages) throw new ShareImageError('tooMany')
-    const page = source.cloneNode(true) as HTMLElement
-    page.removeAttribute('id')
-    page.querySelector('[data-share-content]')!.replaceChildren()
-    page.querySelector('[data-share-page-number]')!.textContent = ''
-    mount.append(page)
-    pages.push(page)
-    return page
+
+  if (page.mode === 'single') {
+    if (fullHeight * SHARE_IMAGE.scale > SHARE_IMAGE.maxHeight) throw new ShareImageError('tooLong')
+    const single = source.cloneNode(true) as HTMLElement
+    single.removeAttribute('id')
+    single.dataset.shareWidth = String(page.width)
+    single.dataset.shareHeight = String(Math.ceil(fullHeight))
+    single.querySelector('[data-share-page-number]')!.textContent = '01'
+    mount.append(single)
+    return [single]
   }
-  let page = makePage()
-  let body = page.querySelector<HTMLElement>('[data-share-content]')!
-  const emptyHeight = page.getBoundingClientRect().height
-  const bodyLimit = pageLimit - emptyHeight - 40
+
+  if (page.height * SHARE_IMAGE.scale > SHARE_IMAGE.pageBudget) throw new ShareImageError('tooLong')
+  const pages: HTMLElement[] = []
+  const makePage = (withHeader: boolean) => {
+    if (pages.length >= SHARE_IMAGE.maxPages) throw new ShareImageError('tooMany')
+    const next = source.cloneNode(true) as HTMLElement
+    next.removeAttribute('id')
+    next.dataset.shareWidth = String(page.width)
+    next.dataset.shareHeight = String(page.height)
+    if (!withHeader) next.querySelector('.share-page-header')?.remove()
+    next.querySelector('[data-share-content]')!.replaceChildren()
+    next.querySelector('[data-share-page-number]')!.textContent = ''
+    mount.append(next)
+    pages.push(next)
+    return next
+  }
+  let current = makePage(true)
+  let body = current.querySelector<HTMLElement>('[data-share-content]')!
+  let bodyLimit = body.clientHeight
   const add = (atom: HTMLElement, messageId: string) => {
     body.append(atom)
-    if (page.getBoundingClientRect().height <= pageLimit || body.children.length === 1) return
+    if (body.scrollHeight <= bodyLimit + 1 || body.children.length === 1) return
     atom.remove()
-    page = makePage()
-    body = page.querySelector<HTMLElement>('[data-share-content]')!
+    current = makePage(false)
+    body = current.querySelector<HTMLElement>('[data-share-content]')!
+    bodyLimit = body.clientHeight
     if (atom.dataset.shareRole === 'assistant' && !atom.querySelector('[data-share-role-label]')) {
       const label = document.createElement('div')
       label.className = 'share-role'
@@ -205,7 +220,7 @@ export function paginateShareContent(source: HTMLElement, mount: HTMLElement, la
     body.append(atom)
     const atomHeight = atom.getBoundingClientRect().height
     atom.remove()
-    if (!paginate || atomHeight <= bodyLimit) { add(atom, messageId); return }
+    if (atomHeight <= bodyLimit) { add(atom, messageId); return }
     const code = atom.querySelector('pre code')
     if (code) {
       const highlighted = [...code.children].filter(node => node.classList.contains('line'))
@@ -300,7 +315,9 @@ export function paginateShareContent(source: HTMLElement, mount: HTMLElement, la
     }
   }
   for (const [index, item] of pages.entries()) {
-    item.querySelector('[data-share-page-number]')!.textContent = pages.length > 1 ? String(index + 1) + ' / ' + pages.length : ''
+    item.querySelector('[data-share-page-number]')!.textContent = pages.length > 1
+      ? String(index + 1) + ' / ' + pages.length
+      : '01'
   }
   return pages
 }

@@ -35,6 +35,7 @@ import { kanbanEditorTargetAtom } from '@/atoms/kanban'
 import { getSessionTitle } from '@/utils/session'
 // Model resolution: connection.defaultModel (no hardcoded defaults)
 import { resolveEffectiveConnectionSlug, isSessionConnectionUnavailable } from '@config/llm-connections'
+import { getModelDisplayName } from '@config/models'
 
 export interface ChatPageProps {
   sessionId: string
@@ -397,19 +398,38 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   const [renameName, setRenameName] = React.useState('')
   const [shareSnapshot, setShareSnapshot] = React.useState<{
     sessionId: string; title: string; messages: ShareMessage[]; initialMessageId?: string
+    modelName?: string; createdAt: number
   } | null>(null)
   const shareOrigin = React.useRef<HTMLElement | null>(null)
-  const shareContext = React.useRef({ session, sessionId, displayTitle, messagesReady: messageLoadState.messagesReady })
-  shareContext.current = { session, sessionId, displayTitle, messagesReady: messageLoadState.messagesReady }
+  const shareModelName = React.useMemo(() => {
+    if (!effectiveModel) return undefined
+    const connectionSlug = resolveEffectiveConnectionSlug(
+      session?.llmConnection, workspaceDefaultLlmConnection, llmConnections,
+    )
+    const connection = connectionSlug ? llmConnections.find(item => item.slug === connectionSlug) : null
+    const entry = connection?.models?.find(model => (typeof model === 'string' ? model : model.id) === effectiveModel)
+    if (entry && typeof entry !== 'string' && entry.name) {
+      return entry.name.replace(/\s*\((?:latest|default)\)\s*$/i, '').trim()
+    }
+    return getModelDisplayName(effectiveModel)
+  }, [effectiveModel, session?.llmConnection, workspaceDefaultLlmConnection, llmConnections])
+  const shareContext = React.useRef({
+    session, sessionId, displayTitle, messagesReady: messageLoadState.messagesReady,
+    modelName: shareModelName, createdAt: session?.createdAt ?? sessionMeta?.createdAt ?? Date.now(),
+  })
+  shareContext.current = {
+    session, sessionId, displayTitle, messagesReady: messageLoadState.messagesReady,
+    modelName: shareModelName, createdAt: session?.createdAt ?? sessionMeta?.createdAt ?? Date.now(),
+  }
   const handleRename = React.useCallback(() => { setRenameName(displayTitle); setEditingTitle(true) }, [displayTitle])
   React.useEffect(() => { setEditingTitle(false); setShareSnapshot(null) }, [sessionId])
   const openImageShare = React.useCallback((initialMessageId?: string) => {
-    const { session, sessionId, displayTitle, messagesReady } = shareContext.current
+    const { session, sessionId, displayTitle, messagesReady, modelName, createdAt } = shareContext.current
     if (!session || !messagesReady) return
     const messages = collectShareMessages(session.messages, !!session.isProcessing)
     if (!messages.length) return
     shareOrigin.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    setShareSnapshot({ sessionId, title: displayTitle, messages,
+    setShareSnapshot({ sessionId, title: displayTitle, messages, modelName, createdAt,
       initialMessageId: messages.some(message => message.id === initialMessageId) ? initialMessageId : undefined })
   }, [])
   const closeImageShare = React.useCallback(() => {
@@ -674,7 +694,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
       setEditingTitle(false)
     }} />
   const headerActions = isDesktopClient ? (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <PreviewHeaderIconButton tooltip={t('chat.imageShare.more')} aria-label={t('chat.imageShare.more')}><MoreHorizontal className="w-4 h-4" /></PreviewHeaderIconButton>
@@ -714,7 +734,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
         <>
           {legacyRenameDialog}
           <div className="h-full flex flex-col">
-            <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? 2 : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
+            <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? (canShareImages ? 2 : 1) : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
             <div className="flex-1 flex flex-col min-h-0">
               <ChatDisplay
                 ref={chatDisplayRef}
@@ -784,7 +804,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     <>
       <div className="h-full flex flex-col relative">
         <div className="h-full flex flex-col min-h-0" inert={shareSnapshot?.sessionId === sessionId ? true : undefined}>
-        <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? 2 : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
+        <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? (canShareImages ? 2 : 1) : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
         <div className="flex-1 flex flex-col min-h-0">
           <ChatDisplay
             ref={chatDisplayRef}

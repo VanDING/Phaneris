@@ -447,10 +447,23 @@ between non-contiguous selections. Activities and unfinished answers do not
 become share content.
 
 The export is a fixed light document using the Default palette, neutral question
-surfaces and light syntax highlighting, even when the app is dark. It is laid
-out at **720 CSS px** and rendered at **2×** for a **1440px-wide PNG**. Page
-padding is **36px top / 40px sides / 26px bottom**. Preview scaling fits this
-document into the available panel; it must not reflow or change the export.
+surfaces and light syntax highlighting, even when the app is dark. Its layout
+uses a **720 CSS px short edge**, rendered at **2×**. Page padding is **36px
+top / 40px sides / 26px bottom**. Preview scaling fits the page into the
+available panel; it must not reflow or change the export.
+
+The page is available in **A4, 3:4, 9:16 and 1:1**, in **portrait or landscape**.
+The 720 px short edge is fixed; the long edge follows the ratio:
+
+| Ratio | Portrait CSS | Portrait PNG | Landscape CSS | Landscape PNG |
+| --- | --- | --- | --- | --- |
+| A4 | 720 × 1018 | 1440 × 2036 | 1018 × 720 | 2036 × 1440 |
+| 3:4 | 720 × 960 | 1440 × 1920 | 960 × 720 | 1920 × 1440 |
+| 9:16 | 720 × 1280 | 1440 × 2560 | 1280 × 720 | 2560 × 1440 |
+| 1:1 | 720 × 720 | 1440 × 1440 | 720 × 720 | 1440 × 1440 |
+
+A4 portrait is the initial page format. The UI does not print “default” on the
+tile; the selected state carries that meaning.
 
 The approved document scale is scoped to `.share-page` in `share-images.css`.
 It is independent of interface density, `--ui-scale` and `--reading-scale`, and
@@ -458,7 +471,7 @@ does not add tiers to the app's canonical frontmatter scale:
 
 | Scoped token | CSS size | Use |
 | --- | --- | --- |
-| `--share-type-meta` | 11px | Role labels, counts and page metadata |
+| `--share-type-meta` | 11px | Role labels, timestamps, model/date and page metadata |
 | `--share-type-code` | 12px | Code and the brand wordmark |
 | `--share-type-table` | 13px | Table content |
 | `--share-type-question` | 15px | Question text |
@@ -467,16 +480,43 @@ does not add tiers to the app's canonical frontmatter scale:
 | `--share-type-title` | 24px | Session title |
 
 Use the bundled Inter Variable / Noto Sans SC Variable stack and JetBrains Mono
-Variable for code. Prose has a 1.85 line height; content headings use 1.55 and
+Variable for code. Prose has a 1.7 line height; content headings use 1.55 and
 the session title uses 1.5. Static exports show complete rich content without
 interactive buttons, scroll fades or entrance motion. Keep headings with their
 next block, repeat table headers across row splits, and preserve code lines and
 oversized rich blocks across continuations.
 
-Automatic layout splits documents taller than **12,000 output px** using a
-**4,800 output px** page budget. Single-image layout has a **24,000 output px**
-height limit; any export has a **32-page** limit. These are output-pixel limits,
-not CSS-pixel dimensions.
+The first page has a fixed composition. Top-left carries the Phaneris mark and
+wordmark, top-right “Conversation excerpt”; below the rule are the session title
+and a single model · date line. The date is the session creation date, not the
+export date. There is no message count, no session-label row, no template picker
+and no model in the footer. The footer carries only “Exported by Phaneris” and
+the folio; the folio is `01` on a one-page export and `01 / 03` on a multipage
+export.
+
+Continuation pages omit the header entirely: no brand, excerpt, title or
+model/date line. They start with the continued content and carry only the folio
+in the footer. The header is page-one furniture, not a running header; repeating
+it steals a quarter of every page.
+
+**Split** always paginates at the selected page height, from the first page; the
+old 12,000 output px trigger is retired. One page may not exceed **4,800 output
+px** and an export may not exceed **32 pages**. **Single image** is one
+continuous page **720 CSS px / 1440 PNG px** wide with a **24,000 output px**
+height limit. Single image ignores page ratio and direction; those controls are
+disabled rather than silently ineffective.
+
+Settings use one selection language everywhere: bordered tile, ink selected
+state and a right-side check. Page ratio, page direction and the four metadata
+tags (timestamp, date, page number, model) are all the same tile; there are no
+checkboxes in settings. Tags show their titles only; the values are written into
+the page. A4 is selected initially but is not labelled “default”.
+
+The selection surface is 760 px wide, flat rows with a hairline and a neutral
+selected fill, never tinted cards. Type is 13 px title, 12 px message body, 11 px
+role, 10 px time; headings inside a row are flattened to 12 px. Rows clamp at
+four lines, expose a rich-content summary and an expand control. Both phases use
+a 56 px bottom action bar; the header carries only back, title and step.
 
 Preview and Copy retain image data in memory. Copy takes the page most visible
 in the preview; Save explicitly keeps every page in reading order under the
