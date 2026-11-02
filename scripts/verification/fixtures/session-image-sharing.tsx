@@ -27,22 +27,24 @@ const rich = '# 今日记录\n\n中文与 English，保持完整内容。**加�
 const long = Array.from({ length: 95 }, (_, i) => '## 记录 ' + (i + 1) + '\n\n段落编号 ' + (i + 1) + '。中文长文验证，保留顺序与全部内容。' + '详细说明和 English content。'.repeat(5)).join('\n\n') + '\n\nLONG-END'
 const table = '| 编号 | A | B | C | D | E | F | G | H |\n|---|---|---|---|---|---|---|---|---|\n' + Array.from({ length: 160 }, (_, i) => '| row-' + i + ' | aa | bb | cc | dd | ee | ff | gg | end-' + i + ' |').join('\n')
 const giant = '~~~text\n' + Array.from({ length: 600 }, (_, i) => 'CODE-LINE-' + i + ' 中文与长代码').join('\n') + '\n~~~\n\nGIANT-END'
+const at = (hour: number, minute: number) => new Date(2026, 10, 2, hour, minute).getTime()
 const messages: ShareMessage[] = [
-  { id: 'q1', role: 'user', content: '请整理今天的记录。', position: 0 },
-  { id: 'a1', role: 'assistant', content: rich, position: 1 },
-  { id: 'q2', role: 'user', content: '继续补充历史内容。', position: 2 },
-  { id: 'a2', role: 'assistant', content: '第二个回答，可以单独分享。', position: 3 },
+  { id: 'q1', role: 'user', content: '请整理今天的记录。', timestamp: at(15, 12), position: 0 },
+  { id: 'a1', role: 'assistant', content: rich, timestamp: at(15, 13), position: 1 },
+  { id: 'q2', role: 'user', content: '继续补充历史内容。', timestamp: at(15, 14), position: 2 },
+  { id: 'a2', role: 'assistant', content: '第二个回答，可以单独分享。', timestamp: at(15, 15), position: 3 },
 ]
 const history = Array.from({ length: 66 }, (_, i): ShareMessage => ({
   id: 'history-' + i, role: i % 2 ? 'assistant' : 'user', position: i, content: '历史消息 ' + i,
+  timestamp: at(8, 0) + i * 60_000,
 }))
 type Kind = 'rich' | 'long' | 'table' | 'giant' | 'history' | 'broken'
 const variants: Record<Kind, ShareMessage[]> = {
   rich: messages, history,
-  long: [{ id: 'long', role: 'assistant', content: long, position: 0 }],
-  table: [{ id: 'table', role: 'assistant', content: table, position: 0 }],
-  giant: [{ id: 'giant', role: 'assistant', content: giant, position: 0 }],
-  broken: [{ id: 'broken', role: 'assistant', content: '![无法读取](http://127.0.0.1:1/missing.png)', position: 0 }],
+  long: [{ id: 'long', role: 'assistant', content: long, timestamp: at(16, 0), position: 0 }],
+  table: [{ id: 'table', role: 'assistant', content: table, timestamp: at(16, 1), position: 0 }],
+  giant: [{ id: 'giant', role: 'assistant', content: giant, timestamp: at(16, 2), position: 0 }],
+  broken: [{ id: 'broken', role: 'assistant', content: '![无法读取](http://127.0.0.1:1/missing.png)', timestamp: at(16, 3), position: 0 }],
 }
 const records = { copies: [] as string[], saves: [] as { sessionId: string; images: string[] }[] }
 declare global {
@@ -91,7 +93,7 @@ function Fixture() {
       <div inert={!!snapshot || undefined} className="h-full flex flex-col">
         <PanelHeader title={title} titleAlignment="start" actionCount={2}
           titleContent={<InlineSessionTitle title={title} editing={editing} onEditingChange={setEditing} onRename={setTitle} />}
-          actions={<div className="flex gap-2"><PreviewHeaderIconButton aria-label="更多选项"><MoreHorizontal className="w-4 h-4" /></PreviewHeaderIconButton><PreviewHeaderIconButton aria-label="分享为图片" onClick={() => setSnapshot({ kind: 'rich' })}><Send className="w-4 h-4" /></PreviewHeaderIconButton></div>}
+          actions={<div className="flex gap-1.5"><PreviewHeaderIconButton aria-label="更多选项"><MoreHorizontal className="w-4 h-4" /></PreviewHeaderIconButton><PreviewHeaderIconButton aria-label="分享为图片" onClick={() => setSnapshot({ kind: 'rich' })}><Send className="w-4 h-4" /></PreviewHeaderIconButton></div>}
           trailingAction={<PreviewHeaderIconButton aria-label="关闭"><X className="w-4 h-4" /></PreviewHeaderIconButton>} />
         <div className="overflow-auto flex-1 p-8"><div className="max-w-[850px] mx-auto">
           <TurnCard turnId="fixture" activities={[]} isStreaming={false} isComplete response={{ text: rich, isStreaming: false, messageId: 'a1' }}
