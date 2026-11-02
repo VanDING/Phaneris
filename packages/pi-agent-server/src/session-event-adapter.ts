@@ -9,8 +9,6 @@ import { LengthContinuationTracker, LENGTH_CONTINUATION_PROMPT, MAX_AUTO_LENGTH_
 export interface SessionEventPorts {
   annotateInput?(message: import('@earendil-works/pi-agent-core').AgentMessage): void;
   currentSession(): AgentSession | null;
-  compactionFailure?(): string | undefined;
-  clearCompactionFailure?(): void;
   send(message: OutboundMessage): void;
   debugLog(message: string): void;
   observeSdkLifecycle: Parameters<typeof observeNativeSessionEvent>[2];
@@ -51,12 +49,7 @@ export function createSessionEventAdapter(ports: SessionEventPorts): (event: Age
     if (compact) send({ type: 'event', event: compact as unknown as OutboundAgentEvent });
     return;
   }
-  if (event.type === 'compaction_start') ports.clearCompactionFailure?.();
   let forwardedEvent: OutboundAgentEvent = event;
-  if (event.type === 'compaction_end' && !event.result) {
-    const errorMessage = ports.compactionFailure?.();
-    if (errorMessage) forwardedEvent = { ...event, errorMessage, aborted: false };
-  }
   let lengthContinuationAttempt: number | undefined;
 
   // Log API errors for debugging and attach provider-native turn anchor for branch cutoffs.

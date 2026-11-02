@@ -190,7 +190,7 @@ await verificationWorkflow('api-connection-setup', async run => {
       const { CompactionThresholdController } = await import('../../packages/pi-agent-server/src/compaction-threshold')
       const { SettingsManager } = await import('@earendil-works/pi-coding-agent')
       const reserves: number[] = []
-      const controller = new CompactionThresholdController(SettingsManager.inMemory({}), () => undefined, async (_key, reserve) => { reserves.push(reserve) })
+      const controller = new CompactionThresholdController(SettingsManager.inMemory({}), async (_key, reserve) => { reserves.push(reserve) })
       await controller.update(getCompactionThreshold(), { id: 'small', provider: 'custom', contextWindow: 200000 })
       await controller.refreshModel({ id: 'large', provider: 'custom', contextWindow: 400000 })
       assert.deepEqual(reserves, [40000, 80000]); run.json('compaction-runtime.json', { saved: getCompactionThreshold(), reserves })

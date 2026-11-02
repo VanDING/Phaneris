@@ -115,7 +115,8 @@ const stream = wrapDurableModelStream(streamSimple, async (actualModel, _context
 async function modelCall(mode: string) {
   modelMode = mode; native.startTurn('source-turn')
   const source = await stream(model, sdk.normalizeContext({ systemPrompt: 'Observe controlled responses.',
-    tools: [{ name: 'read_file', description: 'Read controlled fixture evidence.', parameters: sdk.Type.Object({ path: sdk.Type.String() }) }],
+    tools: [{ name: 'read_file', description: 'Read controlled fixture evidence.',
+      parameters: { type: 'object', properties: { path: { type: 'string' } }, required: ['path'] } }],
     messages: [{ role: 'user', content: 'Inspect evidence.', timestamp: Date.now() }] }), { apiKey: 'fixture-only', maxRetries: 0 })
   let result: any
   for await (const event of source) {

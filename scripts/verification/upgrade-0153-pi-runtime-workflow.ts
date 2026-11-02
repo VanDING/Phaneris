@@ -1004,7 +1004,7 @@ try {
   }
 
   // ==========================================================================
-  // PC-05 — ordinary custom chat omits defaults; explicit compaction budgets follow the model.
+  // PC-05 — Pi 1.5 summaries have no explicit reserve-derived cap; custom endpoints own defaults.
   // ==========================================================================
   {
     scene = 'pc-05'
@@ -1043,10 +1043,9 @@ try {
       assert.equal(typeof reserveA, 'number', 'the subprocess must report the reserve it used')
       const summaryA = sceneRequests('pc-05').filter(request => request.kind === 'compaction')
       assert.equal(summaryA.length, 1, 'the manual compaction must issue exactly one summarization request')
-      const expectedA = Math.min(Math.floor(0.8 * reserveA), MODEL_A.maxTokens)
       assert.equal(summaryA[0]!.model, MODEL_A.id)
-      assert.equal(summaryA[0]!.maxTokens, expectedA,
-        `the summarization cap must be min(floor(0.8*reserve), model.maxTokens) = ${expectedA}`)
+      assert.equal(summaryA[0]!.maxTokensField, null,
+        'Pi 1.5 summaries must not reintroduce the removed reserve-derived output cap')
       assert.notEqual(summaryA[0]!.maxTokens, MODEL_A.maxTokens,
         'a plain model cap here would prove the reserve budget was ignored')
 
@@ -1081,12 +1080,9 @@ try {
       const summaryRequests = sceneRequests('pc-05').filter(request => request.kind === 'compaction')
       assert.equal(summaryRequests.length, 2, 'each manual compaction issues one summarization request')
       const summaryB = summaryRequests[1]!
-      const expectedB = Math.min(Math.floor(0.8 * reserveB), MODEL_B.maxTokens)
       assert.equal(summaryB.model, MODEL_B.id, 'the compaction must run on the selected model')
-      assert.equal(summaryB.maxTokens, expectedB,
-        `the summarization cap must follow model B: min(floor(0.8*${reserveB}), ${MODEL_B.maxTokens}) = ${expectedB}`)
-      assert.equal(summaryB.maxTokens, MODEL_B.maxTokens,
-        'under model B the cap binds below the reserve budget')
+      assert.equal(summaryB.maxTokensField, null,
+        'custom endpoint defaults must remain provider-owned after switching models')
 
       await teardown(agent)
       evidence.json('pi-output-caps.json', {
@@ -1097,11 +1093,11 @@ try {
         chatRequests: sceneRequests('pc-05').filter(request => request.kind === 'chat').map(requestView),
         compactionRequests: summaryRequests.map(requestView),
         derivations: {
-          chat: 'withCustomEndpointOutputPolicy removes implicit SDK max_tokens/max_completion_tokens for ordinary custom chat; the endpoint owns its default budget. Explicit per-call compaction budgets remain intact.',
-          compaction: 'pi-coding-agent generateSummaryWithUsage: maxTokens = min(floor(0.8 * reserveTokens), model.maxTokens > 0 ? model.maxTokens : Infinity) (core/compaction/compaction.js:511-512). reserveTokens is read through the session\'s current model (pi-agent-server/src/context-usage.ts:24-30) and reported back in compact_result.',
+          chat: 'withCustomEndpointOutputPolicy removes implicit SDK max_tokens/max_completion_tokens; the custom endpoint owns its default budget. Explicit per-call limits remain intact.',
+          compaction: 'Pi 1.4+ summary generation ignores reserveTokens and uses the model output limit. On arbitrary custom Chat Completions endpoints, the host removes implicit SDK limits, including summary requests. reserveTokens controls the compaction trigger only.',
           observed: {
-            modelA: { reserveTokens: reserveA, modelMaxTokens: MODEL_A.maxTokens, expected: expectedA, observed: summaryA[0]!.maxTokens },
-            modelB: { reserveTokens: reserveB, modelMaxTokens: MODEL_B.maxTokens, expected: expectedB, observed: summaryB.maxTokens },
+            modelA: { reserveTokens: reserveA, modelMaxTokens: MODEL_A.maxTokens, expectedField: null, observedField: summaryA[0]!.maxTokensField },
+            modelB: { reserveTokens: reserveB, modelMaxTokens: MODEL_B.maxTokens, expectedField: null, observedField: summaryB.maxTokensField },
           },
         },
         compactions: [
@@ -1155,10 +1151,10 @@ try {
       snapshots.a = await agent.requestCompact('PC06 manual with independent budget')
       const summaryA = requests.slice(before).filter(row => row.kind === 'compaction')
       assert.equal(summaryA.length, 1)
-      assert.equal(summaryA[0]!.maxTokens, 13_107, 'earlier trigger must not inflate the original SDK summary budget')
+      assert.equal(summaryA[0]!.maxTokensField, null, 'the trigger must not set the Pi 1.5 summary output budget')
       const endA = eventRows(agent).filter(row => row.event?.type === 'compaction_end' && row.event.result).at(-1)?.event
       assert(endA?.result.firstKeptEntryId)
-      assert(endA?.result.details && Array.isArray(endA.result.details.readFiles), 'SDK file tracking survives the custom extension')
+      assert(endA?.result.details && Array.isArray(endA.result.details.readFiles), 'native SDK file tracking survives custom thresholds')
       scenes.push('pc-06-independent-summary-budget-and-sdk-metadata')
 
       await agent.updateRuntimeConfig({ model: `pi/${MODEL_B.id}`, providerType: 'pi_compat', authType: 'api_key', runtime: { baseUrl: providerUrl, customEndpoint: CUSTOM_ENDPOINT, customModels: CUSTOM_MODELS } })
@@ -1166,7 +1162,7 @@ try {
       await seedHistory('threshold-B')
       const beforeB = requests.length
       snapshots.b = await agent.requestCompact('PC06 model B keeps its smaller output limit')
-      assert.equal(requests.slice(beforeB).filter(row => row.kind === 'compaction')[0]!.maxTokens, MODEL_B.maxTokens)
+      assert.equal(requests.slice(beforeB).filter(row => row.kind === 'compaction')[0]!.maxTokensField, null)
       await agent.updateCompactionThreshold(null)
       assert.equal(latestReserve(), 16_384, 'clear restores the SDK default reserve')
       await agent.updateRuntimeConfig({ model: `pi/${MODEL_A.id}`, providerType: 'pi_compat', authType: 'api_key', runtime: { baseUrl: providerUrl, customEndpoint: CUSTOM_ENDPOINT, customModels: CUSTOM_MODELS } })
@@ -1191,10 +1187,10 @@ try {
       const auto = requests.slice(beforeAuto).filter(row => row.kind === 'compaction')
       evidence.json('pi-compaction-auto-probe.json', { auto: auto.map(requestView), requests: requests.slice(beforeAuto).map(requestView), events: eventRows(agent, beforeEvents) })
       assert(auto.length >= 1 && auto.length <= 2, 'earlier threshold compacts without an unbounded loop')
-      assert(auto.every(row => [8192, 13_107].includes(row.maxTokens!)), 'original SDK history (80%) and split-turn prefix (50%) budgets remain bounded')
+      assert(auto.every(row => row.maxTokensField === null), 'native summaries must not derive output caps from the trigger reserve')
       // SDK reuses the previous summary when there is no new history to summarize
       // (compaction.js:690-701), so an automatic split can issue prefix requests only.
-      for (const row of auto) assert.equal(row.maxTokens, Math.floor((row.summaryKind === 'turn-prefix' ? 0.5 : 0.8) * 16_384), 'each emitted summary must retain its original SDK budget')
+      for (const row of auto) assert.equal(row.maxTokensField, null, 'history and turn-prefix summaries both use endpoint defaults')
       assert(eventRows(agent, beforeEvents, 'compaction_start').some(row => row.event.reason === 'threshold'))
       snapshots.auto = auto.map(requestView)
       scenes.push('pc-06-real-automatic-threshold')
@@ -1209,12 +1205,12 @@ try {
       const overflowRequests = requests.slice(beforeOverflow)
       assert.equal(overflowRequests[0]!.status, 400)
       assert(overflowRequests.some(row => row.kind === 'compaction'))
-      assert(overflowRequests.filter(row => row.kind === 'compaction').every(row => [8192, 13_107].includes(row.maxTokens!)))
+      assert(overflowRequests.filter(row => row.kind === 'compaction').every(row => row.maxTokensField === null))
       assert(overflowRequests.some(row => row.kind === 'chat' && row.status === 200), 'overflow recovery retries the conversation')
       assert(eventRows(agent, overflowEvents, 'compaction_start').some(row => row.event.reason === 'overflow'))
       assert.equal(finalTexts(overflowTurn.events).length, 1)
       snapshots.overflow = overflowRequests.map(requestView)
-      scenes.push('pc-06-real-overflow-compacts-with-original-budget-and-retries')
+      scenes.push('pc-06-real-overflow-compacts-natively-and-retries')
 
       await agent.updateContextPolicy('manual')
       scene = 'pc-06-fail'; sceneAttempt = 0
@@ -1222,10 +1218,10 @@ try {
       const beforeFailure = requests.length
       await assert.rejects(() => withDeadline(agent.requestCompact('PC06 controlled failure'), 30_000, 'failed compaction'), /FU_COMPACTION_REFUSED_400/)
       const failedSummaries = requests.slice(beforeFailure).filter(row => row.kind === 'compaction')
-      assert.equal(failedSummaries.length, 1, 'a failed extension must not fall back to the enlarged SDK budget')
-      assert.equal(failedSummaries[0]!.maxTokens, 13_107)
+      assert.equal(failedSummaries.length, 1, 'a deterministic failure must not create a second summary request')
+      assert.equal(failedSummaries[0]!.maxTokensField, null)
       snapshots.failed = wireRows(agent).filter(row => row.type === 'compact_result').at(-1)
-      scenes.push('pc-06-failure-does-not-fall-back-to-enlarged-budget')
+      scenes.push('pc-06-native-compaction-failure-is-terminal')
 
       scene = 'pc-06-cancel'; sceneAttempt = 0
       const cancelled = agent.requestCompact('PC06 cancel pending summary').then(() => ({ success: true }), (error: unknown) => ({ success: false, error: String(error) }))

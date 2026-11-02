@@ -1,7 +1,8 @@
 import type { StreamFn } from '@earendil-works/pi-agent-core'
 
 /** Let an arbitrary Chat Completions server own its default output budget.
- * Explicit call_llm, compaction, handoff and cache-warming limits still apply.
+ * Explicit call_llm, handoff and cache-warming limits still apply.
+ * Pi 1.4+ summaries have no explicit cap and use the endpoint default too.
  * Wrap outside accounting so the recorded payload is the payload actually sent.
  */
 export function withCustomEndpointOutputPolicy(stream: StreamFn): StreamFn {

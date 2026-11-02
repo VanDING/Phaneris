@@ -745,7 +745,7 @@ async function createSession(): Promise<AgentSession> {
   const mutableSettings = createMutablePhanerisSettingsManager('main');
   const mainSettings = mutableSettings.settings;
   let ownedSession: AgentSession | undefined;
-  const compactionController = new CompactionThresholdController(mainSettings, () => sessionLifecycle.current === ownedSession ? ownedSession : undefined, mutableSettings.writeCompactionReserve);
+  const compactionController = new CompactionThresholdController(mainSettings, mutableSettings.writeCompactionReserve);
   const sessionOptions: CreateAgentSessionOptions = {
     cwd,
     modelRuntime,
@@ -754,7 +754,6 @@ async function createSession(): Promise<AgentSession> {
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
     resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), settingsManager: mainSettings, observeLifecycle: observeSdkLifecycle,
       installCompaction: pi => {
-        compactionController.install(pi);
         pi.on('session_compact', event => {
           if (ownedSession && initConfig) recordCanonicalCompaction(ownedSession.sessionManager, event.compactionEntry.id,
             JSON.stringify([initConfig.workspaceRootPath, initConfig.sessionId]), lastCanonicalCoveredSeq);
@@ -1612,11 +1611,6 @@ async function runMiniCompletion(prompt: string): Promise<string | null> {
 const adaptSessionEvent = createSessionEventAdapter({
   annotateInput: message => nativeInputs.stamp(message),
   currentSession: () => sessionLifecycle.current, send, debugLog, observeSdkLifecycle,
-  clearCompactionFailure: () => {
-    const controller = sessionLifecycle.current && compactionControllers.get(sessionLifecycle.current);
-    if (controller) controller.failure = undefined;
-  },
-  compactionFailure: () => sessionLifecycle.current ? compactionControllers.get(sessionLifecycle.current)?.failure : undefined,
   lengthContinuationTracker, accounting: durableToolAccounting,
   diagnostics: { capturePromptSnapshot, rememberPromptSnapshot, getPhanerisSystemPrompt, promptSnapshots },
   prefetch(content) {
@@ -2005,8 +1999,7 @@ async function handleCompact(msg: Extract<InboundMessage, { type: 'compact' }>):
       },
     });
   } catch (error) {
-    const current = sessionLifecycle.current;
-    const errorMsg = (current && compactionControllers.get(current)?.failure) || (error instanceof Error ? error.message : String(error));
+    const errorMsg = error instanceof Error ? error.message : String(error);
     debugLog(`[compact] Failed after ${Date.now() - startedAt}ms: ${errorMsg}`);
     send({
       type: 'compact_result',

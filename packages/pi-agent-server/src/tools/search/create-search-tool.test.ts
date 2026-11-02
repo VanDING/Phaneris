@@ -19,7 +19,7 @@ describe('createSearchTool', () => {
     expect(tool.description).toContain('Search the web');
   });
 
-  it('validates arguments through the SDK TypeBox build (coercion + required checks)', () => {
+  it('validates arguments through the SDK JSON Schema validator (coercion + required checks)', () => {
     const provider: WebSearchProvider = {
       name: 'Mock',
       async search() {
@@ -30,9 +30,8 @@ describe('createSearchTool', () => {
     const call = (args: unknown) =>
       validateToolArguments(tool as any, { type: 'toolCall', id: 'call-1', name: tool.name, arguments: args } as any);
 
-    // The SDK only coerces model-emitted argument types (e.g. "3" -> 3) for schemas
-    // built with its own TypeBox; a schema from a second TypeBox copy would be
-    // validated strictly and reject this call instead.
+    // Pi 1.5 validates JSON Schema, including TypeBox-built schemas, with the
+    // same coercion rules (e.g. "3" -> 3), independent of the schema's builder.
     expect(call({ query: 'craft', count: '3' })).toEqual({ query: 'craft', count: 3 });
     expect(() => call({ count: 3 })).toThrow(/Validation failed/);
     expect(() => call({ query: 'craft', count: 99 })).toThrow(/Validation failed/);
