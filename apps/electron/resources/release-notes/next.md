@@ -7,6 +7,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 ## Improvements
 
 - Combine startup feedback into a white character background, reveal the Phaneris mark only after the application is ready, and transition directly into the workspace.
+- Add a centered, gently breathing LOADING word to the startup character grid, with a deeper violet color and a smooth handoff to the Phaneris mark.
 
 ## Bug Fixes
 

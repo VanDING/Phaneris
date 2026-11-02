@@ -1,5 +1,8 @@
 # Build artifacts for DMG packaging
 vendor/
+# The bundled startup effect is application source, not a packaging artifact.
+!src/renderer/components/startup/vendor/
+!src/renderer/components/startup/vendor/*
 packages/
 release/
 node_modules/@anthropic-ai/

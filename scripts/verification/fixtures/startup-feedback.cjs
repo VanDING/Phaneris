@@ -3,6 +3,21 @@ const assert = require('node:assert/strict')
 const { mkdirSync, readFileSync, writeFileSync } = require('node:fs')
 const { join } = require('node:path')
 
+// Read the actual running shader, without a diagnostic API in the product.
+function loadingState() {
+  const canvas = document.querySelector('canvas')
+  const gl = canvas?.getContext('webgl2')
+  const program = gl?.getParameter(gl.CURRENT_PROGRAM)
+  if (!program) return null
+  const uniform = name => gl.getUniform(program, gl.getUniformLocation(program, name))
+  const grid = uniform('uGrid'), cell = uniform('uCell'), origin = uniform('uOrigin'), size = uniform('uResolution')
+  return { visibility: uniform('uLoading'), breath: uniform('uLoadingBreath'), color: Array.from(uniform('uLoadingColor')),
+    glyphs: Array.from({ length: 7 }, (_, i) => uniform(`uLoadingGlyphs[${i}]`)),
+    cols: grid[0], rows: grid[1], dx: origin[0] + grid[0] * cell[0] / 2 - size[0] / 2,
+    dy: origin[1] + grid[1] * cell[1] / 2 - size[1] / 2,
+    background: Array.from(uniform('uBase')) }
+}
+
 ;(async () => {
   const fixture = JSON.parse(readFileSync(process.argv[2], 'utf8'))
   const checks = [], samples = [], errors = []
@@ -12,12 +27,14 @@ const { join } = require('node:path')
     delete env.ELECTRON_RUN_AS_NODE; delete env.VITE_DEV_SERVER_URL
     const application = await _electron.launch({ args: [fixture.entry, ...(scene === 'no-webgl' ? ['--no-webgl'] : [])], env, timeout: 30000 })
     const nativeProcess = application.process()
+    let nativeLog = ''
+    nativeProcess.stderr.on('data', data => { nativeLog += data.toString() })
     let tracing = false
     try {
       const page = await application.firstWindow()
       page.on('pageerror', error => errors.push({ scene, message: error.message }))
       if (scene === 'slow') { await page.context().tracing.start({ screenshots: true, snapshots: true }); tracing = true }
-      if (scene === 'reduced') await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.emulateMedia({ reducedMotion: scene === 'reduced' ? 'reduce' : 'no-preference' })
       await page.locator('[data-startup-phase="loading"]').waitFor()
       const native = await application.browserWindow(page)
       await page.waitForFunction(() => document.querySelector('canvas'))
@@ -27,6 +44,14 @@ const { join } = require('node:path')
         paper: getComputedStyle(document.querySelector('.startup-surface')).backgroundColor,
         logo: !!document.querySelector('[data-testid="startup-logo"]'), overflow: document.body.scrollWidth > innerWidth }))
       assert.deepEqual(isolated, { node: 'undefined', api: 'undefined', paper: 'rgb(255, 255, 255)', logo: false, overflow: false })
+      if (scene !== 'no-webgl') {
+        await page.waitForFunction(loadingState)
+        const word = await page.evaluate(loadingState)
+        assert.equal(word.visibility, 1)
+        assert.deepEqual(word.glyphs, [11, 14, 0, 3, 8, 13, 6])
+        assert(Math.abs(word.dx) <= 1 && Math.abs(word.dy) <= 1 && word.cols % 2 && word.rows % 2)
+        for (let i = 0; i < 3; i++) assert(Math.abs(word.color[i] - [76, 41, 111][i] / 255) < 0.000001)
+      }
       if (scene === 'cancel') {
         const closed = new Promise(resolve => nativeProcess.once('exit', resolve))
         await native.evaluate(window => window.close())
@@ -49,17 +74,31 @@ const { join } = require('node:path')
         const first = await page.screenshot()
         await page.waitForTimeout(180)
         assert.notDeepEqual(await page.screenshot(), first, 'The loading background must animate')
-        checks.push('slow backend and hidden renderer retain animated white characters without logo or text')
+        const wordSamples = []
+        for (let i = 0; i < 32; i++) {
+          wordSamples.push(await page.evaluate(loadingState))
+          await page.waitForTimeout(110)
+        }
+        const breaths = wordSamples.map(value => value.breath)
+        assert(Math.min(...breaths) < 0.32 && Math.max(...breaths) > 0.62)
+        assert(wordSamples.every(value => value.visibility === 1 && value.glyphs.join() === '11,14,0,3,8,13,6'))
+        await page.mouse.move(800, 500); await page.mouse.click(800, 500)
+        assert.deepEqual((await page.evaluate(loadingState)).glyphs, [11, 14, 0, 3, 8, 13, 6])
+        writeFileSync(join(fixture.output, 'loading-word.json'), JSON.stringify(wordSamples, null, 2))
+        checks.push('slow backend retains a centered deep-violet LOADING word with a 3.2-second breath and unchanged background')
       }
       if (scene === 'no-webgl') {
         assert.equal(await page.evaluate(() => document.querySelector('canvas').getContext('webgl2')), null)
         await page.locator('.startup-fallback').waitFor()
+        await page.getByTestId('startup-loading-fallback').waitFor()
+        assert.equal(await page.getByTestId('startup-loading-fallback').textContent(), 'LOADING')
         await page.screenshot({ path: join(fixture.output, 'webgl-fallback.png') })
       }
       if (scene === 'context-lost') {
         await page.evaluate(() => document.querySelector('canvas').getContext('webgl2').getExtension('WEBGL_lose_context').loseContext())
         await page.locator('.startup-fallback').waitFor()
         await page.locator('canvas').waitFor({ state: 'detached' })
+        await page.getByTestId('startup-loading-fallback').waitFor()
         await page.evaluate(() => { window.startupCanvas = null })
       }
       if (scene === 'reduced') {
@@ -80,10 +119,11 @@ const { join } = require('node:path')
       } else {
         if (scene === 'minimized') await native.evaluate(window => window.minimize())
         const start = Date.now()
-        assert.equal(await application.evaluate(() => {
+        await application.evaluate(() => {
           const { presentation, targets } = globalThis.startupTest
-          return presentation.ready(targets[0].webContents.id)
-        }), true)
+          // Leave the inspector evaluation before starting the native animation.
+          setTimeout(() => { globalThis.startupTest.readyResult = presentation.ready(targets[0].webContents.id) }, 50)
+        })
         if (scene === 'minimized') {
           await page.waitForTimeout(200)
           assert.equal(await page.locator('[data-testid="startup-logo"]').count(), 0)
@@ -111,18 +151,25 @@ const { join } = require('node:path')
               }
             })
           }
+          if (scene === 'no-webgl' || scene === 'context-lost') {
+            await page.waitForFunction(() => getComputedStyle(document.querySelector('[data-testid="startup-loading-fallback"]')).opacity === '0')
+          } else await page.waitForFunction(() => {
+            const gl = document.querySelector('canvas').getContext('webgl2'), program = gl.getParameter(gl.CURRENT_PROGRAM)
+            return gl.getUniform(program, gl.getUniformLocation(program, 'uLoading')) === 0
+          })
         }
         await page.waitForEvent('close', { timeout: 10000 })
         const elapsed = Date.now() - start
         console.log(JSON.stringify({ scene, elapsed }))
         if (scene === 'reduced') assert(elapsed < 1500, 'Reduced motion must not wait for the logo animation')
-        else if (scene !== 'slow') assert(elapsed >= 1600, `${scene}: Handoff must wait for the real logo entrance (${elapsed}ms)`)
+        else if (scene !== 'slow') assert(elapsed >= 1800, `${scene}: Handoff must wait for the loading fade and real logo entrance (${elapsed}ms)`)
         samples.push({ scene, elapsed, logoClockControlled: scene === 'slow', webglCapabilityEmulated: scene === 'no-webgl', isolated })
       }
       const deadline = Date.now() + 10000
       while (!await application.evaluate(() => globalThis.startupTest.presentation.window.isDestroyed())) {
         assert(Date.now() < deadline); await new Promise(resolve => setTimeout(resolve, 30))
       }
+      if (scene !== 'crash') assert.equal(await application.evaluate(() => globalThis.startupTest.readyResult), true)
       if (scene === 'multiple-late') {
         assert.equal(await application.evaluate(() => globalThis.startupTest.targets[1].isVisible()), false)
         assert.equal(await application.evaluate(() => {
@@ -135,6 +182,7 @@ const { join } = require('node:path')
       checks.push(`${scene}: readiness ownership, continuous canvas and native handoff without residual window`)
       if (tracing) { await page.context().tracing.stop({ path: join(fixture.output, 'startup-trace.zip') }); tracing = false }
     } finally {
+      writeFileSync(join(fixture.output, `${scene}-native.log`), nativeLog)
       if (tracing) await application.context().tracing.stop({ path: join(fixture.output, 'failure-trace.zip') })
       if (nativeProcess.exitCode === null) await application.close()
     }
@@ -158,10 +206,14 @@ const { join } = require('node:path')
       const startup = await application.firstWindow()
       assert(/\/startup\.html/.test(startup.url()))
       await startup.locator('[data-startup-phase="loading"]').waitFor()
-      assert.equal(await startup.locator('[data-testid="startup-logo"]').count(), 0)
-      assert.equal(await startup.evaluate(() => getComputedStyle(document.querySelector('.startup-surface')).backgroundColor), 'rgb(255, 255, 255)')
-      await startup.evaluate(() => { window.startupCanvas = document.querySelector('canvas') })
-      await startup.locator('[data-startup-phase="revealing"]').waitFor({ timeout: 60000 })
+      const revealing = startup.locator('[data-startup-phase="revealing"]').waitFor({ timeout: 60000 })
+      const initial = await startup.evaluate(() => {
+        window.startupCanvas = document.querySelector('canvas')
+        return { logo: !!document.querySelector('[data-testid="startup-logo"]'),
+          paper: getComputedStyle(document.querySelector('.startup-surface')).backgroundColor }
+      })
+      assert.deepEqual(initial, { logo: false, paper: 'rgb(255, 255, 255)' })
+      await revealing
       assert(await startup.evaluate(() => window.startupCanvas === document.querySelector('canvas')))
       const business = application.windows().find(page => /\/renderer\/index\.html/.test(page.url()))
       assert(business, 'The actual workspace renderer must exist before logo entry')

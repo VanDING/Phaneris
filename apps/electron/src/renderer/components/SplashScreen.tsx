@@ -74,10 +74,15 @@ export function SplashScreen({ ready, onExitComplete, native = false }: SplashSc
         {!contextLost && <LetterGlitch lightMode baseColor="#766a83" glitchColors={['#7851a9', '#9879b7', '#533665']}
           fontSize={15} spacing={0.65} density={0.85} baseOpacity={0.17} glitchAmount={0.2076}
           speed={reduced ? 0 : 0.55} smooth interactive={!reduced} cursorRadius={140} clickEffect="tear"
+          loading={!ready} loadingColor="#4c296f"
           flow={0.4} edgeFade={0.08} centerFade={0} intro={!reduced} paused={reduced && painted}
           onFrame={paintedFrame} dpr={Math.min(devicePixelRatio || 1, 1.5)}
           backgroundColor={undefined} style={undefined} />}
       </div>
+      {(!painted || contextLost) && <div className={`startup-loading-fallback${ready ? ' startup-loading-leaving' : ''}`}
+        data-testid="startup-loading-fallback" aria-hidden="true">
+        <span>{Array.from('LOADING').map((letter, i) => <span key={i}>{letter}</span>)}</span>
+      </div>}
       {ready && <div className="startup-logo" aria-hidden="true" data-testid="startup-logo">
         <PhanerisSymbol className="startup-quiet" />
         <div className="startup-ink" onAnimationEnd={event => {
