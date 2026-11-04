@@ -164,6 +164,19 @@ export interface ValidatorInterface {
  * - Codex: createCodexContext() with callback IPC and limited capabilities
  */
 export interface SessionToolContext {
+  /** Host-bound workspace assistant reads; absent in ordinary sessions. */
+  assistantMemorySearch?: (input: import('./memory-lookup-contracts').MemoryLookupQuery) => Promise<import('./memory-lookup-contracts').MemoryLookupResult>;
+  assistantMemoryInspect?: (input: import('./memory-lookup-contracts').MemoryInspectQuery) => Promise<import('./memory-lookup-contracts').MemoryInspectResult>;
+  assistantHistorySearch?: (input: import('./history-contracts').HistoryQuery) => Promise<import('./history-contracts').HistoryPage>;
+  assistantMemoryUpdate?: (input: import('./memory-contracts').MemoryMutation) => Promise<unknown>;
+  assistantMemoryMaintenance?: (input: import('./memory-maintenance-contracts').MemoryMaintenanceCommand) => Promise<import('./memory-maintenance-contracts').MemoryMaintenanceResult>;
+  assistantContextHistory?: (input: { query?: string; offset?: number; limit?: number }) => Promise<unknown>;
+  assistantDeliveryAck?: (input: { eventIds: string[] }) => Promise<unknown>;
+  assistantDelegate?: (input: import('./delegation-contracts').AssistantDispatch) => Promise<import('./delegation-contracts').AssistantWork>;
+  assistantWorkerOptions?: (input: import('./delegation-contracts').WorkerOptionsQuery) => Promise<import('./delegation-contracts').WorkerOptionsPage>;
+  assistantWork?: (input: import('./delegation-contracts').AssistantWorkQuery) => Promise<import('./delegation-contracts').AssistantWorkPage>;
+  assistantCancelWork?: (id: string) => Promise<import('./delegation-contracts').AssistantWork>;
+  assistantMemoryRead?: (input: { sessionId: string; messageId: string; expectedContentHash?: string; offset?: number; maxChars?: number }) => Promise<unknown>;
   /** Scoped to one tool call; never shared between concurrent executions. */
   signal?: AbortSignal;
   /** Stable host-owned tool identity, used to deduplicate durable deliveries. */

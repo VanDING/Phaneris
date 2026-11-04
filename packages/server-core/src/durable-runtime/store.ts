@@ -387,6 +387,27 @@ export class DurableRuntimeStore {
     return rows.map(row => JSON.parse(row.state_json) as DurableOperationState)
   }
 
+  inputExecutions(sessionId: string, messageId: string, options: { before?: number; limit: number }) {
+    // Auxiliary/model effects never become another execution attempt. Only an
+    // agent-turn acceptance carrying this exact original input can establish it.
+    const total = this.db.prepare(`SELECT COUNT(*) AS count FROM runtime_events WHERE session_id=? AND event_type='operation_accepted'
+      AND json_extract(payload_json,'$.kind')='agent_turn' AND json_extract(payload_json,'$.userMessageId')=?`).get(sessionId, messageId) as { count: number }
+    const accepted = this.db.prepare(`SELECT * FROM runtime_events WHERE session_id=? AND event_type='operation_accepted'
+      AND json_extract(payload_json,'$.kind')='agent_turn' AND json_extract(payload_json,'$.userMessageId')=?
+      AND (? IS NULL OR seq<?) ORDER BY seq DESC LIMIT ?`).all(sessionId, messageId, options.before ?? null, options.before ?? null, options.limit + 1) as RuntimeEventRow[]
+    const items = accepted.slice(0, options.limit).map(row => {
+      const current = this.getOperation(row.operation_id)
+      const terminal = this.db.prepare(`SELECT * FROM runtime_events WHERE operation_id=? AND session_id=? AND event_type='operation_terminal' ORDER BY seq DESC LIMIT 1`)
+        .get(row.operation_id, sessionId) as RuntimeEventRow | undefined
+      const unresolved = this.db.prepare(`SELECT COUNT(*) AS count FROM tool_operations WHERE run_operation_id=? AND status IN ('effect_pending','recovery_parked')`)
+        .get(row.operation_id) as { count: number }
+      return { operationId: row.operation_id, sessionId, inputMessageId: messageId, acceptedSeq: row.seq, acceptedAt: row.created_at,
+        updatedAt: current?.updatedAt ?? terminal?.created_at ?? row.created_at, phase: current?.phase ?? (terminal ? 'terminal' as const : 'unknown' as const), unsettledToolCount: unresolved.count,
+        ...(terminal ? { terminal: { eventId: terminal.event_id, sequence: terminal.seq, reason: (JSON.parse(terminal.payload_json) as { reason?: string }).reason, at: terminal.created_at } } : {}) }
+    })
+    return { items, total: total.count, nextBefore: accepted.length > options.limit ? items.at(-1)!.acceptedSeq : null }
+  }
+
   deleteOperation(operationId: string, terminalEvent: RuntimeEvent): number {
     return this.databaseOperation('delete terminal operation', () => this.db.transaction(() => {
       const seq = this.appendEvent(terminalEvent)
@@ -767,6 +788,9 @@ export class DurableRuntimeStore {
     }
     this.db.exec(`CREATE INDEX IF NOT EXISTS ix_runtime_decisions_session
       ON runtime_events(session_id, seq) WHERE event_type = 'decision_observed'`)
+    this.db.exec(`CREATE INDEX IF NOT EXISTS ix_runtime_input_executions ON runtime_events(session_id,json_extract(payload_json,'$.userMessageId'),seq)
+      WHERE event_type='operation_accepted' AND json_extract(payload_json,'$.kind')='agent_turn';
+      CREATE INDEX IF NOT EXISTS ix_tool_run_status ON tool_operations(run_operation_id,status);`)
     this.db.exec('CREATE TABLE IF NOT EXISTS decision_recording_metadata (id INTEGER PRIMARY KEY CHECK(id = 1), started_at INTEGER NOT NULL)')
   }
 

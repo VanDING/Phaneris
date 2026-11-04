@@ -231,6 +231,19 @@ export const LOCAL_ONLY_CHANNELS = new Set<string>([
 // ---------------------------------------------------------------------------
 
 export const REMOTE_ELIGIBLE_CHANNELS = new Set<string>([
+  RPC_CHANNELS.residentAssistant.GET,
+  RPC_CHANNELS.residentAssistant.CONTEXT,
+  RPC_CHANNELS.residentAssistant.EVENTS,
+  RPC_CHANNELS.residentAssistant.DISPATCH,
+  RPC_CHANNELS.residentAssistant.WORK,
+  RPC_CHANNELS.residentAssistant.CANCEL_WORK,
+  RPC_CHANNELS.assistantMemory.QUERY,
+  RPC_CHANNELS.assistantMemory.SUPPRESSION_EXPORT,
+  RPC_CHANNELS.assistantMemory.SUPPRESSION_MERGE,
+  RPC_CHANNELS.assistantMemory.HISTORY,
+  RPC_CHANNELS.assistantMemory.MUTATE,
+  RPC_CHANNELS.assistantMemory.READ_SOURCE,
+  RPC_CHANNELS.assistantMemory.CHANGED,
   // Decision settings and credentials belong to the authenticated workspace server.
   RPC_CHANNELS.decisions.GET_SETTINGS,
   RPC_CHANNELS.decisions.GET_SESSION,

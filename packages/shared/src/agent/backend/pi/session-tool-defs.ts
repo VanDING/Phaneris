@@ -13,20 +13,23 @@ import {
 import { FEATURE_FLAGS } from '../../../feature-flags.ts';
 import { isDecisionFeatureActive } from '../../../decisions/resolve.ts';
 import { getCapabilityPromptSections } from '../../../prompts/system.ts';
+import { isResidentAssistantToolAllowed } from '../../resident-role.ts';
 
 export type SessionToolProxyDef = JsonSchemaToolDef;
 
 export { SESSION_TOOL_NAMES };
 
-export function getSessionToolProxyDefs(workspaceRootPath?: string): SessionToolProxyDef[] {
-  const guidance = getCapabilityPromptSections(workspaceRootPath);
+export function getSessionToolProxyDefs(workspaceRootPath?: string, role?: string): SessionToolProxyDef[] {
+  const guidance = role === 'resident_assistant' ? [] : getCapabilityPromptSections(workspaceRootPath);
   return getToolDefsAsJsonSchema({
     prefix: 'mcp__session__',
     includeDeveloperFeedback: FEATURE_FLAGS.developerFeedback,
     // Same gate as the Claude path (session-scoped-tools.ts): advertise `decide`
     // only while the decision layer is on.
     includeDecide: isDecisionFeatureActive('decideTool'),
-  }).map(def => {
+  }).filter(def => role === 'resident_assistant'
+    ? isResidentAssistantToolAllowed(role, def.name)
+    : !def.name.startsWith('mcp__session__assistant_')).map(def => {
     const family = def.namespace?.name.replace('phaneris:', '');
     const ids = family === 'resources' ? ['resources', 'automations'] : family === 'data' ? ['deliverables'] : [family];
     const instructions = guidance.filter(s => ids.includes(s.id)).map(s => s.content).join('');

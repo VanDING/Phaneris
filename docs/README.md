@@ -20,6 +20,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
+0.6.x 常驻助手：[架构与版本路线](architecture/resident-assistant-0.6-roadmap-2026-11-03.md)、[实施进度与验证边界](process/resident-assistant-implementation-2026-11-03.md)、[先行失败矩阵](verification/resident-assistant-failure-matrix-2026-11-03.md) — accepted（2026-11-03，实施中）；记忆 Host/RPC、特殊助手身份/角色、Pi 记忆读取、配置校验及普通 Session 的新建/续用委派已接通，委派库仅保留投递回执和成果引用。2026-11-04 已贯通增量来源目录、按版本/项目恢复的有界提取与候选确认、依赖退出、逐请求上下文清单、稳定身份换段、事件消费/自动交付及顶部居中独立品牌入口；按用户最新确认复用现有对话页和管理对话框，原 Logo 菜单保留，不新增助手侧栏；成熟生命周期、长期质量与远端托管按后续阶段验证，尚未发行 0.6.0。UI 以[品牌入口与全屏对话原型](prototypes/resident-assistant-entry-2026-11-03.html)为布局基准，功能以架构规划为准。
+
 M0 收尾：[实施与验证](process/m0-closeout-implementation-2026-10-28.md)、[先行失败矩阵](verification/m0-closeout-failure-matrix-2026-10-28.md) — accepted（2026-10-29，本机 Windows 候选）；完整 CI/critical、Harness 与实际打包应用通过；已纳入 [0.5.5 发布准备](../apps/electron/resources/release-notes/0.5.5.md)，本机安装版不自动替换。
 
 阶段评估与开发建议：[2026-10-28 治理方向评估与后续路线](process/governance-review-and-development-direction-2026-10-28.md) — M0 本地收尾完成，M1–M3 仍为 proposed；评估 0.3.0 至 0.5.4 的投入与验证边界，建议有限稳定性收尾后转向成果反馈、实际交付和项目接续。

@@ -25,7 +25,7 @@ import type { PiUsage, StoredAttachment, MessageRole, ToolStatus, AuthRequestTyp
  */
 export const SESSION_PERSISTENT_FIELDS = [
   // Identity
-  'id', 'workspaceRootPath', 'sdkSessionId', 'sdkCwd',
+  'id', 'workspaceRootPath', 'sdkSessionId', 'sdkCwd', 'sessionKind', 'residentDelegationId', 'delegationIds',
   // Timestamps
   'createdAt', 'lastUsedAt', 'lastMessageAt',
   // Display
@@ -34,6 +34,7 @@ export const SESSION_PERSISTENT_FIELDS = [
   'lastReadMessageId', 'hasUnread',
   // Config
   'enabledSourceSlugs', 'permissionMode', 'previousPermissionMode', 'workingDirectory',
+  'systemPromptPreset',
   // Active plugin bundle (D12: at most one per session)
   'activePlugin',
   // Model/Connection
@@ -144,6 +145,13 @@ export type { StoredMessage } from '@phaneris/core/types';
  */
 export interface SessionConfig extends SessionPlanningFields {
   id: string;
+  /** Host-selected prompt identity; delegated execution accepts registered presets only. */
+  systemPromptPreset?: string;
+  /** Absent on ordinary sessions. Only the Host assistant entry creates this role. */
+  sessionKind?: 'resident_assistant';
+  residentDelegationId?: string;
+  /** Attributed input identities; ordinary Sessions may receive multiple delegations. */
+  delegationIds?: string[];
   /** SDK session ID (captured after first message) */
   sdkSessionId?: string;
   /** Workspace root path this session belongs to */

@@ -31,6 +31,7 @@ export interface InitMessage {
   providerType?: string;
   authType?: string;
   workspaceId?: string;
+  sessionKind?: 'resident_assistant';
   baseUrl?: string;
   branchFromSdkSessionId?: string;
   branchFromSessionPath?: string;
@@ -68,7 +69,7 @@ export type InboundMessage =
   | { type: 'durable_tool_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; canonicalArgsHash: string; recoveryMode: ToolRecoveryMode; created: boolean; status: string; committedSeq: number }; reason?: string }
   | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; reason?: string }
   | { type: 'durable_model_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }
-  | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; reason?: string }
+  | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; discard?: true; reason?: string }
   | PiLargeResultFilterResponse
   | { type: 'abort'; id?: string }
   | { type: 'mini_completion'; id: string; prompt: string; durableRunOperationId?: string; durableTurnId?: string }
@@ -163,6 +164,7 @@ export interface OutboundDurableToolOutcomeReq {
 }
 
 export interface OutboundDurableModelPrepareReq {
+  residentContext?: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest['residentContext'];
   purpose?: 'cache_warm' | 'compaction';
   type: 'durable_model_prepare_request';
   requestId: string;

@@ -16,6 +16,18 @@ import type { LabelConfig } from '../labels/types'
 import type { LoadedSkill } from '../skills/types'
 
 export interface RpcMethodResults {
+  [c.residentAssistant.GET]: Session
+  [c.residentAssistant.CONTEXT]: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState
+  [c.residentAssistant.EVENTS]: import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage
+  [c.residentAssistant.DISPATCH]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWork
+  [c.residentAssistant.WORK]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage
+  [c.residentAssistant.CANCEL_WORK]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWork
+  [c.assistantMemory.QUERY]: import('./assistant-memory').MemoryQueryResult
+  [c.assistantMemory.SUPPRESSION_EXPORT]: import('./assistant-memory').MemorySuppressionPage
+  [c.assistantMemory.SUPPRESSION_MERGE]: import('./assistant-memory').MemorySuppressionMergeResult
+  [c.assistantMemory.HISTORY]: import('./assistant-memory').HistoryPage
+  [c.assistantMemory.MUTATE]: import('./assistant-memory').MemoryMutationResult
+  [c.assistantMemory.READ_SOURCE]: import('./assistant-memory').MemorySourceResult
   [c.sources.GET]: LoadedSource[]
   [c.sources.CREATE]: FolderSourceConfig
   [c.automations.TEST]: TestAutomationResult

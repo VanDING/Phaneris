@@ -104,8 +104,9 @@ function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (
       if (purpose === 'cache_warm') throw new Error('Cache warming requires durable accounting');
       return async message => { Object.assign(message, { durableRequestSeq: requestSeq }); };
     }
+    if (initConfig.sessionKind === 'resident_assistant' && capacity.availableInputTokens < 1000) throw new Error('Resident context capacity is exhausted. Reduce the working set or select a new topic; original requirements were not truncated.');
     const prepared = await requestDurableModelPrepare(
-      providerRequestId, model.provider, model.id, canonicalRequestHash, purpose, durableRun,
+      providerRequestId, model.provider, model.id, canonicalRequestHash, purpose, durableRun, contextSnapshot,
     );
     return async message => {
       const committedSeq = await requestDurableModelOutcome({
@@ -121,7 +122,7 @@ function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (
       });
       if (!purpose) rememberDurableToolBatch(message, prepared.operationId, capacity);
     };
-  }, () => piCacheRetention));
+  }, () => piCacheRetention, () => initConfig?.sessionKind === 'resident_assistant' || contextFenced));
 }
 
 registerPiSdkRuntime(withDurableAccounting(streamSimple));
@@ -167,6 +168,7 @@ import { createWebFetchTool } from './tools/web-fetch.ts';
 import { modelMetering } from './model-metering.ts';
 import { CompactionThresholdController } from './compaction-threshold.ts';
 import { isCompactionThreshold } from '@phaneris/shared/agent/compaction-threshold';
+import { isResidentAssistantToolAllowed } from '@phaneris/shared/agent/resident-role';
 import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
 import { stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
@@ -234,6 +236,8 @@ function nextLocalEphemeralQueryId(source: string): string {
 
 // Init config (set on 'init' message)
 let initConfig: Extract<InboundMessage, { type: 'init' }> | null = null;
+let residentContext: DurableCanonicalModelContext['resident'];
+let contextFenced = false;
 
 // Mutable state
 let currentDurableRunOperationId: string | undefined;
@@ -275,7 +279,7 @@ function sendThinkingLevelState(): void {
 // Pending promises for async handshakes
 const pendingPreToolUse = new PendingReplies<{ action: string; input?: Record<string, unknown>; reason?: string }>();
 const pendingToolExecutions = new PendingReplies<PiProxyToolResult>();
-type OutcomeReply = { ok: boolean; committedSeq?: number; deferred?: true; unavailable?: true; reason?: string };
+type OutcomeReply = { ok: boolean; committedSeq?: number; deferred?: true; discard?: true; unavailable?: true; reason?: string };
 const unavailableReceipt = { ok: false, unavailable: true as const, reason: 'Runtime receipt unavailable or execution cancelled' };
 const pendingDurableToolPrepares = new PendingReplies<{ ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; unavailable?: true; reason?: string }>();
 const pendingDurableToolOutcomes = new PendingReplies<OutcomeReply>();
@@ -732,10 +736,12 @@ async function createSession(): Promise<AgentSession> {
   // report_progress is local, read-only and intentionally bypasses the
   // permission handshake: it is a presentation channel, not an external action.
   const wrappedAll = [
-    ...wrapToolsWithHooks([...builtinDefs, ...webTools, ...proxyTools]),
+    ...wrapToolsWithHooks([...builtinDefs, ...webTools, ...proxyTools]
+      .filter(tool => isResidentAssistantToolAllowed(initConfig?.sessionKind, tool.name))),
     createReportProgressTool(),
   ];
-  const catalog = composeToolCatalog([wrappedAll], ['tool_search', 'codemode']);
+  const catalog = composeToolCatalog([wrappedAll], ['tool_search', 'codemode']
+    .filter(name => isResidentAssistantToolAllowed(initConfig?.sessionKind, name)));
   debugLog(`Session tools: ${builtinDefs.length} builtin + ${webTools.length} web + ${proxyTools.length} proxy + 1 progress = ${wrappedAll.length} total`);
 
   // Build session options.
@@ -838,7 +844,8 @@ async function createSession(): Promise<AgentSession> {
   }
   const availableNames = new Set([...catalog.customTools.filter(tool => tool.exposure !== 'hidden').map(tool => tool.name), ...catalog.activeNames]);
   const restoredToolNames = getCurrentTools(session.sessionManager.buildSessionContext().messages).map(tool => tool.name).filter(name => availableNames.has(name));
-  session.setActiveToolsByName([...new Set([...catalog.activeNames, ...restoredToolNames])]);
+  session.setActiveToolsByName([...new Set([...catalog.activeNames, ...restoredToolNames])]
+    .filter(name => isResidentAssistantToolAllowed(initConfig?.sessionKind, name)));
   // Ordinary requests keep their existing boundary. SDK background refreshes
   // use a distinct boundary and never publish assistant/tool output.
   const sessionStream = installCacheWarmingAccounting(
@@ -1014,6 +1021,7 @@ async function requestDurableModelPrepare(
   canonicalRequestHash: string,
   purpose?: 'cache_warm' | 'compaction',
   durableRun = currentDurableModelRun(),
+  snapshot?: import('@phaneris/core/types').RequestContextSnapshot,
 ): Promise<PreparedDurableModel> {
   if (!initConfig || !durableRun) {
     throw new Error('Durable model boundary is unavailable');
@@ -1031,6 +1039,7 @@ async function requestDurableModelPrepare(
     provider,
     model,
     canonicalRequestHash,
+    residentContext: residentContext ? { segmentId: residentContext.segmentId, snapshot } : undefined,
   });
   const response = await responsePromise;
   if (!response.ok || !response.prepared) throw new Error(response.reason || 'Durable model T1 failed');
@@ -1099,6 +1108,7 @@ async function requestDurableModelOutcome(input: {
   } satisfies OutboundDurableModelOutcomeReq;
   send(request);
   const response = await responsePromise;
+  if (response.discard) throw new Error('Resident context changed while the provider was running; its stale response was withheld. Start a fresh turn.');
   if (!response.ok) { retainPendingOutcome({ kind: 'model', request }); return undefined; }
   if (response.committedSeq === undefined && !response.deferred) throw new Error('Durable model T2 returned no receipt');
   return response.committedSeq;
@@ -1696,6 +1706,8 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
   currentDurableTurnId = msg.durableTurnId ?? msg.id;
 
   try {
+    if (initConfig?.sessionKind === 'resident_assistant' && !msg.canonicalContext?.resident) throw new Error('Resident prompt requires a prepared context segment');
+    if (msg.canonicalContext?.blocked) throw new Error(msg.canonicalContext.blocked);
     // If proxy tools changed since last session creation, dispose and recreate.
     // This avoids calling _buildRuntime() for dynamic tool updates — instead
     // we create a fresh session via continueRecent() with all tools known upfront.
@@ -1709,6 +1721,8 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     }
 
     const session = await ensureSession();
+    residentContext = msg.canonicalContext?.resident;
+    contextFenced = !!msg.canonicalContext?.fenced || !!residentContext;
 
     if (msg.canonicalContext) {
       if (!session.isIdle) {
@@ -1735,7 +1749,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     if (msg.systemPrompt) {
       setPhanerisSystemPrompt(msg.systemPrompt);
     }
-    setPhanerisTaskInstructions([msg.taskPreparation?.instructions ?? '', msg.taskPreparation?.sourceContext ?? '']);
+    setPhanerisTaskInstructions([msg.taskPreparation?.instructions ?? '', msg.taskPreparation?.sourceContext ?? '', residentContext?.contextText ?? '']);
     const selectedFamilies = new Set(msg.taskPreparation?.capabilityFamilies ?? []);
     const selectedSources = new Set(msg.taskPreparation?.sourceSlugs ?? []);
     const prepared = proxyToolDefs.filter(tool => {
@@ -1795,19 +1809,23 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     send({ type: 'error', message: errorMsg, code: 'prompt_error' });
     // Prompt failed before Pi could establish a normal run, so synthesize the
     // same terminal boundary the SDK guarantees for started runs.
-    if (!received) send({ type: 'event', event: { type: 'agent_settled', aborted: error instanceof Error && error.name === 'AbortError' } });
+    if (!received) {
+      send({ type: 'event', event: { type: 'agent_end', messages: [], willRetry: false } });
+      send({ type: 'event', event: { type: 'agent_settled', aborted: error instanceof Error && error.name === 'AbortError' } });
+    }
   }
 }
 
 function handleSyncTools(msg: Extract<InboundMessage, { type: 'sync_tools' }>): void {
-  if (!proxyToolDefinitionsChanged(proxyToolDefs, msg.tools)) {
+  const permitted = msg.tools.filter(tool => isResidentAssistantToolAllowed(initConfig?.sessionKind, tool.name));
+  if (!proxyToolDefinitionsChanged(proxyToolDefs, permitted)) {
     debugLog(`Proxy tool sync unchanged (${msg.tools.length} tools)`);
     return;
   }
 
   // Replace the full proxy set so removed/disabled source tools cannot remain
   // visible in a resumed Pi session.
-  proxyToolDefs = msg.tools;
+  proxyToolDefs = permitted;
   debugLog(`Synced ${proxyToolDefs.length} proxy tools: ${proxyToolDefs.map(t => t.name).join(', ')}`);
 
   // Pi registers custom tool definitions at construction time. Recreate only
@@ -1872,7 +1890,7 @@ function handleDurableModelPrepareResponse(
 function handleDurableModelOutcomeResponse(
   msg: Extract<InboundMessage, { type: 'durable_model_outcome_response' }>,
 ): void {
-  if (!pendingDurableModelOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, deferred: msg.deferred, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableModelOutcomeResponse');
+  if (!pendingDurableModelOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, deferred: msg.deferred, discard: msg.discard, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableModelOutcomeResponse');
 }
 
 function handleCancelEphemeralQuery(

@@ -100,6 +100,9 @@ export async function createSession(
   workspaceRootPath: string,
   options?: {
     name?: string;
+    sessionKind?: SessionConfig['sessionKind'];
+    residentDelegationId?: string;
+    delegationIds?: string[];
     workingDirectory?: string;
     permissionMode?: SessionConfig['permissionMode'];
     enabledSourceSlugs?: string[];
@@ -148,6 +151,9 @@ export async function createSession(
   const session: SessionConfig = {
     id: sessionId,
     workspaceRootPath,
+    sessionKind: options?.sessionKind,
+    residentDelegationId: options?.residentDelegationId,
+    delegationIds: options?.delegationIds,
     name: options?.name,
     createdAt: now,
     lastUsedAt: now,

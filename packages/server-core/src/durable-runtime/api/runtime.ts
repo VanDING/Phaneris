@@ -103,6 +103,8 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
     events: guarded((workspace: string, options: { sessionId?: string; operationId?: string; afterSeq?: number; limit?: number } = {}) =>
       options.limit !== undefined ? kernel.storeFor(workspace).listEvents(options) : kernel.storeFor(workspace).listAllEvents(options)),
     operations: guarded((workspace: string, sessionId?: string) => kernel.storeFor(workspace).listOperations(sessionId)),
+    inputExecutions: guarded((workspace: string, sessionId: string, messageId: string, input: { before?: number; limit: number }) =>
+      kernel.storeFor(workspace).inputExecutions(sessionId, messageId, input)),
     usage: guarded((workspace: string, options: { sessionId?: string; operationId?: string } = {}) => kernel.storeFor(workspace).listUsage(options)),
     unsettledTools: guarded((workspace: string, runOperationId?: string, sessionId?: string) => kernel.storeFor(workspace).listUnsettledToolOperations(runOperationId, sessionId)),
     decisionEvents: guarded((workspace: string, sessionId: string) => kernel.storeFor(workspace).listDecisionEvents(sessionId)),

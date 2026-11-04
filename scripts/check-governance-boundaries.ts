@@ -24,7 +24,9 @@ const piValuePorts = new Set(['agent/context-policy', 'agent/compaction-threshol
   // Shared, narrowly scoped outcome receipts; no runtime coordinator or product/session dependencies.
   'durable-runtime/identity', 'durable-runtime/receipt-storage',
   // Pure name/effect classifiers used for ordering only; transitive purity is checked below.
-  'agent/mcp-tool-names', 'agent/browser-tool-effects'])
+  'agent/mcp-tool-names', 'agent/browser-tool-effects',
+  // Dependency-free role authority, shared by Host enforcement and subprocess tool selection.
+  'agent/resident-role'])
 const definitions = new Map<string, Map<string, Node>>()
 const importedNames = new Map<string, Map<string, string>>()
 const calls: { file: string; node: Extract<Node, { type: 'CallExpression' }> }[] = []
@@ -114,7 +116,8 @@ for (const { file, node } of calls) {
 const writes = new Set(mutations.filter(row => /write|append/i.test(row.operation)).map(row => row.file)).size
 const pure = ['schemas', 'persisted-types', 'connection-normalize', 'source-validation'].map(domain => `packages/shared/src/config/${domain}.ts`)
 const roots = [...pure, 'packages/shared/src/protocol/index.ts', 'packages/shared/src/agent/permissions-validation.ts',
-  'packages/shared/src/agent/mcp-tool-names.ts', 'packages/shared/src/agent/browser-tool-effects.ts']
+  'packages/shared/src/agent/mcp-tool-names.ts', 'packages/shared/src/agent/browser-tool-effects.ts',
+  'packages/shared/src/agent/resident-role.ts']
 const closures: Record<string, string[]> = {}
 for (const root of roots) {
   if (!existsSync(join(repository, root))) { failures.push(`Missing required pure entry ${root}`); continue }

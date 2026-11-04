@@ -53,7 +53,7 @@ export function useFocusZone({
   // Register zone on mount + stamp container with data attribute for DOM-based zone detection
   useEffect(() => {
     if (!enabled) {
-      unregisterZone(zoneId)
+      unregisterZone(zoneId, zoneRef as React.RefObject<HTMLElement>)
       return
     }
 
@@ -68,7 +68,7 @@ export function useFocusZone({
     })
 
     return () => {
-      unregisterZone(zoneId)
+      unregisterZone(zoneId, zoneRef as React.RefObject<HTMLElement>)
     }
   }, [zoneId, registerZone, unregisterZone, focusFirst, enabled])
 

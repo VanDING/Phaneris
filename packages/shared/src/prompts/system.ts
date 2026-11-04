@@ -19,6 +19,8 @@ import {
 } from './prompt-sanitize.ts';
 import { findGitRepositoryRoot } from './developer-context.ts';
 import { buildAssistantPromptModules, type CompiledSystemPrompt, type PromptSection } from './assistant-prompt.ts';
+import { RESIDENT_ROLE_PROMPT } from '../agent/resident-role.ts';
+import { buildAssistantContract } from './assistant-contract.ts';
 import { buildOperationalCapabilityGuidance } from './capability-guidance.ts';
 
 function assistantFacts(workspaceRootPath?: string, backendName?: string) {
@@ -375,7 +377,7 @@ export interface SystemPromptOptions {
  * - 'default': Full Phaneris system prompt
  * - 'mini': Focused prompt for quick configuration edits
  */
-export type SystemPromptPreset = 'default' | 'mini';
+export type SystemPromptPreset = import('@phaneris/core/types').ExecutionPromptPreset;
 
 /**
  * Get a focused system prompt for mini agents (quick edit tasks).
@@ -457,7 +459,10 @@ export function compileSystemPrompt(options: SystemPromptOptions = {}): Compiled
   // to enable prompt caching. The system prompt stays static and cacheable.
   // Safe Mode context is also in user messages for the same reason.
   const sections: PromptSection[] = [
-    ...buildAssistantPromptModules(assistantFacts(workspaceRootPath, backendName)),
+    ...(preset === 'resident_assistant'
+      ? [{ id: 'resident-role', source: 'product-role', content: RESIDENT_ROLE_PROMPT },
+        ...buildAssistantContract(assistantFacts(workspaceRootPath, backendName)).filter(section => section.id === 'recovery')]
+      : buildAssistantPromptModules(assistantFacts(workspaceRootPath, backendName))),
     { id: 'preferences', source: 'user-preferences', content: preferences },
     { id: 'project', source: 'project-context', content: projectBlock },
     { id: 'debug', source: 'runtime-debug', content: debugContext },

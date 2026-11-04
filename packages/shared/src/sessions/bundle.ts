@@ -168,6 +168,15 @@ export function sessionFromBundle(bundle: SessionBundle, workspaceRootPath: stri
     })),
     tokenUsage: data.header.tokenUsage ?? { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 },
   }
+  // An imported conversation is history, not the target workspace's assistant identity.
+  if (session.sessionKind === 'resident_assistant') {
+    session.hidden = false
+    session.sdkSessionId = undefined
+  }
+  delete session.sessionKind
+  if (session.systemPromptPreset === 'resident_assistant') delete session.systemPromptPreset
+  delete session.residentDelegationId
+  delete session.delegationIds
   // These IDs address source-workspace objects, not portable product content.
   for (const field of ['projectId', 'parentSessionId', 'dependencySessionIds', 'triggeredBy',
     'taskSlug', 'taskRunId', 'taskNodeId', 'taskNodeDispatchId', 'taskNodeCount',

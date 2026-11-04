@@ -153,6 +153,7 @@ import { parseError, type AgentError } from './errors.ts';
 
 // Centralized PreToolUse pipeline
 import { runPreToolUseChecks, type PreToolUseCheckResult, type PreToolUseInput } from './core/pre-tool-use.ts';
+import { isResidentAssistantToolAllowed } from './resident-role.ts';
 import type { PermissionRemember } from './core/permission-remember.ts';
 import { getRtkPath } from './core/rtk-detector.ts';
 import { getRtkEnabled, getRtkExcludeCommands, getBrowserToolEnabled, getExtendedPromptCache, getPromptCacheWarming } from '../config/appearance.ts';
@@ -779,6 +780,7 @@ export class PiAgent extends BaseAgent {
       cacheRetention: extendedPromptCache ? 'long' : 'short',
       promptCacheWarming: getPromptCacheWarming(),
       contextPolicy: this.config.contextPolicy ?? 'compact',
+      sessionKind: this.config.systemPromptPreset === 'resident_assistant' ? 'resident_assistant' : undefined,
       compactionThresholdTokens: this.config.compactionThresholdTokens ?? null,
     });
 
@@ -804,7 +806,7 @@ export class PiAgent extends BaseAgent {
     // These tools (SubmitPlan, config_validate, source auth, call_llm, etc.)
     // are executed in the main process when the LLM calls them.
     this.assertBackendSessionToolParity();
-    let sessionToolDefs = getSessionToolProxyDefs(this.config.workspace.rootPath);
+    let sessionToolDefs = getSessionToolProxyDefs(this.config.workspace.rootPath, this.config.systemPromptPreset);
 
     // Patch call_llm description with provider-specific model hint
     if (this.config.miniModel) {
@@ -1558,6 +1560,10 @@ export class PiAgent extends BaseAgent {
     policyOnly?: boolean;
   }): Promise<void> {
     const { requestId, toolName, toolCallId, input } = req;
+    if (!isResidentAssistantToolAllowed(this.config.systemPromptPreset, toolName)) {
+      this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: 'The resident assistant role does not permit this tool. Delegate execution to a work session.' });
+      return;
+    }
     if (req.policyOnly) {
       const decision = evaluateToolCallRules(this.config.workspace.rootPath, toolName, input);
       const staleSource = toolName.startsWith('mcp__') && !toolName.startsWith('mcp__session__') && !this.mcpPool?.isProxyTool(toolName);
@@ -1831,6 +1837,10 @@ export class PiAgent extends BaseAgent {
   private async handleDurableToolPrepareRequest(
     request: DurableToolPrepareRequest & { requestId: string },
   ): Promise<void> {
+    if (!isResidentAssistantToolAllowed(this.config.systemPromptPreset, request.toolName)) {
+      this.send({ type: 'durable_tool_prepare_response', requestId: request.requestId, ok: false, reason: 'The resident assistant role does not permit this tool.' });
+      return;
+    }
     const boundary = this.config.durableToolBoundary;
     if (!boundary) {
       this.send({
@@ -1927,7 +1937,7 @@ export class PiAgent extends BaseAgent {
     }
     try {
       const committed = await boundary.commitOutcome(request);
-      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq, deferred: committed.deferred });
+      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq, deferred: committed.deferred, discard: committed.discard });
     } catch (error) {
       this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: false, reason: error instanceof Error ? error.message : String(error) });
     }
@@ -1950,6 +1960,9 @@ export class PiAgent extends BaseAgent {
     intent?: string,
     signal?: AbortSignal,
   ): Promise<PiProxyToolResult> {
+    if (!isResidentAssistantToolAllowed(this.config.systemPromptPreset, toolName)) {
+      return { content: 'The resident assistant role does not permit this tool.', isError: true };
+    }
     // Session-scoped tools — strip mcp__session__ prefix added by the Pi SDK
     // registration (tools are registered as mcp__session__SubmitPlan, etc.)
     const strippedName = toolName.startsWith('mcp__session__')
@@ -2767,8 +2780,10 @@ export class PiAgent extends BaseAgent {
       try {
         canonicalContext = this.config.getCanonicalModelContext?.(options?.durableRunOperationId);
       } catch (error) {
+        if (this.config.systemPromptPreset === 'resident_assistant') throw error;
         this.debug(`Canonical model context unavailable; retaining Pi context: ${error instanceof Error ? error.message : String(error)}`);
       }
+      if (this.config.systemPromptPreset === 'resident_assistant' && !canonicalContext?.resident) throw new Error('Resident context preparation is unavailable; unsafe history fallback was blocked');
 
       // An explicit turn choice affects the subprocess, never the stored setting.
       if (options?.thinkingOverride && options.thinkingOverride !== this.getThinkingLevel()) {

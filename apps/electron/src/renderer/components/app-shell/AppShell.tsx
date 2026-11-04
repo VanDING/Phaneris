@@ -41,6 +41,8 @@ import {
 // SessionStatusIcons no longer used - icons come from dynamic sessionStatuses
 import { SourceAvatar } from "@/components/ui/source-avatar"
 import { TopBar } from "./TopBar"
+import { ResidentAssistantSurface } from '../resident-assistant/ResidentAssistantSurface'
+import { residentNavigationAtom } from '../resident-assistant/resident-navigation'
 import { SquarePenRounded } from "../icons/SquarePenRounded"
 import { McpIcon } from "../icons/McpIcon"
 import { cn } from "@/lib/utils"
@@ -333,9 +335,9 @@ function AppShellContent({
   const store = useStore()
   const surfaceCount = useAtomValue(renderedSurfaceCountAtom)
   const primarySessionId = useAtomValue(primarySessionIdAtom)
+  const residentPresentation = useAtomValue(residentNavigationAtom)
   const isWorkbenchFullWidth = useAtomValue(workbenchFullWidthAtom)
   const navigatorRevealRequest = useAtomValue(navigatorRevealRequestAtom)
-
   const sessionFilter = sessionsContext?.filter ?? null
 
   // Kanban/Calendar are full-width projections inside Project Management, so
@@ -2364,8 +2366,9 @@ function AppShellContent({
       {/* === OUTER LAYOUT: Unified Panel Stack | Right Sidebar === */}
       <div
         ref={shellRef}
+        inert={!!(residentPresentation?.open || residentPresentation?.closing) && residentPresentation?.workspaceId === activeWorkspaceId}
         data-shell-platform={isWebUI ? 'browser' : isMac ? 'macos' : isWindows ? 'windows' : 'linux'}
-        className="flex items-stretch relative"
+        className="resident-workspace-background flex items-stretch relative"
         style={{
           height: '100%',
           paddingRight: isAutoCompact ? 0 : PANEL_EDGE_INSET,
@@ -3931,12 +3934,9 @@ function AppShellContent({
         onSubmit={handleCreateProjectSubmit}
       />
 
-      {/* Messaging dialogs (pairing-code + WA connect) — driven by messagingDialogAtom.
-          Mounted here so they survive context-menu / dropdown close. */}
+      {/* Messaging dialogs survive context-menu / dropdown close. */}
       <MessagingDialogHost />
-
-
-
+      <ResidentAssistantSurface />
     </AppShellProvider>
   )
 }

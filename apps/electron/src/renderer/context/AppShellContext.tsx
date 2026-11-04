@@ -170,6 +170,8 @@ export interface AppShellContextType {
 
   /** Whether this surface currently owns keyboard focus. */
   isFocusedPanel?: boolean
+  /** The resident conversation is presented in its independent fullscreen layer. */
+  residentAssistantPresentation?: boolean
 
   /** Whether the shell is currently in compact/narrow mode */
   isCompactMode?: boolean

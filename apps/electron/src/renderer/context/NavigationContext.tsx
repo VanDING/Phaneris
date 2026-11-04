@@ -1,3 +1,6 @@
+import { useNavigationResourceDefaults } from '@/hooks/useNavigationResourceDefaults'
+import { useResidentAssistantSession } from '@/hooks/useResidentAssistantSession'
+import { residentNavigationAtom } from '@/components/resident-assistant/resident-navigation'
 import { shouldRevealNavigator } from '@/lib/nav-helpers'
 /**
  * NavigationContext
@@ -65,7 +68,6 @@ import type {
   Session,
   NavigationState,
   SessionFilter,
-  SourceFilter,
   ContentBadge,
 } from '../../shared/types'
 import {
@@ -80,8 +82,6 @@ import {
   DEFAULT_NAVIGATION_STATE,
 } from '../../shared/types'
 import { sessionMetaMapAtom, updateSessionMetaAtom, type SessionMeta } from '@/atoms/sessions'
-import { sourcesAtom } from '@/atoms/sources'
-import { skillsAtom } from '@/atoms/skills'
 import {
   activateForegroundSessionAtom,
   addForegroundSessionAtom,
@@ -170,7 +170,7 @@ export function NavigationProvider({
   getDraft,
   onAutoDeleteEmptySession,
   isReady = true,
-  isSessionsReady = true,
+  isSessionsReady: ordinarySessionsReady = true,
   remoteWorkspaceId,
 }: NavigationProviderProps) {
   const { t } = useTranslation()
@@ -185,12 +185,10 @@ export function NavigationProvider({
 
   // Store reference for reading fresh atom values in callbacks (avoids stale closures)
   const store = useStore()
+  const resident = useResidentAssistantSession(workspaceId, isReady && ordinarySessionsReady)
+  const isSessionsReady = ordinarySessionsReady && resident.ready
 
-  // Read sources from atom (populated by AppShell)
-  const sources = useAtomValue(sourcesAtom)
-
-  // Read skills from atom (populated by AppShell)
-  const skills = useAtomValue(skillsAtom)
+  const { getFirstSourceSlug, getFirstSkillSlug } = useNavigationResourceDefaults()
 
   // =========================================================================
   // DERIVED NAVIGATION STATE (from Primary Surface)
@@ -610,24 +608,6 @@ export function NavigationProvider({
     [workspaceId, filterSessionsByFilter]
   )
 
-  const getFirstSourceSlug = useCallback(
-    (filter?: SourceFilter | null): string | null => {
-      if (!filter) {
-        return sources[0]?.config.slug ?? null
-      }
-      const filtered = sources.filter(s => s.config.type === filter.sourceType)
-      return filtered[0]?.config.slug ?? null
-    },
-    [sources]
-  )
-
-  const getFirstSkillSlug = useCallback(
-    (): string | null => {
-      return skills[0]?.slug ?? null
-    },
-    [skills]
-  )
-
   // =========================================================================
   // AUTO-SELECTION (pure computation, no side effects)
   // =========================================================================
@@ -897,6 +877,15 @@ export function NavigationProvider({
       // intentionally do NOT auto-redirect to the last-visited subpage; doing so
       // would defeat the compact-mode drill-in UX.
       const newNavState = parseRouteToNavigationState(route)
+      const assistantId = newNavState && isSessionsNavigation(newNavState) ? newNavState.details?.sessionId : undefined
+      if (assistantId && workspaceId && store.get(sessionMetaMapAtom).get(assistantId)?.sessionKind === 'resident_assistant') {
+        if (parseSessionIdFromSurfaceRoute(store.get(primarySurfaceAtom).route) === assistantId) {
+          store.set(setPrimarySurfaceRouteAtom, routes.view.allSessions())
+        }
+        store.set(residentNavigationAtom, { workspaceId, sessionId: assistantId, route: route as ViewRoute, open: true })
+        return
+      }
+      store.set(residentNavigationAtom, current => current?.open ? { ...current, open: false, closing: true, returnFocus: false } : current)
 
       // Suppress auto-select effect
       if (options?.skipAutoSelect) {
@@ -932,8 +921,13 @@ export function NavigationProvider({
   // =========================================================================
 
   const goBack = useCallback(() => {
+    const assistant = store.get(residentNavigationAtom)
+    if (assistant?.open) {
+      store.set(residentNavigationAtom, { ...assistant, open: false, closing: true, returnFocus: true })
+      return
+    }
     history.back()
-  }, [])
+  }, [store])
 
   const goForward = useCallback(() => {
     history.forward()
@@ -1037,6 +1031,7 @@ export function NavigationProvider({
 
       // Reconcile panels from the new URL
       reconcileFromUrlParamsRef.current(new URLSearchParams(url.search))
+      if (resident.sessionId) void navigate(routes.view.allSessions(resident.sessionId))
       lastSemanticHistoryKeyRef.current = getSemanticHistoryKey()
     }
 
@@ -1051,7 +1046,7 @@ export function NavigationProvider({
       suppressPushRef.current = false
       lastSemanticHistoryKeyRef.current = getSemanticHistoryKey()
     })
-  }, [workspaceId, workspaceSlug, store, updateCanGoBackForward, getSemanticHistoryKey, isSessionsReady])
+  }, [workspaceId, workspaceSlug, store, updateCanGoBackForward, getSemanticHistoryKey, isSessionsReady, resident.sessionId, navigate])
 
   // =========================================================================
   // INITIAL ROUTE RESTORATION (CMD+R reload)
@@ -1076,8 +1071,8 @@ export function NavigationProvider({
     lastSemanticHistoryKeyRef.current = getSemanticHistoryKey()
 
     // If nothing was in the URL, navigate to default.
-    if (!params.get('route') && !params.get('panels')) {
-      navigate(routes.view.allSessions())
+    if ((!params.get('route') || params.get('route') === 'allSessions') && !params.get('panels')) {
+      navigate(routes.view.allSessions(resident.sessionId))
     }
 
     // Initialize history with seq=0 (replaceState so we don't create an extra entry)
@@ -1089,7 +1084,7 @@ export function NavigationProvider({
       suppressPushRef.current = false
       lastSemanticHistoryKeyRef.current = getSemanticHistoryKey()
     })
-  }, [isReady, isSessionsReady, workspaceId, workspaceSlug, navigate, store, getSemanticHistoryKey])
+  }, [isReady, isSessionsReady, workspaceId, workspaceSlug, navigate, store, getSemanticHistoryKey, resident.sessionId])
 
   // =========================================================================
   // PENDING NAVIGATION
@@ -1236,7 +1231,7 @@ export function NavigationProvider({
 
   useEffect(() => {
     if (suppressAutoSelectRef.current) return
-    if (!isReady || !workspaceId) return
+    if (!isReady || !isSessionsReady || !workspaceId) return
     // Scoped to sessions with no explicit detail. resolveAutoSelection owns the
     // selection decision (board skip, last/first fallback) so it lives in one
     // place; this effect just applies it when the session list loads after
@@ -1255,6 +1250,7 @@ export function NavigationProvider({
     }
   }, [
     isReady,
+    isSessionsReady,
     workspaceId,
     navigationState,
     resolveAutoSelection,

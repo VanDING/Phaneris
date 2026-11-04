@@ -667,7 +667,7 @@ export class DurableRuntimeCoordinator {
         operationId: input.operationId,
         type: 'user_message_committed',
         schemaVersion: 1,
-        modelVisible: input.modelVisible ?? true,
+        modelVisible: input.kind !== 'system' && (input.modelVisible ?? true),
         partial: false,
         payload: { messageId: input.userMessageId, content: input.userMessage },
         createdAt: acceptedAt,
@@ -942,7 +942,7 @@ export class DurableRuntimeCoordinator {
       ...(typeof runState!.data === 'object' && runState!.data !== null ? runState!.data : {}),
       currentModel: null,
     }, now)
-    const modelVisible = !warming && (!runState || (runState.data as { modelVisible?: boolean }).modelVisible !== false)
+    const modelVisible = !warming && request.contextDisposition !== 'stale' && (!runState || (runState.data as { modelVisible?: boolean }).modelVisible !== false)
     const usage: RuntimeUsageRow[] = request.usage ? [{
       usageId: `model:${request.runOperationId}:${request.providerRequestId}`,
       operationId: request.runOperationId,

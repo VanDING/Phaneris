@@ -2,6 +2,8 @@ import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 
 import { registerAuthHandlers } from './auth'
+import { registerAssistantMemoryHandlers } from './assistant-memory'
+import { registerResidentAssistantHandlers } from './resident-assistant'
 import { registerAutomationsHandlers } from './automations'
 import { registerArtifactHandlers } from './artifacts'
 import { registerCalendarHandlers } from './calendar'
@@ -38,6 +40,8 @@ export function registerCoreRpcHandlers(
   serverCtx?: ServerHandlerContext,
 ): void {
   registerAuthHandlers(server, deps)
+  registerAssistantMemoryHandlers(server, deps)
+  registerResidentAssistantHandlers(server, deps)
   registerAutomationsHandlers(server, deps)
   registerArtifactHandlers(server, deps)
   registerCalendarHandlers(server, deps)

@@ -26,6 +26,7 @@ import type { SettingsMenuItem } from "../../../shared/menu-schema"
 
 import { useEffect, useRef, useState } from "react"
 import { BrowserTabStrip } from "../browser/BrowserTabStrip"
+import { CompactSurfaceLaunchers } from './CompactSurfaceLaunchers'
 import { SurfaceLauncherButtons } from "./SurfaceLauncherButtons"
 import type { SurfaceLauncherKind } from "@/lib/surface-launchers"
 import type { Workspace } from "../../../shared/types"
@@ -34,6 +35,7 @@ import { CompactWorkspaceSwitcher } from "./CompactWorkspaceSwitcher"
 import { getDocSlug } from "@phaneris/shared/docs/doc-links"
 import { openDocs } from "@/atoms/docs"
 import { AppMenu } from "../AppMenu"
+import { ResidentAssistantEntry } from '../resident-assistant/ResidentAssistantEntry'
 
 const RIGHT_SLOT_FULL_BADGES_THRESHOLD = 420
 const RIGHT_SLOT_TWO_BADGES_THRESHOLD = 300
@@ -101,7 +103,25 @@ export function TopBar({
 }: TopBarProps) {
   const { t } = useTranslation()
   const [maxVisibleBrowserBadges, setMaxVisibleBrowserBadges] = useState(3)
+  const [denseToolbar, setDenseToolbar] = useState(() => window.matchMedia('(max-width: 1400px)').matches)
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 1400px)')
+    const update = () => setDenseToolbar(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
   const rightSlotRef = useRef<HTMLDivElement | null>(null)
+  const workspaceSlotRef = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    const workspaceButton = workspaceSlotRef.current?.querySelector('button')
+    const topbar = workspaceButton?.closest<HTMLElement>('.resident-topbar')
+    if (!workspaceButton || !topbar) return
+    const syncHeight = () => topbar.style.setProperty('--resident-entry-height', `${workspaceButton.getBoundingClientRect().height}px`)
+    const observer = new ResizeObserver(syncHeight)
+    observer.observe(workspaceButton)
+    syncHeight()
+    return () => observer.disconnect()
+  }, [isCompact])
 
   const goBackHotkey = useActionLabel('nav.goBackAlt').hotkey
   const goForwardHotkey = useActionLabel('nav.goForwardAlt').hotkey
@@ -146,7 +166,7 @@ export function TopBar({
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-panel titlebar-drag-region"
+      className="resident-topbar fixed top-0 left-0 right-0 z-panel titlebar-drag-region"
       style={{
         height: 'var(--topbar-height)',
         ...(isWindows && !isWebUI ? {
@@ -163,7 +183,7 @@ export function TopBar({
           so the workspace pill doesn't run flush against the viewport edge. */}
       <div
         className="pointer-events-auto flex min-w-0 flex-1 items-center gap-0.5"
-        style={{ paddingLeft: menuLeftPadding, paddingRight: isCompact ? 12 : 0 }}
+        style={{ paddingLeft: menuLeftPadding, paddingRight: isCompact ? 12 : 0, maxWidth: 'calc(50vw - var(--resident-entry-width) / 2 - 12px)' }}
       >
         <div className="flex items-center gap-0.5">
         {!isCompact && (
@@ -234,7 +254,7 @@ export function TopBar({
             </>
           )}
 
-          <div className="min-w-0 flex-1">
+          <div ref={workspaceSlotRef} className="resident-workspace-slot min-w-0 flex-1">
             {isCompact ? (
               <CompactWorkspaceSwitcher
                 workspaces={workspaces}
@@ -259,14 +279,16 @@ export function TopBar({
         </div>
       </div>
 
+      <ResidentAssistantEntry />
+
       {/* === RIGHT: Browser strip + add + help === */}
       {!isCompact && (
-      <div ref={rightSlotRef} className="flex min-w-0 shrink-0 items-center justify-end gap-1" style={{ paddingRight: 12 }}>
-        <div className="min-w-0">
+      <div ref={rightSlotRef} className="flex min-w-0 shrink-0 items-center justify-end gap-1" style={{ paddingRight: 12, maxWidth: 'max(0px, calc(env(titlebar-area-width, 100vw) + env(titlebar-area-x, 0px) - 50vw - var(--resident-entry-width) / 2 - 12px))' }}>
+        {!denseToolbar && <div className="min-w-0">
           <BrowserTabStrip activeSessionId={activeSessionId} maxVisibleBadges={maxVisibleBrowserBadges} />
-        </div>
+        </div>}
         {onOpenLauncher && onOpenBrowser && (
-          <SurfaceLauncherButtons
+          denseToolbar ? <CompactSurfaceLaunchers onOpenLauncher={onOpenLauncher} onOpenBrowser={onOpenBrowser} onNewSession={onNewSessionFromToolbar} onNewBrowser={onAddBrowserPanel} /> : <SurfaceLauncherButtons
             onOpenLauncher={onOpenLauncher}
             onOpenBrowser={onOpenBrowser}
             onNewSession={onNewSessionFromToolbar}

@@ -55,8 +55,17 @@ export class PiRuntimeDriver implements RuntimeDriver {
 }
 
 type RuntimeConfig = Pick<CoreBackendConfig, 'durableToolBoundary' | 'durableModelBoundary' | 'getCanonicalModelContext' | 'beginDurableUtilityRun' | 'completeDurableUtilityRun'>
+export interface ModelContextPolicy {
+  select(excludeOperationId?: string): import('@phaneris/shared/durable-runtime/types').DurableCanonicalModelContext | undefined
+  valid(request?: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest): boolean
+  /** Owns both request identity and validity at the prepare boundary when supplied. */
+  assert?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
+  entered?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
+  committed?(request: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest, valid: boolean): void
+}
 /** Protocol binding receives an explicit compatibility read port, never a product session object. */
 export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, options: {
+  modelContext?: ModelContextPolicy
   compatibilityMessages?: () => readonly Message[]
   auxiliarySettled?: () => void
   observerError?: (error: unknown) => void
@@ -65,13 +74,27 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
   const { workspaceRootPath: workspace, sessionId } = scope
   const utilityLeases = new Map<string, () => void>()
   return {
-    durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: request => runtime.effects.boundaryFor(workspace).prepare({ ...request, recoverySessionIds: scope.recoverySessionIds }) },
-    durableModelBoundary: { ...runtime.effects.modelBoundaryFor(workspace), commitOutcome: async request => {
-      const result = await runtime.effects.commitModelOutcome(workspace, request)
-      if (request.purpose === 'cache_warm') notify()
+    durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: request => {
+      if (options.modelContext && !options.modelContext.valid()) return Promise.reject(new Error('Model context changed; execution is paused until the original requirements are reviewed'))
+      return runtime.effects.boundaryFor(workspace).prepare({ ...request, recoverySessionIds: scope.recoverySessionIds })
+    } },
+    durableModelBoundary: { ...runtime.effects.modelBoundaryFor(workspace), prepare: async request => {
+      if (options.modelContext?.assert) options.modelContext.assert(request)
+      else if (options.modelContext && !options.modelContext.valid()) throw new Error('Model context changed; prepare a fresh input before continuing')
+      const result = await runtime.effects.modelBoundaryFor(workspace).prepare(request)
+      options.modelContext?.entered?.(request)
       return result
+    }, commitOutcome: async request => {
+      const valid = (options.modelContext?.valid(request) ?? true)
+      const result = await runtime.effects.commitModelOutcome(workspace, valid ? request : { ...request, contextDisposition: 'stale' })
+      const finalValid = valid && (options.modelContext?.valid(request) ?? true)
+      options.modelContext?.committed?.(request, finalValid)
+      if (request.purpose === 'cache_warm') notify()
+      return { ...result, ...(!finalValid ? { discard: true as const } : {}) }
     } },
     getCanonicalModelContext: excludeOperationId => {
+      const materialContext = options.modelContext?.select(excludeOperationId)
+      if (materialContext) return materialContext
       try {
       // Until a known result is backfilled, the native journal has the newer
       // working transcript. An older projection must not overwrite it.

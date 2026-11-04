@@ -71,6 +71,8 @@ export { generateMessageId } from './message.ts';
 
 // Message persistence mappers
 export { messageToStored, storedToMessage } from './message-mapper.ts';
+export { EXECUTION_PROMPT_PRESETS } from './session-execution.ts';
+export type { ExecutionPromptPreset, SessionArtifactBaseline, SessionExecutionConfig, ResolvedSessionExecutionConfig, SessionDelegationInput, MemoryLifecycleState, MemoryMaterialReference, SessionExecutionAttempt, SessionInputExecutionsPage } from './session-execution.ts';
 
 // Server types (headless operations)
 export type {

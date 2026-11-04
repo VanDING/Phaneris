@@ -56,7 +56,7 @@ interface FocusContextValue {
   /** Register a zone (call on mount) */
   registerZone: (zone: FocusZone) => void
   /** Unregister a zone (call on unmount) */
-  unregisterZone: (id: FocusZoneId) => void
+  unregisterZone: (id: FocusZoneId, owner: FocusZone['ref']) => void
   /** Focus a specific zone with optional intent/moveFocus control */
   focusZone: (id: FocusZoneId, options?: FocusZoneOptions) => void
   /** Focus next zone (Tab) */
@@ -81,8 +81,8 @@ export function FocusProvider({ children }: { children: React.ReactNode }) {
     zonesRef.current.set(zone.id, zone)
   }, [])
 
-  const unregisterZone = useCallback((id: FocusZoneId) => {
-    zonesRef.current.delete(id)
+  const unregisterZone = useCallback((id: FocusZoneId, owner: FocusZone['ref']) => {
+    if (zonesRef.current.get(id)?.ref === owner) zonesRef.current.delete(id)
   }, [])
 
   const focusZone = useCallback((id: FocusZoneId, options?: FocusZoneOptions) => {

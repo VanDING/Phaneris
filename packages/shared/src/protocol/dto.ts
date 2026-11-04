@@ -51,6 +51,9 @@ export type BuiltInStatusId = 'backlog' | 'todo' | 'in-progress' | 'needs-review
  */
 export interface Session extends SessionPlanningFields {
   id: string
+  sessionKind?: 'resident_assistant'
+  residentDelegationId?: string
+  delegationIds?: string[]
   workspaceId: string
   workspaceName: string
   name?: string
@@ -148,33 +151,15 @@ export interface Session extends SessionPlanningFields {
   taskDraft?: boolean
 }
 
-export interface CreateSessionOptions extends SessionPlanningFields {
+export interface CreateSessionOptions extends SessionPlanningFields, Pick<import('@phaneris/core/types').SessionExecutionConfig,
+  'llmConnection' | 'model' | 'thinkingLevel' | 'permissionMode' | 'enabledSourceSlugs' | 'projectId' | 'workingDirectory' | 'contextPolicy' | 'labels'> {
   name?: string
-  permissionMode?: PermissionMode
-  /**
-   * Reasoning/thinking level override. When set, takes precedence over workspace
-   * and global defaults. Silently ignored by the underlying SDK on non-reasoning
-   * models (e.g. gpt-4o) — provider drivers don't attach the reasoning param to
-   * the API request for models with `reasoning: false` in the Pi SDK catalog.
-   */
-  thinkingLevel?: ThinkingLevel
-  /**
-   * Working directory for the session:
-   * - 'user_default' or undefined: Use workspace's configured default working directory
-   * - 'none': No working directory (session folder only)
-   * - Absolute path string: Use this specific path
-   */
-  workingDirectory?: string | 'user_default' | 'none'
-  model?: string
-  llmConnection?: string
   systemPromptPreset?: 'default' | 'mini' | string
   hidden?: boolean
   /** Nobody answers prompts in this session (CLI runs): features that would add a prompt skip it. */
   unattended?: boolean
   sessionStatus?: SessionStatus
-  labels?: string[]
   isFlagged?: boolean
-  enabledSourceSlugs?: string[]
   /**
    * Message ID to branch from. This is a hard context cutoff:
    * the new session must not include model context from later parent messages.
@@ -182,11 +167,8 @@ export interface CreateSessionOptions extends SessionPlanningFields {
   branchFromMessageId?: string
   /** Parent session ID used together with branchFromMessageId. */
   branchFromSessionId?: string
-  /** Bind the new session to a workspace project (inherits project's workingDirectory). */
-  projectId?: string
   /** Mark the new session as a subtask of this parent session (undefined = top-level task). */
   parentSessionId?: string
-  contextPolicy?: import('../agent/context-policy').ContextPolicy
   handoffRootSessionId?: string
   handoffFromSessionId?: string
   handoffSequence?: number

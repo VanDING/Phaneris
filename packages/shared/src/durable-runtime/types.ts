@@ -241,6 +241,7 @@ export interface DurableToolBoundary {
 }
 
 export interface DurableModelPrepareRequest {
+  residentContext?: { segmentId: string; snapshot?: import('@phaneris/core/types').RequestContextSnapshot }
   /** Auxiliary requests are independently metered and never model-visible. */
   purpose?: 'cache_warm' | 'decision' | 'image_generation' | 'compaction'
   sessionId: string
@@ -277,6 +278,7 @@ export interface NativeRequestObservation {
 }
 
 export interface DurableModelOutcomeRequest {
+  contextDisposition?: 'stale'
   /** Input IDs actually delivered to the native request, not queue receipts. */
   consumedInputIds?: string[]
   /** Background refresh: independently metered, never model-visible. */
@@ -303,6 +305,7 @@ export interface DurableModelOutcomeRequest {
 }
 
 export interface DurableModelOutcomeResponse {
+  discard?: true
   committedSeq?: number
   deferred?: true
 }
@@ -362,4 +365,7 @@ export type DurableCanonicalContextItem =
 export interface DurableCanonicalModelContext {
   cursor: number
   items: DurableCanonicalContextItem[]
+  resident?: { segmentId: string; contextText: string }
+  fenced?: boolean
+  blocked?: string
 }

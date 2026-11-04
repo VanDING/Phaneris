@@ -204,6 +204,23 @@ export function convergeCanonicalContext(
   model: Model<any>,
   scope?: string,
 ): CanonicalConvergence {
+  if (context.resident) {
+    // An exact logical segment replaces the entire provider view, including an
+    // empty one. Raw journal branches remain available for audit and UI history.
+    const firstSummary = sessionManager.getBranch().find(entry => entry.type === 'compaction' || entry.type === 'branch_summary');
+    if (firstSummary) {
+      const previousLeaf = sessionManager.getLeafId();
+      if (firstSummary.parentId) sessionManager.branch(firstSummary.parentId); else sessionManager.resetLeaf();
+      sessionManager.appendCustomEntry('phaneris:resident-segment', { segmentId: context.resident.segmentId, previousLeaf });
+    } else sessionManager.appendCustomEntry('phaneris:resident-segment', { segmentId: context.resident.segmentId });
+    for (const entry of sessionManager.buildSessionProjection().entries) {
+      const editable = entry.sourceEntry.type === 'custom_message' || (entry.sourceEntry.type === 'message'
+        && ['user', 'assistant', 'toolResult'].includes(entry.sourceEntry.message.role));
+      if (entry.messages.length && editable) sessionManager.appendContextEdit(entry.sourceEntry.id, null);
+    }
+    for (const message of canonicalContextToPiMessages(context, model)) sessionManager.appendMessage(message as Parameters<SessionManager['appendMessage']>[0]);
+    return 'replaced';
+  }
   let boundary = compactedBoundary(sessionManager, scope);
   let items = context.items;
   let projection = sessionManager.buildSessionProjection();

@@ -1,6 +1,9 @@
 import type { TokenUsage } from '@phaneris/core/types'
 
 export interface SessionCompletionEvent {
+  /** Actual producer when the logical task has continued through a context handoff. */
+  resultSessionId?: string
+  inputMessageIds?: string[]
   sessionId: string
   workspaceId: string
   reason: 'complete' | 'interrupted' | 'error' | 'timeout'

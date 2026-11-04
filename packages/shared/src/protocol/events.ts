@@ -22,6 +22,7 @@ import type {
 } from './dto'
 
 export interface BroadcastEventMap {
+  [RPC_CHANNELS.assistantMemory.CHANGED]: [event: import('./assistant-memory').MemoryChanged]
   [RPC_CHANNELS.decisions.SESSION_CHANGED]: [sessionId: string, revision: number]
   [RPC_CHANNELS.terminal.DATA]: [event: TerminalDataEvent]
   [RPC_CHANNELS.terminal.EXIT]: [event: TerminalExitEvent]

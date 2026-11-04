@@ -36,6 +36,28 @@ export function attachSessionSelfManagementBindings(
   sessionId: string,
 ): void {
   // Direct pass-through bindings — signatures match, no wrapping needed.
+  for (const [key, callback] of [['assistantMemoryInspect', 'assistantMemoryInspectFn'], ['assistantMemoryMaintenance', 'assistantMemoryMaintenanceFn'], ['assistantContextHistory', 'assistantContextHistoryFn'], ['assistantMemoryUpdate', 'assistantMemoryUpdateFn'], ['assistantDelegate', 'assistantDelegateFn'], ['assistantWorkerOptions', 'assistantWorkerOptionsFn'], ['assistantWork', 'assistantWorkFn'], ['assistantCancelWork', 'assistantCancelWorkFn']] as const) {
+    Object.defineProperty(context, key, {
+      get: () => getSessionScopedToolCallbacks(sessionId)?.[callback],
+      configurable: true, enumerable: true,
+    });
+  }
+  Object.defineProperty(context, 'assistantMemorySearch', {
+    get: () => getSessionScopedToolCallbacks(sessionId)?.assistantMemorySearchFn,
+    configurable: true, enumerable: true,
+  });
+  Object.defineProperty(context, 'assistantHistorySearch', {
+    get: () => getSessionScopedToolCallbacks(sessionId)?.assistantHistorySearchFn,
+    configurable: true,
+  });
+  Object.defineProperty(context, 'assistantDeliveryAck', {
+    get: () => getSessionScopedToolCallbacks(sessionId)?.assistantDeliveryAckFn,
+    configurable: true,
+  });
+  Object.defineProperty(context, 'assistantMemoryRead', {
+    get: () => getSessionScopedToolCallbacks(sessionId)?.assistantMemoryReadFn,
+    configurable: true, enumerable: true,
+  });
   // Each getter resolves fresh from the registry on every access.
   Object.defineProperty(context, 'appendProjectMemory', {
     get: () => getSessionScopedToolCallbacks(sessionId)?.appendProjectMemoryFn,

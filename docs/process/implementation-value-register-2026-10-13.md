@@ -6,6 +6,8 @@
 
 **本文件是实施裁定、收口状态与后续条件事项的唯一当前入口。** 已接受的架构、制作指南、所有权清单和验收规范继续有效；历史规划中的“下一步”、工期、OPEN 和旧版本缺口不再自动生成待办。
 
+2026-11-03 用户授权新分支实施 [0.6.x 常驻助手方向](../architecture/resident-assistant-0.6-roadmap-2026-11-03.md)。`codex/resident-assistant-0.6` 已完成记忆 Host/RPC、特殊助手身份/角色、Pi 记忆读取及配置/委派底座；2026-11-04 按用户确认继续收敛为普通 Session 新建/续用，内容和配置快照归原会话，委派索引只保留投递事实和成果引用，旧记录保留迁移归档。同日 P4a 已接通全部普通历史的增量来源目录、真实覆盖状态及带内容哈希的检索/精确回读。同日继续贯通候选提取、按版本/项目恢复的增量提取检查点与真实覆盖、已知依赖与派生退出、工作集/逐请求清单、稳定身份逻辑换段、事件消费与自动交付及品牌入口；随后按用户修正恢复原 Logo 菜单，改为顶部居中独立助手入口、共享对话页与管理对话框，不新增助手侧栏；成熟生命周期、长期质量与托管按后续阶段验证，版本仍为 0.5.6。见[实施进度与边界](resident-assistant-implementation-2026-11-03.md)和[事先失败矩阵](../verification/resident-assistant-failure-matrix-2026-11-03.md)。这是用户新授权的 workspace 助手功能，不重新开放历史关闭的跨产品通用记忆平台。
+
 2026-10-26 用户明确授权[Harness 系统演进方案](../architecture/harness-system-evolution-2026-10-25.md)实施。独立分支 `codex/harness-system-evolution` 基于 `ab0282111` 完成任务准备、能力暴露、材料反馈、共同容量口径、原生压缩所有权、接续与执行链收敛，本机 132 个 harness 场景及静态门禁通过；记录见[实施与验证边界](harness-system-evolution-implementation-2026-10-26.md)与[事先失败矩阵](../verification/harness-system-evolution-failure-matrix-2026-10-26.md)。已通过 `1214ba504` 合入 main 并纳入 0.5.0，真实模型质量尚未对照；不重开通用评测平台、多代理控制面或自动语义干预项目。
 
 2026-10-15 用户批准的 Craft 0.15.0 / 0.15.1 非 UI 吸收已完成 B1–B6。[实施记录](../verification/upstream-0.15-non-ui-implementation-2026-10-15.md)及[机器结果](../verification/results/upstream-0.15-non-ui-2026-10-15.json)记录 33 项新增流程通过、静态门禁与生产构建通过，以及全量旧测试未全绿的明确限制；实施遵循[事先失败矩阵](../verification/upstream-0.15-non-ui-failure-matrix-2026-10-15.md)。保留现有 Pi 1.2.0 与视觉体系；不重开已关闭的原生 MCP 全面替换、Claude SDK、网关或通用记忆系统计划。

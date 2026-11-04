@@ -19,6 +19,7 @@ export function wrapDurableModelStream(
    * Explicit values (notably compaction's 'none') are preserved.
    */
   resolveDefaultCacheRetention?: () => CacheRetention,
+  strictContext?: () => boolean,
 ): StreamFn {
   return (model, context, options) => {
     const effectiveOptions = resolveDefaultCacheRetention && options?.cacheRetention === undefined
@@ -32,7 +33,7 @@ export function wrapDurableModelStream(
         let commit: (message: AssistantMessage) => Promise<void>;
         try { commit = await prepare(model, context, observed.observation); }
         catch (error) {
-          if (error instanceof Error && error.name === 'DurableReplayBlocked') throw error;
+          if (strictContext?.() || (error instanceof Error && error.name === 'DurableReplayBlocked')) throw error;
           // Inference and its actual response do not require a healthy audit
           // database. Tool effects still take their own persistent T1 boundary.
           commit = async message => { Object.assign(message, { durableCommitError: String(error) }); };
@@ -53,6 +54,7 @@ export function wrapDurableModelStream(
           return;
         }
         const source = await stream(model, context, observed.options);
+        const buffered: Array<Parameters<typeof target.push>[0]> = [];
         for await (const event of source) {
           timing.observe(event);
           if (event.type === 'done' || event.type === 'error') {
@@ -63,10 +65,14 @@ export function wrapDurableModelStream(
             // The provider's observed result remains true if bookkeeping fails.
             // The boundary retains a retryable receipt; never replace a known
             // successful response with an empty synthetic model error.
-            try { await commit(message); } catch (error) { Object.assign(message, { durableCommitError: String(error) }); }
+            try { await commit(message); } catch (error) {
+              if (strictContext?.()) throw error;
+              Object.assign(message, { durableCommitError: String(error) });
+            }
           }
-          target.push(event);
+          if (strictContext?.()) buffered.push(event); else target.push(event);
         }
+        for (const event of buffered) target.push(event);
       } catch (error) {
         const failed: AssistantMessage = {
           role: 'assistant', content: [], api: model.api, provider: model.provider, model: model.id,

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "channels": 428,
-  "centrallyValidatedMethods": 52,
-  "typedResultPorts": 42,
+  "channels": 441,
+  "centrallyValidatedMethods": 64,
+  "typedResultPorts": 54,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -320,6 +320,149 @@
             "artifactId: string",
             "expectedRevision?: string",
             "leaseId?: string"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "assistantMemory.CHANGED",
+      "channel": "assistantMemory:changed",
+      "domain": "assistantMemory",
+      "routing": "remote-eligible",
+      "kind": "event",
+      "runtimeValidation": "existing handler/capability checks; no centralized schema",
+      "resultContract": "authoritative BroadcastEventMap / existing capability event payload",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": []
+    },
+    {
+      "key": "assistantMemory.HISTORY",
+      "channel": "assistantMemory:history",
+      "domain": "assistantMemory",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./assistant-memory').HistoryPage",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/assistant-memory.ts",
+          "line": 33,
+          "args": [
+            "workspaceId: string",
+            "query: HistoryQuery"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "assistantMemory.MUTATE",
+      "channel": "assistantMemory:mutate",
+      "domain": "assistantMemory",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./assistant-memory').MemoryMutationResult",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/assistant-memory.ts",
+          "line": 37,
+          "args": [
+            "workspaceId: string",
+            "command: MemoryMutation"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "assistantMemory.QUERY",
+      "channel": "assistantMemory:query",
+      "domain": "assistantMemory",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./assistant-memory').MemoryQueryResult",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/assistant-memory.ts",
+          "line": 23,
+          "args": [
+            "workspaceId: string",
+            "query: MemoryQuery"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "assistantMemory.READ_SOURCE",
+      "channel": "assistantMemory:readSource",
+      "domain": "assistantMemory",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./assistant-memory').MemorySourceResult",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/assistant-memory.ts",
+          "line": 35,
+          "args": [
+            "workspaceId: string",
+            "source: MemorySourceRead"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "assistantMemory.SUPPRESSION_EXPORT",
+      "channel": "assistantMemory:suppressionExport",
+      "domain": "assistantMemory",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./assistant-memory').MemorySuppressionPage",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/assistant-memory.ts",
+          "line": 25,
+          "args": [
+            "workspaceId: string",
+            "query: MemorySuppressionQuery"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "assistantMemory.SUPPRESSION_MERGE",
+      "channel": "assistantMemory:suppressionMerge",
+      "domain": "assistantMemory",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./assistant-memory').MemorySuppressionMergeResult",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/assistant-memory.ts",
+          "line": 27,
+          "args": [
+            "workspaceId: string",
+            "command: MemorySuppressionMerge"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5318,6 +5461,137 @@
             "token?: string",
             "allowInsecureTls?: boolean",
             "workspaceId?: string"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.CANCEL_WORK",
+      "channel": "residentAssistant:cancelWork",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWork",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 35,
+          "args": [
+            "workspaceId: string",
+            "id: string"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.CONTEXT",
+      "channel": "residentAssistant:context",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 19,
+          "args": [
+            "workspaceId: string",
+            "command: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextCommand"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.DISPATCH",
+      "channel": "residentAssistant:dispatch",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWork",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 27,
+          "args": [
+            "workspaceId: string",
+            "request: AssistantDispatch"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.EVENTS",
+      "channel": "residentAssistant:events",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 23,
+          "args": [
+            "workspaceId: string",
+            "query: { after?: number; limit?: number }"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.GET",
+      "channel": "residentAssistant:get",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "Session",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 15,
+          "args": [
+            "workspaceId: string"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.WORK",
+      "channel": "residentAssistant:work",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 31,
+          "args": [
+            "workspaceId: string",
+            "query: AssistantWorkQuery"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"

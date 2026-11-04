@@ -629,6 +629,8 @@ export interface AgentBackend {
 
   /** Update the working directory */
   updateWorkingDirectory(path: string): void;
+  /** Refresh project prompt context at a safe input boundary. */
+  updateProjectContext?(projectId: string | undefined): void;
 
   /** Update the SDK cwd (transcript storage location) */
   updateSdkCwd(path: string): void;

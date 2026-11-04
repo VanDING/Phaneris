@@ -14,6 +14,7 @@ values it pins are enforced by `bun run check:scale-contract`.
 
 ```
 Workspace
+├── Assistant         one resident assistant for this workspace, with bounded contexts
 ├── Projects          a grouping of sessions, tasks and files for one effort
 ├── Sessions          one conversation + its agent run, tool calls and artifacts
 │   ├── Turns         one user request and the agent's response
@@ -32,6 +33,7 @@ Workspace
 
 | Term | What it means to a user |
 | --- | --- |
+| **Resident assistant** | The workspace default conversation, reached from its own centered brand entry in the top bar. The original logo remains the app menu. It recalls workspace sources and delegates execution to ordinary sessions; memory never crosses workspaces. |
 | **Workspace** | The whole local installation: your sessions, sources and settings. Different workspaces keep separate histories and configurations. |
 | **Session** | One conversation with the agent. It remembers the turns above it and can run tools. "New chat" creates a session. |
 | **Turn** | One request from you plus everything the agent did in response. Turns are the unit of history pagination and collapse. |
@@ -55,6 +57,12 @@ Workspace
 | **Density** | How tightly rows and controls pack: compact, comfortable or spacious. It changes spacing, not text size. |
 
 ## Core flows
+
+A workspace opens its resident assistant by default. Its dedicated centered brand entry navigates to the same conversation page used
+by ordinary sessions; the original logo keeps its app menu. Memory, context and
+delivery management open on demand in the existing dialog pattern. No assistant
+sidebar or second conversation surface is added. A new
+model context keeps the same assistant identity and complete timeline.
 
 1. **Start a session.** Pick a workspace, then start from the sidebar, the
    landing screen, or a project. The composer accepts text, attachments, `@`

@@ -11,6 +11,8 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import { selectAtom } from 'jotai/utils'
 import { AlertCircle, Globe, Copy, RefreshCw, Link2Off, Info, Pencil, MoreHorizontal, Send } from 'lucide-react'
 import { ChatDisplay, type ChatDisplayHandle } from '@/components/app-shell/ChatDisplay'
+import { ResidentAssistantControls } from '@/components/resident-assistant/ResidentAssistantControls'
+import { useFocusContext } from '@/context/FocusContext'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
 import { SessionMenu } from '@/components/app-shell/SessionMenu'
 import { CompactSessionMenu } from '@/components/app-shell/CompactSessionMenu'
@@ -94,6 +96,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     chatDisplayRef,
     onChatMatchInfoChange,
     isFocusedPanel,
+    residentAssistantPresentation,
   } = useAppShellContext()
 
   // Use the unified session options hook for clean access
@@ -118,6 +121,15 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   // Check if session exists in metadata (for loading state detection)
   const sessionMetaMap = useAtomValue(sessionMetaMapAtom)
   const sessionMeta = sessionMetaMap.get(sessionId)
+  const resident = (session?.sessionKind ?? sessionMeta?.sessionKind) === 'resident_assistant'
+  const { focusZone } = useFocusContext()
+  React.useEffect(() => {
+    if (!resident || !messagesLoaded || !residentAssistantPresentation || isFocusedPanel === false) return
+    const timer = window.setTimeout(() => {
+      focusZone('chat', { intent: 'programmatic', moveFocus: true })
+    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200)
+    return () => clearTimeout(timer)
+  }, [resident, messagesLoaded, residentAssistantPresentation, isFocusedPanel, sessionId, focusZone])
 
   // Fallback: ensure messages are loaded when session is viewed
   const ensureMessagesLoaded = useSetAtom(ensureSessionMessagesLoadedAtom)
@@ -383,7 +395,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
 
   // Get display title for header - use getSessionTitle for consistent fallback logic with SessionList
   // Priority: name > first user message > preview > "New chat"
-  const displayTitle = session ? getSessionTitle(session) : (sessionMeta ? getSessionTitle(sessionMeta) : t('chat.session'))
+  const displayTitle = residentAssistantPresentation ? 'Phaneris' : resident ? t('residentAssistant.title') : session ? getSessionTitle(session) : (sessionMeta ? getSessionTitle(sessionMeta) : t('chat.session'))
   const isFlagged = session?.isFlagged || sessionMeta?.isFlagged || false
   const isArchived = session?.isArchived || sessionMeta?.isArchived || false
   const sharedUrl = session?.sharedUrl || sessionMeta?.sharedUrl || null
@@ -654,7 +666,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   // Desktop uses Radix DropdownMenu via PanelHeader; compact mode uses a
   // vaul Drawer (CompactSessionMenu) so submenus aren't clipped by the
   // panel container query on narrow viewports.
-  const titleMenu = React.useMemo(() => (sessionMeta && (!isCompactMode || isDesktopClient)) ? (
+  const titleMenu = React.useMemo(() => (!resident && sessionMeta && (!isCompactMode || isDesktopClient)) ? (
     <SessionMenu
       item={sessionMeta}
       sessionStatuses={sessionStatuses ?? []}
@@ -671,6 +683,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
       onDelete={handleDelete}
     />
   ) : null, [
+    resident,
     sessionMeta,
     isCompactMode,
     isDesktopClient,
@@ -688,7 +701,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     handleDelete,
   ])
 
-  const compactTitleMenu = React.useMemo(() => (sessionMeta && isCompactMode) ? (
+  const compactTitleMenu = React.useMemo(() => (!resident && sessionMeta && isCompactMode) ? (
     <CompactSessionMenu
       title={displayTitle}
       isRegeneratingTitle={isAsyncOperationOngoing}
@@ -707,6 +720,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
       onDelete={handleDelete}
     />
   ) : null, [
+    resident,
     sessionMeta,
     isCompactMode,
     displayTitle,
@@ -725,7 +739,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     handleDelete,
   ])
 
-  const inlineTitle = isDesktopClient ? (
+  const inlineTitle = isDesktopClient && !resident ? (
     <InlineSessionTitle title={displayTitle} editing={editingTitle} onEditingChange={setEditingTitle}
       onRename={name => onRenameSession(sessionId, name)} />
   ) : undefined
@@ -735,7 +749,11 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
       if (renameName.trim() && renameName.trim() !== displayTitle) onRenameSession(sessionId, renameName.trim())
       setEditingTitle(false)
     }} />
-  const headerActions = isDesktopClient ? (
+  const imageShareButton = canShareImages && <PreviewHeaderIconButton tooltip={t('chat.imageShare.share')} aria-label={t('chat.imageShare.share')} aria-pressed={!!shareSnapshot}
+    disabled={!messageLoadState.messagesReady || !session?.messages.length} onClick={() => shareSnapshot ? closeImageShare() : openImageShare()}>
+    <Send className="w-4 h-4" />
+  </PreviewHeaderIconButton>
+  const headerActions = resident && activeWorkspaceId ? <div className="flex items-center gap-1.5"><ResidentAssistantControls workspaceId={activeWorkspaceId} />{imageShareButton || shareButton}</div> : isDesktopClient ? (
     <div className="flex items-center gap-1.5">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -747,12 +765,12 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
           {isCompactMode && compactInfoButton}
         </StyledDropdownMenuContent>
       </DropdownMenu>
-      {canShareImages && <PreviewHeaderIconButton tooltip={t('chat.imageShare.share')} aria-label={t('chat.imageShare.share')} aria-pressed={!!shareSnapshot}
-        disabled={!messageLoadState.messagesReady || !session?.messages.length} onClick={() => shareSnapshot ? closeImageShare() : openImageShare()}>
-        <Send className="w-4 h-4" />
-      </PreviewHeaderIconButton>}
+      {imageShareButton}
     </div>
   ) : legacyHeaderActions
+  const pageChrome = residentAssistantPresentation
+    ? <div className="resident-conversation-actions">{headerActions}{trailingAction}</div>
+    : <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? (canShareImages ? 2 : 1) : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
 
   // Handle missing session - loading or deleted
   if (!session) {
@@ -775,8 +793,8 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
       return (
         <>
           {legacyRenameDialog}
-          <div className="h-full flex flex-col">
-            <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? (canShareImages ? 2 : 1) : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
+          <div className="h-full flex flex-col relative" data-resident-presentation={residentAssistantPresentation || undefined}>
+            {pageChrome}
             <div className="flex-1 flex flex-col min-h-0">
               <ChatDisplay
                 ref={chatDisplayRef}
@@ -832,8 +850,8 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
 
     // Session truly doesn't exist
     return (
-      <div className="h-full flex flex-col">
-        <PanelHeader title={t('chat.session')} leadingAction={leadingAction} trailingAction={trailingAction} />
+      <div className="h-full flex flex-col relative">
+        {residentAssistantPresentation ? pageChrome : <PanelHeader title={t('chat.session')} leadingAction={leadingAction} trailingAction={trailingAction} />}
         <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground">
           <AlertCircle className="h-10 w-10" />
           <p className="text-body">{t('chat.sessionNoLongerExists')}</p>
@@ -845,9 +863,9 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   return (
     <>
       <ShareSelectionContext.Provider value={shareSelection}>
-      <div ref={shareRoot} className="h-full flex flex-col relative">
+      <div ref={shareRoot} data-session-kind={resident ? 'resident_assistant' : undefined} data-resident-presentation={residentAssistantPresentation || undefined} className="h-full flex flex-col relative">
         <div className="h-full flex flex-col min-h-0" inert={sharePreview ? true : undefined}>
-        <PanelHeader title={displayTitle} titleContent={inlineTitle} titleAlignment={isDesktopClient ? "start" : "center"} actionCount={isDesktopClient ? (canShareImages ? 2 : 1) : 1} titleMenu={isDesktopClient ? undefined : titleMenu} compactTitleMenu={isDesktopClient ? undefined : compactTitleMenu} leadingAction={leadingAction} actions={headerActions} trailingAction={trailingAction} isRegeneratingTitle={isAsyncOperationOngoing} />
+        {pageChrome}
         <div className="flex-1 flex flex-col min-h-0">
           <ChatDisplay
             ref={chatDisplayRef}

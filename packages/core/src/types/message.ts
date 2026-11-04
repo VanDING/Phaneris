@@ -85,6 +85,7 @@ export interface RequestContextSnapshot {
   capturedAt: number;
   provider: string;
   model: string;
+  capacity?: { usedTokens: number; windowTokens: number; reserveTokens: number; availableInputTokens: number; basis: string };
   system: { hash: string; chars: number; textChars?: number };
   messages: Array<{
     role: string;
@@ -327,6 +328,10 @@ export interface Message {
   badges?: ContentBadge[];
   /** Explicit input selection; undefined preserves legacy inline mentions, [] clears selection. */
   skillSlugs?: string[];
+  /** Host-attributed non-human input; provider role=user does not grant user authority. */
+  inputSource?: { kind: 'session_message' } | { kind: 'delegation'; delegationId: string; assistantSessionId: string; originMessageId: string }
+    | { kind: 'resident_event'; eventIds: string[] };
+  delegationInput?: import('./session-execution').SessionDelegationInput;
   /** Annotation payloads for this message */
   annotations?: AnnotationV1[];
   isError?: boolean;
@@ -448,6 +453,8 @@ export interface StoredMessage {
   badges?: ContentBadge[];
   /** Persist the original explicit input selection across recovery and handoff. */
   skillSlugs?: string[];
+  inputSource?: Message['inputSource'];
+  delegationInput?: Message['delegationInput'];
   /** Annotations persisted at message level */
   annotations?: AnnotationV1[];
   // Turn grouping - critical for TurnCard rendering after reload

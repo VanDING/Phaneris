@@ -10,7 +10,7 @@
 
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSetAtom } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { cn } from '@/lib/utils'
 import { X, ChevronLeft } from 'lucide-react'
 import { parseRouteToNavigationState } from '../../../shared/route-parser'
@@ -26,6 +26,7 @@ import { useAppShellContext, AppShellProvider } from '@/context/AppShellContext'
 import { PanelHeaderCenterButton } from '@/components/ui/PanelHeaderCenterButton'
 import { PreviewHeaderIconButton } from '@phaneris/ui'
 import { MainContentPanel } from './MainContentPanel'
+import { residentNavigationAtom } from '../resident-assistant/resident-navigation'
 import { BoundPanelContent, isBoundPanelType } from '@/components/content-panels/bound-panel-content'
 import { RADIUS_EDGE, RADIUS_INNER } from './panel-constants'
 
@@ -71,6 +72,8 @@ export function SurfaceSlot({
   const removeForegroundSession = useSetAtom(removeForegroundSessionAtom)
   const setFocusedSurface = useSetAtom(focusedSurfaceEntryIdAtom)
   const parentContext = useAppShellContext()
+  const assistantPresentation = useAtomValue(residentNavigationAtom)
+  const assistantOpen = !!(assistantPresentation?.open || assistantPresentation?.closing) && assistantPresentation?.workspaceId === parentContext.activeWorkspaceId
   const navState = parseRouteToNavigationState(entry.route)
 
   // Build close button for PanelHeader (via context override)
@@ -108,8 +111,8 @@ export function SurfaceSlot({
     trailingAction: closeButton,
     expandButton: undefined,
     leadingAction: backButton,
-    isFocusedPanel,
-  }), [parentContext, closeButton, backButton, isFocusedPanel])
+    isFocusedPanel: isFocusedPanel && !assistantOpen,
+  }), [parentContext, closeButton, backButton, isFocusedPanel, assistantOpen])
 
   const handlePointerDown = useCallback(() => {
     if (entry.surfaceRole === 'primary' && entry.sessionId) activateForegroundSession(entry.sessionId)

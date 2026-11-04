@@ -81,6 +81,7 @@ export interface SessionMeta {
   messageCount?: number
   /** When true, session is hidden from session list (e.g., mini edit sessions) */
   hidden?: boolean
+  sessionKind?: 'resident_assistant'
   /** Whether this session is archived */
   isArchived?: boolean
   /** Timestamp when session was archived (for retention policy) */

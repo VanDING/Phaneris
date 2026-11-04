@@ -12,7 +12,9 @@ export function recoverSessionQueue(runtime: DurableRuntime, scope: RuntimeScope
       const payload = event.payload as { messageId: string; options?: SendMessageOptions; attachments?: StoredAttachment[] }
       return [payload.messageId, payload] as const
     }))
-  const candidates = messages.filter(message => message.role === 'user' && (message.isQueued === true || message.inputReception?.disposition === 'unknown')).map(message => ({
+  const candidates = messages.filter(message => message.role === 'user'
+    && (!message.delegationInput || message.delegationInput.submittedAt !== undefined)
+    && (message.isQueued === true || message.inputReception?.disposition === 'unknown')).map(message => ({
     message: message.content, messageId: message.id, storedAttachments: message.attachments ?? admissions.get(message.id)?.attachments,
     options: admissions.get(message.id)?.options ?? (message.hidden ? { hidden: true } : undefined),
     reception: message.inputReception as RuntimeInputReceipt | undefined,

@@ -565,6 +565,10 @@ export abstract class BaseAgent implements AgentBackend {
     this.debug(`Working directory updated: ${path}`);
   }
 
+  updateProjectContext(projectId: string | undefined): void {
+    if (this.config.session) this.config.session.projectId = projectId;
+  }
+
   /**
    * Update the SDK cwd (used for transcript storage location).
    *
@@ -995,7 +999,8 @@ ${formattedMessages}
     // Conservative host preallocation; the actual SDK request remains the
     // authoritative occupancy boundary, including schemas and image blocks.
     const preparationBudget = Math.min(64_000, Math.max(2000, Math.floor((this.usageTracker.getContextWindow() ?? 128_000) / 2)));
-    const workContext = this.config.getTaskContinuityContext?.(Math.floor(preparationBudget / 4));
+    const workContext = this.config.systemPromptPreset === 'resident_assistant' ? undefined
+      : this.config.getTaskContinuityContext?.(Math.floor(preparationBudget / 4));
     const { skillPaths, cleanMessage, missingSkills, capabilityFamilies } = this.extractSkillPaths(message, options?.selectedSkillSlugs, workContext?.selectedSkillMessage);
     const instructions = [formatPreparedInstructions(prepareInstructions([
       ...projectInstructionRequests(this.config.session?.workingDirectory),

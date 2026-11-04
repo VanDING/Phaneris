@@ -115,7 +115,7 @@ function parseHeaderChunks(chunks: Buffer[], sessionFile: string): SessionHeader
  * Read full session from JSONL file.
  * Parses header and all message lines.
  */
-export function readSessionJsonl(sessionFile: string): StoredSession | null {
+export function readSessionJsonl(sessionFile: string, options?: { strict?: boolean }): StoredSession | null {
   try {
     const content = readFileSync(sessionFile, 'utf-8');
     const lines = nonEmptyLines(content);
@@ -130,7 +130,7 @@ export function readSessionJsonl(sessionFile: string): StoredSession | null {
     // Parse messages resiliently: skip lines that fail to parse (e.g. truncated by crash)
     // rather than losing the entire session's messages.
     // Expand session path tokens before parsing so embedded paths resolve correctly.
-    const messages = parseMessagesResilient(lines, sessionDir);
+    const messages = parseMessagesResilient(lines, sessionDir, options?.strict);
 
     // Migration: For sessions created before sdkCwd was added, use workingDirectory as fallback.
     // This is correct because the old code used workingDirectory for SDK's cwd parameter.
@@ -148,7 +148,9 @@ export function readSessionJsonl(sessionFile: string): StoredSession | null {
       tokenUsage: header.tokenUsage,
     } as StoredSession;
   } catch (error) {
-    if (error instanceof SnapshotReferenceError) throw error;
+    // Strict read-only consumers reject the whole source as unreadable. Ordinary
+    // reads still surface broken references to prevent an incomplete rewrite.
+    if (error instanceof SnapshotReferenceError && !options?.strict) throw error;
     debug('[jsonl] Failed to read session:', sessionFile, error);
     return null;
   }
@@ -312,13 +314,14 @@ function* nonEmptyLines(content: string): Generator<string> {
   }
 }
 
-function parseMessagesResilient(lines: Iterable<string>, sessionDir: string): StoredMessage[] {
+function parseMessagesResilient(lines: Iterable<string>, sessionDir: string, strict = false): StoredMessage[] {
   const messages: StoredMessage[] = [];
   const decoder = new SnapshotDecoder();
   for (const line of lines) {
     try {
       messages.push(decoder.decode<StoredMessage>(JSON.parse(expandSessionPath(line, sessionDir))));
     } catch (error) {
+      if (strict) throw error;
       // Never turn a broken shared reference into silent evidence loss or an empty-session rewrite.
       if (error instanceof SnapshotReferenceError) throw error;
       // Corrupted/truncated line (likely from a crash during write).

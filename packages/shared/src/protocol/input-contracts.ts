@@ -4,6 +4,9 @@ import { RPC_CHANNELS as c } from './channels'
 import type { SendMessageOptions, FileAttachment, CredentialResponse } from './dto'
 import { LlmConnectionSchema } from '../config/schemas'
 import { THINKING_LEVEL_IDS } from '../agent/thinking-levels'
+import { MemoryMutationSchema, MemoryQuerySchema, MemorySourceReadSchema, HistoryQuerySchema, MemorySuppressionQuerySchema, MemorySuppressionMergeSchema } from './assistant-memory'
+import { AssistantDispatchSchema, AssistantWorkQuerySchema } from '@phaneris/session-tools-core/delegation-contracts'
+import { ResidentContextSchema, ResidentEventsQuerySchema } from '@phaneris/session-tools-core/resident-context-contracts'
 
 const text = z.string()
 const id = text.min(1)
@@ -29,6 +32,18 @@ const tuple = (...items: z.ZodType[]) => {
   return (checked.length ? z.tuple(checked as [z.ZodType, ...z.ZodType[]]) : z.tuple([])).rest(z.unknown())
 }
 export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>> = {
+  [c.residentAssistant.GET]: tuple(id),
+  [c.residentAssistant.CONTEXT]: tuple(id, ResidentContextSchema),
+  [c.residentAssistant.EVENTS]: tuple(id, ResidentEventsQuerySchema),
+  [c.residentAssistant.DISPATCH]: tuple(id, AssistantDispatchSchema),
+  [c.residentAssistant.WORK]: tuple(id, AssistantWorkQuerySchema),
+  [c.residentAssistant.CANCEL_WORK]: tuple(id, id),
+  [c.assistantMemory.QUERY]: tuple(id, MemoryQuerySchema),
+  [c.assistantMemory.SUPPRESSION_EXPORT]: tuple(id, MemorySuppressionQuerySchema),
+  [c.assistantMemory.SUPPRESSION_MERGE]: tuple(id, MemorySuppressionMergeSchema),
+  [c.assistantMemory.HISTORY]: tuple(id, HistoryQuerySchema),
+  [c.assistantMemory.MUTATE]: tuple(id, MemoryMutationSchema),
+  [c.assistantMemory.READ_SOURCE]: tuple(id, MemorySourceReadSchema),
   [c.sessions.SEND_MESSAGE]: tuple(id, text, z.array(attachment).optional(), z.array(object).optional(), sendOptions.optional()),
   [c.sessions.CREATE]: tuple(id, object.optional()),
   [c.sessions.DELETE]: tuple(id),

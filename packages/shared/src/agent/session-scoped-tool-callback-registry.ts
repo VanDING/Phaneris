@@ -20,6 +20,18 @@ import { debug } from '../utils/debug.ts';
  * Callbacks that can be registered per-session
  */
 export interface SessionScopedToolCallbacks {
+  assistantMemorySearchFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemorySearch'];
+  assistantHistorySearchFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantHistorySearch'];
+  assistantMemoryUpdateFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryUpdate'];
+  assistantMemoryInspectFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryInspect'];
+  assistantMemoryMaintenanceFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryMaintenance'];
+  assistantContextHistoryFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantContextHistory'];
+  assistantDeliveryAckFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantDeliveryAck'];
+  assistantDelegateFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantDelegate'];
+  assistantWorkerOptionsFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWorkerOptions'];
+  assistantWorkFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWork'];
+  assistantCancelWorkFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantCancelWork'];
+  assistantMemoryReadFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryRead'];
   /**
    * Called when a plan is submitted via SubmitPlan tool.
    * Receives the path to the plan markdown file.
