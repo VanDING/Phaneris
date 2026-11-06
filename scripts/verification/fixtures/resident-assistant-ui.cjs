@@ -426,10 +426,13 @@ const { firstBusinessWindow } = require('./electron-windows.cjs')
     scenes.push('RFU11-one-click-original-file-preview', 'RFU13-embedded-telegram-setup')
     await panel.locator('.resident-panel-scroll').evaluate(element => { element.scrollTop = 0 })
     await page.screenshot({ path: join(fixture.output, 'desktop-light-panel.png') })
-    await panel.getByRole('button', { name: '调整助手概览宽度', exact: true }).focus()
+    const resizeHandle = panel.getByRole('button', { name: '调整助手概览宽度', exact: true })
     const panelWidth = (await panel.boundingBox()).width
-    await page.keyboard.press('ArrowLeft')
-    assert((await panel.boundingBox()).width > panelWidth, 'Left resize handle must grow toward chat')
+    // The width lands in an atom commit after the key event, so poll for the growth
+    // instead of measuring in the same tick; the check still fails when it never grows.
+    await resizeHandle.press('ArrowLeft')
+    await page.waitForFunction(width => (document.querySelector('[data-testid="resident-work-panel"]')?.getBoundingClientRect().width ?? 0) > width, panelWidth, { timeout: 5000 })
+      .catch(() => assert.fail(`Left resize handle must grow toward chat (width stayed at ${panelWidth})`))
     await page.keyboard.press('Escape')
     await panel.waitFor({ state: 'hidden' })
     await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'resident-details-trigger')
