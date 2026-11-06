@@ -30,6 +30,7 @@ export function useStatuses(workspaceId: string | null): UseStatusesResult {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const generation = useRef(0)
+  const failed = useRef(false)
 
   const refresh = useCallback(async () => {
     const request = ++generation.current
@@ -40,6 +41,7 @@ export function useStatuses(workspaceId: string | null): UseStatusesResult {
     }
 
     try {
+      failed.current = false
       setIsLoading(true)
       const configs = await readAfterReconnect(() => window.electronAPI.listStatuses(workspaceId))
       if (request !== generation.current) return
@@ -47,6 +49,7 @@ export function useStatuses(workspaceId: string | null): UseStatusesResult {
       setError(null)
     } catch (err) {
       if (request !== generation.current) return
+      failed.current = true
       console.error('[useStatuses] Failed to load statuses:', err)
       setError(err instanceof Error ? err.message : 'Failed to load statuses')
     } finally {
@@ -73,6 +76,17 @@ export function useStatuses(workspaceId: string | null): UseStatusesResult {
     })
 
     return cleanup
+  }, [workspaceId, refresh])
+
+  useEffect(() => {
+    let disconnected = false
+    return window.electronAPI.onTransportConnectionStateChanged?.(state => {
+      if (state.status !== 'connected') disconnected = true
+      else if (disconnected) {
+        disconnected = false
+        if (failed.current) void refresh()
+      }
+    })
   }, [workspaceId, refresh])
 
   return {

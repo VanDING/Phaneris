@@ -5,6 +5,8 @@
 基线：`3cfe8a6bd1516f3fd26c6bdbf94ac186c6670805`；包版本 0.5.4，候选包含其后修复及本次未提交改动。  
 依据：[阶段规划](governance-review-and-development-direction-2026-10-28.md)、[事先失败矩阵](../verification/m0-closeout-failure-matrix-2026-10-28.md)。
 
+后续变更（2026-11-06）：本记录中的启动全库检查与自动备份维护已由用户要求的[本地启动收缩](local-startup-implementation-2026-11-06.md)替代；下文保留当时验收结果。
+
 ## 实施结果
 
 | 范围 | 处理 | 保留的边界 |

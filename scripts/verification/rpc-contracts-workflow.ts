@@ -13,6 +13,7 @@ await verificationWorkflow('rpc-contracts', async run => {
   const server = new WsRpcServer()
   const manager = {
     getSessions: () => [{ id: 'session-one', workspaceId: 'workspace-one' }],
+    getSessionWorkspaceId: (id: string) => id === 'session-one' ? 'workspace-one' : null,
     async sendMessage(_id: string, _message: string, _a: unknown, _s: unknown, _o: unknown, _q: unknown, _b: unknown, ack: (id: string) => void) { effects++; ack('message-one') },
   }
   const logger = { info() {}, warn() {}, error() {}, debug() {} }

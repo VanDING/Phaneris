@@ -36,7 +36,10 @@ export const criticalTestGroups: [string, string[]][] = [
 
 export const criticalWorkflows = [
   { id: 'connection-probe', entry: 'scripts/verification/connection-probe-workflow.ts', minimum: 5, required: ['probe.json'] },
-  { id: 'runtime-startup', entry: 'scripts/verification/runtime-startup-workflow.ts', minimum: 5, required: ['startup.json'] },
+  { id: 'runtime-startup', entry: 'scripts/verification/runtime-startup-workflow.ts', minimum: 7, required: ['startup.json'] },
+  { id: 'runtime-backup-retention', entry: 'scripts/verification/runtime-backup-retention-workflow.ts', minimum: 7, required: ['backups.json'] },
+  { id: 'local-startup', entry: 'scripts/verification/local-startup-workflow.ts', minimum: 11, required: ['local-startup.json'] },
+  { id: 'status-startup', entry: 'scripts/verification/status-startup-workflow.ts', minimum: 10, required: ['status-startup.json', 'trace.zip'] },
   { id: 'upstream-015-core', entry: 'scripts/verification/upstream-015-core-workflow.ts', minimum: 11, required: ['upstream-015-core.json', 'mcp-protocol.json', 'project-memory.json', 'guide-reading.json'] },
   { id: 'upstream-015-orchestration', entry: 'scripts/verification/upstream-015-orchestration-workflow.ts', minimum: 5, required: ['upstream-015-orchestration.json', 'oauth-flows.json', 'task-stopped.json'] },
   { id: 'upstream-015-browser', entry: 'scripts/verification/upstream-015-browser-workflow.ts', minimum: 11, required: ['upstream-015-browser.json', 'native-browser.json', 'hidden-current-frame.png', 'privacy-facts.json'] },

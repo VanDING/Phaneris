@@ -44,6 +44,7 @@ function createHarness() {
 
   const base = {
     getSessions: () => SESSIONS,
+    getSessionWorkspaceId: (id: string) => SESSIONS.find(session => session.id === id)?.workspaceId ?? null,
     getSession: async (id: string) => SESSIONS.find(s => s.id === id) ?? null,
     getSessionPath: (id: string) => (SESSIONS.some(s => s.id === id) ? `/sessions/${id}` : null),
     getRecoveryEvidence: (sessionId: string, toolOperationId: string) => ({ sessionId, toolOperationId }),

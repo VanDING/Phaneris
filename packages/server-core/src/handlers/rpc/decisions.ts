@@ -42,9 +42,9 @@ export function registerDecisionsHandlers(server: RpcServer, deps: HandlerDeps):
   server.handle(RPC_CHANNELS.decisions.GET_SESSION, async (ctx, sessionId: string, query?: import('@phaneris/shared/decisions/session').SessionDecisionQuery) => {
     validateSessionId(sessionId)
     // Decisions are available even when the chat transcript cannot be loaded.
-    const session = deps.sessionManager.getSessions().find(session => session.id === sessionId)
-    if (!session) throw new Error('Session not found')
-    if (ctx.workspaceId && session.workspaceId !== ctx.workspaceId) throw new Error('Session belongs to another workspace')
+    const workspaceId = deps.sessionManager.getSessionWorkspaceId(sessionId)
+    if (!workspaceId) throw new Error('Session not found')
+    if (ctx.workspaceId && workspaceId !== ctx.workspaceId) throw new Error('Session belongs to another workspace')
     if (query != null && (typeof query !== 'object' || Array.isArray(query))) throw new Error('Invalid decision query')
     return deps.sessionManager.getSessionDecisions(sessionId, query ?? undefined)
   })

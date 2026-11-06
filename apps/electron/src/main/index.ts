@@ -1078,12 +1078,6 @@ app.whenReady().then(async () => {
 
         messagingHandle.setPublisher(instance.wsServer.push.bind(instance.wsServer))
 
-        // Skip remote-owned workspaces — messaging runs on the remote server.
-        const localWorkspaceIds = getWorkspaces()
-          .filter((ws) => !ws.remoteServer)
-          .map((ws) => ws.id)
-        await messagingHandle.initializeWorkspaces(localWorkspaceIds)
-
         // Compose fan-out event sink: RPC push + messaging gateway dispatch.
         // Always install — this lets workspaces enable messaging at runtime
         // without a process restart.
@@ -1460,6 +1454,14 @@ app.whenReady().then(async () => {
     if (!isHeadless) {
       await createInitialWindows()
       startupWindowsReady = true
+    }
+
+    // The publisher is already wired. Connecting configured messaging accounts
+    // must not delay creation of the business windows.
+    if (messagingHandle) {
+      const localWorkspaceIds = getWorkspaces().filter(workspace => !workspace.remoteServer).map(workspace => workspace.id)
+      void messagingHandle.initializeWorkspaces(localWorkspaceIds)
+        .catch(error => mainLog.error('[messaging] Gateway initialization failed:', error))
     }
 
     // Run credential health check at startup to detect issues early

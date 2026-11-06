@@ -45,6 +45,7 @@ export interface ISessionManager {
   // ---------------------------------------------------------------------------
 
   getSessions(workspaceId?: string): Session[]
+  getSessionWorkspaceId(sessionId: string): string | null
   getSession(sessionId: string): Promise<Session | null>
   getOrCreateResidentAssistant(workspaceId: string): Promise<Session>
   getAssistantMemoryStore(workspaceId: string): import('../resident-assistant/memory-store').AssistantMemoryStore

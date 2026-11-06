@@ -11,7 +11,8 @@
 import { Circle } from 'lucide-react'
 import { EntityIcon } from '@/components/ui/entity-icon'
 import { useEntityIcon } from '@/lib/icon-cache'
-import type { IconSize } from '@phaneris/shared/icons'
+import { ICON_SIZE_CLASSES, type IconSize } from '@phaneris/shared/icons'
+import { cn } from '@/lib/utils'
 
 const LOCAL_STATUS_ICON_FILENAME_PATTERN = /^[^/\\]+\.(svg|png|jpe?g|webp)$/i
 
@@ -70,6 +71,12 @@ export function StatusIcon({
     // Status icons use {statusId}.ext naming (not icon.ext)
     iconFileName,
   })
+
+  if (resolved.loading || resolved.failed) {
+    return <span aria-hidden="true" aria-busy={resolved.loading || undefined}
+      data-icon-state={resolved.loading ? 'loading' : 'error'}
+      className={cn(ICON_SIZE_CLASSES[size], 'inline-block rounded-shape-sm bg-current/10', className)} />
+  }
 
   return (
     <EntityIcon

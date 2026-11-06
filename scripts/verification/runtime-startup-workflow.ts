@@ -1,88 +1,80 @@
-/** M0 failure matrix predates implementation. Real SQLite + worker lifecycle;
- * compare a fixed isolated database, never the user's runtime database. */
+/** Local lifecycle contract: normal opens, explicit diagnostics, no unattended snapshots. */
 import assert from 'node:assert/strict'
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs'
+import { copyFileSync, mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { Database } from 'bun:sqlite'
 import { createDurableRuntime } from '../../packages/server-core/src/durable-runtime'
 import { verificationWorkflow } from './verification-artifacts'
 
 await verificationWorkflow('runtime-startup', async evidence => {
-  const workspace = join(evidence.directory, 'workspace')
-  const seed = createDurableRuntime()
+  const workspace = join(evidence.directory, 'workspace'), seed = createDurableRuntime()
   seed.commands.acceptRun({ workspaceRootPath: workspace, sessionId: 'retained', operationId: 'retained-run', turnId: 'retained-turn',
     userMessageId: 'retained-input', userMessage: 'keep this fact' })
-  const pending = await seed.effects.prepareTool(workspace, { sessionId: 'retained', runOperationId: 'retained-run',
+  await seed.effects.prepareTool(workspace, { sessionId: 'retained', runOperationId: 'retained-run',
     providerToolCallId: 'unknown-call', toolName: 'Write', args: { path: 'unknown.txt' } })
   seed.commands.completeRun(workspace, 'retained-run', 'interrupted')
-  const file = join(workspace, 'runtime/runtime.db')
-  const sql = new Database(file)
+  const file = join(workspace, 'runtime/runtime.db'), sql = new Database(file)
   sql.exec('CREATE TABLE startup_fixture (id INTEGER PRIMARY KEY, payload BLOB); BEGIN')
   const insert = sql.prepare('INSERT INTO startup_fixture(payload) VALUES (randomblob(32768))')
   for (let i = 0; i < 2048; i++) insert.run()
-  sql.exec('COMMIT; PRAGMA wal_checkpoint(TRUNCATE)'); sql.close()
-  const syncStart = performance.now()
-  assert(seed.admin.checkDatabaseIntegrity(workspace).ok)
-  const synchronousMs = performance.now() - syncStart
-  const maintenanceStart = performance.now()
-  seed.admin.backupDatabase(workspace, join(evidence.directory, 'synchronous-backup.db'))
-  seed.admin.maintainDatabase(workspace, { projectionRetentionMs: 30 * 24 * 60 * 60 * 1000 })
-  const synchronousMaintenanceMs = performance.now() - maintenanceStart
-  await seed.close()
+  sql.exec('COMMIT; PRAGMA wal_checkpoint(TRUNCATE)')
+  const rootPage = (sql.query("SELECT rootpage FROM sqlite_schema WHERE name='startup_fixture'").get() as { rootpage: number }).rootpage
+  sql.close(); await seed.close()
   const scenes: string[] = [], timings: unknown[] = []
   for (const state of ['first-reopen', 'warm-reopen']) {
-    const runtime = createDurableRuntime(), notices: string[] = []
-    let ticks = 0
-    const pulse = setInterval(() => { ticks++ }, 5)
-    const started = performance.now()
+    const runtime = createDurableRuntime(), notices: string[] = [], started = performance.now()
     try {
       await runtime.admin.start([workspace], (_root, error) => notices.push(String(error)))
-      const readyMs = performance.now() - started
+      timings.push({ state, readyMs: performance.now() - started })
       assert.equal(notices.length, 0)
-      assert(ticks > 0, 'Startup verification must yield the event loop')
-      assert(!existsSync(join(workspace, 'runtime/backups')), 'Backup must not gate workspace readiness')
-      assert(runtime.queries.events(workspace, { sessionId: 'retained' }).some(e => e.type === 'user_message_committed'))
+      assert(!existsSync(join(workspace, 'runtime/backups')))
+      assert(runtime.queries.events(workspace, { sessionId: 'retained' }).some(event => event.type === 'user_message_committed'))
       assert.equal(runtime.queries.unsettledTools(workspace).length, 1)
       await assert.rejects(runtime.effects.prepareTool(workspace, { sessionId: 'retained', runOperationId: 'retained-run',
         providerToolCallId: 'repeat', toolName: 'Write', args: { path: 'unknown.txt' } }), /unconfirmed outcome/)
-      timings.push({ state, readyMs, ticks })
-      scenes.push(`${state}:full-integrity-yields-and-retains-facts-and-replay-protection`)
-    } finally { clearInterval(pulse); await runtime.close() }
+      scenes.push(`${state}:normal-open-retains-facts-and-replay-protection`)
+      await new Promise(resolve => setTimeout(resolve, 1200))
+      assert(!existsSync(join(workspace, 'runtime/backups')))
+    } finally { await runtime.close() }
   }
-  const runtime = createDurableRuntime()
-  await runtime.admin.start([workspace], (_root, error) => { throw error })
-  let backupTicks = 0
-  const pulse = setInterval(() => { backupTicks++ }, 5)
+  scenes.push('idle-startup-does-not-create-snapshot-directory')
+  const diagnostic = createDurableRuntime()
   try {
-    await runtime.admin.maintainWorkspace(workspace)
-    assert(backupTicks > 0, 'Backup/VACUUM must yield the event loop')
-    const backup = join(workspace, 'runtime/backups', `runtime-${new Date().toISOString().slice(0, 10)}.db`)
-    assert(existsSync(backup))
-    scenes.push('background-maintenance-publishes-real-backup-with-responsive-main-thread')
-  } finally { clearInterval(pulse); await runtime.close() }
-  const broken = join(evidence.directory, 'broken')
-  mkdirSync(join(broken, 'runtime'), { recursive: true })
-  const badFile = join(broken, 'runtime/runtime.db'), badBytes = Buffer.from('not a sqlite database')
-  writeFileSync(badFile, badBytes)
+    assert(diagnostic.admin.checkDatabaseIntegrity(workspace).ok)
+    scenes.push('complete-integrity-check-remains-explicitly-available')
+  } finally { await diagnostic.close() }
+
+  // A corrupt page in an unrelated table is only visited by the explicit full
+  // scan. SQLite can still open and recover Runtime's own indexed records.
+  const isolated = join(evidence.directory, 'unused-page'), isolatedFile = join(isolated, 'runtime/runtime.db')
+  mkdirSync(join(isolated, 'runtime'), { recursive: true }); copyFileSync(file, isolatedFile)
+  const bytes = readFileSync(isolatedFile), encoded = bytes.readUInt16BE(16), pageSize = encoded === 1 ? 65536 : encoded
+  bytes[(rootPage - 1) * pageSize] = 0
+  writeFileSync(isolatedFile, bytes)
+  const noScan = createDurableRuntime(), noScanNotices: string[] = []
+  try {
+    await noScan.admin.start([isolated], (_root, error) => noScanNotices.push(String(error)))
+    assert.deepEqual(noScanNotices, [])
+    assert.equal(noScan.queries.storageStatus(isolated).recovery, undefined)
+    scenes.push('normal-startup-does-not-scan-unrelated-pages')
+    const result = await Promise.resolve().then(() => noScan.admin.checkDatabaseIntegrity(isolated))
+      .then(value => value.ok, () => false)
+    assert.equal(result, false)
+    scenes.push('explicit-diagnostic-finds-corruption-outside-normal-open-path')
+  } finally { await noScan.close() }
+
+  const broken = join(evidence.directory, 'broken'), badFile = join(broken, 'runtime/runtime.db'), badBytes = Buffer.from('not a sqlite database')
+  mkdirSync(join(broken, 'runtime'), { recursive: true }); writeFileSync(badFile, badBytes)
   const recovery = createDurableRuntime(), notices: string[] = []
   try {
     await recovery.admin.start([broken, workspace], (_root, error) => notices.push(String(error)))
-    assert(notices.length > 0)
-    assert(readFileSync(badFile).equals(badBytes))
+    assert(notices.length > 0); assert(readFileSync(badFile).equals(badBytes))
     assert(recovery.queries.storageStatus(broken).recovery)
     assert.equal(recovery.queries.storageStatus(workspace).recovery, undefined)
-    scenes.push('corrupt-database-is-preserved-and-isolated-before-startup-completes')
+    scenes.push('unopenable-database-is-preserved-and-isolated')
   } finally { await recovery.close() }
-  const closing = createDurableRuntime()
-  await closing.admin.start([workspace], () => {})
-  const maintenance = closing.admin.maintainWorkspace(workspace)
-  const outcome = maintenance.catch(error => String(error))
-  await closing.close(); await outcome
-  assert.throws(() => closing.queries.events(workspace), /closed/)
-  scenes.push('shutdown-cancels-and-drains-worker-before-closing-authority')
-  evidence.json('startup.json', { synchronousMs, synchronousMaintenanceMs, synchronousReadyMs: synchronousMs + synchronousMaintenanceMs,
-    timings, backupTicks, scenes, bytes: readFileSync(file).length,
-    scope: 'same synthetic 64 MiB database; first-reopen means first process reopen, not an OS cold-cache measurement' })
+  evidence.json('startup.json', { timings, scenes, bytes: readFileSync(file).length,
+    scope: 'Synthetic 64 MiB database. No live profile mutation or OS cold-cache performance claim.' })
   evidence.complete(scenes, ['User database performance', 'OS cold-cache measurements', 'Signed installer'])
-  console.log(JSON.stringify({ passed: scenes.length, output: evidence.directory, synchronousMs, timings }))
+  console.log(JSON.stringify({ passed: scenes.length, output: evidence.directory, timings }))
 })

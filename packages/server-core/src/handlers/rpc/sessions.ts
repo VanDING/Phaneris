@@ -165,16 +165,11 @@ export const HANDLED_CHANNELS = [
 /**
  * Resolve the workspace a session belongs to.
  *
- * Lightweight: scans session metadata only (getSessions() never loads
- * messages from disk), so it is safe on the hot RPC path. Returns null when
- * the session is unknown to the session manager.
+ * A single registry lookup; ownership checks must not serialize the directory.
+ * Returns null when the session is unknown to the session manager.
  */
 function resolveSessionWorkspaceId(sessionManager: ISessionManager, sessionId: string): string | null {
-  const sessions = sessionManager.getSessions()
-  for (let i = 0; i < sessions.length; i++) {
-    if (sessions[i]!.id === sessionId) return sessions[i]!.workspaceId
-  }
-  return null
+  return sessionManager.getSessionWorkspaceId(sessionId)
 }
 
 /**

@@ -684,6 +684,7 @@ interface ManagedSession extends SessionPlanningFields {
 
   id: string
   workspace: Workspace
+  sessionFolderPath: string
   runtime: SessionRuntimeView
   messages: Message[]
   lastMessageAt: number
@@ -1002,6 +1003,10 @@ export function createManagedSession(
   workspace: Workspace,
   overrides?: Partial<ManagedSession>,
 ): ManagedSession {
+  let tokenRefreshManager: TokenRefreshManager | undefined
+  let backgroundShellCommands: ManagedSession['backgroundShellCommands'] | undefined
+  let backgroundTaskOutputs: ManagedSession['backgroundTaskOutputs'] | undefined
+  let backgroundTaskRegistry: ManagedSession['backgroundTaskRegistry'] | undefined
   const s = source as Record<string, unknown>
   const sourceFields = Object.fromEntries(
     Object.entries(s).filter(([, v]) => v !== undefined)
@@ -1028,17 +1033,18 @@ export function createManagedSession(
     messages: [],
     lastMessageAt: (s.lastMessageAt ?? s.lastUsedAt ?? Date.now()) as number,
     isFlagged: (s.isFlagged ?? false) as boolean,
-    backgroundShellCommands: new Map(),
-    backgroundTaskOutputs: new Map(),
-    backgroundTaskRegistry: new Map(),
+    get backgroundShellCommands() { return backgroundShellCommands ??= new Map() },
+    get backgroundTaskOutputs() { return backgroundTaskOutputs ??= new Map() },
+    get backgroundTaskRegistry() { return backgroundTaskRegistry ??= new Map() },
     messagesLoaded: false,
     streamingText: '',
     streamingTurnId: undefined,
-    tokenRefreshManager: new TokenRefreshManager(getSourceCredentialManager(), {
+    get tokenRefreshManager() { return tokenRefreshManager ??= new TokenRefreshManager(getSourceCredentialManager(), {
       log: (msg) => sessionLog.debug(msg),
-    }),
+    }) },
     // Caller overrides (permissionMode defaults, thinkingLevel, messagesLoaded, etc.)
     ...overrides,
+    sessionFolderPath: getSessionStoragePath(workspace.rootPath, source.id),
     systemPromptPreset: sourceFields.sessionKind === 'resident_assistant'
       ? 'resident_assistant' : overrides?.systemPromptPreset ?? sourceFields.systemPromptPreset,
   } as ManagedSession
@@ -1093,7 +1099,7 @@ function managedToSession(m: ManagedSession, overrides?: Partial<Session>): Sess
     workspaceName: m.workspace.name,
     messages: [],
     isProcessing: m.runtime.isProcessing,
-    sessionFolderPath: getSessionStoragePath(m.workspace.rootPath, m.id),
+    sessionFolderPath: m.sessionFolderPath,
     supportsBranching: resolveSupportsBranching(m),
     ...overrides,
   } as Session
@@ -1192,6 +1198,7 @@ export function canSteerTextPayload(attachments?: FileAttachment[], storedAttach
 
 export class SessionManager implements ISessionManager {
   private sessions: Map<string, ManagedSession> = new Map()
+  private readonly activatedSessions = new WeakSet<ManagedSession>()
   private readonly productRepository = new SessionProductRepository()
   private readonly residentAssistantCreations = new Map<string, Promise<Session>>()
   private readonly residentServices = new Map<string, ResidentAssistantService>()
@@ -1231,6 +1238,10 @@ export class SessionManager implements ISessionManager {
   constructor(private readonly durableRuntime: DurableRuntime = createDurableRuntime()) {
     this.taskRuntimeFacts = new TaskRuntimeFacts(durableRuntime)
     this.execution = durableRuntime.execution
+    this.execution.setSessionInitializer(sessionId => {
+      const managed = this.sessions.get(sessionId)
+      if (managed) this.activateManagedSession(managed)
+    })
   }
   // Delta batching for performance - reduces IPC events from 50+/sec to ~20/sec
   private readonly deltas = new SessionDeltaBatcher((event, workspace) => this.sendEvent(event, workspace))
@@ -1390,10 +1401,18 @@ export class SessionManager implements ISessionManager {
     return { sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath, recoverySessionIds: [...ids] }
   }
 
-  private registerManagedSession(managed: ManagedSession): void {
-    managed.runtime = sessionRuntimeView(this.durableRuntime, managed.id)
+  private registerManagedSession(managed: ManagedSession, activate = true): void {
     this.sessions.set(managed.id, managed)
+    if (activate) this.activateManagedSession(managed)
+  }
+
+  private activateManagedSession(managed: ManagedSession): void {
+    if (this.activatedSessions.has(managed)) return
+    this.activatedSessions.add(managed)
+    managed.runtime = sessionRuntimeView(this.durableRuntime, managed.id)
     this.execution.bindSession({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
+    setPermissionMode(managed.id, managed.permissionMode ?? 'ask', { changedBy: 'restore' })
+    if (managed.previousPermissionMode) hydratePreviousPermissionMode(managed.id, managed.previousPermissionMode)
     this.durableRuntime.evidence.registerReconciliationAdapter('task_node_dispatch', createTaskNodeReconciliationAdapter(
       () => [...this.sessions.values()].filter(session => session.workspace.rootPath === managed.workspace.rootPath),
       session => this.ensureMessagesLoaded(session as ManagedSession),
@@ -2154,7 +2173,7 @@ export class SessionManager implements ISessionManager {
         }
       }
       const recoveries = await this.durableRuntime.admin.start(workspaces.map(workspace => workspace.rootPath),
-        (workspace, error) => sessionLog.error(`Durable Runtime maintenance failed for ${workspace}:`, error))
+        (workspace, error) => sessionLog.error(`Durable Runtime storage reported a problem for ${workspace}:`, error))
       for (let index = 0; index < workspaces.length; index++) {
         const workspace = workspaces[index]!
         const recovery = recoveries[index]!
@@ -2169,6 +2188,13 @@ export class SessionManager implements ISessionManager {
 
       // Load existing sessions from disk
       this.loadSessionsFromDisk()
+
+      // A user-facing done status is not evidence that an external effect
+      // settled. Only the recovery report activates history during startup.
+      for (const recovery of recoveries) for (const item of recovery.items) {
+        const managed = this.sessions.get(item.sessionId)
+        if (managed) this.activateManagedSession(managed)
+      }
 
       // Signal that initialization is complete — IPC handlers waiting on initGate will proceed
       this.initGate.markReady()
@@ -2202,6 +2228,8 @@ export class SessionManager implements ISessionManager {
         try { labelTree = listLabels(workspaceRootPath) } catch (e) { sessionLog.warn(`Could not read labels for ${workspaceRootPath}:`, e) }
 
         for (const meta of sessionMetadata) {
+          const existing = this.sessions.get(meta.id)
+          if (existing && this.activatedSessions.has(existing)) continue
           // Create managed session from metadata only (messages lazy-loaded on demand)
           // This dramatically reduces memory usage at startup - messages are loaded
           // when getSession() is called for a specific session
@@ -2214,9 +2242,9 @@ export class SessionManager implements ISessionManager {
             workingDirectory: meta.workingDirectory ?? wsDefaultWorkingDir,
           })
 
-          // List/profile statistics must use the ledger before messages are opened.
+          // Closed history displays its saved summary. The ledger is projected
+          // when a session is opened or an execution updates its usage.
           if (labelTree) managed.labels = this.canonicalLabels(workspaceRootPath, managed.labels, labelTree)
-          this.applyDurableUsageProjection(managed)
 
           // Migration: clear orphaned llmConnection references (e.g., after connection was deleted)
           if (managed.llmConnection) {
@@ -2228,14 +2256,7 @@ export class SessionManager implements ISessionManager {
             }
           }
 
-          // Initialize mode-manager state for restored sessions even before agent creation.
-          // This keeps diagnostics/effective mode aligned with persisted session metadata.
-          setPermissionMode(meta.id, managed.permissionMode ?? 'ask', { changedBy: 'restore' })
-          if (managed.previousPermissionMode) {
-            hydratePreviousPermissionMode(meta.id, managed.previousPermissionMode)
-          }
-
-          this.registerManagedSession(managed)
+          this.registerManagedSession(managed, false)
 
           // Initialize session metadata in AutomationSystem for diffing
           const automationSystem = this.automationSystems.get(workspaceRootPath)
@@ -2572,8 +2593,8 @@ export class SessionManager implements ISessionManager {
 
     return {
       automationCount,
-      // SchedulerService is running if the system was created with enableScheduler
-      schedulerRunning: !automationSystem.isDisposed(),
+      // Only configured cron/page-refresh work needs the minute timer.
+      schedulerRunning: automationSystem.isSchedulerRunning(),
     }
   }
 
@@ -2621,6 +2642,10 @@ export class SessionManager implements ISessionManager {
     return sessions
       .map(m => managedToSession(m))
       .sort((a, b) => (b.lastMessageAt ?? 0) - (a.lastMessageAt ?? 0))
+  }
+
+  getSessionWorkspaceId(sessionId: string): string | null {
+    return this.sessions.get(sessionId)?.workspace.id ?? null
   }
 
   /**
@@ -2753,6 +2778,7 @@ export class SessionManager implements ISessionManager {
    * to load messages simultaneously.
    */
   private async ensureMessagesLoaded(managed: ManagedSession): Promise<void> {
+    this.activateManagedSession(managed)
     managed.lastAccessAt = Date.now()
     if (managed.messagesLoaded) return
 

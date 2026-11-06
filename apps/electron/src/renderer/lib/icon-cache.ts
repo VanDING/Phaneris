@@ -19,7 +19,8 @@
  * It handles cache lookup, IPC file loading, SVG theming, and emoji detection.
  */
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { readAfterReconnect } from '@/lib/read-after-reconnect'
 import { isEmoji } from '@phaneris/shared/utils/icon-constants'
 import type { ResolvedEntityIcon } from '@phaneris/shared/icons'
 
@@ -85,7 +86,7 @@ function readWorkspaceIcon(workspaceId: string, relativePath: string): Promise<s
   const key = JSON.stringify([workspaceId, relativePath])
   const existing = pendingIconReads.get(key)
   if (existing) return existing
-  const request = window.electronAPI.readWorkspaceImage(workspaceId, relativePath).finally(() => {
+  const request = readAfterReconnect(() => window.electronAPI.readWorkspaceImage(workspaceId, relativePath)).finally(() => {
     if (pendingIconReads.get(key) === request) pendingIconReads.delete(key)
   })
   pendingIconReads.set(key, request)
@@ -557,6 +558,18 @@ export interface UseEntityIconOptions {
  */
 export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
   const { workspaceId, entityType, identifier, iconPath, iconDir, iconValue, iconFileName } = opts
+  const failed = useRef(false)
+  const [connectionRevision, setConnectionRevision] = useState(0)
+  useEffect(() => {
+    let disconnected = false
+    return window.electronAPI.onTransportConnectionStateChanged?.(state => {
+      if (state.status !== 'connected') disconnected = true
+      else if (disconnected) {
+        disconnected = false
+        if (failed.current) setConnectionRevision(revision => revision + 1)
+      }
+    })
+  }, [workspaceId])
 
   // Stable cache key for this entity's icon
   const cacheKey = `${entityType}:${workspaceId}:${identifier}`
@@ -592,10 +605,11 @@ export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
         rawSvg: colorable ? rawSvgCache.get(cacheKey) : undefined,
       }
     }
-    return { kind: 'fallback', colorable: false }
+    return { kind: 'fallback', colorable: false, loading: !!(iconPath || (iconDir && !iconValue)) }
   })
 
   useEffect(() => {
+    failed.current = false
     // If emoji, no file loading needed - just update state
     if (immediateValue?.type === 'emoji') {
       setResolved({ kind: 'emoji', value: immediateValue.value, colorable: false })
@@ -624,6 +638,7 @@ export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
 
     // No cache hit - load from filesystem via IPC
     let cancelled = false
+    setResolved({ kind: 'fallback', colorable: false, loading: true })
 
     async function loadIcon() {
       let result: { dataUrl: string; colorable: boolean; rawSvg?: string } | null = null
@@ -649,10 +664,10 @@ export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
         iconCache.set(cacheKey, result.dataUrl)
         if (result.colorable) {
           colorableCache.add(cacheKey)
-        }
+        } else colorableCache.delete(cacheKey)
         if (result.rawSvg) {
           rawSvgCache.set(cacheKey, result.rawSvg)
-        }
+        } else rawSvgCache.delete(cacheKey)
         setResolved({
           kind: 'file',
           value: result.dataUrl,
@@ -664,10 +679,14 @@ export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
       }
     }
 
-    loadIcon()
+    void loadIcon().catch(() => {
+      if (cancelled) return
+      failed.current = true
+      setResolved({ kind: 'fallback', colorable: false, failed: true })
+    })
 
     return () => { cancelled = true }
-  }, [workspaceId, entityType, identifier, iconPath, iconDir, iconFileName, immediateValue, cacheKey, iconValue])
+  }, [workspaceId, entityType, identifier, iconPath, iconDir, iconFileName, immediateValue, cacheKey, iconValue, connectionRevision])
 
   return resolved
 }
@@ -699,34 +718,22 @@ async function loadIconFile(
   workspaceId: string,
   relativePath: string
 ): Promise<{ dataUrl: string; colorable: boolean; rawSvg?: string } | null> {
-  try {
-    const content = await readWorkspaceIcon(workspaceId, relativePath)
-    // IPC returns null for missing files (silent fallback)
-    if (!content) {
-      return null
+  const content = await readWorkspaceIcon(workspaceId, relativePath)
+  // Missing optional files are settled fallbacks, not failed reads.
+  if (!content) return null
+
+  if (relativePath.endsWith('.svg')) {
+    const colorable = content.includes('currentColor')
+    const dataUrl = svgToThemedDataUrl(content)
+
+    if (colorable) {
+      const rawSvg = sanitizeSvgForInline(content)
+      return { dataUrl, colorable, rawSvg }
     }
-
-    if (relativePath.endsWith('.svg')) {
-      // Detect if SVG uses currentColor (colorable)
-      const colorable = content.includes('currentColor')
-      // Theme SVG: inject foreground color for data URL usage
-      const dataUrl = svgToThemedDataUrl(content)
-
-      if (colorable) {
-        // Sanitize SVG for inline rendering (XSS prevention)
-        const rawSvg = sanitizeSvgForInline(content)
-        return { dataUrl, colorable, rawSvg }
-      }
-
-      return { dataUrl, colorable }
-    }
-
-    // Raster image (PNG, JPG) - not colorable
-    return { dataUrl: content, colorable: false }
-  } catch {
-    // File doesn't exist or failed to load
-    return null
+    return { dataUrl, colorable }
   }
+
+  return { dataUrl: content, colorable: false }
 }
 
 /**
@@ -785,6 +792,8 @@ async function discoverIconFile(
     for (const result of results) {
       if (result.status === 'fulfilled' && result.value) return result.value
     }
+    const failure = results.find(result => result.status === 'rejected')
+    if (failure?.status === 'rejected') throw failure.reason
     return null
   })().finally(() => {
     if (pendingIconDiscoveries.get(key) === discovery) pendingIconDiscoveries.delete(key)

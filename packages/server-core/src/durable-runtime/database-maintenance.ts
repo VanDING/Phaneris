@@ -1,11 +1,9 @@
-import { Worker } from 'node:worker_threads'
 import type { SqliteDatabase } from './sqlite-driver.js'
 
 type DatabaseTask = { kind: 'integrity' } | { kind: 'backup'; destination: string }
   | { kind: 'maintain'; projectionRetentionMs?: number; vacuum?: boolean }
 
-/** Self-contained so the identical SQL/file protocol runs in-process or in a
- * bundled worker without depending on a source-tree entry file. */
+/** Explicit database diagnostics/maintenance share the same SQL/file protocol. */
 export function performDatabaseTask(db: SqliteDatabase, databasePath: string, task: DatabaseTask): unknown {
   const { existsSync, mkdirSync, linkSync, unlinkSync } = process.getBuiltinModule('fs') as typeof import('node:fs')
   const { resolve, dirname } = process.getBuiltinModule('path') as typeof import('node:path')
@@ -50,38 +48,4 @@ export function performDatabaseTask(db: SqliteDatabase, databasePath: string, ta
   if (task.vacuum) db.exec('VACUUM')
   db.exec('PRAGMA optimize')
   return { removedProjections, vacuumed: task.vacuum === true, maintainedAt }
-}
-
-/** Uses the active runtime's native SQLite. Full scans/VACUUM never run on the
- * Electron event loop; the connection is worker-owned and always closed. */
-export function runDatabaseTask<T>(databasePath: string, task: DatabaseTask, signal?: AbortSignal): Promise<T> {
-  if (signal?.aborted) return Promise.reject(new Error('Database maintenance cancelled'))
-  return new Promise<T>((resolve, reject) => {
-    const worker = new Worker(`
-      const { parentPort, workerData } = require('node:worker_threads');
-      const Database = process.versions.bun ? require('bun:sqlite').Database : require('node:sqlite').DatabaseSync;
-      let db;
-      try {
-        db = new Database(workerData.databasePath);
-        db.exec('PRAGMA busy_timeout = 5000');
-        const result = (${performDatabaseTask.toString()})(db, workerData.databasePath, workerData.task);
-        parentPort.postMessage({ result });
-      } catch (error) { parentPort.postMessage({ error: String(error) }); }
-      finally { if (db) db.close(); parentPort.close(); }
-    `, { eval: true, workerData: { databasePath, task } })
-    let result: { result: T } | { error: string } | undefined
-    let cancelled = false, failure: Error | undefined
-    const cancel = () => { cancelled = true; void worker.terminate() }
-    signal?.addEventListener('abort', cancel, { once: true })
-    worker.on('message', message => { result = message })
-    worker.on('error', error => { failure = error })
-    worker.on('exit', code => {
-      signal?.removeEventListener('abort', cancel)
-      if (cancelled) reject(new Error('Database maintenance cancelled'))
-      else if (failure) reject(failure)
-      else if (code !== 0 || !result) reject(new Error(`Database worker exited without a result (${code})`))
-      else if ('error' in result) reject(new Error(result.error))
-      else resolve(result.result)
-    })
-  })
 }

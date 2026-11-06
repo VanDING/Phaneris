@@ -1,9 +1,12 @@
-/** Retry an interrupted, idempotent background read once. Never use for writes. */
+/** Retry an interrupted/timed-out idempotent background read once. Never use for writes. */
 export async function readAfterReconnect<T>(read: () => Promise<T>): Promise<T> {
   try {
     return await read()
   } catch (error) {
-    if (!(error instanceof Error) || error.message !== 'Connection lost') throw error
+    if (!(error instanceof Error)) throw error
+    // A healthy connection can outlive a busy server's first response deadline.
+    if (error.message.startsWith('Request timeout:')) return read()
+    if (error.message !== 'Connection lost' && !error.message.startsWith('Not connected (channel:')) throw error
     const api = window.electronAPI
     if (!api.getTransportConnectionState || !api.onTransportConnectionStateChanged) throw error
     await new Promise<void>((resolve, reject) => {

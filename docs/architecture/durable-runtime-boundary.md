@@ -162,6 +162,8 @@ packages/server-core/src/sessions/         Session 产品逻辑与兼容入口
 | `RuntimeDriver` / `execution.ensureDriver` | 接收不透明输入及运行 scope，返回事件迭代器；提供 stop/dispose/steer | `ManagedSession`、产品 getter 或 PiAgent 实现依赖；具体 SDK 配置留在外部装配 |
 | `CompatibilityReadPort` | legacy context、UI overlay、排队输入候选及其来源/完整性信息 | 将兼容消息当作 dispatch 未发生的证明 |
 
+2026-11-06 本地启动约束：正常启动只打开/迁移 SQLite 并恢复未结算操作，不运行全库 `integrity_check`，不安排每日备份或六小时维护。完整检查、备份和物理维护仍是明确调用的管理能力，已有用户恢复点保持原样。历史 Session 只保留目录元数据与已保存用量；正文、权限运行状态、Host 槽和观察者在打开、执行或确需恢复时激活。用户标记 `done` 不能代替实际副作用结算证据。实施及验收见[本地启动收缩](../process/local-startup-implementation-2026-11-06.md)。
+
 ### 6.1 输入、配置与运行身份
 
 - Session 应用层先处理 workspace 归属、附件引用、连接选择和产品默认值，再提交只读 DTO；Runtime 不从 `getWorkspaces()`、全局 Session map 或环境变量自行查产品配置。

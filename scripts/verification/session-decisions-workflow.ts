@@ -57,7 +57,7 @@ await decisions.getDecisionRecorder().append(legacy as any)
 await decisions.getDecisionRecorder().append({ ...legacy, id: 'no-session', sessionId: undefined } as any)
 await decisions.getDecisionRecorder().flush()
 const rpc = new WsRpcServer({ host: '127.0.0.1', port: 0, requireAuth: true, validateToken: async token => token === 'fixture-token' })
-registerDecisionsHandlers(rpc, { sessionManager: { getSessions: () => manager.getSessions(), getSessionDecisions: (id: string, query: any) => manager.getSessionDecisions(id, query) } } as any)
+registerDecisionsHandlers(rpc, { sessionManager: { getSessionWorkspaceId: (id: string) => manager.getSessionWorkspaceId(id), getSessionDecisions: (id: string, query: any) => manager.getSessionDecisions(id, query) } } as any)
 await rpc.listen()
 const sink = (channel: string, target: any, ...args: any[]) => rpc.push(channel, target, ...args)
 manager.eventSink = sink
@@ -102,15 +102,24 @@ try {
     assert.equal((await report(zero.id)).totals.unknownCostRequests, 1)
     await pending; delay = 0; assert.equal((await report(zero.id)).totals.unknownCostRequests, 0)
   })
-  await check('Host title and pre-turn boundaries confirm actual changes; stopped results are discarded', async () => {
-    noul = 0; await manager.generateTitleUnlessSmallTalk(a, 'Hi'); assert.equal(a.titleDeferred, true)
-    manager.execution.begin({ sessionId: a.id, workspaceRootPath: a.workspace.rootPath }); a.thinkingLevel = 'max'; a.messages = [{ id: 'source-message', role: 'user', content: 'routine' }]
-    const first = await manager.startPreTurnDecisions(a, 'routine'); assert.equal(first.thinkingOverride, 'low')
-    const thinking = (await report()).items.find(item => item.feature === 'adaptiveThinking'); assert(thinking && !thinking.application)
-    first.apply()
-    delay = 100; const late = manager.startPreTurnDecisions(a, 'routine'); manager.execution.requestStop(a.id); await late;  delay = 0; await manager.execution.finish(manager.execution.current(a.id), 'interrupted', { notify: false, advanceQueue: false }); noul = .95
-    const value = await report(); assert(value.items.some((item: any) => item.feature === 'smartTitles' && item.application?.action === 'defer_title' && item.application.changed))
-    assert(value.items.some((item: any) => item.feature === 'adaptiveThinking' && item.application?.status === 'discarded'))
+  await check('Host title changes are recorded; pre-turn preserves explicit thinking without foreground inference', async () => {
+    try {
+      noul = 0; await manager.generateTitleUnlessSmallTalk(a, 'Hi'); assert.equal(a.titleDeferred, true)
+      manager.execution.begin({ sessionId: a.id, workspaceRootPath: a.workspace.rootPath }); a.thinkingLevel = 'max'
+      a.messages = [{ id: 'source-message', role: 'user', content: 'routine' }]
+      const count = requests.length
+      const first = await manager.startPreTurnDecisions(a, 'routine', { thinkingLevel: 'max', hidden: true })
+      assert.equal(first.thinkingOverride, 'max')
+      assert.equal(await manager.startPreTurnDecisions(a, 'routine', { hidden: true }), null)
+      assert.equal(requests.length, count)
+      const value = await report()
+      assert(value.items.some((item: any) => item.feature === 'smartTitles' && item.application?.action === 'defer_title' && item.application.changed))
+      assert(!value.items.some((item: any) => item.feature === 'adaptiveThinking'))
+    } finally {
+      noul = .95
+      const handle = manager.execution.current(a.id)
+      if (handle) await manager.execution.finish(handle, 'completed', { notify: false, advanceQueue: false })
+    }
   })
   await check('Guarded permission still prompts; unavailable check falls back without auto-approval', async () => {
     const modes = await import('../../packages/shared/src/agent/mode-manager.ts')
@@ -229,6 +238,7 @@ try {
     const interrupted = await report(b.id); const interruptedPoint = interrupted.items.find(item => item.id === trace.decisionPointId); assert(interruptedPoint); assert.equal(interruptedPoint.attempts[0].status, 'unknown'); assert.equal(interrupted.totals.unknownCostRequests, 1)
     writeFileSync(join(output, 'evidence.json'), JSON.stringify({ report: after, events: queries.decisionEvents(workspaceRoot, a.id), usage }, null, 2))
   })
+  if (!process.argv.includes('--host-only')) {
   writeFileSync(join(output, 'run.html'), '<!doctype html><html><head><meta charset="utf-8"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/session-decisions.tsx"></script></body></html>')
   vite = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
     optimizeDeps: { entries: [join(output, 'run.html')] },
@@ -324,6 +334,7 @@ try {
     }
     assert.deepEqual(pageErrors, [])
   })
+  }
   await check('Deleted session rejects reads and late observations cannot restore evidence', async () => {
     const deleted = await add('Delete fixture'), decide = await point('suggestions', deleted.id); await decide(request)
     await manager.deleteSession(deleted.id); decide.trace!.apply({ action: 'late', status: 'applied', changed: true })
@@ -331,7 +342,7 @@ try {
   })
 } finally {
   await closeBrowser?.(); await vite?.close(); client.destroy(); rpc.close(); await decisions.getDecisionRecorder().flush(); await manager.cleanup(); api.stop(true)
-  writeFileSync(join(output, 'results.json'), JSON.stringify({ generatedAt: new Date().toISOString(), fixture, requests: requests.length, checks }, null, 2)+'\n')
+  writeFileSync(join(output, 'results.json'), JSON.stringify({ generatedAt: new Date().toISOString(), fixture, scope: process.argv.includes('--host-only') ? 'host-only' : 'host-and-renderer', requests: requests.length, checks }, null, 2)+'\n')
   console.log(JSON.stringify({ output, passed: checks.filter(check => check.pass).length, total: checks.length }))
 }
 process.exit(checks.every(check => check.pass) ? 0 : 1)

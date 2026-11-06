@@ -546,15 +546,6 @@ export default function App({ onReady }: { onReady?: () => void }) {
     if (state) applyPermissionModeState(sessionId, state, 'reconcile')
   }, [applyPermissionModeState, loadPermissionModeState])
 
-  const reconcilePermissionModeStates = useCallback(async (sessionIds: string[]) => {
-    const states = await Promise.all(sessionIds.map(loadPermissionModeState))
-    // Apply within one continuation so React batches the root state updates.
-    // Each updater still compares against any newer event received meanwhile.
-    states.forEach((state, index) => {
-      if (state) applyPermissionModeState(sessionIds[index]!, state, 'reconcile')
-    })
-  }, [applyPermissionModeState, loadPermissionModeState])
-
   // Event processor hook - handles all agent events through pure functions
   const { processAgentEvent, clearStreamingState } = useEventProcessor()
 
@@ -628,8 +619,6 @@ export default function App({ onReady }: { onReady?: () => void }) {
       }
       setSessionOptions(optionsMap)
 
-      await reconcilePermissionModeStates(loadedSessions.map(s => s.id))
-
       setSessionsLoaded(true)
 
       if (initialSessionId && windowWorkspaceId) {
@@ -652,7 +641,7 @@ export default function App({ onReady }: { onReady?: () => void }) {
       setSessionLoadError(formatSessionLoadFailure(err))
       setSessionsLoaded(true)
     }
-  }, [initializeSessions, initialSessionId, reconcilePermissionModeStates, windowWorkspaceId])
+  }, [initializeSessions, initialSessionId, windowWorkspaceId])
 
   const refreshSessionListMetadataFromServer = useCallback(async (options: SessionListRefreshOptions = {}): Promise<Map<string, SessionMeta> | null> => {
     const {
@@ -702,7 +691,6 @@ export default function App({ onReady }: { onReady?: () => void }) {
       for (const session of sessions) {
         syncSessionOptionsFromSession(session)
       }
-      await reconcilePermissionModeStates(sessions.map(s => s.id))
 
       return nextMetaMap
     } catch (err) {
@@ -720,7 +708,7 @@ export default function App({ onReady }: { onReady?: () => void }) {
       })
       return null
     }
-  }, [store, syncSessionOptionsFromSession, reconcilePermissionModeStates, windowWorkspaceId, windowRemoteWorkspaceId])
+  }, [store, syncSessionOptionsFromSession, windowWorkspaceId, windowRemoteWorkspaceId])
 
   // Stale session watchdog — catches stuck sessions that the reconnect protocol misses
   const { trackSessionActivity } = useStaleSessionRecovery({

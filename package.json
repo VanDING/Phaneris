@@ -34,6 +34,8 @@
   "scripts": {
     "verify:connection-probe": "bun run scripts/verification/connection-probe-workflow.ts",
     "verify:runtime-startup": "bun run scripts/verification/runtime-startup-workflow.ts",
+    "verify:local-startup": "bun run scripts/verification/runtime-startup-workflow.ts && bun run scripts/verification/runtime-backup-retention-workflow.ts && bun run scripts/verification/local-startup-workflow.ts && bun run scripts/verification/status-startup-workflow.ts",
+    "verify:local-startup:native": "bun run scripts/verification/local-startup-native-workflow.ts",
     "verify:session-foundation": "bun run scripts/verification/session-foundation-suite.ts",
     "verify:conversation-start": "bun run scripts/verification/conversation-start-fix-workflow.ts",
     "verify:session-working-directory": "bun run server:build:subprocess && bun run scripts/verification/session-working-directory-pi-workflow.ts && bun run scripts/verification/runtime-backup-retention-workflow.ts && bun run scripts/verification/session-artifacts-workflow.ts",

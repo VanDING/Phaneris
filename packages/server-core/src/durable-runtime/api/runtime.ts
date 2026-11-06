@@ -1,11 +1,9 @@
 import type { RuntimeEvent, DurableToolPrepareRequest, DurableToolOutcomeRequest, DurableModelPrepareRequest, DurableModelOutcomeRequest } from '@phaneris/shared/durable-runtime'
 import { DurableRuntimeCoordinator } from '../coordinator.js'
 import { RuntimeHost } from '../execution/host.js'
-import { maintainDailyBackups } from '../daily-backups.js'
 import { withinDeadline } from '../execution/deadline.js'
 import { RuntimeReceiptJournal } from '../receipt-journal.js'
 import { RuntimeDatabaseError } from '../store.js'
-import { runDatabaseTask } from '../database-maintenance.js'
 
 function isStorageFailure(error: unknown): boolean {
   const cause = (error instanceof RuntimeDatabaseError ? error.cause : error) as { name?: string; code?: string } | undefined
@@ -55,9 +53,6 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
     auxiliaries.set(pending.promise, undefined)
     return () => { auxiliaries.delete(pending.promise); pending.resolve() }
   }
-  let maintenanceTimer: ReturnType<typeof setInterval> | undefined
-  let initialMaintenance: ReturnType<typeof setTimeout> | undefined
-  const maintenanceJobs = new Map<string, Promise<void>>()
   const guarded = <T extends (...args: never[]) => unknown>(fn: T): T => ((...args: Parameters<T>) => {
     if (closed) throw new Error('Durable Runtime is closed')
     return fn(...args)
@@ -130,25 +125,8 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
     }),
   })
   const execution = new RuntimeHost(commands, queries, effects, deadlineMs)
-  const maintain = (workspace: string): Promise<void> => {
-    const existing = maintenanceJobs.get(workspace)
-    if (existing) return existing
-    const controller = new AbortController()
-    const pending = trackAuxiliary(async () => {
-      const path = kernel.storeFor(workspace).databasePath
-      if (path === ':memory:') return
-      const fresh = await maintainDailyBackups(workspace, async destination => {
-        await runDatabaseTask(path, { kind: 'backup', destination }, controller.signal)
-      })
-      await runDatabaseTask(path, { kind: 'maintain', projectionRetentionMs: 30 * 24 * 60 * 60 * 1000,
-        vacuum: fresh && new Date().getUTCDay() === 0 && !execution.hasActiveExecutions(workspace) }, controller.signal)
-    }, () => controller.abort()).finally(() => maintenanceJobs.delete(workspace))
-    maintenanceJobs.set(workspace, pending)
-    return pending
-  }
   const admin = Object.freeze({
     checkDatabaseIntegrity: bind('checkDatabaseIntegrity'), backupDatabase: bind('backupDatabase'),
-    maintainWorkspace: admission(maintain),
     maintainDatabase: admission(bind('maintainDatabase')),
     restoreDatabase: admission((...args: Parameters<DurableRuntimeCoordinator['restoreDatabase']>) => {
       if (execution.hasActiveExecutions(args[0]) || auxiliaries.size) throw new Error('Drain Runtime execution before database restore')
@@ -156,28 +134,22 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
       execution.invalidateRestoredWorkspace(args[0])
       return result
     }), recoverWorkspace: admission(bind('recoverWorkspace')),
-    start: admission(async (workspaces: string[], onMaintenanceError: (workspace: string, error: unknown) => void) => {
+    start: admission(async (workspaces: string[], onStorageError: (workspace: string, error: unknown) => void) => {
       const reports = []
       for (const workspace of workspaces) {
         try {
-          const controller = new AbortController()
-          await trackAuxiliary(() => kernel.initializeWorkspace(workspace, controller.signal), () => controller.abort())
+          // Opening SQLite performs its normal schema/open checks. A full scan
+          // is an explicit diagnostic, not a prerequisite for every launch.
+          kernel.storeFor(workspace)
           if (draining) throw new Error('Durable Runtime admission is closed')
           receipts.watch(workspace)
           const status = kernel.storageStatus(workspace)
-          if (status.recovery) onMaintenanceError(workspace, new Error(`Runtime storage recovered automatically: ${status.recovery.reason}`))
+          if (status.recovery) onStorageError(workspace, new Error(`Runtime storage recovered automatically: ${status.recovery.reason}`))
           reports.push(kernel.recoverWorkspace(workspace))
         } catch (error) {
-          onMaintenanceError(workspace, error)
+          onStorageError(workspace, error)
           reports.push({ workspaceRootPath: workspace, recoveredAt: Date.now(), items: [] })
         }
-      }
-      if (!maintenanceTimer && !draining) {
-        const run = () => { for (const workspace of workspaces) void maintain(workspace).catch(error => { if (!draining) onMaintenanceError(workspace, error) }) }
-        initialMaintenance = setTimeout(run, 1000)
-        initialMaintenance.unref()
-        maintenanceTimer = setInterval(run, 6 * 60 * 60 * 1000)
-        maintenanceTimer.unref()
       }
       return reports
     }),
@@ -188,8 +160,6 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
   }
   const close = () => closing ??= (async () => {
     quiesce()
-    if (maintenanceTimer) clearInterval(maintenanceTimer)
-    if (initialMaintenance) clearTimeout(initialMaintenance)
     for (const cancel of auxiliaries.values()) try { cancel?.() } catch { /* Drain the remaining effects even if cancellation fails. */ }
     await Promise.all([execution.shutdown(), withinDeadline(Promise.allSettled([...auxiliaries.keys()]), deadlineMs)])
     await receipts.close()

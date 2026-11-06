@@ -64,6 +64,7 @@ interface Queries {
 /** Sole foreground owner; product observers cannot change a committed conclusion. */
 export class RuntimeHost {
   private readonly slots = new Map<string, Slot>()
+  private sessionInitializer?: (sessionId: string) => void
   private readonly auxiliaryDrivers = new Set<RuntimeDriver>()
   private closing = false
   constructor(private readonly commands: Commands, private readonly queries: Queries,
@@ -81,9 +82,12 @@ export class RuntimeHost {
         get blocked() { return s.blocked }, get driver() { return s.driver },
       })
       this.slots.set(sessionId, slot)
+      this.sessionInitializer?.(sessionId)
     }
     return slot
   }
+  /** Product bindings are installed when a session first needs an execution slot. */
+  setSessionInitializer(initialize: (sessionId: string) => void): void { this.sessionInitializer = initialize }
   view(sessionId: string): RuntimeSessionView { return this.slot(sessionId).view }
   async admission<T>(sessionId: string, transition: () => Promise<T>): Promise<T> {
     if (this.closing) throw new Error('Runtime admission is closed')

@@ -95,10 +95,7 @@ export class AutomationSystem implements AutomationsConfigProvider {
     // Create handlers
     this.createHandlers();
 
-    // Start scheduler if enabled
-    if (options.enableScheduler) {
-      this.startScheduler();
-    }
+    this.syncScheduler();
 
     log.debug(`[AutomationSystem] Created for workspace: ${options.workspaceId}`);
   }
@@ -159,6 +156,7 @@ export class AutomationSystem implements AutomationsConfigProvider {
 
     if (!existsSync(configPath)) {
       this.config = { automations: {} };
+      this.syncScheduler();
       return { success: true, automationCount: 0, errors: [] };
     }
 
@@ -171,6 +169,7 @@ export class AutomationSystem implements AutomationsConfigProvider {
 
       this.config = validation.config;
       this.backfillIds(configPath, raw);
+      this.syncScheduler();
       const actionCount = this.getActionCount();
       log.debug(`[AutomationSystem] Reloaded ${actionCount} actions`);
       return { success: true, automationCount: actionCount, errors: [] };
@@ -266,6 +265,7 @@ export class AutomationSystem implements AutomationsConfigProvider {
     if (this.pageRefreshMatchers.length > 0) {
       log.debug(`[AutomationSystem] ${this.pageRefreshMatchers.length} page refresh matcher(s) active`);
     }
+    this.syncScheduler();
     return this.pageRefreshMatchers.length;
   }
 
@@ -331,6 +331,15 @@ export class AutomationSystem implements AutomationsConfigProvider {
   /**
    * Start the scheduler service.
    */
+  private syncScheduler(): void {
+    const scheduled = this.getMatchersForEvent('SchedulerTick')
+      .some(matcher => matcher.enabled !== false && !!matcher.cron && matcher.actions.length > 0);
+    if (this.options.enableScheduler && scheduled) this.startScheduler();
+    else this.stopScheduler();
+  }
+
+  isSchedulerRunning(): boolean { return this.scheduler !== null; }
+
   private startScheduler(): void {
     if (this.scheduler) return;
 

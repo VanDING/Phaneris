@@ -48,6 +48,9 @@ export interface ResolvedEntityIcon {
    * color classes (e.g. 'text-success') cascade into SVG fills/strokes.
    */
   rawSvg?: string
+  /** File reads are pending or failed; neither state is a resolved fallback. */
+  loading?: boolean
+  failed?: boolean
 }
 
 // ============================================================================
