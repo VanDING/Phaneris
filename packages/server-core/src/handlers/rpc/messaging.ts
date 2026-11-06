@@ -81,6 +81,7 @@ export function registerMessagingHandlers(server: RpcServer, deps: HandlerDeps):
 
   server.handle(RPC_CHANNELS.messaging.GENERATE_CODE, async (ctx, sessionId: string, platform: string) => {
     if (!ctx.workspaceId) throw new Error('Missing workspaceId')
+    if (!deps.sessionManager.getSessions(ctx.workspaceId).some(session => session.id === sessionId)) throw new Error('Messaging session does not belong to this workspace')
     return registry.generatePairingCode(ctx.workspaceId, sessionId, platform)
   })
 

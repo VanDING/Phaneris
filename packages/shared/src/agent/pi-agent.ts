@@ -34,6 +34,7 @@ import { AbortReason } from './backend/types.ts';
 import { getBackendRuntime } from './backend/internal/driver-types.ts';
 import { normalizePiProvider } from '../config/pi-provider-compat.ts';
 import { SourceActivationDrainController } from './source-activation-drain.ts';
+import { AssistantPrivatePaths, resolveFileToolPath } from './assistant-private-paths';
 
 import type { PermissionMode } from './mode-manager.ts';
 import { normalizeThinkingLevel, THINKING_LEVEL_IDS, type ThinkingLevel } from './thinking-levels.ts';
@@ -77,7 +78,8 @@ interface HostToolExecutionRequest {
 
 // System prompt for Phaneris context
 import { getSystemPrompt } from '../prompts/system.ts';
-import { loadProjectById, getProjectAssetsPath, listProjectAssets, getProjectMemoryPath, loadProjectMemory } from '../projects/storage.ts';
+import { loadProjectById, getProjectAssetsPath, listProjectAssets, getProjectMemoryPath, loadProjectMemorySnapshot, projectMemorySnapshotCurrent, type ProjectMemorySnapshot } from '../projects/storage.ts';
+import { readAssistantMemoryPolicy } from '../workspaces/assistant-memory-policy.ts';
 import type { ProjectPromptContext } from '../projects/types.ts';
 
 // Credential manager for token storage
@@ -140,7 +142,7 @@ import type { McpClientPool, ProxyToolDef } from '../mcp/mcp-pool.ts';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 // Path utilities
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { homedir } from 'os';
 
 // Session storage (plans folder path)
@@ -154,6 +156,8 @@ import { parseError, type AgentError } from './errors.ts';
 // Centralized PreToolUse pipeline
 import { runPreToolUseChecks, type PreToolUseCheckResult, type PreToolUseInput } from './core/pre-tool-use.ts';
 import { isResidentAssistantToolAllowed } from './resident-role.ts';
+import { residentSourceToolDefs, residentSourceToolAllowed } from './resident-source-tools.ts';
+import { knowledgeSourceVersion, knowledgeReadReference } from './knowledge-materials.ts';
 import type { PermissionRemember } from './core/permission-remember.ts';
 import { getRtkPath } from './core/rtk-detector.ts';
 import { getRtkEnabled, getRtkExcludeCommands, getBrowserToolEnabled, getExtendedPromptCache, getPromptCacheWarming } from '../config/appearance.ts';
@@ -301,6 +305,21 @@ export class PiAgent extends BaseAgent {
   // identical per-message source refreshes from forcing a Pi session rebuild.
   private sessionProxyToolDefs: SessionToolProxyDef[] = [];
   private syncedProxyToolsSignature: string | null = null;
+  private projectMemorySnapshot?: ProjectMemorySnapshot;
+  private projectConfigSnapshot?: { id: string; value: string };
+  private projectMaterialsStale = false;
+
+  private checkProjectMaterials(): boolean {
+    if (this.projectMaterialsStale) return false;
+    let valid = true;
+    try {
+      const project = this.projectConfigSnapshot && loadProjectById(this.config.workspace.rootPath, this.projectConfigSnapshot.id);
+      if (this.projectConfigSnapshot && (!project || JSON.stringify([project.config.name, project.config.description, project.config.details]) !== this.projectConfigSnapshot.value)) valid = false;
+      if (this.projectMemorySnapshot && !projectMemorySnapshotCurrent(this.projectMemorySnapshot)) valid = false;
+    } catch { valid = false; }
+    if (!valid) { this.projectMaterialsStale = true; this.config.onProjectMaterialsStale?.(); }
+    return valid;
+  }
 
   // Error deduplication — suppress identical consecutive errors after a threshold
   // to prevent a broken subprocess from flooding the user's session.
@@ -314,6 +333,7 @@ export class PiAgent extends BaseAgent {
    * project config file is small.
    */
   private resolveProjectContext(): ProjectPromptContext | null {
+    this.projectMemorySnapshot = undefined; this.projectConfigSnapshot = undefined; this.projectMaterialsStale = false;
     const projectId = this.config.session?.projectId;
     if (!projectId) return null;
 
@@ -322,6 +342,8 @@ export class PiAgent extends BaseAgent {
       const project = loadProjectById(root, projectId);
       if (!project) return null;
       const slug = project.config.slug;
+      this.projectConfigSnapshot = { id: projectId, value: JSON.stringify([project.config.name, project.config.description, project.config.details]) };
+      if (readAssistantMemoryPolicy(this.config.workspace).use) this.projectMemorySnapshot = loadProjectMemorySnapshot(root, slug);
       return {
         name: project.config.name,
         description: project.config.description,
@@ -333,7 +355,8 @@ export class PiAgent extends BaseAgent {
           sizeBytes: a.sizeBytes,
         })),
         memoryPath: getProjectMemoryPath(root, slug),
-        memoryContent: loadProjectMemory(root, slug) ?? undefined,
+        memoryContent: this.projectMemorySnapshot?.promptContent ?? undefined,
+        memoryVersion: this.projectMemorySnapshot ? { contentHash: this.projectMemorySnapshot.contentHash, readAt: this.projectMemorySnapshot.readAt } : undefined,
       };
     } catch (error) {
       this.debug(`[resolveProjectContext] Failed to load project ${projectId}: ${error instanceof Error ? error.message : error}`);
@@ -526,7 +549,7 @@ export class PiAgent extends BaseAgent {
 
     // Set session dir on adapter for concurrent-safe toolMetadataStore lookups
     if (config.session?.id && config.workspace.rootPath) {
-      this.adapter.setSessionDir(join(config.workspace.rootPath, 'sessions', config.session.id));
+      this.adapter.setSessionDir(getSessionPath(config.workspace.rootPath, config.session.id));
     }
 
     // Wire the adapter's async recovery fallbacks into the event queue. They
@@ -601,7 +624,7 @@ export class PiAgent extends BaseAgent {
     // Build session ID and session dir path upfront (used for spawn env + init command)
     const sessionId = this.config.session?.id || `agent-${Date.now()}`;
     const sessionDir = this.config.session
-      ? join(this.config.workspace.rootPath, 'sessions', sessionId)
+      ? getSessionPath(this.config.workspace.rootPath, sessionId)
       : undefined;
 
     // Build spawn args — optionally preload the network interceptor
@@ -857,7 +880,9 @@ export class PiAgent extends BaseAgent {
    */
   private syncProxyToolsWithSubprocess(): void {
     if (!this.subprocess) return;
-    const sourceToolDefs: ProxyToolDef[] = this.mcpPool?.getProxyToolDefs() ?? [];
+    const availableSourceTools = this.mcpPool?.getProxyToolDefs() ?? [];
+    const sourceToolDefs = this.config.systemPromptPreset === 'resident_assistant'
+      ? residentSourceToolDefs(this.config.workspace.rootPath, availableSourceTools) : availableSourceTools;
     const allToolDefs = [...this.sessionProxyToolDefs, ...sourceToolDefs];
     const signature = JSON.stringify(allToolDefs);
     if (signature === this.syncedProxyToolsSignature) {
@@ -868,6 +893,11 @@ export class PiAgent extends BaseAgent {
     this.send({ type: 'sync_tools', tools: allToolDefs });
     this.syncedProxyToolsSignature = signature;
     this.debug(`Synced ${this.sessionProxyToolDefs.length} session + ${sourceToolDefs.length} source tools with subprocess`);
+  }
+
+  private residentToolAllowed(name: string, args: Record<string, unknown>): boolean {
+    return isResidentAssistantToolAllowed(this.config.systemPromptPreset, name)
+      || residentSourceToolAllowed(this.config.workspace.rootPath, this.mcpPool?.getProxyToolDefs() ?? [], name, args);
   }
 
   /**
@@ -1560,9 +1590,21 @@ export class PiAgent extends BaseAgent {
     policyOnly?: boolean;
   }): Promise<void> {
     const { requestId, toolName, toolCallId, input } = req;
-    if (!isResidentAssistantToolAllowed(this.config.systemPromptPreset, toolName)) {
+    if (!this.residentToolAllowed(toolName, input)) {
       this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: 'The resident assistant role does not permit this tool. Delegate execution to a work session.' });
       return;
+    }
+    if (['read', 'grep', 'find', 'ls', 'write', 'edit'].includes(toolName.toLowerCase())) {
+      const path = resolveFileToolPath(this.subprocessCwd ?? this.resolvedCwd(), typeof input.path === 'string' ? input.path : '.');
+      const principal = this.config.session?.sessionKind === 'resident_assistant' ? { kind: 'resident_assistant' as const, sessionId: this.config.session.id } : undefined;
+      try {
+        const policy = new AssistantPrivatePaths(this.config.workspace.rootPath, principal);
+        if (['write', 'edit'].includes(toolName.toLowerCase())) policy.assertWritable(path);
+        else policy.assertPublic(path);
+      } catch (error) {
+        this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: error instanceof Error ? error.message : String(error) });
+        return;
+      }
     }
     if (req.policyOnly) {
       const decision = evaluateToolCallRules(this.config.workspace.rootPath, toolName, input);
@@ -1837,7 +1879,7 @@ export class PiAgent extends BaseAgent {
   private async handleDurableToolPrepareRequest(
     request: DurableToolPrepareRequest & { requestId: string },
   ): Promise<void> {
-    if (!isResidentAssistantToolAllowed(this.config.systemPromptPreset, request.toolName)) {
+    if (!this.residentToolAllowed(request.toolName, request.args)) {
       this.send({ type: 'durable_tool_prepare_response', requestId: request.requestId, ok: false, reason: 'The resident assistant role does not permit this tool.' });
       return;
     }
@@ -1852,6 +1894,7 @@ export class PiAgent extends BaseAgent {
       return;
     }
     try {
+      if (!this.checkProjectMaterials()) throw new Error('Project prompt materials changed; prepare a fresh context');
       const prepared = await boundary.prepare(request);
       const bufferedStart = this.bufferedDurableToolStarts.get(request.providerToolCallId);
       this.bufferedDurableToolStarts.delete(request.providerToolCallId);
@@ -1920,6 +1963,7 @@ export class PiAgent extends BaseAgent {
       return;
     }
     try {
+      if (!this.checkProjectMaterials()) throw new Error('Project prompt materials changed; prepare a fresh context');
       const prepared = await boundary.prepare(request);
       this.send({ type: 'durable_model_prepare_response', requestId: request.requestId, ok: true, prepared });
     } catch (error) {
@@ -1936,8 +1980,9 @@ export class PiAgent extends BaseAgent {
       return;
     }
     try {
-      const committed = await boundary.commitOutcome(request);
-      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq, deferred: committed.deferred, discard: committed.discard });
+      const current = this.checkProjectMaterials();
+      const committed = await boundary.commitOutcome(current ? request : { ...request, contextDisposition: 'stale' });
+      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq, deferred: committed.deferred, discard: !current || committed.discard });
     } catch (error) {
       this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: false, reason: error instanceof Error ? error.message : String(error) });
     }
@@ -1960,7 +2005,7 @@ export class PiAgent extends BaseAgent {
     intent?: string,
     signal?: AbortSignal,
   ): Promise<PiProxyToolResult> {
-    if (!isResidentAssistantToolAllowed(this.config.systemPromptPreset, toolName)) {
+    if (!this.residentToolAllowed(toolName, args)) {
       return { content: 'The resident assistant role does not permit this tool.', isError: true };
     }
     // Session-scoped tools — strip mcp__session__ prefix added by the Pi SDK
@@ -1975,7 +2020,15 @@ export class PiAgent extends BaseAgent {
 
     // MCP source tools — route through centralized pool
     if (this.mcpPool?.isProxyTool(toolName)) {
-      return this.mcpPool.callTool(toolName, args, { durableTool, intent, signal });
+      const slug = this.mcpPool.getProxyToolDefs().find(tool => tool.name === toolName)?.namespace?.name.replace(/^mcp__/, '');
+      const version = slug && residentSourceToolAllowed(this.config.workspace.rootPath, this.mcpPool.getProxyToolDefs(), toolName, args)
+        ? knowledgeSourceVersion(this.config.workspace.rootPath, slug) : undefined;
+      const result = await this.mcpPool.callTool(toolName, args, { durableTool, intent, signal });
+      if (!slug || !version || result.isError) return result;
+      if (knowledgeSourceVersion(this.config.workspace.rootPath, slug) !== version || !this.residentToolAllowed(toolName, args)) throw new Error('Knowledge source access changed during this read; refresh the original source');
+      const content = JSON.stringify({ reference: knowledgeReadReference({ sourceSlug: slug, sourceVersion: version,
+        content: result.content, title: toolName }), content: result.content });
+      return { ...result, content, contentBlocks: [{ type: 'text', text: content }, ...result.contentBlocks?.filter(block => block.type !== 'text') ?? []] };
     }
 
     // Unknown tool
@@ -2130,6 +2183,14 @@ export class PiAgent extends BaseAgent {
 
       // Convert ToolResult to subprocess response format
       const text = result.content.map(c => c.text).join('\n');
+      if (toolName === 'project_memory_append' && !result.isError && this.projectMemorySnapshot?.contentHash === args.expectedContentHash) {
+        const receipt = JSON.parse(text) as { contentHash: string; path: string };
+        const project = this.config.session?.projectId && loadProjectById(this.config.workspace.rootPath, this.config.session.projectId);
+        if (project && receipt.path === this.projectMemorySnapshot?.path) {
+          const current = loadProjectMemorySnapshot(this.config.workspace.rootPath, project.config.slug);
+          if (current.contentHash === receipt.contentHash) this.projectMemorySnapshot = current;
+        }
+      }
       return { content: text, isError: !!result.isError, structuredContent: result.structuredContent, continuation: result.continuation };
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);

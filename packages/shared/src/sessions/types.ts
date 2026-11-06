@@ -322,6 +322,7 @@ export interface SessionHeader extends SessionConfig {
  * Session metadata (lightweight, for lists)
  */
 export interface SessionMetadata extends SessionPlanningFields {
+  sessionKind?: 'resident_assistant';
   id: string;
   workspaceRootPath: string;
   name?: string;

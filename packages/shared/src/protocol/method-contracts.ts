@@ -1,6 +1,6 @@
 /** Typed response ports reuse the authoritative DTOs. Dynamic extension channels return unknown. */
 import { RPC_CHANNELS as c } from './channels'
-import type { Session, RemoteSessionTransferPayload, TestAutomationResult } from './dto'
+import type { Session, RemoteSessionTransferPayload, TestAutomationResult, WorkspaceSettings } from './dto'
 import type { SessionReadChunk } from './session-read'
 import type { ResolvedArtifact, AcceptArtifactResult } from '../artifacts/types'
 import type { WorkItem } from '../work-items/types'
@@ -16,12 +16,14 @@ import type { LabelConfig } from '../labels/types'
 import type { LoadedSkill } from '../skills/types'
 
 export interface RpcMethodResults {
+  [c.workspace.SETTINGS_GET]: WorkspaceSettings | null
   [c.residentAssistant.GET]: Session
   [c.residentAssistant.CONTEXT]: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState
   [c.residentAssistant.EVENTS]: import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage
   [c.residentAssistant.DISPATCH]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWork
   [c.residentAssistant.WORK]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage
   [c.residentAssistant.CANCEL_WORK]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWork
+  [c.residentAssistant.OUTPUT_VISIBILITY]: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest
   [c.assistantMemory.QUERY]: import('./assistant-memory').MemoryQueryResult
   [c.assistantMemory.SUPPRESSION_EXPORT]: import('./assistant-memory').MemorySuppressionPage
   [c.assistantMemory.SUPPRESSION_MERGE]: import('./assistant-memory').MemorySuppressionMergeResult

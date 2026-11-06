@@ -17,15 +17,23 @@ export async function handleProjectMemoryAppend(
   if (!ctx.appendProjectMemory) {
     return errorResponse('project_memory_append is not available in this context.');
   }
-  if (!args.note?.trim()) {
-    return errorResponse('note is required.');
-  }
-
   try {
     const result = await ctx.appendProjectMemory(args);
-    return successResponse(`Added to ${result.path} under "## ${result.heading}".`);
+    return successResponse(JSON.stringify(result));
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return errorResponse(`Failed to add the note: ${message}`);
   }
+}
+
+export async function handleProjectMemoryRead(ctx: SessionToolContext, args: import('../project-memory-contracts').ProjectMemoryRead): Promise<ToolResult> {
+  if (!ctx.readProjectMemory) return errorResponse('Project memory reading is unavailable.');
+  try { return successResponse(JSON.stringify(await ctx.readProjectMemory(args))); }
+  catch (error) { return errorResponse(error instanceof Error ? error.message : String(error)); }
+}
+
+export async function handleProjectMemorySearch(ctx: SessionToolContext, args: import('../project-memory-contracts').ProjectMemorySearch): Promise<ToolResult> {
+  if (!ctx.searchProjectMemory) return errorResponse('Project memory search is unavailable.');
+  try { return successResponse(JSON.stringify(await ctx.searchProjectMemory(args))); }
+  catch (error) { return errorResponse(error instanceof Error ? error.message : String(error)); }
 }

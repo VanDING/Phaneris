@@ -39,6 +39,7 @@ export const CHANNEL_MAP = {
   dispatchAssistantWork: invoke(RPC_CHANNELS.residentAssistant.DISPATCH),
   getAssistantWork: invoke(RPC_CHANNELS.residentAssistant.WORK),
   cancelAssistantWork: invoke(RPC_CHANNELS.residentAssistant.CANCEL_WORK),
+  setAssistantOutputVisibility: invoke(RPC_CHANNELS.residentAssistant.OUTPUT_VISIBILITY),
   queryAssistantMemory: invoke(RPC_CHANNELS.assistantMemory.QUERY),
   exportAssistantMemorySuppression: invoke(RPC_CHANNELS.assistantMemory.SUPPRESSION_EXPORT),
   mergeAssistantMemorySuppression: invoke(RPC_CHANNELS.assistantMemory.SUPPRESSION_MERGE),

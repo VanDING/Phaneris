@@ -286,6 +286,7 @@ const EXPECTED_CHANNELS: string[] = [
   "residentAssistant:dispatch",
   "residentAssistant:events",
   "residentAssistant:get",
+  "residentAssistant:outputVisibility",
   "residentAssistant:work",
   "resources:export",
   "resources:import",

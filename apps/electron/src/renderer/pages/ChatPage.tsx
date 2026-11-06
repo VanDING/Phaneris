@@ -753,7 +753,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     disabled={!messageLoadState.messagesReady || !session?.messages.length} onClick={() => shareSnapshot ? closeImageShare() : openImageShare()}>
     <Send className="w-4 h-4" />
   </PreviewHeaderIconButton>
-  const headerActions = resident && activeWorkspaceId ? <div className="flex items-center gap-1.5"><ResidentAssistantControls workspaceId={activeWorkspaceId} />{imageShareButton || shareButton}</div> : isDesktopClient ? (
+  const headerActions = resident && activeWorkspaceId ? <div className="flex items-center gap-1.5"><ResidentAssistantControls workspaceId={activeWorkspaceId} sessionId={sessionId} />{imageShareButton || shareButton}</div> : isDesktopClient ? (
     <div className="flex items-center gap-1.5">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { getWorkspaceSessionsPath } from '../workspaces/storage.ts';
 import { sanitizeSessionId } from './validation.ts';
 import { expandPath } from '../utils/paths.ts';
+import { readAssistantSessionId, registerAssistantSessionLocation } from './assistant-location';
 // ============================================================
 // Directory Utilities
 // ============================================================
@@ -29,6 +30,10 @@ export function ensureSessionsDir(workspaceRootPath: string): string {
 export function getSessionPath(workspaceRootPath: string, sessionId: string): string {
   // Defense-in-depth: strip any path components from sessionId
   const safeSessionId = sanitizeSessionId(sessionId);
+  if (readAssistantSessionId(workspaceRootPath) === safeSessionId) {
+    if (existsSync(join(getWorkspaceSessionsPath(workspaceRootPath), safeSessionId))) throw new Error('Assistant Session has conflicting writable locations');
+    return join(workspaceRootPath, 'assistant', 'sessions', safeSessionId);
+  }
   return join(getWorkspaceSessionsPath(workspaceRootPath), safeSessionId);
 }
 
@@ -47,7 +52,8 @@ export function getSessionFilePath(workspaceRootPath: string, sessionId: string)
 /**
  * Ensure session directory exists with all subdirectories
  */
-export function ensureSessionDir(workspaceRootPath: string, sessionId: string): string {
+export function ensureSessionDir(workspaceRootPath: string, sessionId: string, sessionKind?: 'resident_assistant'): string {
+  if (sessionKind === 'resident_assistant') registerAssistantSessionLocation(workspaceRootPath, sessionId);
   const sessionDir = getSessionPath(workspaceRootPath, sessionId);
   if (!existsSync(sessionDir)) {
     // M-23: session dirs contain transcripts/attachments — owner rwx only.

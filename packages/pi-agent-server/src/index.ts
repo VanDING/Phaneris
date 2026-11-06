@@ -17,6 +17,7 @@ import { requestCapacity, ResultBudget } from './request-capacity.ts';
 import { retainRuntimeReceipt, type PendingRuntimeReceipt } from '@phaneris/shared/durable-runtime/receipt-storage';
 import { canonicalToolArgsHash, durableToolOperationId } from '@phaneris/shared/durable-runtime/identity';
 import { access as accessReadFile } from 'node:fs/promises';
+import { privateSafeLsOperations, protectPrivateFileTools } from './private-file-tools';
 /**
  * Pi Agent Server
  *
@@ -716,7 +717,8 @@ async function createSession(): Promise<AgentSession> {
   //     our hooked versions take effect (permissions + large-response summarization).
   //   - Do NOT pass tool *objects* to `tools` — `allowedToolNames = new Set(options.tools)`
   //     then `.has(name)` returns false for every string lookup → zero tools active.
-  const builtinDefs = [
+  const filePrincipal = initConfig.sessionKind === 'resident_assistant' ? { kind: 'resident_assistant' as const, sessionId: initConfig.sessionId } : undefined;
+  const builtinDefs = protectPrivateFileTools([
     createReadToolDefinition(cwd, { operations: { readFile: readFileWithEvidence, access: accessReadFile, detectImageMimeType: async path => {
       const mime = await detectSupportedImageMimeTypeFromFile(path);
       const capture = readCapture.getStore();
@@ -730,18 +732,18 @@ async function createSession(): Promise<AgentSession> {
     createWriteToolDefinition(cwd),
     createGrepToolDefinition(cwd),
     createFindToolDefinition(cwd),
-    createLsToolDefinition(cwd),
-  ];
+    createLsToolDefinition(cwd, { operations: privateSafeLsOperations(initConfig.workspaceRootPath, filePrincipal) }),
+  ], initConfig.workspaceRootPath, cwd, filePrincipal);
   const proxyTools = buildProxyTools();
   // report_progress is local, read-only and intentionally bypasses the
   // permission handshake: it is a presentation channel, not an external action.
   const wrappedAll = [
     ...wrapToolsWithHooks([...builtinDefs, ...webTools, ...proxyTools]
-      .filter(tool => isResidentAssistantToolAllowed(initConfig?.sessionKind, tool.name))),
+      .filter(tool => residentToolAllowed(tool.name))),
     createReportProgressTool(),
   ];
   const catalog = composeToolCatalog([wrappedAll], ['tool_search', 'codemode']
-    .filter(name => isResidentAssistantToolAllowed(initConfig?.sessionKind, name)));
+    .filter(name => residentToolAllowed(name)));
   debugLog(`Session tools: ${builtinDefs.length} builtin + ${webTools.length} web + ${proxyTools.length} proxy + 1 progress = ${wrappedAll.length} total`);
 
   // Build session options.
@@ -845,7 +847,7 @@ async function createSession(): Promise<AgentSession> {
   const availableNames = new Set([...catalog.customTools.filter(tool => tool.exposure !== 'hidden').map(tool => tool.name), ...catalog.activeNames]);
   const restoredToolNames = getCurrentTools(session.sessionManager.buildSessionContext().messages).map(tool => tool.name).filter(name => availableNames.has(name));
   session.setActiveToolsByName([...new Set([...catalog.activeNames, ...restoredToolNames])]
-    .filter(name => isResidentAssistantToolAllowed(initConfig?.sessionKind, name)));
+    .filter(name => residentToolAllowed(name)));
   // Ordinary requests keep their existing boundary. SDK background refreshes
   // use a distinct boundary and never publish assistant/tool output.
   const sessionStream = installCacheWarmingAccounting(
@@ -1277,6 +1279,10 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
 // ============================================================
 // Proxy Tools (tools executed in main process)
 // ============================================================
+
+function residentToolAllowed(name: string): boolean {
+  return isResidentAssistantToolAllowed(initConfig?.sessionKind, name, proxyToolDefs.find(tool => tool.name === name)?.readOnly === true);
+}
 
 function buildProxyTools(): ToolDefinition<any, any>[] {
   debugLog(`Building proxy tools from ${proxyToolDefs.length} definitions: ${proxyToolDefs.map(t => t.name).join(', ')}`);
@@ -1817,7 +1823,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
 }
 
 function handleSyncTools(msg: Extract<InboundMessage, { type: 'sync_tools' }>): void {
-  const permitted = msg.tools.filter(tool => isResidentAssistantToolAllowed(initConfig?.sessionKind, tool.name));
+  const permitted = msg.tools.filter(tool => isResidentAssistantToolAllowed(initConfig?.sessionKind, tool.name, tool.readOnly === true));
   if (!proxyToolDefinitionsChanged(proxyToolDefs, permitted)) {
     debugLog(`Proxy tool sync unchanged (${msg.tools.length} tools)`);
     return;

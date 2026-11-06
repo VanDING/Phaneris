@@ -118,6 +118,8 @@ export type ModelProvider = 'pi';
  * Used throughout the application for model selection and display.
  */
 export interface ModelDefinition {
+  /** Provider-reported routes. Absence means compatibility has not been reported. */
+  supportedEndpoints?: string[];
   /** Model identifier (e.g., 'claude-sonnet-4-6', 'gpt-5.3-codex') */
   id: string;
   /** Human-readable name (e.g., 'Sonnet 4.6', 'Codex') */

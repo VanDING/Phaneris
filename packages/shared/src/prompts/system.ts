@@ -522,6 +522,7 @@ export function formatProjectContextForPrompt(ctx: ProjectPromptContext): string
   }
 
   lines.push(`<project_memory_path>${sanitizePromptBody(ctx.memoryPath, PROJECT_BLOCK_TAGS)}</project_memory_path>`);
+  if (ctx.memoryVersion) lines.push(`<project_memory_version>${JSON.stringify(ctx.memoryVersion)}</project_memory_version>`);
   if (ctx.memoryContent?.trim()) {
     lines.push('<project_memory>');
     lines.push(sanitizePromptBody(ctx.memoryContent.trim(), PROJECT_BLOCK_TAGS));
@@ -537,7 +538,7 @@ export function formatProjectContextForPrompt(ctx: ProjectPromptContext): string
   }
   lines.push(`<project_memory> is accumulated project knowledge; reconcile it with current instructions and evidence as`);
   lines.push(`established context. When you learn something durable (a decision, gotcha, convention, or`);
-  lines.push(`project-specific user preference), add a short note with project_memory_append only when task scope and mode permit writes.`);
+  lines.push(`project-specific user preference), use the controlled project_memory_append with a supported assessment, exact source quote and current document hash. Workspace learning policy and original task scope apply.`);
   lines.push(`Never rewrite MEMORY.md from this snapshot: other sessions may have appended knowledge. Append corrections to outdated notes.`);
   lines.push(`</project_context>`);
   lines.push('');

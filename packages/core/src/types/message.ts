@@ -330,8 +330,13 @@ export interface Message {
   skillSlugs?: string[];
   /** Host-attributed non-human input; provider role=user does not grant user authority. */
   inputSource?: { kind: 'session_message' } | { kind: 'delegation'; delegationId: string; assistantSessionId: string; originMessageId: string }
-    | { kind: 'resident_event'; eventIds: string[] };
+    | { kind: 'resident_event'; eventIds: string[] }
+    | { kind: 'memory_maintenance'; jobId: string; sourceSessionId: string }
+    | { kind: 'runtime_continuation'; reason: 'source_activation' | 'memory_refresh'; inputMessageIds: string[] };
   delegationInput?: import('./session-execution').SessionDelegationInput;
+  /** Host-captured turn ownership. Explicit null remains unassigned after later project switches. */
+  projectScope?: { projectId: string | null };
+  delegationRefresh?: { originalInputId: string; retiredRunOperationId: string; materialDependencies: NonNullable<import('./session-execution').SessionDelegationInput['materialDependencies']> };
   /** Annotation payloads for this message */
   annotations?: AnnotationV1[];
   isError?: boolean;
@@ -455,6 +460,8 @@ export interface StoredMessage {
   skillSlugs?: string[];
   inputSource?: Message['inputSource'];
   delegationInput?: Message['delegationInput'];
+  projectScope?: Message['projectScope'];
+  delegationRefresh?: Message['delegationRefresh'];
   /** Annotations persisted at message level */
   annotations?: AnnotationV1[];
   // Turn grouping - critical for TurnCard rendering after reload

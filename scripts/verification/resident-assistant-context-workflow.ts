@@ -16,7 +16,7 @@ await verificationWorkflow('resident-assistant-context', async run => {
   writeFileSync(join(run.directory, 'host.log'), stdout + stderr)
   assert.equal(code, 0, (stdout + stderr).slice(-8000))
   const result = JSON.parse(readFileSync(join(run.directory, 'context-evidence.json'), 'utf8')) as { scenes: string[] }
-  for (const [source, name] of [['assistant/context.db', 'context.db'], ['assistant/delegations.db', 'delegations.db'], ['memory/memory.db', 'memory.db']]) copyFileSync(join(config, 'alpha', source!), join(run.directory, name!))
+  for (const [source, name] of [['assistant/context.db', 'context.db'], ['assistant/delegations.db', 'delegations.db'], ['assistant/memory/memory.db', 'memory.db']]) copyFileSync(join(config, 'alpha', source!), join(run.directory, name!))
   run.complete(result.scenes, ['Paid model quality', 'Remote deployment, multi-Host ownership, physical-client interaction (separate UI workflow)'])
   console.log(JSON.stringify({ passed: result.scenes.length, output: run.directory }))
 })

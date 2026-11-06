@@ -47,11 +47,14 @@ export interface ISessionManager {
   getSessions(workspaceId?: string): Session[]
   getSession(sessionId: string): Promise<Session | null>
   getOrCreateResidentAssistant(workspaceId: string): Promise<Session>
+  getAssistantMemoryStore(workspaceId: string): import('../resident-assistant/memory-store').AssistantMemoryStore
+  scheduleAssistantMemory?(workspaceId: string): void
   assistantContext(workspaceId: string, command: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextCommand): Promise<import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState>
   assistantEvents(workspaceId: string, query: { after?: number; limit?: number }): Promise<import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage>
   dispatchAssistantWork(workspaceId: string, request: import('@phaneris/session-tools-core/delegation-contracts').AssistantDispatch): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
   getAssistantWork(workspaceId: string, query: import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkQuery): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage>
   cancelAssistantWork(workspaceId: string, id: string): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
+  setAssistantOutputVisibility(workspaceId: string, command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility): Promise<import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest>
   getSessionDecisions(sessionId: string, query?: import('@phaneris/shared/decisions/session').SessionDecisionQuery): Promise<import('@phaneris/shared/decisions/session').SessionDecisionReport>
   getRecoveryEvidence(
     sessionId: string,

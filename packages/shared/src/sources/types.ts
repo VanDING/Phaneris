@@ -458,6 +458,8 @@ export interface SourceBrand {
  * Main source configuration (stored in config.json)
  */
 export interface FolderSourceConfig {
+  /** Relevance metadata only; actual capabilities and permissions stay with Source/Host. */
+  knowledge?: { purpose: 'knowledge'; projectIds?: string[] }
   id: string;
   name: string;
   slug: string;

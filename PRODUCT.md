@@ -59,9 +59,18 @@ Workspace
 ## Core flows
 
 A workspace opens its resident assistant by default. Its dedicated centered brand entry navigates to the same conversation page used
-by ordinary sessions; the original logo keeps its app menu. Memory, context and
-delivery management open on demand in the existing dialog pattern. No assistant
-sidebar or second conversation surface is added. A new
+by ordinary sessions; the original logo keeps its app menu. More opens a non-modal,
+resizable overview with Current, Deliverables and History views. Current surfaces
+pending requests and unfinished assignments; history is searched and paged on demand.
+Task details load only when opened. Deliverables require an explicit Worker manifest,
+Host ownership/version checks and assistant review; process files remain in task details.
+Users can reversibly remove reviewed files from Deliverables or restore them through
+task details. This changes presentation for that file version and preserves the file,
+its history and the original task outcome.
+File previews open the reviewed immutable revision. Messaging has a compact management
+entry; platforms appear in the connection picker. It stays open while using the
+assistant and hides when leaving that page; reopening restores workspace-local
+presentation. Existing channel setup and file preview surfaces are reused. A new
 model context keeps the same assistant identity and complete timeline.
 
 1. **Start a session.** Pick a workspace, then start from the sidebar, the

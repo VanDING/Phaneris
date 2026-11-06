@@ -39,6 +39,8 @@ export interface UseMessagingConnectOptions {
    * Playground overrides this to toast only (it has no router).
    */
   onTelegramNotConfigured?: () => void
+  /** Embedded surfaces may keep setup beside the session instead of navigating away. */
+  onPlatformNotConfigured?: (platform: MessagingPlatform) => void
   /**
    * Override the error classifier used when pairing-code generation fails.
    * Default: {@link classifyMessagingError} — matches "not connected" and
@@ -54,6 +56,7 @@ export interface UseMessagingConnectOptions {
 export function useMessagingConnect({
   sessionId,
   onTelegramNotConfigured,
+  onPlatformNotConfigured,
   classifyError = classifyMessagingError,
 }: UseMessagingConnectOptions) {
   const { t } = useTranslation()
@@ -72,6 +75,8 @@ export function useMessagingConnect({
           setMessagingDialog({ kind: 'wa_connect', continueToPairingSessionId: sessionId })
         } else if (platform === 'wechat') {
           setMessagingDialog({ kind: 'wechat_connect', continueToPairingSessionId: sessionId })
+        } else if (onPlatformNotConfigured) {
+          onPlatformNotConfigured(platform)
         } else if (onTelegramNotConfigured) {
           onTelegramNotConfigured()
         } else {
@@ -113,7 +118,7 @@ export function useMessagingConnect({
         error: classifyError(err, t),
       })
     }
-  }, [sessionId, onTelegramNotConfigured, classifyError, setMessagingDialog, t])
+  }, [sessionId, onTelegramNotConfigured, onPlatformNotConfigured, classifyError, setMessagingDialog, t])
 }
 
 export interface MessagingSessionMenuItemProps extends UseMessagingConnectOptions {}

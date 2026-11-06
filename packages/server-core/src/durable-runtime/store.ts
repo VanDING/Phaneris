@@ -387,21 +387,22 @@ export class DurableRuntimeStore {
     return rows.map(row => JSON.parse(row.state_json) as DurableOperationState)
   }
 
-  inputExecutions(sessionId: string, messageId: string, options: { before?: number; limit: number }) {
+  inputExecutions(sessionId: string, messageId: string | readonly string[], options: { before?: number; limit: number }) {
+    const ids = JSON.stringify(typeof messageId === 'string' ? [messageId] : messageId)
     // Auxiliary/model effects never become another execution attempt. Only an
     // agent-turn acceptance carrying this exact original input can establish it.
     const total = this.db.prepare(`SELECT COUNT(*) AS count FROM runtime_events WHERE session_id=? AND event_type='operation_accepted'
-      AND json_extract(payload_json,'$.kind')='agent_turn' AND json_extract(payload_json,'$.userMessageId')=?`).get(sessionId, messageId) as { count: number }
+      AND json_extract(payload_json,'$.kind')='agent_turn' AND json_extract(payload_json,'$.userMessageId') IN (SELECT value FROM json_each(?))`).get(sessionId, ids) as { count: number }
     const accepted = this.db.prepare(`SELECT * FROM runtime_events WHERE session_id=? AND event_type='operation_accepted'
-      AND json_extract(payload_json,'$.kind')='agent_turn' AND json_extract(payload_json,'$.userMessageId')=?
-      AND (? IS NULL OR seq<?) ORDER BY seq DESC LIMIT ?`).all(sessionId, messageId, options.before ?? null, options.before ?? null, options.limit + 1) as RuntimeEventRow[]
+      AND json_extract(payload_json,'$.kind')='agent_turn' AND json_extract(payload_json,'$.userMessageId') IN (SELECT value FROM json_each(?))
+      AND (? IS NULL OR seq<?) ORDER BY seq DESC LIMIT ?`).all(sessionId, ids, options.before ?? null, options.before ?? null, options.limit + 1) as RuntimeEventRow[]
     const items = accepted.slice(0, options.limit).map(row => {
       const current = this.getOperation(row.operation_id)
       const terminal = this.db.prepare(`SELECT * FROM runtime_events WHERE operation_id=? AND session_id=? AND event_type='operation_terminal' ORDER BY seq DESC LIMIT 1`)
         .get(row.operation_id, sessionId) as RuntimeEventRow | undefined
       const unresolved = this.db.prepare(`SELECT COUNT(*) AS count FROM tool_operations WHERE run_operation_id=? AND status IN ('effect_pending','recovery_parked')`)
         .get(row.operation_id) as { count: number }
-      return { operationId: row.operation_id, sessionId, inputMessageId: messageId, acceptedSeq: row.seq, acceptedAt: row.created_at,
+      return { operationId: row.operation_id, sessionId, inputMessageId: (JSON.parse(row.payload_json) as { userMessageId: string }).userMessageId, acceptedSeq: row.seq, acceptedAt: row.created_at,
         updatedAt: current?.updatedAt ?? terminal?.created_at ?? row.created_at, phase: current?.phase ?? (terminal ? 'terminal' as const : 'unknown' as const), unsettledToolCount: unresolved.count,
         ...(terminal ? { terminal: { eventId: terminal.event_id, sequence: terminal.seq, reason: (JSON.parse(terminal.payload_json) as { reason?: string }).reason, at: terminal.created_at } } : {}) }
     })
@@ -491,6 +492,19 @@ export class DurableRuntimeStore {
     return evidence ? resolveToolRecovery(evidence) : undefined
   }
 
+  /** Completed runs retire mutable state; immutable T1/T2 evidence remains authoritative. */
+  getCompletedToolObservation(operationId: string): { sessionId: string; outcome: ToolOutcome } | undefined {
+    const row = this.getToolOperationRow(operationId)
+    if (!row || row.status !== 'outcome_committed' || !row.outcome_json) return
+    const outcome = JSON.parse(row.outcome_json) as ToolOutcome
+    if (outcome.isError) return
+    const owners = this.db.prepare(`SELECT DISTINCT session_id FROM runtime_events
+      WHERE operation_id=? AND event_type='tool_outcome_committed'
+        AND json_extract(payload_json,'$.operationId')=? LIMIT 2`).all(row.run_operation_id, operationId) as Array<{ session_id: string }>
+    if (owners.length !== 1) return
+    return { sessionId: owners[0]!.session_id, outcome }
+  }
+
   listUnsettledToolOperations(runOperationId?: string, sessionId?: string): ToolRecoveryEvidence[] {
     const rows = this.db.prepare(`
       SELECT * FROM tool_operations
@@ -500,6 +514,10 @@ export class DurableRuntimeStore {
       ORDER BY prepared_at ASC
     `).all(...(runOperationId ? [runOperationId] : []), ...(sessionId ? [sessionId] : [])) as ToolOperationRow[]
     return rows.map(row => this.getToolRecoveryEvidence(row.operation_id)!)
+  }
+  unsettledSessionIds(): string[] {
+    return (this.db.prepare(`SELECT DISTINCT o.session_id FROM tool_operations t JOIN operations o ON o.operation_id=t.run_operation_id
+      WHERE t.status IN ('effect_pending','recovery_parked')`).all() as Array<{ session_id: string }>).map(row => row.session_id)
   }
 
   setProjectionCursor(projection: string, seq: number, updatedAt = Date.now()): void {

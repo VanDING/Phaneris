@@ -32,7 +32,7 @@ const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request
 writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [workspace], activeWorkspaceId: 'alpha', setupDeferred: true, defaultLlmConnection: 'fixture',
   llmConnections: [{ slug: 'fixture', name: 'Loopback', providerType: 'pi_compat', piAuthProvider: 'openai', authType: 'api_key', createdAt: 1, baseUrl: provider.url.href,
     customEndpoint: { api: 'openai-completions' }, defaultModel: 'fixture', models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Test only', provider: 'pi', contextWindow: 64000, maxTokens: 4096, supportsThinking: false }] }] }))
-writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, defaults: { permissionMode: 'safe', defaultLlmConnection: 'fixture', model: 'fixture' } }))
+writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, assistantMemory: { version: 1, learning: 'explicit', use: true }, defaults: { permissionMode: 'safe', defaultLlmConnection: 'fixture', model: 'fixture' } }))
 const { getCredentialManager } = await import('@phaneris/shared/credentials')
 await getCredentialManager().setLlmApiKey('fixture', 'loopback-only-key')
 await saveSession({ id: 'temporal-source', workspaceRootPath: workspace.rootPath, createdAt: 1, lastUsedAt: 1,
@@ -120,14 +120,14 @@ try {
   assert(JSON.stringify(requests.at(-1)?.messages).includes('DISPUTED_FACT_MATERIAL_A'))
   assert(JSON.stringify(requests.at(-1)?.messages).includes('relatedMemoryIds'))
   scenes.push('RL01-purposeful-disputed-review-keeps-historical-state')
-  relationCommand = { action: 'resolve', requestId: 'native-resolve', id: two.id, expectedRevision: 2, related: [{ id: one.id, expectedRevision: 2 }],
+  relationCommand = { action: 'resolve', intent: 'user_request', requestId: 'native-resolve', id: two.id, expectedRevision: 2, related: [{ id: one.id, expectedRevision: 2 }],
     winnerId: two.id, reason: 'Use the second observation as explicitly requested.', sources: [{ sessionId: 'temporal-source', messageId: 'input' }] }
   const internalBoundary = requests.length
   await manager.sendMessage(assistant.id, 'RESOLVE_CONFLICT_INTERNAL', undefined, undefined, { hidden: true })
-  assert(JSON.stringify(requests.slice(internalBoundary).map(request => request.messages)).includes('direct current user turn'))
+  assert(JSON.stringify(requests.slice(internalBoundary).map(request => request.messages)).includes('cannot authorize an explicit memory operation'))
   assert((await query({ includeRetired: true, ids: [one.id, two.id] })).items.every(record => record.dispute))
   scenes.push('RL09-internal-input-cannot-confirm-a-memory-resolution')
-  await manager.sendMessage(assistant.id, 'RESOLVE_CONFLICT_DIRECT_USER')
+  await manager.sendMessage(assistant.id, 'RESOLVE_CONFLICT_DIRECT_USER: explicitly use the second observation as the current conclusion.')
   assert.equal((await query({ ids: [two.id] })).items[0]?.lastValidatedAt !== undefined, true)
   scenes.push('RL04-real-pi-resolves-with-explicit-direct-user-turn')
   relationCommand = undefined

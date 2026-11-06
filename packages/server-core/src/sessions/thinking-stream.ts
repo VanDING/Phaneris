@@ -2,6 +2,7 @@ import type { AgentEvent, Message, TrajectorySourceBlock } from '@phaneris/core/
 
 const streams = new WeakMap<object, { turnId: string; blocks: TrajectorySourceBlock[]; startedAt: number }>()
 export function clearThinkingStream(owner: object): void { streams.delete(owner) }
+export function hasThinkingStream(owner: object): boolean { return !!streams.get(owner)?.blocks.length }
 export function rememberThinkingDelta(owner: object, event: Extract<AgentEvent, { type: 'thinking_delta' }>): void {
   const state = streams.get(owner)?.turnId === event.turnId ? streams.get(owner)! : { turnId: event.turnId, blocks: [], startedAt: Date.now() }
   const block = state.blocks.find(block => block.index === event.blockIndex)

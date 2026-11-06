@@ -435,6 +435,7 @@ export class McpClientPool {
         const { $schema, ...cleanSchema } = (tool.inputSchema as Record<string, unknown>) || {};
         defs.push({
           name,
+          sourceToolName: tool.name,
           description: tool.description || `Tool from ${slug}`,
           inputSchema: Object.keys(cleanSchema).length > 0 ? cleanSchema : { type: 'object', properties: {} },
           ...(tool.outputSchema ? { outputSchema: tool.outputSchema as Record<string, unknown> } : {}),

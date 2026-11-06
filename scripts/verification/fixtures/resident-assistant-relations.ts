@@ -74,7 +74,7 @@ try {
   const last = await remember('latest-new', { sources: [{ sessionId: 'relation-source', messageId: 'latest' }] })
   const second = await mutate({ action: 'resolve', requestId: 'newest-replaces-correction', ...ref(last), related: [ref(resolved.record)], winnerId: last.id, reason: 'Final correction', sources: [{ sessionId: 'relation-source', messageId: 'latest' }] } as MemoryMutation)
   client.destroy(); await host.stop()
-  copyFileSync(join(workspace.rootPath, 'memory/memory.db'), join(output, 'memory-before-forget.db'))
+  copyFileSync(join(workspace.rootPath, 'assistant/memory/memory.db'), join(output, 'memory-before-forget.db'))
   host = await boot(); client = await connect()
   const forgotten = await mutate({ action: 'transition', requestId: 'forget-newest', ...ref(second.record), state: 'forgotten' })
   assert.equal(forgotten.record.content, null); assert.equal(forgotten.record.retirementReason, undefined)
@@ -101,7 +101,7 @@ try {
   scenes.push('RB01-reference-only-versioned-export', 'RB03-foreign-workspace-rejected')
   client.destroy(); await host.stop()
   // Only this fixture's isolated database is overwritten to model an old backup.
-  copyFileSync(join(output, 'memory-before-forget.db'), join(workspace.rootPath, 'memory/memory.db'))
+  copyFileSync(join(output, 'memory-before-forget.db'), join(workspace.rootPath, 'assistant/memory/memory.db'))
   host = await boot(); client = await connect()
   assert((await query({ ids: [last.id] })).items[0]?.content)
   const imported = await client.invoke(RPC_CHANNELS.assistantMemory.SUPPRESSION_MERGE, 'alpha', bundle)

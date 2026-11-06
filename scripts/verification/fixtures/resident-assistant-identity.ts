@@ -12,7 +12,10 @@ const config = process.env.PHANERIS_CONFIG_DIR!
 const root = process.argv[2]!
 if (!config || !root) throw new Error('An isolated config and evidence root are required')
 const workspaces = ['alpha', 'beta'].map(id => ({ id, name: id, rootPath: join(config, id), createdAt: 1 }))
-for (const workspace of workspaces) mkdirSync(workspace.rootPath, { recursive: true })
+for (const workspace of workspaces) {
+  mkdirSync(workspace.rootPath, { recursive: true })
+  writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, assistantMemory: { version: 1, learning: 'explicit', use: true } }))
+}
 writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces, activeWorkspaceId: 'alpha', setupDeferred: true, llmConnections: [] }))
 let callbackMemory: import('../../../packages/server-core/src/resident-assistant/memory-store').AssistantMemoryStore | undefined
 const scenes: string[] = []
@@ -80,10 +83,11 @@ try {
   const { mergeSessionScopedToolCallbacks } = await import('../../../packages/shared/src/agent/session-scoped-tool-callback-registry')
   const { attachSessionSelfManagementBindings } = await import('../../../packages/shared/src/agent/session-self-management-bindings')
   const { SESSION_TOOL_REGISTRY } = await import('@phaneris/session-tools-core')
-  const denied = ['bash', 'powershell', 'write', 'edit', 'read', 'codemode', 'mcp__session__update_user_preferences', 'mcp__session__send_agent_message', 'mcp__external__anything']
+  const denied = ['bash', 'powershell', 'write', 'edit', 'codemode', 'mcp__session__update_user_preferences', 'mcp__session__send_agent_message', 'mcp__external__anything']
+  for (const name of ['read', 'grep', 'find', 'ls']) assert(isResidentAssistantToolAllowed('resident_assistant', name))
   const responses: Array<Record<string, unknown>> = []
   let effects = 0
-  const bridge = { config: { systemPromptPreset: 'resident_assistant', workspace: workspaces[0],
+  const bridge = { residentToolAllowed: (name: string) => isResidentAssistantToolAllowed('resident_assistant', name), config: { systemPromptPreset: 'resident_assistant', workspace: workspaces[0],
     durableToolBoundary: { prepare: () => { effects++; throw new Error('Forbidden effect') } } }, send: (response: Record<string, unknown>) => responses.push(response) }
   const port = PiAgent.prototype as unknown as {
     handlePreToolUseRequest: (this: unknown, request: unknown) => Promise<void>

@@ -15,6 +15,7 @@ export interface MemoryLookupItem extends Pick<MemoryRecord, 'id' | 'key' | 'pro
   sources: MemoryRecord['sources']; sourceCount: number; supersedesCount: number; disputed: boolean
 }
 export interface MemoryLookupResult {
+  coverage?: import('./memory-contracts').MemoryQueryResult['coverage']
   items: MemoryLookupItem[]; nextCursor: NonNullable<MemoryQuery['cursor']> | null; version: number
   scope: { projectId?: string; includesWorkspace: boolean; workspaceWide: boolean }
   budget: { maxChars: number; usedChars: number; requestedItems: number; scannedRecords: number; scanLimit: number }

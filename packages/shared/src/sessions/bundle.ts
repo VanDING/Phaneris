@@ -9,7 +9,7 @@
 
 import { existsSync, readFileSync, mkdirSync, mkdtempSync, renameSync, rmSync } from 'fs'
 import { cp } from 'fs/promises'
-import { join } from 'path'
+import { dirname, join } from 'path'
 import type { SessionHeader, StoredMessage } from './types.ts'
 import type { StoredSession } from './types.ts'
 import { readSessionJsonl, writeSessionJsonl, makeSessionPathPortable, expandSessionPath } from './jsonl.ts'
@@ -201,7 +201,7 @@ export function restoreSessionBundle(session: StoredSession, files: BundleFile[]
   }
   const target = getSessionPath(session.workspaceRootPath, session.id)
   if (existsSync(target)) throw new Error(`Session ${session.id} already exists in target workspace`)
-  const parent = join(session.workspaceRootPath, 'sessions')
+  const parent = dirname(target)
   mkdirSync(parent, { recursive: true, mode: 0o700 })
   const staging = mkdtempSync(join(parent, '.import-'))
   try {

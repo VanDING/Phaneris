@@ -26,6 +26,7 @@ import { randomBytes } from 'node:crypto';
 import { tmpdir, homedir } from 'node:os';
 import { basename, dirname, join, relative, resolve, isAbsolute } from 'node:path';
 import { backupRuntimeDatabase } from '../durable-runtime/index.js';
+import { openSqliteDatabase } from '../runtime/sqlite.js';
 
 const MANIFEST_NAME = 'manifest.json';
 const MANIFEST_VERSION = 1;
@@ -136,12 +137,29 @@ export function createWorkspaceBackup(workspaceRootPath: string, outputPath: str
   mkdirSync(tempDir, { recursive: true, mode: 0o700 });
   try {
     const runtimeCopy = prepareRuntimeDatabaseCopy(root, tempDir);
+    const assistantCopies = new Map<string, string>();
+    for (const relativePath of ['assistant/memory/memory.db', 'assistant/context.db', 'assistant/delegations.db', 'memory/memory.db']) {
+      const source = join(root, relativePath);
+      if (!existsSync(source)) continue;
+      const snapshot = join(tempDir, `assistant-${assistantCopies.size}.db`);
+      const database = openSqliteDatabase(source);
+      try {
+        database.exec(`VACUUM INTO '${snapshot.replaceAll("'", "''")}'`);
+        const check = openSqliteDatabase(snapshot);
+        try { if ((check.prepare('PRAGMA integrity_check').get() as { integrity_check: string }).integrity_check !== 'ok') throw new Error(`Assistant database backup is corrupt: ${relativePath}`); }
+        finally { check.close(); }
+      } finally { database.close(); }
+      assistantCopies.set(relativePath, snapshot);
+    }
     const files: WorkspaceBackupFile[] = [];
     let totalBytes = 0;
 
     for (const source of walkFiles(root)) {
       const relativePath = relative(root, source).replaceAll('\\', '/');
       if (/^runtime\/runtime\.db(?:-wal|-shm)?$/.test(relativePath)) continue;
+      if (relativePath === 'assistant/.writer.lock' || /^assistant\/\.writer-stale-/.test(relativePath)) continue;
+      if (/^assistant\/migrations\/.*\/memory\.db-(wal|shm)$/.test(relativePath)) continue;
+      if ([...assistantCopies.keys()].some(path => relativePath === path || relativePath === path + '-wal' || relativePath === path + '-shm')) continue;
       if (relativePath === MANIFEST_NAME) throw new Error('Workspace contains reserved manifest.json');
       const target = join(output, relativePath);
       copyFilePreservingMode(source, target);
@@ -158,6 +176,12 @@ export function createWorkspaceBackup(workspaceRootPath: string, outputPath: str
       const size = statSync(runtimeCopy).size;
       files.push({ path: relativePath, size, sha256: sha256File(runtimeCopy) });
       totalBytes += size;
+    }
+    for (const [relativePath, snapshot] of assistantCopies) {
+      const target = join(output, relativePath);
+      mkdirSync(dirname(target), { recursive: true }); copyFileSync(snapshot, target);
+      const size = statSync(target).size;
+      files.push({ path: relativePath, size, sha256: sha256File(target) }); totalBytes += size;
     }
 
     files.sort((a, b) => a.path.localeCompare(b.path));

@@ -1,12 +1,22 @@
 import type { SessionToolContext } from '../context'
 import { successResponse, errorResponse } from '../response'
 import type { HistoryQuery } from '../history-contracts'
+export async function handleAssistantScenarioCapture(ctx: SessionToolContext, input: import('../memory-derived-contracts').ScenarioCapture) {
+  if (!ctx.assistantScenarioCapture) return errorResponse('Scenario capture is unavailable in this session.')
+  try { return successResponse(JSON.stringify(await ctx.assistantScenarioCapture(input))) }
+  catch (error) { return errorResponse(error instanceof Error ? error.message : 'Scenario capture failed') }
+}
+export async function handleAssistantScenarioSearch(ctx: SessionToolContext, input: import('../memory-derived-contracts').ScenarioQuery) {
+  if (!ctx.assistantScenarioSearch) return errorResponse('Scenario lookup is unavailable in this session.')
+  try { return successResponse(JSON.stringify(await ctx.assistantScenarioSearch(input))) }
+  catch (error) { return errorResponse(error instanceof Error ? error.message : 'Scenario lookup failed') }
+}
 export async function handleAssistantMemoryMaintenance(ctx: SessionToolContext, args: import('../memory-maintenance-contracts').MemoryMaintenanceCommand) {
   if (!ctx.assistantMemoryMaintenance) return errorResponse('Incremental memory maintenance is unavailable in this session.')
   try { return successResponse(JSON.stringify(await ctx.assistantMemoryMaintenance(args))) }
   catch (error) { return errorResponse(error instanceof Error ? error.message : 'Memory maintenance failed') }
 }
-export async function handleAssistantDeliveryAck(ctx: SessionToolContext, args: { eventIds: string[] }) {
+export async function handleAssistantDeliveryAck(ctx: SessionToolContext, args: import('../task-result-contracts').AssistantDeliveryAck) {
   if (!ctx.assistantDeliveryAck) return errorResponse('Resident delivery is not available in this session.')
   try { return successResponse(JSON.stringify(await ctx.assistantDeliveryAck(args))) }
   catch (error) { return errorResponse(error instanceof Error ? error.message : 'Delivery acknowledgement failed') }

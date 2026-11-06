@@ -29,9 +29,14 @@ export function resolveWorkerConfig(
   if (!connection) throw new Error('Worker requires a configured connection')
   const selected = requested.model ?? (requested.llmConnection ? connection.defaultModel : parent.model) ?? connection.defaultModel ?? backend.resolvedModel
   const modelId = selected.replace(/^pi\//, '')
-  const model = connection.models?.find(item => (typeof item === 'string' ? item : item.id) === modelId)
+  const model = connection.models?.find(item => (typeof item === 'string' ? item : item.id).replace(/^pi\//, '') === modelId)
   if (!model) throw new Error(`Worker model is not in the selected connection catalog: ${modelId}`)
   const definition = typeof model === 'string' ? getModelById(model) : model
+  const protocol = connection.customEndpoint?.api
+  const endpoint = protocol === 'anthropic-messages' ? '/messages' : protocol === 'openai-responses' ? '/responses' : '/chat/completions'
+  if (protocol && definition?.supportedEndpoints && !definition.supportedEndpoints.some(route => route.endsWith(endpoint))) {
+    throw new Error(`Worker model ${modelId} does not support connection protocol ${protocol}; select a compatible connection or refresh its model catalog`)
+  }
   const adjustments: string[] = []
   const knownLevels = definition?.supportedThinkingLevels
   const hasThinkingCatalog = definition?.supportsThinking === false || !!knownLevels?.length || !!definition?.thinkingLevelMap

@@ -18,9 +18,10 @@ import {
   writeFileSync,
   unlinkSync,
   readFileSync,
+  realpathSync,
 } from 'fs';
 import { basename, extname, join } from 'path';
-import { randomUUID } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
 import { atomicWriteFileSync, readJsonFileSync, getMimeType } from '../utils/files.ts';
 import { generateUniqueSlug } from '../utils/slug.ts';
 import { debug } from '../utils/debug.ts';
@@ -158,21 +159,33 @@ export function loadProjectMemory(
   projectSlug: string,
   maxTokens = 5000,
 ): string | null {
+  try { return loadProjectMemorySnapshot(workspaceRootPath, projectSlug, maxTokens).promptContent; }
+  catch (error) { debug('[loadProjectMemory] Failed to read MEMORY.md:', projectSlug, error); return null; }
+}
+
+export interface ProjectMemorySnapshot { path: string; contentHash: string; readAt: number; signature: string; promptContent: string | null }
+const memorySignature = (path: string) => {
+  if (!existsSync(path)) return 'missing';
+  const stat = statSync(path, { bigint: true });
+  if (!stat.isFile() || stat.nlink > 1n || stat.size > 64n * 1024n * 1024n) throw new Error('Project memory is not an independently owned bounded regular file');
+  return `${stat.dev}:${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}`;
+};
+export function projectMemorySnapshotCurrent(snapshot: ProjectMemorySnapshot): boolean {
+  if (memorySignature(snapshot.path) === snapshot.signature) return true;
+  const current = existsSync(snapshot.path) ? readFileSync(snapshot.path, 'utf8') : '';
+  return createHash('sha256').update(current).digest('hex') === snapshot.contentHash;
+}
+export function loadProjectMemorySnapshot(workspaceRootPath: string, projectSlug: string, maxTokens = 5000): ProjectMemorySnapshot {
   const memoryPath = getProjectMemoryPath(workspaceRootPath, projectSlug);
-  if (!existsSync(memoryPath)) return null;
-
-  let content: string;
-  try {
-    content = readFileSync(memoryPath, 'utf-8');
-  } catch (error) {
-    debug('[loadProjectMemory] Failed to read MEMORY.md:', projectSlug, error);
-    return null;
-  }
-
-  if (!content.trim()) return null;
+  const signature = memorySignature(memoryPath);
+  if (signature !== 'missing' && !isPathWithin(join(realpathSync(join(workspaceRootPath, 'projects')), projectSlug), realpathSync(memoryPath))) throw new Error('Project memory leaves its owning project');
+  const content = signature === 'missing' ? '' : readFileSync(memoryPath, 'utf-8');
+  if (memorySignature(memoryPath) !== signature) throw new Error('Project memory changed during prompt reading');
+  const snapshot = { path: memoryPath, contentHash: createHash('sha256').update(content).digest('hex'), readAt: Date.now(), signature };
+  if (!content.trim()) return { ...snapshot, promptContent: null };
 
   const tokens = estimateTokensDensityAware(content);
-  if (tokens <= maxTokens) return content;
+  if (tokens <= maxTokens) return { ...snapshot, promptContent: content };
 
   // Over budget: reserve room for the marker, then keep 30% from the start and 70%
   // from the end (where new notes land). `charsPerToken` is derived from the actual
@@ -186,7 +199,7 @@ export function loadProjectMemory(
   const headChars = Math.floor(charBudget * 0.3);
   const head = content.slice(0, headChars).trimEnd();
   const tail = content.slice(content.length - (charBudget - headChars)).trimStart();
-  return `${head}${marker}${tail}`;
+  return { ...snapshot, promptContent: `${head}${marker}${tail}` };
 }
 
 /**

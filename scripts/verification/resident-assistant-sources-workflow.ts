@@ -10,6 +10,11 @@ await verificationWorkflow('resident-assistant-sources', async run => {
   mkdirSync(resolve('.cache/verification'), { recursive: true })
   const config = mkdtempSync(resolve('.cache/verification/resident-sources-'))
   const workspace = { id: 'alpha', rootPath: join(config, 'alpha') }, otherWorkspace = { id: 'beta', rootPath: join(config, 'beta') }
+  for (const owner of [workspace, otherWorkspace]) {
+    mkdirSync(owner.rootPath, { recursive: true })
+    writeFileSync(join(owner.rootPath, 'config.json'), JSON.stringify({ ...owner, name: owner.id, createdAt: 1,
+      assistantMemory: { version: 1, learning: 'explicit', use: true } }))
+  }
   const usage = { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 }
   const messages = Array.from({ length: 128 }, (_, index) => ({ id: `input-${index}`, type: 'user' as const, content: `SOURCE_SNAPSHOT_ALPHA_${index}`, timestamp: index + 1 }))
   const write = (items = messages) => saveSession({ id: 'many-sources', workspaceRootPath: workspace.rootPath, createdAt: 1, lastUsedAt: 1, messages: items, tokenUsage: usage })
@@ -103,7 +108,7 @@ await verificationWorkflow('resident-assistant-sources', async run => {
     scenes.push('RS02-delete-visible-without-cached-fallback')
     run.json('sources-evidence.json', { scenes, diagnostics, final: store.getDiagnostics() })
   } finally { store.close(); other.close() }
-  copyFileSync(join(workspace.rootPath, 'memory/memory.db'), join(run.directory, 'memory.db'))
+  copyFileSync(join(workspace.rootPath, 'assistant/memory/memory.db'), join(run.directory, 'memory.db'))
   writeFileSync(join(run.directory, 'source-fixture.json'), JSON.stringify({ messages: messages.length, workspaces: [workspace.id, otherWorkspace.id] }))
   run.complete(scenes, ['Paid-model quality', 'Multi-Host authority', 'Filesystem changes inside one synchronous validation boundary'])
 })

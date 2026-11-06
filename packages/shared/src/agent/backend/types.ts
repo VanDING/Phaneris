@@ -236,6 +236,8 @@ export interface CoreBackendConfig {
 
   /** Runtime-Host-owned durable boundary for provider model attempts. */
   durableModelBoundary?: DurableModelBoundary;
+  /** Invalidates an active prompt snapshot; the Host owns any bounded continuation. */
+  onProjectMaterialsStale?: () => void;
 
   /** Canonical committed history for provider context; current accepted run is excluded by identity. */
   getCanonicalModelContext?: (excludeOperationId?: string) => DurableCanonicalModelContext | undefined;

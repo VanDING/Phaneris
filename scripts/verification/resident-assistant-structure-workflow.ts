@@ -64,6 +64,6 @@ await verificationWorkflow('resident-assistant-structure', async run => {
     run.json('structure-evidence.json', { scenes, rounds: 20 })
   } finally { await service.close() }
   copyFileSync(join(workspace.rootPath, 'assistant/context.db'), join(run.directory, 'context.db'))
-  copyFileSync(join(workspace.rootPath, 'memory/memory.db'), join(run.directory, 'memory.db'))
+  copyFileSync(join(workspace.rootPath, 'assistant/memory/memory.db'), join(run.directory, 'memory.db'))
   run.complete(scenes, ['Paid models and provider quality', 'Performance beyond the recorded repeated-turn fixture', 'Multi-Host authority'])
 })

@@ -31,7 +31,14 @@ export interface LocalMcpConfig {
 /**
  * Workspace configuration (stored in config.json)
  */
+export interface AssistantMemoryPolicy {
+  version: 1;
+  learning: 'automatic' | 'explicit' | 'paused';
+  use: boolean;
+}
+
 export interface WorkspaceConfig {
+  assistantMemory?: AssistantMemoryPolicy | false;
   id: string;
   name: string;
   slug: string; // Folder name (URL-safe)

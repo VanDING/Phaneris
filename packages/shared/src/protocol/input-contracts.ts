@@ -7,6 +7,7 @@ import { THINKING_LEVEL_IDS } from '../agent/thinking-levels'
 import { MemoryMutationSchema, MemoryQuerySchema, MemorySourceReadSchema, HistoryQuerySchema, MemorySuppressionQuerySchema, MemorySuppressionMergeSchema } from './assistant-memory'
 import { AssistantDispatchSchema, AssistantWorkQuerySchema } from '@phaneris/session-tools-core/delegation-contracts'
 import { ResidentContextSchema, ResidentEventsQuerySchema } from '@phaneris/session-tools-core/resident-context-contracts'
+import { TaskOutputVisibilitySchema } from '@phaneris/session-tools-core/task-result-contracts'
 
 const text = z.string()
 const id = text.min(1)
@@ -38,6 +39,7 @@ export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>>
   [c.residentAssistant.DISPATCH]: tuple(id, AssistantDispatchSchema),
   [c.residentAssistant.WORK]: tuple(id, AssistantWorkQuerySchema),
   [c.residentAssistant.CANCEL_WORK]: tuple(id, id),
+  [c.residentAssistant.OUTPUT_VISIBILITY]: tuple(id, TaskOutputVisibilitySchema),
   [c.assistantMemory.QUERY]: tuple(id, MemoryQuerySchema),
   [c.assistantMemory.SUPPRESSION_EXPORT]: tuple(id, MemorySuppressionQuerySchema),
   [c.assistantMemory.SUPPRESSION_MERGE]: tuple(id, MemorySuppressionMergeSchema),

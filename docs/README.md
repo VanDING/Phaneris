@@ -20,7 +20,17 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
-0.6.x 常驻助手：[架构与版本路线](architecture/resident-assistant-0.6-roadmap-2026-11-03.md)、[实施进度与验证边界](process/resident-assistant-implementation-2026-11-03.md)、[先行失败矩阵](verification/resident-assistant-failure-matrix-2026-11-03.md) — accepted（2026-11-03，实施中）；记忆 Host/RPC、特殊助手身份/角色、Pi 记忆读取、配置校验及普通 Session 的新建/续用委派已接通，委派库仅保留投递回执和成果引用。2026-11-04 已贯通增量来源目录、按版本/项目恢复的有界提取与候选确认、依赖退出、逐请求上下文清单、稳定身份换段、事件消费/自动交付及顶部居中独立品牌入口；按用户最新确认复用现有对话页和管理对话框，原 Logo 菜单保留，不新增助手侧栏；成熟生命周期、长期质量与远端托管按后续阶段验证，尚未发行 0.6.0。UI 以[品牌入口与全屏对话原型](prototypes/resident-assistant-entry-2026-11-03.html)为布局基准，功能以架构规划为准。
+0.6.2 版本计划：[助手权限、能力认知与 Worker 管理](architecture/resident-assistant-0.6.2-plan-2026-11-06.md) — proposed；收敛广泛读取、L0 原文直读、主助手与 Worker 执行授权分离、能力声明/Host 同源及 Worker 全过程管理。包含实施顺序、先行失败矩阵与候选包验收，本次仅规划，尚未实施。
+
+助手使用与维护：[权限、内置记忆、项目事实和个人知识来源](guides/resident-assistant-memory.md)。
+
+助手完整实施：[2026-11-05 实施与最终验收](process/resident-assistant-native-rollout-2026-11-05.md) — 2026-11-06 完成权限、目录迁移、自动学习、Project 单一权威、L2/L3 与知识引用；21 个工作流、351 组场景通过本机 Windows 隔离验收。真实 Work 数据未迁移、已安装客户端未替换。
+
+助手「更多」侧栏改版：[工作总览与交付物设计](design/resident-assistant-overview-redesign-2026-11-05.md) — 已完成；当前/交付物/历史、独立详情、分页搜索、明确成果、快照版本及移出/恢复通过后端和桌面验收，范围见实施记录。
+
+助手权限与记忆最终计划：[2026-11-05 综合实施计划](architecture/resident-assistant-permissions-memory-final-plan-2026-11-05.md) — accepted；用户已批准完整实施，收敛个人内置记忆、主助手基本只读能力、助手专属目录、Project 事实归属与现有知识源接入。新增[委派启动、回执与 Source 现场诊断](verification/resident-assistant-dispatch-receipt-source-investigation-2026-11-05.md)，将调度/恢复/交付和 Source 主动激活提前到目录迁移与记忆改造之前。包含迁移、实施顺序及先行失败矩阵；实际完成情况以实施记录及验证产物为准。
+
+0.6.x 常驻助手：[架构与版本路线](architecture/resident-assistant-0.6-roadmap-2026-11-03.md)、[实施进度与验证边界](process/resident-assistant-implementation-2026-11-03.md)、[先行失败矩阵](verification/resident-assistant-failure-matrix-2026-11-03.md)。2026-11-04 已贯通身份/角色、记忆与有界上下文、普通 Session 委派、事件消费/自动交付及顶部独立品牌入口。2026-11-05 根据 0.6.0 打包客户端实测修订为仅在助手页面打开的非模态悬浮概览，直接呈现任务与交付物；消息连接按需选择平台，已绑定渠道才常驻显示，面板排除记忆与上下文。详见[本轮实施与验证](process/resident-assistant-followup-2026-11-05.md)和[本轮先行失败矩阵](verification/resident-assistant-followup-failure-matrix-2026-11-05.md)。原 Logo 菜单及同一对话页继续保留；长期质量、真实外部消息账号与远端托管的未验证范围以各记录为准。[历史品牌入口与全屏原型](prototypes/resident-assistant-entry-2026-11-03.html)保留为布局沿革。
 
 M0 收尾：[实施与验证](process/m0-closeout-implementation-2026-10-28.md)、[先行失败矩阵](verification/m0-closeout-failure-matrix-2026-10-28.md) — accepted（2026-10-29，本机 Windows 候选）；完整 CI/critical、Harness 与实际打包应用通过；已纳入 [0.5.5 发布准备](../apps/electron/resources/release-notes/0.5.5.md)，本机安装版不自动替换。
 

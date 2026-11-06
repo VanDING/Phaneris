@@ -15,6 +15,7 @@
  */
 
 import type { McpClientPool, McpPromptListing, McpResourceListing } from '@phaneris/shared/mcp'
+import { knowledgeSourceVersion, knowledgeReadReference } from '@phaneris/shared/agent/knowledge-materials'
 import type {
   McpSourcePrompt,
   McpSourceResource,
@@ -26,6 +27,7 @@ import type {
 export type McpSourcePool = Pick<McpClientPool, 'listResources' | 'readResource' | 'listPrompts' | 'getPrompt'>
 
 export interface McpSourceToolCallbacksDeps {
+  workspaceRoot?: string
   /** The session's MCP pool, read on every call. */
   getPool: () => McpSourcePool | undefined
   /** The session's enabled source slugs, read on every call. */
@@ -57,6 +59,7 @@ export function buildMcpSourceToolCallbacks(deps: McpSourceToolCallbacksDeps): M
   // The pool only holds the session's enabled sources; checking the slug here
   // also covers the moment a source change is still being applied to it.
   const poolFor = (sourceSlug: string): McpSourcePool => {
+    if (deps.workspaceRoot) knowledgeSourceVersion(deps.workspaceRoot, sourceSlug)
     const enabled = deps.getEnabledSourceSlugs() ?? []
     if (!enabled.includes(sourceSlug)) {
       throw new Error(enabled.length > 0
@@ -78,7 +81,12 @@ export function buildMcpSourceToolCallbacks(deps: McpSourceToolCallbacksDeps): M
       }
     },
     async readResource(sourceSlug, uri, options) {
-      return poolFor(sourceSlug).readResource(sourceSlug, uri, options)
+      const version = deps.workspaceRoot ? knowledgeSourceVersion(deps.workspaceRoot, sourceSlug) : undefined
+      const content = await poolFor(sourceSlug).readResource(sourceSlug, uri, options)
+      poolFor(sourceSlug)
+      if (!version || !deps.workspaceRoot) return content
+      if (knowledgeSourceVersion(deps.workspaceRoot, sourceSlug) !== version) throw new Error('Knowledge source changed during reading; read the current source again')
+      return JSON.stringify({ reference: knowledgeReadReference({ sourceSlug, sourceVersion: version, uri, title: uri, content }), content })
     },
     async listPrompts(sourceSlug, options) {
       const listing = await poolFor(sourceSlug).listPrompts(sourceSlug, options)

@@ -60,6 +60,7 @@ export interface ModelContextPolicy {
   valid(request?: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest): boolean
   /** Owns both request identity and validity at the prepare boundary when supplied. */
   assert?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
+  assertTool?(request: import('@phaneris/shared/durable-runtime/types').DurableToolPrepareRequest): void
   entered?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
   committed?(request: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest, valid: boolean): void
 }
@@ -75,6 +76,7 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
   const utilityLeases = new Map<string, () => void>()
   return {
     durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: request => {
+      options.modelContext?.assertTool?.(request)
       if (options.modelContext && !options.modelContext.valid()) return Promise.reject(new Error('Model context changed; execution is paused until the original requirements are reviewed'))
       return runtime.effects.boundaryFor(workspace).prepare({ ...request, recoverySessionIds: scope.recoverySessionIds })
     } },

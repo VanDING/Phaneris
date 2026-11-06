@@ -129,7 +129,7 @@ class SessionPersistenceQueue {
     try {
       const data = typeof entry.data === 'function' ? entry.data() : entry.data
       ensureSessionsDir(data.workspaceRootPath)
-      ensureSessionDir(data.workspaceRootPath, sessionId)
+      ensureSessionDir(data.workspaceRootPath, sessionId, data.sessionKind)
 
       const filePath = getSessionFilePath(data.workspaceRootPath, sessionId)
 

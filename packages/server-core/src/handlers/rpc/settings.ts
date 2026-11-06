@@ -14,6 +14,7 @@ import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { requestClientOpenFileDialog } from '@phaneris/server-core/transport'
 import { isValidWorkingDirectory } from '../../utils/path-validation'
+import { parseAssistantMemoryPolicy, readAssistantMemoryPolicy } from '@phaneris/shared/workspaces'
 
 export const HANDLED_CHANNELS = [
   RPC_CHANNELS.workspace.SETTINGS_GET,
@@ -134,7 +135,9 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
     const { loadWorkspaceConfig } = await import('@phaneris/shared/workspaces')
     const config = loadWorkspaceConfig(workspace.rootPath)
 
+    const memoryPolicy = readAssistantMemoryPolicy(workspace)
     return {
+      assistantMemory: { version: memoryPolicy.version, learning: memoryPolicy.learning, use: memoryPolicy.use },
       name: config?.name,
       model: config?.defaults?.model,
       permissionMode: config?.defaults?.permissionMode,
@@ -157,7 +160,7 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
       : value
 
     // Validate key is a known workspace setting
-    const validKeys = ['name', 'model', 'enabledSourceSlugs', 'permissionMode', 'cyclablePermissionModes', 'thinkingLevel', 'workingDirectory', 'localMcpEnabled', 'defaultLlmConnection', 'chatStarters']
+    const validKeys = ['name', 'model', 'enabledSourceSlugs', 'permissionMode', 'cyclablePermissionModes', 'thinkingLevel', 'workingDirectory', 'localMcpEnabled', 'defaultLlmConnection', 'chatStarters', 'assistantMemory']
     if (!validKeys.includes(key)) {
       throw new Error(`Invalid workspace setting key: ${key}. Valid keys: ${validKeys.join(', ')}`)
     }
@@ -166,6 +169,7 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
     // only caller, and "at most 3, non-empty, bounded" has to hold for anything
     // that reaches config.json. A rejected payload throws and writes nothing.
     let normalizedStarters: unknown
+    const normalizedMemoryPolicy = key === 'assistantMemory' ? parseAssistantMemoryPolicy(value) : undefined
     if (key === 'chatStarters') {
       const { normalizeChatStarters } = await import('@phaneris/shared/workspaces')
       normalizedStarters = normalizeChatStarters(value) ?? []
@@ -193,7 +197,9 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
     }
 
     // Handle 'name' specially - it's a top-level config property, not in defaults
-    if (key === 'name') {
+    if (key === 'assistantMemory') {
+      config.assistantMemory = normalizedMemoryPolicy!
+    } else if (key === 'name') {
       config.name = String(normalizedValue).trim()
     } else if (key === 'localMcpEnabled') {
       // Store in localMcpServers.enabled (top-level, not in defaults)
@@ -222,6 +228,7 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
 
     // Save the config
     saveWorkspaceConfig(workspace.rootPath, config)
+    if (key === 'assistantMemory') deps.sessionManager?.scheduleAssistantMemory?.(workspaceId)
     deps.platform.logger.info(`Workspace setting updated: ${key} = ${JSON.stringify(normalizedValue)}`)
   })
 

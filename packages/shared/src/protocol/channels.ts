@@ -4,7 +4,7 @@
  * Key paths are internal and may be reorganized freely.
  */
 export const RPC_CHANNELS = {
-  residentAssistant: { GET: 'residentAssistant:get', DISPATCH: 'residentAssistant:dispatch', WORK: 'residentAssistant:work', CANCEL_WORK: 'residentAssistant:cancelWork', CONTEXT: 'residentAssistant:context', EVENTS: 'residentAssistant:events' },
+  residentAssistant: { GET: 'residentAssistant:get', DISPATCH: 'residentAssistant:dispatch', WORK: 'residentAssistant:work', CANCEL_WORK: 'residentAssistant:cancelWork', OUTPUT_VISIBILITY: 'residentAssistant:outputVisibility', CONTEXT: 'residentAssistant:context', EVENTS: 'residentAssistant:events' },
   assistantMemory: {
     SUPPRESSION_EXPORT: 'assistantMemory:suppressionExport',
     SUPPRESSION_MERGE: 'assistantMemory:suppressionMerge',

@@ -193,7 +193,9 @@ export const SourceBrandSchema = z.object({
   color: EntityColorSchema.optional(),
 });
 
+export const SourceKnowledgeSchema = z.object({ purpose: z.literal('knowledge'), projectIds: z.array(z.string().min(1).max(200)).max(100).optional() }).strict()
 export const FolderSourceConfigSchema = z.object({
+  knowledge: SourceKnowledgeSchema.optional(),
   id: z.string().min(1),
   name: z.string().min(1),
   slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),

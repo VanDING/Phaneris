@@ -15,6 +15,7 @@ import * as React from 'react'
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WorkspaceConversationSettings } from '@/components/settings/WorkspaceConversationSettings'
+import { WorkspaceMemorySettings } from '@/components/settings/WorkspaceMemorySettings'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { HeaderMenu } from '@/components/ui/HeaderMenu'
@@ -435,6 +436,7 @@ export default function WorkspaceSettingsPage() {
             </SettingsSection>
 
             <WorkspaceConversationSettings key={activeWorkspaceId} workspaceId={activeWorkspaceId} />
+            <WorkspaceMemorySettings key={`memory:${activeWorkspaceId}`} workspaceId={activeWorkspaceId} />
 
             {/* Chat starters — new-chat prompt chips (max 3) */}
             <SettingsSection

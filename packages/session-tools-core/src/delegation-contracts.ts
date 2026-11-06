@@ -17,16 +17,25 @@ export const WorkerConfigSchema = z.object({
 export const AssistantDispatchSchema = z.object({
   requestId: id.describe('Stable identity for this work intent. Reuse on retry; changed content requires a new identity.'),
   title: z.string().min(1).max(200), instructions: z.string().min(1).max(24000).refine(text => text.trim().length > 0),
+  goalQuote: z.string().trim().min(1).max(6000).optional().describe('Exact task-scoped quote from the original current user input. The Host verifies it and can rebuild withdrawn derived materials from this unchanged authorization.'),
   acceptanceCriteria: z.array(z.string().min(1).max(2000)).max(32).optional(), config: WorkerConfigSchema,
+  attachmentIds: z.array(id).max(16).optional().describe('Select files from the original current user input. Omitted forwards those input files; [] forwards none. The Host copies the selected bytes into the Worker Session.'),
   artifacts: z.array(z.object({ artifactId: id, expectedRevision: z.string().regex(/^[a-f0-9]{64}$/) }).strict()).min(1).max(16).optional()
     .describe('Exact Artifact revisions for feedback. Requires targetSessionId of their original owner; the Host rejects changed baselines before starting.'),
   targetSessionId: id.optional().describe('Continue an idle ordinary Session in this workspace. Its existing configuration and task metadata are preserved; incompatible settings are rejected.'),
 }).strict().refine(input => !input.artifacts || !!input.targetSessionId, 'Artifact baselines require targetSessionId of the original owner')
   .refine(input => !input.artifacts || new Set(input.artifacts.map(item => item.artifactId)).size === input.artifacts.length, 'Duplicate Artifact baselines')
+  .refine(input => !input.attachmentIds || new Set(input.attachmentIds).size === input.attachmentIds.length, 'Duplicate input attachments')
 export const AssistantWorkQuerySchema = z.object({
   id: id.optional(), after: z.number().int().nonnegative().optional(), limit: z.number().int().min(1).max(20).optional(),
   attemptsBefore: z.number().int().nonnegative().optional(), attemptLimit: z.number().int().min(1).max(20).optional(),
+  view: z.enum(['current', 'history', 'deliverables']).optional(), search: z.string().trim().max(500).optional(),
+  state: z.enum(['result_ready', 'failed', 'cancelled']).optional(),
+  cursor: z.object({ createdAt: z.number().int().nonnegative(), id }).strict().optional(),
 }).strict().refine(input => input.attemptsBefore === undefined || input.id !== undefined, 'Attempt pagination requires an explicit delegation id')
+  .refine(input => !input.state || input.view === 'history', 'Outcome filtering requires the history view')
+  .refine(input => (!input.cursor && !input.search) || !!input.view, 'View pagination/search requires a view')
+  .refine(input => !input.view || (!input.id && input.after === undefined), 'View queries cannot mix legacy sequence or detail selection')
 export const WorkerOptionsQuerySchema = z.object({
   kind: z.enum(['connections', 'models', 'sources', 'skills', 'plugins', 'projects', 'presets']),
   expectedRevision: z.string().regex(/^[a-f0-9]{64}$/).optional(),
@@ -47,18 +56,33 @@ export interface AssistantDelegationReceipt {
   state: 'accepted' | 'preparing' | 'submitting' | 'submitted' | 'result_ready' | 'needs_attention' | 'failed' | 'cancel_requested' | 'cancelled'
   sessionId?: string; inputMessageId?: string; createdAt: number; updatedAt: number; seq: number; error?: string
   result?: { messageId: string; sessionId: string }
+  /** Scheduler-owned resource decision; no duplicate Runtime execution state. */
+  waitingFor?: { delegationId: string; reason: 'session' | 'source' | 'directory' | 'configuration' }
 }
 /** Read-time projection of the ordinary Session's input snapshot. Never persisted in the inbox. */
 export interface AssistantWork extends AssistantDelegationReceipt {
+  outputManifest?: import('./task-result-contracts').TaskOutputManifest
+  title?: string
   artifactBaselines?: import('@phaneris/core/types').SessionArtifactBaseline[]
   effectiveConfig?: EffectiveWorkerConfig; adjustments?: string[]
   configRevision?: string; capabilityRevision?: string; acceptedConfigRevision?: string; acceptedPermissionMode?: NonNullable<WorkerConfig['permissionMode']>
   execution?: AssistantWorkExecution
 }
 export interface AssistantWorkExecution {
+  activity?: 'queued' | 'requesting' | 'thinking' | 'responding' | 'tool' | 'waiting' | 'completed' | 'failed' | 'cancelled' | 'unknown'
+  toolName?: string
+  error?: { messageId: string; summary: string; code?: string }
+  /** Subsequent direct user input is distinct from the original assignment. */
+  followUp?: { inputMessageId: string; at: number; isProcessing: boolean; result?: { sessionId: string; messageId: string } }
   source: 'runtime'; inputMessageId: string; sourceAvailable: boolean
   coverage: 'original_input' | 'original_input_with_continuation' | 'not_started' | 'unknown'
   attempts: import('@phaneris/core/types').SessionExecutionAttempt[]; nextBefore: number | null; totalAttempts: number
   continuationSessionId?: string
 }
-export interface AssistantWorkPage { items: AssistantWork[]; nextAfter: number | null; lastSeq: number }
+export interface AssistantWorkPage {
+  items: AssistantWork[]; nextAfter: number | null; lastSeq: number
+  nextCursor?: { createdAt: number; id: string } | null
+  total?: number
+  searchCoverage?: { indexed: number; total: number }
+  deliverables?: import('./task-result-contracts').TaskDeliverable[]
+}

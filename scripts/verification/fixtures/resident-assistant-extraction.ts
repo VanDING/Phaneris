@@ -44,6 +44,7 @@ const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request
     await plan.onPage?.(page)
     if (plan.candidate) call = { name: 'assistant_memory_update', args: { command: { action: 'remember', requestId: `${page.requestIdPrefix}:observation`, key: `${page.requestIdPrefix}:observation`,
       content: 'EXTRACTED_DURABLE_CANDIDATE', kind: 'experience', basis: 'inferred', projectId: page.source!.projectId,
+      assessment: { confidence: 'tentative', durability: 'durable', domain: 'experience', reason: 'This fragment suggests an observation but needs corroboration.' },
       sources: [{ sessionId: page.source!.sessionId, messageId: page.source!.messageId }] } } }
     else if (plan.ack) call = { name: 'assistant_memory_maintenance', args: { command: { action: 'acknowledge', checkpointId: page.checkpointId,
       conclusion: plan.badCandidate ? 'candidates' : 'no_candidate', candidateIds: plan.badCandidate ? ['missing-memory'] : undefined, reason: 'No durable observation in this fragment.' } } }

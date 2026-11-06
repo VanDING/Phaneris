@@ -26,6 +26,8 @@
     "./agent/permissions-config": "./src/agent/permissions-config.ts",
     "./agent/thinking-levels": "./src/agent/thinking-levels.ts",
     "./agent/resident-role": "./src/agent/resident-role.ts",
+    "./agent/assistant-private-paths": "./src/agent/assistant-private-paths.ts",
+    "./agent/knowledge-materials": "./src/agent/knowledge-materials.ts",
     "./artifacts": "./src/artifacts/index.ts",
     "./artifacts/browser": "./src/artifacts/browser.ts",
     "./auth": "./src/auth/index.ts",

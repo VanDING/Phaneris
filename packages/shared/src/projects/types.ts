@@ -108,4 +108,5 @@ export interface ProjectPromptContext {
   memoryPath: string;
   /** MEMORY.md content, already capped by loadProjectMemory. */
   memoryContent?: string;
+  memoryVersion?: { contentHash: string; readAt: number };
 }

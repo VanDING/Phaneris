@@ -108,6 +108,8 @@ export interface ArtifactDescriptor {
 /** Descriptor plus server-resolved paths for preview/editor adapters. */
 export interface ResolvedArtifact {
   artifact: ArtifactDescriptor;
+  /** Explicit immutable revision selected by a result reference. */
+  viewedRevision?: string;
   /** Immutable reviewed revision, or accepted source path after commit. */
   activePath: string | null;
   /** Mutable managed checkout. Only present while the artifact is a draft. */

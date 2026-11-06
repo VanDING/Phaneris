@@ -277,8 +277,17 @@ export class RuntimeHost {
       try {
         let finalReason = s.stopRequested && reason === 'complete' ? 'interrupted' : reason
         if (finalReason === 'complete' && s.activeRun) {
-          const outcome = this.queries.events(h.workspaceRootPath, { operationId: s.activeRun }).findLast(event => event.type === 'model_outcome_committed')
-          const stopReason = (outcome?.payload as { stopReason?: string } | undefined)?.stopReason
+          const facts = this.queries.events(h.workspaceRootPath, { operationId: s.activeRun })
+          const outcomeIndex = facts.findLastIndex(event => event.type === 'model_outcome_committed')
+          const outcome = facts[outcomeIndex]
+          // Prepare can fail before a model outcome exists. The SDK's terminal
+          // response observation then owns the stop reason, not an older toolUse.
+          const observationIndex = facts.findLastIndex(event => event.type === 'sdk_observation'
+            && (event.payload as DurableSdkObservation).event === 'assistant_response_observation')
+          const observation = facts[observationIndex]
+          const stopReason = observation && observationIndex > outcomeIndex
+            ? ((observation.payload as DurableSdkObservation).data as { stopReason?: string }).stopReason
+            : (outcome?.payload as { stopReason?: string } | undefined)?.stopReason
           if (['length', 'error', 'refusal'].includes(stopReason ?? '')) finalReason = 'error'
           if (stopReason === 'aborted') finalReason = 'interrupted'
         }

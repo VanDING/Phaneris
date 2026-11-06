@@ -25,6 +25,7 @@ export interface ResolvedSessionExecutionConfig extends SessionExecutionConfig {
 }
 export type MemoryLifecycleState = 'candidate' | 'active' | 'scheduled' | 'dormant' | 'superseded' | 'expired' | 'invalidated' | 'forgotten'
 export interface MemoryMaterialReference { id: string; revision: number; observedState?: MemoryLifecycleState; observedDispute?: boolean }
+export interface ScenarioMaterialReference { id: string; revision: number; derivedVersion: string }
 /** Read-only facts projected from the existing Runtime for one ordinary input. */
 export interface SessionExecutionAttempt {
   operationId: string; sessionId: string; inputMessageId: string; acceptedSeq: number; acceptedAt: number; updatedAt: number
@@ -34,9 +35,15 @@ export interface SessionExecutionAttempt {
 }
 export interface SessionInputExecutionsPage { items: SessionExecutionAttempt[]; nextBefore: number | null; total: number }
 /** Immutable assignment evidence on an ordinary Session input, not another task. */
+export interface ToolObservationReference { operationId: string; runOperationId: string }
+export interface SourceMaterialReference { sessionId: string; messageId: string; contentHash: string; observation?: ToolObservationReference }
+export interface KnowledgeMaterialReference { sourceSlug: string; version: string }
+
 export interface SessionDelegationInput {
+  originGrant?: SourceMaterialReference & { quote: string }
+  attachmentMaterials?: Array<{ attachmentId: string; originSessionId: string; originMessageId: string; path: string; contentHash: string }>
   artifactBaselines?: SessionArtifactBaseline[]
-  materialDependencies?: { sources: Array<{ sessionId: string; messageId: string; contentHash: string }>; memories: MemoryMaterialReference[] }
+  materialDependencies?: { sources: SourceMaterialReference[]; memories: MemoryMaterialReference[]; scenarios?: ScenarioMaterialReference[]; knowledge?: KnowledgeMaterialReference[] }
   requestId: string; fingerprint: string; title: string; acceptanceCriteria?: string[]
   requestedConfig: SessionExecutionConfig; effectiveConfig: ResolvedSessionExecutionConfig; adjustments: string[]
   configRevision?: string; capabilityRevision?: string

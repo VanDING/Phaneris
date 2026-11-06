@@ -14,8 +14,10 @@ export const ResidentContextSchema = z.discriminatedUnion('action', [
 export type ResidentContextCommand = z.infer<typeof ResidentContextSchema>
 export type ResidentSource = z.infer<typeof ResidentSourceSchema>
 export interface ResidentDependencies {
-  sources: Array<{ sessionId: string; messageId: string; contentHash: string; ranges?: Array<{ offset: number; end: number }> }>
+  sources: Array<import('@phaneris/core/types').SourceMaterialReference & { ranges?: Array<{ offset: number; end: number }> }>
   memories: import('@phaneris/core/types').MemoryMaterialReference[]
+  scenarios?: import('@phaneris/core/types').ScenarioMaterialReference[]
+  knowledge?: import('@phaneris/core/types').KnowledgeMaterialReference[]
 }
 export interface ResidentSegment {
   id: string

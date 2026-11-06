@@ -29,6 +29,28 @@ export function indexSessionMessages(events: RuntimeEvent[], messages: Message[]
   return indexed
 }
 
+/** Attach authoritative evidence to stable UI tool rows without replacing queued user messages. */
+export function annotateToolSources(events: RuntimeEvent[], messages: Message[], inputIds: readonly string[]): void {
+  const start = messages.findIndex(message => inputIds.includes(message.id))
+  if (start < 0) return
+  const tools = new Map<string, Message[]>()
+  for (const message of messages.slice(start + 1)) if (message.role === 'tool' && message.durableOperationId) tools.set(message.durableOperationId, [...tools.get(message.durableOperationId) ?? [], message])
+  const calls = new Map<string, { toolName: string; args: Record<string, unknown> }>()
+  for (const event of events) {
+    if (event.partial || event.type !== 'tool_call_observed') continue
+    const payload = event.payload as { providerToolCallId: string; toolName: string; args: Record<string, unknown>; toolOperationId?: string }
+    if (!payload.toolOperationId) continue
+    calls.set(payload.toolOperationId, { toolName: payload.toolName, args: payload.args })
+  }
+  for (const event of events) {
+    if (event.partial || event.type !== 'tool_outcome_committed') continue
+    const outcome = event.payload as ToolOutcome, call = calls.get(outcome.operationId), rows = tools.get(outcome.operationId)
+    if (!call || rows?.length !== 1) continue
+    Object.assign(rows[0]!, { toolName: call.toolName, toolInput: call.args, durableOperationId: outcome.operationId, durableSeq: event.seq,
+      toolResult: typeof outcome.result === 'string' ? outcome.result : JSON.stringify(outcome.result), isError: outcome.isError, toolStatus: outcome.isError ? 'error' : 'completed' })
+  }
+}
+
 /**
  * Reorder and overwrite the model-visible portion of the rich legacy UI cache
  * from canonical facts. Rich UI-only metadata remains a compatibility overlay;

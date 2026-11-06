@@ -6,9 +6,11 @@ export const MemoryMaintenanceCommandSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('next'), projectId: id.optional(), sessionId: id.optional(), scope: z.enum(['current', 'workspace']).optional() }).strict()
     .refine(input => input.scope !== 'workspace' || input.projectId === undefined, 'Workspace-wide extraction cannot also specify a project filter'),
   z.object({ action: z.literal('acknowledge'), checkpointId: z.string().regex(/^[a-f0-9]{64}$/),
-    conclusion: z.enum(['candidates', 'no_candidate']), reason: z.string().min(1).max(1000),
+    conclusion: z.enum(['candidates', 'no_candidate', 'project_recorded']), reason: z.string().min(1).max(1000),
+    projectEntries: z.array(z.object({ projectId: id, entryId: z.string().regex(/^[a-f0-9]{64}$/) }).strict()).min(1).max(8).optional(),
     candidateIds: z.array(id).min(1).max(16).optional() }).strict().superRefine((input, ctx) => {
       if ((input.conclusion === 'candidates') !== !!input.candidateIds?.length) ctx.addIssue({ code: 'custom', message: 'Only candidates conclusions require candidateIds' })
+      if ((input.conclusion === 'project_recorded') !== !!input.projectEntries?.length) ctx.addIssue({ code: 'custom', message: 'Only project_recorded conclusions require actual Project entries' })
     }),
 ])
 export type MemoryMaintenanceCommand = z.infer<typeof MemoryMaintenanceCommandSchema>

@@ -437,6 +437,30 @@ contract, `text-` + a Tailwind scale word is drift.
   elevation, focus treatment and tooltip. Close removes the open view and
   preserves the session and its draft.
 
+### Resident assistant overview
+
+More opens a non-modal, resizable overview anchored to the assistant header.
+Presentation belongs to the current workspace and stays visible while using the
+assistant. Leaving that page hides the overview immediately; reopening restores
+its presentation. File inspection uses the existing file preview content.
+
+Use PanelHeader, existing header controls, FileTypeIcon, contract typography and
+semantic status colors. The width starts at 384px, with a 320–640px resize range
+and a viewport clamp. Height follows content up to the available space. Pending
+decisions appear in Current; SegmentedTabs switch Current, Deliverables and History
+within one scroll area. Lists use bounded backend pages; History and Deliverables
+search on the server. A compact task row opens a detail view with a back action;
+configuration, runtime evidence and process material belong there. Preserve the
+list position and focus when returning. Deliverables are explicitly selected final
+outputs grouped by task, with supporting files disclosed underneath and pinned
+revision previews. Legacy artifacts do not implicitly enter this list. Memory and context
+are excluded from this surface.
+
+Messaging collapses bound channel management by default. An unbound assistant has one connection entry;
+available platforms appear only in its transient picker. Setup, pairing and
+credential entry reuse existing messaging flows. Connection errors and progress
+remain contextual to the selected platform.
+
 ### Session image sharing
 
 This Electron-only flow formats existing finalized messages locally. The header

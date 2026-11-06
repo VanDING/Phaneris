@@ -18,6 +18,7 @@ import type {
   CreateSourceInput,
 } from './types.ts';
 import { validateSourceConfig } from '../config/source-validation.ts';
+import { SourceKnowledgeSchema } from '../config/schemas.ts';
 import { debug } from '../utils/debug.ts';
 import { readJsonFileSync } from '../utils/files.ts';
 import { expandPath, toPortablePath } from '../utils/paths.ts';
@@ -72,6 +73,7 @@ export function loadSourceConfig(
 
   try {
     const config = readJsonFileSync<FolderSourceConfig>(configPath);
+    if (config.knowledge !== undefined) config.knowledge = SourceKnowledgeSchema.parse(config.knowledge);
 
     // Expand path variables in local source paths for portability
     if (config.type === 'local' && config.local?.path) {

@@ -7,10 +7,12 @@
 // Types
 export type {
   WorkspaceConfig,
+  AssistantMemoryPolicy,
   CreateWorkspaceInput,
   LoadedWorkspace,
   WorkspaceSummary,
 } from './types.ts';
+export { parseAssistantMemoryPolicy, readAssistantMemoryPolicy, initializeAssistantMemoryPolicy } from './assistant-memory-policy';
 
 // Chat starters (workspace-level prompt chips) — type, limits and validation
 export type { ChatStarter } from './chat-starters.ts';

@@ -3,29 +3,41 @@ import { canonicalJson } from '@phaneris/shared/durable-runtime/identity'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { loadSession, validateSessionId } from '@phaneris/shared/sessions'
+import { readAssistantMemoryPolicy } from '@phaneris/shared/workspaces'
 import type { MemoryMutation, MemoryMutationResult, MemoryQuery, MemoryQueryResult, MemoryRecord, MemorySource, MemorySourceResult } from '@phaneris/shared/protocol'
 import { openSqliteDatabase, type SqliteDatabase } from '../runtime/sqlite'
 import { initializeHistoryIndex, queryHistory } from './history-index'
-import { isDirectUserMessage, historySourceContent } from './source-provenance'
+import { isDirectUserMessage, historySourceContent, sourceContentHash, sourceContentMatches } from './source-provenance'
 import type { HistoryQuery, HistoryPage } from '@phaneris/session-tools-core/history-contracts'
 import { initializeHistoryExtraction, maintainHistory, historyExtractionCoverage } from './history-extraction'
 import type { MemoryMaintenanceCommand, MemoryMaintenanceResult } from '@phaneris/session-tools-core/memory-maintenance-contracts'
 import type { MemorySuppressionQuery, MemorySuppressionPage, MemorySuppressionMerge, MemorySuppressionMergeResult } from '@phaneris/session-tools-core/memory-contracts'
 import type { MemoryLookupQuery, MemoryLookupResult, MemoryLookupItem, MemoryInspectQuery, MemoryInspectResult } from '@phaneris/session-tools-core/memory-lookup-contracts'
+import type { ObservationVerifier } from './source-observation'
+import { MemoryMaintenanceQueue, type MemoryMaintenanceJob } from './memory-maintenance-queue'
+import { MemoryLexicalIndex, lexicalTokens, type MemorySearchSnapshot } from './memory-lexical'
+import { DerivedMemory } from './memory-derived'
+import { ProjectMemoryService, type ProjectMemoryRequestReceipt } from './project-memory'
+import { knowledgeSourceVersion } from '@phaneris/shared/agent/knowledge-materials'
+import type { ScenarioCapture, ScenarioQuery } from '@phaneris/session-tools-core/memory-derived-contracts'
 
 type StoredRecord = Omit<MemoryRecord, 'content' | 'key'> & { content: string; key: string }
 const digest = (text: string) => createHash('sha256').update(text).digest('hex')
 
 /** Workspace-owned memory only. No Session, preference or task state is rewritten. */
 export class AssistantMemoryStore {
+  readonly maintenance: MemoryMaintenanceQueue
+  readonly projects: ProjectMemoryService
+  private readonly lexical: MemoryLexicalIndex
+  private readonly derived: DerivedMemory
   private readonly db: SqliteDatabase
   private readonly resolvingSources = new Set<string>()
   private readonly sourceSnapshot = new Map<string, ReturnType<typeof loadSession>>()
   private snapshotDepth = 0
   private sourceFileLoads = 0
   private sourceCacheHits = 0
-  constructor(private readonly workspace: { id: string; rootPath: string }) {
-    const root = join(workspace.rootPath, 'memory')
+  constructor(private readonly workspace: { id: string; rootPath: string }, private readonly verifyObservation?: ObservationVerifier) {
+    const root = join(workspace.rootPath, 'assistant', 'memory')
     mkdirSync(root, { recursive: true })
     this.db = openSqliteDatabase(join(root, 'memory.db'))
     this.db.exec(`PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;
@@ -35,6 +47,7 @@ export class AssistantMemoryStore {
       CREATE TABLE IF NOT EXISTS memories (id TEXT PRIMARY KEY, scope_key TEXT NOT NULL UNIQUE, body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS revisions (id TEXT NOT NULL, revision INTEGER NOT NULL, body TEXT NOT NULL, PRIMARY KEY(id, revision));
       CREATE TABLE IF NOT EXISTS requests (request_id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, memory_id TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS project_requests(id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,project_id TEXT NOT NULL,entry_id TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS memory_request_members(request_id TEXT NOT NULL,memory_id TEXT NOT NULL,PRIMARY KEY(request_id,memory_id));
       CREATE TABLE IF NOT EXISTS suppression_imports(request_id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,result TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS suppression (memory_id TEXT NOT NULL, source_key TEXT NOT NULL, PRIMARY KEY(memory_id, source_key));
@@ -48,9 +61,25 @@ export class AssistantMemoryStore {
     }
     initializeHistoryIndex(this.db)
     initializeHistoryExtraction(this.db)
+    this.maintenance = new MemoryMaintenanceQueue(this.db)
+    this.projects = new ProjectMemoryService(workspace, this)
+    this.lexical = new MemoryLexicalIndex(this.db)
+    this.derived = new DerivedMemory(this.db, {
+      record: id => { const row = this.db.prepare('SELECT body FROM memories WHERE id=?').get(id) as { body: string } | undefined; return row ? this.view(JSON.parse(row.body) as StoredRecord) : undefined },
+      source: source => this.readSource(source), policy: () => readAssistantMemoryPolicy(this.workspace), version: () => this.version(),
+    })
   }
 
   close(): void { this.db.close() }
+  /** Request references only: Project text and entry authority remain in MEMORY.md. */
+  projectRequest(id: string): ProjectMemoryRequestReceipt | undefined {
+    return this.db.prepare('SELECT fingerprint,project_id AS projectId,entry_id AS entryId FROM project_requests WHERE id=?').get(id) as ProjectMemoryRequestReceipt | undefined
+  }
+  recordProjectRequest(id: string, receipt: ProjectMemoryRequestReceipt): void {
+    const previous = this.projectRequest(id)
+    if (previous && (previous.fingerprint !== receipt.fingerprint || previous.projectId !== receipt.projectId || previous.entryId !== receipt.entryId)) throw new Error('Project memory request receipt conflict')
+    this.db.prepare('INSERT OR IGNORE INTO project_requests VALUES(?,?,?,?)').run(id, receipt.fingerprint, receipt.projectId, receipt.entryId)
+  }
   getDiagnostics(): { sourceFileLoads: number; sourceCacheHits: number } { return { sourceFileLoads: this.sourceFileLoads, sourceCacheHits: this.sourceCacheHits } }
   private withSourceSnapshot<T>(operation: () => T): T {
     this.snapshotDepth++
@@ -64,7 +93,9 @@ export class AssistantMemoryStore {
   }
   isSourceSuppressed(source: MemorySource): boolean { return this.suppressed(source) }
   dependenciesValid(dependencies: import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies): boolean {
+    if (dependencies.memories.length && !readAssistantMemoryPolicy(this.workspace).use) return false
     return this.withSourceSnapshot(() => {
+      if (dependencies.scenarios?.some(reference => !this.derived.valid(reference))) return false
       for (const reference of dependencies.memories) {
         const row = this.db.prepare('SELECT body FROM memories WHERE id=?').get(reference.id) as { body: string } | undefined
         if (!row) return false
@@ -73,7 +104,12 @@ export class AssistantMemoryStore {
       }
       // Source availability is an I/O boundary: a missing/corrupt source invalidates
       // dependent model material, rather than falling back to a cached excerpt.
-      try { for (const source of dependencies.sources) this.readSource({ ...source, expectedContentHash: source.contentHash }) }
+      try {
+        for (const source of dependencies.knowledge ?? []) if (knowledgeSourceVersion(this.workspace.rootPath, source.sourceSlug) !== source.version) return false
+        for (const source of dependencies.sources) {
+        const current = this.readSource({ ...source, expectedContentHash: source.contentHash })
+        if (source.observation && (current.observation?.operationId !== source.observation.operationId || current.observation.runOperationId !== source.observation.runOperationId)) return false
+      } }
       catch { return false }
       return true
     })
@@ -82,6 +118,11 @@ export class AssistantMemoryStore {
   private version(): number {
     return (this.db.prepare('SELECT version FROM meta WHERE singleton=1').get() as { version: number }).version
   }
+  profile(input: { projectId?: string; query?: string }) { return this.withSourceSnapshot(() => this.derived.profile(input)) }
+  captureScenario(command: ScenarioCapture, authority: 'automatic' | 'user_request' | 'management' = 'automatic') {
+    return this.withSourceSnapshot(() => this.derived.capture(command, authority))
+  }
+  scenarios(input: ScenarioQuery) { return this.withSourceSnapshot(() => this.derived.scenarios(input)) }
 
   private sourceKey(source: MemorySource): string { return JSON.stringify([source.sessionId, source.messageId]) }
 
@@ -155,12 +196,49 @@ export class AssistantMemoryStore {
     }))
   }
 
-  maintain(command: MemoryMaintenanceCommand, runId: string): MemoryMaintenanceResult {
+  maintenanceStatus() { return this.maintenance.status() }
+  enqueueMaintenance(sessionId: string, inputIds: readonly string[]): void {
+    const source = loadSession(this.workspace.rootPath, sessionId)
+    if (!source) return
+    const start = source.messages.findIndex(message => inputIds.includes(message.id))
+    if (start < 0) return
+    const eligible = source.messages.slice(start).filter(message => isDirectUserMessage(message) && inputIds.includes(message.id)
+      || source.sessionKind !== 'resident_assistant' && message.type === 'tool' && message.toolStatus === 'completed')
+    const groups = new Map<string | undefined, import('@phaneris/core/types').SourceMaterialReference[]>()
+    for (const message of eligible) {
+      if (this.suppressed({ sessionId, messageId: message.id })) continue
+      try {
+        const item = this.readSource({ sessionId, messageId: message.id }), projectId = message.projectScope ? message.projectScope.projectId ?? undefined : source.projectId
+        groups.set(projectId, [...groups.get(projectId) ?? [], { sessionId, messageId: message.id, contentHash: item.contentHash }])
+      } catch { /* Withdrawn/corrupt sources cannot be scheduled as fresh material. */ }
+    }
+    for (const [projectId, sources] of groups) this.maintenance.enqueue(sessionId, projectId, sources)
+  }
+  assertMaintenance(job: MemoryMaintenanceJob): void {
+    this.maintenance.assert(job)
+    if (readAssistantMemoryPolicy(this.workspace).learning !== 'automatic') throw new Error('Automatic learning is not enabled')
+    this.withSourceSnapshot(() => {
+      for (const source of job.sources) if (this.readSource({ ...source, expectedContentHash: source.contentHash }).projectId !== job.projectId) throw new Error('Maintenance source project scope changed')
+    })
+  }
+  assertMaintenanceMutation(job: MemoryMaintenanceJob, command: MemoryMutation): void {
+    this.assertMaintenance(job)
+    if (command.intent === 'user_request' || command.action === 'transition' && command.state === 'forgotten') throw new Error('Maintenance cannot grant user authority or permanent forgetting')
+    const sources = command.action === 'remember' || command.action === 'revise' || command.action === 'dispute' || command.action === 'resolve'
+      ? command.sources : this.get(command.id).sources
+    if (!sources.length || sources.some(source => !job.sources.some(allowed => allowed.sessionId === source.sessionId && allowed.messageId === source.messageId)))
+      throw new Error('Maintenance mutation exceeds the source grant')
+    const projectId = command.action === 'remember' ? command.projectId : this.get(command.id).projectId
+    if (projectId !== job.projectId) throw new Error('Maintenance cannot change project ownership')
+  }
+  maintain(command: MemoryMaintenanceCommand, runId: string, job?: MemoryMaintenanceJob): MemoryMaintenanceResult {
     return this.withSourceSnapshot(() => {
       // Refresh source identity before selecting/acknowledging checkpoints. This
       // bounded catalogue pass never invokes a model or replays a Session.
-      this.history({ limit: 1 })
-      return maintainHistory(this.db, command, runId, source => this.readSource(source), id => this.view(this.get(id)))
+      if (job) this.assertMaintenance(job)
+      this.history({ limit: 1, sessionId: job?.sessionId })
+      return maintainHistory(this.db, command, runId, source => this.readSource(source), id => this.view(this.get(id)), job?.sources.map(source => source.messageId),
+        (reference, source) => this.projects.verifyEntry(reference, source))
     })
   }
 
@@ -180,6 +258,7 @@ export class AssistantMemoryStore {
       if (message.delegationInput?.materialDependencies && !this.dependenciesValid(message.delegationInput.materialDependencies)) {
         throw new Error('Delegated source is unavailable because its original materials changed or were forgotten')
       }
+      if (message.delegationRefresh && !this.dependenciesValid(message.delegationRefresh.materialDependencies)) throw new Error('Refreshed delegated source is unavailable because its materials changed or were forgotten')
       const lineage = this.db.prepare('SELECT dependencies FROM derived_sources WHERE source_key=?').get(this.sourceKey(source)) as { dependencies: string } | undefined
       if (lineage) {
         const key = this.sourceKey(source)
@@ -192,10 +271,14 @@ export class AssistantMemoryStore {
         throw new Error('Historical resident-derived source has no verifiable material lineage and is unavailable for model recall')
       }
       const content = historySourceContent(message)
-      const contentHash = digest(content)
-      if (source.expectedContentHash && source.expectedContentHash !== contentHash) throw new Error('Memory source content hash changed; search again before reading')
+      const contentHash = sourceContentHash(this.workspace.rootPath, source.sessionId, content)
+      if (source.expectedContentHash && !sourceContentMatches(this.workspace.rootPath, source.sessionId, content, source.expectedContentHash)) throw new Error('Memory source content hash changed; search again before reading')
+      const observation = message.type === 'tool' && message.toolStatus === 'completed' && !message.isError && message.durableOperationId && message.toolUseId && message.toolName && message.toolInput && message.toolResult
+        ? this.verifyObservation?.({ sessionId: source.sessionId, operationId: message.durableOperationId, providerToolCallId: message.toolUseId,
+          toolName: message.toolName, toolInput: message.toolInput, toolResult: message.toolResult }) : undefined
       return { sessionId: source.sessionId, messageId: source.messageId, content, role: message.type, timestamp: message.timestamp,
-        directUser: isDirectUserMessage(message), contentHash }
+        projectId: message.projectScope ? message.projectScope.projectId ?? undefined : session?.projectId,
+        directUser: isDirectUserMessage(message), contentHash, observation }
     })
   }
 
@@ -206,8 +289,15 @@ export class AssistantMemoryStore {
       if (basis === 'user_stated' && !resolved.directUser) {
         throw new Error('Source is not a confirmed direct user statement; use inferred provenance')
       }
-      return { ...source, contentHash: resolved.contentHash }
+      return { sessionId: source.sessionId, messageId: source.messageId, contentHash: resolved.contentHash, observation: resolved.observation }
     })
+  }
+
+  private supportedUserExtraction(sources: StoredRecord['sources'], assessment: StoredRecord['assessment']): boolean {
+    if (assessment?.confidence !== 'supported' || assessment.durability !== 'durable' || !sources.length) return false
+    const resolved = sources.map(source => this.readSource({ ...source, expectedContentHash: source.contentHash }))
+    return ['collaboration', 'user_fact', 'project_pointer', 'experience'].includes(assessment.domain) && resolved.every(source => source.directUser)
+      || assessment.domain === 'experience' && resolved.every(source => source.directUser || source.observation) && resolved.some(source => source.observation)
   }
 
   private get(id: string): StoredRecord {
@@ -216,8 +306,8 @@ export class AssistantMemoryStore {
     return JSON.parse(row.body) as StoredRecord
   }
 
-  private view(record: StoredRecord, now = Date.now()): MemoryRecord {
-    const redacted = record.state === 'forgotten' || record.sources.some(source => this.suppressed(source))
+  private view(record: StoredRecord, now = Date.now(), readable = true): MemoryRecord {
+    const redacted = !readable || record.state === 'forgotten' || record.sources.some(source => this.suppressed(source))
       || !this.dependenciesValid({ sources: [...record.sources, ...record.dispute?.sources ?? []], memories: [] })
     const state = record.state !== 'active' ? record.state
       : record.validUntil !== undefined && record.validUntil <= now ? 'expired'
@@ -225,6 +315,7 @@ export class AssistantMemoryStore {
     return { ...record, state, redacted, key: redacted ? null : record.key, condition: redacted ? undefined : record.condition,
       dispute: redacted ? undefined : record.dispute, supersedes: redacted ? undefined : record.supersedes,
       supersededBy: redacted ? undefined : record.supersededBy, retirementReason: redacted ? undefined : record.retirementReason,
+      assessment: redacted ? undefined : record.assessment,
       content: redacted ? null : record.content, sources: redacted ? [] : record.sources }
   }
 
@@ -233,10 +324,13 @@ export class AssistantMemoryStore {
       const items: MemoryLookupItem[] = [], maxChars = 12000, requestedItems = input.limit ?? 5, scanLimit = 100
       const projectId = input.scope === 'workspace' ? undefined : input.projectId, includesWorkspace = !projectId || !!input.includeWorkspace
       let nextCursor = input.cursor ?? null, version = this.version(), scannedRecords = 0
+      if (!readAssistantMemoryPolicy(this.workspace).use) return { items: [], nextCursor: null, version, scope: { projectId, includesWorkspace, workspaceWide: !projectId },
+        budget: { maxChars, usedChars: 0, requestedItems, scannedRecords: 0, scanLimit } }
+      const search = this.lexical.refresh({ projectId, includeWorkspace: includesWorkspace }, record => !this.view(record).redacted)
       while (items.length < requestedItems && scannedRecords < scanLimit) {
         const priorCursor = nextCursor
-        const page = this.query({ text: input.query, projectId, includeWorkspace: includesWorkspace, condition: input.condition, ids: input.ids,
-          includeRetired: input.includeRetired, limit: 1, cursor: nextCursor ?? undefined })
+        const page = this.querySnapshot({ text: input.query, projectId, includeWorkspace: includesWorkspace, condition: input.condition, ids: input.ids,
+          includeRetired: input.includeRetired, limit: 1, cursor: nextCursor ?? undefined }, search)
         version = page.version
         scannedRecords++
         const record = page.items[0]
@@ -256,7 +350,7 @@ export class AssistantMemoryStore {
         nextCursor = page.nextCursor
         if (!nextCursor) break
       }
-      const result: MemoryLookupResult = { items, nextCursor, version, scope: { projectId, includesWorkspace, workspaceWide: !projectId }, budget: { maxChars, usedChars: 0, requestedItems, scannedRecords, scanLimit } }
+      const result: MemoryLookupResult = { items, nextCursor, version, coverage: search, scope: { projectId, includesWorkspace, workspaceWide: !projectId }, budget: { maxChars, usedChars: 0, requestedItems, scannedRecords, scanLimit } }
       result.budget.usedChars = JSON.stringify(result).length
       result.budget.usedChars = JSON.stringify(result).length
       return result
@@ -267,7 +361,7 @@ export class AssistantMemoryStore {
     return this.withSourceSnapshot(() => {
       const stored = this.get(input.id)
       if (stored.revision !== input.expectedRevision) throw new Error('Memory inspection revision changed; search again before reading')
-      const record = this.view(stored), content = record.content ?? ''
+      const record = this.view(stored, undefined, readAssistantMemoryPolicy(this.workspace).use), content = record.content ?? ''
       const offset = Math.min(input.offset ?? 0, content.length), end = Math.min(offset + (input.maxChars ?? 2000), content.length)
       const page = <T>(items: T[], requestedOffset: number, limit: number) => {
         const start = Math.min(requestedOffset, items.length), last = Math.min(start + limit, items.length)
@@ -284,12 +378,20 @@ export class AssistantMemoryStore {
   }
 
   query(query: MemoryQuery): MemoryQueryResult {
+    return this.withSourceSnapshot(() => this.querySnapshot(query, this.lexical.refresh(query, record => !this.view(record).redacted)))
+  }
+  private querySnapshot(query: MemoryQuery, search: MemorySearchSnapshot): MemoryQueryResult {
     // One read transaction keeps records and version from different processes consistent.
     return this.withSourceSnapshot(() => this.db.transaction(() => {
       const version = this.version()
       const now = Date.now()
+      const searching = !!query.text?.trim(), fulltext = searching && search.engine === 'fts5' && query.text!.trim().length > 1
+      const terms = lexicalTokens(query.text ?? '', true), termsJson = JSON.stringify(terms)
+      const match = terms.map(term => `"${term.replaceAll('"', '""')}"`).join(' OR ')
+      const searchable = "lower(json_extract(body,'$.content')||' '||json_extract(body,'$.key')||' '||COALESCE(json_extract(body,'$.condition'),''))"
       const fingerprint = digest(canonicalJson({ text: query.text ?? '', projectId: query.projectId ?? null, condition: query.condition ?? null,
-        ids: query.ids ? [...new Set(query.ids)].sort() : null, includeWorkspace: !!query.projectId && !!query.includeWorkspace, includeRetired: query.includeRetired ?? false, limit: query.limit ?? 20 }))
+        ids: query.ids ? [...new Set(query.ids)].sort() : null, includeWorkspace: !!query.projectId && !!query.includeWorkspace, includeRetired: query.includeRetired ?? false, limit: query.limit ?? 20,
+        lexicalVersion: searching ? search.version : undefined }))
       if (query.cursor && query.cursor.fingerprint !== fingerprint) throw new Error('Memory cursor query changed; restart query')
       if (query.cursor && query.cursor.version !== version) throw new Error('Memory cursor version changed; restart query')
       if (query.cursor?.expiresAt != null && query.cursor.expiresAt <= now) throw new Error('Memory cursor expired; restart query')
@@ -300,25 +402,26 @@ export class AssistantMemoryStore {
       const limit = query.limit ?? 20
       const offset = query.cursor?.offset ?? 0
       const rows = this.db.prepare(`WITH views AS (
-        SELECT id, body, (json_extract(body, '$.state')='forgotten' OR EXISTS (
+        SELECT rowid AS row_id,id, body, (json_extract(body, '$.state')='forgotten' OR EXISTS (
           SELECT 1 FROM json_each(body, '$.sources') AS source JOIN suppression
           ON suppression.source_key=json_array(json_extract(source.value, '$.sessionId'), json_extract(source.value, '$.messageId'))
         )) AS redacted FROM memories
-      ) SELECT body FROM views
+      ) SELECT body FROM views ${fulltext ? 'JOIN memory_fts ON memory_fts.rowid=views.row_id' : ''}
         WHERE (? IS NULL OR json_extract(body, '$.projectId')=? OR (? AND json_extract(body,'$.projectId') IS NULL))
         AND (? IS NULL OR id IN (SELECT value FROM json_each(?)))
         AND (? IS NULL OR json_extract(body, '$.condition')=?)
-        AND (?='' OR (NOT redacted AND instr(lower(json_extract(body, '$.content')), lower(?))>0))
         AND (? OR (NOT redacted AND json_extract(body, '$.state')='active'
           AND json_extract(body, '$.dispute') IS NULL
           AND (json_extract(body, '$.validFrom') IS NULL OR json_extract(body, '$.validFrom')<=?)
           AND (json_extract(body, '$.validUntil') IS NULL OR json_extract(body, '$.validUntil')>?)))
-        ORDER BY json_extract(body, '$.updatedAt') DESC, id ASC LIMIT ? OFFSET ?`)
+        ${!searching ? '' : fulltext ? 'AND NOT redacted AND memory_fts MATCH ?' : `AND NOT redacted AND EXISTS(SELECT 1 FROM json_each(?) term WHERE instr(${searchable},term.value)>0)`}
+        ORDER BY ${fulltext ? 'bm25(memory_fts,4.0,1.0,2.0),' : searching ? `(SELECT COALESCE(SUM(length(term.value)),0) FROM json_each(?) term WHERE instr(${searchable},term.value)>0) DESC,` : ''}
+          json_extract(body, '$.updatedAt') DESC, id ASC LIMIT ? OFFSET ?`)
         .all(query.projectId ?? null, query.projectId ?? null, query.includeWorkspace ? 1 : 0, query.ids ? JSON.stringify(query.ids) : null, query.ids ? JSON.stringify(query.ids) : null,
-          query.condition ?? null, query.condition ?? null, query.text ?? '', query.text ?? '',
-          query.includeRetired ? 1 : 0, now, now, limit + 1, offset) as Array<{ body: string }>
+          query.condition ?? null, query.condition ?? null, query.includeRetired ? 1 : 0, now, now,
+          ...(searching ? [fulltext ? match : termsJson] : []), ...(searching && !fulltext ? [termsJson] : []), limit + 1, offset) as Array<{ body: string }>
       return { items: rows.slice(0, limit).map(row => this.view(JSON.parse(row.body) as StoredRecord, now))
-        .filter(item => query.includeRetired || (!item.redacted && !item.dispute && item.state === 'active')), version,
+        .filter(item => (!searching || !item.redacted) && (query.includeRetired || (!item.redacted && !item.dispute && item.state === 'active'))), version, coverage: search,
         nextCursor: rows.length > limit ? { version, offset: offset + limit, expiresAt: expiry.deadline, fingerprint } : null }
     })())
   }
@@ -353,7 +456,8 @@ export class AssistantMemoryStore {
     })
   }
 
-  mutate(command: MemoryMutation): MemoryMutationResult {
+  mutate(command: MemoryMutation, authority: 'management' | 'user_request' | 'automatic' = 'management'): MemoryMutationResult {
+    const policy = readAssistantMemoryPolicy(this.workspace), readable = authority === 'management' || policy.use
     return this.withSourceSnapshot(() => this.db.transaction(() => {
       const fingerprint = digest(canonicalJson(command))
       const receipt = this.db.prepare('SELECT fingerprint, memory_id FROM requests WHERE request_id=?').get(command.requestId) as { fingerprint: string; memory_id: string } | undefined
@@ -361,9 +465,18 @@ export class AssistantMemoryStore {
         if (receipt.fingerprint !== fingerprint) throw new Error('Request ID conflict: payload changed')
         // Always use the current view: a replay must not resurrect an old, now-forgotten response.
         const members = this.db.prepare('SELECT memory_id FROM memory_request_members WHERE request_id=?').all(command.requestId) as Array<{ memory_id: string }>
-        return { record: this.view(this.get(receipt.memory_id)), version: this.version(), affectedIds: members.length ? members.map(member => member.memory_id) : [receipt.memory_id] }
+        return { record: this.view(this.get(receipt.memory_id), undefined, readable), version: this.version(), affectedIds: members.length ? members.map(member => member.memory_id) : [receipt.memory_id] }
       }
       const now = Date.now()
+      if (authority === 'automatic' && command.action === 'transition' && command.state === 'forgotten') throw new Error('Permanent forgetting requires an explicit user request')
+      if (authority !== 'management' && command.action !== 'transition' && (policy.learning === 'paused' || authority === 'automatic' && policy.learning !== 'automatic')) throw new Error('Assistant learning policy requires an explicit request or is paused')
+      if (authority === 'automatic' && (command.action === 'remember' || command.action === 'revise') && !(command.assessment ?? (command.action === 'revise' ? this.get(command.id).assessment : undefined))) throw new Error('Automatic learning requires a source-based assessment')
+      if ((command.action === 'remember' || command.action === 'revise') && command.assessment) {
+        if (command.assessment.domain === 'secret') throw new Error('Credentials and secrets do not belong in assistant memory')
+        if (command.assessment.domain === 'project_fact') throw new Error('Project facts belong to their Project memory owner; retain a scoped pointer instead')
+        if (command.assessment.durability === 'task_only') throw new Error('One-time instructions belong in the current task or context')
+        if (authority === 'automatic' && command.assessment.domain === 'sensitive') throw new Error('Sensitive personal memory requires an explicit user request')
+      }
       let record: StoredRecord
       let related: StoredRecord[] = []
       if (command.action === 'remember') {
@@ -374,7 +487,9 @@ export class AssistantMemoryStore {
         if (this.db.prepare('SELECT 1 FROM memories WHERE scope_key=?').get(scopeKey)) throw new Error('Memory key already exists; revise it explicitly')
         record = { id: randomUUID(), workspaceId: this.workspace.id, key: command.key, projectId: command.projectId, condition: command.condition,
           content: command.content, kind: command.kind, basis: command.basis, sources: resolved,
-          state: command.basis === 'inferred' ? 'candidate' : 'active', revision: 1,
+          assessment: command.assessment,
+          state: command.assessment?.confidence === 'tentative' || command.assessment?.domain === 'authority' ? 'candidate'
+            : command.basis === 'user_stated' || this.supportedUserExtraction(resolved, command.assessment) ? 'active' : 'candidate', revision: 1,
           createdAt: now, updatedAt: now, validFrom: command.validFrom, validUntil: command.validUntil, redacted: false }
         if (record.validFrom !== undefined && record.validUntil !== undefined && record.validFrom >= record.validUntil) throw new Error('Memory validity interval must have validFrom before validUntil')
         this.db.prepare('INSERT INTO memories VALUES (?, ?, ?)').run(record.id, scopeKey, JSON.stringify(record))
@@ -389,13 +504,21 @@ export class AssistantMemoryStore {
         if (record.state === 'forgotten') throw new Error('Forgotten memory cannot be changed or automatically restored')
         if (record.state === 'superseded' && (command.action !== 'transition' || command.state !== 'forgotten')) throw new Error('Superseded memory cannot be revised or automatically restored')
         if (command.action === 'revise') {
-          record = { ...record, content: command.content, sources: this.resolveSources(command.sources, record.basis),
+          const sources = this.resolveSources(command.sources, record.basis)
+          const assessment = command.assessment ?? record.assessment
+          record = { ...record, content: command.content, sources,
+            assessment,
+            state: ['candidate', 'active'].includes(record.state) && record.basis === 'inferred' ? this.supportedUserExtraction(sources, assessment) ? 'active' : 'candidate' : record.state,
             validFrom: command.validFrom === undefined ? record.validFrom : command.validFrom ?? undefined,
             validUntil: command.validUntil === undefined ? record.validUntil : command.validUntil ?? undefined }
           if (record.validFrom !== undefined && record.validUntil !== undefined && record.validFrom >= record.validUntil) throw new Error('Memory validity interval must have validFrom before validUntil')
         } else {
           if (command.state === 'active' && record.dispute) throw new Error('Resolve the memory dispute explicitly before activation')
+          if (command.state === 'active' && record.assessment?.domain === 'authority') throw new Error('Permissions belong to execution policy, not memory activation')
+          if (authority === 'automatic' && command.state === 'active' && record.state === 'candidate' && policy.learning !== 'automatic') throw new Error('Learning policy does not permit automatic candidate admission')
+          if (authority === 'automatic' && command.state === 'active' && record.state === 'candidate' && !this.supportedUserExtraction(record.sources, record.assessment)) throw new Error('This candidate still lacks evidence for automatic admission')
           if (command.state === 'active' && record.sources.some(source => this.suppressed(source))) throw new Error('Memory source remains suppressed')
+          if (command.state === 'active' && record.state === 'candidate') record = { ...record, sources: this.resolveSources(record.sources, record.basis) }
           record = { ...record, state: command.state }
           if (command.state === 'forgotten') {
             // All source revisions remain blocked, including earlier statements replaced by a correction.
@@ -412,7 +535,7 @@ export class AssistantMemoryStore {
       }
       this.db.prepare('INSERT INTO requests VALUES (?, ?, ?)').run(command.requestId, fingerprint, record.id)
       this.db.prepare('UPDATE meta SET version=version+1 WHERE singleton=1').run()
-      return { record: this.view(record), version: this.version(), affectedIds: [record, ...related].map(item => item.id) }
+      return { record: this.view(record, undefined, readable), version: this.version(), affectedIds: [record, ...related].map(item => item.id) }
     })())
   }
 }

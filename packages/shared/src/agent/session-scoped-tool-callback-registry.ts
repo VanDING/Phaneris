@@ -24,9 +24,12 @@ export interface SessionScopedToolCallbacks {
   assistantHistorySearchFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantHistorySearch'];
   assistantMemoryUpdateFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryUpdate'];
   assistantMemoryInspectFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryInspect'];
+  assistantScenarioCaptureFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantScenarioCapture'];
+  assistantScenarioSearchFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantScenarioSearch'];
   assistantMemoryMaintenanceFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryMaintenance'];
   assistantContextHistoryFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantContextHistory'];
   assistantDeliveryAckFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantDeliveryAck'];
+  reportTaskResultFn?: import('@phaneris/session-tools-core').SessionToolContext['reportTaskResult'];
   assistantDelegateFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantDelegate'];
   assistantWorkerOptionsFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWorkerOptions'];
   assistantWorkFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWork'];
@@ -128,6 +131,8 @@ export interface SessionScopedToolCallbacks {
   pages?: import('@phaneris/session-tools-core').PagesToolCallbacks;
   mcpSources?: import('@phaneris/session-tools-core').McpSourceToolCallbacks;
   appendProjectMemoryFn?: (input: import('@phaneris/session-tools-core').ProjectMemoryAppendInput) => Promise<import('@phaneris/session-tools-core').ProjectMemoryAppendResult>;
+  readProjectMemoryFn?: NonNullable<import('@phaneris/session-tools-core').SessionToolContext['readProjectMemory']>;
+  searchProjectMemoryFn?: NonNullable<import('@phaneris/session-tools-core').SessionToolContext['searchProjectMemory']>;
   /**
    * Decision-layer callback for the `decide` tool (Jev / System One). Wired by
    * SessionManager from `@phaneris/shared/decisions`; gating (Settings switch,

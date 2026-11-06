@@ -160,6 +160,7 @@ export function parseDiscoveredModels(
 
     models.push({
       id,
+      ...(Array.isArray(row.supported_endpoints) ? { supportedEndpoints: row.supported_endpoints.filter((route): route is string => typeof route === 'string') } : {}),
       name,
       shortName: known?.shortName ?? name,
       description: known?.description ?? 'Discovered from custom endpoint',

@@ -44,6 +44,7 @@ import { debug } from '../utils/debug.ts';
 import { getStatusCategory } from '../statuses/storage.ts';
 import { readSessionHeader, readSessionJsonl } from './jsonl.ts';
 import { sessionPersistenceQueue } from './persistence-queue.ts';
+import { sessionDirectoryEntries } from './assistant-location';
 
 // Re-export types for convenience
 export type { SessionConfig } from './types.ts';
@@ -72,12 +73,7 @@ export type { SessionConfig } from './types.ts';
  * Get existing session IDs for collision detection
  */
 function getExistingSessionIds(workspaceRootPath: string): Set<string> {
-  const sessionsDir = getWorkspaceSessionsPath(workspaceRootPath);
-  if (!existsSync(sessionsDir)) {
-    return new Set();
-  }
-  const entries = readdirSync(sessionsDir, { withFileTypes: true });
-  return new Set(entries.filter(e => e.isDirectory()).map(e => e.name));
+  return new Set(sessionDirectoryEntries(workspaceRootPath).map(entry => entry.id));
 }
 
 /**
@@ -141,7 +137,7 @@ export async function createSession(
   const sessionId = generateSessionId(workspaceRootPath);
 
   // Create session directory with all subdirectories (plans, attachments)
-  ensureSessionDir(workspaceRootPath, sessionId);
+  ensureSessionDir(workspaceRootPath, sessionId, options?.sessionKind);
 
   // Set sdkCwd to initial working directory or session path - this never changes
   // The SDK stores session transcripts at ~/.claude/projects/{cwd-slugified}/
@@ -310,20 +306,12 @@ export function loadSession(workspaceRootPath: string, sessionId: string): Store
  */
 export function listSessions(workspaceRootPath: string): SessionMetadata[] {
   const span = perf.span('session.listSessions');
-  const sessionsDir = getWorkspaceSessionsPath(workspaceRootPath);
-  if (!existsSync(sessionsDir)) {
-    span.end();
-    return [];
-  }
-
-  const entries = readdirSync(sessionsDir, { withFileTypes: true });
+  const entries = sessionDirectoryEntries(workspaceRootPath);
   span.mark('readdir');
   const sessions: SessionMetadata[] = [];
 
   for (const entry of entries) {
-    if (entry.isDirectory() && !entry.name.startsWith('.')) {
-      const sessionId = entry.name;
-      const sessionDir = join(sessionsDir, sessionId);
+      const sessionDir = entry.path;
       const jsonlFile = join(sessionDir, 'session.jsonl');
 
       if (existsSync(jsonlFile)) {
@@ -333,7 +321,6 @@ export function listSessions(workspaceRootPath: string): SessionMetadata[] {
           if (metadata) sessions.push(metadata);
         }
       }
-    }
   }
   span.mark('parsed');
   span.setMetadata('count', sessions.length);

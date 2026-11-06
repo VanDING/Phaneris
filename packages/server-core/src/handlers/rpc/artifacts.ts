@@ -77,8 +77,8 @@ export function registerArtifactHandlers(server: RpcServer, deps: HandlerDeps): 
     return listArtifacts({ workspaceRootPath: workspaceRoot(workspaceId) }, filter ?? {})
   })
 
-  server.handle(RPC_CHANNELS.artifacts.GET, async (_ctx, workspaceId: string, artifactId: string) => {
-    return getArtifact({ workspaceRootPath: workspaceRoot(workspaceId) }, artifactId)
+  server.handle(RPC_CHANNELS.artifacts.GET, async (_ctx, workspaceId: string, artifactId: string, revision?: string) => {
+    return getArtifact({ workspaceRootPath: workspaceRoot(workspaceId) }, artifactId, revision ?? undefined)
   })
 
   server.handle(RPC_CHANNELS.artifacts.REGISTER_CURRENT, async (

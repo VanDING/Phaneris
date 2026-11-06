@@ -59,6 +59,7 @@ import {
   downloadStatusIcon,
 } from '../statuses/storage.ts';
 import { readSessionHeader } from '../sessions/jsonl.ts';
+import { getSessionFilePath } from '../sessions/paths';
 import type { SessionHeader } from '../sessions/types.ts';
 import { AUTOMATIONS_CONFIG_FILE } from '../automations/constants.ts';
 import { ensureUserThemesDir, getAppThemesDir } from './appearance.ts';
@@ -517,9 +518,10 @@ export class ConfigWatcher {
     // Session metadata changes: sessions/{id}/session.jsonl
     // Detects external modifications (other instances, scripts, manual edits).
     // Only reads line 1 (header) — lightweight even during active streaming.
-    if (parts[0] === 'sessions' && parts.length >= 3) {
-      const sessionId = parts[1]!;
-      const file = parts[2];
+    const sessionParts = parts[0] === 'assistant' && parts[1] === 'sessions' ? parts.slice(1) : parts;
+    if (sessionParts[0] === 'sessions' && sessionParts.length >= 3) {
+      const sessionId = sessionParts[1]!;
+      const file = sessionParts[2];
 
       // Only watch actual session files, ignore .tmp (atomic write intermediates)
       if (file === 'session.jsonl') {
@@ -1059,7 +1061,7 @@ export class ConfigWatcher {
    * made by other instances, scripts, or manual edits.
    */
   private handleSessionMetadataChange(sessionId: string): void {
-    const sessionFile = join(this.workspaceDir, 'sessions', sessionId, 'session.jsonl');
+    const sessionFile = getSessionFilePath(this.workspaceDir, sessionId);
 
     if (!existsSync(sessionFile)) {
       return;

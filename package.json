@@ -102,6 +102,7 @@
     "lint:i18n:parity": "bun run scripts/check-i18n-parity.ts",
     "check:docs": "bun run scripts/check-docs.ts",
     "verify:assistant-memory": "bun run scripts/verification/resident-assistant-memory-workflow.ts",
+    "verify:assistant-rollout": "bun run scripts/verification/resident-assistant-rollout-workflow.ts",
     "verify:assistant-history": "bun run scripts/verification/resident-assistant-history-workflow.ts",
     "verify:assistant-extraction": "bun run scripts/verification/resident-assistant-extraction-workflow.ts",
     "verify:assistant-temporal": "bun run scripts/verification/resident-assistant-temporal-workflow.ts",

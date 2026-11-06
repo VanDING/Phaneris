@@ -15,20 +15,24 @@ export function readWorkerOptions(workspaceRoot: string, query: WorkerOptionsQue
   let items: Array<Record<string, unknown>>
   switch (query.kind) {
     case 'presets': items = EXECUTION_PROMPT_PRESETS.map(id => ({ id, description: id === 'mini' ? 'Focused configuration edits' : 'Full ordinary Session execution' })); break
-    case 'connections': items = getLlmConnections().map(connection => ({ slug: connection.slug, name: connection.name, defaultModel: connection.defaultModel, modelCount: connection.models?.length ?? 0 })); break
+    case 'connections': items = getLlmConnections().map(connection => ({ slug: connection.slug, name: connection.name, defaultModel: connection.defaultModel, protocol: connection.customEndpoint?.api, modelCount: connection.models?.length ?? 0 })); break
     case 'models': {
       const connection = query.connectionSlug ? getLlmConnection(query.connectionSlug) : null
       if (!connection) throw new Error('Select an installed connection to list its models')
       items = (connection.models ?? []).map(model => {
         const definition = typeof model === 'string' ? getModelById(model) : model
         return { id: typeof model === 'string' ? model : model.id, name: definition?.name,
+          protocol: connection.customEndpoint?.api, supportedEndpoints: definition?.supportedEndpoints,
           supportsThinking: definition?.supportsThinking,
           supportedThinkingLevels: definition?.supportsThinking === false ? ['off'] : definition?.supportedThinkingLevels,
           thinkingLevelMap: definition?.thinkingLevelMap }
       })
       break
     }
-    case 'sources': items = loadWorkspaceSources(workspaceRoot).map(source => ({ slug: source.config.slug, name: source.config.name, type: source.config.type, usable: isSourceUsable(source) })); break
+    case 'sources': items = loadWorkspaceSources(workspaceRoot).map(source => ({ slug: source.config.slug, name: source.config.name, type: source.config.type, usable: isSourceUsable(source),
+      enabled: source.config.enabled, connectionStatus: source.config.connectionStatus,
+      knowledge: source.config.knowledge, relevantToProject: source.config.knowledge ? !source.config.knowledge.projectIds?.length || !!query.projectId && source.config.knowledge.projectIds.includes(query.projectId) : undefined,
+      access: source.config.type === 'local' ? 'Native bounded file tools; document parsing capabilities apply' : source.config.type === 'api' ? 'Host GET-only; inspect the actual tool schema' : 'MCP resources and Host-authorized read-only tool schemas; discover search/read capabilities, do not infer from names' })); break
     case 'skills': {
       const project = query.projectId ? loadProjectById(workspaceRoot, query.projectId) : null
       if (query.projectId && !project) throw new Error('Project not found in this workspace')

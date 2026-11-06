@@ -865,6 +865,7 @@ export interface UpdateInfo {
 // ---------------------------------------------------------------------------
 
 export interface WorkspaceSettings {
+  assistantMemory?: import('../workspaces/types').AssistantMemoryPolicy
   name?: string
   model?: string
   permissionMode?: PermissionMode

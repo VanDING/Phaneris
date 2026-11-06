@@ -15,9 +15,10 @@ await verificationWorkflow('resident-assistant-identity', async run => {
   writeFileSync(join(run.directory, 'host.log'), stdout + stderr)
   assert.equal(code, 0, (stdout + stderr).slice(-5000))
   const result = JSON.parse(readFileSync(join(run.directory, 'identity-result.json'), 'utf8')) as { scenes: string[]; [key: string]: unknown }
+  const { getSessionPath } = await import('@phaneris/shared/sessions')
   for (const [workspace, id] of [['alpha', result.assistantId], ['beta', result.otherAssistantId]]) {
     assert.equal(typeof id, 'string')
-    copyFileSync(join(config, String(workspace), 'sessions', String(id), 'session.jsonl'), join(run.directory, `${workspace}-assistant.jsonl`))
+    copyFileSync(join(getSessionPath(join(config, String(workspace)), String(id)), 'session.jsonl'), join(run.directory, `${workspace}-assistant.jsonl`))
   }
   run.json('identity-evidence.json', result)
   run.complete(result.scenes, ['Live model quality', 'Native model tool invocation and frontend', 'Worker execution configuration and delegation', 'Provider context invalidation'])

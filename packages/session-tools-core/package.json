@@ -10,9 +10,12 @@
     ".": "./src/index.ts",
     "./api-auth": "./src/api-auth.ts",
     "./delegation-contracts": "./src/delegation-contracts.ts",
+    "./task-result-contracts": "./src/task-result-contracts.ts",
     "./history-contracts": "./src/history-contracts.ts",
     "./resident-context-contracts": "./src/resident-context-contracts.ts",
     "./memory-contracts": "./src/memory-contracts.ts",
+    "./memory-derived-contracts": "./src/memory-derived-contracts.ts",
+    "./project-memory-contracts": "./src/project-memory-contracts.ts",
     "./memory-maintenance-contracts": "./src/memory-maintenance-contracts.ts",
     "./memory-lookup-contracts": "./src/memory-lookup-contracts.ts"
   },

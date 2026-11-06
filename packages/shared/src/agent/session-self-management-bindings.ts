@@ -35,8 +35,9 @@ export function attachSessionSelfManagementBindings(
   context: SessionToolContext,
   sessionId: string,
 ): void {
+  Object.defineProperty(context, 'reportTaskResult', { get: () => getSessionScopedToolCallbacks(sessionId)?.reportTaskResultFn, configurable: true, enumerable: true });
   // Direct pass-through bindings — signatures match, no wrapping needed.
-  for (const [key, callback] of [['assistantMemoryInspect', 'assistantMemoryInspectFn'], ['assistantMemoryMaintenance', 'assistantMemoryMaintenanceFn'], ['assistantContextHistory', 'assistantContextHistoryFn'], ['assistantMemoryUpdate', 'assistantMemoryUpdateFn'], ['assistantDelegate', 'assistantDelegateFn'], ['assistantWorkerOptions', 'assistantWorkerOptionsFn'], ['assistantWork', 'assistantWorkFn'], ['assistantCancelWork', 'assistantCancelWorkFn']] as const) {
+  for (const [key, callback] of [['assistantScenarioCapture', 'assistantScenarioCaptureFn'], ['assistantScenarioSearch', 'assistantScenarioSearchFn'], ['assistantMemoryInspect', 'assistantMemoryInspectFn'], ['assistantMemoryMaintenance', 'assistantMemoryMaintenanceFn'], ['assistantContextHistory', 'assistantContextHistoryFn'], ['assistantMemoryUpdate', 'assistantMemoryUpdateFn'], ['assistantDelegate', 'assistantDelegateFn'], ['assistantWorkerOptions', 'assistantWorkerOptionsFn'], ['assistantWork', 'assistantWorkFn'], ['assistantCancelWork', 'assistantCancelWorkFn']] as const) {
     Object.defineProperty(context, key, {
       get: () => getSessionScopedToolCallbacks(sessionId)?.[callback],
       configurable: true, enumerable: true,
@@ -63,6 +64,8 @@ export function attachSessionSelfManagementBindings(
     get: () => getSessionScopedToolCallbacks(sessionId)?.appendProjectMemoryFn,
     configurable: true, enumerable: true,
   });
+  Object.defineProperty(context, 'readProjectMemory', { get: () => getSessionScopedToolCallbacks(sessionId)?.readProjectMemoryFn, configurable: true, enumerable: true });
+  Object.defineProperty(context, 'searchProjectMemory', { get: () => getSessionScopedToolCallbacks(sessionId)?.searchProjectMemoryFn, configurable: true, enumerable: true });
   Object.defineProperty(context, 'readSessionMessages', {
     get: () => getSessionScopedToolCallbacks(sessionId)?.readSessionMessagesFn,
     configurable: true, enumerable: true,

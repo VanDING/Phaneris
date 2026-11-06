@@ -5,9 +5,13 @@ import type { RequestContext } from '../../transport/types'
 import type { AssistantDispatch, AssistantWorkQuery } from '@phaneris/session-tools-core/delegation-contracts'
 
 export const HANDLED_CHANNELS = [RPC_CHANNELS.residentAssistant.GET, RPC_CHANNELS.residentAssistant.CONTEXT, RPC_CHANNELS.residentAssistant.EVENTS, RPC_CHANNELS.residentAssistant.DISPATCH,
-  RPC_CHANNELS.residentAssistant.WORK, RPC_CHANNELS.residentAssistant.CANCEL_WORK] as const
+  RPC_CHANNELS.residentAssistant.WORK, RPC_CHANNELS.residentAssistant.CANCEL_WORK, RPC_CHANNELS.residentAssistant.OUTPUT_VISIBILITY] as const
 
 export function registerResidentAssistantHandlers(server: RpcServer, deps: HandlerDeps): void {
+  server.handle(RPC_CHANNELS.residentAssistant.OUTPUT_VISIBILITY, (ctx, workspaceId: string, command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility) => {
+    assertWorkspace(ctx, workspaceId)
+    return deps.sessionManager.setAssistantOutputVisibility(workspaceId, command)
+  })
   function assertWorkspace(ctx: RequestContext, workspaceId: string): void {
     const accepted = ctx.workspaceId ?? (ctx.webContentsId !== null ? deps.windowManager?.getWorkspaceForWindow(ctx.webContentsId) : null)
     if (!accepted || accepted !== workspaceId) throw new Error('Workspace context does not permit this assistant request')

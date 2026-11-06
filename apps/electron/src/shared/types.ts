@@ -341,6 +341,7 @@ export interface ElectronAPI {
   dispatchAssistantWork(workspaceId: string, request: import('@phaneris/session-tools-core/delegation-contracts').AssistantDispatch): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
   getAssistantWork(workspaceId: string, query: import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkQuery): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage>
   cancelAssistantWork(workspaceId: string, id: string): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
+  setAssistantOutputVisibility(workspaceId: string, command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility): Promise<import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest>
   queryAssistantMemory(workspaceId: string, query: import('@phaneris/shared/protocol').MemoryQuery): Promise<import('@phaneris/shared/protocol').MemoryQueryResult>
   exportAssistantMemorySuppression(workspaceId: string, query: import('@phaneris/shared/protocol').MemorySuppressionQuery): Promise<import('@phaneris/shared/protocol').MemorySuppressionPage>
   mergeAssistantMemorySuppression(workspaceId: string, command: import('@phaneris/shared/protocol').MemorySuppressionMerge): Promise<import('@phaneris/shared/protocol').MemorySuppressionMergeResult>
@@ -716,7 +717,7 @@ export interface ElectronAPI {
 
   // Artifacts (workspace-scoped revisioned deliverables)
   listArtifacts(workspaceId: string, filter?: import('@phaneris/shared/artifacts').ArtifactListFilter): Promise<import('@phaneris/shared/artifacts').ResolvedArtifact[]>
-  getArtifact(workspaceId: string, artifactId: string): Promise<import('@phaneris/shared/artifacts').ResolvedArtifact>
+  getArtifact(workspaceId: string, artifactId: string, revision?: string): Promise<import('@phaneris/shared/artifacts').ResolvedArtifact>
   registerCurrentArtifact(workspaceId: string, input: import('@phaneris/shared/artifacts').RegisterCurrentArtifactInput): Promise<import('@phaneris/shared/artifacts').ResolvedArtifact>
   createArtifact(workspaceId: string, input: import('@phaneris/shared/artifacts').CreateArtifactDraftInput): Promise<import('@phaneris/shared/artifacts').ResolvedArtifact>
   applyArtifact(workspaceId: string, artifactId: string, input: import('@phaneris/shared/artifacts').ApplyArtifactDraftInput): Promise<import('@phaneris/shared/artifacts').ResolvedArtifact>

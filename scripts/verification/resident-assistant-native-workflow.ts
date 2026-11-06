@@ -13,6 +13,7 @@ await verificationWorkflow('resident-assistant-native', async run => {
   const workspace = { id: 'resident-native', name: 'Resident native fixture', slug: 'resident-native', createdAt: 1, rootPath: join(fixture, 'workspace') }
   const sessionId = 'resident-native-session'
   mkdirSync(join(workspace.rootPath, 'sessions', sessionId), { recursive: true })
+  writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, assistantMemory: { version: 1, learning: 'automatic', use: true } }))
   const { isResidentAssistantToolAllowed } = await import('../../packages/shared/src/agent/resident-role')
   const { assembleSessionAgent } = await import('../../packages/server-core/src/sessions/agent-assembly')
   const { createDurableRuntime } = await import('../../packages/server-core/src/durable-runtime')
@@ -29,6 +30,11 @@ await verificationWorkflow('resident-assistant-native', async run => {
   const remembered = memory.mutate({ action: 'remember', requestId: 'native-remember', key: 'definition', content: 'NATIVE_QUARTERLY_MEMORY',
     basis: 'user_stated', kind: 'decision', sources: [{ sessionId: 'source-session', messageId: 'source-user' }] })
   const forbiddenPath = join(fixture, 'must-not-be-written.txt')
+  const readablePath = join(fixture, 'readable-report.md')
+  writeFileSync(readablePath, 'RESIDENT_DIRECT_READ_EVIDENCE\n')
+  const cachedPath = join(workspace.rootPath, 'assistant', 'sessions', sessionId, 'downloads', 'source-report.md')
+  mkdirSync(join(workspace.rootPath, 'assistant', 'sessions', sessionId, 'downloads'), { recursive: true }); writeFileSync(cachedPath, 'RESIDENT_OWN_SOURCE_DOWNLOAD')
+  const privatePath = join(workspace.rootPath, 'assistant', 'private-control.txt'); writeFileSync(privatePath, 'PRIVATE_HOST_CONTROL_STATE')
   const requests: Array<{ tools?: Array<{ function: { name: string } }>; messages: Array<{ role: string; content?: unknown }> }> = []
   const violations: string[] = []
   const api = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
@@ -37,15 +43,16 @@ await verificationWorkflow('resident-assistant-native', async run => {
     const names = (body.tools ?? []).map(tool => tool.function.name)
     if (names.some(name => !isResidentAssistantToolAllowed('resident_assistant', name))) violations.push('forbidden tool exposed')
     if (!JSON.stringify(body.messages.filter(message => ['system', 'developer'].includes(message.role))).includes('resident_assistant_role')) violations.push('resident prompt missing')
-    if (requests.length > 6 || violations.length) return Response.json({ error: { message: violations.join(', ') || 'Unexpected extra inference', type: 'invalid_request_error' } }, { status: 400 })
+    if (requests.length > 12 || violations.length) return Response.json({ error: { message: violations.join(', ') || 'Unexpected extra inference', type: 'invalid_request_error' } }, { status: 400 })
     const index = requests.length
     const search = names.find(name => name.endsWith('__assistant_memory_search'))
     if (!search) return Response.json({ error: { message: 'Memory tool missing' } }, { status: 400 })
     const chunk = (delta: object, finish_reason: string | null = null) => `data: ${JSON.stringify({ id: `resident-${index}`, object: 'chat.completion.chunk', created: 1, model: 'fixture',
       choices: [{ index: 0, delta, finish_reason }], ...(finish_reason ? { usage: { prompt_tokens: 100, completion_tokens: 10, total_tokens: 110 } } : {}) })}\n\n`
     const call = index % 2 === 1
-    const tool = index === 5 ? 'write' : search
-    const args = index === 5 ? { path: forbiddenPath, content: 'FORBIDDEN_EFFECT' } : { query: 'NATIVE_QUARTERLY_MEMORY' }
+    if (index === 7) for (const name of ['read', 'grep', 'find', 'ls']) assert(names.includes(name), `Resident catalog must expose ${name}`)
+    const tool = index === 5 ? 'write' : [7, 9, 11].includes(index) ? 'read' : search
+    const args = index === 5 ? { path: forbiddenPath, content: 'FORBIDDEN_EFFECT' } : index === 7 ? { path: readablePath } : index === 9 ? { path: cachedPath } : index === 11 ? { path: privatePath } : { query: 'NATIVE_QUARTERLY_MEMORY' }
     const reply = call ? chunk({ tool_calls: [{ index: 0, id: `resident-call-${index}`, type: 'function', function: { name: tool, arguments: JSON.stringify(args) } }] }, 'tool_calls')
       : chunk({ content: 'RESIDENT_NATIVE_TURN_DONE' }) + chunk({}, 'stop')
     return new Response(chunk({ role: 'assistant' }) + reply + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
@@ -71,7 +78,7 @@ await verificationWorkflow('resident-assistant-native', async run => {
   const scenes: string[] = []
   try {
     const driver = await runtime.execution.ensureDriver(sessionId, async () => new PiRuntimeDriver(agent))
-    for (const [index, message] of ['Recall the memory', 'Recall it after forgetting', 'Reject a forged write call'].entries()) {
+    for (const [index, message] of ['Recall the memory', 'Recall it after forgetting', 'Reject a forged write call', 'Read the requested report directly', 'Read this assistant own Source download', 'Protect internal Host control state'].entries()) {
       if (index === 1) {
         memory.mutate({ action: 'transition', requestId: 'native-forget', id: remembered.record.id, expectedRevision: 1, state: 'forgotten' })
         agent.updateBrowserToolEnabled?.(true)
@@ -81,7 +88,10 @@ await verificationWorkflow('resident-assistant-native', async run => {
       assert.equal((await runtime.execution.drive(handle, driver, { message, options: { inputId: `resident-user-${index}` } })).kind, 'terminal')
     }
     assert.equal(violations.length, 0, violations.join(', '))
-    assert.equal(requests.length, 6)
+    assert.equal(requests.length, 12)
+    assert(JSON.stringify(requests[9]!.messages.filter(message => message.role === 'tool').at(-1)).includes('RESIDENT_OWN_SOURCE_DOWNLOAD'))
+    assert(!JSON.stringify(requests[11]!.messages.filter(message => message.role === 'tool').at(-1)).includes('PRIVATE_HOST_CONTROL_STATE'))
+    assert(JSON.stringify(requests[7]!.messages.filter(message => message.role === 'tool')).includes('RESIDENT_DIRECT_READ_EVIDENCE'))
     assert(JSON.stringify(requests[1]!.messages.filter(message => message.role === 'tool').at(-1)).includes('NATIVE_QUARTERLY_MEMORY'))
     assert(!JSON.stringify(requests[3]!.messages.filter(message => message.role === 'tool').at(-1)).includes('NATIVE_QUARTERLY_MEMORY'))
     assert(!existsSync(forbiddenPath), 'SDK must not execute a forged tool call absent from the role catalog')
@@ -89,7 +99,7 @@ await verificationWorkflow('resident-assistant-native', async run => {
     const facts = runtime.queries.events(workspace.rootPath, { sessionId })
     assert(facts.some(event => event.type === 'tool_outcome_committed' && JSON.stringify(event.payload).includes('NATIVE_QUARTERLY_MEMORY')))
     scenes.push('RA07-native-model-catalog', 'RA08-native-independent-prompt', 'RA09-native-memory-recall',
-      'RA09-fresh-search-after-forgetting', 'RA07-native-dynamic-rebuild', 'RA05-native-forged-write-rejected', 'RA09-durable-memory-outcome')
+      'RA09-fresh-search-after-forgetting', 'RA07-native-dynamic-rebuild', 'RA05-native-forged-write-rejected', 'RA09-durable-memory-outcome', 'R01-resident-direct-file-read', 'R02-native-read-search-list-catalog', 'R03-resident-own-source-download-readable', 'R04-private-host-control-state-stays-protected')
     run.json('native-evidence.json', { scenes, providerCalls: requests.length, requests, facts,
       limitation: 'Deterministic loopback verifies SDK boundaries, not paid model quality.' })
     run.complete(scenes, ['Paid model quality', 'Frontend and full delegation'])

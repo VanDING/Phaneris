@@ -13,7 +13,7 @@ await verificationWorkflow('resident-assistant-relations', async run => {
   writeFileSync(join(run.directory, 'host.log'), stdout + stderr)
   assert.equal(code, 0, (stdout + stderr).slice(-8000))
   const evidence = JSON.parse(readFileSync(join(run.directory, 'relations-evidence.json'), 'utf8')) as { scenes: string[] }
-  copyFileSync(join(config, 'alpha/memory/memory.db'), join(run.directory, 'memory.db'))
+  copyFileSync(join(config, 'alpha/assistant/memory/memory.db'), join(run.directory, 'memory.db'))
   run.complete(evidence.scenes, ['Automatic semantic conflict detection', 'Paid-model quality', 'Remote hosting and multi-Host ownership'])
   console.log(JSON.stringify({ passed: evidence.scenes.length, output: run.directory }))
 })

@@ -103,13 +103,15 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
     events: guarded((workspace: string, options: { sessionId?: string; operationId?: string; afterSeq?: number; limit?: number } = {}) =>
       options.limit !== undefined ? kernel.storeFor(workspace).listEvents(options) : kernel.storeFor(workspace).listAllEvents(options)),
     operations: guarded((workspace: string, sessionId?: string) => kernel.storeFor(workspace).listOperations(sessionId)),
-    inputExecutions: guarded((workspace: string, sessionId: string, messageId: string, input: { before?: number; limit: number }) =>
+    inputExecutions: guarded((workspace: string, sessionId: string, messageId: string | readonly string[], input: { before?: number; limit: number }) =>
       kernel.storeFor(workspace).inputExecutions(sessionId, messageId, input)),
     usage: guarded((workspace: string, options: { sessionId?: string; operationId?: string } = {}) => kernel.storeFor(workspace).listUsage(options)),
     unsettledTools: guarded((workspace: string, runOperationId?: string, sessionId?: string) => kernel.storeFor(workspace).listUnsettledToolOperations(runOperationId, sessionId)),
+    unsettledSessionIds: guarded((workspace: string) => kernel.storeFor(workspace).unsettledSessionIds()),
     decisionEvents: guarded((workspace: string, sessionId: string) => kernel.storeFor(workspace).listDecisionEvents(sessionId)),
   })
   const evidence = Object.freeze({
+    completedToolObservation: guarded((workspace: string, operationId: string) => kernel.storeFor(workspace).getCompletedToolObservation(operationId)),
     getRecoveryEvidence: bind('getRecoveryEvidence'), reconcileTool: bind('reconcileTool'), reconcileModel: bind('reconcileModel'),
     queryAndReconcileTool: bind('queryAndReconcileTool'), registerReconciliationAdapter: bind('registerReconciliationAdapter'),
     decisionRecordingSince: guarded((workspace: string, since: number) => kernel.storeFor(workspace).decisionRecordingSince(since)),

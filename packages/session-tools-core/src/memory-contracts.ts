@@ -28,18 +28,27 @@ export const MemoryQuerySchema = z.object({
 const sources = z.array(MemorySourceSchema).min(1).max(16)
 const content = z.string().min(1).max(8000).refine(value => value.trim().length > 0, 'Content must not be blank')
 const expectedRevision = z.number().int().positive()
-const relation = z.object({ requestId: id, id, expectedRevision, related: z.array(z.object({ id, expectedRevision }).strict()).min(1).max(15),
+const intent = z.enum(['automatic', 'user_request']).optional().describe('user_request requires an explicit current direct user instruction for this operation. Historical statements are evidence, not new permission.')
+export const MemoryAssessmentSchema = z.object({
+  confidence: z.enum(['supported', 'tentative']), durability: z.enum(['durable', 'task_only']),
+  domain: z.enum(['collaboration', 'user_fact', 'experience', 'project_pointer', 'project_fact', 'authority', 'sensitive', 'secret']),
+  reason: z.string().trim().min(1).max(1000),
+}).strict()
+export type MemoryAssessment = z.infer<typeof MemoryAssessmentSchema>
+const relation = z.object({ requestId: id, id, expectedRevision, intent, related: z.array(z.object({ id, expectedRevision }).strict()).min(1).max(15),
   reason: z.string().trim().min(1).max(1000), sources })
 export const MemoryMutationSchema = z.discriminatedUnion('action', [
   relation.extend({ action: z.literal('dispute') }).strict(),
   relation.extend({ action: z.literal('resolve'), winnerId: id.optional() }).strict(),
-  z.object({ action: z.literal('remember'), requestId: id, key: id, content,
+  z.object({ action: z.literal('remember'), requestId: id, key: id, content, intent,
+    assessment: MemoryAssessmentSchema.optional(),
     kind: z.enum(['fact', 'decision', 'experience']), basis: z.enum(['user_stated', 'inferred']),
     projectId: id.optional(), condition: z.string().trim().min(1).max(500).optional(),
     validFrom: z.number().int().nonnegative().optional(), validUntil: z.number().int().nonnegative().optional(), sources }).strict(),
-  z.object({ action: z.literal('revise'), requestId: id, id, expectedRevision, content, sources,
+  z.object({ action: z.literal('revise'), requestId: id, id, expectedRevision, content, sources, intent,
+    assessment: MemoryAssessmentSchema.optional(),
     validFrom: z.number().int().nonnegative().nullable().optional(), validUntil: z.number().int().nonnegative().nullable().optional() }).strict(),
-  z.object({ action: z.literal('transition'), requestId: id, id, expectedRevision,
+  z.object({ action: z.literal('transition'), requestId: id, id, expectedRevision, intent,
     state: z.enum(['active', 'dormant', 'expired', 'invalidated', 'forgotten']) }).strict(),
 ])
 
@@ -49,6 +58,7 @@ export type MemoryQuery = z.infer<typeof MemoryQuerySchema>
 export type MemoryMutation = z.infer<typeof MemoryMutationSchema>
 export type MemoryState = import('@phaneris/core/types').MemoryLifecycleState
 export interface MemoryRecord {
+  assessment?: MemoryAssessment
   id: string
   workspaceId: string
   key: string | null
@@ -57,7 +67,7 @@ export interface MemoryRecord {
   kind: 'fact' | 'decision' | 'experience'
   basis: 'user_stated' | 'inferred'
   content: string | null
-  sources: Array<MemorySource & { contentHash: string }>
+  sources: import('@phaneris/core/types').SourceMaterialReference[]
   state: MemoryState
   revision: number
   createdAt: number
@@ -72,10 +82,11 @@ export interface MemoryRecord {
   redacted: boolean
 }
 export interface MemoryQueryResult {
+  coverage?: { engine: 'fts5' | 'lexical'; indexedRecords: number; pendingRecords: number; unavailableRecords: number; refreshedRecords: number }
   items: MemoryRecord[]
   nextCursor: { version: number; offset: number; expiresAt: number | null; fingerprint: string } | null
   version: number
 }
 export interface MemoryMutationResult { record: MemoryRecord; version: number; affectedIds?: string[] }
-export interface MemorySourceResult extends MemorySource { content: string; role: string; timestamp?: number; contentHash: string; directUser: boolean }
+export interface MemorySourceResult extends MemorySource { content: string; role: string; timestamp?: number; projectId?: string; contentHash: string; directUser: boolean; observation?: import('@phaneris/core/types').ToolObservationReference }
 export interface MemoryChanged { workspaceId: string; id: string; version: number }

@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto'
-import { existsSync, lstatSync, readdirSync } from 'node:fs'
-import { join } from 'node:path'
+import { lstatSync } from 'node:fs'
+import { sessionDirectoryEntries } from '@phaneris/shared/sessions'
 import { getSessionFilePath, readSessionJsonl } from '@phaneris/shared/sessions'
 import { canonicalJson } from '@phaneris/shared/durable-runtime/identity'
 import type { HistoryMatch, HistoryPage, HistoryQuery } from '@phaneris/session-tools-core/history-contracts'
 import type { SqliteDatabase } from '../runtime/sqlite'
-import { isDirectUserMessage, historySourceContent } from './source-provenance'
+import { isDirectUserMessage, historySourceContent, sourceContentHash } from './source-provenance'
 import { historyExtractionCoverage } from './history-extraction'
 
 type SourceState = 'pending' | 'indexed' | 'unreadable' | 'assistant'
@@ -17,7 +17,12 @@ export function initializeHistoryIndex(db: SqliteDatabase): void {
     INSERT OR IGNORE INTO history_clock VALUES(1,0);
     CREATE TABLE IF NOT EXISTS history_sessions(id TEXT PRIMARY KEY, signature TEXT NOT NULL, state TEXT NOT NULL, project_id TEXT, scanned_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS history_messages(session_id TEXT NOT NULL, message_id TEXT NOT NULL, content TEXT NOT NULL, body TEXT NOT NULL,
-      PRIMARY KEY(session_id,message_id));`)
+      PRIMARY KEY(session_id,message_id));
+    CREATE TABLE IF NOT EXISTS history_schema(singleton INTEGER PRIMARY KEY CHECK(singleton=1),version INTEGER NOT NULL);`)
+  const schema = db.prepare('SELECT version FROM history_schema WHERE singleton=1').get() as { version: number } | undefined
+  if (!schema || schema.version < 2) db.transaction(() => {
+    db.exec("UPDATE history_sessions SET state='pending'; INSERT OR REPLACE INTO history_schema VALUES(1,2)")
+  })()
 }
 
 /** Atomic JSONL rewrites make file identity, rather than a byte offset, the incremental boundary.
@@ -26,13 +31,11 @@ export function initializeHistoryIndex(db: SqliteDatabase): void {
 export function queryHistory(db: SqliteDatabase, workspaceRootPath: string, input: HistoryQuery, memoryVersion: number,
   sourceAvailable?: (source: { sessionId: string; messageId: string; contentHash: string }) => boolean): HistoryPage {
   return db.transaction(() => {
-    const directory = join(workspaceRootPath, 'sessions')
     const inventory = new Map<string, string>()
-    if (existsSync(directory)) for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      if (!entry.isDirectory() || entry.name.startsWith('.')) continue
-      const stat = lstatSync(getSessionFilePath(workspaceRootPath, entry.name), { bigint: true, throwIfNoEntry: false })
+    for (const entry of sessionDirectoryEntries(workspaceRootPath)) {
+      const stat = lstatSync(getSessionFilePath(workspaceRootPath, entry.id), { bigint: true, throwIfNoEntry: false })
       if (!stat) continue
-      inventory.set(entry.name, stat?.isFile() ? `${stat.dev}:${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}` : 'unreadable')
+      inventory.set(entry.id, stat.isFile() ? `${stat.dev}:${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}` : 'unreadable')
     }
     const rows = db.prepare('SELECT * FROM history_sessions').all() as SourceRow[]
     const previous = new Map(rows.map(row => [row.id, row]))
@@ -50,21 +53,23 @@ export function queryHistory(db: SqliteDatabase, workspaceRootPath: string, inpu
     }
     // Unreadable files are retried when their file identity changes, so one damaged
     // source cannot starve older history. No model or startup-wide history replay.
-    const pending = db.prepare("SELECT * FROM history_sessions WHERE state='pending' ORDER BY scanned_at ASC,id ASC LIMIT 8").all() as SourceRow[]
+    const pending = db.prepare("SELECT * FROM history_sessions WHERE state='pending' ORDER BY CASE WHEN id=? THEN 0 ELSE 1 END,scanned_at ASC,id ASC LIMIT 8").all(input.sessionId ?? null) as SourceRow[]
     for (const row of pending) {
       const session = row.signature === 'unreadable' ? null : readSessionJsonl(getSessionFilePath(workspaceRootPath, row.id), { strict: true })
       const valid = session?.id === row.id && session.messages.every(message => message && typeof message.id === 'string'
         && message.id.length > 0 && typeof message.content === 'string'
         && ['user', 'assistant', 'tool', 'error', 'info', 'warning', 'status', 'plan', 'auth-request'].includes(message.type))
         && new Set(session.messages.map(message => message.id)).size === session.messages.length
-      const state: SourceState = !valid ? 'unreadable' : session.sessionKind === 'resident_assistant' ? 'assistant' : 'indexed'
+      const state: SourceState = !valid ? 'unreadable' : 'indexed'
       db.prepare('UPDATE history_sessions SET state=?,project_id=?,scanned_at=? WHERE id=?').run(state, valid ? session.projectId ?? null : null, Date.now(), row.id)
       if (state === 'indexed' && session) for (const message of session.messages) {
+        if (session.sessionKind === 'resident_assistant' && !isDirectUserMessage(message)) continue
         if (db.prepare('SELECT 1 FROM suppression WHERE source_key=? LIMIT 1').get(JSON.stringify([row.id, message.id]))) continue
         const content = historySourceContent(message)
-        const body: Omit<HistoryMatch, 'snippet' | 'range' | 'projectId'> = { sessionId: row.id, messageId: message.id, role: message.type,
+        const body: Omit<HistoryMatch, 'snippet' | 'range' | 'projectId'> & { projectId: string | null } = { sessionId: row.id, messageId: message.id, role: message.type,
+          projectId: message.projectScope ? message.projectScope.projectId : session.projectId ?? null,
           timestamp: message.timestamp, directUser: isDirectUserMessage(message), inputSource: message.inputSource,
-          contentHash: digest(content), attachmentCount: message.attachments?.length ?? 0, attachmentContentIndexed: false }
+          contentHash: sourceContentHash(workspaceRootPath, row.id, content), attachmentCount: message.attachments?.length ?? 0, attachmentContentIndexed: false }
         db.prepare('INSERT INTO history_messages VALUES(?,?,?,?)').run(row.id, message.id, content, JSON.stringify(body))
       }
       changed = true
@@ -77,8 +82,8 @@ export function queryHistory(db: SqliteDatabase, workspaceRootPath: string, inpu
       throw new Error('History cursor version or query changed; restart query')
     }
     const offset = input.cursor?.offset ?? 0
-    const matches = db.prepare(`SELECT m.content,m.body,s.project_id FROM history_messages m JOIN history_sessions s ON s.id=m.session_id
-      WHERE s.state='indexed' AND (? IS NULL OR s.project_id=? OR (? AND s.project_id IS NULL)) AND (? IS NULL OR m.session_id=?)
+    const matches = db.prepare(`SELECT m.content,m.body,json_extract(m.body,'$.projectId') AS project_id FROM history_messages m JOIN history_sessions s ON s.id=m.session_id
+      WHERE s.state='indexed' AND (? IS NULL OR json_extract(m.body,'$.projectId')=? OR (? AND json_extract(m.body,'$.projectId') IS NULL)) AND (? IS NULL OR m.session_id=?)
       AND instr(lower(m.content),lower(?))>0
       AND NOT EXISTS(SELECT 1 FROM suppression WHERE source_key=json_array(m.session_id,m.message_id))
       ORDER BY COALESCE(json_extract(m.body,'$.timestamp'),0) DESC,m.session_id ASC,m.message_id ASC LIMIT ? OFFSET ?`)
@@ -89,7 +94,7 @@ export function queryHistory(db: SqliteDatabase, workspaceRootPath: string, inpu
       const start = Math.max(0, row.content.toLowerCase().indexOf(query.toLowerCase()) - 120)
       const end = Math.min(row.content.length, start + 500)
       return { ...JSON.parse(row.body) as Omit<HistoryMatch, 'snippet' | 'range'>,
-        ...(row.project_id ? { projectId: row.project_id } : {}), snippet: row.content.slice(start, end), range: { offset: start, end, fullChars: row.content.length } }
+        projectId: row.project_id ?? undefined, snippet: row.content.slice(start, end), range: { offset: start, end, fullChars: row.content.length } }
     }).filter(source => !sourceAvailable || sourceAvailable(source)), nextCursor: matches.length > limit ? { version, memoryVersion, fingerprint, offset: offset + limit } : null,
     coverage: { discoveredSessions: inventory.size, indexedSessions: count('indexed'), pendingSessions: count('pending'),
       unreadableSessions: count('unreadable'), excludedAssistantSessions: count('assistant'), refreshedSessions: pending.length,

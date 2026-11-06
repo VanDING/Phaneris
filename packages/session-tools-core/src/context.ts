@@ -7,6 +7,8 @@
  * This enables writing tool handlers once and running them in both environments.
  */
 
+import type { ProjectMemoryAppendInput, ProjectMemoryAppendResult, ProjectMemoryRead, ProjectMemoryReadResult, ProjectMemorySearch, ProjectMemorySearchResult } from './project-memory-contracts'
+export type { ProjectMemoryAppendInput, ProjectMemoryAppendResult } from './project-memory-contracts'
 import type {
   AuthRequest,
   ToolResult,
@@ -167,11 +169,14 @@ export interface SessionToolContext {
   /** Host-bound workspace assistant reads; absent in ordinary sessions. */
   assistantMemorySearch?: (input: import('./memory-lookup-contracts').MemoryLookupQuery) => Promise<import('./memory-lookup-contracts').MemoryLookupResult>;
   assistantMemoryInspect?: (input: import('./memory-lookup-contracts').MemoryInspectQuery) => Promise<import('./memory-lookup-contracts').MemoryInspectResult>;
+  assistantScenarioCapture?: (input: import('./memory-derived-contracts').ScenarioCapture) => Promise<{ id: string; revision: number }>;
+  assistantScenarioSearch?: (input: import('./memory-derived-contracts').ScenarioQuery) => Promise<import('./memory-derived-contracts').ScenarioPage>;
   assistantHistorySearch?: (input: import('./history-contracts').HistoryQuery) => Promise<import('./history-contracts').HistoryPage>;
   assistantMemoryUpdate?: (input: import('./memory-contracts').MemoryMutation) => Promise<unknown>;
   assistantMemoryMaintenance?: (input: import('./memory-maintenance-contracts').MemoryMaintenanceCommand) => Promise<import('./memory-maintenance-contracts').MemoryMaintenanceResult>;
   assistantContextHistory?: (input: { query?: string; offset?: number; limit?: number }) => Promise<unknown>;
-  assistantDeliveryAck?: (input: { eventIds: string[] }) => Promise<unknown>;
+  assistantDeliveryAck?: (input: import('./task-result-contracts').AssistantDeliveryAck) => Promise<unknown>;
+  reportTaskResult?: (input: import('./task-result-contracts').ReportTaskResult) => Promise<import('./task-result-contracts').TaskOutputManifest>;
   assistantDelegate?: (input: import('./delegation-contracts').AssistantDispatch) => Promise<import('./delegation-contracts').AssistantWork>;
   assistantWorkerOptions?: (input: import('./delegation-contracts').WorkerOptionsQuery) => Promise<import('./delegation-contracts').WorkerOptionsPage>;
   assistantWork?: (input: import('./delegation-contracts').AssistantWorkQuery) => Promise<import('./delegation-contracts').AssistantWorkPage>;
@@ -387,6 +392,8 @@ export interface SessionToolContext {
    */
   createTask?(input: CreateTaskInput): Promise<CreateTaskResult>;
   appendProjectMemory?(input: ProjectMemoryAppendInput): Promise<ProjectMemoryAppendResult>;
+  readProjectMemory?(input: ProjectMemoryRead): Promise<ProjectMemoryReadResult>;
+  searchProjectMemory?(input: ProjectMemorySearch): Promise<ProjectMemorySearchResult>;
   mcpSources?: McpSourceToolCallbacks;
 
   // ============================================================
@@ -1068,17 +1075,6 @@ export function createNodeFileSystem(): FileSystemInterface {
       };
     },
   };
-}
-
-export interface ProjectMemoryAppendInput {
-  /** Markdown note; the backend adds a dated heading naming the session. */
-  note: string;
-}
-
-export interface ProjectMemoryAppendResult {
-  path: string;
-  heading: string;
-  bytesAppended: number;
 }
 
 export interface McpSourceResource {

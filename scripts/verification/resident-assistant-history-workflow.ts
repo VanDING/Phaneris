@@ -14,7 +14,7 @@ await verificationWorkflow('resident-assistant-history', async run => {
   writeFileSync(join(run.directory, 'host.log'), stdout + stderr)
   assert.equal(code, 0, (stdout + stderr).slice(-6000))
   const evidence = JSON.parse(readFileSync(join(run.directory, 'history-evidence.json'), 'utf8')) as { scenes: string[] }
-  copyFileSync(join(config, 'alpha/memory/memory.db'), join(run.directory, 'memory.db'))
+  copyFileSync(join(config, 'alpha/assistant/memory/memory.db'), join(run.directory, 'memory.db'))
   run.complete(evidence.scenes, ['Automatic memory extraction and semantic ranking', 'Provider history invalidation, working sets and context segments', 'P3b event consumption and automatic delivery', 'Paid model quality, frontend and multi-Host operation'])
   console.log(JSON.stringify({ passed: evidence.scenes.length, output: run.directory }))
 })

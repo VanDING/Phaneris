@@ -6,8 +6,16 @@
  */
 
 import { homedir } from 'os';
-import { resolve, join, normalize, isAbsolute, dirname, relative } from 'path';
+import { resolve, join, normalize, isAbsolute, dirname, relative, basename } from 'path';
 import { existsSync, lstatSync, realpathSync } from 'fs';
+
+/** Preserve missing suffixes while resolving existing symlink ancestors. */
+export function resolveCanonicalPath(targetPath: string): string {
+  const absolute = resolve(targetPath);
+  if (existsSync(absolute)) return realpathSync(absolute);
+  const parent = dirname(absolute);
+  return parent === absolute ? absolute : join(resolveCanonicalPath(parent), basename(absolute));
+}
 
 /**
  * Expand path variables (~, ${HOME}, $HOME) to absolute paths.

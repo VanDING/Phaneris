@@ -12,9 +12,10 @@ interface WeComConnectDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   reconfigure?: boolean
+  onSaved?: () => void
 }
 
-export function WeComConnectDialog({ open, onOpenChange, reconfigure = false }: WeComConnectDialogProps) {
+export function WeComConnectDialog({ open, onOpenChange, reconfigure = false, onSaved }: WeComConnectDialogProps) {
   const { t } = useTranslation()
   const [botId, setBotId] = React.useState('')
   const [secret, setSecret] = React.useState('')
@@ -41,6 +42,7 @@ export function WeComConnectDialog({ open, onOpenChange, reconfigure = false }: 
         ...(wsUrl.trim() ? { wsUrl: wsUrl.trim() } : {}),
       })
       toast.success(t('settings.messaging.wecom.saved'))
+      onSaved?.()
       onOpenChange(false)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('settings.messaging.wecom.saveFailed'))

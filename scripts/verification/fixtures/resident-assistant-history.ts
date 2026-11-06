@@ -38,7 +38,7 @@ const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request
 writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces, activeWorkspaceId: 'alpha', setupDeferred: true, defaultLlmConnection: 'fixture',
   llmConnections: [{ slug: 'fixture', name: 'Loopback', providerType: 'pi_compat', piAuthProvider: 'openai', authType: 'api_key', createdAt: 1, baseUrl: provider.url.href,
     customEndpoint: { api: 'openai-completions' }, defaultModel: 'fixture', models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Test only', provider: 'pi', contextWindow: 64000, maxTokens: 4096, supportsThinking: false }] }] }))
-writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, defaults: { permissionMode: 'safe', defaultLlmConnection: 'fixture', model: 'fixture' } }))
+writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, assistantMemory: { version: 1, learning: 'explicit', use: true }, defaults: { permissionMode: 'safe', defaultLlmConnection: 'fixture', model: 'fixture' } }))
 const usage = { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 }
 async function source(id: string, messages: StoredMessage[], extra: Record<string, unknown> = {}, target = workspace) {
   await saveSession({ id, workspaceRootPath: target.rootPath, createdAt: 1, lastUsedAt: 1, messages, tokenUsage: usage, ...extra })
@@ -50,9 +50,10 @@ await source('a-history', [user('one', '季度口径 NATIVE_HISTORY_EVIDENCE'), 
   { ...user('attachment', '季度口径 附件入口'), attachments: [{ id: 'attachment', type: 'pdf', name: 'unparsed.pdf', mimeType: 'application/pdf', size: 10, storedPath: 'missing.pdf' }] },
   user('literal', "100%_ '季度")], { projectId: 'project-a', isArchived: true })
 await source('b-hidden', [user('one', '季度口径 隐藏普通历史')], { projectId: 'project-b', hidden: true })
-await source('resident-history-assistant', [user('one', 'ASSISTANT_HISTORY_EXCLUDED')], { sessionKind: 'resident_assistant', hidden: true, permissionMode: 'safe' })
+await source('resident-history-assistant', [user('one', 'MAIN_DIRECT_USER_HISTORY'), { id: 'model-feedback', type: 'assistant', content: 'ASSISTANT_HISTORY_EXCLUDED', timestamp: 2 }], { sessionKind: 'resident_assistant', hidden: true, permissionMode: 'safe' })
 await source('beta-history', [user('one', '季度口径 OTHER_WORKSPACE_SECRET')], { projectId: 'project-a' }, workspaces[1]!)
-for (let i = 0; i < 12; i++) await source(`old-${i.toString().padStart(2, '0')}`, [user('one', `OLDER_HISTORY_${i} 季度口径`)])
+for (let i = 0; i < 20; i++) await source(`old-${i.toString().padStart(2, '0')}`, [user('one', `OLDER_HISTORY_${i} 季度口径`)])
+await source('zz-explicit-source', [user('explicit', 'EXPLICIT_SOURCE_READY')])
 const original = readFileSync(getSessionFilePath(workspace.rootPath, 'a-history'), 'utf8')
 const { getCredentialManager } = await import('@phaneris/shared/credentials')
 await getCredentialManager().setLlmApiKey('fixture', 'loopback-only-key')
@@ -71,6 +72,10 @@ let client = await connect('alpha')
 const query = (input: HistoryQuery = {}) => client.invoke(RPC_CHANNELS.assistantMemory.HISTORY, 'alpha', input)
 try {
   assert(REMOTE_ELIGIBLE_CHANNELS.has(RPC_CHANNELS.assistantMemory.HISTORY))
+  const explicit = await query({ sessionId: 'zz-explicit-source', query: 'EXPLICIT_SOURCE_READY' })
+  assert.equal(explicit.items[0]?.sessionId, 'zz-explicit-source', 'Explicit source must be available on first query')
+  assert(explicit.coverage.refreshedSessions <= 8)
+  scenes.push('RFU06-explicit-source-first-query-priority')
   const first = await query({ query: '季度' })
   assert(first.coverage.pendingSessions > 0)
   assert(first.coverage.refreshedSessions <= 8)
@@ -78,7 +83,7 @@ try {
   let settled = first
   for (let i = 0; settled.coverage.pendingSessions && i < 10; i++) settled = await query({ query: '季度' })
   assert.equal(settled.coverage.pendingSessions, 0)
-  assert.equal(settled.coverage.excludedAssistantSessions, 1)
+  assert.equal(settled.coverage.excludedAssistantSessions, 0, 'Main direct user inputs participate in scoped history; model self-feedback does not')
   assert(settled.items.some(item => item.sessionId === 'a-history'), 'Archived ordinary sessions are included')
   assert(settled.items.some(item => item.sessionId === 'b-hidden'), 'Hidden ordinary sessions are included')
   assert.equal((await query()).coverage.refreshedSessions, 0)
@@ -100,6 +105,7 @@ try {
   assert.equal((await query({ query: "100%_ '" })).items.length, 1)
   assert.equal((await query({ sessionId: 'b-hidden' })).items.length, 1)
   assert.equal((await query({ query: 'ASSISTANT_HISTORY_EXCLUDED' })).items.length, 0)
+  assert.equal((await query({ query: 'MAIN_DIRECT_USER_HISTORY' })).items[0]?.sessionId, 'resident-history-assistant')
   assert.equal(readFileSync(getSessionFilePath(workspace.rootPath, 'a-history'), 'utf8'), original, 'Indexing must not rewrite the source JSONL')
   scenes.push('RH04-provenance-not-user-authority', 'RH05-scope-and-literal-search', 'RH11-attachment-coverage')
   const toolMessage: StoredMessage = { id: 'tool-result', type: 'tool', content: '', toolName: 'file_read', toolUseId: 'call-1',
@@ -168,7 +174,7 @@ try {
   assert.equal(brokenReference.items.length, 1)
   scenes.push('RH14-normal-role-variants', 'RH14-broken-reference-isolated')
   client.destroy(); await host.stop()
-  const db = openSqliteDatabase(join(workspace.rootPath, 'memory/memory.db'))
+  const db = openSqliteDatabase(join(workspace.rootPath, 'assistant/memory/memory.db'))
   // Disposable index rebuild must never delete the authority's suppression rows.
   db.exec('DELETE FROM history_messages; DELETE FROM history_sessions;')
   db.close()

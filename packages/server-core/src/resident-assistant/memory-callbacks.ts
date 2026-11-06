@@ -2,12 +2,14 @@ import type { SessionScopedToolCallbacks } from '@phaneris/shared/agent'
 import { loadSession } from '@phaneris/shared/sessions'
 import { isDirectUserMessage } from './source-provenance'
 import { AssistantMemoryStore } from './memory-store'
+import type { MemoryMaintenanceJob } from './memory-maintenance-queue'
 
 /** Sources and paths come from Host identity, never model-provided workspace IDs. */
-export function buildResidentMemoryCallbacks({ workspace, memory, assertResidentRole, track, sessionId, currentRun, currentProject }: {
+export function buildResidentMemoryCallbacks({ workspace, memory, assertResidentRole, track, sessionId, currentRun, currentProject, maintenanceJob }: {
   workspace: { id: string; rootPath: string }; memory: AssistantMemoryStore; assertResidentRole(): void
   track?: (dependencies: Partial<import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies>) => void
   sessionId?: string; currentRun?: () => string; currentProject?: () => string | undefined
+  maintenanceJob?: () => MemoryMaintenanceJob | undefined
 }): Pick<SessionScopedToolCallbacks, 'assistantMemoryInspectFn' | 'assistantMemoryMaintenanceFn' | 'assistantMemorySearchFn' | 'assistantMemoryReadFn' | 'assistantHistorySearchFn' | 'assistantContextHistoryFn'> {
   function withMemory<T>(operation: (store: AssistantMemoryStore) => T): T {
     assertResidentRole()
@@ -15,8 +17,10 @@ export function buildResidentMemoryCallbacks({ workspace, memory, assertResident
   }
   return {
     ...(currentRun ? { assistantMemoryMaintenanceFn: async (input: import('@phaneris/session-tools-core/memory-maintenance-contracts').MemoryMaintenanceCommand) => withMemory(store => {
-      const command = input.action === 'next' ? { ...input, projectId: input.scope === 'workspace' ? undefined : input.projectId ?? currentProject?.() } : input
-      const result = store.maintain(command, currentRun())
+      const job = maintenanceJob?.()
+      if (job && input.action === 'next' && (input.scope === 'workspace' || input.sessionId && input.sessionId !== job.sessionId || input.projectId && input.projectId !== job.projectId)) throw new Error('Maintenance cannot widen its source grant')
+      const command = input.action === 'next' ? { ...input, ...(job ? { sessionId: job.sessionId, projectId: job.projectId } : { projectId: input.scope === 'workspace' ? undefined : input.projectId ?? currentProject?.() }) } : input
+      const result = store.maintain(command, currentRun(), job)
       if (result.status === 'source') track?.({ sources: [{ sessionId: result.source.sessionId, messageId: result.source.messageId,
         contentHash: result.source.contentHash, ranges: [result.range] }] })
       return result
@@ -45,7 +49,9 @@ export function buildResidentMemoryCallbacks({ workspace, memory, assertResident
       return result
     }),
     assistantMemoryReadFn: async input => withMemory(store => {
-      const source = store.readSource(input)
+      const job = maintenanceJob?.(), granted = job?.sources.find(source => source.sessionId === input.sessionId && source.messageId === input.messageId)
+      if (job && !granted) throw new Error('Source is outside this maintenance grant')
+      const source = store.readSource({ ...input, ...(granted ? { expectedContentHash: granted.contentHash } : {}) })
       const offset = Math.min(input.offset ?? 0, source.content.length)
       const end = Math.min(offset + (input.maxChars ?? 5000), source.content.length)
       track?.({ sources: [{ sessionId: source.sessionId, messageId: source.messageId, contentHash: source.contentHash, ranges: [{ offset, end }] }] })

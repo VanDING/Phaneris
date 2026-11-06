@@ -26,7 +26,10 @@ const piValuePorts = new Set(['agent/context-policy', 'agent/compaction-threshol
   // Pure name/effect classifiers used for ordering only; transitive purity is checked below.
   'agent/mcp-tool-names', 'agent/browser-tool-effects',
   // Dependency-free role authority, shared by Host enforcement and subprocess tool selection.
-  'agent/resident-role'])
+  'agent/resident-role',
+  // Narrow native-file boundary shared with the Host: path expansion/canonical scope,
+  // private-control filtering and Project write ownership; no runtime/session writer.
+  'agent/assistant-private-paths'])
 const definitions = new Map<string, Map<string, Node>>()
 const importedNames = new Map<string, Map<string, string>>()
 const calls: { file: string; node: Extract<Node, { type: 'CallExpression' }> }[] = []
