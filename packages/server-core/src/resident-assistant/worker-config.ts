@@ -48,7 +48,7 @@ export function resolveWorkerConfig(
     || (definition?.supportedThinkingLevels && !definition.supportedThinkingLevels.includes(thinkingLevel))
     || definition?.thinkingLevelMap?.[thinkingLevel] === null) throw new Error(`Worker model does not support thinking level: ${thinkingLevel}`)
   const permissionMode = clampPermissionMode(requested.permissionMode, parent.permissionMode)
-  if (requested.permissionMode && permissionMode !== requested.permissionMode) adjustments.push(`permissionMode: ${requested.permissionMode} -> ${permissionMode} (assistant ceiling)`)
+  if (requested.permissionMode && permissionMode !== requested.permissionMode) adjustments.push(`permissionMode: ${requested.permissionMode} -> ${permissionMode} (execution ceiling)`)
   const projectId = requested.projectId ?? parent.projectId
   const project = projectId ? loadProjectById(workspace.rootPath, projectId) : null
   if (projectId && !project) throw new Error('Worker project not found in this workspace')

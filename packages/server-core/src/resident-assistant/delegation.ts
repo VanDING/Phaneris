@@ -12,6 +12,8 @@ import type { ResidentInboxEvent, ResidentEventsPage } from '@phaneris/session-t
 import type { LegacyDelegation } from './delegation-migration'
 import { TaskResultStore } from './task-results'
 import type { TaskDeliverableSelection } from '@phaneris/session-tools-core/task-result-contracts'
+import { WorkerControls } from './worker-controls'
+import type { WorkerControl, WorkerControlApplication, WorkerControlReceipt } from '@phaneris/session-tools-core/worker-control-contracts'
 
 export interface SessionDelegationPlan { config: EffectiveWorkerConfig; adjustments: string[]; configRevision?: string; capabilityRevision?: string }
 export type { LegacyDelegation } from './delegation-migration'
@@ -30,6 +32,9 @@ export interface DelegationHost {
   rejectStaged(receipt: AssistantDelegationReceipt, reason: string): Promise<void>
   /** Only cancel execution owned by this input, never an unrelated human turn. */
   cancel(receipt: AssistantDelegationReceipt): Promise<boolean>
+  control?(receipt: AssistantDelegationReceipt, command: WorkerControl, supplements: string[], context: Pick<WorkerControlReceipt, 'actor' | 'initialState' | 'evidence'>, mayApply: () => boolean): Promise<WorkerControlApplication>
+  controlEvidence?(): NonNullable<WorkerControlReceipt['evidence']>
+  controlEvidenceValid?(evidence: NonNullable<WorkerControlReceipt['evidence']>): boolean
   reportError(error: unknown): void
   eventsAvailable?(): void
   restoreDeliverables?(receipt: AssistantDelegationReceipt): Promise<void>
@@ -39,6 +44,7 @@ export interface DelegationHost {
 export class AssistantDelegation {
   readonly ready: Promise<void>
   readonly results: TaskResultStore
+  readonly controls: WorkerControls
   private readonly db: SqliteDatabase
   private pumping: Promise<void> | undefined
   private pendingKick = false
@@ -69,6 +75,15 @@ export class AssistantDelegation {
       this.db.close(); throw new Error('Delegation database belongs to another workspace')
     }
     this.results = new TaskResultStore(this.db, this.workspace)
+    this.controls = new WorkerControls(this.db, {
+      read: id => this.get(id), save: receipt => this.save(receipt), view: receipt => this.view(receipt, { id: receipt.id }),
+      evidence: () => this.host.controlEvidence?.() ?? { sources: [], memories: [] },
+      evidenceValid: evidence => this.host.controlEvidenceValid?.(evidence) ?? false,
+      apply: (receipt, command, supplements, context) => {
+        if (!this.host.control) throw new Error('Worker management is unavailable in this Host')
+        return this.host.control(receipt, command, supplements, context, () => this.get(receipt.id).pendingControlId === command.commandId && !['cancel_requested', 'cancelled'].includes(this.get(receipt.id).state))
+      }, wake: () => this.kick(),
+    })
     this.ready = this.initialize()
   }
   private async initialize(): Promise<void> {
@@ -76,12 +91,16 @@ export class AssistantDelegation {
       const { migrateDelegations } = await import('./delegation-migration')
       await migrateDelegations(this.db, this.workspace.id, legacy => this.host.importLegacy(legacy), receipt => this.save(receipt))
     }
-    const interrupted = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state') IN ('preparing','submitting','submitted','cancel_requested')").all() as Array<{ body: string }>
+    const interrupted = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state') IN ('preparing','submitting','submitted','cancel_requested','pause_requested')").all() as Array<{ body: string }>
     for (const row of interrupted) {
       const receipt = JSON.parse(row.body) as AssistantDelegationReceipt
       try {
         const { completedResult, resume, ...binding } = await this.host.recover(receipt)
         Object.assign(receipt, binding)
+        if (receipt.state === 'pause_requested') {
+          this.save({ ...receipt, state: this.host.heldSessionIds?.().includes(receipt.sessionId!) ? 'pause_requested' : 'paused' })
+          this.controls.settled(receipt.id); continue
+        }
         if (completedResult && receipt.state !== 'cancel_requested') {
           this.save({ ...receipt, state: 'result_ready', result: completedResult, error: undefined }); continue
         }
@@ -95,6 +114,7 @@ export class AssistantDelegation {
     const completed = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state') IN ('result_ready','cancelled') ORDER BY seq DESC LIMIT 20").all() as Array<{ body: string }>
     for (const row of completed) await this.host.restoreDeliverables?.(JSON.parse(row.body) as AssistantDelegationReceipt).catch(error => this.host.reportError(error))
     this.initialized = true
+    await this.controls.recover()
     void this.indexBatch()
   }
   private indexBatch(): Promise<void> {
@@ -143,7 +163,12 @@ export class AssistantDelegation {
   private async view(receipt: AssistantDelegationReceipt, query: AssistantWorkQuery = {}): Promise<AssistantWork> {
     const [input, execution] = await Promise.all([this.host.snapshot(receipt), query.view ? undefined : this.host.execution?.(receipt, { before: query.attemptsBefore, limit: query.attemptLimit ?? 5 })])
     const cached = this.db.prepare('SELECT title FROM work_index WHERE id=?').get(receipt.id) as { title: string } | undefined
-    return { ...receipt, ...(query.id ? { outputManifest: this.results.get(receipt.id) } : {}), title: input?.title ?? cached?.title, ...(input ? { effectiveConfig: input.effectiveConfig, adjustments: input.adjustments, artifactBaselines: input.artifactBaselines,
+    if (input && cached?.title !== input.title) this.db.prepare('UPDATE work_index SET title=? WHERE id=?').run(input.title, receipt.id)
+    const reason = !input ? 'Original assignment is unavailable' : execution?.followUp ? 'A later direct user input owns this Session'
+      : receipt.pendingControlId ? 'Another management command is pending' : ['result_ready', 'cancelled', 'cancel_requested'].includes(receipt.state) ? 'The original assignment has settled' : undefined
+    const actions: NonNullable<AssistantWork['controlAvailability']>['actions'] = reason ? [] : ['plan', 'message', 'configure',
+      ...(receipt.state === 'paused' ? ['resume' as const] : ['failed', 'needs_attention'].includes(receipt.state) ? ['pause' as const, 'retry' as const] : ['pause' as const])]
+    return { ...receipt, ...(query.id ? { outputManifest: this.results.get(receipt.id), controls: this.controls.list(receipt.id), controlAvailability: { actions, reason } } : {}), title: input?.title ?? cached?.title, ...(input ? { effectiveConfig: input.effectiveConfig, adjustments: input.adjustments, artifactBaselines: input.artifactBaselines,
       configRevision: input.configRevision, capabilityRevision: input.capabilityRevision,
       acceptedConfigRevision: input.acceptedConfigRevision, acceptedPermissionMode: input.acceptedPermissionMode } : {}), ...(execution ? { execution } : {}) }
   }
@@ -156,7 +181,7 @@ export class AssistantDelegation {
   private reserved(sessionId: string): boolean {
     return !!this.db.prepare(`SELECT 1 FROM work WHERE
       (json_extract(body,'$.sessionId')=? OR json_extract(body,'$.targetSessionId')=?)
-      AND json_extract(body,'$.state') IN ('preparing','accepted','submitting','submitted','needs_attention','cancel_requested') LIMIT 1`).get(sessionId, sessionId)
+      AND json_extract(body,'$.state') IN ('preparing','accepted','submitting','submitted','needs_attention','cancel_requested','pause_requested','paused') LIMIT 1`).get(sessionId, sessionId)
   }
   async dispatch(assistantSessionId: string, originMessageId: string, request: AssistantDispatch): Promise<AssistantWork> {
     await this.ready
@@ -297,7 +322,8 @@ export class AssistantDelegation {
     await this.ready
     const receipt = this.get(id)
     if (['result_ready','failed','cancelled'].includes(receipt.state)) return this.view(receipt)
-    this.save({ ...receipt, state: 'cancel_requested' })
+    this.controls.supersede(id)
+    this.save({ ...receipt, state: 'cancel_requested', pendingControlId: undefined })
     const awaitingSettlement = receipt.state === 'preparing' || (receipt.sessionId ? await this.host.cancel(receipt) : false)
     const current = this.get(id)
     const cancelled = awaitingSettlement || current.state === 'cancelled' ? current : this.save({ ...current, state: 'cancelled' })
@@ -305,14 +331,28 @@ export class AssistantDelegation {
     this.kick()
     return this.view(cancelled)
   }
+  directUserInput(sessionId: string): void {
+    const rows = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.sessionId')=? AND json_extract(body,'$.pendingControlId') IS NOT NULL").all(sessionId) as Array<{ body: string }>
+    for (const row of rows) {
+      const receipt = JSON.parse(row.body) as AssistantDelegationReceipt
+      this.controls.supersede(receipt.id)
+      this.save({ ...receipt, pendingControlId: undefined, ...(receipt.state === 'pause_requested' ? {
+        state: 'needs_attention' as const, error: 'A later direct user input superseded the pending management command; original execution facts are preserved',
+      } : {}) })
+    }
+  }
   complete(event: SessionCompletionEvent): void {
     if (!this.initialized || this.closed || event.workspaceId !== this.workspace.id) return
     const rows = this.db.prepare(`SELECT body FROM work WHERE json_extract(body,'$.sessionId')=?
-      AND json_extract(body,'$.state') IN ('submitting','submitted','needs_attention','cancel_requested')`).all(event.sessionId) as Array<{ body: string }>
+      AND json_extract(body,'$.state') IN ('submitting','submitted','needs_attention','cancel_requested','pause_requested')`).all(event.sessionId) as Array<{ body: string }>
     const receipt = rows.map(row => JSON.parse(row.body) as AssistantDelegationReceipt)
       .find(item => item.inputMessageId && event.inputMessageIds?.includes(item.inputMessageId))
     if (!receipt) { this.kick(); return }
-    if (receipt.state === 'cancel_requested') this.save({ ...receipt, state: 'cancelled' })
+    if (receipt.state === 'pause_requested') {
+      this.save({ ...receipt, state: this.host.heldSessionIds?.().includes(receipt.sessionId!) ? 'pause_requested' : 'paused' })
+      this.controls.settled(receipt.id)
+    }
+    else if (receipt.state === 'cancel_requested') this.save({ ...receipt, state: 'cancelled' })
     else if (event.reason === 'complete' && event.finalMessageId) this.save({ ...receipt, state: 'result_ready', error: undefined,
       result: { sessionId: event.resultSessionId ?? event.sessionId, messageId: event.finalMessageId } })
     else this.save({ ...receipt, state: ['error','timeout'].includes(event.reason) ? 'failed' : 'needs_attention', error: `Session ${event.reason}; inspect its original execution.` })
@@ -348,7 +388,7 @@ export class AssistantDelegation {
   private async pump(): Promise<void> {
     while (!this.closed) {
       if (this.db.prepare("SELECT 1 FROM work WHERE json_extract(body,'$.state') IN ('preparing','submitting','submitted','cancel_requested') LIMIT 1").get()) return
-      const waiting = (this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state')='needs_attention'").all() as Array<{ body: string }>)
+      const waiting = (this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state') IN ('needs_attention','pause_requested')").all() as Array<{ body: string }>)
         .map(row => JSON.parse(row.body) as AssistantDelegationReceipt)
       const holders = this.host.heldSessionIds?.() ?? []
       if (holders.length) {
@@ -356,10 +396,11 @@ export class AssistantDelegation {
           AND json_extract(body,'$.state') IN ('cancelled','failed','result_ready')`).all(JSON.stringify(holders)) as Array<{ body: string }>
         waiting.push(...held.map(row => JSON.parse(row.body) as AssistantDelegationReceipt))
       }
-      const rows = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state')='accepted' ORDER BY seq").all() as Array<{ body: string }>
+      const rows = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state')='accepted' ORDER BY COALESCE(json_extract(body,'$.priority'),0) DESC,json_extract(body,'$.createdAt'),seq").all() as Array<{ body: string }>
       let eligible: AssistantDelegationReceipt | undefined
       for (const row of rows) {
         const candidate = JSON.parse(row.body) as AssistantDelegationReceipt
+        if (candidate.pendingControlId) continue
         const blocker = await this.sharesWaitingResources(candidate, waiting)
         if (!blocker) { eligible = candidate; break }
         const current = this.get(candidate.id)
@@ -376,6 +417,7 @@ export class AssistantDelegation {
       }
       catch (error) {
         const current = this.get(receipt.id)
+        if (current.pendingControlId) continue
         if (!['cancelled','cancel_requested','result_ready'].includes(current.state)) {
           const failed: AssistantDelegationReceipt = { ...current, state: error instanceof SessionDelegationConflict ? 'failed' : 'needs_attention',
             error: error instanceof Error ? error.message : 'Session input submission failed' }

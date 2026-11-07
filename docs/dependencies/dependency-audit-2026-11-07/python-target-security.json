@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-07T06:20:54.236Z",
+  "source": "https://api.osv.dev/v1/querybatch",
+  "query": {
+    "queries": [
+      {
+        "package": {
+          "name": "pillow",
+          "ecosystem": "PyPI"
+        },
+        "version": "13.0.0"
+      },
+      {
+        "package": {
+          "name": "pypdf",
+          "ecosystem": "PyPI"
+        },
+        "version": "6.21.4"
+      },
+      {
+        "package": {
+          "name": "pypdf",
+          "ecosystem": "PyPI"
+        },
+        "version": "7.0.0"
+      }
+    ]
+  },
+  "response": {
+    "results": [
+      {},
+      {},
+      {}
+    ]
+  }
+}

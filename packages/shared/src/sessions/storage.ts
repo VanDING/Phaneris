@@ -346,7 +346,9 @@ function headerToMetadata(header: SessionHeader, workspaceRootPath: string): Ses
     const planCount = listPlanFiles(workspaceRootPath, header.id).length;
 
     // Migration: For sessions created before sdkCwd was added, use workingDirectory as fallback.
-    const workingDir = header.workingDirectory ? expandPath(header.workingDirectory) : undefined;
+    // Preserve explicit "no project directory" intent in startup metadata. The
+    // execution resolver maps it to the owned Session folder, never a cwd/none path.
+    const workingDir = header.workingDirectory === 'none' ? 'none' : header.workingDirectory ? expandPath(header.workingDirectory) : undefined;
     const sdkCwd = header.sdkCwd ? expandPath(header.sdkCwd) : workingDir;
 
     // Destructure fields that don't exist on SessionMetadata or need overrides

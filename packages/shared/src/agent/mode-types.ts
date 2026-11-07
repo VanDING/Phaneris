@@ -144,6 +144,9 @@ const ApiEndpointRuleSchema = z.object({
   method: z.enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']),
   path: z.string().describe('Regex pattern for API path'),
   comment: z.string().optional(),
+  /** Source-local Host effect contract. For the main assistant this is only
+   * honored for POST with an anchored literal path, never a wildcard rule. */
+  readOnly: z.boolean().optional(),
 });
 
 export type ApiEndpointRule = z.infer<typeof ApiEndpointRuleSchema>;

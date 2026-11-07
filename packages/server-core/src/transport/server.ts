@@ -731,7 +731,7 @@ export class WsRpcServer implements RpcServer {
       const bytes = Buffer.byteLength(data)
       if (bytes > MAX_MESSAGE_PAYLOAD_BYTES) {
         this.sendResponseError(client.ws, id, channel, 'PAYLOAD_TOO_LARGE',
-          `Response payload too large (${bytes} bytes; limit ${MAX_MESSAGE_PAYLOAD_BYTES} bytes). Use bounded reads for this resource.`)
+          `Response payload too large (${bytes} bytes; limit ${MAX_MESSAGE_PAYLOAD_BYTES} bytes; channel ${channel}). Use bounded reads for this resource.`)
       } else {
         this.safeSend(client.ws, data)
       }

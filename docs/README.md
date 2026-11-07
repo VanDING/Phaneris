@@ -20,9 +20,13 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
-0.6.2 版本计划：[助手权限、能力认知与 Worker 管理](architecture/resident-assistant-0.6.2-plan-2026-11-06.md) — proposed；收敛广泛读取、L0 原文直读、主助手与 Worker 执行授权分离、能力声明/Host 同源及 Worker 全过程管理。包含实施顺序、先行失败矩阵与候选包验收，本次仅规划，尚未实施。
+后续版本安排：0.6.3 先扎实任务管理，具体范围由用户另开对话讨论；[0.6.4 助手与 Board 并排交互计划](architecture/resident-assistant-board-0.6.4-plan-2026-11-07.md) — deferred，四步主交互已确认，暂不实施。进入助手默认全屏，可呼出工作区 Board 并切换 Kanban / 日历 / 甘特图；从 Board 进入右侧 Session，左侧助手保留，右侧可返回原 Board。
+
+0.6.2 版本计划：[助手权限、能力认知与 Worker 管理](architecture/resident-assistant-0.6.2-plan-2026-11-06.md) — implemented / validated，2026-11-07 完成源码与隔离 Windows 候选验收；23 工作流 / 392 场景、实际打包客户端 33 场景及真实主助手 3 个样本通过。读取、L0、执行上限与管理闭环的范围及未覆盖项见[实施与验收记录](process/resident-assistant-0.6.2-implementation-2026-11-06.md)，安装版与真实 Work 数据未替换。
 
 助手使用与维护：[权限、内置记忆、项目事实和个人知识来源](guides/resident-assistant-memory.md)。
+
+记忆现场修复：[2026-11-07 记忆索引、旧工作区身份和大体积会话读取](process/resident-assistant-memory-repair-2026-11-07.md) — 保留原文与记忆权威，先复现旧库和超限失败，再做有界恢复及回归；现场生效状态见记录。
 
 助手完整实施：[2026-11-05 实施与最终验收](process/resident-assistant-native-rollout-2026-11-05.md) — 2026-11-06 完成权限、目录迁移、自动学习、Project 单一权威、L2/L3 与知识引用；21 个工作流、351 组场景通过本机 Windows 隔离验收。真实 Work 数据未迁移、已安装客户端未替换。
 

@@ -12,12 +12,12 @@ import { PRODUCT_NAME, USER_DATA_DIR_NAME } from '../../packages/shared/src/iden
 import { getBuiltinModels } from '@earendil-works/pi-ai/providers/all'
 
 export const liveOutput = resolve(import.meta.dir, '../../.cache/capability-integration')
-const ledgerPath = resolve(liveOutput, 'live-deepseek-budget.json')
 // Conservative peak catalog prices, independently checked against the official pricing page.
 const price = { input: .3, output: 1.2, cacheRead: .006 }
-export async function liveDeepSeek() {
-  mkdirSync(liveOutput, { recursive: true })
-  const connection = getLlmConnections().find(c => c.name.toLowerCase() === 'deepseek' && c.defaultModel === 'deepseek-flash')
+export async function liveDeepSeek(outputDirectory = liveOutput) {
+  mkdirSync(outputDirectory, { recursive: true })
+  const ledgerPath = resolve(outputDirectory, 'live-deepseek-budget.json')
+  const connection = getLlmConnections().find(c => c.name.toLowerCase() === 'deepseek' && c.defaultModel?.replace(/^pi\//, '') === 'deepseek-flash')
   if (!connection) throw new Error('Configured DeepSeek Flash connection is unavailable')
   const endpoint = new URL(connection.baseUrl ?? 'https://api.deepseek.com')
   if (endpoint.origin !== 'https://api.deepseek.com') throw new Error('Live fixture benchmark requires the configured official DeepSeek endpoint')

@@ -3,7 +3,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import { isAbsolute, join, relative, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { appendProjectMemoryEntry, getProjectMemoryPath, loadProjectById } from '@phaneris/shared/projects'
-import { readAssistantMemoryPolicy } from '@phaneris/shared/workspaces'
+import { readAssistantMemoryPolicy, assertAssistantMemoryLearning } from '@phaneris/shared/workspaces'
 import { AssistantPrivatePaths } from '@phaneris/shared/agent/assistant-private-paths'
 import { resolveCanonicalPath } from '@phaneris/shared/utils'
 import type { MemorySource, MemorySourceResult } from '@phaneris/session-tools-core/memory-contracts'
@@ -116,7 +116,7 @@ export class ProjectMemoryService {
       ?? (same(context.delegatedSource, input.evidence.source) ? context.delegatedSource?.contentHash : undefined) })
     const explicit = input.intent === 'user_request' && same(context.currentUserSource, source) && source.directUser
     if (input.intent === 'user_request' && !explicit) throw new Error('Historical or internal inputs cannot authorize an explicit project memory operation')
-    if (policy.learning === 'paused' || policy.learning === 'explicit' && !explicit) throw new Error('Project memory learning is paused or requires an explicit current user request')
+    assertAssistantMemoryLearning(policy, explicit ? 'user_request' : 'automatic')
     if (input.assessment.confidence !== 'supported' || input.assessment.durability !== 'durable' || !['project_fact', 'experience'].includes(input.assessment.domain)) throw new Error('Project memory requires a supported durable assessment; sensitive, secret and authority material is ineligible')
     const quote = input.evidence.quote
     if (![quote, JSON.stringify(quote).slice(1, -1), JSON.stringify(JSON.stringify(quote).slice(1, -1)).slice(1, -1)].some(text => source.content.includes(text))) throw new Error('Project memory evidence quote does not match the actual source')

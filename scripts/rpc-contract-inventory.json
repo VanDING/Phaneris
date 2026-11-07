@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "channels": 442,
-  "centrallyValidatedMethods": 65,
-  "typedResultPorts": 56,
+  "channels": 445,
+  "centrallyValidatedMethods": 68,
+  "typedResultPorts": 59,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -411,7 +411,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('./assistant-memory').MemorySourceResult",
+      "resultContract": "import('./assistant-memory').MemorySourcePage",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5480,7 +5480,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
-          "line": 39,
+          "line": 59,
           "args": [
             "workspaceId: string",
             "id: string"
@@ -5502,10 +5502,32 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
-          "line": 23,
+          "line": 43,
           "args": [
             "workspaceId: string",
             "command: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextCommand"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.CONTROL",
+      "channel": "residentAssistant:control",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/worker-control-contracts').WorkerControlResult",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 24,
+          "args": [
+            "workspaceId: string",
+            "command: import('@phaneris/session-tools-core/worker-control-contracts').WorkerControl"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5524,7 +5546,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
-          "line": 31,
+          "line": 51,
           "args": [
             "workspaceId: string",
             "request: AssistantDispatch"
@@ -5546,10 +5568,32 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
-          "line": 27,
+          "line": 47,
           "args": [
             "workspaceId: string",
             "query: { after?: number; limit?: number }"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.EXECUTION_MODE",
+      "channel": "residentAssistant:executionMode",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "Session",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 20,
+          "args": [
+            "workspaceId: string",
+            "mode: import('@phaneris/shared/agent/mode-types').PermissionMode"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5568,9 +5612,32 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
-          "line": 19,
+          "line": 36,
           "args": [
             "workspaceId: string"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.ORIGINALS",
+      "channel": "residentAssistant:originals",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryPage",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 16,
+          "args": [
+            "workspaceId: string",
+            "sessionId: string",
+            "query: import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryQuery"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5589,7 +5656,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
-          "line": 11,
+          "line": 28,
           "args": [
             "workspaceId: string",
             "command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility"
@@ -5611,7 +5678,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
-          "line": 35,
+          "line": 55,
           "args": [
             "workspaceId: string",
             "query: AssistantWorkQuery"

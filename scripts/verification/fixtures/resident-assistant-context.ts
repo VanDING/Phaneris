@@ -26,7 +26,8 @@ const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request
   const messages = body.messages as Array<{ role: string; content?: unknown }>
   const latestUser = messages.flatMap((message, index) => message.role === 'user' ? [{ index, text:
     (typeof message.content === 'string' ? message.content : (message.content as Array<{ text?: string }> ?? []).map(part => part.text ?? '').join('\n'))
-      .replace(/<resident_context_segment>[\s\S]*?<\/resident_context_segment>/g, '').trim() }] : []).filter(entry => entry.text).at(-1)
+      .replace(/<resident_context_segment>[\s\S]*?<\/resident_context_segment>/g, '')
+      .replace(/<resident_capabilities>[\s\S]*?<\/resident_capabilities>/g, '').trim() }] : []).filter(entry => entry.text).at(-1)
   const latestText = latestUser?.text ?? ''
   const latest = latestText
   const refreshing = latest.includes('<resident_material_refresh>')

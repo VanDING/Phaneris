@@ -1,6 +1,6 @@
 {
   "name": "@phaneris/session-tools-core",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "license": "Apache-2.0",
   "description": "Shared utilities for session-scoped tools (Claude and Codex)",
   "type": "module",
@@ -12,6 +12,9 @@
     "./delegation-contracts": "./src/delegation-contracts.ts",
     "./task-result-contracts": "./src/task-result-contracts.ts",
     "./history-contracts": "./src/history-contracts.ts",
+    "./session-history-contracts": "./src/session-history-contracts.ts",
+    "./assistant-capabilities": "./src/assistant-capabilities.ts",
+    "./worker-control-contracts": "./src/worker-control-contracts.ts",
     "./resident-context-contracts": "./src/resident-context-contracts.ts",
     "./memory-contracts": "./src/memory-contracts.ts",
     "./memory-derived-contracts": "./src/memory-derived-contracts.ts",

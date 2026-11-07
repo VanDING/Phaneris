@@ -113,6 +113,18 @@ Fine-grained rules for API source requests.
 }
 ```
 
+The workspace assistant has a separate reading/management role. Ordinary endpoint allowances do not grant it business writes. In a Source's own `permissions.json`, a trusted read-only POST operation can be declared explicitly:
+
+```json
+{
+  "allowedApiEndpoints": [
+    { "method": "POST", "path": "^/v1/query$", "readOnly": true }
+  ]
+}
+```
+
+For this role, `readOnly` is honored only for POST with an anchored literal path, matched exactly against the tool's `path` argument. Wildcards, remote annotations and ordinary POST allowances cannot grant this capability. The declaration describes an operation that is read-only for its accepted requests; it cannot turn a mixed read/write endpoint into a query adapter. The Host republishes the constrained schema and checks the current Source policy at every call. Worker execution remains subject to its own permission ceiling.
+
 ### allowedBashPatterns
 
 Regex patterns for bash commands to allow.

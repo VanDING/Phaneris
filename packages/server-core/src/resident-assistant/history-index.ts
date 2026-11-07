@@ -20,8 +20,10 @@ export function initializeHistoryIndex(db: SqliteDatabase): void {
       PRIMARY KEY(session_id,message_id));
     CREATE TABLE IF NOT EXISTS history_schema(singleton INTEGER PRIMARY KEY CHECK(singleton=1),version INTEGER NOT NULL);`)
   const schema = db.prepare('SELECT version FROM history_schema WHERE singleton=1').get() as { version: number } | undefined
-  if (!schema || schema.version < 2) db.transaction(() => {
-    db.exec("UPDATE history_sessions SET state='pending'; INSERT OR REPLACE INTO history_schema VALUES(1,2)")
+  if (!schema || schema.version < 3) db.transaction(() => {
+    // v2 left old messages behind while marking their Sessions pending. Rebuild
+    // both older and already-broken v2 catalogues, retaining authority checkpoints.
+    db.exec("UPDATE history_sessions SET state='pending'; INSERT OR REPLACE INTO history_schema VALUES(1,3); UPDATE history_clock SET version=version+1 WHERE singleton=1")
   })()
 }
 
@@ -55,6 +57,9 @@ export function queryHistory(db: SqliteDatabase, workspaceRootPath: string, inpu
     // source cannot starve older history. No model or startup-wide history replay.
     const pending = db.prepare("SELECT * FROM history_sessions WHERE state='pending' ORDER BY CASE WHEN id=? THEN 0 ELSE 1 END,scanned_at ASC,id ASC LIMIT 8").all(input.sessionId ?? null) as SourceRow[]
     for (const row of pending) {
+      // Every rebuild replaces the complete Session projection, regardless of
+      // why it became pending. Rollback preserves the old projection on DB failure.
+      db.prepare('DELETE FROM history_messages WHERE session_id=?').run(row.id)
       const session = row.signature === 'unreadable' ? null : readSessionJsonl(getSessionFilePath(workspaceRootPath, row.id), { strict: true })
       const valid = session?.id === row.id && session.messages.every(message => message && typeof message.id === 'string'
         && message.id.length > 0 && typeof message.content === 'string'

@@ -120,7 +120,7 @@ export function loadWorkspaceConfig(rootPath: string): WorkspaceConfig | null {
 
     // Expand path variables in defaults for portability
     if (config.defaults?.workingDirectory) {
-      config.defaults.workingDirectory = expandPath(config.defaults.workingDirectory);
+      if (config.defaults.workingDirectory !== 'none') config.defaults.workingDirectory = expandPath(config.defaults.workingDirectory);
     }
 
     // Compatibility: accept canonical or legacy permission mode names on read
@@ -307,7 +307,8 @@ export function generateUniqueWorkspacePath(name: string, baseDir: string): stri
 export function createWorkspaceAtPath(
   rootPath: string,
   name: string,
-  defaults?: WorkspaceConfig['defaults']
+  defaults?: WorkspaceConfig['defaults'],
+  workspaceId?: string,
 ): WorkspaceConfig {
   const now = Date.now();
   const slug = generateSlug(name);
@@ -330,7 +331,7 @@ export function createWorkspaceAtPath(
   };
 
   const config: WorkspaceConfig = {
-    id: `ws_${randomUUID().slice(0, 8)}`,
+    id: workspaceId ?? `ws_${randomUUID().slice(0, 8)}`,
     name,
     slug,
     defaults: workspaceDefaults,

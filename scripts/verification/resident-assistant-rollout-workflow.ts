@@ -16,7 +16,7 @@ await verificationWorkflow('resident-assistant-rollout', async run => {
   }
   const cases = ['memory', 'automatic-memory', 'history', 'extraction', 'temporal', 'relations', 'sources', 'structure',
     'recall', 'project-memory', 'layout', 'identity', 'native', 'private-state', 'source-access',
-    'maintenance', 'context', 'delegation', 'deliverables', 'results', 'ui'] as const
+    'maintenance', 'context', 'delegation', 'deliverables', 'results', 'l0', 'control', 'history-repair', 'memory-repair', 'ui'] as const
   const results: Array<{ case: string; passed: number; directory: string; exitCode: number }> = []
   for (const name of cases) {
     console.log(`Running resident assistant ${name}`)

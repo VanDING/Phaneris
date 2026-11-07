@@ -51,6 +51,7 @@ export type BuiltInStatusId = 'backlog' | 'todo' | 'in-progress' | 'needs-review
  */
 export interface Session extends SessionPlanningFields {
   id: string
+  workerPermissionMode?: PermissionMode
   sessionKind?: 'resident_assistant'
   residentDelegationId?: string
   delegationIds?: string[]
@@ -484,7 +485,7 @@ export type SessionEvent =
   | { type: 'name_changed'; sessionId: string; name?: string }
   | { type: 'session_model_changed'; sessionId: string; model: string | null }
   | { type: 'session_status_changed'; sessionId: string; sessionStatus: SessionStatus }
-  | { type: 'session_metadata_changed'; sessionId: string; changes: Partial<Pick<Session, 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'activePlugin' | 'contextPolicy' | 'contextHandoff' | 'handoffRootSessionId' | 'handoffFromSessionId' | 'handoffSequence' | 'description' | 'acceptanceCriteria' | 'startAt' | 'dueAt' | 'progress' | 'dependencySessionIds' | 'isMilestone' | 'parentSessionId'>> }
+  | { type: 'session_metadata_changed'; sessionId: string; changes: Partial<Pick<Session, 'workerPermissionMode' | 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'activePlugin' | 'contextPolicy' | 'contextHandoff' | 'handoffRootSessionId' | 'handoffFromSessionId' | 'handoffSequence' | 'description' | 'acceptanceCriteria' | 'startAt' | 'dueAt' | 'progress' | 'dependencySessionIds' | 'isMilestone' | 'parentSessionId'>> }
   | { type: 'session_deleted'; sessionId: string }
   | { type: 'session_created'; sessionId: string }
   | { type: 'session_shared'; sessionId: string; sharedUrl: string }

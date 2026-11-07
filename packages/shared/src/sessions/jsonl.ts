@@ -60,6 +60,7 @@ function normalizePermissionMode(value: unknown): PermissionMode | undefined {
 function normalizeHeaderPermissionModes<T extends SessionHeader>(header: T): T {
   const permissionMode = normalizePermissionMode(header.permissionMode);
   const previousPermissionMode = normalizePermissionMode(header.previousPermissionMode);
+  if (header.workerPermissionMode !== undefined) header.workerPermissionMode = normalizePermissionMode(header.workerPermissionMode) ?? 'safe';
 
   if (permissionMode) {
     header.permissionMode = permissionMode;
@@ -134,8 +135,8 @@ export function readSessionJsonl(sessionFile: string, options?: { strict?: boole
 
     // Migration: For sessions created before sdkCwd was added, use workingDirectory as fallback.
     // This is correct because the old code used workingDirectory for SDK's cwd parameter.
-    const workingDir = header.workingDirectory ? expandPath(header.workingDirectory) : undefined;
-    const sdkCwd = header.sdkCwd ? expandPath(header.sdkCwd) : workingDir;
+    const workingDir = header.workingDirectory === 'none' ? 'none' : header.workingDirectory ? expandPath(header.workingDirectory) : undefined;
+    const sdkCwd = header.sdkCwd ? expandPath(header.sdkCwd) : workingDir === 'none' ? undefined : workingDir;
 
     return {
       ...pickSessionFields(header),

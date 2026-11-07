@@ -1,0 +1,1638 @@
+{
+  "scope": "Fresh union resolution for Windows x64 CPython 3.12.15, not installed-runtime inventory",
+  "packages": [
+    {
+      "name": "beautifulsoup4",
+      "version": "4.15.0"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.10.23"
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.2"
+    },
+    {
+      "name": "click",
+      "version": "8.5.0"
+    },
+    {
+      "name": "cobble",
+      "version": "0.1.4"
+    },
+    {
+      "name": "coloredlogs",
+      "version": "15.0.1"
+    },
+    {
+      "name": "cryptography",
+      "version": "50.0.2"
+    },
+    {
+      "name": "defusedxml",
+      "version": "0.7.1"
+    },
+    {
+      "name": "diff-match-patch",
+      "version": "20241021"
+    },
+    {
+      "name": "et-xmlfile",
+      "version": "2.0.0"
+    },
+    {
+      "name": "flatbuffers",
+      "version": "25.12.19"
+    },
+    {
+      "name": "humanfriendly",
+      "version": "10.0"
+    },
+    {
+      "name": "icalendar",
+      "version": "7.3.0"
+    },
+    {
+      "name": "idna",
+      "version": "3.20"
+    },
+    {
+      "name": "img2pdf",
+      "version": "0.6.3"
+    },
+    {
+      "name": "lxml",
+      "version": "6.1.3"
+    },
+    {
+      "name": "magika",
+      "version": "0.6.3"
+    },
+    {
+      "name": "mammoth",
+      "version": "1.11.0"
+    },
+    {
+      "name": "markdownify",
+      "version": "1.2.3"
+    },
+    {
+      "name": "markitdown",
+      "version": "0.1.8"
+    },
+    {
+      "name": "mpmath",
+      "version": "1.3.0"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.4"
+    },
+    {
+      "name": "onnxruntime",
+      "version": "1.20.1"
+    },
+    {
+      "name": "openpyxl",
+      "version": "3.1.5"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3"
+    },
+    {
+      "name": "pandas",
+      "version": "3.1.1"
+    },
+    {
+      "name": "pdfminer-six",
+      "version": "20260107"
+    },
+    {
+      "name": "pdfplumber",
+      "version": "0.11.10"
+    },
+    {
+      "name": "pikepdf",
+      "version": "10.17.0"
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0"
+    },
+    {
+      "name": "pillow-heif",
+      "version": "1.8.1"
+    },
+    {
+      "name": "protobuf",
+      "version": "7.36.2"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.12"
+    },
+    {
+      "name": "pypdf",
+      "version": "6.21.1"
+    },
+    {
+      "name": "pypdfium2",
+      "version": "5.14.0"
+    },
+    {
+      "name": "pyreadline3",
+      "version": "3.5.6"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0"
+    },
+    {
+      "name": "python-docx",
+      "version": "1.2.0"
+    },
+    {
+      "name": "python-dotenv",
+      "version": "1.2.4"
+    },
+    {
+      "name": "python-pptx",
+      "version": "1.0.2"
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0"
+    },
+    {
+      "name": "soupsieve",
+      "version": "4.0.1"
+    },
+    {
+      "name": "sympy",
+      "version": "1.14.0"
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.16.0"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0"
+    },
+    {
+      "name": "xlsxwriter",
+      "version": "3.3.1"
+    }
+  ],
+  "metadata": {
+    "cobble": {
+      "version": "0.1.4",
+      "latest": "0.1.4",
+      "source": "https://pypi.org/pypi/cobble/json",
+      "checkedAt": "2026-11-07T06:25:44.736Z",
+      "requiresPython": ">=3.5",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "click": {
+      "version": "8.5.0",
+      "latest": "8.5.1",
+      "source": "https://pypi.org/pypi/click/json",
+      "checkedAt": "2026-11-07T06:25:44.764Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "beautifulsoup4": {
+      "version": "4.15.0",
+      "latest": "4.15.0",
+      "source": "https://pypi.org/pypi/beautifulsoup4/json",
+      "checkedAt": "2026-11-07T06:25:44.771Z",
+      "requiresPython": ">=3.7.0",
+      "requiresDist": [
+        "soupsieve>=1.6.1",
+        "typing-extensions>=4.0.0",
+        "cchardet; extra == \"cchardet\"",
+        "chardet; extra == \"chardet\"",
+        "charset-normalizer; extra == \"charset-normalizer\"",
+        "html5lib; extra == \"html5lib\"",
+        "lxml; extra == \"lxml\""
+      ],
+      "vulnerabilities": []
+    },
+    "coloredlogs": {
+      "version": "15.0.1",
+      "latest": "15.0.1",
+      "source": "https://pypi.org/pypi/coloredlogs/json",
+      "checkedAt": "2026-11-07T06:25:44.784Z",
+      "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+      "requiresDist": [
+        "humanfriendly (>=9.1)",
+        "capturer (>=2.4) ; extra == 'cron'"
+      ],
+      "vulnerabilities": []
+    },
+    "certifi": {
+      "version": "2026.10.23",
+      "latest": "2026.10.23",
+      "source": "https://pypi.org/pypi/certifi/json",
+      "checkedAt": "2026-11-07T06:25:44.886Z",
+      "requiresPython": ">=3.7",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "diff-match-patch": {
+      "version": "20241021",
+      "latest": "20241021",
+      "source": "https://pypi.org/pypi/diff-match-patch/json",
+      "checkedAt": "2026-11-07T06:25:44.971Z",
+      "requiresPython": ">=3.7",
+      "requiresDist": [
+        "attribution==1.8.0; extra == \"dev\"",
+        "build>=1; extra == \"dev\"",
+        "black==24.8.0; extra == \"dev\"",
+        "flit==3.9.0; extra == \"dev\"",
+        "mypy==1.12.1; extra == \"dev\"",
+        "ufmt==2.7.3; extra == \"dev\"",
+        "usort==1.0.8.post1; extra == \"dev\""
+      ],
+      "vulnerabilities": []
+    },
+    "et-xmlfile": {
+      "version": "2.0.0",
+      "latest": "2.0.0",
+      "source": "https://pypi.org/pypi/et-xmlfile/json",
+      "checkedAt": "2026-11-07T06:25:44.986Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "flatbuffers": {
+      "version": "25.12.19",
+      "latest": "25.12.19",
+      "source": "https://pypi.org/pypi/flatbuffers/json",
+      "checkedAt": "2026-11-07T06:25:45.022Z",
+      "requiresPython": null,
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "defusedxml": {
+      "version": "0.7.1",
+      "latest": "0.7.1",
+      "source": "https://pypi.org/pypi/defusedxml/json",
+      "checkedAt": "2026-11-07T06:25:45.031Z",
+      "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "humanfriendly": {
+      "version": "10.0",
+      "latest": "10.0",
+      "source": "https://pypi.org/pypi/humanfriendly/json",
+      "checkedAt": "2026-11-07T06:25:45.175Z",
+      "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+      "requiresDist": [
+        "monotonic ; python_version == \"2.7\"",
+        "pyreadline ; sys_platform == \"win32\" and python_version<\"3.8\"",
+        "pyreadline3 ; sys_platform == \"win32\" and python_version>=\"3.8\""
+      ],
+      "vulnerabilities": []
+    },
+    "img2pdf": {
+      "version": "0.6.3",
+      "latest": "0.6.3",
+      "source": "https://pypi.org/pypi/img2pdf/json",
+      "checkedAt": "2026-11-07T06:25:45.263Z",
+      "requiresPython": ">=3.5",
+      "requiresDist": [
+        "Pillow",
+        "pikepdf"
+      ],
+      "vulnerabilities": []
+    },
+    "icalendar": {
+      "version": "7.3.0",
+      "latest": "7.3.0",
+      "source": "https://pypi.org/pypi/icalendar/json",
+      "checkedAt": "2026-11-07T06:25:45.271Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "python-dateutil",
+        "typing-extensions~=4.10; python_version < \"3.13\"",
+        "tzdata>=2025.3"
+      ],
+      "vulnerabilities": []
+    },
+    "idna": {
+      "version": "3.20",
+      "latest": "3.20",
+      "source": "https://pypi.org/pypi/idna/json",
+      "checkedAt": "2026-11-07T06:25:45.324Z",
+      "requiresPython": ">=3.9",
+      "requiresDist": [
+        "ruff>=0.16.0; extra == \"all\"",
+        "mypy>=1.11.2; extra == \"all\"",
+        "ty>=0.0.37; extra == \"all\"",
+        "pytest>=8.3.2; extra == \"all\"",
+        "hypothesis>=6.141.1; extra == \"all\"",
+        "coverage>=7.10.0; extra == \"all\""
+      ],
+      "vulnerabilities": []
+    },
+    "magika": {
+      "version": "0.6.3",
+      "latest": "1.0.3",
+      "source": "https://pypi.org/pypi/magika/json",
+      "checkedAt": "2026-11-07T06:25:45.479Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": [
+        "click>=8.1.7",
+        "onnxruntime<1.20.0,>=1.17.0; python_version <= \"3.9\"",
+        "onnxruntime<1.24.1,>=1.17.0; python_version == \"3.10\"",
+        "onnxruntime>=1.17.0; python_version >= \"3.11\" and python_version < \"3.13\"",
+        "onnxruntime>=1.21.0; python_version == \"3.13\"",
+        "onnxruntime>=1.24.1; python_version >= \"3.14\""
+      ],
+      "vulnerabilities": []
+    },
+    "charset-normalizer": {
+      "version": "3.5.2",
+      "latest": "3.5.2",
+      "source": "https://pypi.org/pypi/charset-normalizer/json",
+      "checkedAt": "2026-11-07T06:25:45.513Z",
+      "requiresPython": ">=3.7",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "markdownify": {
+      "version": "1.2.3",
+      "latest": "1.2.3",
+      "source": "https://pypi.org/pypi/markdownify/json",
+      "checkedAt": "2026-11-07T06:25:45.520Z",
+      "requiresPython": null,
+      "requiresDist": [
+        "beautifulsoup4<5,>=4.9",
+        "six<2,>=1.15"
+      ],
+      "vulnerabilities": []
+    },
+    "markitdown": {
+      "version": "0.1.8",
+      "latest": "0.1.9",
+      "source": "https://pypi.org/pypi/markitdown/json",
+      "checkedAt": "2026-11-07T06:25:45.572Z",
+      "requiresPython": "<3.15,>=3.10",
+      "requiresDist": [
+        "beautifulsoup4",
+        "certifi>=2026.10.19",
+        "charset-normalizer",
+        "defusedxml",
+        "magika<2,>=0.6.1",
+        "markdownify",
+        "requests",
+        "azure-ai-contentunderstanding>=1.2.0b1; extra == \"all\"",
+        "azure-ai-documentintelligence; extra == \"all\"",
+        "azure-identity; extra == \"all\"",
+        "lxml; extra == \"all\"",
+        "mammoth<2,>=1.12.2; extra == \"all\"",
+        "olefile; extra == \"all\"",
+        "openpyxl; extra == \"all\"",
+        "pandas; extra == \"all\"",
+        "pdfminer-six>=20251230; extra == \"all\"",
+        "pdfplumber>=0.11.9; extra == \"all\"",
+        "pydub; extra == \"all\"",
+        "python-pptx; extra == \"all\"",
+        "speechrecognition; extra == \"all\"",
+        "xlrd; extra == \"all\"",
+        "youtube-transcript-api~=1.2.3; extra == \"all\"",
+        "pydub; extra == \"audio-transcription\"",
+        "speechrecognition; extra == \"audio-transcription\"",
+        "azure-ai-contentunderstanding>=1.2.0b1; extra == \"az-content-understanding\"",
+        "azure-identity; extra == \"az-content-understanding\"",
+        "azure-ai-documentintelligence; extra == \"az-doc-intel\"",
+        "azure-identity; extra == \"az-doc-intel\"",
+        "lxml; extra == \"docx\"",
+        "mammoth<2,>=1.12.2; extra == \"docx\"",
+        "olefile; extra == \"outlook\"",
+        "pdfminer-six>=20251230; extra == \"pdf\"",
+        "pdfplumber>=0.11.9; extra == \"pdf\"",
+        "python-pptx; extra == \"pptx\"",
+        "pandas; extra == \"xls\"",
+        "xlrd; extra == \"xls\"",
+        "openpyxl; extra == \"xlsx\"",
+        "pandas; extra == \"xlsx\"",
+        "youtube-transcript-api~=1.2.3; extra == \"youtube-transcription\""
+      ],
+      "vulnerabilities": []
+    },
+    "cffi": {
+      "version": "2.1.1",
+      "latest": "2.1.1",
+      "source": "https://pypi.org/pypi/cffi/json",
+      "checkedAt": "2026-11-07T06:25:45.594Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "pycparser; implementation_name != \"PyPy\""
+      ],
+      "vulnerabilities": []
+    },
+    "mammoth": {
+      "version": "1.11.0",
+      "latest": "1.13.0",
+      "source": "https://pypi.org/pypi/mammoth/json",
+      "checkedAt": "2026-11-07T06:25:45.656Z",
+      "requiresPython": ">=3.7",
+      "requiresDist": [
+        "cobble<0.2,>=0.1.3"
+      ],
+      "vulnerabilities": []
+    },
+    "cryptography": {
+      "version": "50.0.2",
+      "latest": "50.0.2",
+      "source": "https://pypi.org/pypi/cryptography/json",
+      "checkedAt": "2026-11-07T06:25:45.728Z",
+      "requiresPython": "!=3.9.0,!=3.9.1,>=3.9",
+      "requiresDist": [
+        "cffi>=2.0.0; platform_python_implementation != \"PyPy\"",
+        "typing-extensions>=4.13.2; python_full_version < \"3.11\"",
+        "bcrypt>=3.1.5; extra == \"ssh\""
+      ],
+      "vulnerabilities": []
+    },
+    "mpmath": {
+      "version": "1.3.0",
+      "latest": "1.4.1",
+      "source": "https://pypi.org/pypi/mpmath/json",
+      "checkedAt": "2026-11-07T06:25:45.755Z",
+      "requiresPython": ">=3.9",
+      "requiresDist": [
+        "pytest>=6; extra == \"tests\"",
+        "numpy; extra == \"tests\"",
+        "packaging; extra == \"tests\"",
+        "pytest-timeout; extra == \"tests\"",
+        "matplotlib; extra == \"tests\"",
+        "pexpect; extra == \"tests\"",
+        "ipython; extra == \"tests\"",
+        "hypothesis; extra == \"tests\"",
+        "mpmath[tests]; extra == \"develop\"",
+        "flake518>=1.5; extra == \"develop\"",
+        "pytest-cov>=7; extra == \"develop\"",
+        "wheel; extra == \"develop\"",
+        "build; extra == \"develop\"",
+        "gmpy2>=2.3; extra == \"gmpy2\"",
+        "mpmath[gmpy2]; extra == \"gmpy\"",
+        "python-gmp; extra == \"gmp\"",
+        "sphinx; extra == \"docs\"",
+        "matplotlib; extra == \"docs\"",
+        "sphinxcontrib-autoprogram; extra == \"docs\"",
+        "pytest-xdist; extra == \"ci\"",
+        "diff_cover; extra == \"ci\""
+      ],
+      "vulnerabilities": []
+    },
+    "openpyxl": {
+      "version": "3.1.5",
+      "latest": "3.1.5",
+      "source": "https://pypi.org/pypi/openpyxl/json",
+      "checkedAt": "2026-11-07T06:25:45.868Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": [
+        "et-xmlfile"
+      ],
+      "vulnerabilities": []
+    },
+    "packaging": {
+      "version": "26.3",
+      "latest": "26.3",
+      "source": "https://pypi.org/pypi/packaging/json",
+      "checkedAt": "2026-11-07T06:25:45.876Z",
+      "requiresPython": ">=3.9",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "pdfminer-six": {
+      "version": "20260107",
+      "latest": "20260107",
+      "source": "https://pypi.org/pypi/pdfminer-six/json",
+      "checkedAt": "2026-11-07T06:25:45.949Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "charset-normalizer>=2.0.0",
+        "cryptography>=36.0.0",
+        "Pillow; extra == \"image\""
+      ],
+      "vulnerabilities": []
+    },
+    "numpy": {
+      "version": "2.5.4",
+      "latest": "2.5.4",
+      "source": "https://pypi.org/pypi/numpy/json",
+      "checkedAt": "2026-11-07T06:25:46.043Z",
+      "requiresPython": ">=3.12",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "pdfplumber": {
+      "version": "0.11.10",
+      "latest": "0.11.10",
+      "source": "https://pypi.org/pypi/pdfplumber/json",
+      "checkedAt": "2026-11-07T06:25:46.045Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": [
+        "pdfminer.six==20260107",
+        "Pillow>=12.2.0",
+        "pypdfium2>=5.9.0"
+      ],
+      "vulnerabilities": []
+    },
+    "onnxruntime": {
+      "version": "1.20.1",
+      "latest": "1.31.1",
+      "source": "https://pypi.org/pypi/onnxruntime/json",
+      "checkedAt": "2026-11-07T06:25:46.209Z",
+      "requiresPython": ">=3.11",
+      "requiresDist": [
+        "flatbuffers",
+        "numpy>=1.21.6",
+        "packaging",
+        "protobuf>=4.25.8",
+        "sympy; extra == \"symbolic\"",
+        "ml_dtypes; extra == \"quantization\""
+      ],
+      "vulnerabilities": []
+    },
+    "lxml": {
+      "version": "6.1.3",
+      "latest": "6.1.3",
+      "source": "https://pypi.org/pypi/lxml/json",
+      "checkedAt": "2026-11-07T06:25:46.253Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": [
+        "cssselect>=0.7; extra == \"cssselect\"",
+        "html5lib; extra == \"html5\"",
+        "BeautifulSoup4; extra == \"htmlsoup\"",
+        "lxml_html_clean; extra == \"html-clean\""
+      ],
+      "vulnerabilities": []
+    },
+    "pillow-heif": {
+      "version": "1.8.1",
+      "latest": "1.8.1",
+      "source": "https://pypi.org/pypi/pillow-heif/json",
+      "checkedAt": "2026-11-07T06:25:46.259Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "pillow>=11.1.0",
+        "sphinx>=4.4; extra == \"docs\"",
+        "sphinx-issues>=3.0.1; extra == \"docs\"",
+        "sphinx-rtd-theme>=1.0; extra == \"docs\"",
+        "pytest; extra == \"tests-min\"",
+        "defusedxml; extra == \"tests-min\"",
+        "packaging; extra == \"tests-min\"",
+        "pytest; extra == \"tests\"",
+        "defusedxml; extra == \"tests\"",
+        "packaging; extra == \"tests\"",
+        "numpy; extra == \"tests\"",
+        "pympler; extra == \"tests\"",
+        "pytest; extra == \"dev\"",
+        "defusedxml; extra == \"dev\"",
+        "packaging; extra == \"dev\"",
+        "numpy; extra == \"dev\"",
+        "pympler; extra == \"dev\"",
+        "opencv-python==5.0.0.93; extra == \"dev\"",
+        "pre-commit; extra == \"dev\"",
+        "pylint; extra == \"dev\"",
+        "mypy; extra == \"dev\"",
+        "coverage; extra == \"dev\"",
+        "setuptools; extra == \"dev\""
+      ],
+      "vulnerabilities": []
+    },
+    "pycparser": {
+      "version": "3.12",
+      "latest": "3.12",
+      "source": "https://pypi.org/pypi/pycparser/json",
+      "checkedAt": "2026-11-07T06:25:46.271Z",
+      "requiresPython": ">=3.11",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "protobuf": {
+      "version": "7.36.2",
+      "latest": "7.36.2",
+      "source": "https://pypi.org/pypi/protobuf/json",
+      "checkedAt": "2026-11-07T06:25:46.312Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "pypdf": {
+      "version": "6.21.1",
+      "latest": "7.0.0",
+      "source": "https://pypi.org/pypi/pypdf/json",
+      "checkedAt": "2026-11-07T06:25:46.429Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "typing_extensions>=4.0; python_version < \"3.11\"",
+        "brotli>=1.2.0; extra == \"brotli\"",
+        "cryptography>=43; extra == \"crypto\"",
+        "pycryptodome; extra == \"cryptodome\"",
+        "flit; extra == \"dev\"",
+        "pip-tools; extra == \"dev\"",
+        "pre-commit; extra == \"dev\"",
+        "pytest-cov; extra == \"dev\"",
+        "pytest-socket; extra == \"dev\"",
+        "pytest-timeout; extra == \"dev\"",
+        "pytest-xdist; extra == \"dev\"",
+        "wheel; extra == \"dev\"",
+        "myst-parser; extra == \"docs\"",
+        "sphinx; extra == \"docs\"",
+        "sphinx-rtd-theme; extra == \"docs\"",
+        "fonttools; extra == \"fonts\"",
+        "arabic-reshaper; extra == \"full\"",
+        "brotli>=1.2.0; extra == \"full\"",
+        "cryptography>=43; extra == \"full\"",
+        "fonttools; extra == \"full\"",
+        "pillow>=8.0.0; extra == \"full\"",
+        "python-bidi; extra == \"full\"",
+        "pillow>=8.0.0; extra == \"image\"",
+        "arabic-reshaper; extra == \"rtl-text\"",
+        "python-bidi; extra == \"rtl-text\""
+      ],
+      "vulnerabilities": []
+    },
+    "pyreadline3": {
+      "version": "3.5.6",
+      "latest": "3.5.6",
+      "source": "https://pypi.org/pypi/pyreadline3/json",
+      "checkedAt": "2026-11-07T06:25:46.478Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": [
+        "build; extra == \"dev\"",
+        "flake8; extra == \"dev\"",
+        "mypy; extra == \"dev\"",
+        "pytest; extra == \"dev\"",
+        "twine; extra == \"dev\""
+      ],
+      "vulnerabilities": []
+    },
+    "pillow": {
+      "version": "12.3.0",
+      "latest": "13.0.0",
+      "source": "https://pypi.org/pypi/pillow/json",
+      "checkedAt": "2026-11-07T06:25:46.484Z",
+      "requiresPython": ">=3.11",
+      "requiresDist": [
+        "furo; extra == \"docs\"",
+        "olefile; extra == \"docs\"",
+        "sphinx>=8.2; extra == \"docs\"",
+        "sphinx-autobuild; extra == \"docs\"",
+        "sphinx-copybutton; extra == \"docs\"",
+        "sphinx-inline-tabs; extra == \"docs\"",
+        "sphinxext-opengraph; extra == \"docs\"",
+        "olefile; extra == \"fpx\"",
+        "olefile; extra == \"mic\"",
+        "arro3-compute; extra == \"test-arrow\"",
+        "arro3-core; extra == \"test-arrow\"",
+        "nanoarrow; extra == \"test-arrow\"",
+        "pyarrow; extra == \"test-arrow\"",
+        "coverage>=7.4.2; extra == \"tests\"",
+        "defusedxml; extra == \"tests\"",
+        "markdown2; extra == \"tests\"",
+        "olefile; extra == \"tests\"",
+        "packaging; extra == \"tests\"",
+        "psutil; (sys_platform == \"linux\" or sys_platform == \"darwin\") and extra == \"tests\"",
+        "pytest; extra == \"tests\"",
+        "pytest-cov; extra == \"tests\"",
+        "pytest-timeout; extra == \"tests\"",
+        "pytest-xdist; extra == \"tests\"",
+        "setuptools; extra == \"tests\"",
+        "trove-classifiers>=2024.10.12; extra == \"tests\"",
+        "defusedxml; extra == \"xmp\""
+      ],
+      "vulnerabilities": []
+    },
+    "pypdfium2": {
+      "version": "5.14.0",
+      "latest": "5.15.0",
+      "source": "https://pypi.org/pypi/pypdfium2/json",
+      "checkedAt": "2026-11-07T06:25:46.504Z",
+      "requiresPython": ">=3.6",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "python-dateutil": {
+      "version": "2.9.0.post0",
+      "latest": "4.0.0",
+      "source": "https://pypi.org/pypi/python-dateutil/json",
+      "checkedAt": "2026-11-07T06:25:46.505Z",
+      "requiresPython": ">=3.11",
+      "requiresDist": [
+        "tzdata"
+      ],
+      "vulnerabilities": []
+    },
+    "pandas": {
+      "version": "3.1.1",
+      "latest": "3.1.1",
+      "source": "https://pypi.org/pypi/pandas/json",
+      "checkedAt": "2026-11-07T06:25:46.563Z",
+      "requiresPython": ">=3.11",
+      "requiresDist": [
+        "numpy>=2.0.2; python_version < \"3.14\"",
+        "numpy>=2.3.3; python_version >= \"3.14\"",
+        "python-dateutil>=2.9.0",
+        "tzdata; sys_platform == \"win32\"",
+        "tzdata; sys_platform == \"emscripten\"",
+        "pytest>=8.3.4; extra == \"test\"",
+        "pytest-xdist>=3.6.1; extra == \"test\"",
+        "pyarrow>=16.0.0; extra == \"pyarrow\"",
+        "bottleneck>=1.5.0; extra == \"performance\"",
+        "numba>=0.61.2; extra == \"performance\"",
+        "numexpr!=2.14.1,>=2.11.0; extra == \"performance\"",
+        "scipy>=1.16.1; extra == \"computation\"",
+        "xarray>=2025.7.1; extra == \"computation\"",
+        "fsspec>=2025.7.0; extra == \"fss\"",
+        "s3fs>=2025.7.0; extra == \"aws\"",
+        "gcsfs>=2025.7.0; extra == \"gcp\"",
+        "odfpy>=1.4.1; extra == \"excel\"",
+        "openpyxl>=3.1.5; extra == \"excel\"",
+        "python-calamine>=0.4.0; extra == \"excel\"",
+        "pyxlsb>=1.0.10; extra == \"excel\"",
+        "xlrd>=2.0.2; extra == \"excel\"",
+        "xlsxwriter>=3.2.5; extra == \"excel\"",
+        "pandas[pyarrow]; extra == \"parquet\"",
+        "pandas[pyarrow]; extra == \"feather\"",
+        "pyiceberg>=0.9.1; extra == \"iceberg\"",
+        "tables>=3.10.2; extra == \"hdf5\"",
+        "pyreadstat>=1.3.0; extra == \"spss\"",
+        "SQLAlchemy>=2.0.42; extra == \"postgresql\"",
+        "psycopg2>=2.9.10; extra == \"postgresql\"",
+        "adbc-driver-postgresql>=1.7.0; extra == \"postgresql\"",
+        "SQLAlchemy>=2.0.42; extra == \"mysql\"",
+        "pymysql>=1.1.1; extra == \"mysql\"",
+        "SQLAlchemy>=2.0.42; extra == \"sql-other\"",
+        "adbc-driver-postgresql>=1.7.0; extra == \"sql-other\"",
+        "adbc-driver-sqlite>=1.7.0; extra == \"sql-other\"",
+        "beautifulsoup4>=4.13.4; extra == \"html\"",
+        "html5lib>=1.1; extra == \"html\"",
+        "lxml>=6.0.0; extra == \"html\"",
+        "lxml>=6.0.0; extra == \"xml\"",
+        "matplotlib>=3.10.5; extra == \"plot\"",
+        "jinja2>=3.1.6; extra == \"output-formatting\"",
+        "tabulate>=0.9.0; extra == \"output-formatting\"",
+        "PyQt5>=5.15.11; extra == \"clipboard\"",
+        "qtpy>=2.4.3; extra == \"clipboard\"",
+        "zstandard>=0.23.0; extra == \"compression\"",
+        "pytz>=2020.1; extra == \"timezone\"",
+        "pandas[aws,clipboard,compression,computation,excel,feather,fss,gcp,hdf5,html,iceberg,mysql,output-formatting,parquet,performance,plot,postgresql,pyarrow,spss,sql-other,test,timezone,xml]; extra == \"all\"",
+        "fastparquet>=2024.11.0; extra == \"all\""
+      ],
+      "vulnerabilities": []
+    },
+    "python-docx": {
+      "version": "1.2.0",
+      "latest": "1.2.0",
+      "source": "https://pypi.org/pypi/python-docx/json",
+      "checkedAt": "2026-11-07T06:25:46.564Z",
+      "requiresPython": ">=3.9",
+      "requiresDist": [
+        "lxml>=3.1.0",
+        "typing_extensions>=4.9.0"
+      ],
+      "vulnerabilities": []
+    },
+    "python-dotenv": {
+      "version": "1.2.4",
+      "latest": "1.2.4",
+      "source": "https://pypi.org/pypi/python-dotenv/json",
+      "checkedAt": "2026-11-07T06:25:46.638Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "click>=5.0; extra == \"cli\""
+      ],
+      "vulnerabilities": []
+    },
+    "six": {
+      "version": "1.17.0",
+      "latest": "1.17.0",
+      "source": "https://pypi.org/pypi/six/json",
+      "checkedAt": "2026-11-07T06:25:46.703Z",
+      "requiresPython": "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "requests": {
+      "version": "2.34.2",
+      "latest": "2.34.2",
+      "source": "https://pypi.org/pypi/requests/json",
+      "checkedAt": "2026-11-07T06:25:46.719Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "charset_normalizer<4,>=2",
+        "idna<4,>=2.5",
+        "urllib3<3,>=1.26",
+        "certifi>=2023.5.7",
+        "PySocks!=1.5.7,>=1.5.6; extra == \"socks\"",
+        "chardet<8,>=3.0.2; extra == \"use-chardet-on-py3\""
+      ],
+      "vulnerabilities": []
+    },
+    "python-pptx": {
+      "version": "1.0.2",
+      "latest": "1.0.2",
+      "source": "https://pypi.org/pypi/python-pptx/json",
+      "checkedAt": "2026-11-07T06:25:46.758Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": [
+        "Pillow>=3.3.2",
+        "XlsxWriter>=0.5.7",
+        "lxml>=3.1.0",
+        "typing-extensions>=4.9.0"
+      ],
+      "vulnerabilities": []
+    },
+    "typing-extensions": {
+      "version": "4.16.0",
+      "latest": "4.16.0",
+      "source": "https://pypi.org/pypi/typing-extensions/json",
+      "checkedAt": "2026-11-07T06:25:46.761Z",
+      "requiresPython": ">=3.9",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "soupsieve": {
+      "version": "4.0.1",
+      "latest": "4.0.1",
+      "source": "https://pypi.org/pypi/soupsieve/json",
+      "checkedAt": "2026-11-07T06:25:46.775Z",
+      "requiresPython": ">=3.11.5",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "sympy": {
+      "version": "1.14.0",
+      "latest": "1.14.0",
+      "source": "https://pypi.org/pypi/sympy/json",
+      "checkedAt": "2026-11-07T06:25:46.784Z",
+      "requiresPython": ">=3.9",
+      "requiresDist": [
+        "mpmath<1.4,>=1.1.0",
+        "pytest>=7.1.0; extra == \"dev\"",
+        "hypothesis>=6.70.0; extra == \"dev\""
+      ],
+      "vulnerabilities": []
+    },
+    "tzdata": {
+      "version": "2026.6",
+      "latest": "2026.6",
+      "source": "https://pypi.org/pypi/tzdata/json",
+      "checkedAt": "2026-11-07T06:25:46.832Z",
+      "requiresPython": ">=2",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "urllib3": {
+      "version": "2.8.0",
+      "latest": "2.8.0",
+      "source": "https://pypi.org/pypi/urllib3/json",
+      "checkedAt": "2026-11-07T06:25:46.929Z",
+      "requiresPython": ">=3.10",
+      "requiresDist": [
+        "brotli>=1.2.0; platform_python_implementation == \"CPython\" and extra == \"brotli\"",
+        "brotlicffi>=1.2.0.0; platform_python_implementation != \"CPython\" and extra == \"brotli\"",
+        "h2<5,>=4; extra == \"h2\"",
+        "pysocks!=1.5.7,<2.0,>=1.5.6; extra == \"socks\"",
+        "backports-zstd>=1.0.0; python_version < \"3.14\" and extra == \"zstd\""
+      ],
+      "vulnerabilities": []
+    },
+    "xlsxwriter": {
+      "version": "3.3.1",
+      "latest": "3.3.1",
+      "source": "https://pypi.org/pypi/xlsxwriter/json",
+      "checkedAt": "2026-11-07T06:25:46.955Z",
+      "requiresPython": ">=3.8",
+      "requiresDist": null,
+      "vulnerabilities": []
+    },
+    "pikepdf": {
+      "version": "10.17.0",
+      "latest": "10.17.0",
+      "source": "https://pypi.org/pypi/pikepdf/json",
+      "checkedAt": "2026-11-07T06:25:47.075Z",
+      "requiresPython": ">=3.11",
+      "requiresDist": [
+        "Pillow>=10.0.1",
+        "lxml>=4.8",
+        "packaging",
+        "jsonschema>=4.18; extra == \"pdfa\"",
+        "referencing; extra == \"pdfa\"",
+        "fonttools>=4.40; extra == \"pdfa\""
+      ],
+      "vulnerabilities": []
+    }
+  },
+  "osv": {
+    "source": "https://api.osv.dev/v1/querybatch",
+    "checkedAt": "2026-11-07T06:25:48.510Z",
+    "status": 200,
+    "query": {
+      "queries": [
+        {
+          "package": {
+            "name": "beautifulsoup4",
+            "ecosystem": "PyPI"
+          },
+          "version": "4.15.0"
+        },
+        {
+          "package": {
+            "name": "certifi",
+            "ecosystem": "PyPI"
+          },
+          "version": "2026.10.23"
+        },
+        {
+          "package": {
+            "name": "cffi",
+            "ecosystem": "PyPI"
+          },
+          "version": "2.1.1"
+        },
+        {
+          "package": {
+            "name": "charset-normalizer",
+            "ecosystem": "PyPI"
+          },
+          "version": "3.5.2"
+        },
+        {
+          "package": {
+            "name": "click",
+            "ecosystem": "PyPI"
+          },
+          "version": "8.5.0"
+        },
+        {
+          "package": {
+            "name": "cobble",
+            "ecosystem": "PyPI"
+          },
+          "version": "0.1.4"
+        },
+        {
+          "package": {
+            "name": "coloredlogs",
+            "ecosystem": "PyPI"
+          },
+          "version": "15.0.1"
+        },
+        {
+          "package": {
+            "name": "cryptography",
+            "ecosystem": "PyPI"
+          },
+          "version": "50.0.2"
+        },
+        {
+          "package": {
+            "name": "defusedxml",
+            "ecosystem": "PyPI"
+          },
+          "version": "0.7.1"
+        },
+        {
+          "package": {
+            "name": "diff-match-patch",
+            "ecosystem": "PyPI"
+          },
+          "version": "20241021"
+        },
+        {
+          "package": {
+            "name": "et-xmlfile",
+            "ecosystem": "PyPI"
+          },
+          "version": "2.0.0"
+        },
+        {
+          "package": {
+            "name": "flatbuffers",
+            "ecosystem": "PyPI"
+          },
+          "version": "25.12.19"
+        },
+        {
+          "package": {
+            "name": "humanfriendly",
+            "ecosystem": "PyPI"
+          },
+          "version": "10.0"
+        },
+        {
+          "package": {
+            "name": "icalendar",
+            "ecosystem": "PyPI"
+          },
+          "version": "7.3.0"
+        },
+        {
+          "package": {
+            "name": "idna",
+            "ecosystem": "PyPI"
+          },
+          "version": "3.20"
+        },
+        {
+          "package": {
+            "name": "img2pdf",
+            "ecosystem": "PyPI"
+          },
+          "version": "0.6.3"
+        },
+        {
+          "package": {
+            "name": "lxml",
+            "ecosystem": "PyPI"
+          },
+          "version": "6.1.3"
+        },
+        {
+          "package": {
+            "name": "magika",
+            "ecosystem": "PyPI"
+          },
+          "version": "0.6.3"
+        },
+        {
+          "package": {
+            "name": "mammoth",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.11.0"
+        },
+        {
+          "package": {
+            "name": "markdownify",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.2.3"
+        },
+        {
+          "package": {
+            "name": "markitdown",
+            "ecosystem": "PyPI"
+          },
+          "version": "0.1.8"
+        },
+        {
+          "package": {
+            "name": "mpmath",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.3.0"
+        },
+        {
+          "package": {
+            "name": "numpy",
+            "ecosystem": "PyPI"
+          },
+          "version": "2.5.4"
+        },
+        {
+          "package": {
+            "name": "onnxruntime",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.20.1"
+        },
+        {
+          "package": {
+            "name": "openpyxl",
+            "ecosystem": "PyPI"
+          },
+          "version": "3.1.5"
+        },
+        {
+          "package": {
+            "name": "packaging",
+            "ecosystem": "PyPI"
+          },
+          "version": "26.3"
+        },
+        {
+          "package": {
+            "name": "pandas",
+            "ecosystem": "PyPI"
+          },
+          "version": "3.1.1"
+        },
+        {
+          "package": {
+            "name": "pdfminer-six",
+            "ecosystem": "PyPI"
+          },
+          "version": "20260107"
+        },
+        {
+          "package": {
+            "name": "pdfplumber",
+            "ecosystem": "PyPI"
+          },
+          "version": "0.11.10"
+        },
+        {
+          "package": {
+            "name": "pikepdf",
+            "ecosystem": "PyPI"
+          },
+          "version": "10.17.0"
+        },
+        {
+          "package": {
+            "name": "pillow",
+            "ecosystem": "PyPI"
+          },
+          "version": "12.3.0"
+        },
+        {
+          "package": {
+            "name": "pillow-heif",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.8.1"
+        },
+        {
+          "package": {
+            "name": "protobuf",
+            "ecosystem": "PyPI"
+          },
+          "version": "7.36.2"
+        },
+        {
+          "package": {
+            "name": "pycparser",
+            "ecosystem": "PyPI"
+          },
+          "version": "3.12"
+        },
+        {
+          "package": {
+            "name": "pypdf",
+            "ecosystem": "PyPI"
+          },
+          "version": "6.21.1"
+        },
+        {
+          "package": {
+            "name": "pypdfium2",
+            "ecosystem": "PyPI"
+          },
+          "version": "5.14.0"
+        },
+        {
+          "package": {
+            "name": "pyreadline3",
+            "ecosystem": "PyPI"
+          },
+          "version": "3.5.6"
+        },
+        {
+          "package": {
+            "name": "python-dateutil",
+            "ecosystem": "PyPI"
+          },
+          "version": "2.9.0.post0"
+        },
+        {
+          "package": {
+            "name": "python-docx",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.2.0"
+        },
+        {
+          "package": {
+            "name": "python-dotenv",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.2.4"
+        },
+        {
+          "package": {
+            "name": "python-pptx",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.0.2"
+        },
+        {
+          "package": {
+            "name": "requests",
+            "ecosystem": "PyPI"
+          },
+          "version": "2.34.2"
+        },
+        {
+          "package": {
+            "name": "six",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.17.0"
+        },
+        {
+          "package": {
+            "name": "soupsieve",
+            "ecosystem": "PyPI"
+          },
+          "version": "4.0.1"
+        },
+        {
+          "package": {
+            "name": "sympy",
+            "ecosystem": "PyPI"
+          },
+          "version": "1.14.0"
+        },
+        {
+          "package": {
+            "name": "typing-extensions",
+            "ecosystem": "PyPI"
+          },
+          "version": "4.16.0"
+        },
+        {
+          "package": {
+            "name": "tzdata",
+            "ecosystem": "PyPI"
+          },
+          "version": "2026.6"
+        },
+        {
+          "package": {
+            "name": "urllib3",
+            "ecosystem": "PyPI"
+          },
+          "version": "2.8.0"
+        },
+        {
+          "package": {
+            "name": "xlsxwriter",
+            "ecosystem": "PyPI"
+          },
+          "version": "3.3.1"
+        }
+      ]
+    },
+    "response": {
+      "results": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "vulns": [
+            {
+              "id": "GHSA-22hg-r758-rrw9",
+              "modified": "2026-10-26T08:56:03.565713Z"
+            },
+            {
+              "id": "GHSA-24rc-8hj2-v98c",
+              "modified": "2026-10-29T10:55:36.262902Z"
+            },
+            {
+              "id": "GHSA-254f-3936-288h",
+              "modified": "2026-10-26T08:56:17.690706Z"
+            },
+            {
+              "id": "GHSA-27h8-gf7j-v5hc",
+              "modified": "2026-10-27T11:10:35.409737Z"
+            },
+            {
+              "id": "GHSA-332p-7hrc-92wf",
+              "modified": "2026-10-26T08:56:07.886625Z"
+            },
+            {
+              "id": "GHSA-3j72-p6qg-6xp7",
+              "modified": "2026-10-29T10:55:45.826300Z"
+            },
+            {
+              "id": "GHSA-4558-3h8r-v8xp",
+              "modified": "2026-10-27T11:10:34.006455Z"
+            },
+            {
+              "id": "GHSA-462x-pgg6-55fp",
+              "modified": "2026-10-26T08:56:01.770928Z"
+            },
+            {
+              "id": "GHSA-4rm8-3hmm-39fg",
+              "modified": "2026-10-29T10:56:07.449486Z"
+            },
+            {
+              "id": "GHSA-4rr5-89j8-mwwm",
+              "modified": "2026-10-27T11:10:49.694224Z"
+            },
+            {
+              "id": "GHSA-58r4-6rv3-gfh8",
+              "modified": "2026-10-28T11:10:53.627071Z"
+            },
+            {
+              "id": "GHSA-5x8w-8jj5-q52h",
+              "modified": "2026-10-28T11:10:48.833199Z"
+            },
+            {
+              "id": "GHSA-5xm2-6676-qcp9",
+              "modified": "2026-10-26T08:56:16.789537Z"
+            },
+            {
+              "id": "GHSA-654x-cwwv-5j9c",
+              "modified": "2026-10-29T10:56:00.934076Z"
+            },
+            {
+              "id": "GHSA-65qm-jvmh-6pqg",
+              "modified": "2026-10-26T08:55:49.781288Z"
+            },
+            {
+              "id": "GHSA-74r2-7ff9-mjj2",
+              "modified": "2026-10-26T08:56:13.792431Z"
+            },
+            {
+              "id": "GHSA-78g4-xqwv-q3g8",
+              "modified": "2026-10-22T17:15:04.326552Z"
+            },
+            {
+              "id": "GHSA-7mwm-ghpf-9vrm",
+              "modified": "2026-10-28T11:10:35.587185Z"
+            },
+            {
+              "id": "GHSA-8g5g-8vmr-9782",
+              "modified": "2026-10-28T11:10:51.788355Z"
+            },
+            {
+              "id": "GHSA-9v9v-9qvf-h2hj",
+              "modified": "2026-10-29T10:55:35.129178Z"
+            },
+            {
+              "id": "GHSA-c6hw-5grf-ff96",
+              "modified": "2026-10-26T08:55:55.669563Z"
+            },
+            {
+              "id": "GHSA-cp9v-662q-vvx9",
+              "modified": "2026-10-28T11:10:36.014536Z"
+            },
+            {
+              "id": "GHSA-f2g6-542v-9j58",
+              "modified": "2026-10-26T08:56:13.538142Z"
+            },
+            {
+              "id": "GHSA-fc9g-5qg7-mf45",
+              "modified": "2026-10-26T08:56:06.483214Z"
+            },
+            {
+              "id": "GHSA-g4qv-2jxx-769h",
+              "modified": "2026-10-29T10:55:44.091799Z"
+            },
+            {
+              "id": "GHSA-g7cr-3p24-7wf7",
+              "modified": "2026-10-29T10:56:05.933422Z"
+            },
+            {
+              "id": "GHSA-g842-9rc4-69pw",
+              "modified": "2026-10-29T10:55:56.102454Z"
+            },
+            {
+              "id": "GHSA-gg2r-wvfm-q9rx",
+              "modified": "2026-10-26T08:55:54.537605Z"
+            },
+            {
+              "id": "GHSA-j4m9-6w36-pw47",
+              "modified": "2026-10-26T08:55:43.891551Z"
+            },
+            {
+              "id": "GHSA-jg86-v3jv-hrpm",
+              "modified": "2026-10-26T08:56:08.669907Z"
+            },
+            {
+              "id": "GHSA-mrfp-p49p-3hf2",
+              "modified": "2026-10-29T10:55:39.916451Z"
+            },
+            {
+              "id": "GHSA-p4wg-p73j-c528",
+              "modified": "2026-10-26T08:55:38.434240Z"
+            },
+            {
+              "id": "GHSA-p8hx-v2p6-rp84",
+              "modified": "2026-10-29T10:55:49.521326Z"
+            },
+            {
+              "id": "GHSA-pchr-8j38-3x4p",
+              "modified": "2026-10-28T11:10:41.233140Z"
+            },
+            {
+              "id": "GHSA-q45j-58j2-45rg",
+              "modified": "2026-10-26T08:56:08.265781Z"
+            },
+            {
+              "id": "GHSA-rfgq-q3w2-pmv2",
+              "modified": "2026-10-26T08:55:50.383984Z"
+            },
+            {
+              "id": "GHSA-v9pv-5gc8-w2m6",
+              "modified": "2026-10-29T10:55:37.663049Z"
+            },
+            {
+              "id": "GHSA-vx6w-vv9f-6gvg",
+              "modified": "2026-10-20T21:00:04.428653Z"
+            },
+            {
+              "id": "GHSA-w889-685w-c8fh",
+              "modified": "2026-10-26T08:55:37.091976Z"
+            },
+            {
+              "id": "GHSA-xgh8-jp6q-p5x8",
+              "modified": "2026-10-28T11:10:55.647541Z"
+            },
+            {
+              "id": "GHSA-xvh5-g6gv-559v",
+              "modified": "2026-10-21T21:45:08.352742Z"
+            },
+            {
+              "id": "PYSEC-2026-4326",
+              "modified": "2026-10-27T11:10:35.409737Z"
+            },
+            {
+              "id": "PYSEC-2026-4327",
+              "modified": "2026-10-27T11:10:34.006455Z"
+            },
+            {
+              "id": "PYSEC-2026-4328",
+              "modified": "2026-10-27T11:10:49.694224Z"
+            },
+            {
+              "id": "PYSEC-2026-4329",
+              "modified": "2026-10-28T11:10:53.627071Z"
+            },
+            {
+              "id": "PYSEC-2026-4330",
+              "modified": "2026-10-28T11:10:48.833199Z"
+            },
+            {
+              "id": "PYSEC-2026-4331",
+              "modified": "2026-10-28T11:10:35.587185Z"
+            },
+            {
+              "id": "PYSEC-2026-4332",
+              "modified": "2026-10-28T11:10:51.788355Z"
+            },
+            {
+              "id": "PYSEC-2026-4333",
+              "modified": "2026-10-28T11:10:36.014536Z"
+            },
+            {
+              "id": "PYSEC-2026-4334",
+              "modified": "2026-10-28T11:10:41.233140Z"
+            },
+            {
+              "id": "PYSEC-2026-4335",
+              "modified": "2026-10-28T11:10:55.647541Z"
+            },
+            {
+              "id": "PYSEC-2026-4336",
+              "modified": "2026-10-29T10:56:00.934076Z"
+            },
+            {
+              "id": "PYSEC-2026-4337",
+              "modified": "2026-10-29T10:55:49.521326Z"
+            },
+            {
+              "id": "PYSEC-2026-4338",
+              "modified": "2026-10-29T10:55:56.102454Z"
+            },
+            {
+              "id": "PYSEC-2026-4339",
+              "modified": "2026-10-29T10:55:37.663049Z"
+            },
+            {
+              "id": "PYSEC-2026-4340",
+              "modified": "2026-10-29T10:56:07.449486Z"
+            },
+            {
+              "id": "PYSEC-2026-4341",
+              "modified": "2026-10-29T10:55:45.826300Z"
+            },
+            {
+              "id": "PYSEC-2026-4342",
+              "modified": "2026-10-29T10:55:44.091799Z"
+            },
+            {
+              "id": "PYSEC-2026-4343",
+              "modified": "2026-10-29T10:55:35.129178Z"
+            }
+          ]
+        },
+        {},
+        {},
+        {},
+        {
+          "vulns": [
+            {
+              "id": "GHSA-42gh-23hr-vphw",
+              "modified": "2026-10-30T23:15:05.410552Z"
+            },
+            {
+              "id": "GHSA-4vqv-7265-gm2w",
+              "modified": "2026-10-30T23:15:07.229853Z"
+            },
+            {
+              "id": "GHSA-5849-834g-hvw5",
+              "modified": "2026-10-30T23:30:04.101910Z"
+            },
+            {
+              "id": "GHSA-62m5-6wh8-28x7",
+              "modified": "2026-10-30T23:15:05.408554Z"
+            },
+            {
+              "id": "GHSA-6c7f-9265-g8fw",
+              "modified": "2026-10-23T21:00:06.235957Z"
+            },
+            {
+              "id": "GHSA-cggf-277g-3q54",
+              "modified": "2026-10-30T23:30:04.096691Z"
+            },
+            {
+              "id": "GHSA-gmh7-3g9r-mjh5",
+              "modified": "2026-10-23T21:00:05.293776Z"
+            },
+            {
+              "id": "GHSA-jr96-gvgh-j3r4",
+              "modified": "2026-10-23T21:00:06.090706Z"
+            },
+            {
+              "id": "GHSA-mfr5-77xh-9j7h",
+              "modified": "2026-10-30T23:30:04.094971Z"
+            },
+            {
+              "id": "GHSA-x3rh-gjgm-fmqc",
+              "modified": "2026-10-30T23:15:04.529631Z"
+            }
+          ]
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  }
+}

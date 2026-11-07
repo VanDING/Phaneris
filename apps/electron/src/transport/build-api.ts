@@ -40,6 +40,14 @@ export function buildClientApi(
         if (typeof cb !== 'function') throw new TypeError(`Listener ${key} requires a callback`)
         return client.on(entry.channel, cb as import('@phaneris/server-core/transport').RpcCallback)
       }
+    } else if (entry.channel === RPC_CHANNELS.residentAssistant.GET || entry.channel === RPC_CHANNELS.residentAssistant.EXECUTION_MODE) {
+      const channel = entry.channel
+      fn = async (...args: unknown[]) => {
+        const metadata = await client.invoke(channel, ...args)
+        const session = await readSessionSnapshot(client, metadata.id, isChannelAvailable)
+        if (!session) throw new Error('Resident assistant Session is no longer available')
+        return session
+      }
     } else if (entry.channel === RPC_CHANNELS.sessions.GET_MESSAGES) {
       fn = (...args: unknown[]) => {
         if (typeof args[0] !== 'string') throw new TypeError('Session id must be a string')

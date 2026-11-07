@@ -8,6 +8,8 @@ import { MemoryMutationSchema, MemoryQuerySchema, MemorySourceReadSchema, Histor
 import { AssistantDispatchSchema, AssistantWorkQuerySchema } from '@phaneris/session-tools-core/delegation-contracts'
 import { ResidentContextSchema, ResidentEventsQuerySchema } from '@phaneris/session-tools-core/resident-context-contracts'
 import { TaskOutputVisibilitySchema } from '@phaneris/session-tools-core/task-result-contracts'
+import { WorkerControlSchema } from '@phaneris/session-tools-core/worker-control-contracts'
+import { SessionHistoryQuerySchema } from '@phaneris/session-tools-core/session-history-contracts'
 
 const text = z.string()
 const id = text.min(1)
@@ -38,6 +40,9 @@ export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>>
   [c.residentAssistant.EVENTS]: tuple(id, ResidentEventsQuerySchema),
   [c.residentAssistant.DISPATCH]: tuple(id, AssistantDispatchSchema),
   [c.residentAssistant.WORK]: tuple(id, AssistantWorkQuerySchema),
+  [c.residentAssistant.CONTROL]: tuple(id, WorkerControlSchema),
+  [c.residentAssistant.ORIGINALS]: tuple(id, id, SessionHistoryQuerySchema),
+  [c.residentAssistant.EXECUTION_MODE]: tuple(id, z.enum(['safe', 'ask', 'guarded', 'allow-all'])),
   [c.residentAssistant.CANCEL_WORK]: tuple(id, id),
   [c.residentAssistant.OUTPUT_VISIBILITY]: tuple(id, TaskOutputVisibilitySchema),
   [c.assistantMemory.QUERY]: tuple(id, MemoryQuerySchema),

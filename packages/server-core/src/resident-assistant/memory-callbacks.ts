@@ -51,12 +51,9 @@ export function buildResidentMemoryCallbacks({ workspace, memory, assertResident
     assistantMemoryReadFn: async input => withMemory(store => {
       const job = maintenanceJob?.(), granted = job?.sources.find(source => source.sessionId === input.sessionId && source.messageId === input.messageId)
       if (job && !granted) throw new Error('Source is outside this maintenance grant')
-      const source = store.readSource({ ...input, ...(granted ? { expectedContentHash: granted.contentHash } : {}) })
-      const offset = Math.min(input.offset ?? 0, source.content.length)
-      const end = Math.min(offset + (input.maxChars ?? 5000), source.content.length)
-      track?.({ sources: [{ sessionId: source.sessionId, messageId: source.messageId, contentHash: source.contentHash, ranges: [{ offset, end }] }] })
-      return { ...source, content: source.content.slice(offset, end),
-        range: { offset, end, fullChars: source.content.length }, nextOffset: end < source.content.length ? end : null }
+      const source = store.readSourceRange({ ...input, ...(granted ? { expectedContentHash: granted.contentHash } : {}) })
+      track?.({ sources: [{ sessionId: source.sessionId, messageId: source.messageId, contentHash: source.contentHash, ranges: [source.range] }] })
+      return source
     }),
   }
 }

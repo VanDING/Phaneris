@@ -2,7 +2,8 @@ import { z } from 'zod'
 
 const id = z.string().min(1).max(200).regex(/^\S(?:[\s\S]*\S)?$/, 'Identifier must not have surrounding whitespace')
 export const MemorySourceSchema = z.object({ sessionId: id, messageId: id }).strict()
-export const MemorySourceReadSchema = MemorySourceSchema.extend({ expectedContentHash: z.string().regex(/^[a-f0-9]{64}$/).optional() })
+export const MemorySourceReadSchema = MemorySourceSchema.extend({ expectedContentHash: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  offset: z.number().int().nonnegative().optional(), maxChars: z.number().int().min(1).max(12000).optional() })
 export const MemorySuppressionQuerySchema = z.object({ limit: z.number().int().min(1).max(1000).optional(),
   cursor: z.object({ version: z.number().int().nonnegative(), offset: z.number().int().nonnegative(), limit: z.number().int().min(1).max(1000) }).strict().optional() }).strict()
 export const MemorySuppressionBundleSchema = z.object({ formatVersion: z.literal(1), workspaceId: id,
@@ -89,4 +90,8 @@ export interface MemoryQueryResult {
 }
 export interface MemoryMutationResult { record: MemoryRecord; version: number; affectedIds?: string[] }
 export interface MemorySourceResult extends MemorySource { content: string; role: string; timestamp?: number; projectId?: string; contentHash: string; directUser: boolean; observation?: import('@phaneris/core/types').ToolObservationReference }
+export interface MemorySourcePage extends MemorySourceResult {
+  range: { offset: number; end: number; fullChars: number }
+  nextOffset: number | null
+}
 export interface MemoryChanged { workspaceId: string; id: string; version: number }

@@ -16,7 +16,7 @@ export function projectWorkExecution(receipt: AssistantDelegationReceipt, sessio
   const notStarted = input?.delegationInput?.submittedAt === undefined && ['saved', 'queued', 'rejected'].includes(input?.inputReception?.disposition ?? '')
     && ['accepted', 'preparing', 'submitting', 'cancelled', 'failed'].includes(receipt.state)
   const activity: AssistantWorkExecution['activity'] = receipt.state === 'cancelled' ? 'cancelled' : receipt.state === 'failed' ? 'failed'
-    : receipt.state === 'result_ready' ? 'completed' : receipt.state === 'needs_attention' || receipt.state === 'cancel_requested' ? 'waiting'
+    : receipt.state === 'result_ready' ? 'completed' : ['needs_attention', 'cancel_requested', 'pause_requested', 'paused'].includes(receipt.state) ? 'waiting'
       : session.processing && later < 0 ? tool ? 'tool' : session.thinking ? 'thinking' : session.streaming ? 'responding' : 'requesting'
         : page.items[0]?.phase === 'model_effect_pending' ? 'requesting' : notStarted ? 'queued' : 'unknown'
   const followUp = later < 0 ? undefined : after.slice(later).findLast(message => message.role === 'user' && !message.inputSource && !message.hidden)

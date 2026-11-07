@@ -246,17 +246,14 @@ export function addWorkspace(workspace: Omit<Workspace, 'id' | 'createdAt' | 'sl
     return updated;
   }
 
+  const localConfig = loadWorkspaceConfig(workspace.rootPath)
+    ?? createWorkspaceAtPath(workspace.rootPath, workspace.name);
   const newWorkspace: Workspace = {
     ...workspace,
     slug,
-    id: generateWorkspaceId(),
+    id: localConfig.id,
     createdAt: Date.now(),
   };
-
-  // Create workspace folder structure if it doesn't exist
-  if (!isValidWorkspace(newWorkspace.rootPath)) {
-    createWorkspaceAtPath(newWorkspace.rootPath, newWorkspace.name);
-  }
 
   config.workspaces.push(newWorkspace);
 

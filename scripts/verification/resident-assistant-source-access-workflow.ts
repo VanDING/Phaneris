@@ -48,9 +48,9 @@ await verificationWorkflow('resident-assistant-source-access', async run => {
     requests.push(body)
     if (requests.length > 48) return Response.json({ error: { message: 'Source access exceeded the bounded model budget', type: 'invalid_request_error' } }, { status: 400 })
     const names = body.tools?.map(tool => tool.function.name) ?? []
-    const latest = body.messages.filter(message => message.role === 'user').map(message => JSON.stringify(message.content).replace(/<resident_context_segment>[\s\S]*?<\/resident_context_segment>/g, '')).findLast(text => /READ_API|READ_MCP|READ_DOTTED|READ_RESOURCE|FORGE_API|FORGE_MCP|DISABLED_SOURCE|REVOKED_MCP|CANCEL_CONNECT|WORKER_SOURCE_CONTINUATION/.test(text)) ?? ''
-    const goal = latest.match(/READ_API|READ_MCP|READ_DOTTED|READ_RESOURCE|FORGE_API|FORGE_MCP|DISABLED_SOURCE|REVOKED_MCP|CANCEL_CONNECT|WORKER_SOURCE_CONTINUATION/)?.[0]
-    const slug = goal === 'READ_API' || goal === 'FORGE_API' ? 'docs' : goal === 'DISABLED_SOURCE' ? 'disabled' : goal === 'CANCEL_CONNECT' ? 'slow' : 'kb'
+    const latest = body.messages.filter(message => message.role === 'user').map(message => JSON.stringify(message.content).replace(/<resident_context_segment>[\s\S]*?<\/resident_context_segment>/g, '')).findLast(text => /READ_POST_QUERY|READ_API|READ_MCP|READ_DOTTED|READ_RESOURCE|FORGE_API|FORGE_MCP|DISABLED_SOURCE|REVOKED_MCP|CANCEL_CONNECT|WORKER_SOURCE_CONTINUATION/.test(text)) ?? ''
+    const goal = latest.match(/READ_POST_QUERY|READ_API|READ_MCP|READ_DOTTED|READ_RESOURCE|FORGE_API|FORGE_MCP|DISABLED_SOURCE|REVOKED_MCP|CANCEL_CONNECT|WORKER_SOURCE_CONTINUATION/)?.[0]
+    const slug = goal === 'READ_API' || goal === 'READ_POST_QUERY' || goal === 'FORGE_API' ? 'docs' : goal === 'DISABLED_SOURCE' ? 'disabled' : goal === 'CANCEL_CONNECT' ? 'slow' : 'kb'
     const active = manager.getSessions('alpha').find(session => session.id === assistantId)?.enabledSourceSlugs?.includes(slug)
     const exposed = names.find(name => name.startsWith(`mcp__${slug}__`) && (slug === 'docs' ? name.includes('api_') : name.endsWith(goal === 'READ_DOTTED' ? 'fetch_doc' : 'fetch_document')))
     if (exposed) knownTools.set(slug, exposed)
@@ -64,6 +64,8 @@ await verificationWorkflow('resident-assistant-source-access', async run => {
     let call: { name: string; args: Record<string, unknown> } | undefined
     if (goal === 'WORKER_SOURCE_CONTINUATION' && !JSON.stringify(body.messages).includes('resident_assistant_role') && !latest.includes('[docs activated]')) {
       call = { name: 'mcp__session__source_activate', args: { sourceSlug: 'docs' } }
+    } else if (goal === 'READ_POST_QUERY' && !attemptedControls.has(goal)) {
+      attemptedControls.add(goal); call = { name: knownTools.get('docs')!, args: { method: 'POST', path: 'query', params: { query: 'personal decision' } } }
     } else if (goal === 'FORGE_API' && !attemptedControls.has(goal)) {
       attemptedControls.add(goal); call = { name: knownTools.get('docs')!, args: { method: 'POST', path: 'write', params: { value: 'MUST_NOT_WRITE' } } }
     } else if (goal === 'FORGE_MCP' && !attemptedControls.has(goal)) {
@@ -88,7 +90,7 @@ await verificationWorkflow('resident-assistant-source-access', async run => {
     slug: 'fixture', name: 'Loopback', providerType: 'pi_compat', piAuthProvider: 'openai', authType: 'api_key', createdAt: 1, baseUrl: api.url.href,
     customEndpoint: { api: 'openai-completions' }, defaultModel: 'fixture', models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Loopback', provider: 'pi', contextWindow: 64000, maxTokens: 4096 }],
   }] }))
-  writeFileSync(join(root, 'config.json'), JSON.stringify({ ...workspace, defaults: { permissionMode: 'allow-all', defaultLlmConnection: 'fixture', model: 'fixture' } }))
+  writeFileSync(join(root, 'config.json'), JSON.stringify({ ...workspace, assistantMemory: { version: 1, learning: 'explicit', use: true }, defaults: { permissionMode: 'allow-all', defaultLlmConnection: 'fixture', model: 'fixture' } }))
   for (const slug of ['docs', 'kb', 'disabled', 'slow']) {
     const folder = join(root, 'sources', slug)
     mkdirSync(folder, { recursive: true })
@@ -97,6 +99,7 @@ await verificationWorkflow('resident-assistant-source-access', async run => {
     writeFileSync(join(folder, 'guide.md'), `Read-only fixture knowledge ${slug}.`)
   }
   const permissionsPath = join(root, 'sources/kb/permissions.json')
+  writeFileSync(join(root, 'sources/docs/permissions.json'), JSON.stringify({ allowedApiEndpoints: [{ method: 'POST', path: '^query$', readOnly: true }] }))
   writeFileSync(permissionsPath, JSON.stringify({ allowedMcpPatterns: ['^fetch_document$', '^fetch[.]doc$', '^safe_tool$'] }))
   const { getCredentialManager } = await import('@phaneris/shared/credentials')
   await getCredentialManager().setLlmApiKey('fixture', 'loopback-only')
@@ -116,13 +119,19 @@ await verificationWorkflow('resident-assistant-source-access', async run => {
   try {
     assistantId = (await client.invoke(RPC_CHANNELS.residentAssistant.GET, 'alpha')).id
     let observedResult: { sessionId: string; messageId: string } | undefined, workerObservation: { sessionId: string; messageId: string } | undefined, observedVersion = ''
-    for (const goal of ['READ_API', 'READ_MCP', 'READ_DOTTED', 'READ_RESOURCE', 'FORGE_API', 'FORGE_MCP', 'DISABLED_SOURCE', 'REVOKED_MCP']) {
+    for (const goal of ['READ_API', 'READ_POST_QUERY', 'READ_MCP', 'READ_DOTTED', 'READ_RESOURCE', 'FORGE_API', 'FORGE_MCP', 'DISABLED_SOURCE', 'REVOKED_MCP']) {
       if (goal === 'REVOKED_MCP') {
         writeFileSync(permissionsPath, JSON.stringify({ allowedMcpPatterns: [] }))
         assert(observedResult)
         await assert.rejects(client.invoke(RPC_CHANNELS.assistantMemory.READ_SOURCE, 'alpha', observedResult!), /unavailable|changed|material/i)
         assert(workerObservation)
         await assert.rejects(client.invoke(RPC_CHANNELS.assistantMemory.READ_SOURCE, 'alpha', workerObservation!), /unavailable|changed|material/i)
+        for (const reference of [observedResult!, workerObservation!]) {
+          const originals = await client.invoke(RPC_CHANNELS.residentAssistant.ORIGINALS, 'alpha', reference.sessionId, { messageId: reference.messageId })
+          assert.equal(originals.messages[0]!.coverage, 'unavailable', 'Raw history cannot revive a revoked Source observation')
+          assert(!JSON.stringify(originals.messages).includes('MCP_KNOWLEDGE_EVIDENCE'))
+        }
+        scenes.push('H07-source-revocation-is-shared-by-main-and-worker-original-history')
         const { AssistantContextStore } = await import('../../packages/server-core/src/resident-assistant/context-store')
         const { knowledgeSourceVersion } = await import('../../packages/shared/src/agent/knowledge-materials')
         const memory = manager.getAssistantMemoryStore('alpha'), context = new AssistantContextStore(workspace, assistantId, memory)
@@ -142,6 +151,7 @@ await verificationWorkflow('resident-assistant-source-access', async run => {
       while (Date.now() < until && ((await manager.getSession(assistantId))?.isProcessing || expected && !effects.includes(expected))) await Bun.sleep(25)
       assert(!(await manager.getSession(assistantId))?.isProcessing, `${goal} must settle`)
       if (goal === 'READ_API') assert(effects.includes('GET /docs/evidence'), 'Resident must activate and read API knowledge without manual selection')
+      if (goal === 'READ_POST_QUERY') assert(effects.includes('POST /docs/query'), 'A Host-defined read-only POST operation is available without allowing ordinary POST writes')
       if (goal === 'READ_MCP') assert(effects.includes('MCP fetch_document'), 'Resident must activate and read MCP knowledge without manual selection')
       if (goal === 'READ_DOTTED') assert(effects.includes('MCP fetch.doc'), 'Permission matching uses the original MCP operation before proxy sanitization')
       if (goal === 'READ_API' || goal === 'READ_MCP' || goal === 'READ_RESOURCE') {
@@ -171,8 +181,8 @@ await verificationWorkflow('resident-assistant-source-access', async run => {
       if (goal === 'REVOKED_MCP') assert.equal(effects.filter(effect => effect === 'MCP fetch_document').length, 1, 'Revocation applies to the next tool call')
       scenes.push(goal)
     }
-    assert(!effects.some(effect => effect.startsWith('POST') || effect === 'MCP dangerous_write'))
-    assert.deepEqual([...attemptedControls].sort(), ['DISABLED_SOURCE', 'FORGE_API', 'FORGE_MCP', 'REVOKED_MCP'])
+    assert(!effects.some(effect => effect === 'POST /docs/write' || effect === 'MCP dangerous_write'))
+    assert.deepEqual([...attemptedControls].sort(), ['DISABLED_SOURCE', 'FORGE_API', 'FORGE_MCP', 'READ_POST_QUERY', 'REVOKED_MCP'])
     await client.invoke(RPC_CHANNELS.residentAssistant.CONTEXT, 'alpha', { action: 'focus', label: 'Cancel source connection', anchors: [] })
     const connecting = manager.sendMessage(assistantId, 'CANCEL_CONNECT')
     const deadline = setTimeout(() => slowStarted.reject(new Error('Slow Source connection never started')), 20000)

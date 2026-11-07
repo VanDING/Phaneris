@@ -22,6 +22,9 @@ export interface RpcMethodResults {
   [c.residentAssistant.EVENTS]: import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage
   [c.residentAssistant.DISPATCH]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWork
   [c.residentAssistant.WORK]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage
+  [c.residentAssistant.CONTROL]: import('@phaneris/session-tools-core/worker-control-contracts').WorkerControlResult
+  [c.residentAssistant.ORIGINALS]: import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryPage
+  [c.residentAssistant.EXECUTION_MODE]: Session
   [c.residentAssistant.CANCEL_WORK]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWork
   [c.residentAssistant.OUTPUT_VISIBILITY]: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest
   [c.assistantMemory.QUERY]: import('./assistant-memory').MemoryQueryResult
@@ -29,7 +32,7 @@ export interface RpcMethodResults {
   [c.assistantMemory.SUPPRESSION_MERGE]: import('./assistant-memory').MemorySuppressionMergeResult
   [c.assistantMemory.HISTORY]: import('./assistant-memory').HistoryPage
   [c.assistantMemory.MUTATE]: import('./assistant-memory').MemoryMutationResult
-  [c.assistantMemory.READ_SOURCE]: import('./assistant-memory').MemorySourceResult
+  [c.assistantMemory.READ_SOURCE]: import('./assistant-memory').MemorySourcePage
   [c.sources.GET]: LoadedSource[]
   [c.sources.CREATE]: FolderSourceConfig
   [c.automations.TEST]: TestAutomationResult

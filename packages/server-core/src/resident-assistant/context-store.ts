@@ -15,7 +15,7 @@ export interface ResidentMaterialRefresh { id: string; originalInputId: string; 
 function uniqueDependencies(dependencies: ResidentDependencies): ResidentDependencies {
   const sources = new Map<string, ResidentDependencies['sources'][number]>()
   for (const source of dependencies.sources) {
-    const key = JSON.stringify([source.sessionId, source.messageId, source.contentHash])
+    const key = JSON.stringify([source.sessionId, source.messageId, source.contentHash, source.readPurpose])
     const ranges = [...sources.get(key)?.ranges ?? [], ...source.ranges ?? []]
     sources.set(key, { ...source, ...(ranges.length ? { ranges: ranges.filter((range, index) => ranges.findIndex(item => item.offset === range.offset && item.end === range.end) === index) } : {}) })
   }

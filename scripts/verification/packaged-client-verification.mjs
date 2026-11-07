@@ -33,7 +33,8 @@ import { fileURLToPath } from 'node:url'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 process.chdir(ROOT)
 const ELECTRON_DIR = join(ROOT, 'apps', 'electron')
-const RELEASE_DIR = join(ELECTRON_DIR, 'release')
+const RELEASE_DIR = resolve(process.argv.find(arg => arg.startsWith('--release-dir='))?.slice('--release-dir='.length)
+  ?? join(ELECTRON_DIR, 'release'))
 const isWindows = process.platform === 'win32'
 // `darwin` keeps the historical filename; other platforms get their own artifact
 // so one platform's run never overwrites another's evidence.

@@ -1,0 +1,52 @@
+{
+  "asOf": "2026-11-07 Asia/Shanghai",
+  "checkedAt": "2026-11-07T06:29:51.911Z",
+  "head": "ecba907a8d9d2c38a05687d07c93c5a77226ed5e",
+  "manifestCount": 14,
+  "directExternalNames": 175,
+  "directControls": 184,
+  "controlsWithNewerStable": 87,
+  "externalLockNames": 1477,
+  "npmNames": 1475,
+  "externalLockInstances": 1830,
+  "gitDependencies": 1,
+  "cdnDependencies": 1,
+  "pythonScripts": 8,
+  "pythonDirectPackages": 13,
+  "pythonResolvedPackages": 49,
+  "environmentRows": 23,
+  "advisoryCounts": {
+    "npmAudit": {
+      "critical": 1,
+      "high": 1,
+      "moderate": 3,
+      "low": 1
+    },
+    "pythonGhsa": {
+      "pillow": {
+        "critical": 5,
+        "high": 23,
+        "moderate": 13
+      },
+      "pypdf": {
+        "high": 10
+      }
+    }
+  },
+  "priorityCounts": {
+    "保留": 102,
+    "P2": 68,
+    "P1": 6,
+    "P3": 7,
+    "P0": 1
+  },
+  "limitations": [
+    "No dependency edits, no install, no upgraded candidate runtime/E2E verification",
+    "Python target compile requested 3.12.16 but uv 0.13.1 fell back to 3.12.15 for build dependencies",
+    "Windows Python resolution is fresh, not installed runtime inventory and not macOS/Linux",
+    "No actual container OS inventory or image vulnerability scan",
+    "All JS metadata checked; specific release-note review is prioritized, not every transitive changelog"
+  ],
+  "changedManifestFingerprints": [],
+  "lockFingerprintUnchanged": true
+}

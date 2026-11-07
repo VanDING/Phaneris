@@ -37,7 +37,7 @@ export function registerAssistantMemoryHandlers(
   server.handle(RPC_CHANNELS.assistantMemory.HISTORY, (ctx, workspaceId: string, query: HistoryQuery) =>
     access(ctx, workspaceId, store => store.history(query)))
   server.handle(RPC_CHANNELS.assistantMemory.READ_SOURCE, (ctx, workspaceId: string, source: MemorySourceRead) =>
-    access(ctx, workspaceId, store => store.readSource(source)))
+    access(ctx, workspaceId, store => store.readSourceRange(source)))
   server.handle(RPC_CHANNELS.assistantMemory.MUTATE, async (ctx, workspaceId: string, command: MemoryMutation) => {
     const result = await access(ctx, workspaceId, store => store.mutate(command))
     pushTyped(server, RPC_CHANNELS.assistantMemory.CHANGED, { to: 'workspace', workspaceId },

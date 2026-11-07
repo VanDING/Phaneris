@@ -122,6 +122,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   const sessionMetaMap = useAtomValue(sessionMetaMapAtom)
   const sessionMeta = sessionMetaMap.get(sessionId)
   const resident = (session?.sessionKind ?? sessionMeta?.sessionKind) === 'resident_assistant'
+  const displayedPermissionMode = resident ? session?.workerPermissionMode ?? sessionMeta?.workerPermissionMode ?? sessionOpts.permissionMode : sessionOpts.permissionMode
   const { focusZone } = useFocusContext()
   React.useEffect(() => {
     if (!resident || !messagesLoaded || !residentAssistantPresentation || isFocusedPanel === false) return
@@ -813,7 +814,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
                 onRespondToAskUser={onRespondToAskUser}
                 thinkingLevel={sessionOpts.thinkingLevel}
                 onThinkingLevelChange={(level) => setOption('thinkingLevel', level)}
-                permissionMode={sessionOpts.permissionMode}
+                permissionMode={displayedPermissionMode}
                 previousPermissionMode={sessionOpts.previousPermissionMode}
                 onPermissionModeChange={setPermissionMode}
                 enabledModes={enabledModes}
@@ -898,7 +899,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
             onRespondToAskUser={onRespondToAskUser}
             thinkingLevel={sessionOpts.thinkingLevel}
             onThinkingLevelChange={(level) => setOption('thinkingLevel', level)}
-            permissionMode={sessionOpts.permissionMode}
+            permissionMode={displayedPermissionMode}
             previousPermissionMode={sessionOpts.previousPermissionMode}
             onPermissionModeChange={setPermissionMode}
             enabledModes={enabledModes}

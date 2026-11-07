@@ -4,10 +4,12 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import type { AssistantWork, AssistantWorkExecution } from '@phaneris/session-tools-core/delegation-contracts'
 import type { TaskOutputReference } from '@phaneris/session-tools-core/task-result-contracts'
 import { Button } from '@/components/ui/button'
+import { WorkerManagement } from './WorkerManagement'
+import { SessionOriginals } from './SessionOriginals'
 
 export function workActivity(work: AssistantWork): NonNullable<AssistantWorkExecution['activity']> {
   return work.execution?.activity ?? ({ accepted: 'queued', preparing: 'queued', submitting: 'requesting', submitted: 'requesting',
-    result_ready: 'completed', needs_attention: 'waiting', failed: 'failed', cancel_requested: 'waiting', cancelled: 'cancelled' } as const)[work.state]
+    result_ready: 'completed', needs_attention: 'waiting', failed: 'failed', cancel_requested: 'waiting', cancelled: 'cancelled', pause_requested: 'waiting', paused: 'waiting' } as const)[work.state]
 }
 
 export function ResidentTaskDetail({ workspaceId, id, connected, assistantBusy, onBack, onSession, onPreview, onChanged, onRetry }: {
@@ -19,6 +21,7 @@ export function ResidentTaskDetail({ workspaceId, id, connected, assistantBusy, 
   const [work, setWork] = React.useState<AssistantWork>()
   const [error, setError] = React.useState<string>()
   const [busy, setBusy] = React.useState(false)
+  const originalsSessionId = work?.execution?.continuationSessionId ?? work?.sessionId
   const generation = React.useRef(0)
   const invalidate = React.useCallback(() => { generation.current++ }, [])
   const [processFiles, setProcessFiles] = React.useState<Awaited<ReturnType<typeof window.electronAPI.listArtifacts>>>()
@@ -52,7 +55,7 @@ export function ResidentTaskDetail({ workspaceId, id, connected, assistantBusy, 
     {!work && !error && <p role="status" className="resident-panel-empty text-label">{t('residentAssistant.loading')}</p>}
     {work && <>
       <h3 className="text-body font-medium break-words mt-3">{work.title ?? t('residentAssistant.panel.untitled')}</h3>
-      <p className="resident-work-state text-label mt-1" data-activity={workActivity(work)}>{t(`residentAssistant.panel.activity.${workActivity(work)}`)}</p>
+      <p className="resident-work-state text-label mt-1" data-activity={workActivity(work)}>{t(work.state === 'paused' || work.state === 'pause_requested' ? `residentAssistant.control.${work.state}` : `residentAssistant.panel.activity.${workActivity(work)}`)}</p>
       {work.error && <p className="resident-panel-notice text-label text-destructive-text">{work.error}</p>}
       {work.waitingFor && <p className="resident-panel-notice text-label text-text-secondary">{t(`residentAssistant.panel.blocker.${work.waitingFor.reason}`)}</p>}
       {work.result && <WorkResult workspaceId={workspaceId} {...work.result} />}
@@ -82,10 +85,12 @@ export function ResidentTaskDetail({ workspaceId, id, connected, assistantBusy, 
         {work.adjustments?.map(reason => <p key={reason} className="text-label text-text-secondary break-words">{reason}</p>)}
         <p className="text-meta text-text-secondary tabular-nums">{t('residentAssistant.panel.duration', { seconds: Math.max(0, Math.round((work.updatedAt - work.createdAt) / 1000)) })}</p>
       </details>}
+      {originalsSessionId && <SessionOriginals key={originalsSessionId} workspaceId={workspaceId} sessionId={originalsSessionId} connected={connected} />}
+      <WorkerManagement key={work.id} workspaceId={workspaceId} work={work} connected={connected} onChange={updated => { invalidate(); setWork(updated); onChanged() }} />
       <div className="resident-work-actions mt-4">
         {work.sessionId && <Button size="sm" variant="outline" onClick={() => onSession(work.sessionId!)}>{t('residentAssistant.panel.openTask')}<ArrowUpRight className="size-3.5" /></Button>}
-        {['accepted', 'preparing', 'submitting', 'submitted', 'needs_attention'].includes(work.state) && <Button size="sm" variant="ghost" disabled={busy || !connected} onClick={() => void action(() => window.electronAPI.cancelAssistantWork(workspaceId, id))}>{t('residentAssistant.panel.stop')}</Button>}
-        {work.sessionId && ['failed', 'cancelled'].includes(work.state) && !work.execution?.followUp && <Button size="sm" variant="ghost" disabled={busy || !connected || assistantBusy}
+        {['accepted', 'preparing', 'submitting', 'submitted', 'needs_attention', 'paused', 'pause_requested'].includes(work.state) && <Button size="sm" variant="ghost" disabled={busy || !connected} onClick={() => void action(() => window.electronAPI.cancelAssistantWork(workspaceId, id))}>{t('residentAssistant.panel.stop')}</Button>}
+        {work.sessionId && work.state === 'cancelled' && !work.execution?.followUp && <Button size="sm" variant="ghost" disabled={busy || !connected || assistantBusy}
           onClick={() => void action(() => onRetry(work))}>{t('residentAssistant.panel.retry')}</Button>}
       </div>
     </>}

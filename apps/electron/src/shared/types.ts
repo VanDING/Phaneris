@@ -341,6 +341,9 @@ export interface ElectronAPI {
   dispatchAssistantWork(workspaceId: string, request: import('@phaneris/session-tools-core/delegation-contracts').AssistantDispatch): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
   getAssistantWork(workspaceId: string, query: import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkQuery): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage>
   cancelAssistantWork(workspaceId: string, id: string): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
+  controlAssistantWork(workspaceId: string, command: import('@phaneris/session-tools-core/worker-control-contracts').WorkerControl): Promise<import('@phaneris/session-tools-core/worker-control-contracts').WorkerControlResult>
+  setAssistantExecutionMode(workspaceId: string, mode: PermissionMode): Promise<Session>
+  readAssistantOriginals(workspaceId: string, sessionId: string, query: import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryQuery): Promise<import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryPage>
   setAssistantOutputVisibility(workspaceId: string, command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility): Promise<import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest>
   queryAssistantMemory(workspaceId: string, query: import('@phaneris/shared/protocol').MemoryQuery): Promise<import('@phaneris/shared/protocol').MemoryQueryResult>
   exportAssistantMemorySuppression(workspaceId: string, query: import('@phaneris/shared/protocol').MemorySuppressionQuery): Promise<import('@phaneris/shared/protocol').MemorySuppressionPage>
@@ -349,7 +352,7 @@ export interface ElectronAPI {
   residentAssistantContext(workspaceId: string, command: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextCommand): Promise<import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState>
   residentAssistantEvents(workspaceId: string, query: { after?: number; limit?: number }): Promise<import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage>
   mutateAssistantMemory(workspaceId: string, command: import('@phaneris/shared/protocol').MemoryMutation): Promise<import('@phaneris/shared/protocol').MemoryMutationResult>
-  readAssistantMemorySource(workspaceId: string, source: import('@phaneris/shared/protocol').MemorySourceRead): Promise<import('@phaneris/shared/protocol').MemorySourceResult>
+  readAssistantMemorySource(workspaceId: string, source: import('@phaneris/shared/protocol').MemorySourceRead): Promise<import('@phaneris/shared/protocol').MemorySourcePage>
   onAssistantMemoryChanged(callback: (event: import('@phaneris/shared/protocol').MemoryChanged) => void): () => void
   deleteSession(sessionId: string): Promise<void>
   sendMessage(sessionId: string, message: string, attachments?: FileAttachment[], storedAttachments?: StoredAttachmentType[], options?: SendMessageOptions): Promise<void>

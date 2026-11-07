@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { canonicalJson } from '@phaneris/shared/durable-runtime/identity'
-import type { AssistantMemoryPolicy } from '@phaneris/shared/workspaces'
+import { assertAssistantMemoryLearning, type AssistantMemoryPolicyStatus } from '@phaneris/shared/workspaces'
 import type { MemoryRecord, MemorySource, MemorySourceResult } from '@phaneris/session-tools-core/memory-contracts'
 import type { CollaborationProfile, ScenarioCapture, ScenarioPage, ScenarioQuery, ScenarioResult } from '@phaneris/session-tools-core/memory-derived-contracts'
 import type { SqliteDatabase } from '../runtime/sqlite'
@@ -16,15 +16,18 @@ export class DerivedMemory {
   constructor(private readonly db: SqliteDatabase, private readonly owner: {
     record(id: string): MemoryRecord | undefined
     source(source: MemorySource & { expectedContentHash?: string }): MemorySourceResult
-    policy(): AssistantMemoryPolicy
+    policy(): AssistantMemoryPolicyStatus
     version(): number
   }) {
     db.exec(`CREATE TABLE IF NOT EXISTS memory_scenarios(id TEXT PRIMARY KEY,scope_key TEXT NOT NULL UNIQUE,body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS memory_scenario_requests(request_id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,receipt TEXT NOT NULL);`)
   }
   profile(input: { projectId?: string; query?: string }): CollaborationProfile {
-    const version = this.owner.version(), maxChars = 6000
-    if (!this.owner.policy().use) return { version, items: [], coverage: { scanned: 0, candidateRecords: 0, omitted: 0, maxChars } }
+    const version = this.owner.version(), maxChars = 6000, policy = this.owner.policy()
+    const unassessedRecords = (this.db.prepare(`SELECT COUNT(*) AS count FROM memories WHERE
+      (json_extract(body,'$.projectId') IS NULL OR json_extract(body,'$.projectId')=?)
+      AND json_extract(body,'$.state')='active' AND json_extract(body,'$.assessment') IS NULL`).get(input.projectId ?? null) as { count: number }).count
+    if (!policy.use) return { version, items: [], policy, coverage: { scanned: 0, candidateRecords: 0, omitted: 0, maxChars, unassessedRecords } }
     const scope = "(json_extract(body,'$.projectId') IS NULL OR json_extract(body,'$.projectId')=?) AND json_extract(body,'$.state')='active' AND json_extract(body,'$.assessment.domain')='collaboration'"
     const rows = this.db.prepare(`SELECT id FROM memories WHERE ${scope} ORDER BY json_extract(body,'$.updatedAt') DESC,id LIMIT 128`).all(input.projectId ?? null) as Array<{ id: string }>
     const count = (this.db.prepare(`SELECT COUNT(*) AS count FROM memories WHERE ${scope}`).get(input.projectId ?? null) as { count: number }).count
@@ -43,11 +46,11 @@ export class DerivedMemory {
       if (JSON.stringify([...items, item]).length > maxChars) continue
       items.push(item)
     }
-    return { version, items, coverage: { scanned: rows.length, candidateRecords: count, omitted: Math.max(0, count - items.length), maxChars } }
+    return { version, items, policy, coverage: { scanned: rows.length, candidateRecords: count, omitted: Math.max(0, count - items.length), maxChars, unassessedRecords } }
   }
   capture(command: ScenarioCapture, authority: 'automatic' | 'user_request' | 'management') {
     const policy = this.owner.policy()
-    if (authority !== 'management' && (policy.learning === 'paused' || authority === 'automatic' && policy.learning !== 'automatic')) throw new Error('Scenario learning is not enabled for this operation')
+    if (authority !== 'management') assertAssistantMemoryLearning(policy, authority)
     if (command.assessment.domain !== 'experience' || command.assessment.confidence !== 'supported' || command.assessment.durability !== 'durable') throw new Error('A scenario needs a supported durable experience assessment; sensitive and secret material is ineligible')
     const fingerprint = digest(command)
     return this.db.transaction(() => {

@@ -33,7 +33,7 @@ export const SESSION_PERSISTENT_FIELDS = [
   // Read tracking
   'lastReadMessageId', 'hasUnread',
   // Config
-  'enabledSourceSlugs', 'permissionMode', 'previousPermissionMode', 'workingDirectory',
+  'enabledSourceSlugs', 'permissionMode', 'workerPermissionMode', 'previousPermissionMode', 'workingDirectory',
   'systemPromptPreset',
   // Active plugin bundle (D12: at most one per session)
   'activePlugin',
@@ -167,6 +167,8 @@ export interface SessionConfig extends SessionPlanningFields {
   isFlagged?: boolean;
   /** Permission mode for this session ('safe', 'ask', 'allow-all') */
   permissionMode?: PermissionMode;
+  /** User-selected Worker execution ceiling; independent of the resident role's own tool mode. */
+  workerPermissionMode?: PermissionMode;
   /** Previous permission mode (used to preserve modeTransition context across restarts) */
   previousPermissionMode?: PermissionMode;
   /** User-controlled session status - determines inbox vs completed */
@@ -346,6 +348,7 @@ export interface SessionMetadata extends SessionPlanningFields {
   activePlugin?: string;
   /** Permission mode for this session */
   permissionMode?: PermissionMode;
+  workerPermissionMode?: PermissionMode;
   /** Previous permission mode (used to preserve modeTransition context across restarts) */
   previousPermissionMode?: PermissionMode;
   /** Number of plan files for this session */

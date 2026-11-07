@@ -48,6 +48,7 @@ export interface SessionMeta {
   labels?: string[]
   /** Permission mode ('safe', 'ask', 'guarded', 'allow-all') — used by view expressions */
   permissionMode?: string
+  workerPermissionMode?: Session['workerPermissionMode']
   /** Session status for filtering */
   sessionStatus?: string
   /** Role/type of the last message (for badge display without loading messages) */

@@ -12,7 +12,8 @@ export type {
   LoadedWorkspace,
   WorkspaceSummary,
 } from './types.ts';
-export { parseAssistantMemoryPolicy, readAssistantMemoryPolicy, initializeAssistantMemoryPolicy } from './assistant-memory-policy';
+export { parseAssistantMemoryPolicy, readAssistantMemoryPolicy, initializeAssistantMemoryPolicy, assertAssistantMemoryLearning } from './assistant-memory-policy';
+export type { AssistantMemoryPolicyStatus } from './assistant-memory-policy';
 
 // Chat starters (workspace-level prompt chips) — type, limits and validation
 export type { ChatStarter } from './chat-starters.ts';

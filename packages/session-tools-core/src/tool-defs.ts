@@ -13,6 +13,8 @@ import { successResponse, errorResponse } from './response.ts';
  */
 
 import { z } from 'zod';
+import { SessionHistoryQuerySchema } from './session-history-contracts.ts';
+import { WorkerControlSchema } from './worker-control-contracts.ts';
 import type { ZodObject } from 'zod';
 import type { ToolResult } from './types.ts';
 import type { SessionToolContext } from './context.ts';
@@ -296,10 +298,7 @@ export const UpdateSessionPlanningSchema = z.object({
 
 export const GetSessionInfoSchema = z.object({
   sessionId: z.string().optional().describe('Session ID to query. Omit to get info about the current session.'),
-  history: z.object({
-    messageId: z.string().optional(), offset: z.number().int().min(0).optional(), limit: z.number().int().min(1).max(50).optional(),
-    startCharacter: z.number().int().min(0).optional(), maxCharacters: z.number().int().min(1).max(32000).optional(),
-  }).optional().describe('Read original user/assistant message ranges; messageId selects one message. Omit history for metadata only.'),
+  history: SessionHistoryQuerySchema.optional().describe('Read original Session records directly, including tools, errors and attributed internal messages. No memory or message ID is required. Use cursor for stable continuation, messageId/character ranges for one record, or fromEnd for the recent tail. The resident may read authorized workspace originals; unavailable/forgotten sources remain redacted. Omit history for metadata only.'),
 });
 
 export const ArchiveSessionSchema = z.object({
@@ -990,6 +989,12 @@ export const SESSION_TOOL_DEFS: SessionToolDef[] = [
   { name: 'assistant_cancel_work', family: 'session-management', exposure: 'direct',
     description: 'Cancel a queued or running delegation by id. Preserve the original Worker and its evidence. Cancellation does not undo effects that have already occurred.',
     inputSchema: z.object({ id: z.string().min(1).max(200) }).strict(), executionMode: 'registry', safeMode: 'allow', handler: handleAssistantCancelWork },
+  { name: 'assistant_worker_control', family: 'session-management', exposure: 'direct',
+    description: 'Manage an existing authorized Worker: inspect its assistant_work receipt first, then pass its seq as expectedSeq and a stable commandId. Supports attributed messages, pause/resume, safe retry, configuration at execution boundaries, and planning/priority. A request receipt is not proof of application. Host verifies original ownership, current authorization, unknown effects and later human work. Paused tasks remain paused across restart; cancellation and completed work are not silently replayed. This never changes a Runtime fact or grants a wider task.',
+    inputSchema: z.object({ command: WorkerControlSchema }).strict(), executionMode: 'registry', safeMode: 'allow', handler: async (ctx, { command }) => {
+      if (!ctx.assistantWorkerControl) return errorResponse('Worker management is unavailable for this Session')
+      return successResponse(JSON.stringify(await ctx.assistantWorkerControl(command)))
+    } },
   { name: 'assistant_memory_search', family: 'session-management', exposure: 'direct',
     description: 'Navigate memory in a bounded 12000-character packet. Default scope is the applied current project plus workspace-generic memory; use scope=workspace explicitly for cross-project discovery, or a projectId filter. The result reports effective scope. Content/conditions and source references are previews with explicit full sizes; inspect id/revision before relying on truncated material or resolving a dispute. Continue nextCursor under the same filters. Scheduled, expired and disputed records are excluded by default; includeRetired is historical review, never current authority. Forgotten content stays redacted. Scan limits and remaining cursors mean absence is not exhaustive.',
     inputSchema: MemoryLookupSchema,

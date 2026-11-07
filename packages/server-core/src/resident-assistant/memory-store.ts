@@ -3,8 +3,8 @@ import { canonicalJson } from '@phaneris/shared/durable-runtime/identity'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { loadSession, validateSessionId } from '@phaneris/shared/sessions'
-import { readAssistantMemoryPolicy } from '@phaneris/shared/workspaces'
-import type { MemoryMutation, MemoryMutationResult, MemoryQuery, MemoryQueryResult, MemoryRecord, MemorySource, MemorySourceResult } from '@phaneris/shared/protocol'
+import { readAssistantMemoryPolicy, assertAssistantMemoryLearning } from '@phaneris/shared/workspaces'
+import type { MemoryMutation, MemoryMutationResult, MemoryQuery, MemoryQueryResult, MemoryRecord, MemorySource, MemorySourceResult, MemorySourceRead, MemorySourcePage } from '@phaneris/shared/protocol'
 import { openSqliteDatabase, type SqliteDatabase } from '../runtime/sqlite'
 import { initializeHistoryIndex, queryHistory } from './history-index'
 import { isDirectUserMessage, historySourceContent, sourceContentHash, sourceContentMatches } from './source-provenance'
@@ -107,7 +107,7 @@ export class AssistantMemoryStore {
       try {
         for (const source of dependencies.knowledge ?? []) if (knowledgeSourceVersion(this.workspace.rootPath, source.sourceSlug) !== source.version) return false
         for (const source of dependencies.sources) {
-        const current = this.readSource({ ...source, expectedContentHash: source.contentHash })
+        const current = this.readSource({ ...source, expectedContentHash: source.contentHash, readPurpose: source.readPurpose })
         if (source.observation && (current.observation?.operationId !== source.observation.operationId || current.observation.runOperationId !== source.observation.runOperationId)) return false
       } }
       catch { return false }
@@ -216,7 +216,7 @@ export class AssistantMemoryStore {
   }
   assertMaintenance(job: MemoryMaintenanceJob): void {
     this.maintenance.assert(job)
-    if (readAssistantMemoryPolicy(this.workspace).learning !== 'automatic') throw new Error('Automatic learning is not enabled')
+    assertAssistantMemoryLearning(readAssistantMemoryPolicy(this.workspace), 'automatic')
     this.withSourceSnapshot(() => {
       for (const source of job.sources) if (this.readSource({ ...source, expectedContentHash: source.contentHash }).projectId !== job.projectId) throw new Error('Maintenance source project scope changed')
     })
@@ -242,7 +242,35 @@ export class AssistantMemoryStore {
     })
   }
 
-  readSource(source: MemorySource & { expectedContentHash?: string }): MemorySourceResult {
+  /** Historical reading still enforces source/credential revocation and forgetting,
+   * but a corrected memory or disabled automatic recall does not erase L0. */
+  private historicalDependenciesValid(dependencies: import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies): boolean {
+    if (dependencies.knowledge?.some(reference => knowledgeSourceVersion(this.workspace.rootPath, reference.sourceSlug) !== reference.version)) return false
+    for (const reference of dependencies.memories) {
+      const row = this.db.prepare('SELECT body FROM memories WHERE id=?').get(reference.id) as { body: string } | undefined
+      if (!row) return false
+      const record = JSON.parse(row.body) as StoredRecord
+      if (record.state === 'forgotten' || record.sources.some(source => this.suppressed(source))) return false
+    }
+    return dependencies.sources.every(reference => {
+      try { this.readSource({ ...reference, readPurpose: 'historical' }); return true } catch { return false }
+    })
+  }
+  readHistoricalSources(sessionId: string, references: Array<{ messageId: string; contentHash: string }>): Array<{ source?: MemorySourceResult; unavailable?: string }> {
+    return this.withSourceSnapshot(() => references.map(reference => {
+      try { return { source: this.readSource({ sessionId, messageId: reference.messageId, expectedContentHash: reference.contentHash, readPurpose: 'historical' }) } }
+      catch (error) { return { unavailable: error instanceof Error ? error.message : 'Original source unavailable' } }
+    }))
+  }
+  /** Model and management readers share one versioned, bounded source page. */
+  readSourceRange(input: MemorySourceRead): MemorySourcePage {
+    const source = this.readSource(input)
+    const offset = Math.min(input.offset ?? 0, source.content.length)
+    const end = Math.min(offset + (input.maxChars ?? 5000), source.content.length)
+    return { ...source, content: source.content.slice(offset, end), range: { offset, end, fullChars: source.content.length },
+      nextOffset: end < source.content.length ? end : null }
+  }
+  readSource(source: MemorySource & { expectedContentHash?: string; readPurpose?: 'historical' }): MemorySourceResult {
     return this.withSourceSnapshot(() => {
       validateSessionId(source.sessionId)
       if (this.suppressed(source)) throw new Error('Source suppressed by a forgotten memory')
@@ -255,19 +283,20 @@ export class AssistantMemoryStore {
       }
       const message = session?.messages.find(item => item.id === source.messageId)
       if (!message) throw new Error('Memory source message does not exist in this workspace')
-      if (message.delegationInput?.materialDependencies && !this.dependenciesValid(message.delegationInput.materialDependencies)) {
+      const valid = (dependencies: import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies) => source.readPurpose === 'historical' ? this.historicalDependenciesValid(dependencies) : this.dependenciesValid(dependencies)
+      if (message.delegationInput?.materialDependencies && !valid(message.delegationInput.materialDependencies)) {
         throw new Error('Delegated source is unavailable because its original materials changed or were forgotten')
       }
-      if (message.delegationRefresh && !this.dependenciesValid(message.delegationRefresh.materialDependencies)) throw new Error('Refreshed delegated source is unavailable because its materials changed or were forgotten')
+      if (message.delegationRefresh && !valid(message.delegationRefresh.materialDependencies)) throw new Error('Refreshed delegated source is unavailable because its materials changed or were forgotten')
       const lineage = this.db.prepare('SELECT dependencies FROM derived_sources WHERE source_key=?').get(this.sourceKey(source)) as { dependencies: string } | undefined
       if (lineage) {
         const key = this.sourceKey(source)
         if (this.resolvingSources.has(key)) throw new Error('Derived source dependency cycle is unavailable')
         this.resolvingSources.add(key)
         try {
-          if (!this.dependenciesValid(JSON.parse(lineage.dependencies))) throw new Error('Derived source is unavailable because its original materials changed or were forgotten')
+          if (!valid(JSON.parse(lineage.dependencies))) throw new Error('Derived source is unavailable because its original materials changed or were forgotten')
         } finally { this.resolvingSources.delete(key) }
-      } else if (session?.sessionKind === 'resident_assistant' && message.type !== 'user') {
+      } else if (source.readPurpose !== 'historical' && session?.sessionKind === 'resident_assistant' && message.type !== 'user') {
         throw new Error('Historical resident-derived source has no verifiable material lineage and is unavailable for model recall')
       }
       const content = historySourceContent(message)
@@ -469,7 +498,7 @@ export class AssistantMemoryStore {
       }
       const now = Date.now()
       if (authority === 'automatic' && command.action === 'transition' && command.state === 'forgotten') throw new Error('Permanent forgetting requires an explicit user request')
-      if (authority !== 'management' && command.action !== 'transition' && (policy.learning === 'paused' || authority === 'automatic' && policy.learning !== 'automatic')) throw new Error('Assistant learning policy requires an explicit request or is paused')
+      if (authority !== 'management' && command.action !== 'transition') assertAssistantMemoryLearning(policy, authority)
       if (authority === 'automatic' && (command.action === 'remember' || command.action === 'revise') && !(command.assessment ?? (command.action === 'revise' ? this.get(command.id).assessment : undefined))) throw new Error('Automatic learning requires a source-based assessment')
       if ((command.action === 'remember' || command.action === 'revise') && command.assessment) {
         if (command.assessment.domain === 'secret') throw new Error('Credentials and secrets do not belong in assistant memory')

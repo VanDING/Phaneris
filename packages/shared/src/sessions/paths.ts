@@ -39,7 +39,8 @@ export function getSessionPath(workspaceRootPath: string, sessionId: string): st
 
 /** Execution, prompts and file tools must agree; sdkCwd is storage metadata. */
 export function resolveSessionWorkingDirectory(workspaceRootPath: string, sessionId?: string, workingDirectory?: string): string {
-  return expandPath(workingDirectory || (sessionId ? getSessionPath(workspaceRootPath, sessionId) : workspaceRootPath));
+  const directory = workingDirectory === 'none' ? undefined : workingDirectory;
+  return expandPath(directory || (sessionId ? getSessionPath(workspaceRootPath, sessionId) : workspaceRootPath));
 }
 
 /**

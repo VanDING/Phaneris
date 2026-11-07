@@ -1,0 +1,132 @@
+{
+  "checkedAt": "2026-11-07T06:29:51.984Z",
+  "report": {
+    "path": "docs/dependencies/dependency-audit-2026-11-07.md",
+    "sha256": "d25b64c0786f300e67558e35fbdf9878df4701e19d9a13e1b4b0d4f593dbdbfc"
+  },
+  "files": [
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/audit-gate.txt",
+      "bytes": 349,
+      "sha256": "869d01d7e9cfe5ed975ba19cb1b0ea79fa2d7a3b6d64acdf70160f98e0d8410e"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/baseline.json",
+      "bytes": 5146,
+      "sha256": "65126696274aef74916c2da52108559c3b60bfbf82b9851ac60e27bb59a4b36a"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/bun-audit.txt",
+      "bytes": 2826,
+      "sha256": "22017ed1cba4e262c34c0079a5b7e634efbf41ae8641fd1c29cb493cac88852e"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/declarations.csv",
+      "bytes": 29937,
+      "sha256": "57d365db5362531392ac1497e7de574c13a2dc3478b5657d13554c386cc9ecc6"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/direct-controls.csv",
+      "bytes": 71899,
+      "sha256": "e159c2dfd1e0ef320e7d0d96e9f0cff4c3bc0f2a733f191055ce5f87cb8ea20e"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/environment.csv",
+      "bytes": 4759,
+      "sha256": "93f97a0fc0aa3d085488e525a2ca8febc92d664af8ef22759875345587347506"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/lock-instances.csv",
+      "bytes": 430122,
+      "sha256": "6d3f639997fa78ea84abb5f51ab3223bae65d90d57ce0bbb1ba0695bbd303f2d"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/locked-packages.csv",
+      "bytes": 561341,
+      "sha256": "18a34f068ded1bc90b3fc4f72df76431964542dd975682d6a0422dc9f636547b"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/npm-metadata.json",
+      "bytes": 2022645,
+      "sha256": "a29a845c80ce39a8311c9a8e03c558025e04687d7cb340d82ea280bd00402b29"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-advisories.json",
+      "bytes": 674185,
+      "sha256": "5e4b423d0c94cb62c3d28c36db39609a8fca6aba89c5bcbd3b1dd92d6eb4a915"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-direct.csv",
+      "bytes": 4070,
+      "sha256": "47501b7eb2951d378889015e915d2cbca468b9c80c9d4a41ab6cbfff5e692419"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-requirements.in",
+      "bytes": 277,
+      "sha256": "0ed3430ca52856046fc58a59c7c82e6ead28314416d5bd07f07200c9895f14a2"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-resolve.log",
+      "bytes": 949,
+      "sha256": "71fcc876a069c13d1a4e98fb5abfa7d0410bc2fe73a0384d7bfbfbdc0a8d91bb"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-resolved.csv",
+      "bytes": 8600,
+      "sha256": "4c667779dfc55d97cace5403248831d15b33be008b4de0e1bff7fab50cb6e3ba"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-resolved.txt",
+      "bytes": 869,
+      "sha256": "339f64876b54bd9152671439c834c9e63d5f9d139224b88f2aeb116db9622bfd"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-security-targets-resolved.txt",
+      "bytes": 869,
+      "sha256": "755b106ad8df5fd89e6d5685d7125dd04cadde68f9fe339d3b0cdd62d932eda7"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-security-targets.in",
+      "bytes": 277,
+      "sha256": "6187bdebe9077f56b9a8e213ad68dceab078e2212de7bc6121fd95abc3996b12"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-target-resolve.log",
+      "bytes": 1065,
+      "sha256": "83045836ec82afeaede4e3ca254a91ca10c8bc01c98ceb81b984c151b98c5bfd"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-target-security.json",
+      "bytes": 609,
+      "sha256": "5379c57f087f9aa9d78c120e4827b1ceeaed5563dc1cd0e35547a963cc043d83"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/python-transitive-metadata.json",
+      "bytes": 46343,
+      "sha256": "30dbc36cf2d70e1f09c936981ab8658803ae0ea7114b36b14e08cf2f2183c8f5"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/runtime-python-metadata.json",
+      "bytes": 118079,
+      "sha256": "20234c0d5f203dcb92df50de4af418781953e8d3287c9bf7e5eefdde1c24ce38"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/summary.json",
+      "bytes": 1434,
+      "sha256": "5165ffbd3231d7e02b0262323d012296d1c6ba01daadcc7e9da6448e3b3c7caa"
+    },
+    {
+      "path": "docs/dependencies/dependency-audit-2026-11-07/supplemental-metadata.json",
+      "bytes": 25639,
+      "sha256": "7d3529d89ae4807f38197318da5b87656099eb125577ddb8a10c32bd41335421"
+    }
+  ],
+  "checks": {
+    "inventoryCounts": true,
+    "localReportLinks": true,
+    "manifestsUnchanged": true,
+    "lockUnchanged": true,
+    "auditGate": "failed: new HIGH GHSA-mrwp-f3q8-3g9p",
+    "upgradedRuntimeValidation": "not run"
+  }
+}

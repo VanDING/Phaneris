@@ -23,7 +23,7 @@ await verificationWorkflow('resident-assistant-ui', async run => {
     providerInputs.push({ worker, lastInput })
     writeFileSync(join(run.directory, 'provider-inputs.json'), JSON.stringify(providerInputs, null, 2))
     if (worker && lastInput.includes('PANEL_ERROR_PROBE')) return Response.json({ error: { message: 'Use /provider/v1/messages: incompatible request shape', type: 'invalid_request_error' } }, { status: 400 })
-    if (worker && lastInput.includes('PANEL_WAIT_PROBE') && !lastInput.includes('PANEL_MANUAL_CONTINUATION')) {
+    if (worker && lastInput.includes('PANEL_WAIT_PROBE') && !lastInput.includes('PANEL_MANUAL_CONTINUATION') && !lastInput.includes('<worker_control>')) {
       const frame = (delta: object) => `data: ${JSON.stringify({ id: 'panel-thinking', object: 'chat.completion.chunk', created: 1, model: 'fixture', choices: [{ index: 0, delta, finish_reason: null }] })}\n\n`
       return new Response(new ReadableStream({ start(controller) {
         controller.enqueue(new TextEncoder().encode(frame({ role: 'assistant' }) + frame({ reasoning_content: 'Fixture activity signal' })))
@@ -65,16 +65,29 @@ await verificationWorkflow('resident-assistant-ui', async run => {
     models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Test only', provider: 'pi', contextWindow: 64000, maxTokens: 4096, supportsThinking: true, supportedThinkingLevels: ['off', 'high'] }] }
   writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [{ id: 'resident-ui', name: 'Assistant workspace', rootPath: workspace, createdAt: 1 }],
     activeWorkspaceId: 'resident-ui', setupDeferred: true, defaultLlmConnection: 'fixture', llmConnections: [connection], appearance: { mode: 'light', colorTheme: 'default', font: 'inter' } }))
-  writeFileSync(join(workspace, 'config.json'), JSON.stringify({ id: 'resident-ui', name: 'Assistant workspace', defaults: { defaultLlmConnection: 'fixture', model: 'fixture', permissionMode: 'safe', workingDirectory: 'none' } }))
+  const memoryRepairProbe = process.env.PHANERIS_VERIFICATION_MEMORY_REPAIR === '1'
+  writeFileSync(join(workspace, 'config.json'), JSON.stringify({ id: memoryRepairProbe ? 'ws_legacy_ui' : 'resident-ui', name: 'Assistant workspace', defaults: { defaultLlmConnection: 'fixture', model: 'fixture', permissionMode: 'safe', workingDirectory: 'none' } }))
   writeFileSync(join(workspace, 'verify.py'), 'print("PROCESS_ONLY")')
   const { getCredentialManager } = await import('@phaneris/shared/credentials')
   await getCredentialManager().setLlmApiKey('fixture', 'loopback-only-key')
-  const { saveSession } = await import('@phaneris/shared/sessions')
+  const { saveSession, getSessionPath } = await import('@phaneris/shared/sessions')
   await saveSession({ id: 'ordinary-history-ui', workspaceRootPath: workspace, name: 'Existing ordinary Session', createdAt: 1, lastUsedAt: 1,
     messages: [{ id: 'source-user', type: 'user', content: 'UI_SOURCE_DECISION', timestamp: 1 }],
     tokenUsage: { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 } })
+  if (memoryRepairProbe) {
+    const tokenUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 }
+    await saveSession({ id: 'resident-large-ui', workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1, tokenUsage,
+      sessionKind: 'resident_assistant', hidden: true, permissionMode: 'safe', workingDirectory: 'none', sdkCwd: getSessionPath(workspace, 'resident-large-ui'),
+      messages: Array.from({ length: 120 }, (_, index) => ({
+        id: `baseline-${index}`, type: 'assistant', timestamp: index + 1, content: `PACKAGED_BASELINE_${index}`, promptSnapshot: 'PACKAGED_PROMPT_'.repeat(10000),
+        contextSnapshot: { version: 1, capturedAt: index, provider: 'fixture', model: 'fixture', system: { hash: 'a'.repeat(64), chars: 160000 },
+          messages: [], tools: [{ name: 'read', hash: 'b'.repeat(64), schemaChars: 1000, description: 'PACKAGED_TOOL_'.repeat(1000) }] },
+      })) })
+    await saveSession({ id: 'huge-source-ui', workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1, tokenUsage, hidden: true, isArchived: true,
+      messages: [{ id: 'original', type: 'user', timestamp: 1, content: 'SOURCE_PAGE_'.repeat(1500000) }] })
+  }
   const input = join(run.directory, 'input.json')
-  writeFileSync(input, JSON.stringify({ root: resolve('.'), config, output: run.directory, executable: process.env.PHANERIS_VERIFICATION_EXECUTABLE }))
+  writeFileSync(input, JSON.stringify({ root: resolve('.'), config, output: run.directory, executable: process.env.PHANERIS_VERIFICATION_EXECUTABLE, memoryRepairProbe }))
   const child = Bun.spawn(['node', 'scripts/verification/fixtures/resident-assistant-ui.cjs', input], { stdout: 'pipe', stderr: 'pipe' })
   const [out, err, code] = await Promise.all([new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited])
   provider.stop(true)

@@ -32,7 +32,7 @@ export function readWorkerOptions(workspaceRoot: string, query: WorkerOptionsQue
     case 'sources': items = loadWorkspaceSources(workspaceRoot).map(source => ({ slug: source.config.slug, name: source.config.name, type: source.config.type, usable: isSourceUsable(source),
       enabled: source.config.enabled, connectionStatus: source.config.connectionStatus,
       knowledge: source.config.knowledge, relevantToProject: source.config.knowledge ? !source.config.knowledge.projectIds?.length || !!query.projectId && source.config.knowledge.projectIds.includes(query.projectId) : undefined,
-      access: source.config.type === 'local' ? 'Native bounded file tools; document parsing capabilities apply' : source.config.type === 'api' ? 'Host GET-only; inspect the actual tool schema' : 'MCP resources and Host-authorized read-only tool schemas; discover search/read capabilities, do not infer from names' })); break
+      access: source.config.type === 'local' ? 'Native bounded file tools; document parsing capabilities apply' : source.config.type === 'api' ? 'GET and exact Host-defined read-only operations; inspect the actual tool schema' : 'MCP resources and Host-authorized read-only tool schemas; discover search/read capabilities, do not infer from names' })); break
     case 'skills': {
       const project = query.projectId ? loadProjectById(workspaceRoot, query.projectId) : null
       if (query.projectId && !project) throw new Error('Project not found in this workspace')

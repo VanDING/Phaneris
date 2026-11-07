@@ -23,3 +23,9 @@ export function runtimeInputAliases(messages: readonly Message[], originalId: st
     && message.inputSource.inputMessageIds.some(id => aliases.has(id))) aliases.add(message.id)
   return [...aliases]
 }
+
+/** Latest Host-authored configuration remains linked to the immutable original input. */
+export function latestDelegationInput(messages: readonly Message[], originalId: string): Message | undefined {
+  const aliases = new Set(runtimeInputAliases(messages, originalId))
+  return messages.findLast(message => aliases.has(message.id) && !!message.delegationInput)
+}

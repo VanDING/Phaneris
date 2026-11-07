@@ -1,0 +1,145 @@
+{
+  "checkedAt": "2026-11-07T06:17:18.213Z",
+  "head": "ecba907a8d9d2c38a05687d07c93c5a77226ed5e",
+  "manifests": [
+    {
+      "path": "package.json",
+      "name": "phaneris",
+      "sha256": "2cf03c9562ac9bb670f3c2508a06c7d20cb65601c0880b484b984adbea67d715"
+    },
+    {
+      "path": "apps/cli/package.json",
+      "name": "@phaneris/cli",
+      "sha256": "44581ea287cab0810d0c1b6b80402550cd5d1ca0b5d93de7f40c7fd1049dd653"
+    },
+    {
+      "path": "apps/electron/package.json",
+      "name": "@phaneris/electron",
+      "sha256": "e68d55694a622d042c0d3fba9c6cabe785a05ff588665f605a1224590ad1111a"
+    },
+    {
+      "path": "apps/viewer/package.json",
+      "name": "@phaneris/viewer",
+      "sha256": "1de000674febacad857e5c4d22544b7be64b290e3214cd504d282036e05e1955"
+    },
+    {
+      "path": "apps/webui/package.json",
+      "name": "@phaneris/webui",
+      "sha256": "474d41b2604ed9d7d04c4d9ebc430dcbc4f9313163f1a676f6e957df5c13229f"
+    },
+    {
+      "path": "packages/core/package.json",
+      "name": "@phaneris/core",
+      "sha256": "58387588dd62a760abc6b4d806404f724f42365d8e17c71aa8d147f549dcb131"
+    },
+    {
+      "path": "packages/messaging-gateway/package.json",
+      "name": "@phaneris/messaging-gateway",
+      "sha256": "d66067f256d1b8d0083fa2731b0d02f5a57370c6b76f00749f986f03e1b7af84"
+    },
+    {
+      "path": "packages/messaging-whatsapp-worker/package.json",
+      "name": "@phaneris/messaging-whatsapp-worker",
+      "sha256": "116a64b072709dfab5605b71e0ae223b73d16cbb55a01929630df768a491e2a9"
+    },
+    {
+      "path": "packages/pi-agent-server/package.json",
+      "name": "@phaneris/pi-agent-server",
+      "sha256": "3fa4c85fb045f15206bc625eb805f047965620e34d6108565daa39bf85eab259"
+    },
+    {
+      "path": "packages/server/package.json",
+      "name": "@phaneris/server",
+      "sha256": "3cd0d4c763e2b3dfa985dabf73ccd6844ae6f61b261b3a92d127575fdedf5053"
+    },
+    {
+      "path": "packages/server-core/package.json",
+      "name": "@phaneris/server-core",
+      "sha256": "7ca4ea129baed97937cc7b866e618b7a4125404fcd21817577f81dbda05f3593"
+    },
+    {
+      "path": "packages/session-tools-core/package.json",
+      "name": "@phaneris/session-tools-core",
+      "sha256": "96637b135a7d7abbfa684e320049d9b8fd4a46b2ec4d37322d35c60119ea6bcc"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "name": "@phaneris/shared",
+      "sha256": "11d705d84b052c3f1e2acda0276e44b33483933c2b5155d342bf8695589b5f6e"
+    },
+    {
+      "path": "packages/ui/package.json",
+      "name": "@phaneris/ui",
+      "sha256": "9045f1e1944025406bcd9092e89a56969266365fb47d5830155edafd18e1e908"
+    }
+  ],
+  "lockSha256": "c72943f0126a8956e6688369d454d7520bd4d288673fa6ff87ebe2352a66de43",
+  "worktreeDirty": true,
+  "internalPackages": [
+    {
+      "path": "apps/cli/package.json",
+      "name": "@phaneris/cli",
+      "sha256": "44581ea287cab0810d0c1b6b80402550cd5d1ca0b5d93de7f40c7fd1049dd653"
+    },
+    {
+      "path": "apps/electron/package.json",
+      "name": "@phaneris/electron",
+      "sha256": "e68d55694a622d042c0d3fba9c6cabe785a05ff588665f605a1224590ad1111a"
+    },
+    {
+      "path": "apps/viewer/package.json",
+      "name": "@phaneris/viewer",
+      "sha256": "1de000674febacad857e5c4d22544b7be64b290e3214cd504d282036e05e1955"
+    },
+    {
+      "path": "apps/webui/package.json",
+      "name": "@phaneris/webui",
+      "sha256": "474d41b2604ed9d7d04c4d9ebc430dcbc4f9313163f1a676f6e957df5c13229f"
+    },
+    {
+      "path": "packages/core/package.json",
+      "name": "@phaneris/core",
+      "sha256": "58387588dd62a760abc6b4d806404f724f42365d8e17c71aa8d147f549dcb131"
+    },
+    {
+      "path": "packages/messaging-gateway/package.json",
+      "name": "@phaneris/messaging-gateway",
+      "sha256": "d66067f256d1b8d0083fa2731b0d02f5a57370c6b76f00749f986f03e1b7af84"
+    },
+    {
+      "path": "packages/messaging-whatsapp-worker/package.json",
+      "name": "@phaneris/messaging-whatsapp-worker",
+      "sha256": "116a64b072709dfab5605b71e0ae223b73d16cbb55a01929630df768a491e2a9"
+    },
+    {
+      "path": "packages/pi-agent-server/package.json",
+      "name": "@phaneris/pi-agent-server",
+      "sha256": "3fa4c85fb045f15206bc625eb805f047965620e34d6108565daa39bf85eab259"
+    },
+    {
+      "path": "packages/server/package.json",
+      "name": "@phaneris/server",
+      "sha256": "3cd0d4c763e2b3dfa985dabf73ccd6844ae6f61b261b3a92d127575fdedf5053"
+    },
+    {
+      "path": "packages/server-core/package.json",
+      "name": "@phaneris/server-core",
+      "sha256": "7ca4ea129baed97937cc7b866e618b7a4125404fcd21817577f81dbda05f3593"
+    },
+    {
+      "path": "packages/session-tools-core/package.json",
+      "name": "@phaneris/session-tools-core",
+      "sha256": "96637b135a7d7abbfa684e320049d9b8fd4a46b2ec4d37322d35c60119ea6bcc"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "name": "@phaneris/shared",
+      "sha256": "11d705d84b052c3f1e2acda0276e44b33483933c2b5155d342bf8695589b5f6e"
+    },
+    {
+      "path": "packages/ui/package.json",
+      "name": "@phaneris/ui",
+      "sha256": "9045f1e1944025406bcd9092e89a56969266365fb47d5830155edafd18e1e908"
+    }
+  ]
+}

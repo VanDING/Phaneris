@@ -33,7 +33,8 @@ export interface ResidentSessionPort {
   input(): Message | undefined
   runId(): string | undefined
   projectId(): string | undefined
-  permissionMode(): PermissionMode
+  executionMode(): PermissionMode
+  capabilities(): import('@phaneris/session-tools-core/assistant-capabilities').AssistantCapabilityView
   materialsStale(): void
   canonical(excludeOperationId?: string): DurableCanonicalModelContext
   work(): Promise<AssistantDelegation>
@@ -160,8 +161,10 @@ export class ResidentAssistantService {
     return {
       select: operationId => {
         const maintenance = job()
-        return maintenance ? context.prepareMaintenance(session.canonical(operationId), operationId!, maintenance)
+        const selection = maintenance ? context.prepareMaintenance(session.canonical(operationId), operationId!, maintenance)
           : context.prepare(session.canonical(operationId), session.messages(), operationId!, session.input()?.id ?? '', this.delegation?.pendingEvents() ?? [])
+        if (!maintenance) selection.resident!.contextText += `\n<resident_capabilities>\n${JSON.stringify(session.capabilities())}\n</resident_capabilities>`
+        return selection
       },
       valid: request => {
         if (request) { const valid = context.outcome(request); if (!valid) session.materialsStale(); return valid }
@@ -258,7 +261,7 @@ export class ResidentAssistantService {
         work.handledEvents(eventIds, segment.runOperationId, selections)
         return { acknowledged: eventIds }
       },
-      assistantWorkerOptionsFn: async query => readWorkerOptions(this.workspace.rootPath, query, session.permissionMode()),
+      assistantWorkerOptionsFn: async query => readWorkerOptions(this.workspace.rootPath, query, session.executionMode()),
       assistantDelegateFn: request => {
         const input = session.input(), segment = context.get().activeSegment
         const sourceContinuation = input?.inputSource?.kind === 'runtime_continuation' && input.inputSource.reason === 'source_activation'
@@ -268,6 +271,7 @@ export class ResidentAssistantService {
       },
       assistantWorkFn: async query => (await session.work()).query(query),
       assistantCancelWorkFn: async id => (await session.work()).cancel(id),
+      assistantWorkerControlFn: async command => (await session.work()).controls.control(command),
     }
   }
   resolve(requested: Parameters<typeof resolveWorkerConfig>[1], parent: Parameters<typeof resolveWorkerConfig>[2]) {

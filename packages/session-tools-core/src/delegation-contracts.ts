@@ -53,7 +53,9 @@ export interface AssistantDelegationReceipt {
   formatVersion: 2
   id: string; workspaceId: string; assistantSessionId: string; originMessageId: string
   requestId: string; fingerprint: string; targetSessionId?: string
-  state: 'accepted' | 'preparing' | 'submitting' | 'submitted' | 'result_ready' | 'needs_attention' | 'failed' | 'cancel_requested' | 'cancelled'
+  state: 'accepted' | 'preparing' | 'submitting' | 'submitted' | 'result_ready' | 'needs_attention' | 'failed' | 'cancel_requested' | 'cancelled' | 'pause_requested' | 'paused'
+  priority?: number
+  pendingControlId?: string
   sessionId?: string; inputMessageId?: string; createdAt: number; updatedAt: number; seq: number; error?: string
   result?: { messageId: string; sessionId: string }
   /** Scheduler-owned resource decision; no duplicate Runtime execution state. */
@@ -61,6 +63,8 @@ export interface AssistantDelegationReceipt {
 }
 /** Read-time projection of the ordinary Session's input snapshot. Never persisted in the inbox. */
 export interface AssistantWork extends AssistantDelegationReceipt {
+  controlAvailability?: { actions: import('./worker-control-contracts').WorkerControl['action'][]; reason?: string }
+  controls?: import('./worker-control-contracts').WorkerControlReceipt[]
   outputManifest?: import('./task-result-contracts').TaskOutputManifest
   title?: string
   artifactBaselines?: import('@phaneris/core/types').SessionArtifactBaseline[]

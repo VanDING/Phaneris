@@ -332,7 +332,7 @@ export interface Message {
   inputSource?: { kind: 'session_message' } | { kind: 'delegation'; delegationId: string; assistantSessionId: string; originMessageId: string }
     | { kind: 'resident_event'; eventIds: string[] }
     | { kind: 'memory_maintenance'; jobId: string; sourceSessionId: string }
-    | { kind: 'runtime_continuation'; reason: 'source_activation' | 'memory_refresh'; inputMessageIds: string[] };
+    | { kind: 'runtime_continuation'; reason: 'source_activation' | 'memory_refresh' | 'worker_control' | 'context_handoff'; inputMessageIds: string[] };
   delegationInput?: import('./session-execution').SessionDelegationInput;
   /** Host-captured turn ownership. Explicit null remains unassigned after later project switches. */
   projectScope?: { projectId: string | null };

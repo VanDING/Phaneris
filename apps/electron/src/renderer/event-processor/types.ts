@@ -221,7 +221,7 @@ export interface SessionStatusChangedEvent {
 export interface SessionMetadataChangedEvent {
   type: 'session_metadata_changed'
   sessionId: string
-  changes: Partial<Pick<Session, 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'contextPolicy' | 'contextHandoff'>>
+  changes: Partial<Pick<Session, 'workerPermissionMode' | 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'contextPolicy' | 'contextHandoff'>>
 }
 
 /**

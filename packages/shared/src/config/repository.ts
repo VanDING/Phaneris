@@ -76,7 +76,7 @@ export function loadStoredConfig(): StoredConfig | null {
     for (const workspace of config.workspaces) {
       if (!isValidWorkspace(workspace.rootPath)) {
         try {
-          createWorkspaceAtPath(workspace.rootPath, workspace.name);
+          createWorkspaceAtPath(workspace.rootPath, workspace.name, undefined, workspace.id);
         } catch (wsError) {
           debug('[config] Failed to create workspace at', workspace.rootPath, ':', wsError instanceof Error ? wsError.message : wsError);
         }

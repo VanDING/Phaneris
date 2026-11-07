@@ -34,6 +34,7 @@ export interface SessionScopedToolCallbacks {
   assistantWorkerOptionsFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWorkerOptions'];
   assistantWorkFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWork'];
   assistantCancelWorkFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantCancelWork'];
+  assistantWorkerControlFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWorkerControl'];
   assistantMemoryReadFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryRead'];
   /**
    * Called when a plan is submitted via SubmitPlan tool.

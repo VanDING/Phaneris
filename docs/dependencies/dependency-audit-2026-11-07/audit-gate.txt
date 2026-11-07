@@ -1,0 +1,9 @@
+New advisories (5):
+  - LOW GHSA-238p-pmpm-9mq7
+  - MODERATE GHSA-3g3m-2fjr-6pw4
+  - MODERATE GHSA-g3hv-75wg-m249
+  - HIGH GHSA-mrwp-f3q8-3g9p
+  - MODERATE GHSA-rj75-hqrm-r3gf
+
+Dependency audit failed: 1 new/escalated high-severity advisory(ies).
+Update dependencies or record an explicit accepted-risk decision, then refresh the baseline.
