@@ -1,0 +1,10 @@
+{
+  "CheckedAt": "2026-11-07T13:05:01.5133768+00:00",
+  "Bun": "1.4.4",
+  "Node": "v24.22.2",
+  "BundledBun": "1.4.4",
+  "BundledUv": "uv 0.13.7 (316c827e0 2026-11-03 x86_64-pc-windows-msvc)",
+  "Electron": "44.10.2",
+  "BunPackageManager": "bun@1.4.4",
+  "NodePin": "24.22.2"
+}

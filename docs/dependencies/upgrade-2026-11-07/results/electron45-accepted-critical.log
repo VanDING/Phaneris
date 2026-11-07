@@ -1,0 +1,164 @@
+Environment OK: Bun 1.4.4, Node v24.22.2; local script entries exist.
+
+> run scripts/verification/markdown-popout-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\markdown-popout
+{"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-accepted\\markdown-popout","passed":18,"total":18}
+
+> run scripts/verification/theme-foundation-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-foundation
+[PLUGIN_TIMINGS] JavaScript callbacks ran for 3.4s of this 3.7s build (94%).
+2 callbacks are listed without a time. Their calls overlapped, so the time inside one call includes work from other calls. To find their cost, profile the build with `node --cpu-prof`:
+  - plugin @tailwindcss/vite:generate:build transform (4 calls)
+  - plugin vite:css transform (4 calls)
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+{"phase":"controls-electron","executed":22}
+{"phase":"controls-ui","executed":44}
+{"phase":"controls-viewer","executed":66}
+{"phase":"controls-webui","executed":88}
+{"phase":"production-build:start","elapsedMs":22396,"detail":{"command":"webui:build"}}
+{"phase":"production-build:done","elapsedMs":31879,"detail":{"exitCode":0,"bytes":85340}}
+{"phase":"production-web-built","elapsedMs":33839,"detail":{"executed":92,"dist":"E:\\Phaneris-dependency-upgrade-20261107\\apps\\webui\\dist"}}
+{"phase":"spawn:done","elapsedMs":33856,"detail":{"pid":47968}}
+{"phase":"ready","elapsedMs":34668,"detail":{"url":"ws://127.0.0.1:59354"}}
+{"phase":"contexts:done","elapsedMs":34675}
+{"phase":"auth:done","elapsedMs":34887}
+{"phase":"pages:done","elapsedMs":34984}
+{"phase":"page-ready:first:start","elapsedMs":35280}
+{"phase":"page-ready:first:done","elapsedMs":35553}
+{"phase":"TF02:applied:start","elapsedMs":35554}
+{"phase":"TF02:applied:done","elapsedMs":35597}
+{"phase":"TF02:workspace-text:done","elapsedMs":35885}
+{"phase":"settle:deadline","elapsedMs":40898,"detail":{"note":"animations did not all finish within 5s"}}
+{"phase":"TF02:settled","elapsedMs":40899}
+{"phase":"TF02:screenshot:done","elapsedMs":40956}
+{"phase":"page-ready:second:start","elapsedMs":41135}
+{"phase":"page-ready:second:done","elapsedMs":41318}
+{"phase":"page-ready:first:start","elapsedMs":43617}
+{"phase":"page-ready:first:done","elapsedMs":43859}
+{"phase":"settle:deadline","elapsedMs":49388,"detail":{"note":"animations did not all finish within 5s"}}
+{"phase":"page-ready:second:start","elapsedMs":49834}
+{"phase":"page-ready:second:done","elapsedMs":50091}
+{"phase":"cleanup:start","elapsedMs":50809}
+{"phase":"cleanup:done","elapsedMs":53749,"detail":{"checks":103}}
+
+> run scripts/verification/theme-contract-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-contract
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/string_decoder/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+
+> run scripts/verification/theme-roles-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-roles
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/string_decoder/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+
+> run scripts/verification/theme-domains-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-domains
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/string_decoder/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+
+> run scripts/verification/theme-browser-host-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-browser-host
+
+> run scripts/verification/theme-login-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-login
+
+> run scripts/verification/theme-design-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-design
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/string_decoder/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+
+> run scripts/verification/theme-governance-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\theme-governance
+
+> run scripts/verification/distribution-inputs-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\distribution-inputs
+
+> run scripts/verification/identity-gate-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\identity-gate
+
+> run scripts/verification/upgrade-0153-fixtures-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-fixtures
+
+> run scripts/verification/upgrade-0153-heic-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-heic
+Decoding image failed heif_image_handle {} {
+  code: l {},
+  subcode: l {},
+  message: 'Invalid input: Unexpected end of file: Extent in iloc box references data outside of file bounds (points to file position 380)\n'
+}
+Converted to JPEG, saved to E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-heic\img-tool-converted.jpg
+{"passed":6,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-accepted\\upgrade-0153-heic"}
+
+> run scripts/verification/upgrade-0153-heic-store-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-heic-store
+2026-11-07T14:21:33.271Z INFO  HEIC/HEIF attachment transcoded to JPEG: photo.heic
+2026-11-07T14:21:33.308Z INFO  Resizing image from 2048x1536 to 1568x1176
+2026-11-07T14:21:33.336Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)
+2026-11-07T14:21:33.616Z INFO  HEIC/HEIF attachment transcoded to JPEG: photo.heic
+2026-11-07T14:21:33.617Z INFO  Resizing image from 2048x1536 to 1568x1176
+2026-11-07T14:21:33.646Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)
+2026-11-07T14:21:33.906Z INFO  HEIC/HEIF attachment transcoded to JPEG: renamed.jpg
+2026-11-07T14:21:33.907Z INFO  Resizing image from 2048x1536 to 1568x1176
+2026-11-07T14:21:33.941Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)
+2026-11-07T14:21:34.203Z INFO  HEIC/HEIF attachment transcoded to JPEG: no-mime
+2026-11-07T14:21:34.204Z INFO  Resizing image from 2048x1536 to 1568x1176
+2026-11-07T14:21:34.233Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)
+2026-11-07T14:21:34.278Z INFO  Resizing image from 2048x1536 to 1568x1176
+2026-11-07T14:21:34.406Z INFO  Image resized: 13317 -> 376374 bytes (-2726% reduction)
+2026-11-07T14:21:34.548Z INFO  HEIC/HEIF attachment transcoded to JPEG: small.heic
+2026-11-07T14:21:34.830Z INFO  HEIC/HEIF attachment transcoded to JPEG: photo.heic
+2026-11-07T14:21:34.831Z INFO  Resizing image from 2048x1536 to 1568x1176
+2026-11-07T14:21:34.860Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)
+2026-11-07T14:21:35.129Z INFO  HEIC/HEIF attachment transcoded to JPEG: photo.heic
+2026-11-07T14:21:35.129Z INFO  Resizing image from 2048x1536 to 1568x1176
+2026-11-07T14:21:35.158Z INFO  Image resized: 157453 -> 55273 bytes (65% reduction)
+Decoding image failed heif_image_handle {} {
+  code: l {},
+  subcode: l {},
+  message: 'Invalid input: Unexpected end of file: Extent in iloc box references data outside of file bounds (points to file position 380)\n'
+}
+2026-11-07T14:21:35.235Z ERROR storeAttachment error: Could not decode HEIC/HEIF image (brand heic [mif1 heic miaf]): HEIF processing error
+{"passed":6,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-accepted\\upgrade-0153-heic-store"}
+
+> run scripts/verification/upgrade-0153-chat-starters-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-chat-starters
+{"passed":4,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-accepted\\upgrade-0153-chat-starters"}
+
+> run scripts/verification/upgrade-0153-endpoints-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-endpoints
+{"passed":4,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-accepted\\upgrade-0153-endpoints"}
+
+> run scripts/verification/upgrade-0153-b1-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-b1
+{"passed":5,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-accepted\\upgrade-0153-b1"}
+
+> run scripts/verification/upgrade-0153-pi-runtime-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-pi-runtime
+{"passed":13,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-accepted\\upgrade-0153-pi-runtime"}
+
+> run scripts/verification/upgrade-0153-followup-browser-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-followup-browser
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/shiki/dist/index.mjs is dynamically imported by packages/ui/src/components/markdown/code-highlight.ts but also statically imported by packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/index.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/vscode.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/github.light.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] packages/shared/src/i18n/locales/zh-Hans.json is dynamically imported by packages/shared/src/i18n/registry.ts but also statically imported by scripts/verification/fixtures/upgrade-followup.tsx, dynamic import will not move module into another chunk.
+
+49 |   })
+50 |   const input = page.locator('#compaction-threshold-select')
+51 |   const choose = async (label: string) => { await input.click(); await page.locator('[data-option]').filter({ hasText: label }).first().click() }
+52 |   const wait = async (probe: () => boolean | Promise<boolean>, label: string) => {
+53 |     const deadline = Date.now() + 15_000
+54 |     while (!await probe()) { if (Date.now() > deadline) throw new Error(`Timed out: ${label}`); await Bun.sleep(25) }
+                                                                       ^
+error: Timed out: saved before server restart
+      at E:\Phaneris-dependency-upgrade-20261107\scripts\verification\upgrade-0153-followup-browser-workflow.ts:54:67
+      at E:\Phaneris-dependency-upgrade-20261107\scripts\verification\upgrade-0153-followup-browser-workflow.ts:99:32
+      at verificationWorkflow (unknown:1:1)
+
+Bun v1.4.4 (Windows x64)
+57 |       }
+58 |     }
+59 |     await Promise.all([copy(child.stdout as ReadableStream<Uint8Array>, process.stdout), copy(child.stderr as ReadableStream<Uint8Array>, process.stderr)])
+60 |   }
+61 |   const code = await child.exited
+62 |   if (code !== 0) throw new Error(`${args.join(' ')} exited with ${code}`)
+                                 ^
+error: run scripts/verification/upgrade-0153-followup-browser-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-accepted\upgrade-0153-followup-browser exited with 1
+      at run (E:\Phaneris-dependency-upgrade-20261107\scripts\check-environment.ts:62:29)
+
+Bun v1.4.4 (Windows x64)

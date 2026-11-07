@@ -1,11 +1,11 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#   "pypdfium2==5.14.0",
-#   "pypdf==6.21.1",
+#   "pypdfium2==5.15.0",
+#   "pypdf==6.21.4",
 #   "img2pdf==0.6.3",
-#   "Pillow==12.3.0",
-#   "click==8.5.0",
+#   "Pillow==13.0.0",
+#   "click==8.5.1",
 #   "python-pptx==1.0.2",
 #   "python-docx==1.2.0",
 # ]

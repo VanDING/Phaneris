@@ -1,0 +1,26 @@
+[editor] browser 156.0.8078.4
+[editor] fixture page http://127.0.0.1:65299/.cache/upgrade-20261107-baseline-editor/index.html from E:\Phaneris\.cache\upgrade-20261107-baseline-editor\bundle (built in 3712ms)
+[editor] boot attempt 1
+[editor] attempt 1 ready=true in 1357ms
+[editor] ED-01 start
+[editor] ED-01 setMarkdown(artifact)
+[editor] ED-01 focus
+[editor] ED-01 cdp session
+[editor] ED-01 imeSetComposition
+[editor] ED-01 imeSetComposition answered
+[editor] ED-01 composing visible=true text="你好世界产物验收\n\n正文段落。"
+[editor] ED-01 insertText (commit)
+[editor] ED-01 wait for commit
+[editor] ED-01 screenshot
+[editor] ED-01 method Input.imeSetComposition + Input.insertText | markdown "# 你好世界产物验收\n\n正文段落。"
+[editor] ED-01 passed
+[editor] ED-02 start
+[editor] pageerror Called contentMatchAt on a node with invalid content
+[editor] ED-02 bold via bubble menu
+[editor] ED-02 passed
+[editor] ED-03 start
+[editor] ED-03 buttons {"before":[{"text":"Visual","pressed":"true","disabled":false},{"text":"Source","pressed":"false","disabled":false}],"after":[{"text":"可视化","pressed":"true","disabled":false},{"text":"源码","pressed":"false","disabled":false}],"back":[{"text":"Visual","pressed":"true","disabled":false},{"text":"Source","pressed":"false","disabled":false}]}
+[editor] ED-03 passed
+[editor] ED-04-history-list-paste-and-image-upload start
+[editor] ED-04-history-list-paste-and-image-upload passed
+{"passed":4,"output":"E:\\Phaneris\\.cache\\upgrade-20261107-baseline-editor"}

@@ -1,0 +1,57 @@
+[
+  {
+    "Stage": "electron45-final-frozen",
+    "Command": [
+      "bun",
+      "install",
+      "--frozen-lockfile",
+      "--registry",
+      "https://registry.npmjs.org"
+    ],
+    "StartedAt": "2026-11-07T13:49:34.5958019+00:00",
+    "FinishedAt": "2026-11-07T13:49:35.1374973+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-final-frozen.log",
+    "LogSha256": "ffcec1df631783c3834e25e09368ca55ce4942647ea6ccfed625f7942bf21d83"
+  },
+  {
+    "Stage": "electron45-final-ci",
+    "Command": [
+      "bun",
+      "run",
+      "validate:ci"
+    ],
+    "StartedAt": "2026-11-07T13:49:35.1814841+00:00",
+    "FinishedAt": "2026-11-07T13:52:32.8389143+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-final-ci.log",
+    "LogSha256": "70bd4e4fbfacf92a6fbf49a7275614124cb814a12f662166a7b2d8bd6b1d6a91"
+  },
+  {
+    "Stage": "electron45-final-workspace",
+    "Command": [
+      "bun",
+      "run",
+      "test"
+    ],
+    "StartedAt": "2026-11-07T13:52:32.8628752+00:00",
+    "FinishedAt": "2026-11-07T13:55:52.3106310+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-final-workspace.log",
+    "LogSha256": "349187075425161f023744d0db72c76745509ddc99b62d6d096500b74a91de93"
+  },
+  {
+    "Stage": "electron45-final-critical",
+    "Command": [
+      "bun",
+      "run",
+      "test:critical",
+      "--output-dir=.cache/upgrade-20261107/critical-45-final"
+    ],
+    "StartedAt": "2026-11-07T13:55:52.3338552+00:00",
+    "FinishedAt": "2026-11-07T14:05:30.5421212+00:00",
+    "ExitCode": 1,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-final-critical.log",
+    "LogSha256": "1b6d25195ded95bacbbeb1469144a439f5662d7fcba6b0a1025cc888c820963f"
+  }
+]

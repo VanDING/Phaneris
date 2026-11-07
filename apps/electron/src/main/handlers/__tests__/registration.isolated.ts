@@ -113,6 +113,8 @@ async function getExpectedChannels(): Promise<Set<string>> {
     pages,
     plugins,
     decisions,
+    assistantMemory,
+    residentAssistant,
   ] = await Promise.all([
     import('@phaneris/server-core/handlers/rpc/auth'),
     import('@phaneris/server-core/handlers/rpc/artifacts'),
@@ -138,6 +140,8 @@ async function getExpectedChannels(): Promise<Set<string>> {
     import('@phaneris/server-core/handlers/rpc/pages'),
     import('@phaneris/server-core/handlers/rpc/plugins'),
     import('@phaneris/server-core/handlers/rpc/decisions'),
+    import('@phaneris/server-core/handlers/rpc/assistant-memory'),
+    import('@phaneris/server-core/handlers/rpc/resident-assistant'),
   ])
 
   // GUI handler channels (remain in electron)
@@ -173,6 +177,8 @@ async function getExpectedChannels(): Promise<Set<string>> {
     ...pages.HANDLED_CHANNELS,
     ...plugins.HANDLED_CHANNELS,
     ...decisions.HANDLED_CHANNELS,
+    ...assistantMemory.HANDLED_CHANNELS,
+    ...residentAssistant.HANDLED_CHANNELS,
     ...browser.HANDLED_CHANNELS,
     ...guiSystem.GUI_HANDLED_CHANNELS,
     ...guiWorkspace.GUI_HANDLED_CHANNELS,

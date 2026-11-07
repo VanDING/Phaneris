@@ -1,0 +1,286 @@
+$ bun run runtime:provision:validation && bun run typecheck:all && bun run verify:session-foundation && bun run lint && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table && bun run lint:i18n:parity && bun run lint:i18n:sorted && bun run lint:i18n:coverage && bun run lint:i18n:dead-keys && bun run check:docs && bun run check:fonts && bun run identity:check && bun run version:check && bun run runtime:check && bun run electron-pin:check
+$ bun run scripts/provision-validation-runtime.ts
+uv already present at E:\Phaneris-dependency-upgrade-20261107\apps\electron\resources\bin\win32-x64\uv.exe
+$ cd packages/core && bun run tsc --noEmit && cd ../shared && bun run tsc --noEmit && cd ../server-core && bun run tsc --noEmit && cd ../server && bun run tsc --noEmit && cd ../session-tools-core && bun run tsc --noEmit && cd ../pi-agent-server && bun run typecheck && cd ../../apps/electron && bun run typecheck && cd ../../packages/ui && bun run tsc --noEmit && cd ../messaging-gateway && bun run tsc --noEmit && cd ../messaging-whatsapp-worker && bun run tsc --noEmit && cd ../../apps/cli && bun run typecheck && cd ../.. && bun run webui:typecheck && bun run viewer:typecheck && bun run typecheck:build && bun run typecheck:scripts
+$ bun run tsc --noEmit -p tsconfig.typecheck.json
+$ bun run tsc --noEmit
+$ bun run tsc --noEmit
+$ cd apps/webui && bun run typecheck
+$ bun run tsc --noEmit
+$ cd apps/viewer && bun run typecheck
+$ bun run tsc --noEmit
+$ bun run tsc --noEmit -p tsconfig.build.json
+$ bun run tsc --noEmit -p tsconfig.tooling.json && bun run tsc --noEmit -p scripts/performance/tsconfig.runner.json && bun run tsc --noEmit -p scripts/performance/tsconfig.server.json
+$ bun run scripts/verification/session-foundation-suite.ts
+{"workflows":7,"scenes":53,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\verification\\session-foundation-suite-SsOr1m"}
+$ bun run lint:workspace && bun run lint:transition-all && bun run lint:runtime-boundary && bun run lint:architecture && bun run lint:automation-events && bun run check:themes && bun run check:visual-contracts && bun run check:scale-contract && bun run audit:scale && bun run check:design-drift && bun run check:file-size && bun run audit:ui-merge && bun run check:contrast-floor && bun run check:governance && bun run check:ipc && bun run check:boundaries && bun run check:cycles && bun run check:rpc-contracts && bun run check:distribution
+$ bun run scripts/lint-workspace.ts
+Workspace lint OK: 2618 files, 24 registered warnings
+$ bun run scripts/check-transition-all.ts
+transition-all: clean (1076 files scanned)
+$ bun run scripts/check-runtime-boundary.ts
+{
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-11-07T13:00:26.081Z",
+  "scannedFiles": 1698,
+  "violationCount": 0,
+  "violations": []
+}
+$ bun run scripts/check-architecture.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-07T13:00:29.727Z",
+  "scannedFiles": 1698,
+  "webuiClosureSize": 841,
+  "webuiShimCount": 4,
+  "inspected": {
+    "webui-unshimmed-node": 8,
+    "undeclared-subpath-import": 1538
+  },
+  "baselineSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "currentSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "failures": []
+}
+$ bun run scripts/check-automation-events.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-07T13:00:30.126Z",
+  "vocabularySize": 13,
+  "emittedCount": 5,
+  "unemittedCount": 8,
+  "emitted": {},
+  "unemitted": [
+    "Notification",
+    "PermissionRequest",
+    "PreCompact",
+    "SessionEnd",
+    "SessionStart",
+    "Setup",
+    "SubagentStart",
+    "SubagentStop"
+  ],
+  "failures": []
+}
+$ bun run scripts/generate-theme-contract.ts --check
+Theme contract verified: 39 fields, 1 built-ins, 65 Shiki themes.
+$ bun run scripts/check-visual-contracts.ts
+Visual contracts OK: four domains, 496 explicit legacy findings, no new debt.
+$ bun run scripts/check-scale-contract.ts
+Scale contract OK: fontSize 7 tiers, radius 5 tiers, controlHeight 6 tiers; DESIGN.md, tokens, allowlist and tree agree.
+$ bun run scripts/measure-scale-drift.ts
+fontSize: 0 sites / 0 values
+  
+radius: 2 sites / 1 values
+  2px(2)
+controlHeight: 48 sites / 23 values
+  1px(1) 2px(3) 6px(1) 12px(8) 15px(1) 16px(2) 18px(1) 24px(1) 32px(1) 44px(1) 48px(1) 50px(4) 88px(1) 120px(1) 180px(1) 200px(1) 240px(6) 260px(1) 300px(2) 320px(3) 400px(5) 460px(1) 600px(1)
+width(informational): 42 sites
+css font-size: 1 sites; css radius: 0 sites
+  font 16px(1)
+files scanned: 844 (playground excluded: 70)
+Report mode: counts are informational and never fail CI.
+$ bun run scripts/check-design-drift.ts
+  tightenable: interactiveTitle: 91 → 90
+Design drift OK: 6 counters at or below baseline; 2 motion utilities all consumed.
+$ bun run scripts/check-file-size.ts
+can tighten — packages/ui/src/components/chat/TurnCard.tsx: 3001 lines, budget 3043 — tighten to 3001
+can tighten — apps/electron/src/renderer/App.tsx: 2352 lines, budget 2406 — tighten to 2352
+can tighten — apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx: 2469 lines, budget 2473 — tighten to 2469
+can tighten — apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx: 1991 lines, budget 2006 — tighten to 1991
+can tighten — apps/electron/src/renderer/context/NavigationContext.tsx: 1327 lines, budget 1331 — tighten to 1327
+can tighten — apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx: 1281 lines, budget 1284 — tighten to 1281
+File-size ratchet OK: 7 files within budget (threshold 1200 lines).
+$ bun run scripts/audit-ui-merge.ts
+files scanned: 805
+tiers registered: micro, meta, label, body, reading, title, display, glyph-watermark, glyph-avatar
+Merge layer OK: every literal keeps its contract font-size tier.
+$ bun run scripts/check-contrast-floor.ts
+58 colour pairs across 1 built-in themes.
+  tightest: default light destructive-text / worst surface and 20% wash = 4.51:1 (floor 4.5)
+  tightest: default light success-text / worst surface and 20% wash = 4.53:1 (floor 4.5)
+  tightest: default dark accent-text / worst surface and 20% wash = 4.53:1 (floor 4.5)
+  tightest: default light info-text / worst surface and 20% wash = 4.54:1 (floor 4.5)
+  tightest: default light accent-text / worst surface and 20% wash = 4.54:1 (floor 4.5)
+Contrast floor OK: no built-in pair below its WCAG threshold.
+$ bun run scripts/check-governance.ts
+Governance wiring OK: 13 members, 4 tooling projects; uv and artifact pins checked
+$ bun run scripts/ipc-inventory.ts
+IPC compatibility fixture OK: 445 literal channels
+$ bun run scripts/check-governance-boundaries.ts
+Governance boundaries OK: 1698 modules; 10020 references; 9 pure entries; one config writer
+$ bun run scripts/check-cycles.ts
+Runtime cycles OK: 1698 modules; 3 exact reviewed compositions; new/changed/stale edges fail
+$ bun run scripts/contract-inventory.ts
+RPC contracts OK: 445 channels; 68 validated input contracts
+$ bun run scripts/check-distribution.ts
+Distribution inputs OK: Bun 1.4.4; 13 workspaces; 3 patches before install
+$ bun run test:shared:llm-connections && bun run test:shared:models-pi && bun run test:shared:config
+$ cd packages/shared && bun test tests/llm-connections.test.ts
+bun test v1.4.4 (38afee6c8)
+
+tests\llm-connections.test.ts:
+(pass) getMiniModel() > honors an explicit utility model from the provider catalog [0.68ms]
+(pass) getMiniModel() > finds haiku for anthropic provider [0.63ms]
+(pass) getMiniModel() > finds mini for pi provider [0.05ms]
+(pass) getMiniModel() > skips denied codex-mini-latest alias for pi provider [0.02ms]
+(pass) getMiniModel() > skips denied pi/codex-mini-latest alias for pi provider [0.02ms]
+(pass) getMiniModel() > finds mini for pi_compat provider [0.02ms]
+(pass) getMiniModel() > finds mini for Pi list with mixed models [0.02ms]
+(pass) getMiniModel() > finds mini even when model name has "mini" in different position [0.02ms]
+(pass) getMiniModel() > does not match minimax brand names for the "mini" keyword [2.62ms]
+(pass) getMiniModel() > falls back to last model when Pi list has no mini/flash model [0.23ms]
+(pass) getMiniModel() > returns undefined for empty model list [0.77ms]
+(pass) getMiniModel() > returns undefined for undefined models [0.14ms]
+(pass) getMiniModel() > falls back to last model when no keyword match [0.12ms]
+(pass) getMiniModel() > fallback ignores denied alias and returns last allowed model [0.10ms]
+(pass) getMiniModel() > handles single-model list [0.05ms]
+(pass) getSummarizationModel() > returns same result as getMiniModel (shared implementation) [0.16ms]
+(pass) getMiniModel() — auth-flavor awareness > skips *codex-mini* variants under openai-codex auth [0.63ms]
+(pass) getMiniModel() — auth-flavor awareness > still returns *codex-mini* variants under regular openai (API-key) auth [0.11ms]
+(pass) getMiniModel() — auth-flavor awareness > falls back to last allowed model when every mini candidate is denied [0.14ms]
+(pass) isDeniedMiniModelId() > always denies codex-mini-latest [0.04ms]
+(pass) isDeniedMiniModelId() > denies *codex-mini* variants only under openai-codex auth [0.06ms]
+(pass) isDeniedMiniModelId() > does not deny non-codex-mini models [0.04ms]
+
+ 22 pass
+ 0 fail
+ 30 expect() calls
+Ran 22 tests across 1 file. [84.00ms]
+$ cd packages/shared && bun test tests/models-pi.test.ts
+bun test v1.4.4 (38afee6c8)
+
+tests\models-pi.test.ts:
+(pass) models-pi filtering > excludes codex-mini-latest for openai models [1.10ms]
+(pass) models-pi filtering > excludes all gpt-4* models for openai models [0.50ms]
+(pass) models-pi filtering > keeps Claude Opus 4.6 models in Anthropic catalogs [1.85ms]
+(pass) models-pi filtering > includes DeepSeek in the Pi API key provider list with a human-readable label [1.25ms]
+(pass) models-pi filtering > returns current DeepSeek models, including the patched deepseek-flash entry [2.01ms]
+(pass) models-pi filtering > includes Moonshot AI in the Pi API key provider list with human-readable labels [0.39ms]
+(pass) models-pi filtering > returns Claude Opus 5 from the Pi SDK catalog for Anthropic and Bedrock [1.41ms]
+(pass) models-pi filtering > returns Claude Opus 5.5 from the Pi SDK catalog for Anthropic and Bedrock [1.20ms]
+(pass) models-pi filtering > returns GPT-6 Astra from the Pi SDK catalog for OpenAI API keys and ChatGPT accounts [0.61ms]
+(pass) models-pi filtering > returns Kimi K3 from the Pi SDK catalog for both Moonshot providers [0.16ms]
+
+ 10 pass
+ 0 fail
+ 30 expect() calls
+Ran 10 tests across 1 file. [133.00ms]
+$ cd packages/shared && bun test src/config/__tests__/storage-migrations.test.ts src/config/__tests__/storage-startup-migration.test.ts src/config/__tests__/default-thinking-level.test.ts src/config/__tests__/theme.test.ts
+bun test v1.4.4 (38afee6c8)
+
+src\config\__tests__\default-thinking-level.test.ts:
+(pass) default thinking level storage > falls back to bundled default when no app-level default is set [162.64ms]
+(pass) default thinking level storage > persists defaultThinkingLevel to config.json [180.38ms]
+(pass) default thinking level storage > round-trips persisted value across processes [267.00ms]
+(pass) default thinking level storage > supports every thinking level [373.81ms]
+(pass) default thinking level storage > migrates legacy "think" value to "medium" [126.72ms]
+
+src\config\__tests__\storage-migrations.test.ts:
+(pass) shouldMigratePiOpenAiProvider > migrates legacy Pi OAuth OpenAI connections to openai-codex [0.05ms]
+(pass) shouldMigratePiOpenAiProvider > does not migrate Pi API key OpenAI connections [0.01ms]
+(pass) shouldMigratePiOpenAiProvider > does not migrate Pi custom endpoint connections [0.01ms]
+(pass) shouldMigratePiOpenAiProvider > does not migrate already-correct openai-codex connections
+(pass) shouldRepairPiApiKeyCodexProvider > repairs Pi API key connections that were incorrectly set to openai-codex [0.02ms]
+(pass) shouldRepairPiApiKeyCodexProvider > repairs Pi API key with endpoint connections that were incorrectly set to openai-codex
+(pass) shouldRepairPiApiKeyCodexProvider > does not repair OAuth openai-codex connections
+(pass) shouldRepairPiApiKeyCodexProvider > does not repair non-OpenAI-Codex providers
+(pass) inferModelSelectionMode > infers automaticallySyncedFromProvider when model list equals provider defaults [0.10ms]
+(pass) inferModelSelectionMode > infers userDefined3Tier when model list is a custom subset [0.02ms]
+(pass) inferModelSelectionMode > infers automaticallySyncedFromProvider for empty model lists
+
+src\config\__tests__\storage-startup-migration.test.ts:
+(pass) startup migration (integration) > repairs broken pi-api-key openai-codex provider on startup migration [247.00ms]
+(pass) startup migration (integration) > preserves userDefined3Tier model subsets during startup migration [193.87ms]
+(pass) startup migration (integration) > normalizes auto mode model set back to provider defaults [200.82ms]
+(pass) startup migration (integration) > repairs userDefined3Tier lists by removing invalid IDs and fixing default model [240.23ms]
+(pass) startup migration (integration) > falls back to provider defaults when userDefined3Tier becomes empty after filtering [246.25ms]
+(pass) startup migration (integration) > normalizes legacy unprefixed userDefined3Tier model IDs instead of resetting [273.39ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps direct Anthropic Opus 4.6 default/model entries intact [223.43ms]
+(pass) legacy Opus migration to default Opus (integration) > restores Opus 4.6 once to direct Anthropic connections and respects a later removal [435.31ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates direct Anthropic Opus 4.5 defaults straight to Opus 4.8 [193.66ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates previous direct Anthropic Opus 4.7 defaults to Opus 4.8 while keeping 4.7 selectable [243.03ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps workspace default Opus 4.6 unchanged [217.55ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates workspace default Opus 4.7 to Opus 4.8 [227.66ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps Pi Anthropic Opus 4.6 IDs unchanged [194.59ms]
+(pass) legacy Opus migration to default Opus (integration) > keeps Pi Bedrock Opus 4.6 native IDs unchanged [248.53ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates legacy unprefixed Pi Anthropic Opus 4.6 IDs to pi-prefixed Opus 4.6 [260.19ms]
+(pass) legacy Opus migration to default Opus (integration) > migrates legacy Bedrock provider Opus 4.6 IDs to Pi Bedrock native Opus 4.6 IDs [258.97ms]
+(pass) endpoint transport repair (integration) > collapses a compat connection stored without an endpoint protocol back to native Pi [247.89ms]
+(pass) endpoint transport repair (integration) > leaves genuine custom endpoints compat [221.02ms]
+(pass) endpoint transport repair (integration) > drops a leftover protocol from a native connection [218.73ms]
+
+src\config\__tests__\theme.test.ts:
+(pass) themeToCSS > emits semantic and visual tokens from a theme file [0.41ms]
+(pass) themeToCSS > expands each high-level depth preset [0.25ms]
+(pass) themeToCSS > glass depth exposes blur while other depths disable it [0.06ms]
+(pass) themeToCSS > raised depth combines a hard border ring with zero-blur offset shadows [0.04ms]
+(pass) themeToCSS > keeps status colors in their original CSS syntax without parallel RGB channels [0.04ms]
+(pass) themeToCSS > leaves omitted surfaces and material tokens on the static Default baseline [0.04ms]
+(pass) themeToCSS > dark mode overrides visual tokens without losing light defaults [0.07ms]
+(pass) theme resolution > deeply overlays a user theme onto the canonical default [0.22ms]
+(pass) theme resolution > normalizes both light-only and dark-only themes [0.06ms]
+(pass) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [0.52ms]
+(pass) theme resolution > bundles exactly the canonical Default theme [12.27ms]
+(pass) theme resolution > keeps Electron startup backgrounds aligned with the Default CSS colors [0.05ms]
+(pass) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [11.83ms]
+(pass) theme validation > accepts the expanded preset schema [0.68ms]
+(pass) theme validation > rejects unsupported values and CSS declaration injection [7.04ms]
+(pass) theme validation > rejects unknown preset fields and ambiguous supported modes [0.47ms]
+
+ 51 pass
+ 0 fail
+ 384 expect() calls
+Ran 51 tests across 4 files. [6.29s]
+$ bun run scripts/test-doc-tools.ts
+WARN `--no-project` was provided, but no project was found
+........................
+----------------------------------------------------------------------
+Ran 24 tests in 57.794s
+
+OK
+$ bun test ./apps/electron/src/renderer/components/ui/data-table-features.test.ts
+bun test v1.4.4 (38afee6c8)
+
+apps\electron\src\renderer\components\ui\data-table-features.test.ts:
+(pass) data table v9 interactions > sorts naturally and applies global and column filters [8.62ms]
+(pass) data table v9 interactions > paginates only when enabled and supports next/previous page [1.60ms]
+(pass) data table v9 interactions > expands and collapses hierarchical labels [0.76ms]
+(pass) data table v9 interactions > preserves column sizing, visibility, and row selection APIs [1.46ms]
+
+ 4 pass
+ 0 fail
+ 15 expect() calls
+Ran 4 tests across 1 file. [788.00ms]
+$ bun run scripts/check-i18n-parity.ts
+i18n parity OK (6 locales, 3024 keys each)
+$ bun run scripts/sort-locales.ts --check
+$ bun run scripts/check-i18n-coverage.ts
+i18n coverage OK (3212 references across 1438 files, 3024 en keys)
+$ bun run scripts/check-i18n-dead-keys.ts
+i18n dead keys OK (3024 en keys, all referenced)
+$ bun run scripts/check-docs.ts
+check:docs — 257 documents, 1953 relative links checked.
+Documentation gate OK.
+$ bun run scripts/check-font-stacks.ts
+Font stacks OK: typography.css and DEFAULT_THEME agree; bundled faces installed and variable; no font CDN in shipped sources.
+$ bun run scripts/check-identity.ts --strict
+identity: Phaneris (io.github.vanding.phaneris, phaneris://)
+
+drift check
+  OK — generated identity artifacts and packaging config are in sync
+
+residual upstream identifiers
+  OK — no unallowlisted upstream identifier remains
+$ bun run scripts/check-versions.ts
+Version OK — 0.6.2 across 27 declarations (13 workspace packages).
+$ bun run scripts/check-python-runtime-pin.ts
+Python runtime pin OK: tools run CPython 3.12.16 via uv 0.13.7 (16 wrapper invocation(s); bundled win32-x64=0.13.7).
+$ bun run scripts/check-electron-pin.ts
+Electron pin OK: installer and dependency both at 44.10.2 (package.json "^44.10.2").

@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * B1 failure matrix for the 2026-10-18 batch: the Pi 1.3.0 SDK graph, the
+ * B1 failure matrix maintained for the current frozen Pi 1.5.0 SDK graph, the
  * Anthropic/OpenAI tool-schema adapters as they serialize real requests, the
  * built-in provider endpoints, and the compaction reserve the Pi subprocess
  * reports for the *current* model.
@@ -15,6 +15,7 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
+import { createRequire } from 'node:module'
 import { join, resolve } from 'node:path'
 import { VerificationRun } from './verification-artifacts'
 
@@ -33,30 +34,37 @@ try {
   for (const name of [...piPackages, 'pi-mcp', 'pi-telemetry', 'pi-tui']) {
     piVersions[name] = JSON.parse(readFileSync(join(root, 'node_modules/@earendil-works', name, 'package.json'), 'utf8')).version
   }
-  for (const name of piPackages) assert.equal(piVersions[name], '1.3.0', `${name} must be 1.3.0`)
+  for (const name of piPackages) assert.equal(piVersions[name], '1.5.0', `${name} must remain 1.5.0`)
   // The internal packages move with the direct four; they are not overridden.
-  for (const name of ['pi-mcp', 'pi-telemetry', 'pi-tui']) assert.equal(piVersions[name], '1.3.0')
+  for (const name of ['pi-mcp', 'pi-telemetry', 'pi-tui']) assert.equal(piVersions[name], '1.5.0')
   const lock = readFileSync(join(root, 'bun.lock'), 'utf8')
   // Pi's own exact pins must survive: no cross-parent dedupe of its SDK copies.
-  const codingAgentEntry = lock.split('\n').find(line => line.includes('"@earendil-works/pi-coding-agent@1.3.0"'))
-  assert(codingAgentEntry, 'pi-coding-agent must be locked at 1.3.0')
-  // Pi owns these exact versions; the direct `undici` upgrade must not reach them.
-  assert(codingAgentEntry!.includes('"undici": "8.10.2"'), "pi-coding-agent's own undici pin must survive")
+  const codingAgentEntry = lock.split('\n').find(line => line.includes('"@earendil-works/pi-coding-agent@1.5.0"'))
+  assert(codingAgentEntry, 'pi-coding-agent must remain locked at 1.5.0')
+  // Preserve Pi's published pins, with the reviewed version-scoped Undici patch.
+  assert(codingAgentEntry!.includes('"undici": "8.12.3"'), "pi-coding-agent's published undici requirement must survive")
   assert(codingAgentEntry!.includes('"semver": "7.8.5"'), "pi-coding-agent's own semver pin must survive")
-  const aiEntry = lock.split('\n').find(line => line.includes('"@earendil-works/pi-ai@1.3.0"'))
-  assert(aiEntry, 'pi-ai must be locked at 1.3.0')
-  for (const pin of ['"@anthropic-ai/sdk": "0.129.0"', '"openai": "7.19.0"', '"typebox": "1.3.27"']) {
+  assert(codingAgentEntry!.includes('"typebox": "1.3.27"'), "pi-coding-agent's own typebox pin must survive")
+  const aiEntry = lock.split('\n').find(line => line.includes('"@earendil-works/pi-ai@1.5.0"'))
+  assert(aiEntry, 'pi-ai must remain locked at 1.5.0')
+  for (const pin of ['"@anthropic-ai/sdk": "0.129.0"', '"openai": "7.19.0"']) {
     assert(aiEntry!.includes(pin), `pi-ai's own ${pin} pin must survive`)
   }
   const directUndici = JSON.parse(readFileSync(join(root, 'node_modules/undici/package.json'), 'utf8')).version
-  assert.equal(directUndici, '8.12.2')
+  assert.equal(directUndici, '8.12.4')
+  const fromPi = createRequire(join(root, 'node_modules/@earendil-works/pi-coding-agent/package.json'))
+  const piUndici = JSON.parse(readFileSync(fromPi.resolve('undici/package.json'), 'utf8')).version
+  assert.equal(piUndici, '8.12.4')
+  const overrides = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).overrides
+  assert.equal(overrides['undici@8.12.3'], '8.12.4')
+  assert.equal(overrides.undici, undefined, 'do not force Undici 6/7 parents onto 8')
   const directAnthropic = JSON.parse(readFileSync(join(root, 'node_modules/zod/package.json'), 'utf8')).version
   assert.equal(directAnthropic, '4.6.7')
-  assert.equal(JSON.parse(readFileSync(join(root, 'node_modules/@modelcontextprotocol/sdk/package.json'), 'utf8')).version, '1.32.1')
+  assert.equal(JSON.parse(readFileSync(join(root, 'node_modules/@modelcontextprotocol/sdk/package.json'), 'utf8')).version, '1.32.2')
   assert.equal(JSON.parse(readFileSync(join(root, 'node_modules/http-cache-semantics/package.json'), 'utf8')).version, '4.3.0')
-  const internalPins = { undici: directUndici, zod: directAnthropic }
+  const internalPins = { undici: directUndici, piUndici, zod: directAnthropic }
   evidence.json('sdk-graph.json', { piVersions, internalPins })
-  scenes.push('pi-130-uniform-sdk-graph')
+  scenes.push('pi-150-uniform-sdk-graph')
 
   // --- scene 2/3: tool schema as actually serialized -------------------------
   const requests: { url: string; body: Record<string, unknown> }[] = []

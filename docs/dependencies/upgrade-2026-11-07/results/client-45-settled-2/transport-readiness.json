@@ -1,0 +1,20 @@
+{
+  "waits": [
+    {
+      "label": "second-workspace-manual-reconnect",
+      "initialPending": 0,
+      "elapsedMs": 212
+    },
+    {
+      "label": "original-workspace-manual-reconnect",
+      "initialPending": 0,
+      "elapsedMs": 224
+    },
+    {
+      "label": "intentional-offline",
+      "initialPending": 0,
+      "elapsedMs": 215
+    }
+  ],
+  "pendingSessionReads": []
+}

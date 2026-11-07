@@ -1,0 +1,43 @@
+bun test v1.4.3 (c6da4a4d3)
+
+src\main\handlers\__tests__\registration-profiles.isolated.ts:
+194 | 
+195 |     registerCoreRpcHandlers(createMockServer(), createMockDeps())
+196 | 
+197 |     const actual = new Set(registeredChannels.filter(ch => ch.includes(':')))
+198 |     expect([...expected].filter(ch => !actual.has(ch))).toEqual([])
+199 |     expect([...actual].filter(ch => !expected.has(ch))).toEqual([])
+                                                              ^
+error: expect(received).toEqual(expected)
+
+- []
++ [
++   "assistantMemory:query",
++   "assistantMemory:suppressionExport",
++   "assistantMemory:suppressionMerge",
++   "assistantMemory:history",
++   "assistantMemory:readSource",
++   "assistantMemory:mutate",
++   "residentAssistant:originals",
++   "residentAssistant:executionMode",
++   "residentAssistant:control",
++   "residentAssistant:outputVisibility",
++   "residentAssistant:get",
++   "residentAssistant:context",
++   "residentAssistant:events",
++   "residentAssistant:dispatch",
++   "residentAssistant:work",
++   "residentAssistant:cancelWork",
++ ]
+
+- Expected  - 1
++ Received  + 18
+
+      at <anonymous> (E:\Phaneris\apps\electron\src\main\handlers\__tests__\registration-profiles.isolated.ts:199:57)
+(fail) RPC handler profile registration > registerCoreRpcHandlers registers only core channels [2753.62ms]
+(pass) RPC handler profile registration > registerGuiRpcHandlers registers only gui channels [0.57ms]
+
+ 1 pass
+ 1 fail
+ 4 expect() calls
+Ran 2 tests across 1 file. [2.83s]

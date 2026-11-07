@@ -78,7 +78,9 @@ Durable Runtime 连续性：[2026-10-26 修复与验证](process/durable-runtime
 
 复杂度治理实施：[2026-10-28 实施与验证记录](process/complexity-debt-implementation-2026-10-28.md) — 派生写入、死路径、恢复流程、单后端分发与重复门禁已收敛，历史证据保留；组合验收限制与未闭环项独立记录。
 
-本轮维护：[2026-10-16 全量依赖升级评估](dependencies/dependency-audit-2026-10-16.md)；[CI 修复失败矩阵](verification/ci-repair-failure-matrix-2026-10-16.md)；[CI 修复验证记录](verification/ci-repair-2026-10-16.md)。
+本轮维护：[2026-11-07 全量依赖评估](dependencies/dependency-audit-2026-11-07.md)、[实施记录](dependencies/dependency-upgrade-2026-11-07.md)与[实施前失败矩阵](verification/dependency-upgrade-2026-11-07-failure-matrix.md)。状态以实施记录的最终验收为准。
+
+历史维护：[2026-10-16 全量依赖升级评估](dependencies/dependency-audit-2026-10-16.md)；[CI 修复失败矩阵](verification/ci-repair-failure-matrix-2026-10-16.md)；[CI 修复验证记录](verification/ci-repair-2026-10-16.md)。
 
 升级规划：[2026-10-18 上游 0.15.3 与依赖升级执行规划](dependencies/upgrade-plan-2026-10-18.md) — Codex 已完成评估与目标冻结，交 DSH 执行；实施状态以独立验收记录为准。
 

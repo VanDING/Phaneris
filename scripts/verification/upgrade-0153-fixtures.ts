@@ -66,13 +66,13 @@ await sharp({
   .toFile(source)
 
 const encodeCommand = [
-  resolveUv(), 'run', '--python', '3.12.15', '--quiet', '-',
+  resolveUv(), 'run', '--python', '3.12.16', '--quiet', '-',
 ].join(' ')
 const heic = join(out, 'photo.heic')
-const python = execFileSync(resolveUv(), ['run', '--python', '3.12.15', '--quiet', '-'], {
+const python = execFileSync(resolveUv(), ['run', '--python', '3.12.16', '--quiet', '-'], {
   input: `
 # /// script
-# dependencies = ["Pillow==12.3.0", "pillow-heif==1.8.1"]
+# dependencies = ["Pillow==13.0.0", "pillow-heif==1.8.1"]
 # ///
 import pillow_heif
 from PIL import Image
@@ -100,10 +100,10 @@ await sharp({ create: { width: 800, height: 600, channels: 3, background: { r: 4
   .toFile(smallSource)
 const smallHeic = join(out, 'small.heic')
 const smallAvif = join(out, 'small.avif')
-execFileSync(resolveUv(), ['run', '--python', '3.12.15', '--quiet', '-'], {
+execFileSync(resolveUv(), ['run', '--python', '3.12.16', '--quiet', '-'], {
   input: `
 # /// script
-# dependencies = ["Pillow==12.3.0", "pillow-heif==1.8.1"]
+# dependencies = ["Pillow==13.0.0", "pillow-heif==1.8.1"]
 # ///
 import pillow_heif
 from PIL import Image
@@ -167,7 +167,7 @@ const manifest = {
   generator: 'scripts/verification/upgrade-0153-fixtures.ts',
   source: { path: 'source.png', width: meta.width, height: meta.height, sha256: sha256(readFileSync(source)) },
   encoders: {
-    heic: 'pillow-heif (libheif) via uv run --python 3.12.15',
+    heic: 'pillow-heif (libheif) via uv run --python 3.12.16',
     avif: 'sharp/libvips avif(quality 55)',
     jpeg: 'sharp/libvips jpeg(quality 85)',
     pillowHeif: python.trim(),

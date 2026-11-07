@@ -1,0 +1,36 @@
+{
+  "node": "v24.22.2",
+  "followRedirects": "1.16.2",
+  "scenes": [
+    {
+      "name": "same-realm",
+      "cross": {
+        "x-control": "retained",
+        "host": "127.0.0.1:56258",
+        "connection": "keep-alive"
+      },
+      "same": {
+        "x-api-key": "synthetic-key",
+        "x-control": "retained",
+        "host": "127.0.0.1:56259",
+        "connection": "keep-alive"
+      },
+      "passed": true
+    },
+    {
+      "name": "cross-realm",
+      "cross": {
+        "x-control": "retained",
+        "host": "127.0.0.1:56258",
+        "connection": "keep-alive"
+      },
+      "same": {
+        "x-api-key": "synthetic-key",
+        "x-control": "retained",
+        "host": "127.0.0.1:56259",
+        "connection": "keep-alive"
+      },
+      "passed": true
+    }
+  ]
+}

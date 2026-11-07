@@ -1,0 +1,106 @@
+{
+  "verifiedAt": "2026-11-07T14:46:59.147Z",
+  "lockfileSha256": "f5bb8111a4a7e07a9221916fed1b62136f3c7116a08de7704ce8eecd7297f196",
+  "workflows": [
+    {
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\theme-native-45-complete",
+      "workflow": "theme-native",
+      "manifestSha256": "98a683f5e16b8416706d7453c1db9a20492f617d3db137cfe0e08ba612516db2",
+      "scenes": [
+        "native authoritative preferences apply before acceptance",
+        "real main preload deliver initial theme to toolbar and empty state",
+        "native theme delivery default/light resolves to default/light",
+        "native theme delivery default/dark resolves to default/dark",
+        "native theme delivery ink/light resolves to default/light",
+        "native theme delivery ink/dark resolves to default/dark",
+        "native theme delivery geek/light resolves to default/light",
+        "native theme delivery geek/dark resolves to default/dark",
+        "native theme delivery cyberpunk-2077/light resolves to default/light",
+        "native theme delivery cyberpunk-2077/dark resolves to default/dark",
+        "real Chromium browser zoom 200 percent reflows",
+        "foreign page receives no private theme payload",
+        "native renderer has no unhandled errors"
+      ],
+      "artifacts": 268,
+      "exitCode": 0
+    },
+    {
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-45-complete\\native",
+      "workflow": "upgrade-0153-native-attachments",
+      "manifestSha256": "0cfa0acf05d930ee9112d6e72ada99445fe470e549dc27eaf797b07aef8c3b3e",
+      "scenes": [
+        "actual choose HEIC normalizes metadata and bytes before provider dispatch",
+        "actual drop HEIC normalizes metadata and bytes before provider dispatch",
+        "actual paste HEIC normalizes metadata and bytes before provider dispatch",
+        "a late storage acknowledgement preserves text typed after submission",
+        "failed transcode retains the text and attachment without dispatch",
+        "actual main-process nativeImage decodes the RPC-normalized JPEG",
+        "actual Electron main loads node-pty and executes a real ConPTY child"
+      ],
+      "artifacts": 7,
+      "exitCode": 0
+    },
+    {
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-45-complete\\reopen",
+      "workflow": "windows-reopen",
+      "manifestSha256": "acc5f2509a0df2d7e20f92c539931f9fc1ebac66922c766fec5d4371818f9675",
+      "scenes": [
+        "native-close-and-immediate-reopen-preserves-the-launch-request",
+        "second-instance-recovers-a-running-owner-with-no-window",
+        "duplicate-launch-restores-one-existing-window-without-restarting",
+        "native-second-instance-deep-link-routes-to-the-requested-workspace-and-settings",
+        "three-native-close-reopen-cycles-exit-and-release-the-server-lock",
+        "native-gantt-rounded-corners-scroll-and-menu-in-light-dark-wide-narrow-views"
+      ],
+      "artifacts": 1036,
+      "exitCode": 0
+    },
+    {
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-45-complete",
+      "workflow": "upgrade-0153-packaged",
+      "manifestSha256": "762abb822822d241a5db6c9204cffc7f13f0da8ca21188bb8980f6c3b1c01a80",
+      "scenes": [
+        "production-staging-and-current-build-hashes",
+        "real-unpacked-main-preload-renderer-attachments-from-foreign-cwd",
+        "packaged-native-reopen-and-lifecycle",
+        "existing-release-directory-preserved"
+      ],
+      "artifacts": 2455,
+      "exitCode": 0
+    }
+  ],
+  "packagedRuntime": {
+    "node": "24.22.2",
+    "acorn": "8.18.0",
+    "ada": "4.0.0",
+    "amaro": "1.1.11",
+    "ares": "1.34.9",
+    "brotli": "1.2.0",
+    "cldr": "48.0",
+    "icu": "78.2",
+    "llhttp": "9.4.3",
+    "merve": "1.2.2",
+    "modules": "150",
+    "napi": "10",
+    "nbytes": "0.1.4",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.70.0",
+    "nghttp3": "",
+    "ngtcp2": "",
+    "openssl": "0.0.0",
+    "simdjson": "4.6.11",
+    "simdutf": "7.7.0",
+    "sqlite": "3.53.4",
+    "tz": "2026e",
+    "undici": "7.30.1",
+    "unicode": "17.0",
+    "uv": "1.52.1",
+    "uvwasi": "0.0.23",
+    "v8": "15.6.75.27-electron.0",
+    "zlib": "1.3.2.1-motley",
+    "zstd": "1.6.0",
+    "electron": "45.2.3",
+    "chrome": "156.0.8078.80"
+  },
+  "note": "Independent verification of final native workflow manifests, required evidence and every recorded artifact SHA-256; no tests rerun. Windows unpacked only, without installer/signing or other OS acceptance."
+}

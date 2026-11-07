@@ -32,6 +32,7 @@ await verificationWorkflow('client-platform', async run => {
   const launched = await launchWorkflowBrowser()
   const errors: string[] = [], consoleTrace: { type: string; text: string; duringOffline: boolean }[] = [], traces: unknown[] = [], checks: string[] = []
   const errorStacks: string[] = []
+  const pendingSessionReads = new Set<string>(), readReadiness: unknown[] = []
   let networkOffline = false
   try {
     const base = child.url.replace(/^ws/, 'http')
@@ -39,9 +40,28 @@ await verificationWorkflow('client-platform', async run => {
     page.on('pageerror', error => { errors.push(error.message); errorStacks.push(error.stack ?? error.message) })
     page.on('console', message => consoleTrace.push({ type: message.type(), text: message.text().slice(0, 2000), duringOffline: networkOffline }))
     page.on('websocket', socket => {
-      socket.on('framesent', frame => { try { const message = JSON.parse(String(frame.payload)); traces.push({ direction: 'send', type: message.type, channel: message.channel }) } catch {} })
-      socket.on('framereceived', frame => { try { const message = JSON.parse(String(frame.payload)); traces.push({ direction: 'receive', type: message.type, channel: message.channel }) } catch {} })
+      const socketReads = new Set<string>()
+      socket.on('framesent', frame => { try {
+        const message = JSON.parse(String(frame.payload)); traces.push({ direction: 'send', id: message.id, type: message.type, channel: message.channel })
+        if (message.type === 'request' && message.channel === 'sessions:readMessages') { socketReads.add(message.id); pendingSessionReads.add(message.id) }
+      } catch {} })
+      socket.on('framereceived', frame => { try {
+        const message = JSON.parse(String(frame.payload)); traces.push({ direction: 'receive', id: message.id, type: message.type, channel: message.channel })
+        if (message.type === 'response') { socketReads.delete(message.id); pendingSessionReads.delete(message.id) }
+      } catch {} })
+      socket.on('close', () => { for (const id of socketReads) pendingSessionReads.delete(id) })
     })
+    const waitForSessionReads = async (label: string) => {
+      const started = Date.now(), initialPending = pendingSessionReads.size
+      let quietSince = started
+      while (pendingSessionReads.size > 0 || Date.now() - quietSince < 200) {
+        assert(Date.now() - started < 20_000, 'Background session reads did not settle before ' + label)
+        if (pendingSessionReads.size) quietSince = Date.now()
+        await page.waitForTimeout(25)
+      }
+      assert.equal(pendingSessionReads.size, 0)
+      readReadiness.push({ label, initialPending, elapsedMs: Date.now() - started })
+    }
     const auth = await page.request.post(new URL('/api/auth', base).href, { data: { password: testSecret } })
     assert(auth.ok())
     let release!: () => void
@@ -56,6 +76,11 @@ await verificationWorkflow('client-platform', async run => {
     checks.push('authenticated transport is ready before business renderer mounts')
     const value = await page.evaluate(async () => ({ sessions: await window.electronAPI.getSessions(), state: await window.electronAPI.getTransportConnectionState() }))
     assert(value.sessions.some(item => item.id === session.id)); assert.equal(value.state.status, 'connected')
+    await page.getByTestId('app-splash').waitFor({ state: 'hidden', timeout: 60_000 })
+    // Finish initial route restoration before exercising session navigation.
+    await page.getByText('Projects', { exact: true }).first().click()
+    await page.getByText('Select a project to view its details', { exact: true }).waitFor()
+    await page.getByRole('button', { name: 'All Sessions', exact: true }).first().click()
     await page.getByText('Governance session', { exact: true }).first().waitFor({ timeout: 60_000 })
     checks.push('production RPC facade reads persisted fixture sessions')
     await page.getByText('Governance session', { exact: true }).first().click()
@@ -93,6 +118,7 @@ await verificationWorkflow('client-platform', async run => {
     await page.getByRole('menuitem', { name: 'Second workspace' }).click()
     await page.getByText('Second workspace session', { exact: true }).first().waitFor()
     assert.equal(await page.evaluate(() => window.electronAPI.getWindowWorkspace()), 'second')
+    await waitForSessionReads('second-workspace-manual-reconnect')
     const reconnectStates = await page.evaluate(async () => {
       const states: string[] = []
       const release = window.electronAPI.onTransportConnectionStateChanged(state => states.push(state.status))
@@ -116,10 +142,12 @@ await verificationWorkflow('client-platform', async run => {
     })
     assert.match(unavailable, /capability.*unavailable/i)
     checks.push('unsupported native file capability fails explicitly')
+    await waitForSessionReads('original-workspace-manual-reconnect')
     await page.evaluate(async () => { await window.electronAPI.reconnectTransport() })
     await waitForBrowserCondition(page, async () => (await window.electronAPI.getTransportConnectionState()).status === 'connected')
     assert((await page.evaluate(() => window.electronAPI.getSessions())).some(item => item.id === session.id))
     checks.push('reconnect retains production session domain state')
+    await waitForSessionReads('intentional-offline')
     networkOffline = true
     await page.context().setOffline(true)
     await page.evaluate(() => window.electronAPI.reconnectTransport())
@@ -141,7 +169,9 @@ await verificationWorkflow('client-platform', async run => {
     assert.equal(await composer.textContent(), 'Draft edited while offline')
     checks.push('real browser offline edits persist after reconnection without an unhandled rejection')
     checks.push(...await verifyConversation(page, conversation, run.directory, 'web'))
-    await page.getByRole('button', { name: 'Files', exact: true }).last().click()
+    // Workspace files belong to Files > Browse; Info lists the session folder.
+    await page.keyboard.press('Control+Shift+E')
+    await page.getByRole('tab', { name: 'Browse', exact: true }).waitFor()
     const writtenFile = page.getByText(basename(conversation.filePath), { exact: true }).last()
     await writtenFile.waitFor()
     await writtenFile.click({ button: 'right' })
@@ -174,6 +204,7 @@ await verificationWorkflow('client-platform', async run => {
   } finally {
     run.json('conversation-provider.json', conversation.report())
     run.json('client-diagnostics.json', { checks, errors, errorStacks, consoleTrace, traces })
+    run.json('transport-readiness.json', { waits: readReadiness, pendingSessionReads: [...pendingSessionReads] })
     await launched.close(); await child.stop(); conversation.stop()
     run.json('server-output.json', { stdout: child.stdout(), stderr: child.stderr() })
   }

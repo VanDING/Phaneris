@@ -1,0 +1,45 @@
+{
+  "rpcResults": [
+    {
+      "at": 1794062219807,
+      "value": {
+        "percent": 80
+      },
+      "outcome": "saved",
+      "persisted": 80
+    },
+    {
+      "at": 1794062219986,
+      "value": {
+        "percent": 90
+      },
+      "outcome": "error",
+      "error": "Error: Fixture interrupted write",
+      "persisted": 80
+    },
+    {
+      "at": 1794062220106,
+      "value": {
+        "percent": 90
+      },
+      "outcome": "saved",
+      "persisted": 90
+    },
+    {
+      "at": 1794062220455,
+      "value": null,
+      "outcome": "saved",
+      "persisted": null
+    },
+    {
+      "at": 1794062220603,
+      "value": {
+        "percent": 85
+      },
+      "outcome": "saved",
+      "persisted": 85
+    }
+  ],
+  "pendingUiWrites": 0,
+  "panel": "Auto-compaction threshold (%)\n\nCompact at this percentage of the active model's context window, capped by the SDK safety reserve. Applies to the next request.\n\n85%"
+}

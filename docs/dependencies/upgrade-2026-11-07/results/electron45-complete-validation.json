@@ -1,0 +1,98 @@
+[
+  {
+    "Stage": "electron45-final-frozen",
+    "Command": [
+      "bun",
+      "install",
+      "--frozen-lockfile",
+      "--registry",
+      "https://registry.npmjs.org"
+    ],
+    "StartedAt": "2026-11-07T21:49:34.5958019+08:00",
+    "FinishedAt": "2026-11-07T21:49:35.1374973+08:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-final-frozen.log",
+    "LogSha256": "ffcec1df631783c3834e25e09368ca55ce4942647ea6ccfed625f7942bf21d83"
+  },
+  {
+    "Stage": "electron45-final-ci",
+    "Command": [
+      "bun",
+      "run",
+      "validate:ci"
+    ],
+    "StartedAt": "2026-11-07T21:49:35.1814841+08:00",
+    "FinishedAt": "2026-11-07T21:52:32.8389143+08:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-final-ci.log",
+    "LogSha256": "70bd4e4fbfacf92a6fbf49a7275614124cb814a12f662166a7b2d8bd6b1d6a91"
+  },
+  {
+    "Stage": "electron45-final-workspace",
+    "Command": [
+      "bun",
+      "run",
+      "test"
+    ],
+    "StartedAt": "2026-11-07T21:52:32.8628752+08:00",
+    "FinishedAt": "2026-11-07T21:55:52.310631+08:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-final-workspace.log",
+    "LogSha256": "349187075425161f023744d0db72c76745509ddc99b62d6d096500b74a91de93"
+  },
+  {
+    "Stage": "electron45-complete-critical",
+    "Command": [
+      "bun",
+      "run",
+      ".cache/upgrade-20261107/continue-critical.ts",
+      "--output-dir=.cache/upgrade-20261107/critical-45-complete"
+    ],
+    "StartedAt": "2026-11-07T14:37:58.4471134+00:00",
+    "FinishedAt": "2026-11-07T14:41:20.6621600+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-complete-critical.log",
+    "LogSha256": "2d9e966be5a0f0d2fd4219aeaa8eaf3455d5c5db5922ba3f90e49c7e956ac4aa"
+  },
+  {
+    "Stage": "electron45-complete-build",
+    "Command": [
+      "bun",
+      "run",
+      "electron:build"
+    ],
+    "StartedAt": "2026-11-07T14:41:20.7001087+00:00",
+    "FinishedAt": "2026-11-07T14:41:54.9550992+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-complete-build.log",
+    "LogSha256": "c5e56f0df747bf2326bd046c8e1e4a25b548d50a337f6fe8f3b9aee784807ba0"
+  },
+  {
+    "Stage": "electron45-complete-native-theme",
+    "Command": [
+      "bun",
+      "run",
+      "scripts/verification/theme-native-workflow.ts",
+      "--output-dir=.cache/upgrade-20261107/theme-native-45-complete"
+    ],
+    "StartedAt": "2026-11-07T14:41:54.9890781+00:00",
+    "FinishedAt": "2026-11-07T14:42:07.9008923+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-complete-native-theme.log",
+    "LogSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "Stage": "electron45-complete-packaged",
+    "Command": [
+      "bun",
+      "run",
+      "scripts/verification/upgrade-0153-packaged-workflow.ts",
+      "--output-dir=.cache/upgrade-20261107/packaged-45-complete"
+    ],
+    "StartedAt": "2026-11-07T14:42:07.9035258+00:00",
+    "FinishedAt": "2026-11-07T14:45:08.6366540+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron45-complete-packaged.log",
+    "LogSha256": "02c3d9d49150ef0ddd9c3377c481192849eba7ab121805fad62a3a738bb816bc"
+  }
+]

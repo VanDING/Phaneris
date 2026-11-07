@@ -1,0 +1,191 @@
+{
+  "checkedAt": "2026-11-07T12:44:56.133Z",
+  "rows": [
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "validate",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "validate",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "validate",
+      "uses": "astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2",
+      "with": {
+        "version": "0.13.7"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "validate",
+      "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "with": {
+        "name": "verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}",
+        "path": ".cache/verification/",
+        "if-no-files-found": "error",
+        "retention-days": 14
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "quality-windows",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "quality-windows",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "quality-windows",
+      "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "with": {
+        "name": "verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}",
+        "path": ".cache/verification/",
+        "if-no-files-found": "error",
+        "retention-days": 14
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "dependency-audit",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "dependency-audit",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "full-validation",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "full-validation",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "full-validation",
+      "uses": "astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2",
+      "with": {
+        "version": "0.13.7"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "full-validation",
+      "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "with": {
+        "name": "verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}",
+        "path": ".cache/verification/",
+        "if-no-files-found": "error",
+        "retention-days": 14
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "production-container",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "production-container",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "production-container",
+      "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "with": {
+        "name": "verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}",
+        "path": ".cache/verification/",
+        "if-no-files-found": "error",
+        "retention-days": 14
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "native-macos",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "native-macos",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "native-macos",
+      "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "with": {
+        "name": "verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}",
+        "path": ".cache/verification/",
+        "if-no-files-found": "error",
+        "retention-days": 14
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "native-theme",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "native-theme",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    },
+    {
+      "file": ".github/workflows/validate.yml",
+      "job": "native-theme",
+      "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "with": {
+        "name": "verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}",
+        "path": ".cache/verification/",
+        "if-no-files-found": "error",
+        "retention-days": 14
+      }
+    },
+    {
+      "file": ".github/workflows/validate-server.yml",
+      "job": "validate-server",
+      "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "file": ".github/workflows/validate-server.yml",
+      "job": "validate-server",
+      "uses": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+      "with": {
+        "bun-version": "1.4.4"
+      }
+    }
+  ]
+}

@@ -1,0 +1,437 @@
+{
+  "workflows": 71,
+  "groups": 6,
+  "completed": 77,
+  "e2eScenes": 1033,
+  "exitCode": 0,
+  "lockfileSha256": "4927b9a46609a55bb318d54bcf3df9655e3938f622c1ea09324c4847d07f8817",
+  "continuation": true,
+  "workflowEvidence": [
+    {
+      "id": "connection-probe",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\connection-probe",
+      "manifestSha256": "0c7949c3c6476845b9b528ff160dff562fd257550e0ffe7aa5eb500f734fe11f",
+      "scenes": 5
+    },
+    {
+      "id": "runtime-startup",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\runtime-startup",
+      "manifestSha256": "74ff255ce831949a185918ca6b7bbee8fb19807aac26ed9c6e6597a94375109c",
+      "scenes": 7
+    },
+    {
+      "id": "runtime-backup-retention",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\runtime-backup-retention",
+      "manifestSha256": "746271f8db40ce5baec4f34442e64a95867ed72462d29f9886579896fc3c902c",
+      "scenes": 7
+    },
+    {
+      "id": "local-startup",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\local-startup",
+      "manifestSha256": "c7a131886375dc5d0a7c00976c7681efec0d415d8c8b21a69541f2ac2590a34e",
+      "scenes": 11
+    },
+    {
+      "id": "status-startup",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\status-startup",
+      "manifestSha256": "b96640045a01d8f063009a4e75bf8093e95ad9892943d907b62308e3aa029473",
+      "scenes": 10
+    },
+    {
+      "id": "upstream-015-core",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\upstream-015-core",
+      "manifestSha256": "78c980aa7b4723bcf2bc4254ee334f19d2ff36d4b46e8336f4d086ca5e2acf19",
+      "scenes": 11
+    },
+    {
+      "id": "upstream-015-orchestration",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\upstream-015-orchestration",
+      "manifestSha256": "84fe53a48ff29812ab2678bfb6f4ce5e85b0ff996892b1f76c2310134fe42c08",
+      "scenes": 5
+    },
+    {
+      "id": "upstream-015-browser",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\upstream-015-browser",
+      "manifestSha256": "0ede33ce3df834cbf2e0c7d9113cf86519ff83bb4c48fe28162e81a5dbd61b87",
+      "scenes": 11
+    },
+    {
+      "id": "upstream-015-renderer",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\upstream-015-renderer",
+      "manifestSha256": "3ba1271f616a6b05cb36d25948b65d39e78d8ee0e40c454dc3cf74856bdbcf07",
+      "scenes": 6
+    },
+    {
+      "id": "task-permission",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\task-permission",
+      "manifestSha256": "9d1c7180cf70ced626ab4f797011466c37d22b4eb3869736e240017fdccbaced",
+      "scenes": 9
+    },
+    {
+      "id": "plugin-consistency",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\plugin-consistency",
+      "manifestSha256": "24439fdbc910798f141c6c67508d2cd842dfa54201674e25be8914d11375e24c",
+      "scenes": 17
+    },
+    {
+      "id": "workspace-recovery",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\workspace-recovery",
+      "manifestSha256": "8c5885e91c5b3585d84438f3258db59d8f5ef00deeb9221b1415795370756c29",
+      "scenes": 11
+    },
+    {
+      "id": "runtime-reliability",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\runtime-reliability",
+      "manifestSha256": "19978a5b000cf8c1a0c94e2f14590156df16e4ca7eec9f0b4931693cfaba458f",
+      "scenes": 10
+    },
+    {
+      "id": "task-file-scope",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\task-file-scope",
+      "manifestSha256": "bea9ee0ce63fa79db4c8fea674eed4cb31ab8dd36a170f44761fefe236d46bf5",
+      "scenes": 11
+    },
+    {
+      "id": "gantt-reschedule",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\gantt-reschedule",
+      "manifestSha256": "3cfc32f3fdb038cd0494afef5aba532eed043dfc716069235fea8a53cf08a7cb",
+      "scenes": 14
+    },
+    {
+      "id": "planning-collection",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\planning-collection",
+      "manifestSha256": "dea81563969bc734cb32ab2782c827e753070e418696bdd618386b230f60e2cf",
+      "scenes": 17
+    },
+    {
+      "id": "planning-performance",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\planning-performance",
+      "manifestSha256": "fece45da3e82db0bd214b0fb1e7b0422390cd7733ed5a91265a09beb0e4bea9a",
+      "scenes": 20
+    },
+    {
+      "id": "docs-locale",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\docs-locale",
+      "manifestSha256": "e413c4ab4b30f103f7ec76732bb83aa55af90ccd150866eb6092f7a953fb2282",
+      "scenes": 52
+    },
+    {
+      "id": "markdown-file-links",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\markdown-file-links",
+      "manifestSha256": "1b30d2e06d17c38765c87c4f3a7d17b8022d16d1bddde2afd1df15f654e0e4ca",
+      "scenes": 18
+    },
+    {
+      "id": "verification-output",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\verification-output",
+      "manifestSha256": "d2733a8aa12ee4de14dac043a7769ba2c8b483cf7701969d6206fbda45d05399",
+      "scenes": 7
+    },
+    {
+      "id": "governance-gates",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\governance-gates",
+      "manifestSha256": "a9c8aa566fa18ba341f0b84936ba404d2c6d5974006306fda463f8af8501137a",
+      "scenes": 10
+    },
+    {
+      "id": "governance-closeout",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\governance-closeout",
+      "manifestSha256": "e26119cf5a027ca4097ee67392e86862b560caae577e4975feaba1bd00100833",
+      "scenes": 28
+    },
+    {
+      "id": "runtime-boundary-gate",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\runtime-boundary-gate",
+      "manifestSha256": "f54c37264cfcc19c8b1e1dbdedc292dd06c1362d9023c43f548e5a685d36c597",
+      "scenes": 10
+    },
+    {
+      "id": "durable-runtime-boundary",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\durable-runtime-boundary",
+      "manifestSha256": "766b69573c2287890ec2b171bb6a1769ef7d8521358dc942ce9663bac1540ee8",
+      "scenes": 15
+    },
+    {
+      "id": "durable-runtime-crash",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\durable-runtime-crash",
+      "manifestSha256": "4fd42c4c6c835cff9bc093735d2321250524affd0fb0df67cf793f11c90d9dfe",
+      "scenes": 8
+    },
+    {
+      "id": "plugin-transaction",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\plugin-transaction",
+      "manifestSha256": "412f8c5524823b93e8824bbd67f24c49f78ca6b4249c4b55e7c3bf366cb0656b",
+      "scenes": 13
+    },
+    {
+      "id": "session-branch",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\session-branch",
+      "manifestSha256": "8b6ef13bddc5bd54a7badd58b5b515e063b389830ee59c4e7c907cf434003e52",
+      "scenes": 6
+    },
+    {
+      "id": "webui-auth-lifecycle",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\webui-auth-lifecycle",
+      "manifestSha256": "364846269f087a67c60072fc76d396d82aa319eb2d9c843a075f110b08d9783d",
+      "scenes": 14
+    },
+    {
+      "id": "process-lifecycle",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\process-lifecycle",
+      "manifestSha256": "3ee41e91a413b6a263b6078ebdcd55faf9cc7507e7fee4c4377ff3c042338adf",
+      "scenes": 12
+    },
+    {
+      "id": "config-domains",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\config-domains",
+      "manifestSha256": "14dc8d412d4a13623433b748dbba6fc9c8687b8ad11fcc62eab2262a4f50390c",
+      "scenes": 22
+    },
+    {
+      "id": "rpc-contracts",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-final\\rpc-contracts",
+      "manifestSha256": "45f630bb84429febe9f802e0035d3ba39ee0150616ea405e3c97006dee878ccc",
+      "scenes": 7
+    },
+    {
+      "id": "governance-boundaries",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete\\governance-boundaries",
+      "manifestSha256": "486bb75ccfc758d68554726f0184b91c7c72b7ac49902d370de35d01e9a56671",
+      "scenes": 17
+    },
+    {
+      "id": "import-graph",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete\\import-graph",
+      "manifestSha256": "da56a398f89ec189214fb09a8657f3d5d0060d27a737d0c364fe165a71693cd1",
+      "scenes": 7
+    },
+    {
+      "id": "cycle-gate",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete\\cycle-gate",
+      "manifestSha256": "bbce78b7a6f3aaccff39d548dde909821efa74ac56d7d20ea552baf5946092e6",
+      "scenes": 6
+    },
+    {
+      "id": "pi-control",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete\\pi-control",
+      "manifestSha256": "b54e124ae643e2c2ddb3bc773d1ea4f315b5d59d2c95f47efb416b4be2d11524",
+      "scenes": 9
+    },
+    {
+      "id": "durable-runtime-pi",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete\\durable-runtime-pi",
+      "manifestSha256": "a8986618760f22bfe5c1598dbf31fbee17b18a27d666b669ef3f7707f0bf8145",
+      "scenes": 6
+    },
+    {
+      "id": "session-owners",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete\\session-owners",
+      "manifestSha256": "2401253c01c5e5b8be8da429f8cff2ca0545abcda4cd0bd2c87033fd805c81df",
+      "scenes": 8
+    },
+    {
+      "id": "client-platform",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\client-platform",
+      "manifestSha256": "58f29764591d51a1730a0135c2830414e21c9eec0571837a60889c8b3616959e",
+      "scenes": 27
+    },
+    {
+      "id": "markdown-popout",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\markdown-popout",
+      "manifestSha256": "e47af5ed0759d5cafd36fe85014cdb3e4e90839a9a42ecf711cb0253cace4ed9",
+      "scenes": 18
+    },
+    {
+      "id": "theme-foundation",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-foundation",
+      "manifestSha256": "8398381b198a6994c630d0b04fd8c5ad1065d5ae73c64e8cee04eae33c92b5dd",
+      "scenes": 103
+    },
+    {
+      "id": "theme-contract",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-contract",
+      "manifestSha256": "039fd23394827cf02f1fb81a50c849332fcaeeee1c48eabe5d7a36b9f7cbaefb",
+      "scenes": 71
+    },
+    {
+      "id": "theme-roles",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-roles",
+      "manifestSha256": "89aecb342ccbbb777b2a3beadcaf413d5ea5e201b32771077298a7a3f2169fc2",
+      "scenes": 76
+    },
+    {
+      "id": "theme-domains",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-domains",
+      "manifestSha256": "c5b630529f0d38198d47d4f6069a90de49bde0e8627d4e2f71ba85b27b731a5e",
+      "scenes": 20
+    },
+    {
+      "id": "theme-browser-host",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-browser-host",
+      "manifestSha256": "bc73cef478732598f8a94677b4b6bbbda775fcd7a62e41ea428323d40d894753",
+      "scenes": 11
+    },
+    {
+      "id": "theme-login",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-login",
+      "manifestSha256": "cedc1daec7310222cd733b160e6c9e608544ba453d4ede5a4a3c490c075c11ff",
+      "scenes": 5
+    },
+    {
+      "id": "theme-design",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-design",
+      "manifestSha256": "396db3a7b573b5300684820cb24206da72ee5dce6d4d5d3ea4c04cb92beba930",
+      "scenes": 28
+    },
+    {
+      "id": "theme-governance",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\theme-governance",
+      "manifestSha256": "a2271c8149e2bbbef3aab9ea6686ae3815bb495cd0ea173e626c2c17c969b04f",
+      "scenes": 49
+    },
+    {
+      "id": "distribution-inputs",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\distribution-inputs",
+      "manifestSha256": "96abe054f7fe6dbe27f96dc88ddbb8985a467f121f790450305e8b4753b0a971",
+      "scenes": 12
+    },
+    {
+      "id": "identity-gate",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\identity-gate",
+      "manifestSha256": "430211d4404dbe5b3f14be1e6889b1363d2b4fb93d0df9dbfa97db8f6e299514",
+      "scenes": 6
+    },
+    {
+      "id": "upgrade-0153-fixtures",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\upgrade-0153-fixtures",
+      "manifestSha256": "44cec49046468f1db0a054f21337fb37cf09104419c798e6fc2f9ae172d7e1ab",
+      "scenes": 1
+    },
+    {
+      "id": "upgrade-0153-heic",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\upgrade-0153-heic",
+      "manifestSha256": "4c53a421e9452aa0c577b5d369c5a1f07f6e94a45cb0f4b4528bf649f99a8a42",
+      "scenes": 6
+    },
+    {
+      "id": "upgrade-0153-heic-store",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\upgrade-0153-heic-store",
+      "manifestSha256": "dc0d5cabd65187040c1e4cfd4b17aeb31be53bf529583e140987f6a8bd615a77",
+      "scenes": 6
+    },
+    {
+      "id": "upgrade-0153-chat-starters",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\upgrade-0153-chat-starters",
+      "manifestSha256": "fb0de01563b4d45b40bf0ef403f2eb2a9407111cf96b907f925ecd72a4940b98",
+      "scenes": 4
+    },
+    {
+      "id": "upgrade-0153-endpoints",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-4\\upgrade-0153-endpoints",
+      "manifestSha256": "f64dcf62d083d79364fb880b22d2d33cb7caa10f25ccb0509d74087e19c47362",
+      "scenes": 4
+    },
+    {
+      "id": "upgrade-0153-b1",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-5\\upgrade-0153-b1",
+      "manifestSha256": "a25ee21b78fb05b13f038af1734bcaf07a8118709a68b000b940850cadd08e6d",
+      "scenes": 5
+    },
+    {
+      "id": "upgrade-0153-pi-runtime",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-5\\upgrade-0153-pi-runtime",
+      "manifestSha256": "6135610803832ee7e1120e0953cc0bd59be6a6f8426a9f440a922ecd4eeb9ff2",
+      "scenes": 13
+    },
+    {
+      "id": "upgrade-0153-followup-browser",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-5\\upgrade-0153-followup-browser",
+      "manifestSha256": "96127ad112e546c099898921c6215dac880b039fbee269ead1154d463ba693e1",
+      "scenes": 12
+    },
+    {
+      "id": "upgrade-0153-mcp",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-5\\upgrade-0153-mcp",
+      "manifestSha256": "25ecc72e416254d38870bafce23362ca528adf33c63067d5ca5d00e89b8e83ab",
+      "scenes": 3
+    },
+    {
+      "id": "upgrade-0153-usage-ledger",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-usage-ledger",
+      "manifestSha256": "ead133beafbde29d357fff5505999add64c66072e69225080a2a10f9711a8cf9",
+      "scenes": 16
+    },
+    {
+      "id": "upgrade-0153-pdf-fixtures",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-pdf-fixtures",
+      "manifestSha256": "28d9844e30fb4f149e91bbd620bd97536c3f7370329092c9b27c6d0fcfe5cf55",
+      "scenes": 1
+    },
+    {
+      "id": "upgrade-0153-pdf",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-pdf",
+      "manifestSha256": "9a7f8abd06ca7e027d7efcb74daecaa39fc620db623e686360bc441ee37d0b84",
+      "scenes": 6
+    },
+    {
+      "id": "upgrade-0153-chat-starters-browser",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-chat-starters-browser",
+      "manifestSha256": "8e5c6b69d76ead583f2c2c14f27ce658085dd0b03bef82fe0094e5282d85134f",
+      "scenes": 13
+    },
+    {
+      "id": "upgrade-0153-chat-starters-landing",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-chat-starters-landing",
+      "manifestSha256": "8712006480547e67448f7a92a29ce10fd6b169975f300dda4f0e9ce07e67ecfe",
+      "scenes": 12
+    },
+    {
+      "id": "upgrade-0153-workspace-isolation",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-workspace-isolation",
+      "manifestSha256": "42452dd33a6e37831bf8c833357f7366c1355344bfccc5c95de18922d8a6bdae",
+      "scenes": 5
+    },
+    {
+      "id": "api-connection-setup",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\api-connection-setup",
+      "manifestSha256": "19e3d3da428b8f65beccfb813020ba054fb4a9dad9cd956b0bc6229853e0c79d",
+      "scenes": 14
+    },
+    {
+      "id": "upgrade-0153-session-info-scroll",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-session-info-scroll",
+      "manifestSha256": "b9e8c3e1a92e5381bdbe68ef44e825a9839e263063a457aba440f82d3b90cf09",
+      "scenes": 4
+    },
+    {
+      "id": "upgrade-0153-calendar-drag",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-calendar-drag",
+      "manifestSha256": "3b7bd50281bab4fc29caf9ecc46c9df81fc29a355d4450cdd4f65cbd3c1f526a",
+      "scenes": 5
+    },
+    {
+      "id": "upgrade-0153-editor",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-editor",
+      "manifestSha256": "c4ccaa6fec335b540fb8a510acecb836a9a62b818eb3595b9e0d5b911548bcc2",
+      "scenes": 4
+    },
+    {
+      "id": "upgrade-0153-undici",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-undici",
+      "manifestSha256": "d4c5efe6307facafc85eac7cacd396cfc713e2ecdccdfc5d5a6c1761125a4d4f",
+      "scenes": 3
+    },
+    {
+      "id": "dependency-upgrade-20261107-images",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\dependency-upgrade-20261107-images",
+      "manifestSha256": "b6ba8440cc066beacd7e7dc4c8732cddc3db71e8ecffc9df24f13f5e4e51fe44",
+      "scenes": 5
+    },
+    {
+      "id": "upgrade-0153-document-tools",
+      "directory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-complete-6\\upgrade-0153-document-tools",
+      "manifestSha256": "c8e598757d7c473eab927925a5e63f08deed80bdcf926d48d61848d3cfec6b4f",
+      "scenes": 8
+    }
+  ]
+}

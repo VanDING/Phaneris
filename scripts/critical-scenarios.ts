@@ -73,7 +73,7 @@ export const criticalWorkflows = [
   { id: 'pi-control', entry: 'scripts/verification/pi-control-workflow.ts', minimum: 9, required: ['pi-control.json'] },
   { id: 'durable-runtime-pi', entry: 'scripts/verification/durable-runtime-pi-workflow.ts', minimum: 6, required: ['independent-pi.json', 'independent-pi.db'] },
   { id: 'session-owners', entry: 'scripts/verification/session-owners-workflow.ts', minimum: 8, required: ['session-owners.json'] },
-  { id: 'client-platform', entry: 'scripts/verification/client-platform-workflow.ts', minimum: 24, required: ['client-platform.json', 'webui-420.png', 'webui-1280.png', 'web-conversation.json', 'web-file-preview.png', 'web-plan.png', 'conversation-provider.json', 'web-conversation-runtime.json', 'web-conversation.db'] },
+  { id: 'client-platform', entry: 'scripts/verification/client-platform-workflow.ts', minimum: 24, required: ['client-platform.json', 'transport-readiness.json', 'webui-420.png', 'webui-1280.png', 'web-conversation.json', 'web-file-preview.png', 'web-plan.png', 'conversation-provider.json', 'web-conversation-runtime.json', 'web-conversation.db'] },
   { id: 'markdown-popout', entry: 'scripts/verification/markdown-popout-workflow.ts', minimum: 18, required: ['markdown-popout.json', 'message-light.png', 'source-light.png', 'source-dark.png', 'source-390.png', 'trace.zip'] },
   // faa7174aa retired 14 custom-theme/scenic watcher scenes and replaced them
   // with 2 user-file preservation/fallback scenes. All 101 other scenes remain.
@@ -124,7 +124,7 @@ export const criticalWorkflows = [
   { id: 'upgrade-0153-pi-runtime', entry: 'scripts/verification/upgrade-0153-pi-runtime-workflow.ts', minimum: 13,
     required: ['pi-model-switch.json', 'pi-malformed-tools.json', 'pi-abort.json', 'pi-retry.json', 'pi-output-caps.json', 'pi-compaction-threshold.json', 'summary.json'] },
   { id: 'upgrade-0153-followup-browser', entry: 'scripts/verification/upgrade-0153-followup-browser-workflow.ts', minimum: 12,
-    required: ['followup-browser.json', 'metering-ui.json', 'threshold-zh.png', 'metering-en.png', 'server-output.json', 'trace.zip'] },
+    required: ['followup-browser.json', 'settings-rpc.json', 'metering-ui.json', 'threshold-zh.png', 'metering-en.png', 'server-output.json', 'trace.zip'] },
   { id: 'upgrade-0153-mcp', entry: 'scripts/verification/upgrade-0153-mcp-workflow.ts', minimum: 3,
     required: ['mcp-stdio.json', 'mcp-http.json', 'mcp-oauth.json', 'summary.json'] },
   { id: 'upgrade-0153-usage-ledger', entry: 'scripts/verification/upgrade-0153-usage-ledger-workflow.ts', minimum: 16,
@@ -150,6 +150,8 @@ export const criticalWorkflows = [
     required: ['editor.json', 'boot.json', 'editor-ime.png', 'editor-roundtrip.png', 'editor-zh.png', 'editor-history-paste.png'] },
   { id: 'upgrade-0153-undici', entry: 'scripts/verification/upgrade-0153-undici-workflow.ts', minimum: 3,
     required: ['undici.json', 'node.log'] },
+  { id: 'dependency-upgrade-20261107-images', entry: 'scripts/verification/dependency-upgrade-20261107-images-workflow.ts', minimum: 5,
+    required: ['images.json'] },
   { id: 'upgrade-0153-document-tools', entry: 'scripts/verification/upgrade-0153-document-tools-workflow.ts', minimum: 8,
     required: ['document-tools.json', 'commands.json', 'runtime.json', 'report.docx', 'scores.xlsx', 'slides.pptx', 'converted.jpg', 'image.pdf', 'planning.ics', 'difference.txt', 'converted.md'] },
 ] as const

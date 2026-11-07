@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["markitdown[pdf,pptx,docx,xlsx]==0.1.8", "python-docx==1.2.0", "click==8.5.0"]
+# dependencies = ["markitdown[pdf,pptx,docx,xlsx]==0.1.9", "python-docx==1.2.0", "click==8.5.1"]
 # ///
 """Universal document to Markdown converter.
 

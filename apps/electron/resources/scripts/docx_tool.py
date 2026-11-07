@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["python-docx==1.2.0", "pillow==12.3.0", "click==8.5.0"]
+# dependencies = ["python-docx==1.2.0", "pillow==13.0.0", "click==8.5.1"]
 # ///
 """Word document (.docx) creation and editing tool.
 

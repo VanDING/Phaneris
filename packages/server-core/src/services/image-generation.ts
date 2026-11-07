@@ -237,6 +237,9 @@ export async function generateImageWithOpenAI(
     ? bytes.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff])) ? 'jpeg'
       : bytes.subarray(0, 4).toString('ascii') === 'RIFF' ? 'webp' : 'png'
     : response.output_format ?? outputFormat;
+  if (actualFormat !== 'png' && actualFormat !== 'jpeg' && actualFormat !== 'webp') {
+    throw new Error(`The image provider returned unsupported image format "${actualFormat}". Choose PNG, JPEG, or WebP.`);
+  }
   assertImageSignature(bytes, actualFormat);
   let output = bytes;
   let format: GeneratedImageFormat = actualFormat;

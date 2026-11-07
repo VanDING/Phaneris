@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["Pillow==12.3.0", "pillow-heif==1.8.1", "click==8.5.0"]
+# dependencies = ["Pillow==13.0.0", "pillow-heif==1.8.1", "click==8.5.1"]
 # ///
 """Image processing tool.
 

@@ -1,0 +1,34 @@
+bun audit v1.4.4 (38afee6c8)
+
+glob@14.0.4, 7.2.3, 13.0.6
+  workspace:@phaneris/shared > glob
+  @sentry/vite-plugin > @sentry/bundler-plugins > glob
+  electron-builder > dmg-builder > app-builder-lib > @electron/universal > @electron/asar > glob
+  moderate: Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal (>=9.0.0 <=14.0.1) - https://github.com/advisories/GHSA-3g3m-2fjr-6pw4
+
+katex@0.18.10, 0.16.47
+  (direct dependency)
+  workspace:@phaneris/ui > katex
+  workspace:@phaneris/ui > @tiptap/extension-mathematics > katex
+  workspace:@phaneris/ui > rehype-katex > katex
+  workspace:@phaneris/electron > @open-file-viewer/core > mermaid > katex
+  workspace:@phaneris/ui > remark-math > micromark-extension-math > katex
+  low: KaTeX: Existing prototype pollution can bypass trust restrictions (>=0.11.0 <0.18.2) - https://github.com/advisories/GHSA-238p-pmpm-9mq7
+
+minimatch@10.2.6, 11.0.3, 3.1.5, 9.0.9, 10.2.5, 5.1.9, 11.0.5
+  workspace:@phaneris/pi-agent-server > @earendil-works/pi-coding-agent > minimatch
+  eslint > @eslint/config-array > minimatch
+  workspace:@phaneris/electron > eslint-plugin-jsx-a11y > minimatch
+  eslint-plugin-react > minimatch
+  workspace:@phaneris/shared > glob > minimatch
+  electron-builder > dmg-builder > app-builder-lib > @electron/universal > @electron/asar > minimatch
+  moderate: minimatch has potential denial of service via globparts amplification (>=7.0.0 <11.0.1) - https://github.com/advisories/GHSA-g3hv-75wg-m249
+
+node-tesseract-ocr@2.2.1
+  workspace:@phaneris/server-core > markitdown-js > node-tesseract-ocr
+  critical: node-tesseract-ocr is vulnerable to OS Command Injection through unsanitized recognize() function parameter (<=2.2.1) - https://github.com/advisories/GHSA-8j44-735h-w4w2
+
+4 vulnerabilities (1 critical, 2 moderate, 1 low)
+
+  bun audit fix           upgrade the vulnerable packages within their ranges
+  bun audit fix --latest  also cross major versions

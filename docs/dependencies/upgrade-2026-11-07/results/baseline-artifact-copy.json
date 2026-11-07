@@ -1,0 +1,250 @@
+{
+  "checkedAt": "2026-11-07T07:01:41.468Z",
+  "copied": [
+    {
+      "directory": "docs/verification/results/resident-assistant-memory-red-2026-11-03",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-memory-red-2026-11-03"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-memory-review-red-2026-11-03",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-memory-review-red-2026-11-03"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-memory-reviewed-2026-11-03",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-memory-reviewed-2026-11-03"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-identity-final-v2-2026-11-03",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-identity-final-v2-2026-11-03"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-native-first-2026-11-03",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-native-first-2026-11-03"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-memory-p2-regression-2026-11-03",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-memory-p2-regression-2026-11-03"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-delegation-final-17-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-delegation-final-17-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-memory-p3-regression-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-memory-p3-regression-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-identity-p3-regression-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-identity-p3-regression-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-native-p3-regression-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-native-p3-regression-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-session-reuse-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-session-reuse-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-session-reuse-memory-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-session-reuse-memory-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-session-reuse-identity-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-session-reuse-identity-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-session-reuse-native-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-session-reuse-native-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-history-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-history-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-history-memory-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-history-memory-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-history-identity-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-history-identity-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-history-native-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-history-native-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-history-delegation-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-history-delegation-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-context-delivery-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-context-delivery-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-assistant-ui-final3-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-assistant-ui-final3-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-foundation-memory-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-foundation-memory-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-foundation-history-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-foundation-history-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-foundation-identity-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-foundation-identity-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-foundation-native-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-foundation-native-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-foundation-delegation-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-foundation-delegation-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-centered-entry-shared-chat-final3-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-centered-entry-shared-chat-final3-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-memory-extraction-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-memory-extraction-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-extraction-memory-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-extraction-memory-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-extraction-history-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-extraction-history-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-extraction-context-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-extraction-context-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-extraction-identity-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-extraction-identity-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-extraction-native-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-extraction-native-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-extraction-delegation-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-extraction-delegation-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-extraction-ui-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-extraction-ui-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-reviewed-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-reviewed-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-memory-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-memory-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-history-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-history-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-temporal-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-temporal-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-relations-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-relations-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-sources-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-sources-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-identity-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-identity-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-native-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-native-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-extraction-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-extraction-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-context-reviewed-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-context-reviewed-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-delegation-v4-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-delegation-v4-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-ui-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-ui-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-backend-artifacts-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-backend-artifacts-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-structure-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-structure-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-context-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-context-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-delegation-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-delegation-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-identity-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-identity-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-native-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-native-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-extraction-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-extraction-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-memory-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-memory-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-history-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-history-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-sources-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-sources-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-relations-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-relations-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-temporal-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-temporal-final-2026-11-04"
+    },
+    {
+      "directory": "docs/verification/results/resident-refactor-ui-final-2026-11-04",
+      "source": "E:\\Phaneris\\docs\\verification\\results\\resident-refactor-ui-final-2026-11-04"
+    }
+  ],
+  "scope": "Existing ignored baseline artifacts copied verbatim; no historical validation rerun asserted"
+}

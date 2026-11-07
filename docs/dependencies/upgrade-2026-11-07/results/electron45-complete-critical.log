@@ -1,0 +1,534 @@
+Environment OK: Bun 1.4.4, Node v24.22.2; local script entries exist.
+
+> run scripts/verification/upgrade-0153-mcp-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-mcp
+[McpClientPool] Proxy name collision on mcp__dotted__foo_bar (source dotted): keeping foo.bar, skipping foo_bar — the skipped tool will not be callable
+{"passed":3,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-mcp"}
+
+> run scripts/verification/upgrade-0153-usage-ledger-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-usage-ledger
+{"passed":16,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-usage-ledger"}
+
+> run scripts/verification/upgrade-0153-pdf-fixtures-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-pdf-fixtures
+
+> run scripts/verification/upgrade-0153-pdf-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-pdf
+{"passed":6,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-pdf"}
+
+> run scripts/verification/upgrade-0153-chat-starters-browser-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-chat-starters-browser
+[cs-browser] browser 158.0.8127.18
+[cs-browser] fixture page http://127.0.0.1:57623/.cache/upgrade-20261107/critical-45-complete/upgrade-0153-chat-starters-browser/index.html from E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-chat-starters-browser\bundle
+[cs-browser] boot attempt 1
+[cs-browser] attempt 1 ready=true
+{"passed":13,"total":13,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-chat-starters-browser"}
+
+> run scripts/verification/upgrade-0153-chat-starters-landing-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-chat-starters-landing
+[landing] browser 158.0.8127.18
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/string_decoder/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[landing] fixture page http://127.0.0.1:57660/.cache/upgrade-20261107/critical-45-complete/upgrade-0153-chat-starters-landing/index.html
+[landing] boot attempt 1
+[landing] attempt 1 ready=true
+{"passed":12,"total":12,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-chat-starters-landing"}
+
+> run scripts/verification/upgrade-0153-workspace-isolation-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-workspace-isolation
+{"passed":5,"total":5,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-workspace-isolation"}
+
+> run scripts/verification/api-connection-setup-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\api-connection-setup
+PASS Native providers require no model fields or catalog request
+PASS Key edits retain saved models and utility; switching providers drops them
+PASS Wizard navigation has one opaque step without overlapping fades
+PASS Blank custom models discover before validation and persist the model tested
+PASS Live model discovery repairs stale cross-provider output caps
+[piDriver] Custom endpoint listing unavailable; enriching 1 configured model(s)
+PASS Missing lists do not guess or save models; manual fallback remains available
+PASS Auxiliary model persists, clears and reports rejected writes
+PASS Percentage thresholds persist, scale per model, retain legacy and clear
+PASS Connection icons reflect provider or endpoint rather than the default model
+PASS Compatible Images API uses explicit connection/model and standard base64 response
+PASS Native image capabilities follow the current provider contract
+PASS Default custom chat omits output caps while explicit limits remain effective
+PASS Chinese dark and narrow layouts retain visible usable controls
+PASS Native provider setup seeds its own catalog and normalizes utility model IDs
+{"passed":14,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\api-connection-setup"}
+
+> run scripts/verification/upgrade-0153-session-info-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-session-info-scroll
+[sis] browser 158.0.8127.18 94ms
+[sis] fixture page http://127.0.0.1:57723/.cache/upgrade-20261107/critical-45-complete/upgrade-0153-session-info-scroll/index.html built in 1884ms
+[sis] boot attempt 1
+[sis] attempt 1 ready=true
+{"passed":4,"total":4,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-session-info-scroll"}
+
+> run scripts/verification/upgrade-0153-calendar-drag-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-calendar-drag
+[cal] browser 158.0.8127.18 90ms
+[cal] fixture page http://127.0.0.1:61771/.cache/upgrade-20261107/critical-45-complete/upgrade-0153-calendar-drag/index.html built in 4423ms
+[cal] boot attempt 1
+[cal] attempt 1 ready=true
+[cal] drag ev-1 2026-11-07 -> 2026-11-02 from {"x":886.203125,"y":289.0625} to {"x":133.125,"y":289.0625}
+{"passed":5,"total":5,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-calendar-drag"}
+
+> run scripts/verification/upgrade-0153-editor-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-editor
+[editor] browser 158.0.8127.18
+[editor] fixture page http://127.0.0.1:64834/.cache/upgrade-20261107/critical-45-complete/upgrade-0153-editor/index.html from E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-editor\bundle (built in 2651ms)
+[editor] boot attempt 1
+[editor] attempt 1 ready=true in 1013ms
+[editor] ED-01 start
+[editor] ED-01 setMarkdown(artifact)
+[editor] ED-01 focus
+[editor] ED-01 cdp session
+[editor] ED-01 imeSetComposition
+[editor] ED-01 imeSetComposition answered
+[editor] ED-01 composing visible=true text="你好世界产物验收\n\n正文段落。"
+[editor] ED-01 insertText (commit)
+[editor] ED-01 wait for commit
+[editor] ED-01 screenshot
+[editor] ED-01 method Input.imeSetComposition + Input.insertText | markdown "# 你好世界产物验收\n\n正文段落。"
+[editor] ED-01 passed
+[editor] ED-02 start
+[editor] pageerror Called contentMatchAt on a node with invalid content
+[editor] ED-02 bold via bubble menu
+[editor] ED-02 passed
+[editor] ED-03 start
+[editor] ED-03 buttons {"before":[{"text":"Visual","pressed":"true","disabled":false},{"text":"Source","pressed":"false","disabled":false}],"after":[{"text":"可视化","pressed":"true","disabled":false},{"text":"源码","pressed":"false","disabled":false}],"back":[{"text":"Visual","pressed":"true","disabled":false},{"text":"Source","pressed":"false","disabled":false}]}
+[editor] ED-03 passed
+[editor] ED-04-history-list-paste-and-image-upload start
+[editor] ED-04-history-list-paste-and-image-upload passed
+{"passed":4,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete\\upgrade-0153-editor"}
+
+> run scripts/verification/upgrade-0153-undici-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-undici
+
+> run scripts/verification/dependency-upgrade-20261107-images-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\dependency-upgrade-20261107-images
+
+> run scripts/verification/upgrade-0153-document-tools-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-complete\upgrade-0153-document-tools
+
+> test ./scripts/check-environment.test.ts
+bun test v1.4.4 (38afee6c8)
+
+scripts\check-environment.test.ts:
+(pass) resolves script targets after cd without flagging workspace-relative assets as missing [1.18ms]
+
+ 1 pass
+ 0 fail
+ 1 expect() calls
+Ran 1 test across 1 file. [15.00ms]
+
+> test ./src/durable-runtime/coordinator.test.ts ./src/durable-runtime/process-crash.test.ts ./src/durable-runtime/projection-runner.test.ts ./src/sessions/idle-session-cache.test.ts ./src/tasks/TaskRunner.test.ts ./src/transport/__tests__/server-lifecycle.test.ts
+bun test v1.4.4 (38afee6c8)
+
+src\durable-runtime\coordinator.test.ts:
+(pass) DurableRuntimeCoordinator > persists native observations without changing execution state, context or usage [24.45ms]
+(pass) DurableRuntimeCoordinator > owns a complete cross-process T1/T2 boundary [19.60ms]
+(pass) DurableRuntimeCoordinator > aggregates a parallel tool batch and accepts out-of-order T2 commits [20.13ms]
+(pass) DurableRuntimeCoordinator > commits final assistant output before it is projected [22.06ms]
+(pass) DurableRuntimeCoordinator > parks a run whose tool outcome is unknown [17.04ms]
+(pass) DurableRuntimeCoordinator > startup recovery parks an unknown effect without replaying it [16.06ms]
+(pass) DurableRuntimeCoordinator > startup recovery terminalizes an interrupted run with no unknown effect [14.69ms]
+(pass) DurableRuntimeCoordinator > atomically commits an assistant model outcome and deduplicated usage [15.62ms]
+(pass) DurableRuntimeCoordinator > owns model T1/T2 and usage across the provider effect boundary [18.59ms]
+(pass) DurableRuntimeCoordinator > parks a provider request left between model T1 and T2 [15.78ms]
+(pass) DurableRuntimeCoordinator > durably resolves an unknown provider attempt without retrying it [16.06ms]
+(pass) DurableRuntimeCoordinator > atomically commits a verified reconciliation and resumes the program counter [17.26ms]
+(pass) DurableRuntimeCoordinator > queries a registered adapter using the durable idempotency identity [18.68ms]
+(pass) DurableRuntimeCoordinator > makes TaskRunner facts authoritative and replayable after terminal cleanup [271.67ms]
+(pass) DurableRuntimeCoordinator > restores a verified backup atomically while retaining the previous live database [40.90ms]
+(pass) DurableRuntimeCoordinator > imports branch history without fabricating tool dispatch evidence [44.62ms]
+(pass) background cache warming ledger > meters warming without disturbing pending tool or adding context [19.45ms]
+(pass) background cache warming ledger > meters warming without disturbing pending model or adding context [20.16ms]
+(pass) background cache warming ledger > accepts metered cancellation after the owning task settles, without reopening it [18.69ms]
+(pass) background cache warming ledger > retains an unknown refresh as pending audit evidence across restart without replay [20.12ms]
+
+src\durable-runtime\process-crash.test.ts:
+(pass) durable runtime process crash recovery > a kill before T1 produces zero external effect calls [74.99ms]
+(pass) durable runtime process crash recovery > a kill after an external effect but before T2 parks without replay [96.35ms]
+(pass) durable runtime process crash recovery > a kill after T1 but before the effect remains unknown and never executes automatically [101.57ms]
+(pass) durable runtime process crash recovery > a kill after tool T2 but before publish rebuilds the settled outcome [81.96ms]
+(pass) durable runtime process crash recovery > a kill after a billable model request but before T2 parks without rebilling [75.07ms]
+(pass) durable runtime process crash recovery > a kill after model T2 but before publish rebuilds response and usage [97.86ms]
+
+src\durable-runtime\projection-runner.test.ts:
+(pass) DurableProjectionRunner > persists an incremental cursor and atomically materialized snapshot [1.45ms]
+(pass) DurableProjectionRunner > rebuilds the same snapshot from seq zero [1.14ms]
+(pass) DurableProjectionRunner > fails closed on an incompatible persisted projection schema [1.49ms]
+(pass) DurableProjectionRunner > CAS prevents two projection writers from advancing the same cursor [1.36ms]
+(pass) session projections skip other sessions without treating their global sequence gaps as corruption [1.46ms]
+
+src\sessions\idle-session-cache.test.ts:
+[session] Lazy-loaded 1 messages for session reload
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) idle eviction flushes pending changes and reloads the complete transcript [40.90ms]
+(pass) idle cleanup protects running work and retires eligible runtime resources [1.43ms]
+(pass) a session accessed during flush is not evicted [0.28ms]
+(pass) failed persistence prevents idle eviction [0.23ms]
+(pass) a new turn during runtime retirement retains its history [0.42ms]
+
+src\tasks\TaskRunner.test.ts:
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"approval"} [35.08ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"loop"} [9.77ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"orchestrator"} [21.50ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"approval":true} [23.27ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"when":"false"} [20.95ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"loop":{"until":"done","max":2}} [23.59ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"for_each":"items"} [19.71ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"trigger":"one_success"} [12.36ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"replicas":2} [25.34ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"aggregate":"concat"} [20.74ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"max_parallel":2} [13.85ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"timeout":10} [16.61ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"cache":"pure"} [20.25ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"backoff":{"base":1}}} [22.83ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"when":"empty"}} [13.02ms]
+(pass) TaskRunner (Conductor) > pauses at the cumulative token budget even when current context is small [46.21ms]
+(pass) TaskRunner (Conductor) > runs a dependency chain, feeding each output into the next [75.94ms]
+(pass) TaskRunner (Conductor) > passes llmConnection (node value, else the task default) to createSession [34.54ms]
+(pass) TaskRunner (Conductor) > resolves permissionMode: node override → task default → child (never the workspace default) [23.95ms]
+(pass) TaskRunner (Conductor) > rejects an omitted permission mode before creating any child [21.04ms]
+(pass) TaskRunner (Conductor) > stamps task/run/node linkage on each dispatched child session [29.05ms]
+(pass) TaskRunner (Conductor) > creates a child session per node (createSession announces each to the renderer by default) [32.67ms]
+(pass) TaskRunner (Conductor) > children inherit the orchestrator's working directory (falling back to spec.cwd) [25.13ms]
+(pass) TaskRunner (Conductor) > moves the orchestrator tile to in-progress on start and done on completion [27.00ms]
+(pass) TaskRunner (Conductor) > runs a fan-out and joins at the synthesizer [55.18ms]
+(pass) TaskRunner (Conductor) > marks a node failed, leaves dependents pending, and settles the run as failed [47.45ms]
+(pass) TaskRunner (Conductor) > honors max_parallel [46.19ms]
+(pass) TaskRunner (Conductor) > pauses scheduling and resumes [46.65ms]
+(pass) TaskRunner (Conductor) > stops a run and cancels in-flight children [26.30ms]
+(pass) TaskRunner (Conductor) > resumes a run from the persisted run-log after a restart, reusing finished node outputs [69.19ms]
+(pass) TaskRunner (Conductor) > rehydrates node output from canonical task facts without the run-log files [29.72ms]
+(pass) TaskRunner (Conductor) > wraps child dispatch in durable T1/T2 around the external send [19.26ms]
+(pass) TaskRunner (Conductor) > never retries a child dispatch after durable T1 when T2 is missing [45.66ms]
+(pass) TaskRunner (Conductor) > retries a failed node up to retry.limit, then fails [51.22ms]
+(pass) TaskRunner (Conductor) > does not retry when retry.limit is 0 [34.16ms]
+(pass) TaskRunner (Conductor) > feeds the prior failure into the retried prompt and can then succeed [38.03ms]
+(pass) TaskRunner (Conductor) > completes without verifying when there is no orchestrator [59.06ms]
+(pass) TaskRunner (Conductor) > gates the run on the orchestrator verdict and includes acceptance_criteria in the prompt [38.11ms]
+(pass) TaskRunner (Conductor) > re-runs the terminal node once on a FAIL verdict, then completes on PASS [52.50ms]
+(pass) TaskRunner (Conductor) > fails the run when FAIL verdicts exhaust the repair budget (max_iterations) [75.99ms]
+(pass) TaskRunner (Conductor) > re-asks on an unparsable verdict and fails only after the re-ask budget is exhausted [65.29ms]
+(pass) TaskRunner (Conductor) > scopes a repair to the named nodes and their transitive dependents [81.96ms]
+(pass) TaskRunner (Conductor) > an unparsed re-ask does not consume the repair budget [47.28ms]
+(pass) TaskRunner (Conductor) > does not hang in verifying when the verification send rejects [28.37ms]
+(pass) TaskRunner (Conductor) > ignores a verdict that arrives after the run was stopped [41.33ms]
+(pass) TaskRunner (Conductor) > reconstructs the repair counter from the run-log on a cross-restart resume [81.17ms]
+(pass) TaskRunner (Conductor) > fails a node that completes with no text despite declaring outputs (instead of marking it done) [33.99ms]
+(pass) TaskRunner (Conductor) > still marks a node done on empty text when it declares no outputs (lenient default) [29.22ms]
+(pass) TaskRunner (Conductor) > publishes the total node count to the orchestrator at run start (stable board denominator) [38.96ms]
+(pass) TaskRunner (Conductor) > fails a run that exceeds the wall-clock timeout and cancels in-flight children [89.16ms]
+(pass) TaskRunner (Conductor) > fails a run stuck in verifying (orchestrator never returns a verdict) [70.26ms]
+
+src\transport\__tests__\server-lifecycle.test.ts:
+(pass) WsRpcServer lifecycle > accepts valid token [15.51ms]
+(pass) WsRpcServer lifecycle > rejects invalid token with 4005 [4.53ms]
+(pass) WsRpcServer lifecycle > rejects missing token [4.23ms]
+(pass) WsRpcServer lifecycle > rejects connections when at maxClients [6.17ms]
+(pass) WsRpcServer lifecycle > allows new connections after a client disconnects [59.01ms]
+(pass) WsRpcServer lifecycle > times out slow handlers [5.45ms]
+(pass) WsRpcServer lifecycle > closes connections that exceed maxPayload (16MiB) [19.80ms]
+(pass) WsRpcServer lifecycle > rejects wrong protocol major version [4.41ms]
+(pass) WsRpcServer lifecycle > terminates all clients on close() [4.36ms]
+(pass) transport memory budgets > bounds replay bytes for large events and preserves sequence gaps for resync [4.12ms]
+(pass) transport memory budgets > disconnects an over-budget socket instead of growing its outgoing queue [0.07ms]
+
+ 98 pass
+ 0 fail
+ 373 expect() calls
+Ran 98 tests across 6 files. [3.78s]
+
+> test ./src/webui/__tests__/http-server.isolated.ts
+bun test v1.4.4 (38afee6c8)
+
+src\webui\__tests__\http-server.isolated.ts:
+(pass) startWebuiHttpServer > allows plain-http login even when the RPC transport is wss [187.34ms]
+(pass) startWebuiHttpServer > FF01/FF02: failures are rate limited, but a correct password still logs in [484.38ms]
+(pass) startWebuiHttpServer > FF02: repeated successful logins never consume the budget [2445.19ms]
+(pass) startWebuiHttpServer > FF09: a cookie under the pre-rename name still authenticates [175.52ms]
+(pass) startWebuiHttpServer > FF10: a forwarded address is ignored when the direct peer is not trusted [513.13ms]
+(pass) startWebuiHttpServer > FF11: a forwarded address is used when the direct peer is trusted [194.04ms]
+(pass) startWebuiHttpServer > FF07: an oversized body is refused before it is buffered [114.93ms]
+(pass) startWebuiHttpServer > rejects invalid credentials [175.30ms]
+(pass) startWebuiHttpServer > honors an explicit secure-cookie override [176.53ms]
+(pass) startWebuiHttpServer > infers secure cookies from proxy https headers when no override is set [175.32ms]
+(pass) startWebuiHttpServer > derives a browser-facing websocket URL from forwarded public host headers [190.97ms]
+(pass) startWebuiHttpServer > returns an explicit public websocket URL override from /api/config [174.82ms]
+(pass) startWebuiHttpServer > issues each session token with a unique jti claim [282.43ms]
+(pass) startWebuiHttpServer > revokes the session on logout so a replayed cookie is rejected [185.55ms]
+(pass) startWebuiHttpServer > rate limits per client IP when no trusted proxies are configured [562.96ms]
+
+ 15 pass
+ 0 fail
+ 78 expect() calls
+Ran 15 tests across 1 file. [6.10s]
+
+> test ./src/sessions/__tests__/persistence-queue.test.ts ./src/durable-runtime/recovery.test.ts ./src/config/__tests__/theme.test.ts
+bun test v1.4.4 (38afee6c8)
+
+src\sessions\__tests__\persistence-queue.test.ts:
+(pass) session persistence header conflict helpers > metadata signature ignores non-metadata fields [0.09ms]
+(pass) session persistence header conflict helpers > metadata signature changes when metadata changes [0.04ms]
+(pass) session persistence header conflict helpers > merge preserves external metadata while keeping local computed fields [0.08ms]
+(pass) session persistence header conflict helpers > startup scenario: external metadata differs from local signature [0.06ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > tracks a debounce-started write so flush() awaits it even when nothing is pending [73.11ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > flushAll() awaits in-flight writes so quit never drops data [42.32ms]
+(pass) SessionPersistenceQueue write failures > reports a failed write without skipping a newer queued snapshot [27.52ms]
+[PersistenceQueue] Failed to write session s1: 253 |       await queue.flush('s1')
+254 |       const signature = queue.getLastWrittenSignature('s1')
+255 |       const file = getSessionFilePath(root, 's1')
+256 |       mkdirSync(file + '.tmp') // Force a real write failure without changing the last good snapshot.
+257 |       queue.enqueue({ ...session, name: 'Failed update' })
+258 |       await expect(queue.flush('s1')).rejects.toThrow()
+                                                    ^
+EISDIR: illegal operation on a directory, open 'C:\Users\dotty\AppData\Local\Temp\craft-pq-metadata-fail-ay7DUB\sessions\s1\session.jsonl.tmp'
+    path: "C:\\Users\\dotty\\AppData\\Local\\Temp\\craft-pq-metadata-fail-ay7DUB\\sessions\\s1\\session.jsonl.tmp",
+ syscall: "open",
+   errno: -4068,
+    code: "EISDIR"
+
+      at <anonymous> (E:\Phaneris-dependency-upgrade-20261107\packages\shared\src\sessions\__tests__\persistence-queue.test.ts:258:47)
+
+(pass) SessionPersistenceQueue write failures > does not treat a failed file write as the last saved metadata [36.32ms]
+(pass) SessionPersistenceQueue write failures > keeps a debounce failure observable until a newer write succeeds [23.42ms]
+(pass) lazy persistence snapshots > coalesces snapshot creation and preserves multi-batch Unicode transcripts [30.21ms]
+
+src\durable-runtime\recovery.test.ts:
+(pass) resolveToolRecovery > marks a matching outcome completed [0.09ms]
+(pass) resolveToolRecovery > requires reconciliation after dispatch without an outcome [0.01ms]
+(pass) resolveToolRecovery > proves non-dispatch only under the current boundary protocol
+(pass) resolveToolRecovery > fails closed for the same legacy evidence
+(pass) resolveToolRecovery > detects identity and argument mismatches [0.01ms]
+
+src\config\__tests__\theme.test.ts:
+(pass) themeToCSS > emits semantic and visual tokens from a theme file [0.27ms]
+(pass) themeToCSS > expands each high-level depth preset [0.14ms]
+(pass) themeToCSS > glass depth exposes blur while other depths disable it [0.02ms]
+(pass) themeToCSS > raised depth combines a hard border ring with zero-blur offset shadows [0.02ms]
+(pass) themeToCSS > keeps status colors in their original CSS syntax without parallel RGB channels [0.02ms]
+(pass) themeToCSS > leaves omitted surfaces and material tokens on the static Default baseline [0.02ms]
+(pass) themeToCSS > dark mode overrides visual tokens without losing light defaults [0.03ms]
+(pass) theme resolution > deeply overlays a user theme onto the canonical default [0.11ms]
+(pass) theme resolution > normalizes both light-only and dark-only themes [0.03ms]
+(pass) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [1.24ms]
+(pass) theme resolution > bundles exactly the canonical Default theme [5.75ms]
+(pass) theme resolution > keeps Electron startup backgrounds aligned with the Default CSS colors [0.02ms]
+(pass) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [2.24ms]
+(pass) theme validation > accepts the expanded preset schema [0.21ms]
+(pass) theme validation > rejects unsupported values and CSS declaration injection [2.05ms]
+(pass) theme validation > rejects unknown preset fields and ambiguous supported modes [0.26ms]
+
+ 31 pass
+ 0 fail
+ 381 expect() calls
+Ran 31 tests across 3 files. [441.00ms]
+
+> test ./src/plugins/__tests__/plugin-install.isolated.ts
+bun test v1.4.4 (38afee6c8)
+
+src\plugins\__tests__\plugin-install.isolated.ts:
+(pass) plugin placeholder resolution > expands PLUGIN_ROOT and PLUGIN_DATA as plain string substitutions [2.50ms]
+(pass) plugin placeholder resolution > leaves unrelated text untouched [1.69ms]
+(pass) plugin placeholder resolution > resolves command, args, and env together [4.23ms]
+(pass) plugin placeholder resolution > normalizes a plugin-relative command to an absolute path [2.66ms]
+(pass) plugin placeholder resolution > rejects a bare executable name (spec §7.2.1 forbids depending on PATH) [1.76ms]
+(pass) plugin placeholder resolution > rejects a command that escapes the plugin root [1.54ms]
+(pass) plugin placeholder resolution > accepts an absent, dot, or PLUGIN_ROOT cwd — they all mean the plugin root [3.19ms]
+(pass) plugin placeholder resolution > rejects any other cwd with an actionable message (design §5.4.1) [1.64ms]
+(pass) analyzePluginInstall > splits existing resources into overwrites and new ones into creates [21.05ms]
+(pass) analyzePluginInstall > shows the stdio command and args verbatim, before expansion (P5-5) [16.84ms]
+(pass) analyzePluginInstall > skips a stdio entry with an unsupported cwd but keeps the package [20.96ms]
+(pass) analyzePluginInstall > rejects a source key that would escape the workspace sources directory [10.71ms]
+(pass) analyzePluginInstall > rejects a package that contributes nothing (D3) [3.88ms]
+(pass) installPlugin > restores existing resources and removes staged additions when a later source write fails [171.41ms]
+(pass) installPlugin > materializes skills into <ws>/skills and MCP servers into <ws>/sources [101.73ms]
+(pass) installPlugin > stores placeholders verbatim plus a workspace-relative pluginRoot (design §5.4.3/§5.4.4) [70.34ms]
+(pass) installPlugin > replaces an existing skill directory wholesale instead of merging (P5-1) [68.54ms]
+(pass) installPlugin > preserves the plugin data directory across a reinstall (§5.4.7) [48.09ms]
+(pass) installPlugin > rebuilds the derived reverse index (D10) [86.35ms]
+(pass) installPlugin > leaves no staging directories behind after a successful install [41.71ms]
+(pass) installPlugin > rejects a package containing a symbolic link before writing anything (D11) [7.17ms]
+(pass) installPlugin > writes a one-line audit record naming the stdio command (P5-4) [94.14ms]
+(pass) installPlugin > makes the materialized source addressable by the ordinary source loader [61.53ms]
+(pass) P9-4: uninstall and reference counting (D10) > deletes resources only this plugin provided [80.73ms]
+(pass) P9-4: uninstall and reference counting (D10) > keeps a skill another installed plugin still references [144.59ms]
+(pass) P9-4: uninstall and reference counting (D10) > deletes the shared resource once the last referencing plugin goes [81.31ms]
+(pass) P9-4: uninstall and reference counting (D10) > leaves no orphans and keeps the derived index self-consistent [104.25ms]
+(pass) P9-4: uninstall and reference counting (D10) > recovers when the derived index is deleted outright [70.81ms]
+(pass) P9-4: uninstall and reference counting (D10) > rejects uninstalling a plugin that is not installed [2.65ms]
+(pass) plugin stdio resolution for the source_test path > expands ${PLUGIN_ROOT} in the command before it is spawned [4.70ms]
+(pass) plugin stdio resolution for the source_test path > expands placeholders in args and env too [4.12ms]
+(pass) plugin stdio resolution for the source_test path > gives the same expansion the runtime builder uses [4.84ms]
+
+ 32 pass
+ 0 fail
+ 86 expect() calls
+Ran 32 tests across 1 file. [1.50s]
+
+> test ./src/transport-delta.test.ts ./src/request-diagnostics.test.ts ./src/durable-model-stream.test.ts ./src/length-continuation.test.ts
+bun test v1.4.4 (38afee6c8)
+
+src\transport-delta.test.ts:
+(pass) wire delta size is independent of accumulated SDK response size [0.36ms]
+
+src\request-diagnostics.test.ts:
+(pass) derives prompt and tools from the transcript instead of listing system messages twice [0.83ms]
+(pass) hash covers prompt, conversation and tool declarations [0.31ms]
+
+src\durable-model-stream.test.ts:
+(pass) durable model stream > commits native request evidence with the outcome before publishing completion [1.46ms]
+(pass) durable model stream > leaves an indeterminate thrown stream pending instead of committing fabricated zero usage [0.11ms]
+(pass) durable model stream > commits tool-only usage before forwarding the response [0.28ms]
+(pass) durable model stream > commits failed partial usage before forwarding the response [0.04ms]
+(pass) durable model stream cache retention > applies the configured default when callers omit cacheRetention [0.14ms]
+(pass) durable model stream cache retention > preserves an explicit cacheRetention and skips the default resolver [0.09ms]
+(pass) cancellation while awaiting T1 commits known zero usage without dispatching [0.19ms]
+
+src\length-continuation.test.ts:
+(pass) exhaustedModelOutputLimit > detects an assistant response that reached the declared model output limit [0.04ms]
+(pass) exhaustedModelOutputLimit > leaves context-clamped length stops to Pi compaction recovery [0.01ms]
+(pass) exhaustedModelOutputLimit > does not continue complete, non-assistant or unmetered responses [0.02ms]
+(pass) LengthContinuationTracker > bounds automatic continuations and resets for the next user prompt [0.07ms]
+
+ 14 pass
+ 0 fail
+ 48 expect() calls
+Ran 14 tests across 4 files. [470.00ms]
+
+> test ./src/components/chat/__tests__/streaming-projection.test.ts ./src/components/chat/__tests__/turn-utils-grouping.test.ts
+bun test v1.4.4 (38afee6c8)
+
+src\components\chat\__tests__\streaming-projection.test.ts:
+(pass) streaming projection preserves completed cards and matches the full reducer [0.76ms]
+(pass) out-of-order, hidden and interleaved histories keep full grouping semantics [0.08ms]
+(pass) structural selectors retain one version across deltas but invalidate annotated content [0.31ms]
+
+src\components\chat\__tests__\turn-utils-grouping.test.ts:
+(pass) groupActivitiesByParent > empty and flat cases > returns empty array for empty input [0.15ms]
+(pass) groupActivitiesByParent > empty and flat cases > returns flat list when no Task tools present [0.14ms]
+(pass) groupActivitiesByParent > single Task with children > groups child activities under Task parent [0.08ms]
+(pass) groupActivitiesByParent > single Task with children > maintains chronological order of children within group [0.03ms]
+(pass) groupActivitiesByParent > SDK Agent tool name (post v0.2.72 rename) > groups children under an Agent parent identically to a Task parent [0.04ms]
+(pass) groupActivitiesByParent > multiple Tasks with children > groups each Task with its own children [0.05ms]
+(pass) groupActivitiesByParent > mixed orphans and Task groups > preserves orphan activities alongside Task groups in chronological order [0.04ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > attaches TaskOutput data to parent Task group via agentId chain [0.17ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > handles Task without TaskOutput data gracefully [0.03ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > hides TaskOutput activities from result [0.06ms]
+(pass) groupActivitiesByParent > edge cases > handles Task with no children (empty group) [0.02ms]
+(pass) groupActivitiesByParent > edge cases > shows children with missing parents as orphan activities at root level [0.02ms]
+(pass) groupActivitiesByParent > edge cases > handles malformed TaskOutput JSON gracefully [0.05ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > out-of-order stored messages: children before parent still group correctly [0.05ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > restored session with nested Task hierarchy produces correct groups [0.07ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > mixed top-level and nested tools group into correct turns [0.10ms]
+(pass) computeLastChildSet > returns empty set for empty input [0.05ms]
+(pass) computeLastChildSet > returns empty set when no activities have parents (all depth 0) [0.02ms]
+(pass) computeLastChildSet > identifies last child for single parent [0.03ms]
+(pass) computeLastChildSet > identifies last child for multiple parents [0.03ms]
+(pass) computeLastChildSet > handles nested parent-child relationships (depth > 1) [0.02ms]
+(pass) computeLastChildSet > handles single child (is both first and last) [0.17ms]
+(pass) isActivityGroup > returns true for ActivityGroup objects [0.13ms]
+(pass) isActivityGroup > returns false for ActivityItem objects [0.04ms]
+(pass) isActivityGroup > returns false for activity with type property that is not "group" [0.02ms]
+(pass) TodoWrite extraction > includes TodoWrite activities in flat list (not grouped) [0.12ms]
+(pass) TodoWrite extraction > handles TodoWrite as child of Task [0.08ms]
+
+ 30 pass
+ 0 fail
+ 118 expect() calls
+Ran 30 tests across 2 files. [251.00ms]
+
+> test ./src/renderer/lib/__tests__/reconnect-recovery.test.ts
+bun test v1.4.4 (38afee6c8)
+
+src\renderer\lib\__tests__\reconnect-recovery.test.ts:
+(pass) getSessionsToRefreshAfterStaleReconnect > includes the active session and all processing sessions [0.18ms]
+(pass) getSessionsToRefreshAfterStaleReconnect > deduplicates the active session when it is already processing [0.02ms]
+
+ 2 pass
+ 0 fail
+ 2 expect() calls
+Ran 2 tests across 1 file. [8.00ms]
+
+> test ./src/renderer/atoms/__tests__/sessions.isolated.ts
+bun test v1.4.4 (38afee6c8)
+
+src\renderer\atoms\__tests__\sessions.isolated.ts:
+(pass) session message loading atoms > merges full history with live updates even when streaming finishes during the read [1.71ms]
+(pass) session message loading atoms > replaceLoadedSessionAtom marks authoritative full sessions as loaded [0.31ms]
+(pass) session message loading atoms > forceSessionMessagesReloadAtom reloads an empty-but-loaded session [0.29ms]
+(pass) session message loading atoms > does not mark stale empty-response fallback as loaded [0.30ms]
+(pass) streaming session metadata > updates the transcript without notifying list subscribers for text-only deltas [1.02ms]
+(pass) streaming session metadata > publishes appended messages, changed metadata and removed optional fields [0.27ms]
+(pass) refreshSessionsMetadataAtom > preserves messages for already-loaded sessions [0.31ms]
+(pass) refreshSessionsMetadataAtom > marks sessions as unloaded when atom was cleared but loadedSessionIds still tracked them [0.08ms]
+(pass) refreshSessionsMetadataAtom > removes stale sessions from all atoms [0.34ms]
+(pass) refreshSessionsMetadataAtom > preserves omitted sessions when removeMissing is false [0.15ms]
+(pass) refreshSessionsMetadataAtom > non-destructive refresh still preserves loaded messages for returned sessions [0.18ms]
+(pass) refreshSessionsMetadataAtom > updates metadata map and returns it [0.07ms]
+(pass) idle session cache > releases old unmounted histories while preserving active work, readers and metadata [0.83ms]
+
+ 13 pass
+ 0 fail
+ 54 expect() calls
+Ran 13 tests across 1 file. [82.00ms]
+
+> test ./src/main/__tests__/session-branch-rollback.isolated.ts
+bun test v1.4.4 (38afee6c8)
+
+src\main\__tests__\session-branch-rollback.isolated.ts:
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "ws-1",
+  sessionId: "child-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "preflight boom",
+}
+(pass) session branch rollback on preflight failure > deletes newly created child session when ensureBranchReady throws [6.29ms]
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation failed: sdk-fork requires parent SDK session ID {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  sourceProvider: "pi",
+  targetProvider: "pi",
+}
+(pass) session branch rollback on preflight failure > fails branch creation when parent pi sdk session id is missing [0.47ms]
+[session] Branch validation succeeded {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "ws-1",
+  sessionId: "child-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "pi preflight boom",
+}
+(pass) session branch rollback on preflight failure > runs backend preflight for pi branches and rolls back on failure [1.03ms]
+
+ 3 pass
+ 0 fail
+ 13 expect() calls
+Ran 3 tests across 1 file. [448.00ms]
+{"passed":77,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-complete"}

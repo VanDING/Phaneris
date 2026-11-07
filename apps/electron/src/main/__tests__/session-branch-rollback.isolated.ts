@@ -16,6 +16,7 @@ let mockedProvider: 'pi' = 'pi'
 const actualSharedConfigModule = await import('../../../../../packages/shared/src/config/index.ts')
 const actualSharedAgentModule = await import('../../../../../packages/shared/src/agent/index.ts')
 const actualSharedAgentBackendModule = await import('../../../../../packages/shared/src/agent/backend/index.ts')
+const actualSharedWorkspacesModule = await import('../../../../../packages/shared/src/workspaces/index.ts')
 
 mock.module('electron', () => ({
   app: {
@@ -126,6 +127,7 @@ mock.module('@phaneris/shared/config', () => ({
 }))
 
 mock.module('@phaneris/shared/workspaces', () => ({
+  ...actualSharedWorkspacesModule,
   loadWorkspaceConfig: () => ({
     defaults: {
       permissionMode: 'ask',

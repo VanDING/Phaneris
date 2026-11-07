@@ -1,0 +1,23 @@
+714 |   assert.equal(factsOf('metering-XC-compact', 'assistant_message_committed').length, 0)
+715 |   assert.equal(projectDurableUsage(compactRows).contextTokens, 0, 'summary billing never becomes conversational occupancy')
+716 |   assert.equal(compactRows[0]!.inputTokens, 2000); assert.equal(compactRows[0]!.outputTokens, 25)
+717 |   near(compactRows[0]!.costUsd!, derived(2000, 25), 'summary cost')
+718 |   const compactRequest = seen.filter(request => request.label === 'XC').at(-1)!.requestBody as any
+719 |   assert.equal(compactRequest.max_completion_tokens ?? compactRequest.max_tokens, 4096, 'small model output limit binds')
+               ^
+AssertionError: small model output limit binds
++ actual - expected
+
++ undefined
+- 4096
+
+ generatedMessage: false,
+     actual: undefined,
+   expected: 4096,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at E:\Phaneris\scripts\verification\upgrade-0153-usage-ledger-workflow.ts:719:10
+
+Bun v1.4.3 (Windows x64)

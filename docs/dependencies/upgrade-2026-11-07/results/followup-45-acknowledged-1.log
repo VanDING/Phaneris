@@ -1,0 +1,10 @@
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/shiki/dist/index.mjs is dynamically imported by packages/ui/src/components/markdown/code-highlight.ts but also statically imported by packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/index.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/vscode.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/github.light.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] packages/shared/src/i18n/locales/zh-Hans.json is dynamically imported by packages/shared/src/i18n/registry.ts but also statically imported by scripts/verification/fixtures/upgrade-followup.tsx, dynamic import will not move module into another chunk.
+

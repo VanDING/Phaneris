@@ -1,0 +1,29 @@
+[
+  {
+    "Stage": "electron-build-final",
+    "Command": [
+      "bun",
+      "run",
+      "electron:build"
+    ],
+    "StartedAt": "2026-11-07T13:14:14.6547570+00:00",
+    "FinishedAt": "2026-11-07T13:15:48.5373594+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\electron-build-final.log",
+    "LogSha256": "34d6da5b79f5c93a20c7eefa9d17c1394d559572a82c0670f8e8c57c7622ebf3"
+  },
+  {
+    "Stage": "packaged-final",
+    "Command": [
+      "bun",
+      "run",
+      "scripts/verification/upgrade-0153-packaged-workflow.ts",
+      "--output-dir=.cache/upgrade-20261107/packaged-final"
+    ],
+    "StartedAt": "2026-11-07T13:15:48.5975133+00:00",
+    "FinishedAt": "2026-11-07T13:19:15.2804285+00:00",
+    "ExitCode": 1,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-final.log",
+    "LogSha256": "56d1e32a943564117b30ce26fd140d882963a4b165ad6d7dbefd5462304b7d2c"
+  }
+]

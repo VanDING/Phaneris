@@ -31,7 +31,7 @@ await check('Offline cold preparation fails clearly without executing the script
 })
 await check('Concurrent cold Python requests prepare and execute the exact interpreter', async () => {
   const results = await Promise.all([1, 2].map(() => handleScriptSandbox(ctx, { language: 'python3', script: "import sys; print('.'.join(map(str,sys.version_info[:3])))" })))
-  for (const result of results) { assert.equal(result.isError, false, text(result)); assert(text(result).includes('3.12.15')) }
+  for (const result of results) { assert.equal(result.isError, false, text(result)); assert(text(result).includes('3.12.16')) }
   return results.map(text)
 })
 for (const language of ['node', 'python3', 'bun'] as const) {
@@ -44,7 +44,7 @@ for (const language of ['node', 'python3', 'bun'] as const) {
     assert(text(result).includes('runtime-ready'))
     assert(text(result).includes('networkIsolation: enforced'))
     assert(text(result).includes('filesystemIsolation: enforced'))
-    if (language === 'python3') assert(text(result).includes('version=3.12.15'), text(result))
+    if (language === 'python3') assert(text(result).includes('version=3.12.16'), text(result))
     if (language === 'node') assert(text(result).includes('source: electron'), text(result))
     return text(result)
   })

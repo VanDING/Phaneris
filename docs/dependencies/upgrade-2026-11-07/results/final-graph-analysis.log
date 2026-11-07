@@ -1,0 +1,44 @@
+{
+  "controls": 75,
+  "statuses": {
+    "applied-and-resolved": 74,
+    "applied-unused-override": 1
+  },
+  "lockfile": {
+    "before": {
+      "instances": 1843,
+      "names": 1490
+    },
+    "after": {
+      "instances": 1828,
+      "names": 1489
+    },
+    "changed": 198,
+    "added": 34,
+    "removed": 49,
+    "sourceOnly": 1583
+  },
+  "keepChanged": [],
+  "patches": [
+    {
+      "path": "patches/http-cache-semantics@4.2.0.patch",
+      "sha256": "d225ce131bfbdc8f9774d51ac9ee56ffdc4017235d16b225f97922818914e155",
+      "unchanged": true
+    },
+    {
+      "path": "patches/http-cache-semantics@4.3.0.patch",
+      "sha256": "845d0b65804a904873d79ae09acefa403c898bcdb20a2f641d0db84143671ede",
+      "unchanged": true
+    },
+    {
+      "path": "patches/markitdown-js@0.0.14.patch",
+      "sha256": "0dab99ffd405ef43a155a9b52589844fc9fe71415c32eb6b4612dfd432562b25",
+      "unchanged": true
+    },
+    {
+      "path": "patches/node-tesseract-ocr@2.2.1.patch",
+      "sha256": "c8f58841a41d8a93992c1b9d9eb729d1da13f5f02f3a3ba893ad0d5238f537a9",
+      "unchanged": true
+    }
+  ]
+}

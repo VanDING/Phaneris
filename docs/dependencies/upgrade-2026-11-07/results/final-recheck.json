@@ -1,0 +1,41 @@
+[
+  {
+    "Stage": "typecheck-complete",
+    "Command": [
+      "bun",
+      "run",
+      "typecheck:all"
+    ],
+    "StartedAt": "2026-11-07T13:10:34.5147419+00:00",
+    "FinishedAt": "2026-11-07T13:11:02.4993890+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\typecheck-complete.log",
+    "LogSha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308"
+  },
+  {
+    "Stage": "lint-electron-complete",
+    "Command": [
+      "bun",
+      "run",
+      "lint:electron"
+    ],
+    "StartedAt": "2026-11-07T13:11:02.5453411+00:00",
+    "FinishedAt": "2026-11-07T13:11:16.7671032+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\lint-electron-complete.log",
+    "LogSha256": "db8f694e659fde72160617d440fc59d93ee1474872f992bbe16d5b3d400e771e"
+  },
+  {
+    "Stage": "workspace-tests-complete",
+    "Command": [
+      "bun",
+      "run",
+      "test"
+    ],
+    "StartedAt": "2026-11-07T13:11:16.7929290+00:00",
+    "FinishedAt": "2026-11-07T13:14:14.5608487+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\workspace-tests-complete.log",
+    "LogSha256": "6e5ec85f75e3417f1fd524b1560b23ffd181dfb24c0d9cc3a195e31c67460a63"
+  }
+]

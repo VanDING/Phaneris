@@ -3,7 +3,7 @@
  * PDF-01..PDF-05 acceptance for the shipped PDF tool.
  *
  * Runs `apps/electron/resources/scripts/pdf_tool.py` exactly the way the app
- * does — `uv run --python 3.12.15 --quiet <script> COMMAND ...` through the uv
+ * does — `uv run --python 3.12.16 --quiet <script> COMMAND ...` through the uv
  * binary bundled at `apps/electron/resources/bin/<platform>/` — against the
  * bounded fixtures built by `scripts/verification/upgrade-0153-pdf-fixtures.ts`.
  *
@@ -39,7 +39,7 @@ import { VerificationRun } from './verification-artifacts'
 const root = resolve(import.meta.dir, '../..')
 const fixturesDir = join(root, '.cache/upgrade-20261018/pdf-fixtures')
 const toolScript = join(root, 'apps/electron/resources/scripts/pdf_tool.py')
-const toolPython = '3.12.15'
+const toolPython = '3.12.16'
 /** Acceptance bound demanded by the scene list. */
 const BOUND_MS = 60_000
 /** Hard kill, deliberately looser than BOUND_MS so a hang reports as a timeout. */
@@ -241,7 +241,7 @@ const EVIDENCE_FILE: Record<string, string> = {
  * tool's opaque `Error: {str(e)}` line can be attributed to a real class. */
 const LIBRARY_PROBE = `# /// script
 # requires-python = ">=3.12"
-# dependencies = ["pypdf==6.21.1"]
+# dependencies = ["pypdf==6.21.4"]
 # ///
 """Attribute pdf_tool.py's stderr line to the pypdf exception behind it."""
 import json
@@ -270,7 +270,7 @@ const untested = [
   'pdf_tool commands other than info/extract/fill-form/to-image (merge, split, rotate, reorder, duplicate, watermark, compress, crop, resize, flatten, header-footer, encrypt, decrypt, redact, sanitize, from-image, to-docx, to-pptx)',
   'decrypt with the correct password — the encrypted fixture is only ever read without one',
   'the -o/--output form of info and extract (both are driven through stdout)',
-  'platforms other than the recorded one: fixtures are generated and driven on win32-x64 with CPython 3.12.15',
+  'platforms other than the recorded one: fixtures are generated and driven on win32-x64 with CPython 3.12.16',
   'the packaged Electron app shell (the same bundled uv and script argv the .cmd wrapper forwards are used directly)',
   'untrusted or hostile PDFs beyond these five bounded fixtures (no decompression bombs, no documents larger than a few pages)',
 ]
@@ -642,7 +642,7 @@ try {
     scene.expect('the page contains rendered content rather than a blank bitmap', () => assert(pixels.channels.some(channel => channel.stdev > 1)))
     const probeFile = join(scene.cwd, 'resource-probe.py')
     writeFileSync(probeFile, `# /// script
-# dependencies = ["pypdf==6.21.1", "pypdfium2==5.14.0", "click==8.5.0", "Pillow==12.3.0"]
+# dependencies = ["pypdf==6.21.4", "pypdfium2==5.15.0", "click==8.5.1", "Pillow==13.0.0"]
 # ///
 import importlib.util, json, sys
 from click.testing import CliRunner
@@ -714,7 +714,7 @@ print(json.dumps({"calls": 9, "objects": len(objects), "all_closed": True}))
       script: relative(root, toolScript).replaceAll('\\', '/'),
       python: toolPython,
       argvPrefix: [uv, 'run', '--python', toolPython, '--quiet', relative(root, toolScript).replaceAll('\\', '/')],
-      commandTemplate: 'uv run --python 3.12.15 --quiet apps/electron/resources/scripts/pdf_tool.py COMMAND [OPTIONS]',
+      commandTemplate: 'uv run --python 3.12.16 --quiet apps/electron/resources/scripts/pdf_tool.py COMMAND [OPTIONS]',
     },
     runtime: { uv, uvVersion, uvSha256 },
     fixtures: {

@@ -1,0 +1,10 @@
+bun test v1.4.4 (38afee6c8)
+
+src\main\handlers\__tests__\registration.isolated.ts:
+(pass) RPC handler registration > registers all declared handled channels exactly once [442.14ms]
+(pass) RPC handler registration > keeps onboarding channels in registration coverage [0.28ms]
+
+ 2 pass
+ 0 fail
+ 4 expect() calls
+Ran 2 tests across 1 file. [492.00ms]

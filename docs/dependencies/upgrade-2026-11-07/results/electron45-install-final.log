@@ -1,0 +1,8 @@
+bun install v1.4.4 (38afee6c8)
+Resolving dependencies
+Resolved, downloaded and extracted [3]
+Saved lockfile
+
+$ bun run husky
+
+1 package installed [11.78s]

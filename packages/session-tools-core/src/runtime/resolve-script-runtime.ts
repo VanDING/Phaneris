@@ -20,7 +20,7 @@ export type ScriptRuntimeLanguage = 'python3' | 'node' | 'bun';
  * apps/electron/resources/bin/*{,.cmd}; scripts/check-python-runtime-pin.ts
  * enforces that.
  */
-export const TOOL_PYTHON_VERSION = '3.12.15';
+export const TOOL_PYTHON_VERSION = '3.12.16';
 
 export interface ResolvedScriptRuntime {
   command: string;

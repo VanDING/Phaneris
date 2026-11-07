@@ -7,7 +7,7 @@
  *   bun run scripts/verification/upgrade-0153-pdf-fixtures.ts [--out=<dir>]
  *
  * Everything is produced by one PEP 723 script executed through the isolated
- * uv (`uv run --offline --python 3.12.15 --quiet -`), so the fixtures are
+ * uv (`uv run --offline --python 3.12.16 --quiet -`), so the fixtures are
  * byte-reproducible and need no network:
  *
  *   normal.pdf     3 pages of selectable Helvetica text, one unique marker per
@@ -24,7 +24,7 @@
  *
  * Why pypdf and not reportlab: reportlab is NOT in the uv cache on this
  * machine (verified: `uv run --offline ... reportlab` → "reportlab was not
- * found in the cache ... the network was disabled"). pypdf 6.21.1 is already
+ * found in the cache ... the network was disabled"). pypdf 6.21.4 is already
  * pinned by the shipped tool (`apps/electron/resources/scripts/pdf_tool.py`
  * PEP 723 header) and is cached, so the generator stays offline and adds no
  * new dependency. Structural fixtures (normal, form, truncated, cyclic) are
@@ -55,7 +55,7 @@ function resolveUv(): string {
 const builder = String.raw`
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["pypdf==6.21.1"]
+# dependencies = ["pypdf==6.21.4"]
 # ///
 """Build the upgrade-0153 PDF acceptance fixtures (see the .ts header)."""
 
@@ -271,7 +271,7 @@ print(json.dumps(report, sort_keys=True))
 `
 
 const uv = resolveUv()
-const uvArgs = ['run', '--offline', '--python', '3.12.15', '--quiet', '-']
+const uvArgs = ['run', '--offline', '--python', '3.12.16', '--quiet', '-']
 const stdout = execFileSync(uv, uvArgs, {
   input: builder,
   encoding: 'utf8',
@@ -298,11 +298,11 @@ const manifest = {
   generatorCommand: `bun run scripts/verification/upgrade-0153-pdf-fixtures.ts --out=${out}`,
   fixturesDir: out,
   python: {
-    runtime: `uv run --offline --python 3.12.15 --quiet -`,
+    runtime: `uv run --offline --python 3.12.16 --quiet -`,
     uv,
     pypdf: builderReport.pypdf,
     python: builderReport.python,
-    note: 'reportlab is absent from the uv cache, so every fixture is built with pypdf 6.21.1 (already pinned by pdf_tool.py) — --offline proves no network was used',
+    note: 'reportlab is absent from the uv cache, so every fixture is built with pypdf 6.21.4 (already pinned by pdf_tool.py) — --offline proves no network was used',
   },
   fixtures,
 }

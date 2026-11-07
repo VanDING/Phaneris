@@ -31,6 +31,8 @@ await verificationWorkflow(thresholdOnly ? 'compaction-percentage-browser' : 'up
   const launched = await launchWorkflowBrowser(), context = await launched.browser.newContext({ viewport: { width: 980, height: 1100 } })
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true })
   const page = await context.newPage(), errors: string[] = [], calls: { method: string; value?: unknown }[] = [], checks: string[] = []
+  const rpcResults: unknown[] = []
+  let pendingUiWrites = 0
   let failLoad = false, failSave = false, releaseLoad!: () => void, initialRead = true, loadStarted = false
   const heldLoad = new Promise<void>(resolve => { releaseLoad = resolve })
   const persisted = () => JSON.parse(readFileSync(configFile, 'utf8')).compactionThresholdPercent ?? JSON.parse(readFileSync(configFile, 'utf8')).compactionThresholdTokens ?? null
@@ -44,14 +46,25 @@ await verificationWorkflow(thresholdOnly ? 'compaction-percentage-browser' : 'up
       if (initialRead) { initialRead = false; loadStarted = true; await heldLoad }
       return result
     }
-    if (failSave) throw new Error('Fixture interrupted write')
-    return client.invoke(RPC_CHANNELS.caching.SET_COMPACTION_THRESHOLD, value)
+    pendingUiWrites++
+    const save = failSave ? Promise.reject(new Error('Fixture interrupted write')) : client.invoke(RPC_CHANNELS.caching.SET_COMPACTION_THRESHOLD, value)
+    return save.then(result => {
+      rpcResults.push({ at: Date.now(), value, outcome: 'saved', persisted: persisted() }); return result
+    }, error => {
+      rpcResults.push({ at: Date.now(), value, outcome: 'error', error: String(error), persisted: persisted() }); throw error
+    }).finally(() => { pendingUiWrites-- })
   })
   const input = page.locator('#compaction-threshold-select')
-  const choose = async (label: string) => { await input.click(); await page.locator('[data-option]').filter({ hasText: label }).first().click() }
   const wait = async (probe: () => boolean | Promise<boolean>, label: string) => {
     const deadline = Date.now() + 15_000
     while (!await probe()) { if (Date.now() > deadline) throw new Error(`Timed out: ${label}`); await Bun.sleep(25) }
+  }
+  const choose = async (label: string) => {
+    const before = calls.filter(call => call.method === 'set').length
+    await input.click(); await page.locator('[data-option]').filter({ hasText: label }).first().click()
+    await wait(() => calls.filter(call => call.method === 'set').length > before, 'UI write dispatched: ' + label)
+    await wait(() => pendingUiWrites === 0, 'UI write acknowledged: ' + label)
+    await wait(async () => !await input.isDisabled(), 'UI write settled: ' + label)
   }
   try {
     await page.goto(fixture.url, { waitUntil: 'domcontentloaded', timeout: 60_000 })
@@ -141,6 +154,7 @@ await verificationWorkflow(thresholdOnly ? 'compaction-percentage-browser' : 'up
   } finally {
     releaseLoad()
     run.json('followup-browser.json', { checks, errors, calls, persisted: persisted() })
+    run.json('settings-rpc.json', { rpcResults, pendingUiWrites, panel: await page.getByTestId('threshold-setting').innerText().catch(() => '') })
     await context.tracing.stop({ path: join(run.directory, 'trace.zip') })
     await launched.close(); await fixture.close()
     client.destroy(); await host.stop(); launches.push({ url: host.url, stdout: host.stdout(), stderr: host.stderr() })

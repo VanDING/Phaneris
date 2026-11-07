@@ -1,0 +1,57 @@
+Copying Pi Agent Server...
+  Warning: koffi not found in node_modules. Pi SDK sessions may not work.
+33 |   return { config, env, args }
+34 | }
+35 | async function open(profile) {
+36 |   const app = await _electron.launch({ executablePath: fixture.executable, args: profile.args, cwd: fixture.root, env: profile.env, timeout: 60_000 })
+37 |   const page = await firstBusinessWindow(app, { timeout: 60_000 })
+38 |   await page.locator('.sidebar-navigation').waitFor({ timeout: 60_000 })
+                                                 ^
+AssertionError: windows-reopen: 33 |   return { config, env, args }
+34 | }
+35 | async function open(profile) {
+36 |   const app = await _electron.launch({ executablePath: fixture.executable, args: profile.args, cwd: fixture.root, env: profile.env, timeout: 60_000 })
+37 |   const page = await firstBusinessWindow(app, { timeout: 60_000 })
+38 |   await page.locator('.sidebar-navigation').waitFor({ timeout: 60_000 })
+                                                 ^
+AssertionError: locator.waitFor: Timeout 60000ms exceeded.
+Call log:
+  - waiting for locator('.sidebar-navigation') to be visible
+    120 × locator resolved to hidden <div tabindex="-1" data-focus-zone="sidebar" class="h-full font-sans relative sidebar-navigation">…</div>
+
+    at open (E:\Phaneris-dependency-upgrade-20261107\scripts\verification\fixtures\windows-reopen.cjs:38:45)
+    at async E:\Phaneris-dependency-upgrade-20261107\scripts\verification\fixtures\windows-reopen.cjs:64:14 {
+  log: [
+    "  - waiting for locator('.sidebar-navigation') to be visible",
+    '    120 × locator resolved to hidden <div tabindex="-1" data-focus-zone="sidebar" class="h-full font-sans relative sidebar-navigation">…</div>'
+  ],
+  name: 'TimeoutError'
+}
+
+
+1 !== 0
+
+ generatedMessage: false,
+     actual: 1,
+   expected: 0,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at open (E:\Phaneris-dependency-upgrade-20261107\scripts\verification\fixtures\windows-reopen.cjs:38:45)
+
+Bun v1.4.4 (Windows x64)
+
+
+1 !== 0
+
+ generatedMessage: false,
+     actual: 1,
+   expected: 0,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at open (E:\Phaneris-dependency-upgrade-20261107\scripts\verification\fixtures\windows-reopen.cjs:38:45)
+
+Bun v1.4.4 (Windows x64)

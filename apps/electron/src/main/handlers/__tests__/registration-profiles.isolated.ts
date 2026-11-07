@@ -112,6 +112,8 @@ async function getExpectedCoreChannels(): Promise<Set<string>> {
     workItems,
     plugins,
     decisions,
+    assistantMemory,
+    residentAssistant,
   ] = await Promise.all([
     import('@phaneris/server-core/handlers/rpc/auth'),
     import('@phaneris/server-core/handlers/rpc/artifacts'),
@@ -137,6 +139,8 @@ async function getExpectedCoreChannels(): Promise<Set<string>> {
     import('@phaneris/server-core/handlers/rpc/work-items'),
     import('@phaneris/server-core/handlers/rpc/plugins'),
     import('@phaneris/server-core/handlers/rpc/decisions'),
+    import('@phaneris/server-core/handlers/rpc/assistant-memory'),
+    import('@phaneris/server-core/handlers/rpc/resident-assistant'),
   ])
 
   return new Set([
@@ -164,6 +168,8 @@ async function getExpectedCoreChannels(): Promise<Set<string>> {
     ...transfer.HANDLED_CHANNELS,
     ...workItems.HANDLED_CHANNELS,
     ...plugins.HANDLED_CHANNELS,
+    ...assistantMemory.HANDLED_CHANNELS,
+    ...residentAssistant.HANDLED_CHANNELS,
   ])
 }
 

@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["python-pptx==1.0.2", "click==8.5.0"]
+# dependencies = ["python-pptx==1.0.2", "click==8.5.1"]
 # ///
 """PowerPoint (.pptx) operations tool.
 

@@ -716,7 +716,9 @@ try {
   assert.equal(compactRows[0]!.inputTokens, 2000); assert.equal(compactRows[0]!.outputTokens, 25)
   near(compactRows[0]!.costUsd!, derived(2000, 25), 'summary cost')
   const compactRequest = seen.filter(request => request.label === 'XC').at(-1)!.requestBody as any
-  assert.equal(compactRequest.max_completion_tokens ?? compactRequest.max_tokens, 4096, 'small model output limit binds')
+  // Pi 1.5 keeps custom-endpoint summary output defaults provider-owned, as in PC-05.
+  assert.equal(Object.hasOwn(compactRequest, 'max_completion_tokens'), false, 'summary must not inject a completion-token cap')
+  assert.equal(Object.hasOwn(compactRequest, 'max_tokens'), false, 'summary must not inject an SDK default output cap')
   assertCleanAudit(directAudit('metering-XC-compact'), 1, 'independent-budget summary')
   evidence.json('usage-compaction.json', { rows: compactRows, request: compactRequest, outcomes: ofType('metering-XC', 'durable_model_outcome_request') })
   await turn('metering-XC', 'metering-XC-after', 'Continue after the SDK summary')

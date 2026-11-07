@@ -7,8 +7,8 @@
   "files": [
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/audit-gate.txt",
-      "bytes": 349,
-      "sha256": "869d01d7e9cfe5ed975ba19cb1b0ea79fa2d7a3b6d64acdf70160f98e0d8410e"
+      "bytes": 340,
+      "sha256": "229adbbed85795e77d1898de63a3cda4e424817b099fda43a1e83d6dfd162025"
     },
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/baseline.json",
@@ -17,8 +17,8 @@
     },
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/bun-audit.txt",
-      "bytes": 2826,
-      "sha256": "22017ed1cba4e262c34c0079a5b7e634efbf41ae8641fd1c29cb493cac88852e"
+      "bytes": 2781,
+      "sha256": "cea7037533a42571e1a5aa163ac027b82f5cdd2dae3df464f4d78267f88a46ea"
     },
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/declarations.csv",
@@ -67,8 +67,8 @@
     },
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/python-resolve.log",
-      "bytes": 949,
-      "sha256": "71fcc876a069c13d1a4e98fb5abfa7d0410bc2fe73a0384d7bfbfbdc0a8d91bb"
+      "bytes": 899,
+      "sha256": "a33eaef641e4bc91d14bc96ef7fd4f07826a670dce09cd3b9b5a9e075d8430ad"
     },
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/python-resolved.csv",
@@ -92,8 +92,8 @@
     },
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/python-target-resolve.log",
-      "bytes": 1065,
-      "sha256": "83045836ec82afeaede4e3ca254a91ca10c8bc01c98ceb81b984c151b98c5bfd"
+      "bytes": 1014,
+      "sha256": "fc112511a40c8066b8851936db0f339376882ad3899525203c3c9a5e488adb09"
     },
     {
       "path": "docs/dependencies/dependency-audit-2026-11-07/python-target-security.json",
@@ -128,5 +128,31 @@
     "lockUnchanged": true,
     "auditGate": "failed: new HIGH GHSA-mrwp-f3q8-3g9p",
     "upgradedRuntimeValidation": "not run"
+  },
+  "repositorySerialization": {
+    "checkedAt": "2026-11-07T07:05:54.814Z",
+    "reason": "Git text normalization changed CRLF to LF; queries and report content are unchanged",
+    "normalized": [
+      {
+        "path": "docs/dependencies/dependency-audit-2026-11-07/audit-gate.txt",
+        "workingCopySha256": "869d01d7e9cfe5ed975ba19cb1b0ea79fa2d7a3b6d64acdf70160f98e0d8410e",
+        "repositorySha256": "229adbbed85795e77d1898de63a3cda4e424817b099fda43a1e83d6dfd162025"
+      },
+      {
+        "path": "docs/dependencies/dependency-audit-2026-11-07/bun-audit.txt",
+        "workingCopySha256": "22017ed1cba4e262c34c0079a5b7e634efbf41ae8641fd1c29cb493cac88852e",
+        "repositorySha256": "cea7037533a42571e1a5aa163ac027b82f5cdd2dae3df464f4d78267f88a46ea"
+      },
+      {
+        "path": "docs/dependencies/dependency-audit-2026-11-07/python-resolve.log",
+        "workingCopySha256": "71fcc876a069c13d1a4e98fb5abfa7d0410bc2fe73a0384d7bfbfbdc0a8d91bb",
+        "repositorySha256": "a33eaef641e4bc91d14bc96ef7fd4f07826a670dce09cd3b9b5a9e075d8430ad"
+      },
+      {
+        "path": "docs/dependencies/dependency-audit-2026-11-07/python-target-resolve.log",
+        "workingCopySha256": "83045836ec82afeaede4e3ca254a91ca10c8bc01c98ceb81b984c151b98c5bfd",
+        "repositorySha256": "fc112511a40c8066b8851936db0f339376882ad3899525203c3c9a5e488adb09"
+      }
+    ]
   }
 }

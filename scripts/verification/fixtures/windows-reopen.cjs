@@ -35,8 +35,16 @@ function seed(name) {
 async function open(profile) {
   const app = await _electron.launch({ executablePath: fixture.executable, args: profile.args, cwd: fixture.root, env: profile.env, timeout: 60_000 })
   const page = await firstBusinessWindow(app, { timeout: 60_000 })
-  await page.locator('.sidebar-navigation').waitFor({ timeout: 60_000 })
+  await readyShell(page, 60_000)
   return { app, page }
+}
+async function readyShell(page, timeout) {
+  // The resident assistant may expand over the sidebar; the native window
+  // and its always-visible chrome/RPC are the lifecycle readiness contract.
+  await page.locator('.resident-topbar').waitFor({ timeout })
+  await page.getByTestId('app-splash').waitFor({ state: 'hidden', timeout })
+  await page.waitForFunction(async () => Boolean(window.electronAPI)
+    && (await window.electronAPI.getTransportConnectionState()).status === 'connected', undefined, { timeout })
 }
 async function second(app, profile) {
   // Playwright uses cmd.exe as its Windows pipe wrapper; launch the actual
@@ -93,7 +101,7 @@ function cleanupProfile(profile) {
         const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`, { timeout: 1500 })
         const page = browser.contexts()[0]?.pages().find(page => page.url().includes('index.html'))
         if (!page) { await browser.close(); return null }
-        await page.locator('.sidebar-navigation').waitFor({ timeout: 15_000 })
+        await readyShell(page, 15_000)
         return { browser, page }
       }, 'Reopen request was lost while the old process was exiting', 25_000)
       await reopened.page.screenshot({ path: join(fixture.output, 'reopened-after-handoff.png') })
@@ -112,7 +120,7 @@ function cleanupProfile(profile) {
     const recoveredPage = active.app.waitForEvent('window')
     assert.equal((await second(active.app, orphan)).code, 0)
     const recovered = await recoveredPage
-    await recovered.locator('.sidebar-navigation').waitFor({ timeout: 20_000 })
+    await readyShell(recovered, 20_000)
     assert.equal(active.app.process().pid, originalPid)
     checks.push('second-instance-recovers-a-running-owner-with-no-window')
     await active.app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().forEach(window => window.minimize()))

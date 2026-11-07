@@ -1,0 +1,740 @@
+$ bun run vite build --config apps/webui/vite.config.ts
+vite v8.3.6 building client environment for production...
+transforming...
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/string_decoder/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+✓ 9384 modules transformed.
+rendering chunks...
+computing gzip size...
+apps/webui/dist/index.html                                                       2.85 kB │ gzip:   1.09 kB
+apps/webui/dist/assets/KaTeX_Size3-Regular-CTq5MqoE.woff                         4.42 kB
+apps/webui/dist/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2                        4.92 kB
+apps/webui/dist/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2                        5.20 kB
+apps/webui/dist/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2                        5.46 kB
+apps/webui/dist/assets/KaTeX_Size4-Regular-BF-4gkZK.woff                         5.98 kB
+apps/webui/dist/assets/KaTeX_Size2-Regular-oD1tc_U0.woff                         6.18 kB
+apps/webui/dist/login.html                                                       6.25 kB │ gzip:   2.51 kB
+apps/webui/dist/assets/KaTeX_Size1-Regular-C195tn64.woff                         6.49 kB
+apps/webui/dist/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2                  6.90 kB
+apps/webui/dist/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2                     6.91 kB
+apps/webui/dist/assets/noto-sans-sc-88-wght-normal-BXYxwf2t.woff2                7.22 kB
+apps/webui/dist/assets/jetbrains-mono-vietnamese-wght-normal-Bt-aOZkq.woff2      7.50 kB
+apps/webui/dist/assets/KaTeX_Size3-Regular-DgpXs0kz.ttf                          7.58 kB
+apps/webui/dist/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff                   7.65 kB
+apps/webui/dist/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff                      7.71 kB
+apps/webui/dist/assets/ollama-D1dqFtP2.svg                                       7.84 kB │ gzip:   3.32 kB
+apps/webui/dist/assets/noto-sans-sc-87-wght-normal-DioZSHnU.woff2                7.95 kB
+apps/webui/dist/assets/noto-sans-sc-latin-ext-wght-normal-DuJTpTg_.woff2         8.12 kB
+apps/webui/dist/assets/noto-sans-sc-91-wght-normal-DTr9RQcS.woff2                8.61 kB
+apps/webui/dist/assets/noto-sans-sc-vietnamese-wght-normal-Bi3ATJ76.woff2        8.97 kB
+apps/webui/dist/assets/jetbrains-mono-greek-wght-normal-Bw9x6K1M.woff2           9.00 kB
+apps/webui/dist/assets/noto-sans-sc-90-wght-normal-BnOlPreP.woff2                9.22 kB
+apps/webui/dist/assets/KaTeX_Script-Regular-D3wIWfF6.woff2                       9.64 kB
+apps/webui/dist/assets/noto-sans-sc-99-wght-normal-BI6XPoxp.woff2                9.69 kB
+apps/webui/dist/assets/noto-sans-sc-cyrillic-wght-normal-BGmsQlw-.woff2          9.89 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2                   10.34 kB
+apps/webui/dist/assets/KaTeX_Size4-Regular-DWFBv043.ttf                         10.36 kB
+apps/webui/dist/assets/KaTeX_Script-Regular-D5yQViql.woff                       10.58 kB
+apps/webui/dist/assets/noto-sans-sc-89-wght-normal-ClMFrFaL.woff2               10.79 kB
+apps/webui/dist/assets/noto-sans-sc-21-wght-normal-D0x9-yBt.woff2               11.27 kB
+apps/webui/dist/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2                     11.31 kB
+apps/webui/dist/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2                        11.34 kB
+apps/webui/dist/assets/noto-sans-sc-6-wght-normal-ChnZIQfQ.woff2                11.38 kB
+apps/webui/dist/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf                         11.50 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2                    12.02 kB
+apps/webui/dist/assets/jetbrains-mono-cyrillic-wght-normal-D73BlboJ.woff2       12.10 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2                      12.21 kB
+apps/webui/dist/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf                         12.22 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff                    12.31 kB
+apps/webui/dist/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf                   12.34 kB
+apps/webui/dist/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf                      12.36 kB
+apps/webui/dist/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff                      13.20 kB
+apps/webui/dist/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff                         13.29 kB
+apps/webui/dist/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2                  13.56 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff                     14.11 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff                       14.40 kB
+apps/webui/dist/assets/commandcode-D8gwtO8i.ico                                 15.08 kB
+apps/webui/dist/assets/jetbrains-mono-latin-ext-wght-normal-DBQx-q_a.woff2      15.19 kB
+apps/webui/dist/assets/inter-vietnamese-opsz-normal-Ci9T9ieq.woff2              15.26 kB
+apps/webui/dist/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff                   16.02 kB
+apps/webui/dist/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2                     16.40 kB
+apps/webui/dist/assets/KaTeX_Math-Italic-t53AETM-.woff2                         16.44 kB
+apps/webui/dist/assets/KaTeX_Script-Regular-C5JkGWo-.ttf                        16.64 kB
+apps/webui/dist/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2                     16.78 kB
+apps/webui/dist/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2                         16.98 kB
+apps/webui/dist/assets/inter-greek-ext-opsz-normal-BmPQvyvo.woff2               17.37 kB
+apps/webui/dist/assets/openrouter-PqWzhx9M.svg                                  17.50 kB │ gzip:  12.16 kB
+apps/webui/dist/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff                      18.66 kB
+apps/webui/dist/assets/KaTeX_Math-Italic-DA0__PXp.woff                          18.74 kB
+apps/webui/dist/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff                      19.41 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf                     19.43 kB
+apps/webui/dist/assets/KaTeX_Fraktur-Regular-CB_wures.ttf                       19.57 kB
+apps/webui/dist/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf                          19.58 kB
+apps/webui/dist/assets/KaTeX_Main-Italic-BMLOBm91.woff                          19.67 kB
+apps/webui/dist/assets/noto-sans-sc-5-wght-normal-CfWugllB.woff2                20.04 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf                      22.36 kB
+apps/webui/dist/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf                        24.50 kB
+apps/webui/dist/assets/noto-sans-sc-latin-wght-normal-DDW8mKAR.woff2            24.88 kB
+apps/webui/dist/assets/KaTeX_Main-Bold-Cx986IdX.woff2                           25.32 kB
+apps/webui/dist/assets/KaTeX_Main-Regular-B22Nviop.woff2                        26.27 kB
+apps/webui/dist/assets/noto-sans-sc-85-wght-normal-CjI3qdxG.woff2               26.76 kB
+apps/webui/dist/assets/wecom-CGo71XvF.png                                       27.05 kB
+apps/webui/dist/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf                    27.55 kB
+apps/webui/dist/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2                         28.07 kB
+apps/webui/dist/assets/inter-cyrillic-opsz-normal-BFQXbQ-f.woff2                29.63 kB
+apps/webui/dist/assets/KaTeX_Main-Bold-Jm3AIy58.woff                            29.91 kB
+apps/webui/dist/assets/inter-greek-opsz-normal-BM0NlUE_.woff2                   30.20 kB
+apps/webui/dist/assets/KaTeX_Main-Regular-Dr94JaBh.woff                         30.77 kB
+apps/webui/dist/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf                       31.19 kB
+apps/webui/dist/assets/KaTeX_Math-Italic-flOr_0UB.ttf                           31.30 kB
+apps/webui/dist/assets/noto-sans-sc-80-wght-normal-Bje1Fxy1.woff2               32.44 kB
+apps/webui/dist/assets/noto-sans-sc-84-wght-normal-zMBmUocm.woff2               32.51 kB
+apps/webui/dist/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf                       32.96 kB
+apps/webui/dist/assets/noto-sans-sc-86-wght-normal-BHY8TVEH.woff2               33.42 kB
+apps/webui/dist/assets/KaTeX_AMS-Regular-DMm9YOAa.woff                          33.51 kB
+apps/webui/dist/assets/KaTeX_Main-Italic-3WenGoN9.ttf                           33.58 kB
+apps/webui/dist/assets/noto-sans-sc-41-wght-normal-Hthm7FFi.woff2               36.28 kB
+apps/webui/dist/assets/noto-sans-sc-77-wght-normal-B3MVY9Ax.woff2               36.66 kB
+apps/webui/dist/assets/noto-sans-sc-73-wght-normal-B1ZoOTgM.woff2               39.09 kB
+apps/webui/dist/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2          40.40 kB
+apps/webui/dist/assets/noto-sans-sc-79-wght-normal-BIoZy8fr.woff2               41.06 kB
+apps/webui/dist/assets/noto-sans-sc-60-wght-normal-B7QOYsXJ.woff2               41.30 kB
+apps/webui/dist/assets/noto-sans-sc-68-wght-normal-DGbCD9xu.woff2               41.38 kB
+apps/webui/dist/assets/noto-sans-sc-65-wght-normal-DMPCXBvK.woff2               41.39 kB
+apps/webui/dist/assets/noto-sans-sc-64-wght-normal-DVB11t7j.woff2               41.40 kB
+apps/webui/dist/assets/noto-sans-sc-51-wght-normal-BlFLOjcP.woff2               41.47 kB
+apps/webui/dist/assets/inter-cyrillic-ext-opsz-normal-CfYZpDVp.woff2            41.52 kB
+apps/webui/dist/assets/noto-sans-sc-36-wght-normal-CkITyjoT.woff2               41.69 kB
+apps/webui/dist/assets/noto-sans-sc-70-wght-normal-RgTO941D.woff2               42.08 kB
+apps/webui/dist/assets/noto-sans-sc-53-wght-normal-CwyWNT6x.woff2               43.28 kB
+apps/webui/dist/assets/noto-sans-sc-83-wght-normal-99rD8YO-.woff2               43.35 kB
+apps/webui/dist/assets/manifest-B3ojFefP.svg                                    43.36 kB │ gzip:  15.84 kB
+apps/webui/dist/assets/noto-sans-sc-75-wght-normal-Cp2wp4si.woff2               43.82 kB
+apps/webui/dist/assets/noto-sans-sc-61-wght-normal-C8JjQS7w.woff2               45.09 kB
+apps/webui/dist/assets/noto-sans-sc-42-wght-normal-eaS2gKds.woff2               45.43 kB
+apps/webui/dist/assets/noto-sans-sc-50-wght-normal-DAOGW-Dr.woff2               45.72 kB
+apps/webui/dist/assets/noto-sans-sc-118-wght-normal-xhBB7f6V.woff2              45.99 kB
+apps/webui/dist/assets/noto-sans-sc-82-wght-normal-CUggNZi4.woff2               46.00 kB
+apps/webui/dist/assets/noto-sans-sc-40-wght-normal-BQ5xpS5j.woff2               46.43 kB
+apps/webui/dist/assets/noto-sans-sc-43-wght-normal-o-T53XXV.woff2               46.48 kB
+apps/webui/dist/assets/noto-sans-sc-34-wght-normal-Bspba0wC.woff2               46.74 kB
+apps/webui/dist/assets/noto-sans-sc-72-wght-normal-C4oWy3ul.woff2               46.91 kB
+apps/webui/dist/assets/noto-sans-sc-31-wght-normal-Wfi_lutW.woff2               47.08 kB
+apps/webui/dist/assets/noto-sans-sc-27-wght-normal-COFdrquJ.woff2               47.32 kB
+apps/webui/dist/assets/noto-sans-sc-33-wght-normal-CUVQXNAJ.woff2               47.33 kB
+apps/webui/dist/assets/noto-sans-sc-59-wght-normal-BS4Kwzxx.woff2               47.50 kB
+apps/webui/dist/assets/noto-sans-sc-81-wght-normal-B2NN7Qi3.woff2               47.50 kB
+apps/webui/dist/assets/noto-sans-sc-71-wght-normal-D9sG-CWv.woff2               47.76 kB
+apps/webui/dist/assets/noto-sans-sc-55-wght-normal-DBK2wUOR.woff2               47.94 kB
+apps/webui/dist/assets/noto-sans-sc-76-wght-normal-B494D7xS.woff2               48.24 kB
+apps/webui/dist/assets/noto-sans-sc-78-wght-normal-5jX7iNMC.woff2               48.91 kB
+apps/webui/dist/assets/noto-sans-sc-63-wght-normal-BJr8P-OB.woff2               49.05 kB
+apps/webui/dist/assets/noto-sans-sc-28-wght-normal-DMgdNu1o.woff2               50.01 kB
+apps/webui/dist/assets/noto-sans-sc-35-wght-normal-K8fX_YPG.woff2               50.46 kB
+apps/webui/dist/assets/noto-sans-sc-48-wght-normal-BNMfTR6k.woff2               50.61 kB
+apps/webui/dist/assets/noto-sans-sc-26-wght-normal-C0sF2Z2f.woff2               50.74 kB
+apps/webui/dist/assets/KaTeX_Main-Bold-waoOVXN0.ttf                             51.33 kB
+apps/webui/dist/assets/noto-sans-sc-39-wght-normal-BMZNLWQU.woff2               51.61 kB
+apps/webui/dist/assets/noto-sans-sc-52-wght-normal-OZjrybnw.woff2               51.77 kB
+apps/webui/dist/assets/noto-sans-sc-54-wght-normal-DM0nRe18.woff2               51.81 kB
+apps/webui/dist/assets/noto-sans-sc-117-wght-normal-siZzFqgK.woff2              52.22 kB
+apps/webui/dist/assets/noto-sans-sc-32-wght-normal-BRJQ4PY5.woff2               52.36 kB
+apps/webui/dist/assets/noto-sans-sc-67-wght-normal-Dzk7WhCR.woff2               52.46 kB
+apps/webui/dist/assets/noto-sans-sc-66-wght-normal-BobaG10V.woff2               52.62 kB
+apps/webui/dist/assets/noto-sans-sc-49-wght-normal-DX-0y7wg.woff2               52.76 kB
+apps/webui/dist/assets/noto-sans-sc-116-wght-normal-B4HVAfHo.woff2              52.79 kB
+apps/webui/dist/assets/noto-sans-sc-56-wght-normal-C-VKK1LS.woff2               53.33 kB
+apps/webui/dist/assets/noto-sans-sc-37-wght-normal-WCZ2zfEe.woff2               53.35 kB
+apps/webui/dist/assets/KaTeX_Main-Regular-ypZvNtVU.ttf                          53.58 kB
+apps/webui/dist/assets/noto-sans-sc-29-wght-normal-Cmq8em30.woff2               53.84 kB
+apps/webui/dist/assets/noto-sans-sc-44-wght-normal-BJH5J4Ez.woff2               54.09 kB
+apps/webui/dist/assets/noto-sans-sc-30-wght-normal-CZWqZ3yU.woff2               54.41 kB
+apps/webui/dist/assets/noto-sans-sc-38-wght-normal-DeM7CUce.woff2               54.42 kB
+apps/webui/dist/assets/noto-sans-sc-57-wght-normal-Cdbfh5kq.woff2               55.34 kB
+apps/webui/dist/assets/noto-sans-sc-69-wght-normal-Ctrv1EqA.woff2               55.52 kB
+apps/webui/dist/assets/noto-sans-sc-47-wght-normal-CyY7gKNX.woff2               55.97 kB
+apps/webui/dist/assets/noto-sans-sc-74-wght-normal-F7dH_rZJ.woff2               56.26 kB
+apps/webui/dist/assets/noto-sans-sc-115-wght-normal-BWy07H14.woff2              56.26 kB
+apps/webui/dist/assets/noto-sans-sc-23-wght-normal-Du1oYWkE.woff2               56.70 kB
+apps/webui/dist/assets/noto-sans-sc-112-wght-normal-BcFuP3w6.woff2              57.46 kB
+apps/webui/dist/assets/noto-sans-sc-58-wght-normal-CflMKARZ.woff2               57.46 kB
+apps/webui/dist/assets/noto-sans-sc-46-wght-normal-BR_5Mu6e.woff2               57.52 kB
+apps/webui/dist/assets/noto-sans-sc-114-wght-normal-CO_5Xo-i.woff2              57.74 kB
+apps/webui/dist/assets/noto-sans-sc-101-wght-normal-CPkZHnw0.woff2              58.02 kB
+apps/webui/dist/assets/noto-sans-sc-25-wght-normal-BFHiqilg.woff2               58.22 kB
+apps/webui/dist/assets/noto-sans-sc-113-wght-normal-Dk932kmj.woff2              58.42 kB
+apps/webui/dist/assets/noto-sans-sc-62-wght-normal-bS4wq1Gg.woff2               58.95 kB
+apps/webui/dist/assets/noto-sans-sc-109-wght-normal-Dsp-De_0.woff2              60.20 kB
+apps/webui/dist/assets/noto-sans-sc-102-wght-normal-gzIulUH6.woff2              60.51 kB
+apps/webui/dist/assets/noto-sans-sc-107-wght-normal-D7fvVprN.woff2              60.82 kB
+apps/webui/dist/assets/noto-sans-sc-110-wght-normal-DE_6NUrb.woff2              61.18 kB
+apps/webui/dist/assets/noto-sans-sc-104-wght-normal-B3QMglgE.woff2              61.40 kB
+apps/webui/dist/assets/noto-sans-sc-105-wght-normal-xXh_OMfk.woff2              61.61 kB
+apps/webui/dist/assets/noto-sans-sc-111-wght-normal-C4S-TlTn.woff2              62.40 kB
+apps/webui/dist/assets/noto-sans-sc-106-wght-normal-B9n3jMjP.woff2              62.44 kB
+apps/webui/dist/assets/noto-sans-sc-24-wght-normal-CmWjJ0gt.woff2               62.55 kB
+apps/webui/dist/assets/KaTeX_AMS-Regular-DRggAlZN.ttf                           63.63 kB
+apps/webui/dist/assets/noto-sans-sc-103-wght-normal-CJfSBxFo.woff2              63.73 kB
+apps/webui/dist/assets/noto-sans-sc-108-wght-normal-J0_LhxVo.woff2              64.34 kB
+apps/webui/dist/assets/noto-sans-sc-100-wght-normal-DluiXYzi.woff2              64.37 kB
+apps/webui/dist/assets/noto-sans-sc-22-wght-normal-BBUVTShg.woff2               65.22 kB
+apps/webui/dist/assets/noto-sans-sc-45-wght-normal-BKuxSCOJ.woff2               67.43 kB
+apps/webui/dist/assets/inter-latin-opsz-normal-BwkfbSeq.woff2                   72.92 kB
+apps/webui/dist/assets/noto-sans-sc-119-wght-normal-Ck_g2FGz.woff2              76.32 kB
+apps/webui/dist/assets/inter-latin-ext-opsz-normal-DpK-iCPk.woff2              133.33 kB
+apps/webui/dist/assets/pdf.worker.min-Dswkl-cV.mjs                           1,265.41 kB
+apps/webui/dist/assets/syntax-highlight.worker-4DpIaOQE.js                   9,675.06 kB
+apps/webui/dist/assets/TerminalPanel-CfxV5nr_.css                                4.09 kB │ gzip:   1.05 kB
+apps/webui/dist/assets/TextLayer-DXuroF4_.css                                   10.36 kB │ gzip:   2.25 kB
+apps/webui/dist/assets/TiptapMarkdownEditor-ZneyeErF.css                        16.35 kB │ gzip:   3.18 kB
+apps/webui/dist/assets/login-DMGyxS4W.css                                       16.68 kB │ gzip:   5.16 kB
+apps/webui/dist/assets/App-BXU1Lzn5.css                                         22.83 kB │ gzip:   5.18 kB
+apps/webui/dist/assets/ProjectManagementSurface-D02WqqKj.css                    85.27 kB │ gzip:  14.01 kB
+apps/webui/dist/assets/main-CA1-5Rej.css                                       463.94 kB │ gzip: 107.52 kB
+apps/webui/dist/assets/langs-Cbd3DFkV.js                                         0.05 kB │ gzip:   0.07 kB
+apps/webui/dist/assets/engine-oniguruma-DUhL6i2X.js                              0.06 kB │ gzip:   0.08 kB
+apps/webui/dist/assets/utils-BSWjbDjZ.js                                         0.21 kB │ gzip:   0.17 kB │ map:     0.59 kB
+apps/webui/dist/assets/circle-slash-CQMCM5DM.js                                  0.26 kB │ gzip:   0.23 kB │ map:     1.12 kB
+apps/webui/dist/assets/lock-Chj9Qz4k.js                                          0.27 kB │ gzip:   0.24 kB │ map:     1.09 kB
+apps/webui/dist/assets/useSetAtom-D8Olfh1I.js                                    0.28 kB │ gzip:   0.23 kB │ map:     1.03 kB
+apps/webui/dist/assets/getTimezoneOffsetInMilliseconds-D4wox2rX.js               0.31 kB │ gzip:   0.23 kB │ map:     1.58 kB
+apps/webui/dist/assets/plus-ByC4cHPt.js                                          0.32 kB │ gzip:   0.25 kB │ map:     1.76 kB
+apps/webui/dist/assets/monitor-o0TQKIG-.js                                       0.33 kB │ gzip:   0.26 kB │ map:     1.30 kB
+apps/webui/dist/assets/app-window-BrK4l2bn.js                                    0.33 kB │ gzip:   0.26 kB │ map:     1.29 kB
+apps/webui/dist/assets/hash-DihJid3Q.js                                          0.36 kB │ gzip:   0.24 kB │ map:     1.41 kB
+apps/webui/dist/assets/refresh-ccw-B85c4GKL.js                                   0.39 kB │ gzip:   0.28 kB │ map:     1.31 kB
+apps/webui/dist/assets/clsx-DB0hHKMi.js                                          0.41 kB │ gzip:   0.27 kB │ map:     1.12 kB
+apps/webui/dist/assets/useTheme-C5O1ehMi.js                                      0.47 kB │ gzip:   0.30 kB │ map:     1.63 kB
+apps/webui/dist/assets/shield-exclamation-point-DiySQDwr.js                      0.48 kB │ gzip:   0.34 kB │ map:     1.46 kB
+apps/webui/dist/assets/permission-modes-CwGkfOmq.js                              0.51 kB │ gzip:   0.33 kB │ map:     1.02 kB
+apps/webui/dist/assets/sparkles-DtxLhxHy.js                                      0.58 kB │ gzip:   0.35 kB │ map:     1.58 kB
+apps/webui/dist/assets/codeowners-C8r90Shi.js                                    0.58 kB │ gzip:   0.34 kB │ map:     1.05 kB
+apps/webui/dist/assets/platform-DtquDxPg.js                                      0.59 kB │ gzip:   0.32 kB │ map:     2.73 kB
+apps/webui/dist/assets/shellsession-CAaAjSMZ.js                                  0.76 kB │ gzip:   0.46 kB │ map:     1.33 kB
+apps/webui/dist/assets/tsv-sltzmVWM.js                                           0.77 kB │ gzip:   0.37 kB │ map:     1.34 kB
+apps/webui/dist/assets/ai-model-options-DoO10Ctv.js                              0.85 kB │ gzip:   0.45 kB │ map:     2.62 kB
+apps/webui/dist/assets/MarkdownLatexBlock-nbB5FnQn.js                            0.87 kB │ gzip:   0.54 kB │ map:     1.93 kB
+apps/webui/dist/assets/html-derivative-CAiteQre.js                               0.89 kB │ gzip:   0.49 kB │ map:     1.42 kB
+apps/webui/dist/assets/menu-context-Dt5VJVng.js                                  0.92 kB │ gzip:   0.48 kB │ map:     4.58 kB
+apps/webui/dist/assets/dist-D-9m9FoX.js                                          0.93 kB │ gzip:   0.57 kB │ map:     1.85 kB
+apps/webui/dist/assets/with-selector-BNWkZEPk.js                                 1.00 kB │ gzip:   0.57 kB │ map:     5.16 kB
+apps/webui/dist/assets/info-6bP5zcew.js                                          1.02 kB │ gzip:   0.50 kB │ map:     4.28 kB
+apps/webui/dist/assets/git-rebase-OuKXkovv.js                                    1.03 kB │ gzip:   0.47 kB │ map:     1.68 kB
+apps/webui/dist/assets/qmldir-DCQb3MpD.js                                        1.03 kB │ gzip:   0.48 kB │ map:     1.70 kB
+apps/webui/dist/assets/core-DWt0FUCF.js                                          1.06 kB │ gzip:   0.48 kB
+apps/webui/dist/assets/csv-Dx-8-gkx.js                                           1.17 kB │ gzip:   0.40 kB │ map:     1.96 kB
+apps/webui/dist/assets/menu-entries-C5bWvMjQ.js                                  1.19 kB │ gzip:   0.60 kB │ map:     3.84 kB
+apps/webui/dist/assets/read-after-reconnect-Bsh7T7Rp.js                          1.21 kB │ gzip:   0.66 kB │ map:     3.93 kB
+apps/webui/dist/assets/ShikiThemeContext-Djmoa-zN.js                             1.22 kB │ gzip:   0.65 kB │ map:     5.16 kB
+apps/webui/dist/assets/git-commit-BSykSTBG.js                                    1.27 kB │ gzip:   0.56 kB │ map:     2.03 kB
+apps/webui/dist/assets/rolldown-runtime-BCiCTKAo.js                              1.30 kB │ gzip:   0.71 kB
+apps/webui/dist/assets/xsl-CepWDWM_.js                                           1.40 kB │ gzip:   0.53 kB │ map:     2.18 kB
+apps/webui/dist/assets/HeaderMenu-D9TfXPVh.js                                    1.51 kB │ gzip:   0.79 kB │ map:     4.39 kB
+apps/webui/dist/assets/sparql-D_iOobhT.js                                        1.52 kB │ gzip:   0.84 kB │ map:     2.10 kB
+apps/webui/dist/assets/ini-B5eOa1yu.js                                           1.55 kB │ gzip:   0.52 kB │ map:     2.43 kB
+apps/webui/dist/assets/AppShellContext-rkfJIPMQ.js                               1.67 kB │ gzip:   0.74 kB │ map:    17.85 kB
+apps/webui/dist/assets/fortran-fixed-form-DEKoE2YW.js                            1.71 kB │ gzip:   0.72 kB │ map:     2.73 kB
+apps/webui/dist/assets/PdfFilePreview-JJY-esvC.js                                1.74 kB │ gzip:   0.89 kB │ map:     3.99 kB
+apps/webui/dist/assets/docker-IyjqRm3v.js                                        1.77 kB │ gzip:   0.63 kB │ map:     2.61 kB
+apps/webui/dist/assets/preload-helper-9ZhSnZpW.js                                1.78 kB │ gzip:   0.89 kB
+apps/webui/dist/assets/dotenv-CuH5my32.js                                        1.78 kB │ gzip:   0.64 kB │ map:     2.75 kB
+apps/webui/dist/assets/local-storage-B82WpaCT.js                                 1.79 kB │ gzip:   0.85 kB │ map:     6.08 kB
+apps/webui/dist/assets/desktop-Dlh5hvp9.js                                       1.87 kB │ gzip:   0.78 kB │ map:     2.72 kB
+apps/webui/dist/assets/hxml-Dcm88srW.js                                          1.93 kB │ gzip:   0.93 kB │ map:     2.69 kB
+apps/webui/dist/assets/projects-0_fILL5t.js                                      2.00 kB │ gzip:   1.07 kB │ map:    16.39 kB
+apps/webui/dist/assets/roving-focus-D-7-QsZ7.js                                  2.01 kB │ gzip:   1.04 kB │ map:     8.49 kB
+apps/webui/dist/assets/keybinding-context-BINK_-4j.js                            2.01 kB │ gzip:   0.86 kB │ map:    10.88 kB
+apps/webui/dist/assets/erb-CEoGgphw.js                                           2.17 kB │ gzip:   0.65 kB │ map:     3.30 kB
+apps/webui/dist/assets/wenyan-C8pVoKbM.js                                        2.19 kB │ gzip:   1.13 kB │ map:     3.15 kB
+apps/webui/dist/assets/slack-dark-CMu0smFa.js                                    2.23 kB │ gzip:   0.82 kB │ map:     6.68 kB
+apps/webui/dist/assets/PDFPreviewOverlay.impl-DZw0gUuZ.js                        2.24 kB │ gzip:   1.16 kB │ map:     8.47 kB
+apps/webui/dist/assets/stream-tokenizer-BSn_ujhL.js                              2.25 kB │ gzip:   1.02 kB │ map:     8.04 kB
+apps/webui/dist/assets/jssm-DXw9l8Rf.js                                          2.27 kB │ gzip:   0.64 kB │ map:     3.35 kB
+apps/webui/dist/assets/laserwave-HSLx0L75.js                                     2.30 kB │ gzip:   0.81 kB │ map:     6.86 kB
+apps/webui/dist/assets/edge-CkzMQBYh.js                                          2.34 kB │ gzip:   0.70 kB │ map:     3.59 kB
+apps/webui/dist/assets/reg-CRGYupPL.js                                           2.37 kB │ gzip:   0.72 kB │ map:     3.47 kB
+apps/webui/dist/assets/horizon-bright-DaEDgBmR.js                                2.38 kB │ gzip:   0.87 kB │ map:     7.03 kB
+apps/webui/dist/assets/slack-ochin-BBne7cjw.js                                   2.39 kB │ gzip:   0.84 kB │ map:     7.08 kB
+apps/webui/dist/assets/github-dark-default-zacuWV-M.js                           2.40 kB │ gzip:   0.88 kB │ map:     7.09 kB
+apps/webui/dist/assets/dracula-soft-DXuNm1Kq.js                                  2.41 kB │ gzip:   0.84 kB │ map:     7.18 kB
+apps/webui/dist/assets/snazzy-light-CV8HUEmk.js                                  2.42 kB │ gzip:   0.86 kB │ map:     7.12 kB
+apps/webui/dist/assets/horizon-Ba2cwkSy.js                                       2.43 kB │ gzip:   0.86 kB │ map:     7.06 kB
+apps/webui/dist/assets/min-light-DVOTDhnA.js                                     2.43 kB │ gzip:   0.81 kB │ map:     7.14 kB
+apps/webui/dist/assets/ProjectMultiSelectFilter-_VSIZ7ms.js                      2.45 kB │ gzip:   1.05 kB │ map:     7.01 kB
+apps/webui/dist/assets/material-theme-CnthUGfg.js                                2.48 kB │ gzip:   0.83 kB │ map:     7.27 kB
+apps/webui/dist/assets/SettingsSegmentedControl-CrRIWiVF.js                      2.48 kB │ gzip:   1.16 kB │ map:    10.37 kB
+apps/webui/dist/assets/min-dark-EXoM-6Xo.js                                      2.49 kB │ gzip:   0.82 kB │ map:     7.31 kB
+apps/webui/dist/assets/material-theme-ocean-CWR-LogA.js                          2.49 kB │ gzip:   0.85 kB │ map:     7.29 kB
+apps/webui/dist/assets/material-theme-darker-DUi03Qre.js                         2.49 kB │ gzip:   0.84 kB │ map:     7.30 kB
+apps/webui/dist/assets/material-theme-lighter-D2-qr5Vw.js                        2.50 kB │ gzip:   0.83 kB │ map:     7.30 kB
+apps/webui/dist/assets/material-theme-palenight-Cnv8m1ra.js                      2.50 kB │ gzip:   0.85 kB │ map:     7.31 kB
+apps/webui/dist/assets/vesper-sUHevyKv.js                                        2.50 kB │ gzip:   0.84 kB │ map:     7.39 kB
+apps/webui/dist/assets/dialog-B3LrBvoA.js                                        2.59 kB │ gzip:   1.10 kB │ map:     7.29 kB
+apps/webui/dist/assets/diff-woXpYk--.js                                          2.60 kB │ gzip:   0.72 kB │ map:     3.82 kB
+apps/webui/dist/assets/gleam-CSRkHgEL.js                                         2.61 kB │ gzip:   0.85 kB │ map:     3.95 kB
+apps/webui/dist/assets/everforest-dark-CjdfwUBe.js                               2.62 kB │ gzip:   0.88 kB │ map:     7.63 kB
+apps/webui/dist/assets/everforest-light-CfVwwCBP.js                              2.62 kB │ gzip:   0.89 kB │ map:     7.63 kB
+apps/webui/dist/assets/InputSettingsPage-DcppM8bN.js                             2.66 kB │ gzip:   1.04 kB │ map:     7.94 kB
+apps/webui/dist/assets/hy-CZbG8q4J.js                                            2.68 kB │ gzip:   1.21 kB │ map:     3.65 kB
+apps/webui/dist/assets/poimandres-DUFjrgxT.js                                    2.74 kB │ gzip:   0.89 kB │ map:     7.91 kB
+apps/webui/dist/assets/nord-u7hMircQ.js                                          2.79 kB │ gzip:   0.92 kB │ map:     8.19 kB
+apps/webui/dist/assets/one-dark-pro-08PdtLzi.js                                  2.79 kB │ gzip:   1.01 kB │ map:     8.04 kB
+apps/webui/dist/assets/WeComConnectDialog-CurChIw2.js                            2.82 kB │ gzip:   1.08 kB │ map:     6.90 kB
+apps/webui/dist/assets/rose-pine-BSqRqUae.js                                     2.83 kB │ gzip:   0.89 kB │ map:     8.28 kB
+apps/webui/dist/assets/button-CCFreQT4.js                                        2.83 kB │ gzip:   1.35 kB │ map:     8.64 kB
+apps/webui/dist/assets/rose-pine-moon-CAU7u1h4.js                                2.84 kB │ gzip:   0.89 kB │ map:     8.30 kB
+apps/webui/dist/assets/rose-pine-dawn-U6TBE82u.js                                2.84 kB │ gzip:   0.89 kB │ map:     8.30 kB
+apps/webui/dist/assets/openscad-BUDT5pXO.js                                      2.86 kB │ gzip:   1.04 kB │ map:     4.19 kB
+apps/webui/dist/assets/log-BNLmms1o.js                                           2.88 kB │ gzip:   0.93 kB │ map:     4.31 kB
+apps/webui/dist/assets/json-BCymDGPe.js                                          2.93 kB │ gzip:   0.86 kB │ map:     4.31 kB
+apps/webui/dist/assets/cairo-DLTphjLi.js                                         2.97 kB │ gzip:   0.83 kB │ map:     4.53 kB
+apps/webui/dist/assets/TelegramConnectDialog-CR_6WKdW.js                         3.02 kB │ gzip:   1.16 kB │ map:     8.78 kB
+apps/webui/dist/assets/berry-DKpUyyne.js                                         3.04 kB │ gzip:   0.84 kB │ map:     4.81 kB
+apps/webui/dist/assets/jsonl-CmCQp5Yx.js                                         3.04 kB │ gzip:   0.82 kB │ map:     4.47 kB
+apps/webui/dist/assets/plastic-B8mE6BxX.js                                       3.05 kB │ gzip:   0.94 kB │ map:     8.62 kB
+apps/webui/dist/assets/ayu-dark-CwczpL8O.js                                      3.06 kB │ gzip:   1.00 kB │ map:     8.63 kB
+apps/webui/dist/assets/ayu-light-DSh22xiD.js                                     3.06 kB │ gzip:   0.99 kB │ map:     8.63 kB
+apps/webui/dist/assets/ayu-mirage-JE6hAyHG.js                                    3.07 kB │ gzip:   1.00 kB │ map:     8.64 kB
+apps/webui/dist/assets/jsonc-CYpm1nAK.js                                         3.14 kB │ gzip:   0.82 kB │ map:     4.57 kB
+apps/webui/dist/assets/logo-Cluzi2Zq.js                                          3.16 kB │ gzip:   1.50 kB │ map:     3.78 kB
+apps/webui/dist/assets/gruvbox-dark-hard-QTgQQZn-.js                             3.18 kB │ gzip:   1.04 kB │ map:     8.93 kB
+apps/webui/dist/assets/gruvbox-dark-soft-XCkqeBhR.js                             3.18 kB │ gzip:   1.04 kB │ map:     8.93 kB
+apps/webui/dist/assets/gruvbox-light-hard--5-nXqNp.js                            3.18 kB │ gzip:   1.04 kB │ map:     8.93 kB
+apps/webui/dist/assets/gruvbox-light-soft-CIJpzjAO.js                            3.18 kB │ gzip:   1.04 kB │ map:     8.93 kB
+apps/webui/dist/assets/gruvbox-dark-medium-9d5YdCTx.js                           3.18 kB │ gzip:   1.03 kB │ map:     8.94 kB
+apps/webui/dist/assets/gruvbox-light-medium-COA1PZW2.js                          3.18 kB │ gzip:   1.04 kB │ map:     8.94 kB
+apps/webui/dist/assets/kanagawa-wave-D-tTv4k2.js                                 3.18 kB │ gzip:   1.03 kB │ map:     9.26 kB
+apps/webui/dist/assets/kanagawa-lotus--m8sdOxn.js                                3.19 kB │ gzip:   1.02 kB │ map:     9.27 kB
+apps/webui/dist/assets/kanagawa-dragon-DhTFvBMT.js                               3.19 kB │ gzip:   1.04 kB │ map:     9.27 kB
+apps/webui/dist/assets/DeletePageDialog-C4nqnC4v.js                              3.22 kB │ gzip:   1.49 kB │ map:     9.37 kB
+apps/webui/dist/assets/github-dark-BL6HSl_n.js                                   3.26 kB │ gzip:   1.08 kB │ map:     9.43 kB
+apps/webui/dist/assets/github-light-mYhEBkPo.js                                  3.26 kB │ gzip:   1.07 kB │ map:     9.43 kB
+apps/webui/dist/assets/po-BiJDBrnU.js                                            3.27 kB │ gzip:   0.94 kB │ map:     5.05 kB
+apps/webui/dist/assets/json5-BR5RXkoi.js                                         3.29 kB │ gzip:   0.86 kB │ map:     4.92 kB
+apps/webui/dist/assets/mipsasm-BMqwQI7S.js                                       3.29 kB │ gzip:   1.21 kB │ map:     4.64 kB
+apps/webui/dist/assets/one-light-DgvUEtgI.js                                     3.30 kB │ gzip:   1.03 kB │ map:     9.51 kB
+apps/webui/dist/assets/github-dark-dimmed-Mc0P9idi.js                            3.31 kB │ gzip:   1.07 kB │ map:     9.30 kB
+apps/webui/dist/assets/github-light-default-DVlCqP3X.js                          3.32 kB │ gzip:   1.06 kB │ map:     9.31 kB
+apps/webui/dist/assets/tasl-DMoTqEGO.js                                          3.32 kB │ gzip:   0.88 kB │ map:     5.09 kB
+apps/webui/dist/assets/github-dark-high-contrast-IMKX2AVF.js                     3.33 kB │ gzip:   1.08 kB │ map:     9.32 kB
+apps/webui/dist/assets/github-light-high-contrast-Dj6zTyWR.js                    3.33 kB │ gzip:   1.07 kB │ map:     9.33 kB
+apps/webui/dist/assets/rbs-C0MpOrj4.js                                           3.34 kB │ gzip:   0.76 kB │ map:     5.07 kB
+apps/webui/dist/assets/aurora-x-rMvKqtYI.js                                      3.37 kB │ gzip:   1.00 kB │ map:     9.86 kB
+apps/webui/dist/assets/genie-CV2tkWYe.js                                         3.39 kB │ gzip:   1.24 kB │ map:     4.83 kB
+apps/webui/dist/assets/rel-BtDbiS_P.js                                           3.40 kB │ gzip:   1.14 kB │ map:     4.84 kB
+apps/webui/dist/assets/vala-zf12oZj6.js                                          3.40 kB │ gzip:   1.22 kB │ map:     4.86 kB
+apps/webui/dist/assets/dracula-Cf1PG3MT.js                                       3.40 kB │ gzip:   1.06 kB │ map:     9.46 kB
+apps/webui/dist/assets/night-owl-light-RoU30LE0.js                               3.43 kB │ gzip:   1.02 kB │ map:     9.74 kB
+apps/webui/dist/assets/night-owl-Bdcs0PMi.js                                     3.43 kB │ gzip:   1.09 kB │ map:     9.79 kB
+apps/webui/dist/assets/splunk-BC2Px7Mm.js                                        3.47 kB │ gzip:   1.55 kB │ map:     4.41 kB
+apps/webui/dist/assets/LabelsSettingsPage-Df1vFNdJ.js                            3.49 kB │ gzip:   1.30 kB │ map:    10.58 kB
+apps/webui/dist/assets/hurl-CSNuTfdx.js                                          3.55 kB │ gzip:   1.12 kB │ map:     5.44 kB
+apps/webui/dist/assets/dark-plus-CHgc6GYj.js                                     3.59 kB │ gzip:   1.15 kB │ map:     9.97 kB
+apps/webui/dist/assets/red-BJvdDEUx.js                                           3.61 kB │ gzip:   1.15 kB │ map:    10.01 kB
+apps/webui/dist/assets/monokai-DkggTbGy.js                                       3.62 kB │ gzip:   1.10 kB │ map:    10.07 kB
+apps/webui/dist/assets/light-plus-CUjWrTSi.js                                    3.63 kB │ gzip:   1.14 kB │ map:    10.08 kB
+apps/webui/dist/assets/fluent-C03EYrpw.js                                        3.64 kB │ gzip:   0.93 kB │ map:     5.17 kB
+apps/webui/dist/assets/jsonnet-CJTPZ8u_.js                                       3.65 kB │ gzip:   1.07 kB │ map:     5.39 kB
+apps/webui/dist/assets/ssh-config-BgfXC-Er.js                                    3.65 kB │ gzip:   1.63 kB │ map:     4.46 kB
+apps/webui/dist/assets/kdl-CsD5j6eV.js                                           3.66 kB │ gzip:   1.07 kB │ map:     5.47 kB
+apps/webui/dist/assets/narrat-_X_XdTYD.js                                        3.70 kB │ gzip:   1.13 kB │ map:     5.39 kB
+apps/webui/dist/assets/turtle-ByJddavk.js                                        3.73 kB │ gzip:   1.00 kB │ map:     5.46 kB
+apps/webui/dist/assets/glsl-AYV3VvSI.js                                          3.74 kB │ gzip:   1.49 kB │ map:     4.40 kB
+apps/webui/dist/assets/solarized-dark-CmYmhSgI.js                                3.76 kB │ gzip:   1.17 kB │ map:    10.43 kB
+apps/webui/dist/assets/solarized-light-CjLLwxRp.js                               3.77 kB │ gzip:   1.14 kB │ map:    10.43 kB
+apps/webui/dist/assets/andromeeda-DW8vo71h.js                                    3.89 kB │ gzip:   1.20 kB │ map:    11.34 kB
+apps/webui/dist/assets/ron-VUp2lXgN.js                                           3.94 kB │ gzip:   1.01 kB │ map:     5.99 kB
+apps/webui/dist/assets/zenscript-BnlCZFoB.js                                     3.95 kB │ gzip:   1.31 kB │ map:     5.72 kB
+apps/webui/dist/assets/LarkConnectDialog-Ce7BbnR2.js                             3.95 kB │ gzip:   1.30 kB │ map:    11.10 kB
+apps/webui/dist/assets/ShortcutsPage-BSkhT_Fw.js                                 3.96 kB │ gzip:   1.44 kB │ map:     9.83 kB
+apps/webui/dist/assets/gn-CAXYAgV-.js                                            4.05 kB │ gzip:   1.53 kB │ map:     5.26 kB
+apps/webui/dist/assets/MarkdownPdfBlock.impl-B6NUWTZv.js                         4.15 kB │ gzip:   1.90 kB │ map:    14.90 kB
+apps/webui/dist/assets/pascal-4ZHwLPI5.js                                        4.18 kB │ gzip:   1.71 kB │ map:     5.50 kB
+apps/webui/dist/assets/ConnectionIcon-Dq3d0ilw.js                                4.21 kB │ gzip:   1.97 kB │ map:    12.77 kB
+apps/webui/dist/assets/dropdown-menu-B4CPHRRf.js                                 4.23 kB │ gzip:   1.61 kB │ map:    15.30 kB
+apps/webui/dist/assets/http-CZwNlMPV.js                                          4.45 kB │ gzip:   1.09 kB │ map:     6.74 kB
+apps/webui/dist/assets/tcl-CZd0xW_V.js                                           4.46 kB │ gzip:   1.54 kB │ map:     6.44 kB
+apps/webui/dist/assets/tokyo-night-D4ZgDiA7.js                                   4.47 kB │ gzip:   1.28 kB │ map:    13.09 kB
+apps/webui/dist/assets/nextflow-CSgcYZcx.js                                      4.55 kB │ gzip:   1.20 kB │ map:     6.83 kB
+apps/webui/dist/assets/rosmsg-CAekHB0j.js                                        4.56 kB │ gzip:   1.09 kB │ map:     6.72 kB
+apps/webui/dist/assets/StyledDropdown-B9OZy_G5.js                                4.61 kB │ gzip:   1.69 kB │ map:    15.86 kB
+apps/webui/dist/assets/pierre-dark-B2jZWvHG.js                                   4.64 kB │ gzip:   1.30 kB │ map:    13.98 kB
+apps/webui/dist/assets/pierre-light-Vf__O3ev.js                                  4.64 kB │ gzip:   1.29 kB │ map:    13.98 kB
+apps/webui/dist/assets/pierre-dark-soft-DdE7dyP3.js                              4.65 kB │ gzip:   1.32 kB │ map:    14.00 kB
+apps/webui/dist/assets/pierre-light-soft-C3QCXKvN.js                             4.65 kB │ gzip:   1.30 kB │ map:    14.01 kB
+apps/webui/dist/assets/pierre-dark-tritanopia-CXimiT7X.js                        4.66 kB │ gzip:   1.29 kB │ map:    14.02 kB
+apps/webui/dist/assets/pierre-light-tritanopia-CKLy6XvA.js                       4.66 kB │ gzip:   1.29 kB │ map:    14.03 kB
+apps/webui/dist/assets/pierre-dark-protanopia-deuteranopia-CebgQdRf.js           4.69 kB │ gzip:   1.32 kB │ map:    14.08 kB
+apps/webui/dist/assets/pierre-light-protanopia-deuteranopia-BUtWcCQC.js          4.69 kB │ gzip:   1.32 kB │ map:    14.08 kB
+apps/webui/dist/assets/polar-C7UOKdEL.js                                         4.70 kB │ gzip:   1.16 kB │ map:     7.22 kB
+apps/webui/dist/assets/sdbl-bTVj8UrX.js                                          4.73 kB │ gzip:   2.04 kB │ map:     5.86 kB
+apps/webui/dist/assets/switch-CbeoCYDz.js                                        4.78 kB │ gzip:   2.01 kB │ map:    17.19 kB
+apps/webui/dist/assets/fennel-DQxkIbk2.js                                        4.80 kB │ gzip:   1.57 kB │ map:     6.39 kB
+apps/webui/dist/assets/bibtex-Ci_nEsc7.js                                        4.83 kB │ gzip:   0.86 kB │ map:     6.99 kB
+apps/webui/dist/assets/houston-B6x0XVpU.js                                       4.92 kB │ gzip:   1.31 kB │ map:    14.23 kB
+apps/webui/dist/assets/vitesse-light-BxMp8E1Y.js                                 5.07 kB │ gzip:   1.31 kB │ map:    14.71 kB
+apps/webui/dist/assets/llvm-DqHOMS-s.js                                          5.07 kB │ gzip:   2.04 kB │ map:     6.63 kB
+apps/webui/dist/assets/vitesse-dark-CJkzwmKT.js                                  5.12 kB │ gzip:   1.32 kB │ map:    14.76 kB
+apps/webui/dist/assets/vitesse-black-CfklMpOb.js                                 5.12 kB │ gzip:   1.32 kB │ map:    14.77 kB
+apps/webui/dist/assets/wgsl-BsKzXJz4.js                                          5.17 kB │ gzip:   1.42 kB │ map:     7.47 kB
+apps/webui/dist/assets/gdresource-xMC7jr7x.js                                    5.33 kB │ gzip:   1.36 kB │ map:     7.77 kB
+apps/webui/dist/assets/label-icon-C-iFzhu6.js                                    5.37 kB │ gzip:   2.04 kB │ map:    31.66 kB
+apps/webui/dist/assets/zig-CMLA9XwU.js                                           5.37 kB │ gzip:   1.59 kB │ map:     7.83 kB
+apps/webui/dist/assets/qml-DtpKOgIE.js                                           5.37 kB │ gzip:   1.41 kB │ map:     8.13 kB
+apps/webui/dist/assets/dax-BkyTk9wS.js                                           5.39 kB │ gzip:   2.25 kB │ map:     6.73 kB
+apps/webui/dist/assets/bicep-CUHmPFLl.js                                         5.41 kB │ gzip:   1.18 kB │ map:     7.88 kB
+apps/webui/dist/assets/xml-Dl30OFts.js                                           5.49 kB │ gzip:   1.28 kB │ map:     7.86 kB
+apps/webui/dist/assets/awk-BWXHIvNe.js                                           5.49 kB │ gzip:   1.41 kB │ map:     7.96 kB
+apps/webui/dist/assets/catppuccin-mocha-C_2G67cS.js                              5.52 kB │ gzip:   1.43 kB │ map:    15.88 kB
+apps/webui/dist/assets/catppuccin-latte-BILSUICr.js                              5.52 kB │ gzip:   1.43 kB │ map:    15.89 kB
+apps/webui/dist/assets/catppuccin-frappe-pyXErRRU.js                             5.53 kB │ gzip:   1.44 kB │ map:    15.89 kB
+apps/webui/dist/assets/catppuccin-macchiato-Ck60ZZQE.js                          5.53 kB │ gzip:   1.44 kB │ map:    15.90 kB
+apps/webui/dist/assets/jinja-NJbISrru.js                                         5.67 kB │ gzip:   1.39 kB │ map:     8.49 kB
+apps/webui/dist/assets/styled-context-menu-DZdA0nmo.js                           5.75 kB │ gzip:   1.90 kB │ map:    20.70 kB
+apps/webui/dist/assets/lean-CewbzKMR.js                                          5.81 kB │ gzip:   1.95 kB │ map:     7.84 kB
+apps/webui/dist/assets/powerquery-DNMTfnFr.js                                    5.94 kB │ gzip:   1.54 kB │ map:     8.48 kB
+apps/webui/dist/assets/shaderlab-TOUzSsQk.js                                     5.96 kB │ gzip:   2.11 kB │ map:     7.69 kB
+apps/webui/dist/assets/cypher-ClKdZ_lG.js                                        5.99 kB │ gzip:   1.75 kB │ map:     8.40 kB
+apps/webui/dist/assets/coq-CGaSfhwR.js                                           6.08 kB │ gzip:   1.99 kB │ map:     8.19 kB
+apps/webui/dist/assets/vb-DOwzaHZ0.js                                            6.10 kB │ gzip:   2.35 kB │ map:     7.98 kB
+apps/webui/dist/assets/moonbit-D9W784E_.js                                       6.11 kB │ gzip:   1.74 kB │ map:     8.90 kB
+apps/webui/dist/assets/popover-4xBrEkEt.js                                       6.30 kB │ gzip:   2.41 kB │ map:    27.08 kB
+apps/webui/dist/assets/min-dark-BSWPekZh.js                                      6.33 kB │ gzip:   1.74 kB │ map:     8.59 kB
+apps/webui/dist/assets/gdshader-CBce3t8t.js                                      6.36 kB │ gzip:   1.75 kB │ map:     9.16 kB
+apps/webui/dist/assets/ara-4CJ0cIlV.js                                           6.39 kB │ gzip:   1.84 kB │ map:     9.22 kB
+apps/webui/dist/assets/PermissionsSettingsPage-bWlyUo5L.js                       6.42 kB │ gzip:   1.93 kB │ map:    21.34 kB
+apps/webui/dist/assets/verilog-B2gwz-sJ.js                                       6.44 kB │ gzip:   1.96 kB │ map:     8.52 kB
+apps/webui/dist/assets/clojure-DqKBuwfJ.js                                       6.45 kB │ gzip:   1.45 kB │ map:     9.25 kB
+apps/webui/dist/assets/postcss-BXeXVLqQ.js                                       6.45 kB │ gzip:   1.94 kB │ map:     9.08 kB
+apps/webui/dist/assets/SkillInfoPage-DF9RJjdO.js                                 6.45 kB │ gzip:   2.15 kB │ map:    19.22 kB
+apps/webui/dist/assets/toml-CcmNWLt0.js                                          6.46 kB │ gzip:   1.31 kB │ map:     9.44 kB
+apps/webui/dist/assets/ServerSettingsPage-CHubGKv2.js                            6.53 kB │ gzip:   2.21 kB │ map:    19.05 kB
+apps/webui/dist/assets/proto-DB4EqR-F.js                                         6.58 kB │ gzip:   1.45 kB │ map:     9.87 kB
+apps/webui/dist/assets/loader-BdVi9yA1.js                                        6.59 kB │ gzip:   1.47 kB │ map:     8.55 kB
+apps/webui/dist/assets/chapel-CCwJTkJL.js                                        6.66 kB │ gzip:   1.89 kB │ map:     9.41 kB
+apps/webui/dist/assets/red-CYlAq2b0.js                                           6.77 kB │ gzip:   1.74 kB │ map:     9.47 kB
+apps/webui/dist/assets/talonscript-CohzipZa.js                                   6.79 kB │ gzip:   1.52 kB │ map:    10.04 kB
+apps/webui/dist/assets/r-DBBhX2lz.js                                             6.84 kB │ gzip:   1.92 kB │ map:    10.39 kB
+apps/webui/dist/assets/PluginInfoPage-DnOn53wZ.js                                6.85 kB │ gzip:   2.26 kB │ map:    21.01 kB
+apps/webui/dist/assets/riscv-Ckw8ddFX.js                                         6.95 kB │ gzip:   2.01 kB │ map:     9.56 kB
+apps/webui/dist/assets/soy-DGWf1Ra_.js                                           6.96 kB │ gzip:   1.66 kB │ map:    10.70 kB
+apps/webui/dist/assets/solarized-light-DFPxpIYQ.js                               6.98 kB │ gzip:   1.83 kB │ map:     9.81 kB
+apps/webui/dist/assets/min-light-DDpmG2fV.js                                     7.01 kB │ gzip:   1.92 kB │ map:     9.51 kB
+apps/webui/dist/assets/scheme-DQCgrYNe.js                                        7.20 kB │ gzip:   2.08 kB │ map:     9.76 kB
+apps/webui/dist/assets/hlsl-Cvrh5tZx.js                                          7.29 kB │ gzip:   2.21 kB │ map:     9.21 kB
+apps/webui/dist/assets/skill-avatar-CwEddWMW.js                                  7.43 kB │ gzip:   2.78 kB │ map:    26.73 kB
+apps/webui/dist/assets/solarized-dark-b97czJOk.js                                7.44 kB │ gzip:   1.93 kB │ map:    10.39 kB
+apps/webui/dist/assets/qss-Fe1Jh2GI.js                                           7.50 kB │ gzip:   2.60 kB │ map:     9.37 kB
+apps/webui/dist/assets/AppSettingsPage-aQYbKSZr.js                               7.51 kB │ gzip:   2.44 kB │ map:    26.96 kB
+apps/webui/dist/assets/prisma-DMgNhnYS.js                                        7.78 kB │ gzip:   1.51 kB │ map:    11.21 kB
+apps/webui/dist/assets/source-avatar-B9_XDbBf.js                                 7.80 kB │ gzip:   3.02 kB │ map:    34.10 kB
+apps/webui/dist/assets/systemd-BxMlprV5.js                                       7.90 kB │ gzip:   2.57 kB │ map:    10.60 kB
+apps/webui/dist/assets/icon-cache-CBhb0AvC.js                                    8.07 kB │ gzip:   3.12 kB │ map:    47.86 kB
+apps/webui/dist/assets/regexp-Bj-_Rfm1.js                                        8.09 kB │ gzip:   1.50 kB │ map:    11.19 kB
+apps/webui/dist/assets/SourceInfoPage-DI6oeHrE.js                                8.17 kB │ gzip:   2.75 kB │ map:    29.23 kB
+apps/webui/dist/assets/docs-DSfd8qT9.js                                          8.22 kB │ gzip:   2.90 kB │ map:    29.65 kB
+apps/webui/dist/assets/react-ROesobhB.js                                         8.28 kB │ gzip:   3.15 kB │ map:    32.65 kB
+apps/webui/dist/assets/monokai-BscAjiQZ.js                                       8.29 kB │ gzip:   2.01 kB │ map:    11.56 kB
+apps/webui/dist/assets/haml-BfFZ3NK5.js                                          8.38 kB │ gzip:   1.89 kB │ map:    12.41 kB
+apps/webui/dist/assets/vue-html-Bqx4wzzR.js                                      8.52 kB │ gzip:   1.72 kB │ map:    11.99 kB
+apps/webui/dist/assets/plsql-DGHpHOYJ.js                                         8.54 kB │ gzip:   3.03 kB │ map:    10.86 kB
+apps/webui/dist/assets/dart-CHZY9Xhz.js                                          8.65 kB │ gzip:   2.03 kB │ map:    12.60 kB
+apps/webui/dist/assets/horizon-CE9ld1lL.js                                       8.82 kB │ gzip:   1.98 kB │ map:    12.05 kB
+apps/webui/dist/assets/kotlin-DhhofPvG.js                                        8.82 kB │ gzip:   2.16 kB │ map:    12.75 kB
+apps/webui/dist/assets/horizon-bright-DSNQnXHK.js                                8.83 kB │ gzip:   1.99 kB │ map:    12.10 kB
+apps/webui/dist/assets/make-Dixweg8N.js                                          8.99 kB │ gzip:   1.79 kB │ map:    12.83 kB
+apps/webui/dist/assets/PagesHome-C0c-VmwP.js                                     9.02 kB │ gzip:   3.21 kB │ map:    26.87 kB
+apps/webui/dist/assets/andromeeda-vGVdxbeo.js                                    9.06 kB │ gzip:   2.39 kB │ map:    11.93 kB
+apps/webui/dist/assets/sas-BR7yRvMp.js                                           9.10 kB │ gzip:   3.85 kB │ map:    11.10 kB
+apps/webui/dist/assets/dark-plus-Cs2F2srj.js                                     9.14 kB │ gzip:   2.13 kB │ map:    12.40 kB
+apps/webui/dist/assets/slack-dark-DnToyrRv.js                                    9.16 kB │ gzip:   1.99 kB │ map:    12.49 kB
+apps/webui/dist/assets/smithy-Dgaz7aur.js                                        9.17 kB │ gzip:   1.55 kB │ map:    13.05 kB
+apps/webui/dist/assets/sass-DXrisJhu.js                                          9.32 kB │ gzip:   2.52 kB │ map:    13.38 kB
+apps/webui/dist/assets/plastic-DQwYfKfQ.js                                       9.33 kB │ gzip:   2.00 kB │ map:    12.46 kB
+apps/webui/dist/assets/FilePreviewContent-CpqGFtCE.js                            9.37 kB │ gzip:   3.70 kB │ map:    23.66 kB
+apps/webui/dist/assets/dist-DvjTDvi_.js                                          9.39 kB │ gzip:   3.05 kB │ map:    43.61 kB
+apps/webui/dist/assets/slack-ochin-B2OO5cIa.js                                   9.47 kB │ gzip:   2.12 kB │ map:    13.09 kB
+apps/webui/dist/assets/pierre-dark-vibrant-DzBsxHvQ.js                           9.63 kB │ gzip:   1.67 kB │ map:    19.12 kB
+apps/webui/dist/assets/pierre-light-vibrant-DDuTEIhH.js                          9.63 kB │ gzip:   1.65 kB │ map:    19.13 kB
+apps/webui/dist/assets/jison-Del_MnxN.js                                         9.73 kB │ gzip:   1.90 kB │ map:    14.10 kB
+apps/webui/dist/assets/tex-C03NTYOr.js                                           9.77 kB │ gzip:   3.14 kB │ map:    12.43 kB
+apps/webui/dist/assets/AppearanceSettingsPage-CXaLPwcl.js                        9.79 kB │ gzip:   3.35 kB │ map:    34.98 kB
+apps/webui/dist/assets/cmake-Bj61d0ZC.js                                         9.89 kB │ gzip:   3.41 kB │ map:    11.23 kB
+apps/webui/dist/assets/light-plus-DVQuIRkW.js                                    9.98 kB │ gzip:   2.31 kB │ map:    13.40 kB
+apps/webui/dist/assets/hcl-Dh228itO.js                                          10.08 kB │ gzip:   1.96 kB │ map:    14.76 kB
+apps/webui/dist/assets/rst-DJbCvMGR.js                                          10.34 kB │ gzip:   2.28 kB │ map:    15.69 kB
+apps/webui/dist/assets/pkl-ot-7Btpt.js                                          10.40 kB │ gzip:   1.41 kB │ map:    15.44 kB
+apps/webui/dist/assets/raku-B3gFvitq.js                                         10.50 kB │ gzip:   2.97 kB │ map:    12.88 kB
+apps/webui/dist/assets/dream-maker-DW3nJb8Q.js                                  10.51 kB │ gzip:   2.29 kB │ map:    15.09 kB
+apps/webui/dist/assets/nextflow-groovy-D7IRt6Pp.js                              10.57 kB │ gzip:   2.20 kB │ map:    15.35 kB
+apps/webui/dist/assets/yaml-Ba7jIux5.js                                         10.61 kB │ gzip:   2.35 kB │ map:    14.89 kB
+apps/webui/dist/assets/synthwave-84-wQeDKbzQ.js                                 10.83 kB │ gzip:   2.19 kB │ map:    28.89 kB
+apps/webui/dist/assets/just-5jINJmQJ.js                                         10.88 kB │ gzip:   2.65 kB │ map:    15.44 kB
+apps/webui/dist/assets/elm-Dy6u7Zc2.js                                          10.98 kB │ gzip:   2.13 kB │ map:    16.03 kB
+apps/webui/dist/assets/github-light-EUqPIrTm.js                                 11.23 kB │ gzip:   2.53 kB │ map:    15.40 kB
+apps/webui/dist/assets/themes-BNMvmzpp.js                                       11.31 kB │ gzip:   3.20 kB │ map:    22.03 kB
+apps/webui/dist/assets/llm-connections-BdlHjSy5.js                              11.37 kB │ gzip:   2.91 kB │ map:    69.55 kB
+apps/webui/dist/assets/prolog-iXnhIJG7.js                                       11.39 kB │ gzip:   3.88 kB │ map:    13.27 kB
+apps/webui/dist/assets/terraform-DswuEJGm.js                                    11.42 kB │ gzip:   2.54 kB │ map:    16.19 kB
+apps/webui/dist/assets/github-dark-C-LZuMrd.js                                  11.45 kB │ gzip:   2.56 kB │ map:    15.66 kB
+apps/webui/dist/assets/puppet-CDv2pdJW.js                                       11.47 kB │ gzip:   2.14 kB │ map:    16.29 kB
+apps/webui/dist/assets/laserwave-C_8bwKvT.js                                    11.54 kB │ gzip:   2.61 kB │ map:    14.68 kB
+apps/webui/dist/assets/Trans-DW8jQ7A1.js                                        11.56 kB │ gzip:   4.89 kB │ map:    53.07 kB
+apps/webui/dist/assets/gherkin-DExj1W_8.js                                      11.98 kB │ gzip:   5.08 kB │ map:    13.09 kB
+apps/webui/dist/assets/wasm-ByWQv1Qj.js                                         12.04 kB │ gzip:   2.21 kB │ map:    16.81 kB
+apps/webui/dist/assets/hjson-CxZEssPk.js                                        12.08 kB │ gzip:   1.67 kB │ map:    17.25 kB
+apps/webui/dist/assets/surrealql-DdoZdWXN.js                                    12.10 kB │ gzip:   3.33 kB │ map:    17.19 kB
+apps/webui/dist/assets/apache-U0d_L8uA.js                                       12.49 kB │ gzip:   3.74 kB │ map:    15.92 kB
+apps/webui/dist/assets/handlebars-5M9HUcCo.js                                   12.53 kB │ gzip:   2.46 kB │ map:    17.90 kB
+apps/webui/dist/assets/kanban-colors-BGNvnAtx.js                                12.59 kB │ gzip:   4.93 kB │ map:    36.57 kB
+apps/webui/dist/assets/vesper-DdrHHSXu.js                                       12.77 kB │ gzip:   2.03 kB │ map:    16.20 kB
+apps/webui/dist/assets/beancount-C2IN4Vk8.js                                    12.89 kB │ gzip:   2.25 kB │ map:    18.22 kB
+apps/webui/dist/assets/bat-qdxAdBWQ.js                                          12.92 kB │ gzip:   3.26 kB │ map:    17.37 kB
+apps/webui/dist/assets/shiki-Oh7IeoOx.js                                        12.96 kB │ gzip:   5.12 kB │ map:    55.42 kB
+apps/webui/dist/assets/fish-BJitypiv.js                                         13.07 kB │ gzip:   1.76 kB │ map:    16.82 kB
+apps/webui/dist/assets/nsis-CjNLYCLg.js                                         13.16 kB │ gzip:   4.10 kB │ map:    16.00 kB
+apps/webui/dist/assets/v-DBj4K9d_.js                                            13.36 kB │ gzip:   2.79 kB │ map:    19.39 kB
+apps/webui/dist/assets/vitesse-light-VbXTXTou.js                                13.66 kB │ gzip:   3.06 kB │ map:    18.53 kB
+apps/webui/dist/assets/aurora-x-CDeNXAV0.js                                     13.70 kB │ gzip:   2.32 kB │ map:    17.55 kB
+apps/webui/dist/assets/vitesse-black-fwtXNY1n.js                                13.72 kB │ gzip:   3.09 kB │ map:    18.61 kB
+apps/webui/dist/assets/vitesse-dark-BZCL-v6S.js                                 13.80 kB │ gzip:   3.10 kB │ map:    18.69 kB
+apps/webui/dist/assets/pug-DZPtuW5N.js                                          13.89 kB │ gzip:   2.62 kB │ map:    20.53 kB
+apps/webui/dist/assets/PreferencesPage-BXSdxxrD.js                              14.02 kB │ gzip:   5.03 kB │ map:    43.48 kB
+apps/webui/dist/assets/synthwave-84-nFMaYfgc.js                                 14.08 kB │ gzip:   2.88 kB │ map:    19.08 kB
+apps/webui/dist/assets/smalltalk-BHpQb5nM.js                                    14.16 kB │ gzip:   2.18 kB │ map:    19.30 kB
+apps/webui/dist/assets/github-light-default-BXViO-2h.js                         14.21 kB │ gzip:   3.05 kB │ map:    19.26 kB
+apps/webui/dist/assets/github-light-high-contrast-B68TUdTA.js                   14.33 kB │ gzip:   3.03 kB │ map:    19.44 kB
+apps/webui/dist/assets/clarity-CtfBBspg.js                                      14.40 kB │ gzip:   2.54 kB │ map:    20.00 kB
+apps/webui/dist/assets/github-dark-dimmed-Bx1FflLF.js                           14.48 kB │ gzip:   3.15 kB │ map:    19.63 kB
+apps/webui/dist/assets/github-dark-default-DXG-b-1a.js                          14.48 kB │ gzip:   3.15 kB │ map:    19.64 kB
+apps/webui/dist/assets/settings-CmFnIHoS.js                                     14.55 kB │ gzip:   4.07 kB │ map:    59.94 kB
+apps/webui/dist/assets/github-dark-high-contrast-B_tTalzw.js                    14.65 kB │ gzip:   3.11 kB │ map:    19.87 kB
+apps/webui/dist/assets/gnuplot-7GGW24-e.js                                      14.82 kB │ gzip:   3.31 kB │ map:    20.79 kB
+apps/webui/dist/assets/rust-DpiIf5JO.js                                         15.20 kB │ gzip:   2.76 kB │ map:    21.57 kB
+apps/webui/dist/assets/kusto-C7mF5XQf.js                                        15.20 kB │ gzip:   3.96 kB │ map:    19.59 kB
+apps/webui/dist/assets/nix-IvuFDN5E.js                                          15.54 kB │ gzip:   2.51 kB │ map:    22.85 kB
+apps/webui/dist/assets/actionscript-3-Cs6JJXT5.js                               15.58 kB │ gzip:   2.74 kB │ map:    21.91 kB
+apps/webui/dist/assets/lua-DMaandPP.js                                          15.64 kB │ gzip:   3.23 kB │ map:    22.13 kB
+apps/webui/dist/assets/abap-CLvhMVsD.js                                         15.88 kB │ gzip:   5.96 kB │ map:    18.81 kB
+apps/webui/dist/assets/matlab-D7qyCx1q.js                                       16.12 kB │ gzip:   3.10 kB │ map:    23.33 kB
+apps/webui/dist/assets/cue-CE9AQfxI.js                                          16.23 kB │ gzip:   2.08 kB │ map:    23.76 kB
+apps/webui/dist/assets/elixir-CgFd_Fl5.js                                       16.30 kB │ gzip:   2.80 kB │ map:    23.14 kB
+apps/webui/dist/assets/luau-VGWVLoqX.js                                         16.33 kB │ gzip:   3.60 kB │ map:    22.62 kB
+apps/webui/dist/assets/solidity-Bj7E1mRn.js                                     16.44 kB │ gzip:   3.18 kB │ map:    23.90 kB
+apps/webui/dist/assets/odin-B1RWQWA5.js                                         16.54 kB │ gzip:   2.96 kB │ map:    23.76 kB
+apps/webui/dist/assets/ts-tags-BJEzKRSn.js                                      16.59 kB │ gzip:   2.09 kB │ map:    24.70 kB
+apps/webui/dist/assets/AutomationInfoPage-CTuWjA2a.js                           16.62 kB │ gzip:   4.85 kB │ map:    48.76 kB
+apps/webui/dist/assets/kanagawa-wave-BML5mF2J.js                                17.16 kB │ gzip:   2.94 kB │ map:    22.25 kB
+apps/webui/dist/assets/kanagawa-lotus-BmuOG9ZW.js                               17.17 kB │ gzip:   2.94 kB │ map:    22.26 kB
+apps/webui/dist/assets/kanagawa-dragon-Bozd7klA.js                              17.17 kB │ gzip:   2.96 kB │ map:    22.26 kB
+apps/webui/dist/assets/move-BYnGhZoM.js                                         17.69 kB │ gzip:   3.10 kB │ map:    26.46 kB
+apps/webui/dist/assets/graphql-MQkiDMvx.js                                      18.13 kB │ gzip:   2.57 kB │ map:    25.54 kB
+apps/webui/dist/assets/liquid-DQpf6ULV.js                                       18.14 kB │ gzip:   3.18 kB │ map:    25.27 kB
+apps/webui/dist/assets/svelte-DuHRHern.js                                       18.30 kB │ gzip:   3.18 kB │ map:    25.79 kB
+apps/webui/dist/assets/material-theme-Bm3Qr25_.js                               18.66 kB │ gzip:   3.14 kB │ map:    24.10 kB
+apps/webui/dist/assets/material-theme-ocean-CHQ94UKr.js                         18.68 kB │ gzip:   3.16 kB │ map:    24.14 kB
+apps/webui/dist/assets/material-theme-darker-2IIEA8gg.js                        18.68 kB │ gzip:   3.13 kB │ map:    24.14 kB
+apps/webui/dist/assets/material-theme-lighter-uhdI0v04.js                       18.69 kB │ gzip:   3.14 kB │ map:    24.15 kB
+apps/webui/dist/assets/material-theme-palenight-B5W6OYN7.js                     18.69 kB │ gzip:   3.15 kB │ map:    24.16 kB
+apps/webui/dist/assets/gdscript-DYvRD3hg.js                                     19.12 kB │ gzip:   3.80 kB │ map:    26.35 kB
+apps/webui/dist/assets/groovy-CacY0gHj.js                                       19.21 kB │ gzip:   3.63 kB │ map:    27.49 kB
+apps/webui/dist/assets/PanelHeader-Df6BHlCx.js                                  19.82 kB │ gzip:   6.01 kB │ map:    82.97 kB
+apps/webui/dist/assets/ayu-dark-DluEY0Gj.js                                     20.12 kB │ gzip:   3.96 kB │ map:    27.02 kB
+apps/webui/dist/assets/mdc-n-8ALVm3.js                                          20.12 kB │ gzip:   6.84 kB │ map:    23.94 kB
+apps/webui/dist/assets/ayu-mirage-Bqwy1Gya.js                                   20.13 kB │ gzip:   3.95 kB │ map:    27.03 kB
+apps/webui/dist/assets/glimmer-js-B8Babvs0.js                                   20.13 kB │ gzip:   2.97 kB │ map:    28.65 kB
+apps/webui/dist/assets/glimmer-ts-d4LuTVZM.js                                   20.13 kB │ gzip:   2.97 kB │ map:    28.65 kB
+apps/webui/dist/assets/powershell-QtSnmXcu.js                                   20.19 kB │ gzip:   4.09 kB │ map:    26.57 kB
+apps/webui/dist/assets/ayu-light-C3h-C4tm.js                                    20.19 kB │ gzip:   3.93 kB │ map:    27.10 kB
+apps/webui/dist/assets/viml-DvXPmvsu.js                                         20.40 kB │ gzip:   6.77 kB │ map:    23.47 kB
+apps/webui/dist/assets/snazzy-light-4G7pJPwS.js                                 20.82 kB │ gzip:   3.84 kB │ map:    27.99 kB
+apps/webui/dist/assets/dracula-BHWKrbxM.js                                      21.10 kB │ gzip:   4.03 kB │ map:    27.47 kB
+apps/webui/dist/assets/dracula-soft-5eyTD99u.js                                 21.12 kB │ gzip:   4.06 kB │ map:    27.50 kB
+apps/webui/dist/assets/WorkspaceSettingsPage-Cz3B-t_T.js                        21.25 kB │ gzip:   6.19 kB │ map:    73.94 kB
+apps/webui/dist/assets/info-D1hhdcde.js                                         21.42 kB │ gzip:   4.71 kB │ map:    67.24 kB
+apps/webui/dist/assets/wit-DdvCle-K.js                                          21.50 kB │ gzip:   2.91 kB │ map:    30.07 kB
+apps/webui/dist/assets/rose-pine-aMsaMD1D.js                                    21.78 kB │ gzip:   3.91 kB │ map:    28.74 kB
+apps/webui/dist/assets/rose-pine-moon-DO-qXg-I.js                               21.80 kB │ gzip:   3.93 kB │ map:    28.77 kB
+apps/webui/dist/assets/rose-pine-dawn-8PwUyIlP.js                               21.80 kB │ gzip:   3.92 kB │ map:    28.77 kB
+apps/webui/dist/assets/nushell--0fT3PI1.js                                      21.80 kB │ gzip:   5.48 kB │ map:    29.41 kB
+apps/webui/dist/assets/nim-ByXIu_Gp.js                                          22.49 kB │ gzip:   3.19 kB │ map:    32.84 kB
+apps/webui/dist/assets/common-lisp-Cv5bFMCO.js                                  22.62 kB │ gzip:   6.11 kB │ map:    26.65 kB
+apps/webui/dist/assets/gruvbox-dark-hard-C820rvS2.js                            22.68 kB │ gzip:   4.19 kB │ map:    30.55 kB
+apps/webui/dist/assets/gruvbox-dark-soft-MrdJrrXF.js                            22.68 kB │ gzip:   4.19 kB │ map:    30.55 kB
+apps/webui/dist/assets/gruvbox-light-hard-BC_s9l72.js                           22.68 kB │ gzip:   4.19 kB │ map:    30.55 kB
+apps/webui/dist/assets/gruvbox-light-soft-BSMLrYjP.js                           22.68 kB │ gzip:   4.19 kB │ map:    30.55 kB
+apps/webui/dist/assets/gruvbox-dark-medium-BPjhmG05.js                          22.69 kB │ gzip:   4.19 kB │ map:    30.56 kB
+apps/webui/dist/assets/gruvbox-light-medium-BAWPOn9u.js                         22.69 kB │ gzip:   4.20 kB │ map:    30.57 kB
+apps/webui/dist/assets/refresh-cw-lk3y2k-E.js                                   22.71 kB │ gzip:   8.05 kB │ map:    80.82 kB
+apps/webui/dist/assets/SharePanel-B92QEAGq.js                                   22.91 kB │ gzip:   7.57 kB │ map:    63.37 kB
+apps/webui/dist/assets/CopyButton-BgA8y7yF.js                                   23.66 kB │ gzip:   7.84 kB │ map:    99.30 kB
+apps/webui/dist/assets/cadence-CQ2zXKGN.js                                      23.70 kB │ gzip:   3.69 kB │ map:    33.55 kB
+apps/webui/dist/assets/sql-DsSy6OLs.js                                          23.77 kB │ gzip:   7.61 kB │ map:    28.27 kB
+apps/webui/dist/assets/astro-Bbk5Bsuh.js                                        24.06 kB │ gzip:   7.63 kB │ map:    29.22 kB
+apps/webui/dist/assets/apl-DRccd6Vr.js                                          24.07 kB │ gzip:   4.20 kB │ map:    33.39 kB
+apps/webui/dist/assets/templ-Br7FBqwC.js                                        24.10 kB │ gzip:   5.45 kB │ map:    30.92 kB
+apps/webui/dist/assets/lib-BMP2RLjr.js                                          24.14 kB │ gzip:   9.45 kB │ map:    82.99 kB
+apps/webui/dist/assets/angular-html-CrbSKEua.js                                 24.29 kB │ gzip:   4.02 kB │ map:    35.68 kB
+apps/webui/dist/assets/vhdl-BroJfC0k.js                                         24.29 kB │ gzip:   3.90 kB │ map:    33.34 kB
+apps/webui/dist/assets/purescript-9MfHhQsQ.js                                   24.72 kB │ gzip:   3.27 kB │ map:    34.86 kB
+apps/webui/dist/assets/twig-C2AUiiWZ.js                                         24.89 kB │ gzip:   4.04 kB │ map:    34.76 kB
+apps/webui/dist/assets/vue-DQWdTbbO.js                                          25.00 kB │ gzip:   3.06 kB │ map:    37.44 kB
+apps/webui/dist/assets/one-light-D7Lr4KcI.js                                    25.34 kB │ gzip:   3.67 kB │ map:    33.77 kB
+apps/webui/dist/assets/fsharp-D13ZGOAj.js                                       25.34 kB │ gzip:   4.16 kB │ map:    35.86 kB
+apps/webui/dist/assets/rich-text-input-B1wC5evp.js                              25.57 kB │ gzip:   9.10 kB │ map:   115.28 kB
+apps/webui/dist/assets/marko-fSVHjlnh.js                                        25.77 kB │ gzip:   3.70 kB │ map:    36.19 kB
+apps/webui/dist/assets/night-owl-light-eJ-hLW7d.js                              25.95 kB │ gzip:   4.27 kB │ map:    35.13 kB
+apps/webui/dist/assets/c3-D0apG41V.js                                           26.41 kB │ gzip:   4.01 kB │ map:    38.16 kB
+apps/webui/dist/assets/system-verilog-Dh5ihWbf.js                               26.60 kB │ gzip:   4.89 kB │ map:    36.45 kB
+apps/webui/dist/assets/nord-Cb4Vim4T.js                                         26.76 kB │ gzip:   4.39 kB │ map:    35.32 kB
+apps/webui/dist/assets/codeql-oeQT6MSM.js                                       26.92 kB │ gzip:   3.83 kB │ map:    35.98 kB
+apps/webui/dist/assets/typespec-BGhR2SqG.js                                     27.03 kB │ gzip:   2.79 kB │ map:    37.55 kB
+apps/webui/dist/assets/scss-Z9xXYoyf.js                                         27.31 kB │ gzip:   4.26 kB │ map:    38.35 kB
+apps/webui/dist/assets/java-CIgaegb7.js                                         27.32 kB │ gzip:   4.35 kB │ map:    38.62 kB
+apps/webui/dist/assets/coffee-CR0VCb3Q.js                                       27.46 kB │ gzip:   6.38 kB │ map:    36.08 kB
+apps/webui/dist/assets/razor-Bz0Mcd0T.js                                        27.49 kB │ gzip:   3.58 kB │ map:    38.31 kB
+apps/webui/dist/assets/NavigationContext-MqJVc5rC.js                            28.28 kB │ gzip:   8.73 kB │ map:   159.79 kB
+apps/webui/dist/assets/utils-Cn2nLD7f.js                                        28.53 kB │ gzip:   9.06 kB │ map:   151.98 kB
+apps/webui/dist/assets/scala-BiFt_7mu.js                                        28.92 kB │ gzip:   3.96 kB │ map:    40.08 kB
+apps/webui/dist/assets/night-owl-DhmEMT88.js                                    28.95 kB │ gzip:   5.18 kB │ map:    39.02 kB
+apps/webui/dist/assets/crystal-JFWLVSrc.js                                      29.45 kB │ gzip:   4.47 kB │ map:    41.25 kB
+apps/webui/dist/assets/applescript-CCn79oCD.js                                  29.61 kB │ gzip:   5.98 kB │ map:    39.31 kB
+apps/webui/dist/assets/pierre-dark-CpLgRqie.js                                  30.59 kB │ gzip:   4.77 kB │ map:    34.20 kB
+apps/webui/dist/assets/pierre-light-CoaEpmwp.js                                 30.59 kB │ gzip:   4.77 kB │ map:    34.21 kB
+apps/webui/dist/assets/pierre-dark-soft-kZQmAZld.js                             30.61 kB │ gzip:   4.81 kB │ map:    34.23 kB
+apps/webui/dist/assets/pierre-light-soft-lWLdNTOI.js                            30.61 kB │ gzip:   4.77 kB │ map:    34.23 kB
+apps/webui/dist/assets/pierre-dark-tritanopia-CpjhbsIL.js                       30.62 kB │ gzip:   4.72 kB │ map:    34.26 kB
+apps/webui/dist/assets/pierre-light-tritanopia-CEbqgOJL.js                      30.63 kB │ gzip:   4.73 kB │ map:    34.26 kB
+apps/webui/dist/assets/pierre-dark-protanopia-deuteranopia-B35FxJx-.js          30.66 kB │ gzip:   4.80 kB │ map:    34.32 kB
+apps/webui/dist/assets/pierre-light-protanopia-deuteranopia-0fSaH845.js         30.67 kB │ gzip:   4.76 kB │ map:    34.33 kB
+apps/webui/dist/assets/stylus-B6D30XZt.js                                       31.11 kB │ gzip:   8.05 kB │ map:    38.84 kB
+apps/webui/dist/assets/julia-DJJPCyUU.js                                        31.26 kB │ gzip:   4.38 kB │ map:    40.93 kB
+apps/webui/dist/assets/ahk-DwADkxyd.js                                          31.48 kB │ gzip:   7.86 kB │ map:    38.94 kB
+apps/webui/dist/assets/poimandres-DRFjx7u4.js                                   33.53 kB │ gzip:   5.53 kB │ map:    43.03 kB
+apps/webui/dist/assets/provider-icons-S1qgVk3A.js                               33.75 kB │ gzip:  12.28 kB │ map:    47.33 kB
+apps/webui/dist/assets/bsl-_VjlB9mv.js                                          33.99 kB │ gzip:   8.39 kB │ map:    37.71 kB
+apps/webui/dist/assets/nginx-CA9SgvTg.js                                        35.39 kB │ gzip:   4.49 kB │ map:    48.46 kB
+apps/webui/dist/assets/houston-CsvMBhTu.js                                      35.46 kB │ gzip:   5.80 kB │ map:    46.36 kB
+apps/webui/dist/assets/tokyo-night-oM2G3aXe.js                                  35.71 kB │ gzip:   6.26 kB │ map:    45.31 kB
+apps/webui/dist/assets/haxe-C8oCnwJJ.js                                         35.98 kB │ gzip:   6.04 kB │ map:    50.64 kB
+apps/webui/dist/assets/org-CbzVmuoL.js                                          36.30 kB │ gzip:   3.71 kB │ map:    53.32 kB
+apps/webui/dist/assets/one-dark-pro-C6YyR8OD.js                                 37.10 kB │ gzip:   6.14 kB │ map:    48.69 kB
+apps/webui/dist/assets/MessagingSettingsPage-XwoFKzck.js                        37.23 kB │ gzip:   9.29 kB │ map:   113.94 kB
+apps/webui/dist/assets/erlang-Cphh6RMH.js                                       37.52 kB │ gzip:   4.39 kB │ map:    51.55 kB
+apps/webui/dist/assets/PageView-BeWXmIts.js                                     38.11 kB │ gzip:  10.18 kB │ map:   146.97 kB
+apps/webui/dist/assets/bird2-CYIUgYqB.js                                        38.71 kB │ gzip:   8.53 kB │ map:    50.75 kB
+apps/webui/dist/assets/cobol-BvlVigIW.js                                        39.11 kB │ gzip:  10.92 kB │ map:    47.35 kB
+apps/webui/dist/assets/asm-Cmm7eHzH.js                                          40.75 kB │ gzip:   8.20 kB │ map:    52.96 kB
+apps/webui/dist/assets/haskell-D8IpX4py.js                                      41.52 kB │ gzip:   6.44 kB │ map:    57.81 kB
+apps/webui/dist/assets/shellscript-C0fN5siR.js                                  41.59 kB │ gzip:   6.17 kB │ map:    56.53 kB
+apps/webui/dist/assets/perl-DK8DcBlp.js                                         43.18 kB │ gzip:   4.68 kB │ map:    60.80 kB
+apps/webui/dist/assets/d-qD-0Kul2.js                                            43.82 kB │ gzip:   8.46 kB │ map:    62.65 kB
+apps/webui/dist/assets/pierre-dark-vibrant-CpQYzh95.js                          44.81 kB │ gzip:   5.33 kB │ map:    48.44 kB
+apps/webui/dist/assets/pierre-light-vibrant-D80Fkn33.js                         44.81 kB │ gzip:   5.31 kB │ map:    48.44 kB
+apps/webui/dist/assets/ahk2-_6rzW9BS.js                                         45.10 kB │ gzip:   9.90 kB │ map:    59.49 kB
+apps/webui/dist/assets/ruby-CLHmESBm.js                                         46.68 kB │ gzip:   5.74 kB │ map:    66.38 kB
+apps/webui/dist/assets/go-rLFTqkRN.js                                           46.85 kB │ gzip:   5.18 kB │ map:    66.57 kB
+apps/webui/dist/assets/apex-KFGFyKwG.js                                         47.92 kB │ gzip:   6.89 kB │ map:    66.88 kB
+apps/webui/dist/assets/ada-X3Y2mlq2.js                                          48.11 kB │ gzip:   6.00 kB │ map:    70.92 kB
+apps/webui/dist/assets/AiSettingsPage-Ccs5GkZf.js                               48.67 kB │ gzip:  12.74 kB │ map:   185.21 kB
+apps/webui/dist/assets/imba-DsUTQ-LC.js                                         49.96 kB │ gzip:   9.51 kB │ map:    68.04 kB
+apps/webui/dist/assets/catppuccin-mocha-DjuaAJKi.js                             50.90 kB │ gzip:   8.51 kB │ map:    66.67 kB
+apps/webui/dist/assets/catppuccin-latte-CtsyrtPq.js                             50.90 kB │ gzip:   8.52 kB │ map:    66.67 kB
+apps/webui/dist/assets/catppuccin-frappe-C9Q5zVZY.js                            50.90 kB │ gzip:   8.53 kB │ map:    66.67 kB
+apps/webui/dist/assets/catppuccin-macchiato-R8nAf1vR.js                         50.91 kB │ gzip:   8.52 kB │ map:    66.69 kB
+apps/webui/dist/assets/css-D_rnGKEw.js                                          53.47 kB │ gzip:  12.57 kB │ map:    66.42 kB
+apps/webui/dist/assets/everforest-dark-sB-x3p7T.js                              53.79 kB │ gzip:   8.41 kB │ map:    68.24 kB
+apps/webui/dist/assets/everforest-light-Df2xbC6M.js                             53.79 kB │ gzip:   8.41 kB │ map:    68.25 kB
+apps/webui/dist/assets/mermaid-BxpfTIzt.js                                      54.85 kB │ gzip:   4.83 kB │ map:    79.97 kB
+apps/webui/dist/assets/wikitext-ClFFjSW2.js                                     55.92 kB │ gzip:   4.85 kB │ map:    77.60 kB
+apps/webui/dist/assets/useTranslation-wz4tFheG.js                               55.98 kB │ gzip:  18.36 kB │ map:   182.93 kB
+apps/webui/dist/assets/stata-DAcDaZw2.js                                        57.03 kB │ gzip:  12.43 kB │ map:    74.16 kB
+apps/webui/dist/assets/html-XqB6-I6n.js                                         57.36 kB │ gzip:  11.82 kB │ map:    73.03 kB
+apps/webui/dist/assets/engine-javascript-DKxkqixV.js                            57.75 kB │ gzip:  20.28 kB │ map:   202.31 kB
+apps/webui/dist/assets/ballerina-B7ZEbQpA.js                                    58.73 kB │ gzip:   8.14 kB │ map:    81.50 kB
+apps/webui/dist/assets/markdown-BYOwaDjH.js                                     59.37 kB │ gzip:   5.70 kB │ map:    82.29 kB
+apps/webui/dist/assets/ocaml-O90oeIOV.js                                        62.48 kB │ gzip:   5.08 kB │ map:    81.07 kB
+apps/webui/dist/assets/mojo-fg40_ntQ.js                                         69.55 kB │ gzip:   9.24 kB │ map:    94.47 kB
+apps/webui/dist/assets/python-gzcpVVnB.js                                       69.98 kB │ gzip:   9.13 kB │ map:    95.20 kB
+apps/webui/dist/assets/Info_Badge-CGhgwHxH.js                                   71.63 kB │ gzip:  20.45 kB │ map:   402.58 kB
+apps/webui/dist/assets/c-BP8oY9gM.js                                            72.21 kB │ gzip:  10.59 kB │ map:    95.37 kB
+apps/webui/dist/assets/latex-COvXlIia.js                                        73.29 kB │ gzip:   6.82 kB │ map:   101.43 kB
+apps/webui/dist/assets/vyper-CgoNMtux.js                                        74.68 kB │ gzip:  10.73 kB │ map:   100.67 kB
+apps/webui/dist/assets/hack-DoQ6pXaO.js                                         81.11 kB │ gzip:  26.49 kB │ map:    98.61 kB
+apps/webui/dist/assets/UTIF-xYHDUam_.js                                         83.53 kB │ gzip:  29.35 kB │ map:   429.88 kB
+apps/webui/dist/assets/swift-CyEgAFGc.js                                        87.26 kB │ gzip:  14.82 kB │ map:   115.25 kB
+apps/webui/dist/assets/fortran-free-form-CYNrtFtB.js                            89.01 kB │ gzip:  11.23 kB │ map:   124.02 kB
+apps/webui/dist/assets/csharp-dmMxLVLW.js                                       91.47 kB │ gzip:  10.84 kB │ map:   128.11 kB
+apps/webui/dist/assets/racket-DcIDlBhZ.js                                       92.42 kB │ gzip:  15.11 kB │ map:   106.15 kB
+apps/webui/dist/assets/model-picker-helpers-BHcfBn_v.js                         95.14 kB │ gzip:  29.33 kB │ map:   535.96 kB
+apps/webui/dist/assets/less-DVTAwKKz.js                                         97.66 kB │ gzip:  14.88 kB │ map:   131.81 kB
+apps/webui/dist/assets/dist-BhH5-FZu.js                                        100.85 kB │ gzip:  33.69 kB │ map:   509.56 kB
+apps/webui/dist/assets/blade-CjkOyveG.js                                       105.01 kB │ gzip:  28.33 kB │ map:   131.05 kB
+apps/webui/dist/assets/objective-c-D1A_Heim.js                                 105.45 kB │ gzip:  23.67 kB │ map:   129.62 kB
+apps/webui/dist/assets/php-K69fTkvc.js                                         113.16 kB │ gzip:  28.88 kB │ map:   142.17 kB
+apps/webui/dist/assets/asciidoc-SCjQUq34.js                                    136.09 kB │ gzip:   9.49 kB │ map:   195.18 kB
+apps/webui/dist/assets/mdx-DQZ5AkYe.js                                         136.14 kB │ gzip:  23.57 kB │ map:   176.68 kB
+apps/webui/dist/assets/typst-BZOwsCe4.js                                       163.53 kB │ gzip:  10.99 kB │ map:   234.10 kB
+apps/webui/dist/assets/objective-cpp-BsSzOQcm.js                               172.01 kB │ gzip:  31.02 kB │ map:   218.50 kB
+apps/webui/dist/assets/javascript-CS1UlO1x.js                                  174.94 kB │ gzip:  16.73 kB │ map:   236.06 kB
+apps/webui/dist/assets/tsx-BBsz_Nt1.js                                         175.64 kB │ gzip:  16.72 kB │ map:   236.72 kB
+apps/webui/dist/assets/zh-Hans-D_wkrx-L.js                                     176.88 kB │ gzip:  53.44 kB │ map:   204.31 kB
+apps/webui/dist/assets/jsx-B8h_aaCu.js                                         177.89 kB │ gzip:  16.81 kB │ map:   238.98 kB
+apps/webui/dist/assets/typescript-C--v55m-.js                                  181.19 kB │ gzip:  16.33 kB │ map:   244.40 kB
+apps/webui/dist/assets/angular-ts-DzadGj-a.js                                  183.77 kB │ gzip:  16.82 kB │ map:   249.58 kB
+apps/webui/dist/assets/vue-vine-DN6EqCJA.js                                    190.10 kB │ gzip:  18.11 kB │ map:   255.23 kB
+apps/webui/dist/assets/pl--TNxyH4R.js                                          194.07 kB │ gzip:  55.48 kB │ map:   221.49 kB
+apps/webui/dist/assets/es-BPVvHCIv.js                                          195.52 kB │ gzip:  53.99 kB │ map:   222.93 kB
+apps/webui/dist/assets/de-X6oAdpG4.js                                          197.24 kB │ gzip:  54.52 kB │ map:   224.60 kB
+apps/webui/dist/assets/TextLayer-BatlJ2f7.js                                   199.31 kB │ gzip:  61.75 kB │ map:   658.26 kB
+apps/webui/dist/assets/hu-C60NKtjZ.js                                          202.69 kB │ gzip:  56.99 kB │ map:   230.06 kB
+apps/webui/dist/assets/wasm-4KdTHw0F.js                                        212.00 kB │ gzip: 158.91 kB │ map:   212.64 kB
+apps/webui/dist/assets/ja-BXbWwje3.js                                          216.09 kB │ gzip:  56.83 kB │ map:   243.43 kB
+apps/webui/dist/assets/wolfram-DLL8P-h_.js                                     262.42 kB │ gzip:  77.67 kB │ map:   279.62 kB
+apps/webui/dist/assets/TerminalPanel-aRukVrgN.js                               335.52 kB │ gzip:  84.91 kB │ map:   705.16 kB
+apps/webui/dist/assets/types-BpnUz6TX.js                                       343.55 kB │ gzip:  93.50 kB │ map:   790.39 kB
+apps/webui/dist/assets/dist-IgLmdmOm.js                                        391.47 kB │ gzip: 137.63 kB │ map: 1,639.45 kB
+apps/webui/dist/assets/ChatDisplay-CnAf-YBD.js                                 394.51 kB │ gzip: 104.93 kB │ map: 1,416.15 kB
+apps/webui/dist/assets/lib-FiraRCO_.js                                         403.21 kB │ gzip:  97.67 kB │ map: 1,318.59 kB
+apps/webui/dist/assets/pdf-Crs5ltt_.js                                         430.44 kB │ gzip: 129.23 kB │ map: 1,463.37 kB
+apps/webui/dist/assets/highlights-D7UBABd9.js                                  481.29 kB │ gzip: 203.08 kB │ map:   599.16 kB
+apps/webui/dist/assets/pdf-BKh8f7R6.js                                         487.27 kB │ gzip: 148.17 kB │ map: 1,768.54 kB
+apps/webui/dist/assets/xlsx-Cf6faccF.js                                        494.15 kB │ gzip: 161.23 kB │ map: 1,888.59 kB
+apps/webui/dist/assets/OfficeFilePreview-BHI8KFKu.js                           651.66 kB │ gzip: 186.76 kB │ map: 2,566.52 kB
+apps/webui/dist/assets/TiptapMarkdownEditor-CxdMd5q2.js                        711.86 kB │ gzip: 233.43 kB │ map: 3,026.86 kB
+apps/webui/dist/assets/ProjectManagementSurface-DdsleCJR.js                    721.63 kB │ gzip: 208.98 kB │ map: 3,142.82 kB
+apps/webui/dist/assets/cpp-DHk7cFeS.js                                         785.58 kB │ gzip:  58.31 kB │ map: 1,019.16 kB
+apps/webui/dist/assets/emacs-lisp-DR2vtWaj.js                                  790.05 kB │ gzip: 200.35 kB │ map:   800.01 kB
+apps/webui/dist/assets/aiden0z-pptx-renderer.es-CTb6PcjD.js                    978.58 kB │ gzip: 311.02 kB │ map: 4,790.50 kB
+apps/webui/dist/assets/App-C4W716wb.js                                       1,099.80 kB │ gzip: 329.04 kB │ map: 3,149.70 kB
+apps/webui/dist/assets/dist-CYGUju0l.js                                      1,522.33 kB │ gzip: 469.38 kB │ map: 5,021.76 kB
+apps/webui/dist/assets/main-DwzF4l3_.js                                      2,147.65 kB │ gzip: 624.97 kB │ map: 8,940.29 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/shiki/dist/index.mjs is dynamically imported by packages/ui/src/components/markdown/code-highlight.ts but also statically imported by node_modules/tiptap-extension-code-block-shiki/dist/tiptap-extension-code-block-shiki.js, packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx, packages/ui/src/components/markdown/TiptapCodeBlockView.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/index.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by apps/electron/src/renderer/components/content-panels/FilePreviewContent.tsx, packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/vscode.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/github.light.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+✓ built in 42.85s
+[PLUGIN_TIMINGS] JavaScript callbacks ran for 30.7s of this 42.7s build (72%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin vite:worker-import-meta-url transform (51%, 21.7s, 1 call)
+  - plugin @rolldown/plugin-babel transform (14%, 6.1s, 846 calls)
+  - plugin vite:build-import-analysis generateBundle (7%, 3.1s, 1 call)
+4 callbacks are listed without a time. Their calls overlapped, so the time inside one call includes work from other calls. To find their cost, profile the build with `node --cpu-prof`:
+  - plugin vite:asset load (213 calls)
+  - plugin @tailwindcss/vite:generate:build transform (29 calls)
+  - plugin vite:css transform (29 calls)
+  … and 1 more
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+

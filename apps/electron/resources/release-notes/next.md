@@ -10,11 +10,15 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- **Maintain desktop and document runtimes** — Update Electron 45, Bun, uv and the pinned Python runtime together with editor, interface, network and build dependencies. Keep the existing PDF worker, calendar and telemetry compatibility boundaries.
+
 - **Separate assistant duties from Worker authorization** — Host-provided capabilities describe the assistant's reading and management role independently from the user's Worker execution ceiling. Existing Explore settings remain effective.
 
 - **Task controls and original evidence** — Task details include management receipts, recent originals and execution settings. Read-only Source contracts can explicitly identify an exact POST query operation without allowing general POST writes.
 
 ## Bug Fixes
+
+- **Harden image, PDF and redirect handling** — Update Pillow, pypdf and redirect handling with current security fixes. Explicitly reject unsupported image response formats while preserving reported usage when validation fails.
 
 - **Recover existing assistant history** — Rebuild old and partially refreshed history indexes without duplicate-message conflicts, preserving memories, forgetting records and extraction checkpoints.
 - **Restore learning in older workspaces** — Recognize registered legacy workspace identities, share one identity for new workspaces, and distinguish paused learning from invalid configuration and explicit-only learning.

@@ -1,0 +1,3978 @@
+{
+  "generatedAt": "2026-11-07T14:39:41.321Z",
+  "baseCommit": "8537566591090b8154b41d16b1aea4b8870ddc32",
+  "lockfile": {
+    "before": {
+      "instances": 1843,
+      "names": 1490
+    },
+    "after": {
+      "instances": 1828,
+      "names": 1489
+    },
+    "versionChangesAtSameKey": 198,
+    "addedKeys": 34,
+    "removedKeys": 49,
+    "sourceOnlyChanges": 1583,
+    "changes": [
+      {
+        "key": "@babel/core",
+        "name": "@babel/core",
+        "before": "8.0.7",
+        "after": "8.1.0"
+      },
+      {
+        "key": "@babel/generator",
+        "name": "@babel/generator",
+        "before": "8.0.6",
+        "after": "8.1.0"
+      },
+      {
+        "key": "@babel/helper-string-parser",
+        "name": "@babel/helper-string-parser",
+        "before": "8.0.6",
+        "after": "8.0.8"
+      },
+      {
+        "key": "@babel/helpers",
+        "name": "@babel/helpers",
+        "before": "8.0.7",
+        "after": "8.1.0"
+      },
+      {
+        "key": "@babel/parser",
+        "name": "@babel/parser",
+        "before": "8.0.7",
+        "after": "8.1.0"
+      },
+      {
+        "key": "@babel/traverse",
+        "name": "@babel/traverse",
+        "before": "8.0.7",
+        "after": "8.1.0"
+      },
+      {
+        "key": "@babel/types",
+        "name": "@babel/types",
+        "before": "8.0.6",
+        "after": "8.1.0"
+      },
+      {
+        "key": "@dnd-kit/abstract",
+        "name": "@dnd-kit/abstract",
+        "before": "0.5.0",
+        "after": "0.5.3"
+      },
+      {
+        "key": "@dnd-kit/collision",
+        "name": "@dnd-kit/collision",
+        "before": "0.5.0",
+        "after": "0.5.3"
+      },
+      {
+        "key": "@dnd-kit/dom",
+        "name": "@dnd-kit/dom",
+        "before": "0.5.0",
+        "after": "0.5.3"
+      },
+      {
+        "key": "@dnd-kit/geometry",
+        "name": "@dnd-kit/geometry",
+        "before": "0.5.0",
+        "after": "0.5.3"
+      },
+      {
+        "key": "@dnd-kit/state",
+        "name": "@dnd-kit/state",
+        "before": "0.5.0",
+        "after": "0.5.3"
+      },
+      {
+        "key": "@electron/rebuild",
+        "name": "@electron/rebuild",
+        "before": "4.2.0",
+        "after": "4.2.1"
+      },
+      {
+        "key": "@fontsource-variable/noto-sans-sc",
+        "name": "@fontsource-variable/noto-sans-sc",
+        "before": "5.3.0",
+        "after": "5.3.1"
+      },
+      {
+        "key": "@larksuiteoapi/node-sdk",
+        "name": "@larksuiteoapi/node-sdk",
+        "before": "1.74.0",
+        "after": "1.76.0"
+      },
+      {
+        "key": "@modelcontextprotocol/sdk",
+        "name": "@modelcontextprotocol/sdk",
+        "before": "1.32.1",
+        "after": "1.32.2"
+      },
+      {
+        "key": "@oxc-project/types",
+        "name": "@oxc-project/types",
+        "before": "0.152.0",
+        "after": "0.156.0"
+      },
+      {
+        "key": "@paper-design/shaders",
+        "name": "@paper-design/shaders",
+        "before": "0.0.81",
+        "after": "0.0.82"
+      },
+      {
+        "key": "@paper-design/shaders-react",
+        "name": "@paper-design/shaders-react",
+        "before": "0.0.81",
+        "after": "0.0.82"
+      },
+      {
+        "key": "@pierre/diffs",
+        "name": "@pierre/diffs",
+        "before": "1.5.1",
+        "after": "1.6.4"
+      },
+      {
+        "key": "@pierre/theming",
+        "name": "@pierre/theming",
+        "before": "1.0.1",
+        "after": "1.0.2"
+      },
+      {
+        "key": "@radix-ui/primitive",
+        "name": "@radix-ui/primitive",
+        "before": "1.1.7",
+        "after": "1.2.0"
+      },
+      {
+        "key": "@radix-ui/react-arrow",
+        "name": "@radix-ui/react-arrow",
+        "before": "1.1.15",
+        "after": "1.1.17"
+      },
+      {
+        "key": "@radix-ui/react-avatar",
+        "name": "@radix-ui/react-avatar",
+        "before": "1.2.6",
+        "after": "1.3.1"
+      },
+      {
+        "key": "@radix-ui/react-collection",
+        "name": "@radix-ui/react-collection",
+        "before": "1.1.15",
+        "after": "1.2.0"
+      },
+      {
+        "key": "@radix-ui/react-context",
+        "name": "@radix-ui/react-context",
+        "before": "1.2.2",
+        "after": "1.3.0"
+      },
+      {
+        "key": "@radix-ui/react-context-menu",
+        "name": "@radix-ui/react-context-menu",
+        "before": "2.3.7",
+        "after": "2.4.1"
+      },
+      {
+        "key": "@radix-ui/react-dialog",
+        "name": "@radix-ui/react-dialog",
+        "before": "1.1.23",
+        "after": "1.3.1"
+      },
+      {
+        "key": "@radix-ui/react-direction",
+        "name": "@radix-ui/react-direction",
+        "before": "1.1.4",
+        "after": "1.2.0"
+      },
+      {
+        "key": "@radix-ui/react-dismissable-layer",
+        "name": "@radix-ui/react-dismissable-layer",
+        "before": "1.1.19",
+        "after": "1.2.1"
+      },
+      {
+        "key": "@radix-ui/react-dropdown-menu",
+        "name": "@radix-ui/react-dropdown-menu",
+        "before": "2.1.24",
+        "after": "2.2.1"
+      },
+      {
+        "key": "@radix-ui/react-focus-guards",
+        "name": "@radix-ui/react-focus-guards",
+        "before": "1.1.6",
+        "after": "1.2.0"
+      },
+      {
+        "key": "@radix-ui/react-focus-scope",
+        "name": "@radix-ui/react-focus-scope",
+        "before": "1.1.16",
+        "after": "1.3.1"
+      },
+      {
+        "key": "@radix-ui/react-label",
+        "name": "@radix-ui/react-label",
+        "before": "2.1.15",
+        "after": "2.1.17"
+      },
+      {
+        "key": "@radix-ui/react-menu",
+        "name": "@radix-ui/react-menu",
+        "before": "2.1.24",
+        "after": "2.2.1"
+      },
+      {
+        "key": "@radix-ui/react-popover",
+        "name": "@radix-ui/react-popover",
+        "before": "1.1.23",
+        "after": "1.3.1"
+      },
+      {
+        "key": "@radix-ui/react-popper",
+        "name": "@radix-ui/react-popper",
+        "before": "1.3.7",
+        "after": "1.4.0"
+      },
+      {
+        "key": "@radix-ui/react-portal",
+        "name": "@radix-ui/react-portal",
+        "before": "1.1.17",
+        "after": "1.2.0"
+      },
+      {
+        "key": "@radix-ui/react-presence",
+        "name": "@radix-ui/react-presence",
+        "before": "1.1.10",
+        "after": "1.1.11"
+      },
+      {
+        "key": "@radix-ui/react-primitive",
+        "name": "@radix-ui/react-primitive",
+        "before": "2.1.10",
+        "after": "2.2.0"
+      },
+      {
+        "key": "@radix-ui/react-roving-focus",
+        "name": "@radix-ui/react-roving-focus",
+        "before": "1.1.19",
+        "after": "1.2.1"
+      },
+      {
+        "key": "@radix-ui/react-scroll-area",
+        "name": "@radix-ui/react-scroll-area",
+        "before": "1.2.18",
+        "after": "1.4.0"
+      },
+      {
+        "key": "@radix-ui/react-select",
+        "name": "@radix-ui/react-select",
+        "before": "2.3.7",
+        "after": "2.4.1"
+      },
+      {
+        "key": "@radix-ui/react-separator",
+        "name": "@radix-ui/react-separator",
+        "before": "1.1.15",
+        "after": "1.2.0"
+      },
+      {
+        "key": "@radix-ui/react-slot",
+        "name": "@radix-ui/react-slot",
+        "before": "1.3.3",
+        "after": "1.5.0"
+      },
+      {
+        "key": "@radix-ui/react-switch",
+        "name": "@radix-ui/react-switch",
+        "before": "1.3.7",
+        "after": "1.4.1"
+      },
+      {
+        "key": "@radix-ui/react-tabs",
+        "name": "@radix-ui/react-tabs",
+        "before": "1.1.21",
+        "after": "1.2.1"
+      },
+      {
+        "key": "@radix-ui/react-tooltip",
+        "name": "@radix-ui/react-tooltip",
+        "before": "1.2.16",
+        "after": "1.4.1"
+      },
+      {
+        "key": "@radix-ui/react-use-callback-ref",
+        "name": "@radix-ui/react-use-callback-ref",
+        "before": "1.1.4",
+        "after": "1.1.5"
+      },
+      {
+        "key": "@radix-ui/react-use-controllable-state",
+        "name": "@radix-ui/react-use-controllable-state",
+        "before": "1.2.6",
+        "after": "1.3.0"
+      },
+      {
+        "key": "@radix-ui/react-use-size",
+        "name": "@radix-ui/react-use-size",
+        "before": "1.1.4",
+        "after": "1.1.5"
+      },
+      {
+        "key": "@radix-ui/react-visually-hidden",
+        "name": "@radix-ui/react-visually-hidden",
+        "before": "1.2.11",
+        "after": "1.2.13"
+      },
+      {
+        "key": "@rolldown/binding-android-arm-eabi",
+        "name": "@rolldown/binding-android-arm-eabi",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-android-arm64",
+        "name": "@rolldown/binding-android-arm64",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-darwin-arm64",
+        "name": "@rolldown/binding-darwin-arm64",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-darwin-x64",
+        "name": "@rolldown/binding-darwin-x64",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-freebsd-x64",
+        "name": "@rolldown/binding-freebsd-x64",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-linux-arm-gnueabihf",
+        "name": "@rolldown/binding-linux-arm-gnueabihf",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-linux-arm64-gnu",
+        "name": "@rolldown/binding-linux-arm64-gnu",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-linux-arm64-musl",
+        "name": "@rolldown/binding-linux-arm64-musl",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-linux-ppc64-gnu",
+        "name": "@rolldown/binding-linux-ppc64-gnu",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-linux-s390x-gnu",
+        "name": "@rolldown/binding-linux-s390x-gnu",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-linux-x64-gnu",
+        "name": "@rolldown/binding-linux-x64-gnu",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-linux-x64-musl",
+        "name": "@rolldown/binding-linux-x64-musl",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-openharmony-arm64",
+        "name": "@rolldown/binding-openharmony-arm64",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-win32-arm64-msvc",
+        "name": "@rolldown/binding-win32-arm64-msvc",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@rolldown/binding-win32-x64-msvc",
+        "name": "@rolldown/binding-win32-x64-msvc",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "@sentry/electron",
+        "name": "@sentry/electron",
+        "before": "7.20.0",
+        "after": "7.20.2"
+      },
+      {
+        "key": "@shikijs/core",
+        "name": "@shikijs/core",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "@shikijs/engine-javascript",
+        "name": "@shikijs/engine-javascript",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "@shikijs/engine-oniguruma",
+        "name": "@shikijs/engine-oniguruma",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "@shikijs/langs",
+        "name": "@shikijs/langs",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "@shikijs/primitive",
+        "name": "@shikijs/primitive",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "@shikijs/themes",
+        "name": "@shikijs/themes",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "@shikijs/types",
+        "name": "@shikijs/types",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "@shikijs/vscode-textmate",
+        "name": "@shikijs/vscode-textmate",
+        "before": "10.0.2",
+        "after": "10.1.0"
+      },
+      {
+        "key": "@smithy/core",
+        "name": "@smithy/core",
+        "before": "3.33.3",
+        "after": "3.39.0"
+      },
+      {
+        "key": "@svar-ui/gantt-data-provider",
+        "name": "@svar-ui/gantt-data-provider",
+        "before": "2.7.2",
+        "after": "2.8.2"
+      },
+      {
+        "key": "@svar-ui/gantt-locales",
+        "name": "@svar-ui/gantt-locales",
+        "before": "2.7.2",
+        "after": "2.8.2"
+      },
+      {
+        "key": "@svar-ui/gantt-store",
+        "name": "@svar-ui/gantt-store",
+        "before": "2.7.2",
+        "after": "2.8.2"
+      },
+      {
+        "key": "@svar-ui/grid-data-provider",
+        "name": "@svar-ui/grid-data-provider",
+        "before": "2.7.3",
+        "after": "2.7.5"
+      },
+      {
+        "key": "@svar-ui/grid-locales",
+        "name": "@svar-ui/grid-locales",
+        "before": "2.7.3",
+        "after": "2.7.5"
+      },
+      {
+        "key": "@svar-ui/grid-store",
+        "name": "@svar-ui/grid-store",
+        "before": "2.7.3",
+        "after": "2.7.5"
+      },
+      {
+        "key": "@svar-ui/lib-data-provider",
+        "name": "@svar-ui/lib-data-provider",
+        "before": "1.7.1",
+        "after": "1.7.4"
+      },
+      {
+        "key": "@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "before": "1.9.7",
+        "after": "1.10.1"
+      },
+      {
+        "key": "@svar-ui/react-gantt",
+        "name": "@svar-ui/react-gantt",
+        "before": "2.7.3",
+        "after": "2.8.2"
+      },
+      {
+        "key": "@svar-ui/react-grid",
+        "name": "@svar-ui/react-grid",
+        "before": "2.7.4",
+        "after": "2.7.6"
+      },
+      {
+        "key": "@tailwindcss/node",
+        "name": "@tailwindcss/node",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide",
+        "name": "@tailwindcss/oxide",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-android-arm64",
+        "name": "@tailwindcss/oxide-android-arm64",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-darwin-arm64",
+        "name": "@tailwindcss/oxide-darwin-arm64",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-darwin-x64",
+        "name": "@tailwindcss/oxide-darwin-x64",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-freebsd-x64",
+        "name": "@tailwindcss/oxide-freebsd-x64",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-linux-arm-gnueabihf",
+        "name": "@tailwindcss/oxide-linux-arm-gnueabihf",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-linux-arm64-gnu",
+        "name": "@tailwindcss/oxide-linux-arm64-gnu",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-linux-arm64-musl",
+        "name": "@tailwindcss/oxide-linux-arm64-musl",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-linux-x64-gnu",
+        "name": "@tailwindcss/oxide-linux-x64-gnu",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-linux-x64-musl",
+        "name": "@tailwindcss/oxide-linux-x64-musl",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-wasm32-wasi",
+        "name": "@tailwindcss/oxide-wasm32-wasi",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-win32-arm64-msvc",
+        "name": "@tailwindcss/oxide-win32-arm64-msvc",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/oxide-win32-x64-msvc",
+        "name": "@tailwindcss/oxide-win32-x64-msvc",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tailwindcss/vite",
+        "name": "@tailwindcss/vite",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "@tanstack/react-store",
+        "name": "@tanstack/react-store",
+        "before": "0.11.1",
+        "after": "0.11.2"
+      },
+      {
+        "key": "@tanstack/react-table",
+        "name": "@tanstack/react-table",
+        "before": "9.2.4",
+        "after": "9.3.1"
+      },
+      {
+        "key": "@tanstack/store",
+        "name": "@tanstack/store",
+        "before": "0.11.1",
+        "after": "0.11.2"
+      },
+      {
+        "key": "@tanstack/table-core",
+        "name": "@tanstack/table-core",
+        "before": "9.2.4",
+        "after": "9.3.1"
+      },
+      {
+        "key": "@tiptap/core",
+        "name": "@tiptap/core",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-blockquote",
+        "name": "@tiptap/extension-blockquote",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-bold",
+        "name": "@tiptap/extension-bold",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-bubble-menu",
+        "name": "@tiptap/extension-bubble-menu",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-bullet-list",
+        "name": "@tiptap/extension-bullet-list",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-code",
+        "name": "@tiptap/extension-code",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-code-block",
+        "name": "@tiptap/extension-code-block",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-document",
+        "name": "@tiptap/extension-document",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-dropcursor",
+        "name": "@tiptap/extension-dropcursor",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-file-handler",
+        "name": "@tiptap/extension-file-handler",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-floating-menu",
+        "name": "@tiptap/extension-floating-menu",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-gapcursor",
+        "name": "@tiptap/extension-gapcursor",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-hard-break",
+        "name": "@tiptap/extension-hard-break",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-heading",
+        "name": "@tiptap/extension-heading",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-horizontal-rule",
+        "name": "@tiptap/extension-horizontal-rule",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-image",
+        "name": "@tiptap/extension-image",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-italic",
+        "name": "@tiptap/extension-italic",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-link",
+        "name": "@tiptap/extension-link",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-list",
+        "name": "@tiptap/extension-list",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-list-item",
+        "name": "@tiptap/extension-list-item",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-list-keymap",
+        "name": "@tiptap/extension-list-keymap",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-mathematics",
+        "name": "@tiptap/extension-mathematics",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-ordered-list",
+        "name": "@tiptap/extension-ordered-list",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-paragraph",
+        "name": "@tiptap/extension-paragraph",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-placeholder",
+        "name": "@tiptap/extension-placeholder",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-strike",
+        "name": "@tiptap/extension-strike",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-task-item",
+        "name": "@tiptap/extension-task-item",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-task-list",
+        "name": "@tiptap/extension-task-list",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-text",
+        "name": "@tiptap/extension-text",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-text-style",
+        "name": "@tiptap/extension-text-style",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extension-underline",
+        "name": "@tiptap/extension-underline",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/extensions",
+        "name": "@tiptap/extensions",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/markdown",
+        "name": "@tiptap/markdown",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/pm",
+        "name": "@tiptap/pm",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/react",
+        "name": "@tiptap/react",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/starter-kit",
+        "name": "@tiptap/starter-kit",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@tiptap/suggestion",
+        "name": "@tiptap/suggestion",
+        "before": "3.32.0",
+        "after": "3.33.0"
+      },
+      {
+        "key": "@types/bun",
+        "name": "@types/bun",
+        "before": "1.4.3",
+        "after": "1.4.4"
+      },
+      {
+        "key": "@vitejs/plugin-react",
+        "name": "@vitejs/plugin-react",
+        "before": "6.1.2",
+        "after": "6.2.1"
+      },
+      {
+        "key": "app-builder-lib",
+        "name": "app-builder-lib",
+        "before": "26.17.0",
+        "after": "26.18.1"
+      },
+      {
+        "key": "argparse",
+        "name": "argparse",
+        "before": "2.0.1",
+        "after": "3.0.4"
+      },
+      {
+        "key": "axe-core",
+        "name": "axe-core",
+        "before": "4.13.0",
+        "after": "4.14.0"
+      },
+      {
+        "key": "builder-util",
+        "name": "builder-util",
+        "before": "26.16.0",
+        "after": "26.18.1"
+      },
+      {
+        "key": "builder-util-runtime",
+        "name": "builder-util-runtime",
+        "before": "9.7.0",
+        "after": "9.7.1"
+      },
+      {
+        "key": "bun-types",
+        "name": "bun-types",
+        "before": "1.4.3",
+        "after": "1.4.4"
+      },
+      {
+        "key": "chrono-node",
+        "name": "chrono-node",
+        "before": "2.10.2",
+        "after": "2.10.3"
+      },
+      {
+        "key": "dmg-builder",
+        "name": "dmg-builder",
+        "before": "26.17.0",
+        "after": "26.18.1"
+      },
+      {
+        "key": "electron",
+        "name": "electron",
+        "before": "44.9.1",
+        "after": "45.2.3"
+      },
+      {
+        "key": "electron-builder",
+        "name": "electron-builder",
+        "before": "26.17.0",
+        "after": "26.18.1"
+      },
+      {
+        "key": "electron-builder-squirrel-windows",
+        "name": "electron-builder-squirrel-windows",
+        "before": "26.15.3",
+        "after": "26.18.1"
+      },
+      {
+        "key": "electron-publish",
+        "name": "electron-publish",
+        "before": "26.16.0",
+        "after": "26.18.1"
+      },
+      {
+        "key": "electron-updater",
+        "name": "electron-updater",
+        "before": "6.8.10",
+        "after": "6.8.12"
+      },
+      {
+        "key": "eslint",
+        "name": "eslint",
+        "before": "10.13.0",
+        "after": "10.14.0"
+      },
+      {
+        "key": "follow-redirects",
+        "name": "follow-redirects",
+        "before": "1.16.1",
+        "after": "1.16.2"
+      },
+      {
+        "key": "framer-motion",
+        "name": "framer-motion",
+        "before": "14.0.0",
+        "after": "14.10.1"
+      },
+      {
+        "key": "glob",
+        "name": "glob",
+        "before": "13.0.6",
+        "after": "14.0.4"
+      },
+      {
+        "key": "i18next",
+        "name": "i18next",
+        "before": "26.4.7",
+        "after": "26.7.2"
+      },
+      {
+        "key": "i18next-browser-languagedetector",
+        "name": "i18next-browser-languagedetector",
+        "before": "8.2.1",
+        "after": "8.3.0"
+      },
+      {
+        "key": "jose",
+        "name": "jose",
+        "before": "6.2.12",
+        "after": "6.2.15"
+      },
+      {
+        "key": "js-yaml",
+        "name": "js-yaml",
+        "before": "5.4.2",
+        "after": "5.5.0"
+      },
+      {
+        "key": "lucide-react",
+        "name": "lucide-react",
+        "before": "1.51.0",
+        "after": "1.70.0"
+      },
+      {
+        "key": "marked",
+        "name": "marked",
+        "before": "18.1.1",
+        "after": "18.1.3"
+      },
+      {
+        "key": "motion",
+        "name": "motion",
+        "before": "14.0.0",
+        "after": "14.10.1"
+      },
+      {
+        "key": "motion-dom",
+        "name": "motion-dom",
+        "before": "14.0.0",
+        "after": "14.10.1"
+      },
+      {
+        "key": "motion-utils",
+        "name": "motion-utils",
+        "before": "14.0.0",
+        "after": "14.7.0"
+      },
+      {
+        "key": "node-html-parser",
+        "name": "node-html-parser",
+        "before": "9.0.4",
+        "after": "9.0.7"
+      },
+      {
+        "key": "openai",
+        "name": "openai",
+        "before": "7.27.0",
+        "after": "7.53.0"
+      },
+      {
+        "key": "path-scurry",
+        "name": "path-scurry",
+        "before": "2.0.2",
+        "after": "3.0.0"
+      },
+      {
+        "key": "playwright",
+        "name": "playwright",
+        "before": "1.64.1",
+        "after": "1.65.0"
+      },
+      {
+        "key": "playwright-core",
+        "name": "playwright-core",
+        "before": "1.64.1",
+        "after": "1.65.0"
+      },
+      {
+        "key": "postcss",
+        "name": "postcss",
+        "before": "8.5.30",
+        "after": "8.5.32"
+      },
+      {
+        "key": "postcss-selector-parser",
+        "name": "postcss-selector-parser",
+        "before": "6.0.10",
+        "after": "6.1.5"
+      },
+      {
+        "key": "prosemirror-transform",
+        "name": "prosemirror-transform",
+        "before": "1.12.2",
+        "after": "1.12.5"
+      },
+      {
+        "key": "prosemirror-view",
+        "name": "prosemirror-view",
+        "before": "1.42.6",
+        "after": "1.42.9"
+      },
+      {
+        "key": "react",
+        "name": "react",
+        "before": "19.3.0",
+        "after": "19.3.1"
+      },
+      {
+        "key": "react-dom",
+        "name": "react-dom",
+        "before": "19.3.0",
+        "after": "19.3.1"
+      },
+      {
+        "key": "react-i18next",
+        "name": "react-i18next",
+        "before": "17.0.20",
+        "after": "17.1.13"
+      },
+      {
+        "key": "react-resizable-panels",
+        "name": "react-resizable-panels",
+        "before": "4.14.2",
+        "after": "4.19.1"
+      },
+      {
+        "key": "rolldown",
+        "name": "rolldown",
+        "before": "1.2.12",
+        "after": "1.2.16"
+      },
+      {
+        "key": "safe-buffer",
+        "name": "safe-buffer",
+        "before": "5.1.2",
+        "after": "5.2.1"
+      },
+      {
+        "key": "semver",
+        "name": "semver",
+        "before": "7.8.5",
+        "after": "7.8.6"
+      },
+      {
+        "key": "shiki",
+        "name": "shiki",
+        "before": "4.5.0",
+        "after": "4.6.0"
+      },
+      {
+        "key": "tailwindcss",
+        "name": "tailwindcss",
+        "before": "4.3.3",
+        "after": "4.3.5"
+      },
+      {
+        "key": "temporal-polyfill",
+        "name": "temporal-polyfill",
+        "before": "1.0.6",
+        "after": "1.0.8"
+      },
+      {
+        "key": "temporal-utils",
+        "name": "temporal-utils",
+        "before": "1.0.3",
+        "after": "1.0.4"
+      },
+      {
+        "key": "turndown",
+        "name": "turndown",
+        "before": "7.2.4",
+        "after": "7.2.5"
+      },
+      {
+        "key": "undici",
+        "name": "undici",
+        "before": "8.12.2",
+        "after": "8.12.4"
+      },
+      {
+        "key": "unist-util-visit",
+        "name": "unist-util-visit",
+        "before": "5.1.0",
+        "after": "5.2.0"
+      },
+      {
+        "key": "vite",
+        "name": "vite",
+        "before": "8.3.4",
+        "after": "8.3.6"
+      },
+      {
+        "key": "ws",
+        "name": "ws",
+        "before": "8.22.0",
+        "after": "8.22.1"
+      },
+      {
+        "key": "@tailwindcss/node/magic-string",
+        "name": "magic-string",
+        "before": "0.30.21",
+        "after": "1.4.5"
+      },
+      {
+        "key": "glob/minimatch",
+        "name": "minimatch",
+        "before": "10.2.5",
+        "after": "11.0.5"
+      }
+    ],
+    "added": [
+      {
+        "key": "@pierre/highlights",
+        "name": "@pierre/highlights",
+        "version": "0.4.0",
+        "source": "",
+        "integrity": "sha512-2a38H7ep3KweGi1fGQpJk+Krod2OMpDIXagKPlqBd1Y9P460T7zQmc66Wm2JAH1SpIG93wCyyhZVrkc5dnAJVQ=="
+      },
+      {
+        "key": "@babel/helper-create-class-features-plugin/@babel/traverse",
+        "name": "@babel/traverse",
+        "version": "8.0.7",
+        "source": "",
+        "integrity": "sha512-bVV0brinsTWgc6ptSIoQo3GbITtl0VZAqEUJbHHcyfDPEu+q/fEvlYEa+6H85HoK8IdksKBFtKJbJFZ6Kff+zg=="
+      },
+      {
+        "key": "@babel/helper-member-expression-to-functions/@babel/traverse",
+        "name": "@babel/traverse",
+        "version": "8.0.7",
+        "source": "",
+        "integrity": "sha512-bVV0brinsTWgc6ptSIoQo3GbITtl0VZAqEUJbHHcyfDPEu+q/fEvlYEa+6H85HoK8IdksKBFtKJbJFZ6Kff+zg=="
+      },
+      {
+        "key": "@babel/helper-member-expression-to-functions/@babel/types",
+        "name": "@babel/types",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-c+xgSWboV2pdwXP67BUWDVRHi2BO5Q3KwxyFVs7taVTY+fsK47/L51ZXQoV9rozHJDNHvJ4v4WEsI/IlxV2l2A=="
+      },
+      {
+        "key": "@earendil-works/pi-coding-agent/semver",
+        "name": "semver",
+        "version": "7.8.5",
+        "source": "",
+        "integrity": "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA=="
+      },
+      {
+        "key": "@sentry/bundler-plugins/glob",
+        "name": "glob",
+        "version": "13.0.6",
+        "source": "",
+        "integrity": "sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw=="
+      },
+      {
+        "key": "@shikijs/core/hast-util-to-html",
+        "name": "hast-util-to-html",
+        "version": "9.0.6",
+        "source": "",
+        "integrity": "sha512-1SZUxCN3TtJAE7e2BQN2MBHsoZ1gnmi9GoCP5Di59CSWptIezSAW09yDZyVbanb78V9eCwrKqdQsjtfVTxYHWA=="
+      },
+      {
+        "key": "@smithy/core/@smithy/types",
+        "name": "@smithy/types",
+        "version": "4.20.0",
+        "source": "",
+        "integrity": "sha512-lCA6QG22dPk9ecHbv91jDQZsmtPUjdS1aE2Il6NNPqe7DrYc0dZQi6DhcESk2KYXH2sp5xbAcGdYMZDFnuzA2A=="
+      },
+      {
+        "key": "@svar-ui/react-comments/@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "version": "1.9.7",
+        "source": "",
+        "integrity": "sha512-nxRdk+54m1RJjGT2yDH7NjxAM5KECxA39kdTZezEIj1ixykyefssB9BrgxKy2jIseYxJMtd6lPZvQ3SZXuvn2g=="
+      },
+      {
+        "key": "@svar-ui/react-editor/@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "version": "1.9.7",
+        "source": "",
+        "integrity": "sha512-nxRdk+54m1RJjGT2yDH7NjxAM5KECxA39kdTZezEIj1ixykyefssB9BrgxKy2jIseYxJMtd6lPZvQ3SZXuvn2g=="
+      },
+      {
+        "key": "@svar-ui/react-filter/@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "version": "1.9.7",
+        "source": "",
+        "integrity": "sha512-nxRdk+54m1RJjGT2yDH7NjxAM5KECxA39kdTZezEIj1ixykyefssB9BrgxKy2jIseYxJMtd6lPZvQ3SZXuvn2g=="
+      },
+      {
+        "key": "@svar-ui/react-tasklist/@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "version": "1.9.7",
+        "source": "",
+        "integrity": "sha512-nxRdk+54m1RJjGT2yDH7NjxAM5KECxA39kdTZezEIj1ixykyefssB9BrgxKy2jIseYxJMtd6lPZvQ3SZXuvn2g=="
+      },
+      {
+        "key": "cmdk/@radix-ui/react-primitive",
+        "name": "@radix-ui/react-primitive",
+        "version": "2.1.10",
+        "source": "",
+        "integrity": "sha512-MucOnzh6hR5mid6VpkbglRAMYMjKLqRnGBbjXkzjK52fuQDd1qbkx78a5P40mkcnVXJdEVxm26E9OPAiUq7nBg=="
+      },
+      {
+        "key": "markdown-it/argparse",
+        "name": "argparse",
+        "version": "2.0.1",
+        "source": "",
+        "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
+      },
+      {
+        "key": "readable-stream/safe-buffer",
+        "name": "safe-buffer",
+        "version": "5.1.2",
+        "source": "",
+        "integrity": "sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g=="
+      },
+      {
+        "key": "string_decoder/safe-buffer",
+        "name": "safe-buffer",
+        "version": "5.1.2",
+        "source": "",
+        "integrity": "sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g=="
+      },
+      {
+        "key": "unist-util-visit/unist-util-visit-parents",
+        "name": "unist-util-visit-parents",
+        "version": "6.1.0",
+        "source": "",
+        "integrity": "sha512-vKXxz6O38sKDj1mtx/k2cWvkkFBuYGx6uGrlzBkVeWCRF/F8sdI0j3Wbkz/5rVNRRuVc8UrgRdbCxNhmYXgP3w=="
+      },
+      {
+        "key": "@babel/helper-create-class-features-plugin/@babel/traverse/@babel/generator",
+        "name": "@babel/generator",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-/pcanjdRsonCexCuxgGD8fKnBLLzk2i9uM4kmcmGyyev2R5YDs+rafMYZ89RvaGY1mW8T7C5au0TyYaEeHBGng=="
+      },
+      {
+        "key": "@babel/helper-create-class-features-plugin/@babel/traverse/@babel/parser",
+        "name": "@babel/parser",
+        "version": "8.0.7",
+        "source": "",
+        "integrity": "sha512-UkDwEbPO1px2JQSrdh4qIgaH1JgG7GO/pFeJkpxhDxIETkT/QvGpnigXIw75ViHYPtIgKITmVUJqLjiO+JuWjA=="
+      },
+      {
+        "key": "@babel/helper-create-class-features-plugin/@babel/traverse/@babel/types",
+        "name": "@babel/types",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-c+xgSWboV2pdwXP67BUWDVRHi2BO5Q3KwxyFVs7taVTY+fsK47/L51ZXQoV9rozHJDNHvJ4v4WEsI/IlxV2l2A=="
+      },
+      {
+        "key": "@babel/helper-member-expression-to-functions/@babel/traverse/@babel/generator",
+        "name": "@babel/generator",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-/pcanjdRsonCexCuxgGD8fKnBLLzk2i9uM4kmcmGyyev2R5YDs+rafMYZ89RvaGY1mW8T7C5au0TyYaEeHBGng=="
+      },
+      {
+        "key": "@babel/helper-member-expression-to-functions/@babel/traverse/@babel/parser",
+        "name": "@babel/parser",
+        "version": "8.0.7",
+        "source": "",
+        "integrity": "sha512-UkDwEbPO1px2JQSrdh4qIgaH1JgG7GO/pFeJkpxhDxIETkT/QvGpnigXIw75ViHYPtIgKITmVUJqLjiO+JuWjA=="
+      },
+      {
+        "key": "@babel/helper-member-expression-to-functions/@babel/types/@babel/helper-string-parser",
+        "name": "@babel/helper-string-parser",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-+6HYEBnsDRZHJtUTAEfMQd0zMDqdFHS7C+5vAsEZqBUr3vEMWOWlHJ0Jz1gS8jJIlCvLsuA6ivmeoqzH936YcA=="
+      },
+      {
+        "key": "@sentry/bundler-plugins/glob/minimatch",
+        "name": "minimatch",
+        "version": "10.2.5",
+        "source": "",
+        "integrity": "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg=="
+      },
+      {
+        "key": "@sentry/bundler-plugins/glob/path-scurry",
+        "name": "path-scurry",
+        "version": "2.0.2",
+        "source": "",
+        "integrity": "sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg=="
+      },
+      {
+        "key": "app-builder-lib/js-yaml/argparse",
+        "name": "argparse",
+        "version": "2.0.1",
+        "source": "",
+        "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
+      },
+      {
+        "key": "builder-util/js-yaml/argparse",
+        "name": "argparse",
+        "version": "2.0.1",
+        "source": "",
+        "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
+      },
+      {
+        "key": "cmdk/@radix-ui/react-primitive/@radix-ui/react-slot",
+        "name": "@radix-ui/react-slot",
+        "version": "1.3.3",
+        "source": "",
+        "integrity": "sha512-qx7oqnYbxnK9kYI9m317qmFmEgo6ywqWvbTogdj7cL9p3/yx4M48p7Rnw5z3H890cL/ow/EeWJsuTykeZVXP5Q=="
+      },
+      {
+        "key": "dmg-builder/js-yaml/argparse",
+        "name": "argparse",
+        "version": "2.0.1",
+        "source": "",
+        "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
+      },
+      {
+        "key": "electron-updater/js-yaml/argparse",
+        "name": "argparse",
+        "version": "2.0.1",
+        "source": "",
+        "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
+      },
+      {
+        "key": "glob/minimatch/@isaacs/nonrecursive-glob-match",
+        "name": "@isaacs/nonrecursive-glob-match",
+        "version": "1.1.0",
+        "source": "",
+        "integrity": "sha512-GPm/Dbvk5RLmhRnxXIa7nTpK0xtl4E0wj0MslsuNiJ1FIROU+2+9lgUC/dgF7Ey4QCWhfEsgxilMRMCdHPfDfw=="
+      },
+      {
+        "key": "@babel/helper-create-class-features-plugin/@babel/traverse/@babel/generator/@babel/parser",
+        "name": "@babel/parser",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-LpGDIYJAzc3Y3PT9x+FxBrGYu2PlWxLmyN7SwPTzaX0LSwEmFJBsRnPBqmaXF2r1v+Zhz6lNiEJ+7yKtM5+Ugg=="
+      },
+      {
+        "key": "@babel/helper-create-class-features-plugin/@babel/traverse/@babel/types/@babel/helper-string-parser",
+        "name": "@babel/helper-string-parser",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-+6HYEBnsDRZHJtUTAEfMQd0zMDqdFHS7C+5vAsEZqBUr3vEMWOWlHJ0Jz1gS8jJIlCvLsuA6ivmeoqzH936YcA=="
+      },
+      {
+        "key": "@babel/helper-member-expression-to-functions/@babel/traverse/@babel/generator/@babel/parser",
+        "name": "@babel/parser",
+        "version": "8.0.6",
+        "source": "",
+        "integrity": "sha512-LpGDIYJAzc3Y3PT9x+FxBrGYu2PlWxLmyN7SwPTzaX0LSwEmFJBsRnPBqmaXF2r1v+Zhz6lNiEJ+7yKtM5+Ugg=="
+      }
+    ],
+    "removed": [
+      {
+        "key": "@radix-ui/react-use-previous",
+        "name": "@radix-ui/react-use-previous",
+        "version": "1.1.4",
+        "source": "https://registry.npmmirror.com/@radix-ui/react-use-previous/-/react-use-previous-1.1.4.tgz",
+        "integrity": "sha512-XoSLhbRbqxFtgJoi2fNHA3C6pDlY34x508vUpUGoFZfvePfHXHbE1lC4FYFMnJWgiCRroSTw6fOsXQoVS9RwZg=="
+      },
+      {
+        "key": "@shikijs/transformers",
+        "name": "@shikijs/transformers",
+        "version": "4.5.0",
+        "source": "https://registry.npmmirror.com/@shikijs/transformers/-/transformers-4.5.0.tgz",
+        "integrity": "sha512-LM7twi043qCC3gRyGQfjoC2/sowzbEltWuruyRtT3RlBlk1hKzWk9ETnU7RcDBoVWQBmC8Mebnr7p28W7kPoaA=="
+      },
+      {
+        "key": "@babel/generator/@babel/parser",
+        "name": "@babel/parser",
+        "version": "8.0.6",
+        "source": "https://registry.npmmirror.com/@babel/parser/-/parser-8.0.6.tgz",
+        "integrity": "sha512-LpGDIYJAzc3Y3PT9x+FxBrGYu2PlWxLmyN7SwPTzaX0LSwEmFJBsRnPBqmaXF2r1v+Zhz6lNiEJ+7yKtM5+Ugg=="
+      },
+      {
+        "key": "@earendil-works/pi-coding-agent/undici",
+        "name": "undici",
+        "version": "8.12.3",
+        "source": "https://registry.npmmirror.com/undici/-/undici-8.12.3.tgz",
+        "integrity": "sha512-+fdndUTwBP86cVjihTp21hZHo7d6oj1c/47XPA3lL8mM0XHs+C4EkcjmgRsFnFk2f/UONGDy9ItBItmXsLOQHw=="
+      },
+      {
+        "key": "@svar-ui/grid-data-provider/@svar-ui/lib-data-provider",
+        "name": "@svar-ui/lib-data-provider",
+        "version": "1.7.2",
+        "source": "https://registry.npmmirror.com/@svar-ui/lib-data-provider/-/lib-data-provider-1.7.2.tgz",
+        "integrity": "sha512-Od93Iiy0vBwVzgJm25WdizH3d4Xlli/HAA2kqoUj1pzeZ2SWBeFzvE59iihQz8NuIlfAtQJ6MMe168458T+2lQ=="
+      },
+      {
+        "key": "@svar-ui/grid-store/@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "version": "1.9.6",
+        "source": "https://registry.npmmirror.com/@svar-ui/lib-state/-/lib-state-1.9.6.tgz",
+        "integrity": "sha512-twoHa8wZvzdxtES68s6Wnp4Xi1WivScNaFFK6sJ6WDgqVYOzJw0ZhVVrdwHQgieLITTKl/DYh/U3nuqtMetKYw=="
+      },
+      {
+        "key": "@svar-ui/lib-data-provider/@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "version": "1.9.6",
+        "source": "https://registry.npmmirror.com/@svar-ui/lib-state/-/lib-state-1.9.6.tgz",
+        "integrity": "sha512-twoHa8wZvzdxtES68s6Wnp4Xi1WivScNaFFK6sJ6WDgqVYOzJw0ZhVVrdwHQgieLITTKl/DYh/U3nuqtMetKYw=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss",
+        "name": "lightningcss",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss/-/lightningcss-1.32.0.tgz",
+        "integrity": "sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ=="
+      },
+      {
+        "key": "ecdsa-sig-formatter/safe-buffer",
+        "name": "safe-buffer",
+        "version": "5.2.1",
+        "source": "https://registry.npmmirror.com/safe-buffer/-/safe-buffer-5.2.1.tgz",
+        "integrity": "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib",
+        "name": "app-builder-lib",
+        "version": "26.15.3",
+        "source": "https://registry.npmmirror.com/app-builder-lib/-/app-builder-lib-26.15.3.tgz",
+        "integrity": "sha512-2VnyWkqsP5v5XbBhL3tD5Syx8iNPBYsoU7kY4S2fz7wg8Rj/nztWKCUzGKaFRTv0Xwf3/H058CR1Kvtd/3lRow=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/builder-util",
+        "name": "builder-util",
+        "version": "26.15.3",
+        "source": "https://registry.npmmirror.com/builder-util/-/builder-util-26.15.3.tgz",
+        "integrity": "sha512-q2hn7Mbo2nFNkVekPiHFx6Nfo3hURmES3tfBn+k5Pqxl2RkmP3QGqZUhH/q9Pch/4G05NRhPjDlVj1O8q4Txvw=="
+      },
+      {
+        "key": "jwa/safe-buffer",
+        "name": "safe-buffer",
+        "version": "5.2.1",
+        "source": "https://registry.npmmirror.com/safe-buffer/-/safe-buffer-5.2.1.tgz",
+        "integrity": "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="
+      },
+      {
+        "key": "jws/safe-buffer",
+        "name": "safe-buffer",
+        "version": "5.2.1",
+        "source": "https://registry.npmmirror.com/safe-buffer/-/safe-buffer-5.2.1.tgz",
+        "integrity": "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="
+      },
+      {
+        "key": "@svar-ui/grid-data-provider/@svar-ui/lib-data-provider/@svar-ui/lib-state",
+        "name": "@svar-ui/lib-state",
+        "version": "1.9.6",
+        "source": "https://registry.npmmirror.com/@svar-ui/lib-state/-/lib-state-1.9.6.tgz",
+        "integrity": "sha512-twoHa8wZvzdxtES68s6Wnp4Xi1WivScNaFFK6sJ6WDgqVYOzJw0ZhVVrdwHQgieLITTKl/DYh/U3nuqtMetKYw=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-android-arm64",
+        "name": "lightningcss-android-arm64",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-android-arm64/-/lightningcss-android-arm64-1.32.0.tgz",
+        "integrity": "sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-darwin-arm64",
+        "name": "lightningcss-darwin-arm64",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.32.0.tgz",
+        "integrity": "sha512-RzeG9Ju5bag2Bv1/lwlVJvBE3q6TtXskdZLLCyfg5pt+HLz9BqlICO7LZM7VHNTTn/5PRhHFBSjk5lc4cmscPQ=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-darwin-x64",
+        "name": "lightningcss-darwin-x64",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.32.0.tgz",
+        "integrity": "sha512-U+QsBp2m/s2wqpUYT/6wnlagdZbtZdndSmut/NJqlCcMLTWp5muCrID+K5UJ6jqD2BFshejCYXniPDbNh73V8w=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-freebsd-x64",
+        "name": "lightningcss-freebsd-x64",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.32.0.tgz",
+        "integrity": "sha512-JCTigedEksZk3tHTTthnMdVfGf61Fky8Ji2E4YjUTEQX14xiy/lTzXnu1vwiZe3bYe0q+SpsSH/CTeDXK6WHig=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-linux-arm-gnueabihf",
+        "name": "lightningcss-linux-arm-gnueabihf",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.32.0.tgz",
+        "integrity": "sha512-x6rnnpRa2GL0zQOkt6rts3YDPzduLpWvwAF6EMhXFVZXD4tPrBkEFqzGowzCsIWsPjqSK+tyNEODUBXeeVHSkw=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-gnu",
+        "name": "lightningcss-linux-arm64-gnu",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.32.0.tgz",
+        "integrity": "sha512-0nnMyoyOLRJXfbMOilaSRcLH3Jw5z9HDNGfT/gwCPgaDjnx0i8w7vBzFLFR1f6CMLKF8gVbebmkUN3fa/kQJpQ=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-musl",
+        "name": "lightningcss-linux-arm64-musl",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz",
+        "integrity": "sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-linux-x64-gnu",
+        "name": "lightningcss-linux-x64-gnu",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.32.0.tgz",
+        "integrity": "sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-linux-x64-musl",
+        "name": "lightningcss-linux-x64-musl",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.32.0.tgz",
+        "integrity": "sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-win32-arm64-msvc",
+        "name": "lightningcss-win32-arm64-msvc",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.32.0.tgz",
+        "integrity": "sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw=="
+      },
+      {
+        "key": "@tailwindcss/node/lightningcss/lightningcss-win32-x64-msvc",
+        "name": "lightningcss-win32-x64-msvc",
+        "version": "1.32.0",
+        "source": "https://registry.npmmirror.com/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.32.0.tgz",
+        "integrity": "sha512-Amq9B/SoZYdDi1kFrojnoqPLxYhQ4Wo5XiL8EVJrVsB8ARoC1PWW6VGtT0WKCemjy8aC+louJnjS7U18x3b06Q=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/@electron/get",
+        "name": "@electron/get",
+        "version": "3.1.0",
+        "source": "https://registry.npmmirror.com/@electron/get/-/get-3.1.0.tgz",
+        "integrity": "sha512-F+nKc0xW+kVbBRhFzaMgPy3KwmuNTYX1fx6+FxxoSnNgwYX6LD7AKBTWkU0MQ6IBoe7dz069CNkR673sPAgkCQ=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/@noble/hashes",
+        "name": "@noble/hashes",
+        "version": "2.4.0",
+        "source": "https://registry.npmmirror.com/@noble/hashes/-/hashes-2.4.0.tgz",
+        "integrity": "sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/ajv",
+        "name": "ajv",
+        "version": "8.20.0",
+        "source": "https://registry.npmmirror.com/ajv/-/ajv-8.20.0.tgz",
+        "integrity": "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/ci-info",
+        "name": "ci-info",
+        "version": "4.3.1",
+        "source": "https://registry.npmmirror.com/ci-info/-/ci-info-4.3.1.tgz",
+        "integrity": "sha512-Wdy2Igu8OcBpI2pZePZ5oWjPC38tmDVx5WKUXKwlLYkA0ozo85sLsLvkBbBn/sZaSCMFOGZJ14fvW9t5/d7kdA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/dmg-builder",
+        "name": "dmg-builder",
+        "version": "26.15.3",
+        "source": "https://registry.npmmirror.com/dmg-builder/-/dmg-builder-26.15.3.tgz",
+        "integrity": "sha512-O3zJUFUYHJKgzPqioHxfxzBzlSC1eXCSr79gMSBKBP5AgjjpmrydMsMLotEg9fAJF36vdUncb+4ndRNxoPdlSQ=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/dotenv",
+        "name": "dotenv",
+        "version": "16.6.1",
+        "source": "https://registry.npmmirror.com/dotenv/-/dotenv-16.6.1.tgz",
+        "integrity": "sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/electron-publish",
+        "name": "electron-publish",
+        "version": "26.15.3",
+        "source": "https://registry.npmmirror.com/electron-publish/-/electron-publish-26.15.3.tgz",
+        "integrity": "sha512-g/2bn8YTavY4cuS5F+jOS7zmZbXXBV8KZ8yHKfJjFPoKtzBqrpCdNPxBd3tqdBwP7BVd0lGzf7Bk2s0KesWZ4Q=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/hosted-git-info",
+        "name": "hosted-git-info",
+        "version": "4.1.0",
+        "source": "https://registry.npmmirror.com/hosted-git-info/-/hosted-git-info-4.1.0.tgz",
+        "integrity": "sha512-kyCuEOWjJqZuDbRHzL8V93NzQhwIB71oFWSyzVo+KPZI+pnQPPxucdkrOZvkLRnrf5URsQM+IJ09Dw29cRALIA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/js-yaml",
+        "name": "js-yaml",
+        "version": "4.3.2",
+        "source": "https://registry.npmmirror.com/js-yaml/-/js-yaml-4.3.2.tgz",
+        "integrity": "sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/minimatch",
+        "name": "minimatch",
+        "version": "10.2.5",
+        "source": "https://registry.npmmirror.com/minimatch/-/minimatch-10.2.5.tgz",
+        "integrity": "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/semver",
+        "name": "semver",
+        "version": "7.7.4",
+        "source": "https://registry.npmmirror.com/semver/-/semver-7.7.4.tgz",
+        "integrity": "sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/builder-util/http-proxy-agent",
+        "name": "http-proxy-agent",
+        "version": "7.0.2",
+        "source": "https://registry.npmmirror.com/http-proxy-agent/-/http-proxy-agent-7.0.2.tgz",
+        "integrity": "sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/builder-util/https-proxy-agent",
+        "name": "https-proxy-agent",
+        "version": "7.0.6",
+        "source": "https://registry.npmmirror.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz",
+        "integrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/builder-util/js-yaml",
+        "name": "js-yaml",
+        "version": "4.3.2",
+        "source": "https://registry.npmmirror.com/js-yaml/-/js-yaml-4.3.2.tgz",
+        "integrity": "sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/@electron/get/env-paths",
+        "name": "env-paths",
+        "version": "2.2.1",
+        "source": "https://registry.npmmirror.com/env-paths/-/env-paths-2.2.1.tgz",
+        "integrity": "sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/@electron/get/fs-extra",
+        "name": "fs-extra",
+        "version": "8.1.0",
+        "source": "https://registry.npmmirror.com/fs-extra/-/fs-extra-8.1.0.tgz",
+        "integrity": "sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/@electron/get/semver",
+        "name": "semver",
+        "version": "6.3.1",
+        "source": "https://registry.npmmirror.com/semver/-/semver-6.3.1.tgz",
+        "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/ajv/json-schema-traverse",
+        "name": "json-schema-traverse",
+        "version": "1.0.0",
+        "source": "https://registry.npmmirror.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz",
+        "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/hosted-git-info/lru-cache",
+        "name": "lru-cache",
+        "version": "6.0.0",
+        "source": "https://registry.npmmirror.com/lru-cache/-/lru-cache-6.0.0.tgz",
+        "integrity": "sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/builder-util/http-proxy-agent/agent-base",
+        "name": "agent-base",
+        "version": "7.1.4",
+        "source": "https://registry.npmmirror.com/agent-base/-/agent-base-7.1.4.tgz",
+        "integrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/builder-util/https-proxy-agent/agent-base",
+        "name": "agent-base",
+        "version": "7.1.4",
+        "source": "https://registry.npmmirror.com/agent-base/-/agent-base-7.1.4.tgz",
+        "integrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/@electron/get/fs-extra/jsonfile",
+        "name": "jsonfile",
+        "version": "4.0.0",
+        "source": "https://registry.npmmirror.com/jsonfile/-/jsonfile-4.0.0.tgz",
+        "integrity": "sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/@electron/get/fs-extra/universalify",
+        "name": "universalify",
+        "version": "0.1.2",
+        "source": "https://registry.npmmirror.com/universalify/-/universalify-0.1.2.tgz",
+        "integrity": "sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg=="
+      },
+      {
+        "key": "electron-builder-squirrel-windows/app-builder-lib/hosted-git-info/lru-cache/yallist",
+        "name": "yallist",
+        "version": "4.0.0",
+        "source": "https://registry.npmmirror.com/yallist/-/yallist-4.0.0.tgz",
+        "integrity": "sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A=="
+      }
+    ],
+    "counting": "All lock package keys, including 13 workspace packages. External counts exclude workspace: locators.",
+    "external": {
+      "before": {
+        "instances": 1830,
+        "names": 1477
+      },
+      "after": {
+        "instances": 1815,
+        "names": 1476
+      }
+    },
+    "sameVersionIntegrityChanges": [],
+    "majorChanges": [
+      {
+        "key": "argparse",
+        "name": "argparse",
+        "before": "2.0.1",
+        "after": "3.0.4"
+      },
+      {
+        "key": "electron",
+        "name": "electron",
+        "before": "44.9.1",
+        "after": "45.2.3"
+      },
+      {
+        "key": "glob",
+        "name": "glob",
+        "before": "13.0.6",
+        "after": "14.0.4"
+      },
+      {
+        "key": "path-scurry",
+        "name": "path-scurry",
+        "before": "2.0.2",
+        "after": "3.0.0"
+      },
+      {
+        "key": "@tailwindcss/node/magic-string",
+        "name": "magic-string",
+        "before": "0.30.21",
+        "after": "1.4.5"
+      },
+      {
+        "key": "glob/minimatch",
+        "name": "minimatch",
+        "before": "10.2.5",
+        "after": "11.0.5"
+      }
+    ]
+  },
+  "controls": [
+    {
+      "name": "@babel/core",
+      "current": "8.0.7",
+      "suggestedTarget": "8.1.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^8.1.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@babel/core",
+          "version": "8.1.0"
+        },
+        {
+          "key": "@sentry/bundler-plugins/@babel/core",
+          "version": "7.29.7"
+        },
+        {
+          "key": "eslint-plugin-react-hooks/@babel/core",
+          "version": "7.29.7"
+        }
+      ]
+    },
+    {
+      "name": "@dnd-kit/dom",
+      "current": "0.5.0",
+      "suggestedTarget": "0.5.3",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "0.5.3"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "0.5.3"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@dnd-kit/dom",
+          "version": "0.5.3"
+        }
+      ]
+    },
+    {
+      "name": "@fontsource-variable/noto-sans-sc",
+      "current": "5.3.0",
+      "suggestedTarget": "5.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^5.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@fontsource-variable/noto-sans-sc",
+          "version": "5.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@larksuiteoapi/node-sdk",
+      "current": "1.74.0",
+      "suggestedTarget": "1.76.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "packages/messaging-gateway/package.json",
+          "section": "dependencies",
+          "range": "^1.76.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@larksuiteoapi/node-sdk",
+          "version": "1.76.0"
+        }
+      ]
+    },
+    {
+      "name": "@modelcontextprotocol/sdk",
+      "current": "1.32.1",
+      "suggestedTarget": "1.32.2",
+      "priority": "P1",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.32.2"
+        },
+        {
+          "path": "packages/core/package.json",
+          "section": "peerDependencies",
+          "range": "^1.32.2"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "section": "peerDependencies",
+          "range": "^1.32.2"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@modelcontextprotocol/sdk",
+          "version": "1.32.2"
+        }
+      ]
+    },
+    {
+      "name": "@paper-design/shaders-react",
+      "current": "0.0.81",
+      "suggestedTarget": "0.0.82",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "0.0.82"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "0.0.82"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "dependencies",
+          "range": "0.0.82"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@paper-design/shaders-react",
+          "version": "0.0.82"
+        }
+      ]
+    },
+    {
+      "name": "@pierre/diffs",
+      "current": "1.5.1",
+      "suggestedTarget": "1.6.4",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.6.4"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^1.6.4"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@pierre/diffs",
+          "version": "1.6.4"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-avatar",
+      "current": "1.2.6",
+      "suggestedTarget": "1.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.3.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-avatar",
+          "version": "1.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-context-menu",
+      "current": "2.3.7",
+      "suggestedTarget": "2.4.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^2.4.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^2.4.1"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^2.4.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-context-menu",
+          "version": "2.4.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-dialog",
+      "current": "1.1.23",
+      "suggestedTarget": "1.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.3.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.3.1"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^1.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-dialog",
+          "version": "1.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-dropdown-menu",
+      "current": "2.1.24",
+      "suggestedTarget": "2.2.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^2.2.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^2.2.1"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^2.2.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-dropdown-menu",
+          "version": "2.2.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-label",
+      "current": "2.1.15",
+      "suggestedTarget": "2.1.17",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^2.1.17"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^2.1.17"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-label",
+          "version": "2.1.17"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-popover",
+      "current": "1.1.23",
+      "suggestedTarget": "1.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.3.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-popover",
+          "version": "1.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-scroll-area",
+      "current": "1.2.18",
+      "suggestedTarget": "1.4.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.4.0"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.4.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-scroll-area",
+          "version": "1.4.0"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-select",
+      "current": "2.3.7",
+      "suggestedTarget": "2.4.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^2.4.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^2.4.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-select",
+          "version": "2.4.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-separator",
+      "current": "1.1.15",
+      "suggestedTarget": "1.2.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.2.0"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.2.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-separator",
+          "version": "1.2.0"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-slot",
+      "current": "1.3.3",
+      "suggestedTarget": "1.5.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.5.0"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.5.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-slot",
+          "version": "1.5.0"
+        },
+        {
+          "key": "cmdk/@radix-ui/react-primitive/@radix-ui/react-slot",
+          "version": "1.3.3"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-switch",
+      "current": "1.3.7",
+      "suggestedTarget": "1.4.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.4.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.4.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-switch",
+          "version": "1.4.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-tabs",
+      "current": "1.1.21",
+      "suggestedTarget": "1.2.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.2.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.2.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-tabs",
+          "version": "1.2.1"
+        }
+      ]
+    },
+    {
+      "name": "@radix-ui/react-tooltip",
+      "current": "1.2.16",
+      "suggestedTarget": "1.4.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.4.1"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^1.4.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@radix-ui/react-tooltip",
+          "version": "1.4.1"
+        }
+      ]
+    },
+    {
+      "name": "@sentry/electron",
+      "current": "7.20.0",
+      "suggestedTarget": "7.20.2",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "7.20.2"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "7.20.2"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@sentry/electron",
+          "version": "7.20.2"
+        }
+      ]
+    },
+    {
+      "name": "@shikijs/transformers",
+      "current": "4.5.0",
+      "suggestedTarget": "4.6.0",
+      "priority": "P2",
+      "status": "applied-unused-override",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "overrides",
+          "range": "4.6.0"
+        }
+      ],
+      "actual": []
+    },
+    {
+      "name": "@svar-ui/react-gantt",
+      "current": "2.7.3",
+      "suggestedTarget": "2.8.2",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^2.8.2"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@svar-ui/react-gantt",
+          "version": "2.8.2"
+        }
+      ]
+    },
+    {
+      "name": "@svar-ui/react-grid",
+      "current": "2.7.4",
+      "suggestedTarget": "2.7.6",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "2.7.6"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@svar-ui/react-grid",
+          "version": "2.7.6"
+        }
+      ]
+    },
+    {
+      "name": "@tailwindcss/vite",
+      "current": "4.3.3",
+      "suggestedTarget": "4.3.5",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/viewer/package.json",
+          "section": "devDependencies",
+          "range": "^4.3.5"
+        },
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^4.3.5"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tailwindcss/vite",
+          "version": "4.3.5"
+        }
+      ]
+    },
+    {
+      "name": "@tanstack/react-table",
+      "current": "9.2.4",
+      "suggestedTarget": "9.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^9.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tanstack/react-table",
+          "version": "9.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@tanstack/table-core",
+      "current": "9.2.4",
+      "suggestedTarget": "9.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "devDependencies",
+          "range": "^9.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tanstack/table-core",
+          "version": "9.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/core",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/core",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/extension-file-handler",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/extension-file-handler",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/extension-image",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/extension-image",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/extension-mathematics",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/extension-mathematics",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/extension-placeholder",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/extension-placeholder",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/extension-task-item",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/extension-task-item",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/extension-task-list",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/extension-task-list",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/extension-text-style",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/extension-text-style",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/markdown",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/markdown",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/pm",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/pm",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/react",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/react",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/starter-kit",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/starter-kit",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@tiptap/suggestion",
+      "current": "3.32.0",
+      "suggestedTarget": "3.33.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^3.33.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^3.33.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@tiptap/suggestion",
+          "version": "3.33.0"
+        }
+      ]
+    },
+    {
+      "name": "@types/bun",
+      "current": "1.4.3",
+      "suggestedTarget": "1.4.4",
+      "priority": "P1",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/cli/package.json",
+          "section": "devDependencies",
+          "range": "^1.4.4"
+        },
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^1.4.4"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@types/bun",
+          "version": "1.4.4"
+        }
+      ]
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "current": "6.1.2",
+      "suggestedTarget": "6.2.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/viewer/package.json",
+          "section": "devDependencies",
+          "range": "^6.2.1"
+        },
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^6.2.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "@vitejs/plugin-react",
+          "version": "6.2.1"
+        }
+      ]
+    },
+    {
+      "name": "axe-core",
+      "current": "4.13.0",
+      "suggestedTarget": "4.14.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^4.14.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "axe-core",
+          "version": "4.14.0"
+        }
+      ]
+    },
+    {
+      "name": "chrono-node",
+      "current": "2.10.2",
+      "suggestedTarget": "2.10.3",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^2.10.3"
+        }
+      ],
+      "actual": [
+        {
+          "key": "chrono-node",
+          "version": "2.10.3"
+        }
+      ]
+    },
+    {
+      "name": "electron",
+      "current": "44.9.1",
+      "suggestedTarget": "45.2.3",
+      "priority": "P1",
+      "originalSuggestedTarget": "44.10.2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "devDependencies",
+          "range": "^45.2.3"
+        },
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^45.2.3"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "section": "peerDependencies",
+          "range": "^45.2.3"
+        }
+      ],
+      "actual": [
+        {
+          "key": "electron",
+          "version": "45.2.3"
+        }
+      ]
+    },
+    {
+      "name": "electron-builder",
+      "current": "26.17.0",
+      "suggestedTarget": "26.18.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^26.18.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "electron-builder",
+          "version": "26.18.1"
+        }
+      ]
+    },
+    {
+      "name": "electron-updater",
+      "current": "6.8.10",
+      "suggestedTarget": "6.8.12",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^6.8.12"
+        }
+      ],
+      "actual": [
+        {
+          "key": "electron-updater",
+          "version": "6.8.12"
+        }
+      ]
+    },
+    {
+      "name": "eslint",
+      "current": "10.13.0",
+      "suggestedTarget": "10.14.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^10.14.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "eslint",
+          "version": "10.14.0"
+        }
+      ]
+    },
+    {
+      "name": "follow-redirects",
+      "current": "1.16.1",
+      "suggestedTarget": "1.16.2",
+      "priority": "P0",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "overrides",
+          "range": "1.16.2"
+        }
+      ],
+      "actual": [
+        {
+          "key": "follow-redirects",
+          "version": "1.16.2"
+        }
+      ]
+    },
+    {
+      "name": "glob",
+      "current": "13.0.6",
+      "suggestedTarget": "14.0.4",
+      "priority": "P1",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "packages/shared/package.json",
+          "section": "dependencies",
+          "range": "^14.0.4"
+        }
+      ],
+      "actual": [
+        {
+          "key": "glob",
+          "version": "14.0.4"
+        },
+        {
+          "key": "@electron/asar/glob",
+          "version": "7.2.3"
+        },
+        {
+          "key": "@sentry/bundler-plugins/glob",
+          "version": "13.0.6"
+        },
+        {
+          "key": "rimraf/glob",
+          "version": "7.2.3"
+        }
+      ]
+    },
+    {
+      "name": "i18next",
+      "current": "26.4.7",
+      "suggestedTarget": "26.7.2",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "~26.7.2"
+        },
+        {
+          "path": "apps/webui/package.json",
+          "section": "dependencies",
+          "range": "~26.7.2"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "section": "dependencies",
+          "range": "~26.7.2"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "~26.7.2"
+        }
+      ],
+      "actual": [
+        {
+          "key": "i18next",
+          "version": "26.7.2"
+        }
+      ]
+    },
+    {
+      "name": "i18next-browser-languagedetector",
+      "current": "8.2.1",
+      "suggestedTarget": "8.3.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^8.3.0"
+        },
+        {
+          "path": "apps/webui/package.json",
+          "section": "dependencies",
+          "range": "^8.3.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "i18next-browser-languagedetector",
+          "version": "8.3.0"
+        }
+      ]
+    },
+    {
+      "name": "jose",
+      "current": "6.2.12",
+      "suggestedTarget": "6.2.15",
+      "priority": "P1",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^6.2.15"
+        },
+        {
+          "path": "packages/server-core/package.json",
+          "section": "dependencies",
+          "range": "^6.2.15"
+        }
+      ],
+      "actual": [
+        {
+          "key": "jose",
+          "version": "6.2.15"
+        }
+      ]
+    },
+    {
+      "name": "js-yaml",
+      "current": "5.4.2",
+      "suggestedTarget": "5.5.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "5.5.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "js-yaml",
+          "version": "5.5.0"
+        },
+        {
+          "key": "app-builder-lib/js-yaml",
+          "version": "4.3.2"
+        },
+        {
+          "key": "builder-util/js-yaml",
+          "version": "4.3.2"
+        },
+        {
+          "key": "dmg-builder/js-yaml",
+          "version": "4.3.2"
+        },
+        {
+          "key": "electron-updater/js-yaml",
+          "version": "4.3.2"
+        },
+        {
+          "key": "gray-matter/js-yaml",
+          "version": "3.15.2"
+        }
+      ]
+    },
+    {
+      "name": "lucide-react",
+      "current": "1.51.0",
+      "suggestedTarget": "1.70.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.70.0"
+        },
+        {
+          "path": "apps/viewer/package.json",
+          "section": "devDependencies",
+          "range": "^1.70.0"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.70.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^1.70.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "lucide-react",
+          "version": "1.70.0"
+        }
+      ]
+    },
+    {
+      "name": "marked",
+      "current": "18.1.1",
+      "suggestedTarget": "18.1.3",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^18.1.3"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "section": "dependencies",
+          "range": "^18.1.3"
+        }
+      ],
+      "actual": [
+        {
+          "key": "marked",
+          "version": "18.1.3"
+        },
+        {
+          "key": "@earendil-works/pi-tui/marked",
+          "version": "18.0.11"
+        },
+        {
+          "key": "@tiptap/markdown/marked",
+          "version": "17.0.6"
+        },
+        {
+          "key": "mermaid/marked",
+          "version": "16.4.2"
+        }
+      ]
+    },
+    {
+      "name": "motion",
+      "current": "14.0.0",
+      "suggestedTarget": "14.10.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^14.10.1"
+        },
+        {
+          "path": "apps/viewer/package.json",
+          "section": "devDependencies",
+          "range": "^14.10.1"
+        },
+        {
+          "path": "apps/webui/package.json",
+          "section": "dependencies",
+          "range": "^14.10.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^14.10.1"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^14.10.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "motion",
+          "version": "14.10.1"
+        }
+      ]
+    },
+    {
+      "name": "node-html-parser",
+      "current": "9.0.4",
+      "suggestedTarget": "9.0.7",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "packages/pi-agent-server/package.json",
+          "section": "dependencies",
+          "range": "9.0.7"
+        }
+      ],
+      "actual": [
+        {
+          "key": "node-html-parser",
+          "version": "9.0.7"
+        },
+        {
+          "key": "markitdown-js/node-html-parser",
+          "version": "6.1.13"
+        }
+      ]
+    },
+    {
+      "name": "openai",
+      "current": "7.27.0",
+      "suggestedTarget": "7.53.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^7.53.0"
+        },
+        {
+          "path": "packages/server-core/package.json",
+          "section": "dependencies",
+          "range": "^7.53.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "openai",
+          "version": "7.53.0"
+        },
+        {
+          "key": "@earendil-works/pi-ai/openai",
+          "version": "7.19.0"
+        }
+      ]
+    },
+    {
+      "name": "playwright",
+      "current": "1.64.1",
+      "suggestedTarget": "1.65.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "1.65.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "playwright",
+          "version": "1.65.0"
+        }
+      ]
+    },
+    {
+      "name": "prosemirror-transform",
+      "current": "1.12.2",
+      "suggestedTarget": "1.12.5",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.12.5"
+        }
+      ],
+      "actual": [
+        {
+          "key": "prosemirror-transform",
+          "version": "1.12.5"
+        }
+      ]
+    },
+    {
+      "name": "prosemirror-view",
+      "current": "1.42.6",
+      "suggestedTarget": "1.42.9",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^1.42.9"
+        }
+      ],
+      "actual": [
+        {
+          "key": "prosemirror-view",
+          "version": "1.42.9"
+        }
+      ]
+    },
+    {
+      "name": "react",
+      "current": "19.3.0",
+      "suggestedTarget": "19.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "apps/viewer/package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "apps/webui/package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^19.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "react",
+          "version": "19.3.1"
+        }
+      ]
+    },
+    {
+      "name": "react-dom",
+      "current": "19.3.0",
+      "suggestedTarget": "19.3.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "apps/viewer/package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "apps/webui/package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^19.3.1"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^19.3.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "react-dom",
+          "version": "19.3.1"
+        }
+      ]
+    },
+    {
+      "name": "react-i18next",
+      "current": "17.0.20",
+      "suggestedTarget": "17.1.13",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "17.1.13"
+        },
+        {
+          "path": "apps/viewer/package.json",
+          "section": "dependencies",
+          "range": "17.1.13"
+        },
+        {
+          "path": "apps/webui/package.json",
+          "section": "dependencies",
+          "range": "17.1.13"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "17.1.13"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "17.1.13"
+        }
+      ],
+      "actual": [
+        {
+          "key": "react-i18next",
+          "version": "17.1.13"
+        }
+      ]
+    },
+    {
+      "name": "react-resizable-panels",
+      "current": "4.14.2",
+      "suggestedTarget": "4.19.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "4.19.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "4.19.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "react-resizable-panels",
+          "version": "4.19.1"
+        }
+      ]
+    },
+    {
+      "name": "semver",
+      "current": "7.8.5",
+      "suggestedTarget": "7.8.6",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^7.8.6"
+        }
+      ],
+      "actual": [
+        {
+          "key": "semver",
+          "version": "7.8.6"
+        },
+        {
+          "key": "@earendil-works/pi-coding-agent/semver",
+          "version": "7.8.5"
+        },
+        {
+          "key": "app-builder-lib/semver",
+          "version": "7.7.4"
+        },
+        {
+          "key": "electron-updater/semver",
+          "version": "7.7.4"
+        },
+        {
+          "key": "eslint-plugin-react/semver",
+          "version": "6.3.1"
+        },
+        {
+          "key": "node-exports-info/semver",
+          "version": "6.3.1"
+        },
+        {
+          "key": "tiny-async-pool/semver",
+          "version": "5.7.2"
+        },
+        {
+          "key": "@sentry/bundler-plugins/@babel/core/semver",
+          "version": "6.3.1"
+        },
+        {
+          "key": "app-builder-lib/@electron/get/semver",
+          "version": "6.3.1"
+        },
+        {
+          "key": "eslint-plugin-react-hooks/@babel/core/semver",
+          "version": "6.3.1"
+        }
+      ]
+    },
+    {
+      "name": "shiki",
+      "current": "4.5.0",
+      "suggestedTarget": "4.6.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^4.6.0"
+        },
+        {
+          "path": "apps/viewer/package.json",
+          "section": "devDependencies",
+          "range": "^4.6.0"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^4.6.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^4.6.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "shiki",
+          "version": "4.6.0"
+        }
+      ]
+    },
+    {
+      "name": "tailwindcss",
+      "current": "4.3.3",
+      "suggestedTarget": "4.3.5",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/viewer/package.json",
+          "section": "devDependencies",
+          "range": "^4.3.5"
+        },
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^4.3.5"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "peerDependencies",
+          "range": "^4.3.5"
+        }
+      ],
+      "actual": [
+        {
+          "key": "tailwindcss",
+          "version": "4.3.5"
+        }
+      ]
+    },
+    {
+      "name": "temporal-polyfill",
+      "current": "1.0.6",
+      "suggestedTarget": "1.0.8",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^1.0.8"
+        }
+      ],
+      "actual": [
+        {
+          "key": "temporal-polyfill",
+          "version": "1.0.8"
+        }
+      ]
+    },
+    {
+      "name": "turndown",
+      "current": "7.2.4",
+      "suggestedTarget": "7.2.5",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "packages/pi-agent-server/package.json",
+          "section": "dependencies",
+          "range": "^7.2.5"
+        }
+      ],
+      "actual": [
+        {
+          "key": "turndown",
+          "version": "7.2.5"
+        }
+      ]
+    },
+    {
+      "name": "undici",
+      "current": "8.12.2",
+      "suggestedTarget": "8.12.4",
+      "priority": "P1",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^8.12.4"
+        }
+      ],
+      "actual": [
+        {
+          "key": "undici",
+          "version": "8.12.4"
+        },
+        {
+          "key": "@electron/get/undici",
+          "version": "7.30.1"
+        },
+        {
+          "key": "node-gyp/undici",
+          "version": "6.29.1"
+        }
+      ]
+    },
+    {
+      "name": "unist-util-visit",
+      "current": "5.1.0",
+      "suggestedTarget": "5.2.0",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^5.2.0"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "section": "dependencies",
+          "range": "^5.2.0"
+        }
+      ],
+      "actual": [
+        {
+          "key": "unist-util-visit",
+          "version": "5.2.0"
+        }
+      ]
+    },
+    {
+      "name": "vite",
+      "current": "8.3.4",
+      "suggestedTarget": "8.3.6",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/viewer/package.json",
+          "section": "devDependencies",
+          "range": "^8.3.6"
+        },
+        {
+          "path": "apps/webui/package.json",
+          "section": "devDependencies",
+          "range": "^8.3.6"
+        },
+        {
+          "path": "package.json",
+          "section": "devDependencies",
+          "range": "^8.3.6"
+        }
+      ],
+      "actual": [
+        {
+          "key": "vite",
+          "version": "8.3.6"
+        }
+      ]
+    },
+    {
+      "name": "ws",
+      "current": "8.22.0",
+      "suggestedTarget": "8.22.1",
+      "priority": "P2",
+      "status": "applied-and-resolved",
+      "declarations": [
+        {
+          "path": "apps/electron/package.json",
+          "section": "dependencies",
+          "range": "^8.22.1"
+        },
+        {
+          "path": "package.json",
+          "section": "dependencies",
+          "range": "^8.22.1"
+        },
+        {
+          "path": "packages/server-core/package.json",
+          "section": "dependencies",
+          "range": "^8.22.1"
+        },
+        {
+          "path": "packages/server/package.json",
+          "section": "devDependencies",
+          "range": "^8.22.1"
+        }
+      ],
+      "actual": [
+        {
+          "key": "ws",
+          "version": "8.22.1"
+        }
+      ]
+    }
+  ],
+  "keep": [
+    {
+      "name": "@earendil-works/pi-ai",
+      "before": [
+        "1.5.0"
+      ],
+      "after": [
+        "1.5.0"
+      ]
+    },
+    {
+      "name": "@earendil-works/pi-coding-agent",
+      "before": [
+        "1.5.0"
+      ],
+      "after": [
+        "1.5.0"
+      ]
+    },
+    {
+      "name": "@earendil-works/pi-agent-core",
+      "before": [
+        "1.5.0"
+      ],
+      "after": [
+        "1.5.0"
+      ]
+    },
+    {
+      "name": "@earendil-works/pi-tui",
+      "before": [
+        "1.5.0"
+      ],
+      "after": [
+        "1.5.0"
+      ]
+    },
+    {
+      "name": "react-pdf",
+      "before": [
+        "11.0.0"
+      ],
+      "after": [
+        "11.0.0"
+      ]
+    },
+    {
+      "name": "pdfjs-dist",
+      "before": [
+        "6.3.289"
+      ],
+      "after": [
+        "6.3.289"
+      ]
+    },
+    {
+      "name": "@fullcalendar/core",
+      "before": [
+        "7.1.0"
+      ],
+      "after": [
+        "7.1.0"
+      ]
+    },
+    {
+      "name": "@fullcalendar/daygrid",
+      "before": [],
+      "after": []
+    },
+    {
+      "name": "@fullcalendar/interaction",
+      "before": [],
+      "after": []
+    },
+    {
+      "name": "@fullcalendar/react",
+      "before": [
+        "7.1.0"
+      ],
+      "after": [
+        "7.1.0"
+      ]
+    },
+    {
+      "name": "@fullcalendar/timegrid",
+      "before": [],
+      "after": []
+    },
+    {
+      "name": "@sentry/core",
+      "before": [
+        "10.75.0",
+        "10.76.2"
+      ],
+      "after": [
+        "10.75.0",
+        "10.76.2"
+      ]
+    },
+    {
+      "name": "@sentry/react",
+      "before": [
+        "10.75.0"
+      ],
+      "after": [
+        "10.75.0"
+      ]
+    },
+    {
+      "name": "@sentry/vite-plugin",
+      "before": [
+        "5.4.1"
+      ],
+      "after": [
+        "5.4.1"
+      ]
+    },
+    {
+      "name": "@types/node",
+      "before": [
+        "24.19.2"
+      ],
+      "after": [
+        "24.19.2"
+      ]
+    }
+  ],
+  "patches": [
+    {
+      "path": "patches/http-cache-semantics@4.2.0.patch",
+      "sha256": "d225ce131bfbdc8f9774d51ac9ee56ffdc4017235d16b225f97922818914e155",
+      "unchanged": true
+    },
+    {
+      "path": "patches/http-cache-semantics@4.3.0.patch",
+      "sha256": "845d0b65804a904873d79ae09acefa403c898bcdb20a2f641d0db84143671ede",
+      "unchanged": true
+    },
+    {
+      "path": "patches/markitdown-js@0.0.14.patch",
+      "sha256": "0dab99ffd405ef43a155a9b52589844fc9fe71415c32eb6b4612dfd432562b25",
+      "unchanged": true
+    },
+    {
+      "path": "patches/node-tesseract-ocr@2.2.1.patch",
+      "sha256": "c8f58841a41d8a93992c1b9d9eb729d1da13f5f02f3a3ba893ad0d5238f537a9",
+      "unchanged": true
+    }
+  ]
+}

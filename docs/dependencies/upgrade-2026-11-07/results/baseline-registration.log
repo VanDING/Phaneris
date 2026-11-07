@@ -1,0 +1,43 @@
+bun test v1.4.3 (c6da4a4d3)
+
+src\main\handlers\__tests__\registration.isolated.ts:
+196 | 
+197 |     const missing = [...expected].filter(ch => !actual.has(ch)).sort()
+198 |     const unexpected = [...actual].filter(ch => !expected.has(ch)).sort()
+199 | 
+200 |     expect(missing).toEqual([])
+201 |     expect(unexpected).toEqual([])
+                             ^
+error: expect(received).toEqual(expected)
+
+- []
++ [
++   "assistantMemory:history",
++   "assistantMemory:mutate",
++   "assistantMemory:query",
++   "assistantMemory:readSource",
++   "assistantMemory:suppressionExport",
++   "assistantMemory:suppressionMerge",
++   "residentAssistant:cancelWork",
++   "residentAssistant:context",
++   "residentAssistant:control",
++   "residentAssistant:dispatch",
++   "residentAssistant:events",
++   "residentAssistant:executionMode",
++   "residentAssistant:get",
++   "residentAssistant:originals",
++   "residentAssistant:outputVisibility",
++   "residentAssistant:work",
++ ]
+
+- Expected  - 1
++ Received  + 18
+
+      at <anonymous> (E:\Phaneris\apps\electron\src\main\handlers\__tests__\registration.isolated.ts:201:24)
+(fail) RPC handler registration > registers all declared handled channels exactly once [462.99ms]
+(pass) RPC handler registration > keeps onboarding channels in registration coverage [0.33ms]
+
+ 1 pass
+ 1 fail
+ 3 expect() calls
+Ran 2 tests across 1 file. [512.00ms]

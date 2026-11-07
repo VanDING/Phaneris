@@ -1,0 +1,312 @@
+{
+  "checks": [
+    "native authoritative preferences apply before acceptance",
+    "real main preload deliver initial theme to toolbar and empty state",
+    "native theme delivery default/light resolves to default/light",
+    "native theme delivery default/dark resolves to default/dark",
+    "native theme delivery ink/light resolves to default/light",
+    "native theme delivery ink/dark resolves to default/dark",
+    "native theme delivery geek/light resolves to default/light",
+    "native theme delivery geek/dark resolves to default/dark",
+    "native theme delivery cyberpunk-2077/light resolves to default/light",
+    "native theme delivery cyberpunk-2077/dark resolves to default/dark",
+    "real Chromium browser zoom 200 percent reflows",
+    "foreign page receives no private theme payload",
+    "native renderer has no unhandled errors"
+  ],
+  "samples": [
+    [
+      {
+        "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+        "value": {
+          "id": "default",
+          "status": "ready",
+          "mode": "light",
+          "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+          "color": "rgb(34, 38, 48)"
+        }
+      },
+      {
+        "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+        "value": {
+          "id": "default",
+          "status": "ready",
+          "mode": "light",
+          "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+          "color": "rgb(34, 38, 48)"
+        }
+      }
+    ],
+    {
+      "requestedTheme": "default",
+      "preferences": {
+        "mode": "light",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        }
+      ]
+    },
+    {
+      "requestedTheme": "default",
+      "preferences": {
+        "mode": "dark",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        }
+      ]
+    },
+    {
+      "requestedTheme": "ink",
+      "preferences": {
+        "mode": "light",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        }
+      ]
+    },
+    {
+      "requestedTheme": "ink",
+      "preferences": {
+        "mode": "dark",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        }
+      ]
+    },
+    {
+      "requestedTheme": "geek",
+      "preferences": {
+        "mode": "light",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        }
+      ]
+    },
+    {
+      "requestedTheme": "geek",
+      "preferences": {
+        "mode": "dark",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        }
+      ]
+    },
+    {
+      "requestedTheme": "cyberpunk-2077",
+      "preferences": {
+        "mode": "light",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:light",
+            "color": "rgb(34, 38, 48)"
+          }
+        }
+      ]
+    },
+    {
+      "requestedTheme": "cyberpunk-2077",
+      "preferences": {
+        "mode": "dark",
+        "colorTheme": "default",
+        "font": "inter"
+      },
+      "views": [
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris-dependency-upgrade-20261107/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "a9ecd1c66c3df4b6f870c68a3c14a5056f7b4d71e24127fff7ea2b32fbf96b6a:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        }
+      ]
+    },
+    {
+      "zoom": 2,
+      "native": {
+        "contentSize": [
+          1280,
+          900
+        ],
+        "zoomFactor": 2
+      },
+      "geometry": {
+        "width": 640,
+        "scroll": 640,
+        "viewport": 640,
+        "panels": [
+          {
+            "role": "navigator",
+            "x": 0,
+            "width": 640
+          },
+          {
+            "role": "content",
+            "x": 640,
+            "width": 640
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "platform": "win32",
+  "electron": "45.2.3",
+  "scope": "Production bundles, real Electron main/preload and BrowserViews, disposable config, local RPC; no signed installer acceptance."
+}

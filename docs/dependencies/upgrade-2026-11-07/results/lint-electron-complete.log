@@ -1,0 +1,45 @@
+$ cd apps/electron && bun run lint
+$ bun run eslint src/ --max-warnings 69
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\actions\useAction.ts
+  31:25  warning  React Hook useEffect has a spread element in its dependency array. This means we can't statically verify whether you've passed the correct dependencies  react-hooks/exhaustive-deps
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\components\workspace\AddWorkspaceStep_ConnectRemote.tsx
+  39:3  warning  Unused eslint-disable directive (no problems were reported from 'no-constant-condition')
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\hooks\useSessionDecisions.ts
+  57:95  warning  The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\lib\local-storage.ts
+   92:18  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  105:5   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  115:3   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  122:10  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  129:3   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\playground\ComponentPreview.tsx
+   19:19  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+   89:11  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  125:17  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\playground\MotionToggle.tsx
+  39:19  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  52:7   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\playground\PlaygroundApp.tsx
+   43:22  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+   60:22  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  120:9   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  122:9   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  132:7   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\playground\Sidebar.tsx
+  18:22  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+  32:7   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  phaneris/no-localstorage
+
+E:\Phaneris-dependency-upgrade-20261107\apps\electron\src\renderer\playground\demos\messaging\PairingCodeDialogPreview.tsx
+  43:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+
+✖ 21 problems (0 errors, 21 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

@@ -194,13 +194,13 @@ try {
   const packagedUv = join(root, 'apps/electron/resources/bin', platformKey, process.platform === 'win32' ? 'uv.exe' : 'uv')
   const uv = existsSync(packagedUv) ? packagedUv : process.platform === 'win32' ? 'uv.exe' : 'uv'
   const script = join(root, 'apps/electron/resources/scripts/img_tool.py')
-  const info = execFileSync(uv, ['run', '--python', '3.12.15', '--quiet', script, 'info', join(fixtures, 'photo.heic')], { encoding: 'utf8', timeout: 900_000 })
+  const info = execFileSync(uv, ['run', '--python', '3.12.16', '--quiet', script, 'info', join(fixtures, 'photo.heic')], { encoding: 'utf8', timeout: 900_000 })
   const parsed = JSON.parse(info) as { format: string; width: number; height: number }
   assert.equal(parsed.format, 'HEIF', `pillow-heif must open HEIC (got ${parsed.format})`)
   assert.equal(parsed.width, 2048)
   assert.equal(parsed.height, 1536)
   const jpegOut = join(evidence.directory, 'img-tool-converted.jpg')
-  execFileSync(uv, ['run', '--python', '3.12.15', '--quiet', script, 'convert', join(fixtures, 'photo.heic'), '--format', 'jpg', '-o', jpegOut], { timeout: 900_000 })
+  execFileSync(uv, ['run', '--python', '3.12.16', '--quiet', script, 'convert', join(fixtures, 'photo.heic'), '--format', 'jpg', '-o', jpegOut], { timeout: 900_000 })
   const convertedMeta = await sharp(readFileSync(jpegOut)).metadata()
   assert.equal(convertedMeta.format, 'jpeg')
   evidence.json('python-tool.json', {

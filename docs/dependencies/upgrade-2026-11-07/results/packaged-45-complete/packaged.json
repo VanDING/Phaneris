@@ -1,0 +1,80 @@
+{
+  "executable": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-0153-unpacked-zU1pkt\\Phaneris.exe",
+  "packageDirectory": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-45-complete\\package",
+  "unpackedDirectory": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-0153-unpacked-zU1pkt",
+  "commands": [
+    {
+      "name": "package",
+      "args": [
+        "bun",
+        "run",
+        "electron-builder",
+        "--config",
+        "electron-builder.yml",
+        "--dir",
+        "--config.directories.output=E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-45-complete\\package"
+      ],
+      "code": 0,
+      "elapsedMs": 28495,
+      "logSha256": "09af36b5190ff36f7a3235542f5e7b53edb0a4878a3f166b33655b36bca30a19"
+    },
+    {
+      "name": "native-attachments",
+      "args": [
+        "bun",
+        "run",
+        "scripts/verification/upgrade-0153-native-attachments-workflow.ts",
+        "--output-dir=E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-45-complete\\native"
+      ],
+      "code": 0,
+      "elapsedMs": 26052,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "windows-reopen",
+      "args": [
+        "bun",
+        "run",
+        "scripts/verification/windows-reopen-workflow.ts",
+        "--output-dir=E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\packaged-45-complete\\reopen"
+      ],
+      "code": 0,
+      "elapsedMs": 58008,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "currentBuilds": {
+    "dist/main.cjs": "440ce56cfbf25b772144dcba9ef1d2b5e31168fc1d0b4d086f38606b656525ae",
+    "dist/bootstrap-preload.cjs": "ee22d9d58c2d6e54369ce762ffc45deb5d11f0d20011614517ead56f36b033dd",
+    "resources/pi-agent-server/index.js": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e",
+    "resources/pi-agent-server/bundle.js": "6ee1c335cb21608286002292b2627f58d13021315cf229d04424867477e4fb2a"
+  },
+  "attachmentScenes": [
+    "actual choose HEIC normalizes metadata and bytes before provider dispatch",
+    "actual drop HEIC normalizes metadata and bytes before provider dispatch",
+    "actual paste HEIC normalizes metadata and bytes before provider dispatch",
+    "a late storage acknowledgement preserves text typed after submission",
+    "failed transcode retains the text and attachment without dispatch",
+    "actual main-process nativeImage decodes the RPC-normalized JPEG",
+    "actual Electron main loads node-pty and executes a real ConPTY child"
+  ],
+  "reopenScenes": [
+    "native-close-and-immediate-reopen-preserves-the-launch-request",
+    "second-instance-recovers-a-running-owner-with-no-window",
+    "duplicate-launch-restores-one-existing-window-without-restarting",
+    "native-second-instance-deep-link-routes-to-the-requested-workspace-and-settings",
+    "three-native-close-reopen-cycles-exit-and-release-the-server-lock",
+    "native-gantt-rounded-corners-scroll-and-menu-in-light-dark-wide-narrow-views"
+  ],
+  "reachability": {
+    "koffi": {
+      "installed": false,
+      "note": "Not in the frozen dependency graph; production copyPiAgentServer was invoked, no new dependency added."
+    },
+    "sharp": {
+      "desktopConsumer": false,
+      "consumer": "packages/server-core/src/runtime/platform-headless.ts; headless artifact requires darwin/linux"
+    }
+  },
+  "releaseUnchanged": []
+}

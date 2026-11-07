@@ -1,0 +1,23 @@
+32 |     const child = Bun.spawn([process.execPath, 'scripts/check-governance-boundaries.ts', `--repository=${fixture}`], { cwd: resolve(import.meta.dir, '../..'), stdout: 'pipe', stderr: 'pipe' })
+33 |     const [out, err, code] = await Promise.all([new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited])
+34 |     return { code, log: out + err }
+35 |   }
+36 |   const clean = await invoke()
+37 |   assert.equal(clean.code, 0, clean.log)
+              ^
+AssertionError: Missing required pure entry packages/shared/src/agent/resident-role.ts
+
+
+1 !== 0
+
+ generatedMessage: false,
+     actual: 1,
+   expected: 0,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at E:\Phaneris\scripts\verification\governance-boundaries-workflow.ts:37:10
+      at verificationWorkflow (E:\Phaneris\scripts\verification\verification-artifacts.ts:96:37)
+
+Bun v1.4.3 (Windows x64)

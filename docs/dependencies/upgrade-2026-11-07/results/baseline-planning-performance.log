@@ -1,0 +1,19 @@
+94 |     await second.clock.setSystemTime(new Date('2026-10-14T04:00:00Z'))
+95 |     await second.goto(base); await waitForBrowserCondition(second, async () => Boolean(window.electronAPI) && (await window.electronAPI.getTransportConnectionState()).status === 'connected')
+96 |     await second.getByText('Projects', { exact: true }).first().click({ timeout: 60_000 })
+97 |     await navigate(second, 'calendar'); await second.locator('[data-calendar-entry="planning-00000"]').first().waitFor(); await quiet(); await control('reset')
+98 |     await control('rename', { patch: { name: 'C02 cross-window verified' } }); await quiet()
+99 |     for (const target of [page, second]) await target.locator('[data-calendar-entry="planning-00000"]').filter({ hasText: 'C02 cross-window verified' }).first().waitFor()
+                                                                                                                                                                      ^
+TimeoutError: waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-calendar-entry="planning-00000"]').filter({ hasText: 'C02 cross-window verified' }).first() to be visible
+    63 × locator resolved to hidden <div tabindex="0" role="button" data-calendar-entry="planning-00000" class="fc-classic-uqo fc-classic-zIi fc-classic-bCs fc-classic-eYX fc-classic-d0j fc-classic-DO7 fc-classic-YjJ fc-classic-vwH fc-classic-3Xj fc-classic-Ika fc-classic-JIC fc-classic-3J4 fc-classic-USt fc-classic-kmj fc-classic-Jzj fc-classic-Skl fc-classic-3e1 fc-bH fc-iz fc-ZR fc-cj fc-td">…</div>
+
+  log: [ "  - waiting for locator('[data-calendar-entry=\"planning-00000\"]').filter({ hasText: 'C02 cross-window verified' }).first() to be visible",
+  "    63 × locator resolved to hidden <div tabindex=\"0\" role=\"button\" data-calendar-entry=\"planning-00000\" class=\"fc-classic-uqo fc-classic-zIi fc-classic-bCs fc-classic-eYX fc-classic-d0j fc-classic-DO7 fc-classic-YjJ fc-classic-vwH fc-classic-3Xj fc-classic-Ika fc-classic-JIC fc-classic-3J4 fc-classic-USt fc-classic-kmj fc-classic-Jzj fc-classic-Skl fc-classic-3e1 fc-bH fc-iz fc-ZR fc-cj fc-td\">…</div>"
+],
+
+      at E:\Phaneris\scripts\verification\planning-performance-workflow.ts:99:162
+
+Bun v1.4.3 (Windows x64)

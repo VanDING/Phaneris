@@ -1,0 +1,931 @@
+$ bun run scripts/test-critical.ts "--output-dir=.cache/upgrade-20261107/critical-45-final"
+Environment OK: Bun 1.4.4, Node v24.22.2; local script entries exist.
+
+> run build:runtime
+$ bun run server:build:subprocess && bun run build:wa-worker
+$ cd packages/pi-agent-server && bun run build
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 2753 modules in 268ms
+
+  bundle.js  10.0 MB  (entry point)
+
+$ bun run scripts/build-wa-worker.ts
+📨 Building WhatsApp worker (bundling Baileys) — build 2026-11-07T13:55:53.196Z (853756659+dirty)...
+
+  packages\messaging-whatsapp-worker\dist\worker.cjs  7.2mb
+
+Done in 1969ms
+🔍 Verifying worker output...
+✅ WhatsApp worker built (7.16 MB) → E:\Phaneris-dependency-upgrade-20261107\packages\messaging-whatsapp-worker\dist\worker.cjs
+
+> run scripts/check-runtime-boundary.ts
+{
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-11-07T13:55:59.379Z",
+  "scannedFiles": 1698,
+  "violationCount": 0,
+  "violations": []
+}
+
+> run scripts/check-architecture.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-07T13:56:02.597Z",
+  "scannedFiles": 1698,
+  "webuiClosureSize": 841,
+  "webuiShimCount": 4,
+  "inspected": {
+    "webui-unshimmed-node": 8,
+    "undeclared-subpath-import": 1538
+  },
+  "baselineSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "currentSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "failures": []
+}
+
+> run scripts/check-automation-events.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-07T13:56:02.803Z",
+  "vocabularySize": 13,
+  "emittedCount": 5,
+  "unemittedCount": 8,
+  "emitted": {},
+  "unemitted": [
+    "Notification",
+    "PermissionRequest",
+    "PreCompact",
+    "SessionEnd",
+    "SessionStart",
+    "Setup",
+    "SubagentStart",
+    "SubagentStop"
+  ],
+  "failures": []
+}
+
+> run scripts/verification/connection-probe-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\connection-probe
+{"passed":5,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\connection-probe"}
+
+> run scripts/verification/runtime-startup-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\runtime-startup
+{"passed":7,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\runtime-startup","timings":[{"state":"first-reopen","readyMs":17.23040000000003},{"state":"warm-reopen","readyMs":2.1627999999996064}]}
+
+> run scripts/verification/runtime-backup-retention-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\runtime-backup-retention
+{"passed":7,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\runtime-backup-retention"}
+
+> run scripts/verification/local-startup-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup
+2026-11-07T13:56:18.266Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-11-07T13:56:18.266Z ERROR [session] No LLM connection found for slug: null
+2026-11-07T13:56:18.351Z INFO  [session] Setting up ConfigWatcher for workspace: history (E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\history)
+2026-11-07T13:56:18.354Z INFO  [session] Initialized AutomationSystem for workspace history
+2026-11-07T13:56:18.354Z INFO  [session] Setting up ConfigWatcher for workspace: other (E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\other)
+2026-11-07T13:56:18.355Z INFO  [session] Initialized AutomationSystem for workspace other
+2026-11-07T13:56:18.552Z INFO  [session] Loaded 640 sessions from disk (metadata only)
+2026-11-07T13:56:18.743Z INFO  [session] Automations config changed in history
+2026-11-07T13:56:18.744Z INFO  [session] Reloaded 1 automations for workspace history
+2026-11-07T13:56:19.865Z INFO  [sessions:get] result {"ctxWorkspaceId":"history","webContentsId":null,"resolvedWorkspaceId":"history","returnedCount":640,"returnedWorkspaceIds":{"history":640},"returnedIds":{"count":640,"ids":["history-639","history-638","history-637","history-636","history-635","history-634","history-633","history-632","history-631","history-630","history-629","history-628","history-627","history-626","history-625","history-624","history-623","history-622","history-621","history-620","history-619","history-618","history-617","history-616","history-615"],"truncated":true}}
+2026-11-07T13:56:19.881Z WARN  [session] Permission mode diagnostics mismatch, reconciling to managed session mode {"sessionId":"history-0","managedMode":"allow-all","diagnosticsMode":"ask","modeVersion":0,"changedBy":"system"}
+2026-11-07T13:56:19.894Z DEBUG [session] Lazy-loaded 1 messages for session history-0
+2026-11-07T13:56:19.894Z INFO  [session] Cleaning up resources...
+2026-11-07T13:56:19.895Z INFO  [session] Stopped config watcher for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\history
+2026-11-07T13:56:19.895Z INFO  [session] Stopped config watcher for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\other
+2026-11-07T13:56:19.895Z INFO  [session] Disposed AutomationSystem for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\history
+2026-11-07T13:56:19.895Z INFO  [session] Disposed AutomationSystem for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\other
+2026-11-07T13:56:19.927Z INFO  [session] Cleanup complete
+2026-11-07T13:56:19.956Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-11-07T13:56:19.956Z ERROR [session] No LLM connection found for slug: null
+2026-11-07T13:56:20.011Z WARN  [session] Durable Runtime recovered interrupted operations {"workspaceId":"history","operations":[{"operationId":"unsettled-run","sessionId":"history-1","action":"parked_unknown_effect","unsettledToolOperationIds":["toolop_90a1ad8ced5263413bb522c9b3adf434"]}]}
+2026-11-07T13:56:20.012Z INFO  [session] Setting up ConfigWatcher for workspace: history (E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\history)
+2026-11-07T13:56:20.013Z INFO  [session] Initialized AutomationSystem for workspace history
+2026-11-07T13:56:20.013Z INFO  [session] Setting up ConfigWatcher for workspace: other (E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\other)
+2026-11-07T13:56:20.014Z INFO  [session] Initialized AutomationSystem for workspace other
+2026-11-07T13:56:20.185Z INFO  [session] Loaded 640 sessions from disk (metadata only)
+2026-11-07T13:56:20.187Z INFO  [session] Cleaning up resources...
+2026-11-07T13:56:20.187Z INFO  [session] Stopped config watcher for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\history
+2026-11-07T13:56:20.187Z INFO  [session] Stopped config watcher for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\other
+2026-11-07T13:56:20.187Z INFO  [session] Disposed AutomationSystem for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\history
+2026-11-07T13:56:20.187Z INFO  [session] Disposed AutomationSystem for E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\local-startup\other
+2026-11-07T13:56:20.207Z INFO  [session] Cleanup complete
+{"passed":11,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\local-startup","initializeMs":298.0478000000003,"ownershipMs":16.004699999999957}
+
+> run scripts/verification/status-startup-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\status-startup
+{"passed":10,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\status-startup"}
+
+> run scripts/verification/upstream-015-core-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\upstream-015-core
+
+> run scripts/verification/upstream-015-orchestration-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\upstream-015-orchestration
+
+> run scripts/verification/upstream-015-browser-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\upstream-015-browser
+
+> run scripts/verification/upstream-015-renderer-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\upstream-015-renderer
+vite v8.3.6 building client environment for production...
+transforming...
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "E:/Phaneris-dependency-upgrade-20261107/node_modules/string_decoder/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+✓ 8841 modules transformed.
+rendering chunks...
+computing gzip size...
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/shellsession-deHTTuVJ.js                              0.71 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/index.html                                                   0.82 kB │ gzip:   0.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/html-derivative-COniDotr.js                           0.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/git-rebase-DnYC8LXF.js                                0.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/git-commit-dUGrvm6Q.js                                1.23 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/xsl-ChyCsSNC.js                                       1.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sparql-C0ia5K60.js                                    1.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fortran-fixed-form-D6mN0kjy.js                        1.66 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hxml-D7Y24wKF.js                                      1.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/erb-rDg-WUUR.js                                       2.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/edge-DckLT2UQ.js                                      2.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/json-SIBMJoSt.js                                      2.91 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cairo-DRAZz75c.js                                     2.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hurl-BdH6bZOu.js                                      3.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/glsl-SSb7rsvV.js                                      3.73 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size3-Regular-CTq5MqoE.woff                     4.42 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/http-Xn87nvcF.js                                      4.42 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nextflow-BoTnSBQ_.js                                  4.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2                    4.92 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2                    5.20 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gdresource-CZkFGo3B.js                                5.28 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/qml-D7VpWGUJ.js                                       5.34 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2                    5.46 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/xml--cBckwRx.js                                       5.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jinja-BFcXHPeD.js                                     5.64 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/shaderlab-C4rnI7x0.js                                 5.92 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size4-Regular-BF-4gkZK.woff                     5.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size2-Regular-oD1tc_U0.woff                     6.18 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size1-Regular-C195tn64.woff                     6.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/chapel-CMe-j8HV.js                                    6.63 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/r-DYsbrGcX.js                                         6.82 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2              6.90 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2                 6.91 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/soy-CYoMYl_E.js                                       6.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size3-Regular-DgpXs0kz.ttf                      7.58 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff               7.65 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff                  7.71 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ollama-D1dqFtP2.svg                                   7.84 kB │ gzip:   3.32 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/regexp-CqqocXmm.js                                    8.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/haml-VpdtCgYQ.js                                      8.37 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vue-html-BxIzEvO1.js                                  8.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sas-C7qWeX05.js                                       9.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Script-Regular-D3wIWfF6.woff2                   9.64 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jison-DZs5m-8z.js                                     9.69 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tex-DPex9M5i.js                                       9.76 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rst-Cm6mcuMY.js                                      10.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2               10.34 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size4-Regular-DWFBv043.ttf                     10.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Script-Regular-D5yQViql.woff                   10.58 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/yaml-CCEXTIgS.js                                     10.59 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/just-UNFvZq8C.js                                     10.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/elm-Bv1RM5OM.js                                      10.95 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2                 11.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2                    11.34 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf                     11.50 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2                12.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/surrealql-BnP4zl4d.js                                12.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2                  12.21 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf                     12.22 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff                12.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf               12.34 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf                  12.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/handlebars-BZzpAqXj.js                               12.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff                  13.20 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff                     13.29 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2              13.56 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pug-Ddq7x0XK.js                                      13.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff                 14.11 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff                   14.40 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/commandcode-D8gwtO8i.ico                             15.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nix-Cl_7024t.js                                      15.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/lua-DAqCjWaI.js                                      15.63 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff               16.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/elixir-DyrlHNbp.js                                   16.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2                 16.40 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Math-Italic-t53AETM-.woff2                     16.44 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ts-tags-Bw21MT_8.js                                  16.60 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Script-Regular-C5JkGWo-.ttf                    16.64 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2                 16.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2                     16.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/openrouter-PqWzhx9M.svg                              17.50 kB │ gzip:  12.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/liquid-BYVT-aF4.js                                   18.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/graphql-C05xHqsB.js                                  18.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/svelte-CzYIIuSh.js                                   18.26 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff                  18.66 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Math-Italic-DA0__PXp.woff                      18.74 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff                  19.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf                 19.43 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Fraktur-Regular-CB_wures.ttf                   19.57 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf                      19.58 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Italic-BMLOBm91.woff                      19.67 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/glimmer-js-DQ7GYAUY.js                               20.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/glimmer-ts-y-_fgFnB.js                               20.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/mdc-De6B1p0A.js                                      20.09 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf                  22.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nim-g993SJOB.js                                      22.46 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sql-DVJ1tza7.js                                      23.75 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/astro-YuSePSc6.js                                    24.03 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/apl-C9oDFZc8.js                                      24.03 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/templ-Cd5iANqN.js                                    24.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/angular-html-B26onf4i.js                             24.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf                    24.50 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/twig-DBuzagW_.js                                     24.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vue-CTVTdFsj.js                                      24.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fsharp-CwoEF39o.js                                   25.30 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Bold-Cx986IdX.woff2                       25.32 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/marko-BO1mEVpk.js                                    25.73 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Regular-B22Nviop.woff2                    26.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/scss-BUYSmK5x.js                                     27.30 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/java-Dj5ghJSb.js                                     27.30 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/coffee-CiWZURJ5.js                                   27.43 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/razor-DnwXlZiV.js                                    27.45 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf                27.55 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2                     28.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/crystal-qPuD4OGD.js                                  29.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Bold-Jm3AIy58.woff                        29.91 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Regular-Dr94JaBh.woff                     30.77 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf                   31.19 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/julia-D5eJrzvK.js                                    31.23 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Math-Italic-flOr_0UB.ttf                       31.30 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf                   32.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_AMS-Regular-DMm9YOAa.woff                      33.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Italic-3WenGoN9.ttf                       33.58 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/bsl-CVED6lJ1.js                                      33.95 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nginx-BJ-zF5qt.js                                    35.35 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/org-CAd5Ydv5.js                                      36.26 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/erlang-BXdgHVfi.js                                   37.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cobol-DXpPZ8cn.js                                    39.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/shellscript-CWQaeFHi.js                              41.56 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/perl-26iSRikD.js                                     43.15 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/manifest-B3ojFefP.svg                                43.36 kB │ gzip:  15.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ruby-DGBM0vkm.js                                     46.64 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Bold-waoOVXN0.ttf                         51.33 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/css-Ca6zP6N4.js                                      53.45 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_Main-Regular-ypZvNtVU.ttf                      53.58 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/stata-BY08FRpx.js                                    56.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/html-BZRjdGWH.js                                     57.35 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/KaTeX_AMS-Regular-DRggAlZN.ttf                       63.63 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/c-D2shpJEl.js                                        72.20 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/latex-BjMO0jYO.js                                    73.25 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hack-DnfYR2Vi.js                                     81.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/blade-49DIAsxP.js                                   104.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/php-CaD97Iym.js                                     113.13 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/syntax-highlight.worker-BVu4ruGU.js                 143.74 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/typst-DfXvyMdg.js                                   163.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/javascript-B9_lakTp.js                              174.91 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tsx-DTkql2a5.js                                     175.62 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jsx-BLjz-dYZ.js                                     177.88 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/typescript-B5_Wks6H.js                              181.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/angular-ts-CXd-wogi.js                              183.75 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vue-vine-Z591mc3J.js                                190.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wasm-B05eFitM.js                                    211.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cpp-CW5zwYSF.js                                     785.58 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pdf.worker.min-Dswkl-cV.mjs                       1,265.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/TextLayer-DXuroF4_.css                               10.36 kB │ gzip:   2.25 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/index-CKOdWGUU.css                                   89.76 kB │ gzip:  18.94 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/langs-C_scsjBP.js                                     0.05 kB │ gzip:   0.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/engine-oniguruma-XTd-gbN3.js                          0.06 kB │ gzip:   0.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/clsx-DB0hHKMi.js                                      0.36 kB │ gzip:   0.23 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/codeowners-C8r90Shi.js                                0.54 kB │ gzip:   0.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/shellsession-CAaAjSMZ.js                              0.71 kB │ gzip:   0.42 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tsv-sltzmVWM.js                                       0.73 kB │ gzip:   0.33 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/MarkdownLatexBlock-bNK1Juqz.js                        0.79 kB │ gzip:   0.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/html-derivative-CAiteQre.js                           0.84 kB │ gzip:   0.46 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/git-rebase-OuKXkovv.js                                0.98 kB │ gzip:   0.44 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/qmldir-DCQb3MpD.js                                    0.99 kB │ gzip:   0.44 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/core-BnF5T28_.js                                      1.02 kB │ gzip:   0.47 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/csv-Dx-8-gkx.js                                       1.13 kB │ gzip:   0.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/git-commit-BSykSTBG.js                                1.22 kB │ gzip:   0.52 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rolldown-runtime-BCiCTKAo.js                          1.30 kB │ gzip:   0.71 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/xsl-CepWDWM_.js                                       1.36 kB │ gzip:   0.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sparql-D_iOobhT.js                                    1.47 kB │ gzip:   0.81 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ini-B5eOa1yu.js                                       1.51 kB │ gzip:   0.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fortran-fixed-form-DEKoE2YW.js                        1.66 kB │ gzip:   0.68 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/PdfFilePreview-AiLlIZX6.js                            1.69 kB │ gzip:   0.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/docker-IyjqRm3v.js                                    1.73 kB │ gzip:   0.59 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dotenv-CuH5my32.js                                    1.74 kB │ gzip:   0.60 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/preload-helper-DE3Rk_Bk.js                            1.78 kB │ gzip:   0.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/desktop-Dlh5hvp9.js                                   1.82 kB │ gzip:   0.75 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hxml-Dcm88srW.js                                      1.89 kB │ gzip:   0.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/erb-CEoGgphw.js                                       2.13 kB │ gzip:   0.62 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wenyan-C8pVoKbM.js                                    2.15 kB │ gzip:   1.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/slack-dark-CMu0smFa.js                                2.18 kB │ gzip:   0.77 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/PDFPreviewOverlay.impl-C4qpVxmu.js                    2.19 kB │ gzip:   1.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/stream-tokenizer-pSxgzact.js                          2.20 kB │ gzip:   0.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jssm-DXw9l8Rf.js                                      2.23 kB │ gzip:   0.61 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/laserwave-HSLx0L75.js                                 2.25 kB │ gzip:   0.77 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/edge-CkzMQBYh.js                                      2.30 kB │ gzip:   0.67 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/horizon-bright-DaEDgBmR.js                            2.33 kB │ gzip:   0.82 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/reg-CRGYupPL.js                                       2.33 kB │ gzip:   0.69 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/slack-ochin-BBne7cjw.js                               2.34 kB │ gzip:   0.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-default-zacuWV-M.js                       2.34 kB │ gzip:   0.82 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dracula-soft-DXuNm1Kq.js                              2.36 kB │ gzip:   0.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/snazzy-light-CV8HUEmk.js                              2.37 kB │ gzip:   0.81 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/min-light-DVOTDhnA.js                                 2.38 kB │ gzip:   0.76 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/horizon-Ba2cwkSy.js                                   2.39 kB │ gzip:   0.81 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-CnthUGfg.js                            2.43 kB │ gzip:   0.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-ocean-CWR-LogA.js                      2.43 kB │ gzip:   0.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-darker-DUi03Qre.js                     2.43 kB │ gzip:   0.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-lighter-D2-qr5Vw.js                    2.44 kB │ gzip:   0.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-palenight-Cnv8m1ra.js                  2.44 kB │ gzip:   0.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/min-dark-EXoM-6Xo.js                                  2.44 kB │ gzip:   0.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vesper-sUHevyKv.js                                    2.46 kB │ gzip:   0.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/diff-woXpYk--.js                                      2.56 kB │ gzip:   0.68 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/everforest-dark-CjdfwUBe.js                           2.57 kB │ gzip:   0.83 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gleam-CSRkHgEL.js                                     2.57 kB │ gzip:   0.81 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/everforest-light-CfVwwCBP.js                          2.57 kB │ gzip:   0.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hy-CZbG8q4J.js                                        2.64 kB │ gzip:   1.17 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/poimandres-DUFjrgxT.js                                2.69 kB │ gzip:   0.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/one-dark-pro-08PdtLzi.js                              2.74 kB │ gzip:   0.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nord-u7hMircQ.js                                      2.75 kB │ gzip:   0.88 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rose-pine-BSqRqUae.js                                 2.78 kB │ gzip:   0.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rose-pine-moon-CAU7u1h4.js                            2.78 kB │ gzip:   0.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rose-pine-dawn-U6TBE82u.js                            2.79 kB │ gzip:   0.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/openscad-BUDT5pXO.js                                  2.81 kB │ gzip:   1.00 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/log-BNLmms1o.js                                       2.84 kB │ gzip:   0.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/json-BCymDGPe.js                                      2.89 kB │ gzip:   0.82 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cairo-DLTphjLi.js                                     2.93 kB │ gzip:   0.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/berry-DKpUyyne.js                                     2.99 kB │ gzip:   0.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jsonl-CmCQp5Yx.js                                     3.00 kB │ gzip:   0.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/plastic-B8mE6BxX.js                                   3.01 kB │ gzip:   0.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ayu-dark-CwczpL8O.js                                  3.02 kB │ gzip:   0.95 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ayu-light-DSh22xiD.js                                 3.02 kB │ gzip:   0.94 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ayu-mirage-JE6hAyHG.js                                3.02 kB │ gzip:   0.95 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jsonc-CYpm1nAK.js                                     3.10 kB │ gzip:   0.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/logo-Cluzi2Zq.js                                      3.12 kB │ gzip:   1.46 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-dark-hard-QTgQQZn-.js                         3.12 kB │ gzip:   0.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-dark-soft-XCkqeBhR.js                         3.12 kB │ gzip:   0.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-dark-medium-9d5YdCTx.js                       3.12 kB │ gzip:   0.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-light-hard--5-nXqNp.js                        3.12 kB │ gzip:   0.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-light-soft-CIJpzjAO.js                        3.12 kB │ gzip:   0.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-light-medium-COA1PZW2.js                      3.12 kB │ gzip:   0.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kanagawa-wave-D-tTv4k2.js                             3.13 kB │ gzip:   0.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kanagawa-dragon-DhTFvBMT.js                           3.14 kB │ gzip:   0.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kanagawa-lotus--m8sdOxn.js                            3.14 kB │ gzip:   0.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-BL6HSl_n.js                               3.21 kB │ gzip:   1.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-light-mYhEBkPo.js                              3.21 kB │ gzip:   1.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/po-BiJDBrnU.js                                        3.23 kB │ gzip:   0.90 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/json5-BR5RXkoi.js                                     3.24 kB │ gzip:   0.82 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/mipsasm-BMqwQI7S.js                                   3.25 kB │ gzip:   1.17 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-dimmed-Mc0P9idi.js                        3.26 kB │ gzip:   1.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/one-light-DgvUEtgI.js                                 3.26 kB │ gzip:   0.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-light-default-DVlCqP3X.js                      3.26 kB │ gzip:   1.00 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-high-contrast-IMKX2AVF.js                 3.26 kB │ gzip:   1.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-light-high-contrast-Dj6zTyWR.js                3.26 kB │ gzip:   1.01 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tasl-DMoTqEGO.js                                      3.28 kB │ gzip:   0.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rbs-C0MpOrj4.js                                       3.30 kB │ gzip:   0.72 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/aurora-x-rMvKqtYI.js                                  3.32 kB │ gzip:   0.95 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/genie-CV2tkWYe.js                                     3.34 kB │ gzip:   1.20 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rel-BtDbiS_P.js                                       3.36 kB │ gzip:   1.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dracula-Cf1PG3MT.js                                   3.36 kB │ gzip:   1.01 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vala-zf12oZj6.js                                      3.36 kB │ gzip:   1.18 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/night-owl-light-RoU30LE0.js                           3.37 kB │ gzip:   0.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/night-owl-Bdcs0PMi.js                                 3.39 kB │ gzip:   1.05 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/splunk-BC2Px7Mm.js                                    3.42 kB │ gzip:   1.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hurl-CSNuTfdx.js                                      3.50 kB │ gzip:   1.09 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dark-plus-CHgc6GYj.js                                 3.54 kB │ gzip:   1.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/red-BJvdDEUx.js                                       3.57 kB │ gzip:   1.11 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/monokai-DkggTbGy.js                                   3.57 kB │ gzip:   1.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/light-plus-CUjWrTSi.js                                3.59 kB │ gzip:   1.09 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fluent-C03EYrpw.js                                    3.60 kB │ gzip:   0.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ssh-config-BgfXC-Er.js                                3.61 kB │ gzip:   1.59 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jsonnet-CJTPZ8u_.js                                   3.61 kB │ gzip:   1.03 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kdl-CsD5j6eV.js                                       3.62 kB │ gzip:   1.03 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/narrat-_X_XdTYD.js                                    3.66 kB │ gzip:   1.09 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/turtle-ByJddavk.js                                    3.69 kB │ gzip:   0.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/glsl-AYV3VvSI.js                                      3.69 kB │ gzip:   1.46 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/solarized-dark-CmYmhSgI.js                            3.71 kB │ gzip:   1.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/solarized-light-CjLLwxRp.js                           3.71 kB │ gzip:   1.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/andromeeda-DW8vo71h.js                                3.84 kB │ gzip:   1.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/zenscript-BnlCZFoB.js                                 3.90 kB │ gzip:   1.28 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ron-VUp2lXgN.js                                       3.90 kB │ gzip:   0.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gn-CAXYAgV-.js                                        4.01 kB │ gzip:   1.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/MarkdownPdfBlock.impl-DngoUKnO.js                     4.10 kB │ gzip:   1.86 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pascal-4ZHwLPI5.js                                    4.14 kB │ gzip:   1.67 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/http-CZwNlMPV.js                                      4.41 kB │ gzip:   1.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tcl-CZd0xW_V.js                                       4.42 kB │ gzip:   1.50 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tokyo-night-D4ZgDiA7.js                               4.42 kB │ gzip:   1.23 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nextflow-CSgcYZcx.js                                  4.50 kB │ gzip:   1.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rosmsg-CAekHB0j.js                                    4.51 kB │ gzip:   1.05 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-B2jZWvHG.js                               4.59 kB │ gzip:   1.25 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-Vf__O3ev.js                              4.59 kB │ gzip:   1.25 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-soft-DdE7dyP3.js                          4.59 kB │ gzip:   1.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-soft-C3QCXKvN.js                         4.60 kB │ gzip:   1.25 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-tritanopia-CXimiT7X.js                    4.60 kB │ gzip:   1.24 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-tritanopia-CKLy6XvA.js                   4.60 kB │ gzip:   1.24 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-protanopia-deuteranopia-CebgQdRf.js       4.61 kB │ gzip:   1.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-protanopia-deuteranopia-BUtWcCQC.js      4.62 kB │ gzip:   1.26 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/polar-C7UOKdEL.js                                     4.66 kB │ gzip:   1.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sdbl-bTVj8UrX.js                                      4.69 kB │ gzip:   2.00 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fennel-DQxkIbk2.js                                    4.76 kB │ gzip:   1.53 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/bibtex-Ci_nEsc7.js                                    4.78 kB │ gzip:   0.83 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/houston-B6x0XVpU.js                                   4.87 kB │ gzip:   1.26 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vitesse-light-BxMp8E1Y.js                             5.02 kB │ gzip:   1.26 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/llvm-DqHOMS-s.js                                      5.03 kB │ gzip:   2.01 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vitesse-dark-CJkzwmKT.js                              5.07 kB │ gzip:   1.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vitesse-black-CfklMpOb.js                             5.07 kB │ gzip:   1.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wgsl-BsKzXJz4.js                                      5.13 kB │ gzip:   1.38 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gdresource-xMC7jr7x.js                                5.28 kB │ gzip:   1.33 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/zig-CMLA9XwU.js                                       5.33 kB │ gzip:   1.55 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/qml-DtpKOgIE.js                                       5.33 kB │ gzip:   1.38 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dax-BkyTk9wS.js                                       5.35 kB │ gzip:   2.21 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/bicep-CUHmPFLl.js                                     5.37 kB │ gzip:   1.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/xml-Dl30OFts.js                                       5.44 kB │ gzip:   1.24 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/awk-BWXHIvNe.js                                       5.45 kB │ gzip:   1.37 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-mocha-C_2G67cS.js                          5.47 kB │ gzip:   1.38 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-latte-BILSUICr.js                          5.47 kB │ gzip:   1.38 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-frappe-pyXErRRU.js                         5.47 kB │ gzip:   1.38 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-macchiato-Ck60ZZQE.js                      5.47 kB │ gzip:   1.39 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jinja-NJbISrru.js                                     5.62 kB │ gzip:   1.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/lean-CewbzKMR.js                                      5.77 kB │ gzip:   1.91 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/powerquery-DNMTfnFr.js                                5.89 kB │ gzip:   1.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/shaderlab-TOUzSsQk.js                                 5.91 kB │ gzip:   2.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cypher-ClKdZ_lG.js                                    5.94 kB │ gzip:   1.71 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/coq-CGaSfhwR.js                                       6.04 kB │ gzip:   1.95 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vb-DOwzaHZ0.js                                        6.06 kB │ gzip:   2.32 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/moonbit-D9W784E_.js                                   6.07 kB │ gzip:   1.70 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/min-dark-BSWPekZh.js                                  6.28 kB │ gzip:   1.70 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gdshader-CBce3t8t.js                                  6.31 kB │ gzip:   1.72 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ara-4CJ0cIlV.js                                       6.35 kB │ gzip:   1.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/verilog-B2gwz-sJ.js                                   6.40 kB │ gzip:   1.92 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/clojure-DqKBuwfJ.js                                   6.40 kB │ gzip:   1.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/postcss-BXeXVLqQ.js                                   6.41 kB │ gzip:   1.90 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/toml-CcmNWLt0.js                                      6.41 kB │ gzip:   1.28 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/proto-DB4EqR-F.js                                     6.54 kB │ gzip:   1.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/loader-CpD4OC_l.js                                    6.55 kB │ gzip:   1.43 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/chapel-CCwJTkJL.js                                    6.62 kB │ gzip:   1.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/red-CYlAq2b0.js                                       6.73 kB │ gzip:   1.70 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/talonscript-CohzipZa.js                               6.75 kB │ gzip:   1.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/r-DBBhX2lz.js                                         6.80 kB │ gzip:   1.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/riscv-Ckw8ddFX.js                                     6.90 kB │ gzip:   1.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/soy-DGWf1Ra_.js                                       6.92 kB │ gzip:   1.62 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/solarized-light-DFPxpIYQ.js                           6.93 kB │ gzip:   1.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/min-light-DDpmG2fV.js                                 6.96 kB │ gzip:   1.88 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/scheme-DQCgrYNe.js                                    7.16 kB │ gzip:   2.04 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hlsl-Cvrh5tZx.js                                      7.25 kB │ gzip:   2.18 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/solarized-dark-b97czJOk.js                            7.39 kB │ gzip:   1.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/qss-Fe1Jh2GI.js                                       7.46 kB │ gzip:   2.57 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/prisma-DMgNhnYS.js                                    7.73 kB │ gzip:   1.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/systemd-BxMlprV5.js                                   7.86 kB │ gzip:   2.54 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/regexp-Bj-_Rfm1.js                                    8.05 kB │ gzip:   1.47 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/react-ROesobhB.js                                     8.24 kB │ gzip:   3.11 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/monokai-BscAjiQZ.js                                   8.24 kB │ gzip:   1.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/haml-BfFZ3NK5.js                                      8.33 kB │ gzip:   1.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vue-html-Bqx4wzzR.js                                  8.47 kB │ gzip:   1.68 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/plsql-DGHpHOYJ.js                                     8.50 kB │ gzip:   2.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dart-CHZY9Xhz.js                                      8.60 kB │ gzip:   1.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/horizon-CE9ld1lL.js                                   8.77 kB │ gzip:   1.94 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kotlin-DhhofPvG.js                                    8.77 kB │ gzip:   2.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/horizon-bright-DSNQnXHK.js                            8.78 kB │ gzip:   1.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/make-Dixweg8N.js                                      8.95 kB │ gzip:   1.76 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/andromeeda-vGVdxbeo.js                                9.01 kB │ gzip:   2.35 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sas-BR7yRvMp.js                                       9.06 kB │ gzip:   3.82 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dark-plus-Cs2F2srj.js                                 9.09 kB │ gzip:   2.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/slack-dark-DnToyrRv.js                                9.11 kB │ gzip:   1.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/smithy-Dgaz7aur.js                                    9.12 kB │ gzip:   1.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sass-DXrisJhu.js                                      9.28 kB │ gzip:   2.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/plastic-DQwYfKfQ.js                                   9.29 kB │ gzip:   1.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/slack-ochin-B2OO5cIa.js                               9.42 kB │ gzip:   2.08 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-vibrant-DzBsxHvQ.js                       9.57 kB │ gzip:   1.61 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-vibrant-DDuTEIhH.js                      9.57 kB │ gzip:   1.59 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jison-Del_MnxN.js                                     9.69 kB │ gzip:   1.86 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tex-C03NTYOr.js                                       9.73 kB │ gzip:   3.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cmake-Bj61d0ZC.js                                     9.84 kB │ gzip:   3.37 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/light-plus-DVQuIRkW.js                                9.93 kB │ gzip:   2.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hcl-Dh228itO.js                                      10.04 kB │ gzip:   1.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rst-DJbCvMGR.js                                      10.30 kB │ gzip:   2.24 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pkl-ot-7Btpt.js                                      10.36 kB │ gzip:   1.37 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dream-maker-DW3nJb8Q.js                              10.46 kB │ gzip:   2.25 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/raku-B3gFvitq.js                                     10.46 kB │ gzip:   2.94 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nextflow-groovy-D7IRt6Pp.js                          10.52 kB │ gzip:   2.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/yaml-Ba7jIux5.js                                     10.57 kB │ gzip:   2.32 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/synthwave-84-wQeDKbzQ.js                             10.78 kB │ gzip:   2.15 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/just-5jINJmQJ.js                                     10.84 kB │ gzip:   2.61 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/elm-Dy6u7Zc2.js                                      10.94 kB │ gzip:   2.09 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/themes-ClSXNQ2q.js                                   11.04 kB │ gzip:   3.03 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-light-EUqPIrTm.js                             11.18 kB │ gzip:   2.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/prolog-iXnhIJG7.js                                   11.34 kB │ gzip:   3.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/terraform-DswuEJGm.js                                11.38 kB │ gzip:   2.51 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-C-LZuMrd.js                              11.40 kB │ gzip:   2.53 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/puppet-CDv2pdJW.js                                   11.43 kB │ gzip:   2.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/laserwave-C_8bwKvT.js                                11.49 kB │ gzip:   2.57 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gherkin-DExj1W_8.js                                  11.93 kB │ gzip:   5.04 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wasm-ByWQv1Qj.js                                     12.00 kB │ gzip:   2.17 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hjson-CxZEssPk.js                                    12.04 kB │ gzip:   1.64 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/surrealql-DdoZdWXN.js                                12.06 kB │ gzip:   3.29 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/apache-U0d_L8uA.js                                   12.44 kB │ gzip:   3.71 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/handlebars-5M9HUcCo.js                               12.48 kB │ gzip:   2.43 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/shiki-DackMbTO.js                                    12.67 kB │ gzip:   4.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vesper-DdrHHSXu.js                                   12.73 kB │ gzip:   1.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/beancount-C2IN4Vk8.js                                12.84 kB │ gzip:   2.21 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/bat-qdxAdBWQ.js                                      12.88 kB │ gzip:   3.23 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fish-BJitypiv.js                                     13.03 kB │ gzip:   1.73 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nsis-CjNLYCLg.js                                     13.11 kB │ gzip:   4.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/v-DBj4K9d_.js                                        13.32 kB │ gzip:   2.75 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vitesse-light-VbXTXTou.js                            13.61 kB │ gzip:   3.03 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/aurora-x-CDeNXAV0.js                                 13.65 kB │ gzip:   2.28 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vitesse-black-fwtXNY1n.js                            13.67 kB │ gzip:   3.05 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vitesse-dark-BZCL-v6S.js                             13.75 kB │ gzip:   3.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pug-DZPtuW5N.js                                      13.84 kB │ gzip:   2.58 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/synthwave-84-nFMaYfgc.js                             14.03 kB │ gzip:   2.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/smalltalk-BHpQb5nM.js                                14.11 kB │ gzip:   2.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-light-default-BXViO-2h.js                     14.15 kB │ gzip:   3.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-light-high-contrast-B68TUdTA.js               14.27 kB │ gzip:   3.00 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/clarity-CtfBBspg.js                                  14.35 kB │ gzip:   2.50 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-dimmed-Bx1FflLF.js                       14.43 kB │ gzip:   3.11 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-default-DXG-b-1a.js                      14.43 kB │ gzip:   3.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/github-dark-high-contrast-B_tTalzw.js                14.59 kB │ gzip:   3.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gnuplot-7GGW24-e.js                                  14.77 kB │ gzip:   3.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rust-DpiIf5JO.js                                     15.16 kB │ gzip:   2.72 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kusto-C7mF5XQf.js                                    15.16 kB │ gzip:   3.92 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nix-IvuFDN5E.js                                      15.50 kB │ gzip:   2.47 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/actionscript-3-Cs6JJXT5.js                           15.53 kB │ gzip:   2.70 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/lua-DMaandPP.js                                      15.60 kB │ gzip:   3.19 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/abap-CLvhMVsD.js                                     15.84 kB │ gzip:   5.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/matlab-D7qyCx1q.js                                   16.07 kB │ gzip:   3.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cue-CE9AQfxI.js                                      16.19 kB │ gzip:   2.04 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/elixir-CgFd_Fl5.js                                   16.26 kB │ gzip:   2.76 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/luau-VGWVLoqX.js                                     16.29 kB │ gzip:   3.56 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/solidity-Bj7E1mRn.js                                 16.40 kB │ gzip:   3.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/odin-B1RWQWA5.js                                     16.50 kB │ gzip:   2.92 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ts-tags-BJEzKRSn.js                                  16.54 kB │ gzip:   2.05 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kanagawa-wave-BML5mF2J.js                            17.11 kB │ gzip:   2.90 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kanagawa-lotus-BmuOG9ZW.js                           17.11 kB │ gzip:   2.91 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/kanagawa-dragon-Bozd7klA.js                          17.12 kB │ gzip:   2.92 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/move-BYnGhZoM.js                                     17.65 kB │ gzip:   3.06 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/graphql-MQkiDMvx.js                                  18.08 kB │ gzip:   2.53 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/liquid-DQpf6ULV.js                                   18.10 kB │ gzip:   3.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/svelte-DuHRHern.js                                   18.25 kB │ gzip:   3.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-Bm3Qr25_.js                           18.61 kB │ gzip:   3.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-darker-2IIEA8gg.js                    18.62 kB │ gzip:   3.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-ocean-CHQ94UKr.js                     18.62 kB │ gzip:   3.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-lighter-uhdI0v04.js                   18.63 kB │ gzip:   3.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/material-theme-palenight-B5W6OYN7.js                 18.63 kB │ gzip:   3.11 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gdscript-DYvRD3hg.js                                 19.08 kB │ gzip:   3.76 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/groovy-CacY0gHj.js                                   19.17 kB │ gzip:   3.59 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ayu-dark-DluEY0Gj.js                                 20.07 kB │ gzip:   3.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ayu-mirage-Bqwy1Gya.js                               20.08 kB │ gzip:   3.91 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/glimmer-js-B8Babvs0.js                               20.08 kB │ gzip:   2.94 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/glimmer-ts-d4LuTVZM.js                               20.08 kB │ gzip:   2.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/mdc-n-8ALVm3.js                                      20.08 kB │ gzip:   6.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/powershell-QtSnmXcu.js                               20.14 kB │ gzip:   4.05 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ayu-light-C3h-C4tm.js                                20.14 kB │ gzip:   3.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/viml-DvXPmvsu.js                                     20.35 kB │ gzip:   6.73 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/snazzy-light-4G7pJPwS.js                             20.77 kB │ gzip:   3.80 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dracula-BHWKrbxM.js                                  21.06 kB │ gzip:   3.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dracula-soft-5eyTD99u.js                             21.07 kB │ gzip:   4.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wit-DdvCle-K.js                                      21.46 kB │ gzip:   2.87 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rose-pine-aMsaMD1D.js                                21.73 kB │ gzip:   3.88 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rose-pine-moon-DO-qXg-I.js                           21.74 kB │ gzip:   3.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/rose-pine-dawn-8PwUyIlP.js                           21.74 kB │ gzip:   3.89 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nushell--0fT3PI1.js                                  21.76 kB │ gzip:   5.44 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nim-ByXIu_Gp.js                                      22.45 kB │ gzip:   3.15 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/common-lisp-Cv5bFMCO.js                              22.57 kB │ gzip:   6.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-dark-hard-C820rvS2.js                        22.63 kB │ gzip:   4.15 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-dark-soft-MrdJrrXF.js                        22.63 kB │ gzip:   4.15 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-light-hard-BC_s9l72.js                       22.63 kB │ gzip:   4.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-light-soft-BSMLrYjP.js                       22.63 kB │ gzip:   4.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-dark-medium-BPjhmG05.js                      22.63 kB │ gzip:   4.15 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/gruvbox-light-medium-BAWPOn9u.js                     22.63 kB │ gzip:   4.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cadence-CQ2zXKGN.js                                  23.66 kB │ gzip:   3.65 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/sql-DsSy6OLs.js                                      23.73 kB │ gzip:   7.57 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/astro-Bbk5Bsuh.js                                    24.02 kB │ gzip:   7.59 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/apl-DRccd6Vr.js                                      24.02 kB │ gzip:   4.17 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/templ-Br7FBqwC.js                                    24.06 kB │ gzip:   5.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/lib-BMP2RLjr.js                                      24.10 kB │ gzip:   9.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/angular-html-CrbSKEua.js                             24.24 kB │ gzip:   3.99 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vhdl-BroJfC0k.js                                     24.25 kB │ gzip:   3.86 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/purescript-9MfHhQsQ.js                               24.67 kB │ gzip:   3.24 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/twig-C2AUiiWZ.js                                     24.85 kB │ gzip:   4.01 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vue-DQWdTbbO.js                                      24.96 kB │ gzip:   3.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/one-light-D7Lr4KcI.js                                25.29 kB │ gzip:   3.63 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fsharp-D13ZGOAj.js                                   25.30 kB │ gzip:   4.12 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/marko-fSVHjlnh.js                                    25.73 kB │ gzip:   3.66 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/night-owl-light-eJ-hLW7d.js                          25.89 kB │ gzip:   4.23 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/c3-D0apG41V.js                                       26.37 kB │ gzip:   3.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/system-verilog-Dh5ihWbf.js                           26.54 kB │ gzip:   4.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nord-Cb4Vim4T.js                                     26.72 kB │ gzip:   4.35 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/codeql-oeQT6MSM.js                                   26.87 kB │ gzip:   3.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/typespec-BGhR2SqG.js                                 26.99 kB │ gzip:   2.75 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/scss-Z9xXYoyf.js                                     27.26 kB │ gzip:   4.23 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/java-CIgaegb7.js                                     27.28 kB │ gzip:   4.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/coffee-CR0VCb3Q.js                                   27.42 kB │ gzip:   6.35 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/razor-Bz0Mcd0T.js                                    27.45 kB │ gzip:   3.54 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/utils-Cn2nLD7f.js                                    28.48 kB │ gzip:   9.02 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/scala-BiFt_7mu.js                                    28.88 kB │ gzip:   3.93 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/night-owl-DhmEMT88.js                                28.91 kB │ gzip:   5.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/crystal-JFWLVSrc.js                                  29.41 kB │ gzip:   4.44 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/applescript-CCn79oCD.js                              29.56 kB │ gzip:   5.94 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-CpLgRqie.js                              30.54 kB │ gzip:   4.74 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-CoaEpmwp.js                             30.54 kB │ gzip:   4.73 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-soft-kZQmAZld.js                         30.55 kB │ gzip:   4.77 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-soft-lWLdNTOI.js                        30.55 kB │ gzip:   4.73 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-tritanopia-CpjhbsIL.js                   30.56 kB │ gzip:   4.68 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-tritanopia-CEbqgOJL.js                  30.57 kB │ gzip:   4.69 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-protanopia-deuteranopia-B35FxJx-.js      30.59 kB │ gzip:   4.76 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-protanopia-deuteranopia-0fSaH845.js     30.59 kB │ gzip:   4.72 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/stylus-B6D30XZt.js                                   31.06 kB │ gzip:   8.01 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/julia-DJJPCyUU.js                                    31.22 kB │ gzip:   4.34 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ahk-DwADkxyd.js                                      31.44 kB │ gzip:   7.83 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/poimandres-DRFjx7u4.js                               33.49 kB │ gzip:   5.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/bsl-_VjlB9mv.js                                      33.94 kB │ gzip:   8.35 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/nginx-CA9SgvTg.js                                    35.35 kB │ gzip:   4.45 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/houston-CsvMBhTu.js                                  35.41 kB │ gzip:   5.76 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tokyo-night-oM2G3aXe.js                              35.66 kB │ gzip:   6.22 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/haxe-C8oCnwJJ.js                                     35.94 kB │ gzip:   6.00 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/org-CbzVmuoL.js                                      36.26 kB │ gzip:   3.67 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/one-dark-pro-C6YyR8OD.js                             37.05 kB │ gzip:   6.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/erlang-Cphh6RMH.js                                   37.47 kB │ gzip:   4.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/bird2-CYIUgYqB.js                                    38.67 kB │ gzip:   8.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cobol-BvlVigIW.js                                    39.07 kB │ gzip:  10.88 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/asm-Cmm7eHzH.js                                      40.71 kB │ gzip:   8.16 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/haskell-D8IpX4py.js                                  41.48 kB │ gzip:   6.41 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/shellscript-C0fN5siR.js                              41.54 kB │ gzip:   6.13 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/perl-DK8DcBlp.js                                     43.14 kB │ gzip:   4.64 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/d-qD-0Kul2.js                                        43.78 kB │ gzip:   8.43 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-dark-vibrant-CpQYzh95.js                      44.75 kB │ gzip:   5.28 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pierre-light-vibrant-D80Fkn33.js                     44.76 kB │ gzip:   5.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ahk2-_6rzW9BS.js                                     45.05 kB │ gzip:   9.87 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ruby-CLHmESBm.js                                     46.63 kB │ gzip:   5.70 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/go-rLFTqkRN.js                                       46.81 kB │ gzip:   5.14 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/apex-KFGFyKwG.js                                     47.88 kB │ gzip:   6.85 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ada-X3Y2mlq2.js                                      48.07 kB │ gzip:   5.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/imba-DsUTQ-LC.js                                     49.92 kB │ gzip:   9.47 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-mocha-DjuaAJKi.js                         50.84 kB │ gzip:   8.47 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-latte-CtsyrtPq.js                         50.84 kB │ gzip:   8.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-frappe-C9Q5zVZY.js                        50.85 kB │ gzip:   8.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/catppuccin-macchiato-R8nAf1vR.js                     50.85 kB │ gzip:   8.48 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/css-D_rnGKEw.js                                      53.43 kB │ gzip:  12.53 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/everforest-dark-sB-x3p7T.js                          53.74 kB │ gzip:   8.37 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/everforest-light-Df2xbC6M.js                         53.74 kB │ gzip:   8.36 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/mermaid-BxpfTIzt.js                                  54.80 kB │ gzip:   4.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wikitext-ClFFjSW2.js                                 55.87 kB │ gzip:   4.81 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/useTranslation-BxRy8FTs.js                           55.91 kB │ gzip:  18.32 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/stata-DAcDaZw2.js                                    56.99 kB │ gzip:  12.39 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/html-XqB6-I6n.js                                     57.32 kB │ gzip:  11.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/engine-javascript-DKxkqixV.js                        57.70 kB │ gzip:  20.24 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ballerina-B7ZEbQpA.js                                58.68 kB │ gzip:   8.10 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/markdown-BYOwaDjH.js                                 59.32 kB │ gzip:   5.66 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ocaml-O90oeIOV.js                                    62.44 kB │ gzip:   5.04 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/mojo-fg40_ntQ.js                                     69.51 kB │ gzip:   9.20 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/python-gzcpVVnB.js                                   69.94 kB │ gzip:   9.09 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/c-BP8oY9gM.js                                        72.17 kB │ gzip:  10.55 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/latex-COvXlIia.js                                    73.24 kB │ gzip:   6.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vyper-CgoNMtux.js                                    74.64 kB │ gzip:  10.69 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hack-DoQ6pXaO.js                                     81.07 kB │ gzip:  26.45 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/UTIF-xYHDUam_.js                                     83.49 kB │ gzip:  29.30 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/swift-CyEgAFGc.js                                    87.22 kB │ gzip:  14.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/fortran-free-form-CYNrtFtB.js                        88.96 kB │ gzip:  11.18 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/csharp-dmMxLVLW.js                                   91.43 kB │ gzip:  10.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/racket-DcIDlBhZ.js                                   92.38 kB │ gzip:  15.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/less-DVTAwKKz.js                                     97.62 kB │ gzip:  14.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ItemNavigator-Bhu8RMen.js                           103.99 kB │ gzip:  34.63 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/blade-CjkOyveG.js                                   104.97 kB │ gzip:  28.29 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/objective-c-D1A_Heim.js                             105.40 kB │ gzip:  23.63 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/php-K69fTkvc.js                                     113.12 kB │ gzip:  28.84 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/asciidoc-SCjQUq34.js                                136.04 kB │ gzip:   9.45 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/mdx-DQZ5AkYe.js                                     136.10 kB │ gzip:  23.54 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/typst-BZOwsCe4.js                                   163.49 kB │ gzip:  10.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/objective-cpp-BsSzOQcm.js                           171.96 kB │ gzip:  30.98 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/javascript-CS1UlO1x.js                              174.89 kB │ gzip:  16.68 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/tsx-BBsz_Nt1.js                                     175.60 kB │ gzip:  16.68 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/zh-Hans-D_wkrx-L.js                                 176.83 kB │ gzip:  53.40 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/jsx-B8h_aaCu.js                                     177.85 kB │ gzip:  16.77 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/typescript-C--v55m-.js                              181.14 kB │ gzip:  16.29 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/angular-ts-DzadGj-a.js                              183.73 kB │ gzip:  16.78 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/vue-vine-DN6EqCJA.js                                190.05 kB │ gzip:  18.07 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pl--TNxyH4R.js                                      194.03 kB │ gzip:  55.45 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/es-BPVvHCIv.js                                      195.48 kB │ gzip:  53.96 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/de-X6oAdpG4.js                                      197.20 kB │ gzip:  54.49 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/TextLayer-BatlJ2f7.js                               199.27 kB │ gzip:  61.71 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/hu-C60NKtjZ.js                                      202.65 kB │ gzip:  56.95 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wasm-4KdTHw0F.js                                    211.96 kB │ gzip: 158.87 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/ja-BXbWwje3.js                                      216.05 kB │ gzip:  56.79 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/wolfram-DLL8P-h_.js                                 262.38 kB │ gzip:  77.63 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dist-JCH-Zgvy.js                                    391.43 kB │ gzip: 137.59 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/lib-C6nIlihO.js                                     403.17 kB │ gzip:  97.64 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pdf-Crs5ltt_.js                                     430.40 kB │ gzip: 129.19 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/highlights-Ap3FZLd1.js                              481.25 kB │ gzip: 203.04 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/pdf-BKh8f7R6.js                                     487.22 kB │ gzip: 148.13 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/xlsx-Cf6faccF.js                                    494.11 kB │ gzip: 161.20 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/OfficeFilePreview-OBOJx01U.js                       651.60 kB │ gzip: 186.71 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/cpp-DHk7cFeS.js                                     785.54 kB │ gzip:  58.27 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/emacs-lisp-DR2vtWaj.js                              790.01 kB │ gzip: 200.31 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/aiden0z-pptx-renderer.es-CX6QhD3s.js                978.52 kB │ gzip: 310.97 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/dist-CYGUju0l.js                                  1,522.29 kB │ gzip: 469.35 kB
+.cache/upgrade-20261107/critical-45-final/upstream-015-renderer/bundle/assets/index-4HkY3VVd.js                                 2,954.41 kB │ gzip: 847.04 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/shiki/dist/index.mjs is dynamically imported by packages/ui/src/components/markdown/code-highlight.ts but also statically imported by packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/index.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by apps/electron/src/renderer/components/content-panels/FilePreviewContent.tsx, packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/vscode.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/github.light.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+✓ built in 32.54s
+[PLUGIN_TIMINGS] JavaScript callbacks ran for 29.9s of this 32.5s build (92%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin vite:worker-import-meta-url transform (85%, 27.7s, 1 call)
+  - plugin @rolldown/plugin-babel transform (6%, 2.1s, 426 calls)
+2 callbacks are listed without a time. Their calls overlapped, so the time inside one call includes work from other calls. To find their cost, profile the build with `node --cpu-prof`:
+  - plugin vite:asset load (114 calls)
+  - plugin vite:css transform (12 calls)
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+
+> run scripts/verification/task-permission-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\task-permission
+
+> run scripts/verification/plugin-consistency-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\plugin-consistency
+
+> run scripts/verification/workspace-recovery-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\workspace-recovery
+
+> run scripts/verification/runtime-reliability-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\runtime-reliability
+
+> run scripts/verification/task-file-scope-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\task-file-scope
+
+> run scripts/verification/gantt-reschedule-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\gantt-reschedule
+21:59:03 [vite] (client) Re-optimizing dependencies because lockfile has changed
+21:59:06 [vite] (client) [optimizer] bundling dependencies...
+21:59:08 [vite] (client) dependencies optimized: @paper-design/shaders-react, @pierre/diffs, @pierre/diffs/react, @radix-ui/react-context-menu, @radix-ui/react-dialog, @radix-ui/react-dropdown-menu, @radix-ui/react-popover, @radix-ui/react-scroll-area, @radix-ui/react-slot, @radix-ui/react-tooltip, @svar-ui/react-gantt, @uiw/react-json-view, @uiw/react-json-view/githubLight, @uiw/react-json-view/vscode, beautiful-mermaid, class-variance-authority, clsx, date-fns, date-fns/locale/de, date-fns/locale/en-US, date-fns/locale/es, date-fns/locale/hu, date-fns/locale/ja, date-fns/locale/pl, date-fns/locale/zh-CN, fflate, i18next, jotai-family, jotai/utils, linkify-it, lucide-react, motion/react, nice-ticks, react-dom/client, react-i18next, react-markdown, rehype-katex, rehype-raw, rehype-sanitize, remark-gfm, remark-math, shiki, sonner, tailwind-merge, unist-util-visit, vaul, zod
+21:59:08 [vite] (client) optimized dependencies changed. reloading
+21:59:18 [vite] (client) [console.error] [useWorkItems] Failed to update work item: Error: Error: Injected schedule save failure
+    at invoke (http://127.0.0.1:55637/scripts/verification/fixtures/gantt-reschedule.tsx:29:26)
+    at async Object.updateWorkItem (http://127.0.0.1:55637/scripts/verification/fixtures/gantt-reschedule.tsx:35:16)
+    at async http://127.0.0.1:55637/apps/electron/src/renderer/hooks/work-items-collection.ts:130:16
+    at async WorkItemsCollection.mutate (http://127.0.0.1:55637/apps/electron/src/renderer/hooks/work-items-collection.ts:118:11)
+    at async http://127.0.0.1:55637/apps/electron/src/renderer/hooks/useWorkItems.ts:19:11
+    at async saveGanttChange (http://127.0.0.1:55637/apps/electron/src/renderer/components/app-shell/kanban/gantt-rescheduling.ts:44:17)
+    at async http://127.0.0.1:55637/apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx:1207:17
+    at async onSubmit (http://127.0.0.1:55637/apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx:274:10)
+
+> run scripts/verification/planning-collection-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\planning-collection
+
+> run scripts/verification/planning-performance-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\planning-performance
+
+> run scripts/verification/docs-locale-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\docs-locale
+
+> run scripts/verification/markdown-file-links-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\markdown-file-links
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/shiki/dist/index.mjs is dynamically imported by packages/ui/src/components/markdown/code-highlight.ts but also statically imported by packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/index.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/vscode.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+[INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@uiw/react-json-view/esm/theme/github.light.js is dynamically imported by packages/ui/src/components/markdown/MarkdownJsonBlock.tsx but also statically imported by packages/ui/src/components/overlay/ActivityCardsOverlay.tsx, packages/ui/src/components/overlay/JSONPreviewOverlay.tsx, dynamic import will not move module into another chunk.
+
+
+> run scripts/verification/verification-output-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\verification-output
+{"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\verification-output","passed":7}
+
+> run scripts/verification/governance-gates-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\governance-gates
+{"passed":10,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\governance-gates\\governance-gates.json"}
+
+> run scripts/verification/governance-closeout-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\governance-closeout
+
+> run scripts/verification/runtime-boundary-gate-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\runtime-boundary-gate
+{"passed":true,"rejectedViolations":25,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\runtime-boundary-gate\\gate-mutations.json"}
+
+> run scripts/verification/durable-runtime-boundary-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\durable-runtime-boundary
+{"passed":15,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\durable-runtime-boundary\\workflow.json"}
+
+> run scripts/verification/durable-runtime-crash-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\durable-runtime-crash
+{"passed":8,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\durable-runtime-crash\\crash.json"}
+
+> run scripts/verification/plugin-transaction-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\plugin-transaction
+{"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\plugin-transaction","passed":13,"total":13}
+
+> run scripts/verification/session-branch-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\session-branch
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261107-early-gold",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation failed: sdk-fork requires parent SDK session ID {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261107-early-gold",
+  sourceProvider: "pi",
+  targetProvider: "pi",
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261107-tidy-oak",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261107-tidy-oak",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261107-gentle-reed
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "branch-fixture",
+  sessionId: "261107-gentle-reed",
+  branchFromSessionId: "261107-tidy-oak",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "fixture preflight failed",
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261107-tidy-oak",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261107-tidy-oak",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261107-young-clover
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Deleted session 261107-young-clover
+{"passed":6,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\session-branch\\session-branch.json"}
+
+> run scripts/verification/webui-auth-lifecycle-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\webui-auth-lifecycle
+
+> run scripts/verification/process-lifecycle-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\process-lifecycle
+
+> run scripts/verification/config-domains-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\config-domains
+
+> run scripts/verification/rpc-contracts-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\rpc-contracts
+
+> run scripts/verification/governance-boundaries-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\governance-boundaries
+
+> run scripts/verification/import-graph-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\import-graph
+
+> run scripts/verification/cycle-gate-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\cycle-gate
+
+> run scripts/verification/pi-control-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\pi-control
+
+> run scripts/verification/durable-runtime-pi-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\durable-runtime-pi
+{"passed":6,"output":"E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\critical-45-final\\durable-runtime-pi\\independent-pi.json"}
+
+> run scripts/verification/session-owners-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\session-owners
+
+> run scripts/verification/client-platform-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\client-platform
+173 |     const expectedNetworkErrors = consoleTrace.filter(message => message.type === 'error' && message.duringOffline
+174 |       && (message.text === 'WebSocket error during connection setup'
+175 |         || message.text.startsWith('Failed to persist session draft: Error: WebSocket error during connection setup\n')
+176 |         || (message.text.startsWith(`WebSocket connection to 'ws://127.0.0.1:${new URL(child.url).port}/' failed:`)
+177 |           && message.text.endsWith('net::ERR_INTERNET_DISCONNECTED'))))
+178 |     assert.deepEqual(consoleTrace.filter(message => message.type === 'error' && !expectedNetworkErrors.includes(message)), [])
+                 ^
+AssertionError: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   {
++     duringOffline: false,
++     text: 'Failed to handle session_created event: Error: Connection lost\n' +
++       '    at t.onDisconnect (http://127.0.0.1:61345/assets/main-DwzF4l3_.js:565:102541)\n' +
++       '    at t.onclose (http://127.0.0.1:61345/assets/main-DwzF4l3_.js:565:98020)\n' +
++       'RPC channel: sessions:readMessages',
++     type: 'error'
++   }
++ ]
+- []
+
+ generatedMessage: true,
+     actual: [
+  [Object ...]
+],
+   expected: [],
+   operator: "deepStrictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at E:\Phaneris-dependency-upgrade-20261107\scripts\verification\client-platform-workflow.ts:178:12
+      at verificationWorkflow (unknown:1:1)
+
+Bun v1.4.4 (Windows x64)
+57 |       }
+58 |     }
+59 |     await Promise.all([copy(child.stdout as ReadableStream<Uint8Array>, process.stdout), copy(child.stderr as ReadableStream<Uint8Array>, process.stderr)])
+60 |   }
+61 |   const code = await child.exited
+62 |   if (code !== 0) throw new Error(`${args.join(' ')} exited with ${code}`)
+                                 ^
+error: run scripts/verification/client-platform-workflow.ts --output-dir=E:\Phaneris-dependency-upgrade-20261107\.cache\upgrade-20261107\critical-45-final\client-platform exited with 1
+      at run (E:\Phaneris-dependency-upgrade-20261107\scripts\check-environment.ts:62:29)
+
+Bun v1.4.4 (Windows x64)
+error: script "test:critical" exited with code 1

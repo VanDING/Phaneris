@@ -1,0 +1,110 @@
+{
+  "checks": [
+    "native-close-and-immediate-reopen-preserves-the-launch-request",
+    "second-instance-recovers-a-running-owner-with-no-window",
+    "duplicate-launch-restores-one-existing-window-without-restarting",
+    "native-second-instance-deep-link-routes-to-the-requested-workspace-and-settings",
+    "three-native-close-reopen-cycles-exit-and-release-the-server-lock",
+    "native-gantt-rounded-corners-scroll-and-menu-in-light-dark-wide-narrow-views"
+  ],
+  "observations": [
+    {
+      "case": "closing-handoff",
+      "oldPid": 37916,
+      "relaunchedWindowVisible": true
+    },
+    {
+      "case": "actual-second-instance-deep-link",
+      "deepLink": "phaneris-verification-reopen://workspace/reopen/settings/ai",
+      "pid": 11212,
+      "workspace": "reopen",
+      "target": "settings/ai"
+    },
+    {
+      "case": "ordinary-reopen",
+      "cycle": 0,
+      "shutdownMs": 224
+    },
+    {
+      "case": "ordinary-reopen",
+      "cycle": 1,
+      "shutdownMs": 224
+    },
+    {
+      "case": "ordinary-reopen",
+      "cycle": 2,
+      "shutdownMs": 212
+    },
+    {
+      "case": "gantt-corners",
+      "measurements": [
+        {
+          "label": "empty-plan",
+          "radius": "9px",
+          "overflow": "hidden",
+          "cornersClear": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "label": "light-1400",
+          "radius": "9px",
+          "overflow": "hidden",
+          "cornersClear": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "label": "light-880",
+          "radius": "9px",
+          "overflow": "hidden",
+          "cornersClear": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "label": "dark-1400",
+          "radius": "9px",
+          "overflow": "hidden",
+          "cornersClear": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "label": "dark-880",
+          "radius": "9px",
+          "overflow": "hidden",
+          "cornersClear": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "label": "scrolled-plan",
+          "radius": "9px",
+          "overflow": "hidden",
+          "cornersClear": [
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ]
+    }
+  ]
+}

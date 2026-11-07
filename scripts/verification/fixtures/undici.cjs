@@ -36,7 +36,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
   const url = `http://127.0.0.1:${origin.address().port}`
   const direct = new Agent(), proxied = new ProxyAgent({ uri: `http://127.0.0.1:${proxy.address().port}`, proxyTunnel: true })
   try {
-    assert.equal(require('undici/package.json').version, '8.12.2')
+    assert.equal(require('undici/package.json').version, '8.12.4')
     let response = await fetch(url + '/stream', { dispatcher: direct, headers: { 'x-upgrade-acceptance': 'direct' } })
     const reader = response.body.getReader()
     const first = await reader.read()

@@ -1,0 +1,14 @@
+HTTP/1.1 200 Connection established
+
+HTTP/1.1 200 OK
+Date: Sat, 07 Nov 2026 13:48:27 GMT
+Content-Type: application/json
+Connection: keep-alive
+CF-Ray: a56ccbacc952dcee-LAX
+CF-Cache-Status: DYNAMIC
+Access-Control-Allow-Origin: *
+Cache-Control: max-age=300
+Server: cloudflare
+Vary: accept-encoding, accept
+set-cookie: __cf_bm=iALJahOK61llo_4cTB.pvEDGaj389L09ArmBqEqO1uY-1794059307.010957-1.0.1.1-C2FVw8Os1_Hh8aKALYUQKYAT7xQnC.YDrPBYcnVfMutvgzmsivipTxos5QQKrWTvNyzbGG7TrXL5CEQ_uCGcgGo9lpbE1VPkeNDofsAZkINgz8b9pNxzGWxOZI_pXEb0; HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=npmjs.org; Expires=Sat, 07 Nov 2026 14:18:27 GMT
+

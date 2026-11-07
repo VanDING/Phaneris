@@ -1,0 +1,41 @@
+[
+  {
+    "Stage": "frozen-install-final",
+    "Command": [
+      "bun",
+      "install",
+      "--frozen-lockfile"
+    ],
+    "StartedAt": "2026-11-07T12:57:19.8543504+00:00",
+    "FinishedAt": "2026-11-07T12:57:37.8737524+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\frozen-install-final.log",
+    "LogSha256": "be2873955809bb0af4efb420ec306ddeab7e9e9e9894e5e2e766434070740298"
+  },
+  {
+    "Stage": "validate-ci-complete",
+    "Command": [
+      "bun",
+      "run",
+      "validate:ci"
+    ],
+    "StartedAt": "2026-11-07T12:57:37.9460327+00:00",
+    "FinishedAt": "2026-11-07T13:03:18.5456060+00:00",
+    "ExitCode": 0,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\validate-ci-complete.log",
+    "LogSha256": "6624c69014e56f066bc3fe1d5b8d4a566a93c66bedca742e6244a1685d39bfd6"
+  },
+  {
+    "Stage": "workspace-tests-final",
+    "Command": [
+      "bun",
+      "run",
+      "test"
+    ],
+    "StartedAt": "2026-11-07T13:03:18.5695203+00:00",
+    "FinishedAt": "2026-11-07T13:07:15.8619872+00:00",
+    "ExitCode": 1,
+    "Log": "E:\\Phaneris-dependency-upgrade-20261107\\.cache\\upgrade-20261107\\workspace-tests-final.log",
+    "LogSha256": "7c98d8fb0417f9f1990a721fd045ae799038727671b0199961c39c1d2d06ccf4"
+  }
+]

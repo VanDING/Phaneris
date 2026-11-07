@@ -1,0 +1,10 @@
+bun test v1.4.4 (38afee6c8)
+
+src\main\handlers\__tests__\registration-profiles.isolated.ts:
+(pass) RPC handler profile registration > registerCoreRpcHandlers registers only core channels [2948.72ms]
+(pass) RPC handler profile registration > registerGuiRpcHandlers registers only gui channels [0.51ms]
+
+ 2 pass
+ 0 fail
+ 4 expect() calls
+Ran 2 tests across 1 file. [2.99s]

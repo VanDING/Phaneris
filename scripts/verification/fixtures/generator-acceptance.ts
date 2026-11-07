@@ -37,8 +37,8 @@ export async function verifyFixtureGeneration(kind: 'image' | 'pdf') {
         else assert.equal(bytes.subarray(4, 8).toString(), 'ftyp', name)
       }
       if (pdf) {
-        assert.equal(manifest.python.python, '3.12.15')
-        assert.equal(manifest.python.pypdf, '6.21.1')
+        assert.equal(manifest.python.python, '3.12.16')
+        assert.equal(manifest.python.pypdf, '6.21.4')
       } else {
         assert.equal(createHash('sha256').update(readFileSync(join(generated, manifest.source.path))).digest('hex'), manifest.source.sha256)
         assert.match(manifest.encoders.pillowHeif, /1\.8\.1/)

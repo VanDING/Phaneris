@@ -34,7 +34,7 @@ def call(tool: str, *arguments: str) -> str:
         assert match, tool
         python_version, script = match.group(1), SCRIPTS_DIR / match.group(2)
         argv = [str(wrapper), *arguments]
-    assert python_version == "3.12.15", tool
+    assert python_version == "3.12.16", tool
     started = time.monotonic()
     result = run_tool(tool, *arguments, env=env)
     record = dict(tool=tool, argv=argv,
