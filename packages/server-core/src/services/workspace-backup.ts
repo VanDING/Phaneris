@@ -138,7 +138,7 @@ export function createWorkspaceBackup(workspaceRootPath: string, outputPath: str
   try {
     const runtimeCopy = prepareRuntimeDatabaseCopy(root, tempDir);
     const assistantCopies = new Map<string, string>();
-    for (const relativePath of ['assistant/memory/memory.db', 'assistant/context.db', 'assistant/delegations.db', 'memory/memory.db']) {
+    for (const relativePath of ['context.db', 'assistant/memory/memory.db', 'assistant/context.db', 'assistant/delegations.db', 'memory/memory.db']) {
       const source = join(root, relativePath);
       if (!existsSync(source)) continue;
       const snapshot = join(tempDir, `assistant-${assistantCopies.size}.db`);

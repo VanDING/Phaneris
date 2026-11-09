@@ -37,6 +37,8 @@ const DETAILS = process.argv.includes('--details');
 const BUILDER_CONFIG = join(ROOT, 'apps', 'electron', 'electron-builder.yml');
 const ALLOWLIST_PATH = join(ROOT, 'scripts', 'identity-allowlist.json');
 
+const IGNORED_PATHS = new Set(['docs/verification/results']);
+
 /** Directories that never contain first-party source or configuration. */
 const IGNORED_SEGMENTS = new Set([
   '.git',
@@ -279,6 +281,7 @@ const allowedHits: Hit[] = [];
 for (const path of walk(ROOT)) {
   if (isBinary(path)) continue;
   const relPath = toPosix(relative(ROOT, path));
+  if (relPath === 'docs/verification/results' || relPath.startsWith('docs/verification/results/')) continue;
   let text: string;
   try {
     text = readFileSync(path, 'utf-8');

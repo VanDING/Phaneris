@@ -52,6 +52,9 @@ function walk(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     if (entry.isDirectory()) {
       if (IGNORED_DIRS.has(entry.name)) continue;
+      // Generated verification evidence keeps fixture workspaces verbatim;
+      // it is not part of the first-party documentation graph.
+      if (posix(relative(ROOT, join(dir, entry.name))) === 'docs/verification/results') continue;
       walk(join(dir, entry.name), out);
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       out.push(join(dir, entry.name));

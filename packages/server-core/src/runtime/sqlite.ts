@@ -69,7 +69,7 @@ class RuntimeSqliteDatabase implements SqliteDatabase {
  * additional native ABI dependency while keeping the durable store available in
  * both Bun headless builds and Electron/Node.
  */
-export function openSqliteDatabase(path: string): SqliteDatabase {
+export function openSqliteDatabase(path: string, options: { readonly?: boolean } = {}): SqliteDatabase {
   // The Electron main bundle is CommonJS while the Pi subprocess bundle is
   // ESM. `import.meta.url` is erased by the CJS build, so use the active
   // runtime executable as a stable absolute base. Only built-in modules are
@@ -77,13 +77,13 @@ export function openSqliteDatabase(path: string): SqliteDatabase {
   const runtimeRequire = createRequire(process.execPath)
   if (typeof process.versions.bun === 'string') {
     const { Database } = runtimeRequire('bun:sqlite') as {
-      Database: new (filename: string, options?: { create?: boolean }) => NativeDatabase
+      Database: new (filename: string, options?: { create?: boolean; readonly?: boolean }) => NativeDatabase
     }
-    return new RuntimeSqliteDatabase(new Database(path, { create: true }), true)
+    return new RuntimeSqliteDatabase(new Database(path, { create: !options.readonly, readonly: options.readonly }), true)
   }
 
   const { DatabaseSync } = runtimeRequire('node:sqlite') as {
-    DatabaseSync: new (filename: string) => NativeDatabase
+    DatabaseSync: new (filename: string, options?: { readOnly?: boolean }) => NativeDatabase
   }
-  return new RuntimeSqliteDatabase(new DatabaseSync(path), false)
+  return new RuntimeSqliteDatabase(new DatabaseSync(path, { readOnly: options.readonly }), false)
 }

@@ -25,30 +25,22 @@ await verificationWorkflow('resident-assistant-structure', async run => {
       assert.equal(segment.dependencies.sources.length, 1)
     }
     scenes.push('RZ01-repeated-turns-retain-one-source-reference')
-    const dbPath = join(workspace.rootPath, 'assistant/context.db')
+    const dbPath = join(workspace.rootPath, 'context.db')
     await service.close()
     const db = openSqliteDatabase(dbPath)
     try {
-      const state = JSON.parse((db.prepare('SELECT body FROM context_state').get() as { body: string }).body)
-      const segment = JSON.parse((db.prepare('SELECT body FROM segments WHERE id=?').get(state.activeSegmentId) as { body: string }).body)
-      segment.dependencies.sources.push(...segment.dependencies.sources)
-      db.prepare('DELETE FROM segments WHERE id=?').run(segment.id)
-      delete state.activeSegmentId
-      db.prepare('UPDATE context_state SET body=?').run(JSON.stringify({ ...state, activeSegment: segment }))
-      db.exec('PRAGMA user_version=0')
+      const state = JSON.parse((db.prepare('SELECT body FROM pointers').get() as { body: string }).body)
+      assert.equal(state.activeSegment, undefined)
+      assert(db.prepare('SELECT 1 FROM views WHERE id=?').get(state.activeSegmentId))
+      db.prepare("UPDATE pointers SET body=json_set(body,'$.activeSegmentId','missing-view')").run()
     } finally { db.close() }
     service = new ResidentAssistantService(workspace)
     context = service.context('assistant')
-    assert.equal(context.get().activeSegment!.dependencies.sources.length, 1)
-    assert.equal(context.get().activeSegment!.runOperationId, 'run-19')
-    scenes.push('RZ02-legacy-embedded-segment-is-preserved-when-table-copy-is-missing')
-    const damage = openSqliteDatabase(dbPath)
-    try { damage.prepare('UPDATE context_state SET body=json_set(body,\'$.activeSegmentId\',\'missing-segment\')').run() }
-    finally { damage.close() }
-    assert.throws(() => context.prepare({ cursor: 21, items: [] }, messages, 'blocked-run', 'requirement'), /segment|unavailable/i)
+    assert.throws(() => context.get(), /view|unavailable/i)
     context.command({ action: 'focus', label: 'Explicit recovery', anchors: [] }, messages)
     context.prepare({ cursor: 22, items: [] }, messages, 'recovered-run', 'requirement')
-    scenes.push('RZ02-missing-active-reference-blocks-and-explicit-focus-recovers')
+    assert.equal(context.get().activeSegment!.runOperationId, 'recovered-run')
+    scenes.push('RZ02-reference-only-pointer-and-explicit-recovery-without-history-fallback')
     const external = new AssistantMemoryStore(workspace)
     try {
       const entry = external.mutate({ action: 'remember', requestId: 'remember', key: 'original', content: 'LIVE_EXTERNAL_MEMORY', kind: 'fact', basis: 'user_stated', sources: [{ sessionId: 'assistant', messageId: 'requirement' }] })
@@ -63,7 +55,7 @@ await verificationWorkflow('resident-assistant-structure', async run => {
     scenes.push('RZ04-closed-service-cannot-reopen-resources')
     run.json('structure-evidence.json', { scenes, rounds: 20 })
   } finally { await service.close() }
-  copyFileSync(join(workspace.rootPath, 'assistant/context.db'), join(run.directory, 'context.db'))
+  copyFileSync(join(workspace.rootPath, 'context.db'), join(run.directory, 'context.db'))
   copyFileSync(join(workspace.rootPath, 'assistant/memory/memory.db'), join(run.directory, 'memory.db'))
   run.complete(scenes, ['Paid models and provider quality', 'Performance beyond the recorded repeated-turn fixture', 'Multi-Host authority'])
 })

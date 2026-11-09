@@ -36,6 +36,7 @@ export function attachSessionSelfManagementBindings(
   sessionId: string,
 ): void {
   Object.defineProperty(context, 'reportTaskResult', { get: () => getSessionScopedToolCallbacks(sessionId)?.reportTaskResultFn, configurable: true, enumerable: true });
+  Object.defineProperty(context, 'assistantContext', { get: () => getSessionScopedToolCallbacks(sessionId)?.assistantContextFn, configurable: true, enumerable: true });
   Object.defineProperty(context, 'assistantWorkerControl', { get: () => getSessionScopedToolCallbacks(sessionId)?.assistantWorkerControlFn, configurable: true, enumerable: true });
   // Direct pass-through bindings — signatures match, no wrapping needed.
   for (const [key, callback] of [['assistantScenarioCapture', 'assistantScenarioCaptureFn'], ['assistantScenarioSearch', 'assistantScenarioSearchFn'], ['assistantMemoryInspect', 'assistantMemoryInspectFn'], ['assistantMemoryMaintenance', 'assistantMemoryMaintenanceFn'], ['assistantContextHistory', 'assistantContextHistoryFn'], ['assistantMemoryUpdate', 'assistantMemoryUpdateFn'], ['assistantDelegate', 'assistantDelegateFn'], ['assistantWorkerOptions', 'assistantWorkerOptionsFn'], ['assistantWork', 'assistantWorkFn'], ['assistantCancelWork', 'assistantCancelWorkFn']] as const) {

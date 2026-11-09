@@ -241,6 +241,7 @@ export interface DurableToolBoundary {
 }
 
 export interface DurableModelPrepareRequest {
+  contextSnapshot?: import('@phaneris/core/types').RequestContextSnapshot
   residentContext?: { segmentId: string; snapshot?: import('@phaneris/core/types').RequestContextSnapshot }
   /** Auxiliary requests are independently metered and never model-visible. */
   purpose?: 'cache_warm' | 'decision' | 'image_generation' | 'compaction'

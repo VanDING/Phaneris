@@ -89,7 +89,8 @@ export class ResidentAssistantService {
     return this.delegation!.dispatch(sessionId, origin.id, request)
   }
   async deliverInbox(messages: readonly Message[], admit: (id: string, text: string, eventIds: string[]) => Promise<void>): Promise<void> {
-    const work = this.delegation, events = work?.pendingEvents(true) ?? []
+    const work = this.delegation, pending = work?.pendingEvents(true) ?? []
+    const events = pending.filter(event => event.projectId === pending[0]?.projectId)
     if (!work || !events.length || this.stopping) return
     const inputId = work.deliveryInputId(events), ids = events.map(event => event.eventId)
     work.claimEvents(ids, inputId)
@@ -128,9 +129,14 @@ export class ResidentAssistantService {
       knowledge: [...new Map([...base?.knowledge ?? [], ...knowledge].map(source => [JSON.stringify([source.sourceSlug, source.version]), source])).values()] } : undefined
     if (dependencies) {
       const aliases = indexSessionMessages(facts, input.messages)
-      this.memory.registerDerivedSources([...aliases].filter(([, message]) => produced.has(message)).map(([messageId]) => ({ sessionId: input.sessionId, messageId })), dependencies)
+      const ownSources = [...aliases].filter(([, message]) => produced.has(message)).map(([messageId]) => ({ sessionId: input.sessionId, messageId }))
+      const ownIds = new Set(ownSources.map(source => source.messageId))
+      // Reading this turn's committed intermediate output does not create a
+      // new upstream dependency on that same output at settlement.
+      this.memory.registerDerivedSources(ownSources, { ...dependencies, sources: dependencies.sources.filter(source => source.sessionId !== input.sessionId || !ownIds.has(source.messageId)) })
     }
     await input.persist()
+    if (input.resident && !input.messages.some(m => input.inputIds?.includes(m.id) && m.inputSource?.kind === 'memory_maintenance')) this.context(input.sessionId).recordTurn(input.messages, input.inputIds ?? [])
     if (input.resident) for (const message of input.messages) if (input.inputIds?.includes(message.id) && message.inputSource?.kind === 'runtime_continuation' && message.inputSource.reason === 'memory_refresh') {
       this.context(input.sessionId).finishRefresh(message.id, input.completion.reason === 'complete')
     }
@@ -207,6 +213,10 @@ export class ResidentAssistantService {
   tools(session: ResidentSessionPort): SessionScopedToolCallbacks {
     const context = this.context(session.id)
     return {
+      assistantContextFn: async command => {
+        const state = context.command(command, session.messages(), session.input()?.id, session.projectId())
+        return { ...state, activeSegment: state.activeSegment ? { ...state.activeSegment, requests: [] } : undefined }
+      },
       assistantScenarioCaptureFn: async command => {
         const input = session.input(), direct = input?.role === 'user' && !input.hidden && !input.inputSource
         if (command.intent === 'user_request' && !direct) throw new Error('An internal input cannot authorize an explicit scenario operation')

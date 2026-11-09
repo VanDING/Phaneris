@@ -57,6 +57,7 @@ export async function createPhanerisResourceLoader(options: {
   wrapOrchestrationTool?: (tool: ToolDefinition<any, any>) => ToolDefinition<any, any>;
   gateToolCall?: (toolName: string, input: Record<string, unknown>, toolCallId: string) => Promise<void>;
   productTools?: () => readonly { name: string; availability?: { status: string; reason?: string }; namespace?: { name: string; instructions?: string } }[];
+  workingContext?: (messages: import('@earendil-works/pi-agent-core').AgentMessage[]) => import('@earendil-works/pi-agent-core').AgentMessage[];
 }): Promise<DefaultResourceLoader> {
   mkdirSync(options.agentDir, { recursive: true });
   const getPrompt = options.getPrompt ?? (() => currentPhanerisPrompt);
@@ -95,7 +96,7 @@ export async function createPhanerisResourceLoader(options: {
               sections[key] ??= null;
               if (declared.has(tool.name)) sections[key] = tool.namespace.instructions;
             }
-            const messages = [...event.messages];
+            const messages = options.workingContext?.(event.messages) ?? [...event.messages];
             if (Object.keys(sections).length) messages.push({ role: 'system' as const, content: '', sections, timestamp: 0 });
             // Rehydrate the host's explicit selection after native compression,
             // without granting external instructions privileged system scope.

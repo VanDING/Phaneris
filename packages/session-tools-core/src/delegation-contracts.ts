@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SessionExecutionConfig, ResolvedSessionExecutionConfig } from '@phaneris/core/types'
 import { EXECUTION_PROMPT_PRESETS } from '@phaneris/core/types'
+import { ResidentSourceSchema } from './resident-context-contracts'
 
 const id = z.string().min(1).max(200).regex(/^\S(?:[\s\S]*\S)?$/)
 const slugs = z.array(id).max(64)
@@ -15,6 +16,9 @@ export const WorkerConfigSchema = z.object({
   contextPolicy: z.enum(['compact', 'handoff', 'manual']).optional(), labels: slugs.optional(),
 }).strict()
 export const AssistantDispatchSchema = z.object({
+  context: z.object({ branchIds: z.array(z.string().min(1).max(200)).max(8), sources: z.array(ResidentSourceSchema).max(32).optional(),
+    memories: z.array(z.object({ id: z.string().min(1).max(200), revision: z.number().int().positive(), offset: z.number().int().nonnegative().optional(), maxChars: z.number().int().min(1).max(4000).optional() }).strict()).max(16).optional() }).strict().optional()
+    .describe('Task-specific material selection. Select only the branches required by this assignment, plus exact optional source ranges. Omitted uses the single selected branch, never the whole assistant view; ambiguous multi-branch delegation requires an explicit selection.'),
   requestId: id.describe('Stable identity for this work intent. Reuse on retry; changed content requires a new identity.'),
   title: z.string().min(1).max(200), instructions: z.string().min(1).max(24000).refine(text => text.trim().length > 0),
   goalQuote: z.string().trim().min(1).max(6000).optional().describe('Exact task-scoped quote from the original current user input. The Host verifies it and can rebuild withdrawn derived materials from this unchanged authorization.'),
@@ -50,6 +54,8 @@ export type AssistantWorkQuery = z.infer<typeof AssistantWorkQuerySchema>
 export type EffectiveWorkerConfig = ResolvedSessionExecutionConfig
 /** Delivery facts only. The referenced Session owns instructions, settings and result text. */
 export interface AssistantDelegationReceipt {
+  branchIds?: string[]
+  projectId?: string
   formatVersion: 2
   id: string; workspaceId: string; assistantSessionId: string; originMessageId: string
   requestId: string; fingerprint: string; targetSessionId?: string

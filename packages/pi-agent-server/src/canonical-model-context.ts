@@ -12,6 +12,24 @@ const zeroUsage = () => ({
   cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
 });
 
+/** Retain the current input and the settled management boundary, retiring older
+ * process from other work. Shared tool batches remain paired as one boundary. */
+export function residentTurnTail(messages: readonly AgentMessage[], input: string): AgentMessage[] {
+  let current = -1, management = -1;
+  messages.forEach((m, index) => {
+    const text = 'content' in m ? typeof m.content === 'string' ? m.content : m.content.filter(b => b.type === 'text').map(b => 'text' in b ? b.text : '').join('\n') : '';
+    if (m.role === 'user' && text.includes(input)) current = index;
+    if (m.role === 'assistant' && m.content.some(b => b.type === 'toolCall' && /(?:^|__)assistant_context$/.test(b.name))) management = index;
+  });
+  if (current < 0) throw new Error('context_coverage_gap: Current input is absent after selection');
+  if (management <= current) return messages.slice(current);
+  const batch = messages[management] as Extract<AgentMessage, { role: 'assistant' }>;
+  const siblingCalls = new Set(batch.content.filter(b => b.type === 'toolCall' && !/(?:^|__)assistant_context$/.test(b.name)).map(b => b.type === 'toolCall' ? b.id : ''));
+  return [messages[current]!, ...messages.slice(management).map(message => message.role === 'toolResult' && siblingCalls.has(message.toolCallId)
+    ? { ...message, content: [{ type: 'text' as const, text: `Earlier work output folded at context selection: ${message.toolName}, call ${message.toolCallId}. Original outcome remains in this Session/Runtime. Recover that source if needed; do not replay the tool.` }], structuredContent: undefined, details: undefined }
+    : message)];
+}
+
 function resultText(result: unknown): string {
   if (typeof result === 'string') return result;
   try { return JSON.stringify(result); } catch { return String(result); }

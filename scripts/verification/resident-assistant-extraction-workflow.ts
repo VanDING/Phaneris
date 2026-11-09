@@ -16,7 +16,7 @@ await verificationWorkflow('resident-assistant-extraction', async run => {
   writeFileSync(join(run.directory, 'host.log'), stdout + stderr)
   assert.equal(code, 0, (stdout + stderr).slice(-8000))
   const evidence = JSON.parse(readFileSync(join(run.directory, 'extraction-evidence.json'), 'utf8')) as { scenes: string[] }
-  for (const file of ['assistant/memory/memory.db', 'assistant/context.db']) copyFileSync(join(config, 'alpha', file), join(run.directory, file.split('/').at(-1)!))
+  for (const file of ['assistant/memory/memory.db', 'context.db']) copyFileSync(join(config, 'alpha', file), join(run.directory, file.split('/').at(-1)!))
   run.complete(evidence.scenes, ['Paid-model extraction quality and semantic conflict resolution', 'Attachment parsing', 'Remote hosting and multi-Host ownership'])
   console.log(JSON.stringify({ passed: evidence.scenes.length, output: run.directory }))
 })

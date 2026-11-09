@@ -67,7 +67,7 @@ export type InboundMessage =
   | { type: 'tool_execute_response'; requestId: string; result: PiProxyToolResult }
   | { type: 'pre_tool_use_response'; requestId: string; action: 'allow' | 'block' | 'modify'; input?: Record<string, unknown>; reason?: string }
   | { type: 'durable_tool_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; canonicalArgsHash: string; recoveryMode: ToolRecoveryMode; created: boolean; status: string; committedSeq: number }; reason?: string }
-  | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; reason?: string }
+  | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; reason?: string; canonicalContext?: DurableCanonicalModelContext }
   | { type: 'durable_model_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }
   | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; deferred?: true; discard?: true; reason?: string }
   | PiLargeResultFilterResponse
@@ -164,6 +164,7 @@ export interface OutboundDurableToolOutcomeReq {
 }
 
 export interface OutboundDurableModelPrepareReq {
+  contextSnapshot?: import('@phaneris/core/types').RequestContextSnapshot;
   residentContext?: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest['residentContext'];
   purpose?: 'cache_warm' | 'compaction';
   type: 'durable_model_prepare_request';

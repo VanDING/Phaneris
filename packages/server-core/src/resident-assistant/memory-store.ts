@@ -3,6 +3,7 @@ import { canonicalJson } from '@phaneris/shared/durable-runtime/identity'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { loadSession, validateSessionId } from '@phaneris/shared/sessions'
+import { getSourceReader, type SourceReader } from '../context/source-reader'
 import { readAssistantMemoryPolicy, assertAssistantMemoryLearning } from '@phaneris/shared/workspaces'
 import type { MemoryMutation, MemoryMutationResult, MemoryQuery, MemoryQueryResult, MemoryRecord, MemorySource, MemorySourceResult, MemorySourceRead, MemorySourcePage } from '@phaneris/shared/protocol'
 import { openSqliteDatabase, type SqliteDatabase } from '../runtime/sqlite'
@@ -32,7 +33,9 @@ export class AssistantMemoryStore {
   private readonly derived: DerivedMemory
   private readonly db: SqliteDatabase
   private readonly resolvingSources = new Set<string>()
-  private readonly sourceSnapshot = new Map<string, ReturnType<typeof loadSession>>()
+  private readonly sourceSnapshot = new Map<string, ReturnType<SourceReader['read']>>()
+  private readonly sourceSessions = new Map<string, Map<string, ReturnType<SourceReader['read']>>>()
+  private readonly sourceChecks = new Map<string, { version: string; message: import('@phaneris/shared/sessions').StoredMessage; contentHash: string; directUser: boolean; observation?: MemorySourceResult['observation'] }>()
   private snapshotDepth = 0
   private sourceFileLoads = 0
   private sourceCacheHits = 0
@@ -84,7 +87,7 @@ export class AssistantMemoryStore {
   private withSourceSnapshot<T>(operation: () => T): T {
     this.snapshotDepth++
     try { return operation() }
-    finally { if (--this.snapshotDepth === 0) this.sourceSnapshot.clear() }
+    finally { if (--this.snapshotDepth === 0) { this.sourceSnapshot.clear(); this.sourceSessions.clear() } }
   }
   extractionCoverage() { return historyExtractionCoverage(this.db) }
   contextVersion(): number { return this.version() }
@@ -107,7 +110,8 @@ export class AssistantMemoryStore {
       try {
         for (const source of dependencies.knowledge ?? []) if (knowledgeSourceVersion(this.workspace.rootPath, source.sourceSlug) !== source.version) return false
         for (const source of dependencies.sources) {
-        const current = this.readSource({ ...source, expectedContentHash: source.contentHash, readPurpose: source.readPurpose })
+        const current = this.readSource({ ...source, expectedContentHash: source.contentHash, readPurpose: source.readPurpose }, true)
+        if (source.projectId !== undefined && source.projectId !== (current.projectId ?? null)) return false
         if (source.observation && (current.observation?.operationId !== source.observation.operationId || current.observation.runOperationId !== source.observation.runOperationId)) return false
       } }
       catch { return false }
@@ -270,19 +274,39 @@ export class AssistantMemoryStore {
     return { ...source, content: source.content.slice(offset, end), range: { offset, end, fullChars: source.content.length },
       nextOffset: end < source.content.length ? end : null }
   }
-  readSource(source: MemorySource & { expectedContentHash?: string; readPurpose?: 'historical' }): MemorySourceResult {
+  readSource(source: MemorySource & { expectedContentHash?: string; readPurpose?: 'historical' }, validateOnly = false): MemorySourceResult {
     return this.withSourceSnapshot(() => {
       validateSessionId(source.sessionId)
       if (this.suppressed(source)) throw new Error('Source suppressed by a forgotten memory')
-      let session = this.sourceSnapshot.get(source.sessionId)
-      if (this.sourceSnapshot.has(source.sessionId)) this.sourceCacheHits++
+      const cacheKey = this.sourceKey(source)
+      const reader = getSourceReader(this.workspace.rootPath), location = reader.describe(source.sessionId, source.messageId)
+      const known = this.sourceChecks.get(cacheKey)
+      const checked = validateOnly && known?.version === location.version && (!source.expectedContentHash || source.expectedContentHash === known.contentHash) ? known : undefined
+      let original = this.sourceSnapshot.get(cacheKey)
+      if (original || checked) this.sourceCacheHits++
       else {
-        this.sourceFileLoads++
-        session = loadSession(this.workspace.rootPath, source.sessionId)
-        this.sourceSnapshot.set(source.sessionId, session)
+        // One decoded session serves every reference in this snapshot. The
+        // snapshot is bounded to the current validation call and cleared on
+        // exit; repeated message reads therefore do not count as file loads.
+        let session = this.sourceSessions.get(source.sessionId)
+        if (!session) {
+          session = new Map()
+          for (const entry of reader.catalog(source.sessionId).entries) session.set(entry.id, reader.read(source.sessionId, entry.id))
+          this.sourceSessions.set(source.sessionId, session)
+          this.sourceFileLoads++
+        }
+        original = session.get(source.messageId)
+        if (original) this.sourceCacheHits++
+        else {
+          this.sourceFileLoads++
+          original = reader.read(source.sessionId, source.messageId)
+          session.set(source.messageId, original)
+        }
+        this.sourceSnapshot.set(cacheKey, original)
       }
-      const message = session?.messages.find(item => item.id === source.messageId)
+      const session = original?.header ?? location.header, message = original?.message ?? checked!.message
       if (!message) throw new Error('Memory source message does not exist in this workspace')
+      if (message.type === 'tool' && ['pending', 'executing', 'backgrounded'].includes(message.toolStatus ?? '')) throw new Error('source_not_committed: Tool outcome is still in flight; read it after Runtime commits the result')
       const valid = (dependencies: import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies) => source.readPurpose === 'historical' ? this.historicalDependenciesValid(dependencies) : this.dependenciesValid(dependencies)
       if (message.delegationInput?.materialDependencies && !valid(message.delegationInput.materialDependencies)) {
         throw new Error('Delegated source is unavailable because its original materials changed or were forgotten')
@@ -300,14 +324,22 @@ export class AssistantMemoryStore {
         throw new Error('Historical resident-derived source has no verifiable material lineage and is unavailable for model recall')
       }
       const content = historySourceContent(message)
-      const contentHash = sourceContentHash(this.workspace.rootPath, source.sessionId, content)
-      if (source.expectedContentHash && !sourceContentMatches(this.workspace.rootPath, source.sessionId, content, source.expectedContentHash)) throw new Error('Memory source content hash changed; search again before reading')
-      const observation = message.type === 'tool' && message.toolStatus === 'completed' && !message.isError && message.durableOperationId && message.toolUseId && message.toolName && message.toolInput && message.toolResult
+      const contentHash = checked && !original ? checked.contentHash : sourceContentHash(this.workspace.rootPath, source.sessionId, content)
+      if (source.expectedContentHash && source.expectedContentHash !== contentHash && !sourceContentMatches(this.workspace.rootPath, source.sessionId, content, source.expectedContentHash)) throw new Error('Memory source content hash changed; search again before reading')
+      const directUser = checked && !original ? checked.directUser : isDirectUserMessage(message)
+      if (original) {
+        const { id, type, timestamp, projectScope, hidden, inputSource, delegationInput, delegationRefresh, toolStatus } = message
+        this.sourceChecks.delete(cacheKey); this.sourceChecks.set(cacheKey, { version: original.version, contentHash, directUser,
+          message: { id, type, timestamp, projectScope, hidden, inputSource, delegationInput, delegationRefresh, toolStatus, content: '' } })
+        while (this.sourceChecks.size > 4096) this.sourceChecks.delete(this.sourceChecks.keys().next().value!)
+      }
+      const observation = checked && !original ? checked.observation : message.type === 'tool' && message.toolStatus === 'completed' && !message.isError && message.durableOperationId && message.toolUseId && message.toolName && message.toolInput && message.toolResult
         ? this.verifyObservation?.({ sessionId: source.sessionId, operationId: message.durableOperationId, providerToolCallId: message.toolUseId,
           toolName: message.toolName, toolInput: message.toolInput, toolResult: message.toolResult }) : undefined
+      if (original) this.sourceChecks.get(cacheKey)!.observation = observation
       return { sessionId: source.sessionId, messageId: source.messageId, content, role: message.type, timestamp: message.timestamp,
         projectId: message.projectScope ? message.projectScope.projectId ?? undefined : session?.projectId,
-        directUser: isDirectUserMessage(message), contentHash, observation }
+        directUser, contentHash, observation }
     })
   }
 

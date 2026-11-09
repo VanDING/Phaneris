@@ -1,0 +1,101 @@
+import { closeSync, existsSync, openSync, readSync } from 'node:fs'
+import { dirname } from 'node:path'
+import { createHash } from 'node:crypto'
+import type { StoredMessage, SessionHeader } from '@phaneris/shared/sessions'
+import { getSessionFilePath, validateSessionId, expandSessionPath, getSessionSourceIndex, registerSessionSourceIndex, sessionSourceSignature } from '@phaneris/shared/sessions'
+
+interface Entry { id: string; offset: number; length: number; version: string }
+interface Index { signature: string; header: SessionHeader; entries: Entry[]; byId: Map<string, Entry> }
+const digest = (value: string | Buffer) => createHash('sha256').update(value).digest('hex')
+
+/** Rebuildable byte locators, never a second authoritative transcript or body cache.
+ * Source reads intentionally exclude diagnostic prompt/tool-schema snapshots;
+ * those have stream-local dictionaries and are not conversational evidence. */
+export class SourceReader {
+  private readonly indexes = new Map<string, Index>()
+  private counts = { bytesRead: 0, indexScanBytes: 0, decodedRecords: 0, selectedCharacters: 0, rebuilds: 0 }
+  constructor(private readonly root: string) {}
+  metrics() { return { ...this.counts, indexedSessions: this.indexes.size } }
+  release(sessionId: string) { this.indexes.delete(sessionId) }
+  private index(sessionId: string): Index {
+    validateSessionId(sessionId)
+    const file = getSessionFilePath(this.root, sessionId)
+    if (!existsSync(file)) throw new Error(`source_unavailable: Original Session ${sessionId} does not exist`)
+    const signature = sessionSourceSignature(file)
+    const written = getSessionSourceIndex(file, signature)
+    if (written) {
+      this.indexes.delete(sessionId); this.indexes.set(sessionId, written)
+      while (this.indexes.size > 8) this.indexes.delete(this.indexes.keys().next().value!)
+      return written
+    }
+    const cached = this.indexes.get(sessionId)
+    if (cached?.signature === signature) { this.indexes.delete(sessionId); this.indexes.set(sessionId, cached); return cached }
+    const fd = openSync(file, 'r'), entries: Entry[] = []
+    let pending = Buffer.alloc(0), position = 0, header: SessionHeader | undefined
+    const consume = (line: Buffer, offset: number) => {
+      if (!line.length) return
+      const parsed = JSON.parse(expandSessionPath(line.toString('utf8'), dirname(file)))
+      this.counts.decodedRecords++
+      if (!header) { header = parsed as SessionHeader; return }
+      entries.push({ id: (parsed as StoredMessage).id, offset, length: line.length, version: digest(line) })
+    }
+    try {
+      for (;;) {
+        const block = Buffer.allocUnsafe(64 * 1024), bytes = readSync(fd, block, 0, block.length, null)
+        if (!bytes) break
+        this.counts.bytesRead += bytes; this.counts.indexScanBytes += bytes
+        pending = Buffer.concat([pending, block.subarray(0, bytes)])
+        let newline: number
+        while ((newline = pending.indexOf(10)) >= 0) {
+          consume(pending.subarray(0, newline), position)
+          position += newline + 1; pending = pending.subarray(newline + 1)
+        }
+      }
+      if (pending.length) consume(pending, position)
+    } finally { closeSync(fd) }
+    if (!header) throw new Error('source_unavailable: Session header is missing')
+    if (header.id !== sessionId) throw new Error('source_identity_conflict: Session header does not match its path')
+    if (sessionSourceSignature(file) !== signature) throw new Error('source_revision_conflict: Source changed during index rebuild')
+    const index = registerSessionSourceIndex(file, header, entries)
+    if (index.byId.size !== entries.length) throw new Error('source_identity_conflict: Duplicate message identity')
+    this.counts.rebuilds++; this.indexes.delete(sessionId); this.indexes.set(sessionId, index)
+    while (this.indexes.size > 8) this.indexes.delete(this.indexes.keys().next().value!)
+    return index
+  }
+  catalog(sessionId: string) {
+    const index = this.index(sessionId)
+    return { header: index.header, entries: index.entries.map(entry => ({ ...entry })),
+      snapshot: digest(JSON.stringify(index.entries.map(entry => [entry.id, entry.version]))) }
+  }
+  describe(sessionId: string, messageId: string) {
+    const index = this.index(sessionId), entry = index.byId.get(messageId)
+    if (!entry) throw new Error(`source_unavailable: Original message ${sessionId}/${messageId} is missing`)
+    return { header: index.header, version: entry.version, cursor: index.entries.indexOf(entry) + 1 }
+  }
+  read(sessionId: string, messageId: string) {
+    const index = this.index(sessionId), entry = index.byId.get(messageId)
+    if (!entry) throw new Error(`source_unavailable: Original message ${sessionId}/${messageId} is missing`)
+    const file = getSessionFilePath(this.root, sessionId), fd = openSync(file, 'r'), bytes = Buffer.allocUnsafe(entry.length)
+    try {
+      let offset = 0
+      while (offset < bytes.length) {
+        const count = readSync(fd, bytes, offset, bytes.length - offset, entry.offset + offset)
+        if (!count) throw new Error('source_revision_conflict: Source changed during exact read')
+        offset += count; this.counts.bytesRead += count
+      }
+    } finally { closeSync(fd) }
+    if (digest(bytes) !== entry.version) { this.release(sessionId); throw new Error('source_revision_conflict: Source changed during exact read') }
+    const { promptSnapshot: _prompt, contextSnapshot: _context, __craftSnapshotRefs: _refs, ...original } = JSON.parse(expandSessionPath(bytes.toString('utf8'), dirname(file)))
+    const message = original as StoredMessage
+    this.counts.decodedRecords++; this.counts.selectedCharacters += message.content.length
+    return { message, header: index.header, version: entry.version, bytes: { offset: entry.offset, end: entry.offset + entry.length },
+      cursor: index.entries.indexOf(entry) + 1 }
+  }
+}
+const readers = new Map<string, SourceReader>()
+export function getSourceReader(root: string): SourceReader {
+  let reader = readers.get(root)
+  if (!reader) { reader = new SourceReader(root); readers.set(root, reader) }
+  while (readers.size > 4) readers.delete(readers.keys().next().value!)
+  return reader
+}

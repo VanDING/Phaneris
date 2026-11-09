@@ -113,7 +113,7 @@ export function ResidentAssistantIsland() {
     <div className="resident-entry titlebar-no-drag" data-resident-mode={isDark ? 'dark' : 'light'} data-peeking={expanded || hovered}>
       <PopoverAnchor asChild>
         <button ref={button} type="button" className="craft-control resident-island" data-testid="resident-brand-entry"
-          aria-label={`${t(surfaceOpen ? 'residentAssistant.backToWork' : 'residentAssistant.open')} · ${status} · ${pending}`} aria-busy={busy}
+          aria-label={`${t(surfaceOpen ? 'residentAssistant.backToWork' : 'residentAssistant.open')} · Phaneris ${status} ${pending}`} aria-busy={busy}
           aria-disabled={!snapshot.workspaceId || (!snapshot.connected && !surfaceOpen) || busy} aria-haspopup="dialog" aria-expanded={expanded || surfaceOpen} aria-controls={surfaceOpen ? 'resident-assistant-surface' : expanded ? peekId : undefined}
           onClick={() => void open()}
           onPointerEnter={event => { if (event.pointerType !== 'touch') { setHovered(true); reveal(120) } }}

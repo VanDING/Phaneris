@@ -95,10 +95,12 @@ export {
   readSessionJsonl,
   writeSessionJsonl,
   createSessionHeader,
+  expandSessionPath,
 } from './jsonl.ts';
 
 // Field utilities
 export { pickSessionFields } from './utils.ts';
+export { getSessionSourceIndex, registerSessionSourceIndex, sessionSourceSignature } from './source-index.ts';
 
 // Slug generator utilities
 export {

@@ -18,6 +18,7 @@ import { toPortablePath, expandPath, normalizePath } from '../utils/paths.ts';
 import { debug } from '../utils/debug.ts';
 import { safeJsonParse } from '../utils/files.ts';
 import { pickSessionFields } from './utils.ts';
+import { registerSessionSourceIndex } from './source-index.ts';
 
 // ============================================================
 // Session Path Portability
@@ -179,6 +180,14 @@ export function writeSessionJsonl(sessionFile: string, session: StoredSession): 
   // atomic helper writes a process-unique temp file and renames over the target
   // without the old unlink gap, so a crash cannot leave a missing transcript.
   atomicWriteFileSync(sessionFile, lines.join('\n') + '\n', { mode: 0o600 });
+  // Atomic persistence already owns the encoded lines. Publish locators from
+  // that pass so the next precise read need not parse the rewritten transcript.
+  let offset = Buffer.byteLength(lines[0]!) + 1;
+  registerSessionSourceIndex(sessionFile, header, session.messages.map((message, index) => {
+    const line = lines[index + 1]!, length = Buffer.byteLength(line);
+    const entry = { id: message.id, offset, length, version: createHash('sha256').update(line).digest('hex') };
+    offset += length + 1; return entry;
+  }));
 }
 
 /**

@@ -28,6 +28,7 @@ export interface SessionScopedToolCallbacks {
   assistantScenarioSearchFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantScenarioSearch'];
   assistantMemoryMaintenanceFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryMaintenance'];
   assistantContextHistoryFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantContextHistory'];
+  assistantContextFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantContext'];
   assistantDeliveryAckFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantDeliveryAck'];
   reportTaskResultFn?: import('@phaneris/session-tools-core').SessionToolContext['reportTaskResult'];
   assistantDelegateFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantDelegate'];

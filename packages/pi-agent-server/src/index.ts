@@ -93,6 +93,7 @@ function withDurableAccounting(stream: StreamFn, purposeInput?: 'cache_warm' | (
     const requestSeq = ++promptSnapshotSeq;
     const main = sessionLifecycle.current;
     const mainContext = !purpose && currentDurableModelRun()?.runOperationId === currentDurableRunOperationId && !!currentDurableRunOperationId;
+    if (mainContext && refreshedWorkingContext && !workingContextApplied) throw new Error('context_projection_failed: The selected work view was not installed in this provider request');
     const consumedInputIds = mainContext ? nativeInputs.snapshot() : [];
     const occupancy = main && mainContext ? readContextUsage(main) : undefined;
     const reserve = occupancy?.compactionSettings?.reserveTokens;
@@ -184,7 +185,7 @@ import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '@phaneris/shared/durable-runtime/types';
 import { attachDurableToolContext, durableToolFromContext } from './durable-tool-context.ts';
-import { convergeCanonicalContext, recordCanonicalCompaction } from './canonical-model-context.ts';
+import { canonicalContextToPiMessages, convergeCanonicalContext, recordCanonicalCompaction, residentTurnTail } from './canonical-model-context.ts';
 import {
   hasSupportedBaseUrlScheme,
   isLocalhostUrl,
@@ -239,6 +240,11 @@ function nextLocalEphemeralQueryId(source: string): string {
 let initConfig: Extract<InboundMessage, { type: 'init' }> | null = null;
 let residentContext: DurableCanonicalModelContext['resident'];
 let contextFenced = false;
+let refreshedWorkingContext: DurableCanonicalModelContext | undefined;
+let workingContextApplied = false;
+let workingInput = '';
+let baseTaskInstructions: string[] = [];
+let nativeCompactedSelection: DurableCanonicalModelContext | undefined;
 
 // Mutable state
 let currentDurableRunOperationId: string | undefined;
@@ -280,7 +286,7 @@ function sendThinkingLevelState(): void {
 // Pending promises for async handshakes
 const pendingPreToolUse = new PendingReplies<{ action: string; input?: Record<string, unknown>; reason?: string }>();
 const pendingToolExecutions = new PendingReplies<PiProxyToolResult>();
-type OutcomeReply = { ok: boolean; committedSeq?: number; deferred?: true; discard?: true; unavailable?: true; reason?: string };
+type OutcomeReply = { ok: boolean; committedSeq?: number; deferred?: true; discard?: true; unavailable?: true; reason?: string; canonicalContext?: DurableCanonicalModelContext };
 const unavailableReceipt = { ok: false, unavailable: true as const, reason: 'Runtime receipt unavailable or execution cancelled' };
 const pendingDurableToolPrepares = new PendingReplies<{ ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; unavailable?: true; reason?: string }>();
 const pendingDurableToolOutcomes = new PendingReplies<OutcomeReply>();
@@ -763,12 +769,21 @@ async function createSession(): Promise<AgentSession> {
     resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), settingsManager: mainSettings, observeLifecycle: observeSdkLifecycle,
       installCompaction: pi => {
         pi.on('session_compact', event => {
+          nativeCompactedSelection = refreshedWorkingContext;
           if (ownedSession && initConfig) recordCanonicalCompaction(ownedSession.sessionManager, event.compactionEntry.id,
             JSON.stringify([initConfig.workspaceRootPath, initConfig.sessionId]), lastCanonicalCoveredSeq);
         });
       },
       wrapOrchestrationTool: wrapSingleTool,
       productTools: () => proxyToolDefs,
+      workingContext: messages => {
+        if (!refreshedWorkingContext) return messages;
+        // A native summary may stand in for the current run only after the exact
+        // selected journal was installed. Requirements remain pinned separately.
+        const suffix = nativeCompactedSelection === refreshedWorkingContext ? messages.filter(m => m.role !== 'system') : residentTurnTail(messages, workingInput);
+        workingContextApplied = true;
+        return [...messages.filter(m => m.role === 'system'), ...canonicalContextToPiMessages(refreshedWorkingContext, ownedSession!.agent.state.model), ...suffix];
+      },
       gateToolCall: async (toolName, input, toolCallId) => { await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true); } }),
     settingsManager: mainSettings,
   };
@@ -1001,6 +1016,17 @@ async function requestDurableToolOutcome(
   send(request);
   const response = await responsePromise;
   if (!response.ok) { retainPendingOutcome({ kind: 'tool', request }); return undefined; }
+  if (response.canonicalContext?.resident) {
+    const main = sessionLifecycle.current!;
+    const tail = residentTurnTail(main.agent.state.messages, workingInput);
+    convergeCanonicalContext(main.sessionManager, response.canonicalContext, main.agent.state.model);
+    for (const message of tail) main.sessionManager.appendMessage(message as Parameters<typeof main.sessionManager.appendMessage>[0]);
+    main.refreshContext();
+    refreshedWorkingContext = response.canonicalContext;
+    workingContextApplied = false;
+    residentContext = response.canonicalContext.resident;
+    setPhanerisTaskInstructions([...baseTaskInstructions, residentContext.contextText]);
+  }
   if (response.committedSeq === undefined && !response.deferred) throw new Error(`Durable T2 returned no receipt for "${toolName}"`);
   durableToolAccounting.rememberCommit(toolCallId, {
     operationId: prepared.operationId,
@@ -1041,6 +1067,7 @@ async function requestDurableModelPrepare(
     provider,
     model,
     canonicalRequestHash,
+    contextSnapshot: snapshot,
     residentContext: residentContext ? { segmentId: residentContext.segmentId, snapshot } : undefined,
   });
   const response = await responsePromise;
@@ -1704,6 +1731,10 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
 }
 
 async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): Promise<void> {
+  refreshedWorkingContext = undefined;
+  nativeCompactedSelection = undefined;
+  workingInput = msg.message;
+  baseTaskInstructions = [msg.taskPreparation?.instructions ?? '', msg.taskPreparation?.sourceContext ?? ''];
   let received = false;
   lengthContinuationTracker.reset();
   durableToolAccounting.resetBatches();
@@ -1884,7 +1915,7 @@ function handleDurableToolPrepareResponse(
 function handleDurableToolOutcomeResponse(
   msg: Extract<InboundMessage, { type: 'durable_tool_outcome_response' }>,
 ): void {
-  if (!pendingDurableToolOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, deferred: msg.deferred, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableToolOutcomeResponse');
+  if (!pendingDurableToolOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, deferred: msg.deferred, reason: msg.reason, canonicalContext: msg.canonicalContext })) debugLog('Ignoring late or duplicate handleDurableToolOutcomeResponse');
 }
 
 function handleDurableModelPrepareResponse(

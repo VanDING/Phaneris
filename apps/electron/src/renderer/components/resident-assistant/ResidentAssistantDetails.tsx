@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { ResidentContextBranches } from './ResidentContextBranches'
 import { navigate, routes } from '@/lib/navigate'
 import type { HistoryPage, MemoryQueryResult, MemoryRecord, MemorySourceResult } from '@phaneris/shared/protocol'
 import type { SessionDelegationInput } from '@phaneris/core/types'
@@ -84,6 +85,7 @@ export function ResidentAssistantDetails({ workspaceId, detail }: { workspaceId:
     </>}
     {detail === 'context' && context && <div data-testid="resident-context-details" className="space-y-5">
       <div><h3 className="font-medium">{context.focus.label}</h3><p className="text-label text-text-secondary">{t('residentAssistant.contextHint')}</p></div>
+      <ResidentContextBranches workspaceId={workspaceId} context={context} onChange={setContext} onError={setError} />
       <form className="space-y-2" onSubmit={async event => {
         event.preventDefault()
         if (!label.trim()) return

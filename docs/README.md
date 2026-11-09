@@ -20,7 +20,9 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
-后续版本安排：0.6.3 先扎实任务管理，具体范围由用户另开对话讨论；[0.6.4 助手与 Board 并排交互计划](architecture/resident-assistant-board-0.6.4-plan-2026-11-07.md) — deferred，四步主交互已确认，暂不实施。进入助手默认全屏，可呼出工作区 Board 并切换 Kanban / 日历 / 甘特图；从 Board 进入右侧 Session，左侧助手保留，右侧可返回原 Board。
+后续版本安排（2026-11-08）：[0.6.3 共用上下文核心与助手分支管理](architecture/resident-assistant-context-0.6.3-plan-2026-11-08.md) — accepted，已实施并通过确定性、UI、检查点与门禁验收：三类 Session 共用原文、读取与请求组装，主助手按工作分支恢复，普通会话保持线性接续，Worker 使用本任务材料；补齐读取顺序、检查点、安全换段与实际请求验收；[0.6.4 助手任务管理](architecture/resident-assistant-tasks-0.6.4-plan-2026-11-08.md) — proposed，保留 A–F/A2、D/E 的实测调查，完善自主并行、控制、Session 状态与看板可见性；[0.6.5 助手与 Board 并排交互](architecture/resident-assistant-board-0.6.5-plan-2026-11-07.md) — deferred，原核心交互保持，暂不实施。当前仅修订计划，未开始产品实现。
+
+0.6.3 实施与验收：[实施记录](process/resident-context-0.6.3-implementation-2026-11-08.md)、[失败矩阵](verification/resident-context-0.6.3-failure-matrix-2026-11-08.md)、[最终验收报告](verification/resident-context-0.6.3-final-report-2026-11-09.md)。
 
 0.6.2 版本计划：[助手权限、能力认知与 Worker 管理](architecture/resident-assistant-0.6.2-plan-2026-11-06.md) — implemented / validated，2026-11-07 完成源码与隔离 Windows 候选验收；23 工作流 / 392 场景、实际打包客户端 33 场景及真实主助手 3 个样本通过。读取、L0、执行上限与管理闭环的范围及未覆盖项见[实施与验收记录](process/resident-assistant-0.6.2-implementation-2026-11-06.md)，安装版与真实 Work 数据未替换。
 

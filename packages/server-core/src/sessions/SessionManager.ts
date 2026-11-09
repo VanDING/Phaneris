@@ -6,6 +6,8 @@ import { buildAgentSessionSnapshot, buildSessionTaskContext } from './agent-prod
 import { createSessionAgentCallbacks } from './agent-product-callbacks'
 import { projectTaskContinuity } from '@phaneris/shared/agent/task-continuity'
 import { readSessionOriginals } from './session-history'
+import { knowledgeSourceVersion } from '@phaneris/shared/agent/knowledge-materials'
+import { getSourceReader } from '../context/source-reader'
 import { WorkerControlInterrupted } from '../resident-assistant/worker-controls'
 import { RESIDENT_TOOL_NAMES, type AssistantCapabilityView } from '@phaneris/session-tools-core/assistant-capabilities'
 import { getSessionToolProxyDefs } from '@phaneris/shared/agent/backend/pi/session-tool-defs'
@@ -3230,7 +3232,7 @@ export class SessionManager implements ISessionManager {
     const assistant = await this.getOrCreateResidentAssistant(workspaceId)
     const managed = this.sessions.get(assistant.id)!
     await this.ensureMessagesLoaded(managed)
-    if (command.action === 'get' || command.action === 'topics') return this.withResidentContext(managed, context => context.command(command, managed.messages))
+    if (command.action === 'get' || command.action === 'topics' || command.action === 'branches') return this.withResidentContext(managed, context => context.command(command, managed.messages, undefined, managed.projectId))
     if (command.action === 'focus' && command.projectId && command.projectId !== managed.projectId) throw new Error('Select this project using the existing assistant project control before setting its context focus')
     if (command.action === 'resume' && this.withResidentContext(managed, context => context.topic(command.topicId).projectId) !== managed.projectId) throw new Error('Select the saved topic project using the existing assistant project control before resuming its working set')
     this.residentForegroundAdmissions.add(assistant.id)
@@ -3242,7 +3244,7 @@ export class SessionManager implements ISessionManager {
       }
       return await this.execution.admission(assistant.id, async () => {
         if (managed.runtime.isProcessing) throw new Error('Stop the current assistant response before changing its working set')
-        return this.withResidentContext(managed, context => context.command(command.action === 'focus' ? { ...command, projectId: command.projectId ?? managed.projectId } : command, managed.messages))
+        return this.withResidentContext(managed, context => context.command(command.action === 'focus' ? { ...command, projectId: command.projectId ?? managed.projectId } : command, managed.messages, undefined, managed.projectId))
       })
     } finally {
       this.residentForegroundAdmissions.delete(assistant.id)
@@ -3411,8 +3413,37 @@ export class SessionManager implements ISessionManager {
   }
 
   private async prepareDelegatedInput(assistant: ManagedSession, receipt: AssistantDelegationReceipt, request: AssistantDispatch,
-    plan: SessionDelegationPlan, bind: (sessionId: string) => void): Promise<{ sessionId: string; inputMessageId: string }> {
-    const materialDependencies = this.withResidentContext(assistant, context => context.get().activeSegment?.dependencies)
+    plan: SessionDelegationPlan, bind: (sessionId: string) => void): Promise<{ sessionId: string; inputMessageId: string; branchIds?: string[] }> {
+    const context = this.residentService(assistant.workspace).context(assistant.id)
+    const reader = getSourceReader(assistant.workspace.rootPath), beforeRead = reader.metrics()
+    const selected = context.get().activeSegment?.branchIds ?? context.get().selectedBranchIds ?? []
+    if (!request.context && selected.length > 1) throw new Error('context_task_scope_required: Select this Worker task material branches explicitly')
+    const branchIds = request.context?.branchIds ?? selected
+    const materialDependencies = context.taskMaterials(branchIds, request.context?.sources)
+    const taskSourceDependencies = [...materialDependencies.sources]
+    const memory = this.residentService(assistant.workspace).memory
+    const taskMemories = (request.context?.memories ?? []).map(reference => {
+      const inspected = memory.inspect({ id: reference.id, expectedRevision: reference.revision, offset: reference.offset, maxChars: reference.maxChars ?? 2000 })
+      const record = inspected.record
+      if (record.state !== 'active' || record.redacted || record.dispute || record.projectId && record.projectId !== plan.config.projectId) throw new Error('context_memory_unavailable: Task memory is inactive, disputed, withdrawn or belongs to another project')
+      materialDependencies.memories.push({ id: record.id, revision: record.revision, observedState: 'active' })
+      materialDependencies.sources.push(...record.sources)
+      for (let offset = inspected.nextSourceOffset; offset !== null;) {
+        const page = memory.inspect({ id: record.id, expectedRevision: record.revision, sourceOffset: offset, maxChars: 1 })
+        materialDependencies.sources.push(...page.record.sources); offset = page.nextSourceOffset
+      }
+      return { id: record.id, revision: record.revision, projectId: record.projectId, condition: record.condition, content: record.content,
+        range: inspected.contentRange, nextOffset: inspected.nextOffset }
+    })
+    const contextBinding = { assistantSessionId: assistant.id, branchRevisions: Object.fromEntries(branchIds.map(id => [id, context.branch(id).revision])) }
+    const taskMaterials = taskSourceDependencies.map(source => {
+      const original = this.residentService(assistant.workspace).memory.readSource({ ...source, expectedContentHash: source.contentHash })
+      const ranges = 'ranges' in source ? source.ranges as Array<{ offset: number; end: number }> : undefined
+      return { ...source, content: ranges?.length ? ranges.map(range => original.content.slice(range.offset, range.end)).join('\n') : original.content }
+    })
+    const afterRead = reader.metrics()
+    const materialReading = { bytesRead: afterRead.bytesRead - beforeRead.bytesRead, indexScanBytes: afterRead.indexScanBytes - beforeRead.indexScanBytes,
+      decodedRecords: afterRead.decodedRecords - beforeRead.decodedRecords, selectedCharacters: taskMaterials.reduce((sum, source) => sum + source.content.length, 0) + taskMemories.reduce((sum, entry) => sum + (entry.content?.length ?? 0), 0), rebuilds: afterRead.rebuilds - beforeRead.rebuilds }
     let target: ManagedSession
     if (request.targetSessionId) {
       target = this.sessions.get(request.targetSessionId)!
@@ -3443,6 +3474,7 @@ export class SessionManager implements ISessionManager {
       const originSource = request.goalQuote ? this.residentService(assistant.workspace).memory.readSource({ sessionId: assistant.id, messageId: origin.id }) : undefined
       const content = `[Delegated work ${receipt.id}]\nOrigin: assistant ${assistant.id}, user message ${receipt.originMessageId}.\n`
         + `This is an attributed assignment, not a new user instruction or permission grant.\n\n${files.instructions}`
+        + `\n\n<task_materials>\n${JSON.stringify({ branchIds, originMessageId: receipt.originMessageId, sources: taskMaterials, memories: taskMemories })}\n</task_materials>`
         + (request.artifacts?.length ? `\n\nArtifact feedback baselines (original owner, exact revisions):\n${JSON.stringify(request.artifacts)}` : '')
         + (request.acceptanceCriteria?.length ? `\n\nAcceptance criteria:\n${request.acceptanceCriteria.join('\n')}` : '')
         + '\n\nBefore your final response, call report_task_result with a stable requestId, a concise summary, and explicit output roles. Mark only requested finished results as final; supporting files must name their final parentKey. Mark verification scripts, temporary configuration and other process material as intermediate unless they are themselves requested results. Use outputs:[] for a text-only result. The Host validates ownership and versions; reporting does not imply user acceptance.'
@@ -3455,6 +3487,7 @@ export class SessionManager implements ISessionManager {
           executionPermissionCeiling: this.residentExecutionMode(assistant),
           ...(originSource && request.goalQuote ? { originGrant: { sessionId: assistant.id, messageId: origin.id, contentHash: originSource.contentHash, quote: request.goalQuote } } : {}),
           materialDependencies,
+          contextBinding: { ...contextBinding, reading: materialReading },
           attachmentMaterials: files.materials.length ? files.materials : undefined,
           artifactBaselines: request.artifacts,
           acceptanceCriteria: request.acceptanceCriteria, requestedConfig: request.config, effectiveConfig: plan.config,
@@ -3468,7 +3501,7 @@ export class SessionManager implements ISessionManager {
       await this.flushSession(target.id)
       this.sendEvent({ type: 'user_message', sessionId: target.id, message: input, status: 'accepted' }, target.workspace.id)
     })
-    return { sessionId: target.id, inputMessageId }
+    return { sessionId: target.id, inputMessageId, branchIds }
   }
 
   /** Follow the persisted handoff owner; never invent a second Worker binding. */
@@ -3866,6 +3899,14 @@ export class SessionManager implements ISessionManager {
     if (refresh) return refresh.materialDependencies
     return managed.messages.findLast(message => inputs.includes(message.id) && message.delegationInput)?.delegationInput?.materialDependencies
   }
+  private async trackDelegatedMaterials(managed: ManagedSession, additions: Partial<import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies>): Promise<void> {
+    const current = this.activeDelegatedMaterials(managed)
+    if (!current) return
+    current.sources = [...new Map([...current.sources, ...additions.sources ?? []].map(source => [JSON.stringify(source), source])).values()]
+    current.memories = [...new Map([...current.memories, ...additions.memories ?? []].map(source => [canonicalJson(source), source])).values()]
+    current.knowledge = [...new Map([...current.knowledge ?? [], ...additions.knowledge ?? []].map(source => [canonicalJson(source), source])).values()]
+    this.persistSession(managed); await this.flushSession(managed.id)
+  }
 
   private assertWorkerManagementBoundary(managed: ManagedSession): void {
     const root = managed.handoffRootSessionId ? this.sessions.get(managed.handoffRootSessionId) : managed
@@ -3881,6 +3922,7 @@ export class SessionManager implements ISessionManager {
     const inputs = attributedRuntimeInputIds(managed.messages, managed.lastSentMessageIds)
     const input = managed.messages.findLast(message => inputs.includes(message.id) && message.delegationInput)?.delegationInput
     if (!input) return true
+    if (input.contextBinding && !this.residentService(managed.workspace).context(input.contextBinding.assistantSessionId).revisionsValid(input.contextBinding.branchRevisions)) return false
     if (!assignmentAttachmentsValid(input.attachmentMaterials)) return false
     const materials = this.activeDelegatedMaterials(managed)
     if (materials && !this.delegatedMaterialsValid(managed, materials)) return false
@@ -4789,7 +4831,7 @@ export class SessionManager implements ISessionManager {
     const managed = this.sessions.get(sessionId)
     if (!managed) throw new Error('Session not found')
     if (managed.sessionKind === 'resident_assistant' && policy !== 'compact') {
-      throw new Error('The resident assistant currently requires compact context policy; logical context segments are not yet enabled')
+      throw new Error('The resident assistant uses compact inside its stable Session; manage work branches with assistant_context. Ordinary handoff policies are unchanged.')
     }
     if (managed.runtime.isProcessing) throw new Error('Stop the current response before changing its context policy')
     // Apply to the backend first. A rejected toggle must leave both the stored
@@ -5232,7 +5274,10 @@ export class SessionManager implements ISessionManager {
           const latest = managed.messages.findLast(message => message.role === 'user' && !message.hidden && !message.inputSource)
           if (origin && origin.id === latest?.id && !origin.isQueued) this.residentService(managed.workspace).context(managed.id).requestRefresh(origin.id)
         },
-        canonical: operationId => this.durableRuntime.queries.getCanonicalModelContext(managed.workspace.rootPath, managed.id, operationId),
+        // Resident context preparation needs the current run's committed management
+        // outcomes for its settled-action receipts. Branch assembly still replaces
+        // canonical items with the selected view, so this never re-injects turn bodies.
+        canonical: () => this.durableRuntime.queries.getCanonicalModelContext(managed.workspace.rootPath, managed.id),
         work: () => this.residentWork(managed.workspace.id),
         dispatch: request => this.dispatchAssistantWork(managed.workspace.id, request),
         memoryChanged: result => this.eventSink?.(RPC_CHANNELS.assistantMemory.CHANGED, { to: 'workspace', workspaceId: managed.workspace.id }, { workspaceId: managed.workspace.id, id: result.record.id, version: result.version }),
@@ -5254,7 +5299,20 @@ export class SessionManager implements ISessionManager {
           this.assertWorkerManagementBoundary(managed)
           if (!this.delegatedExecutionValid(managed)) throw new Error('Model context changed; prepare a fresh input before continuing')
         },
-        assertTool: () => this.assertWorkerManagementBoundary(managed),
+        assertTool: async request => {
+          this.assertWorkerManagementBoundary(managed)
+          const name = request.toolName.replace(/^mcp__session__/, '')
+          const slug = ['source_read_resource', 'source_get_prompt'].includes(name) && typeof request.args.sourceSlug === 'string'
+            ? request.args.sourceSlug : request.toolName.match(/^mcp__([a-z0-9-]+)__/i)?.[1]
+          if (slug && slug !== 'session') await this.trackDelegatedMaterials(managed, { knowledge: [{ sourceSlug: slug, version: knowledgeSourceVersion(managed.workspace.rootPath, slug) }] })
+        },
+        entered: request => {
+          const input = managed.messages.find(message => managed.lastSentMessageIds?.includes(message.id))
+          this.residentService(managed.workspace).context(managed.id).recordNativeRequest(request,
+            this.durableRuntime.queries.getCanonicalModelContext(managed.workspace.rootPath, managed.id).cursor,
+            input?.id ?? '', this.activeDelegatedMaterials(managed) ?? { sources: [], memories: [] }, input?.delegationInput?.contextBinding?.branchRevisions, input?.delegationInput?.contextBinding?.reading)
+        },
+        committed: (request, valid) => this.residentService(managed.workspace).context(managed.id).committed(request, valid),
       }
       const backend = assembleSessionAgent({
 context: backendContext,
@@ -6428,8 +6486,18 @@ initialSources: {
           await this.ensureMessagesLoaded(target)
           await this.flushSession(target.id)
           const page = readSessionOriginals(managed.workspace, target.id, query, this.residentService(managed.workspace).memory)
+          // The source snapshot can lag the in-memory tool status. The Session
+          // owner knows which tool is still executing, so an in-flight tool result
+          // is never presented as a committed source even when the flush is stale.
+          const executing = new Set(target.messages.filter(message => message.role === 'tool' && ['pending', 'executing', 'backgrounded'].includes(message.toolStatus ?? '')).map(message => message.id))
+          if (executing.size) for (const message of page.messages) {
+            if (!executing.has(message.id)) continue
+            message.unavailable = 'source_not_committed: Tool outcome is still executing'
+            message.content = ''
+          }
           if (managed.sessionKind === 'resident_assistant') this.residentService(managed.workspace).context(managed.id).track({ sources: page.messages.filter(message => !message.unavailable).map(message => ({
             sessionId: target.id, messageId: message.id, contentHash: message.contentHash, readPurpose: 'historical', ranges: [{ offset: message.startCharacter, end: message.endCharacter }] })) })
+          else await this.trackDelegatedMaterials(managed, { sources: page.messages.filter(message => !message.unavailable).map(message => ({ sessionId: target.id, messageId: message.id, contentHash: message.contentHash, readPurpose: 'historical' })) })
           return page
         },
         getSessionInfoFn: (sessionId?: string) => {
@@ -8029,9 +8097,11 @@ initialSources: {
     // Ensure messages are loaded before we try to add new ones
     await this.ensureMessagesLoaded(managed)
     const originalScope = inputSource?.kind === 'runtime_continuation' ? managed.messages.find(input => inputSource.inputMessageIds.includes(input.id) && input.projectScope)?.projectScope : undefined
+    const event = inputSource?.kind === 'resident_event' ? this.residentService(managed.workspace).delegation?.pendingEvents().find(event => inputSource.eventIds.includes(event.eventId)) : undefined
+    const eventScope = event && event.projectId !== undefined ? { projectId: event.projectId } : undefined
     const admittedProjectScope = inputSource?.kind === 'memory_maintenance'
       ? { projectId: this.residentService(managed.workspace).memory.maintenance.active(admissionMessageId ?? '')?.projectId ?? null }
-      : originalScope ?? { projectId: managed.projectId ?? null }
+      : originalScope ?? eventScope ?? { projectId: managed.projectId ?? null }
 
     if (admissionMessageId) {
       const previous = this.durableRuntime.queries.inputAdmission(managed.workspace.rootPath, sessionId, admissionMessageId)

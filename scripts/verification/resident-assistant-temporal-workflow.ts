@@ -16,7 +16,7 @@ await verificationWorkflow('resident-assistant-temporal', async run => {
   assert.equal(code, 0, (stdout + stderr).slice(-8000))
   const evidence = JSON.parse(readFileSync(join(run.directory, 'temporal-evidence.json'), 'utf8')) as { scenes: string[] }
   copyFileSync(join(config, 'alpha/assistant/memory/memory.db'), join(run.directory, 'memory.db'))
-  copyFileSync(join(config, 'alpha/assistant/context.db'), join(run.directory, 'context.db'))
+  copyFileSync(join(config, 'alpha/context.db'), join(run.directory, 'context.db'))
   run.complete(evidence.scenes, ['Semantic conflict and supersession inference', 'Paid-model quality', 'Remote hosting and multi-Host ownership'])
   console.log(JSON.stringify({ passed: evidence.scenes.length, output: run.directory }))
 })

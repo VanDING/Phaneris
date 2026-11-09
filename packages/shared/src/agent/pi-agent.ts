@@ -1941,6 +1941,8 @@ export class PiAgent extends BaseAgent {
         ok: true,
         committedSeq: committed.committedSeq,
         deferred: committed.deferred,
+        ...(request.toolName.replace(/^mcp__session__/, '') === 'assistant_context' && !committed.deferred
+          ? { canonicalContext: this.config.getCanonicalModelContext?.(request.runOperationId) } : {}),
       });
     } catch (error) {
       this.send({

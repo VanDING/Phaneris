@@ -36,10 +36,12 @@ export interface SessionExecutionAttempt {
 export interface SessionInputExecutionsPage { items: SessionExecutionAttempt[]; nextBefore: number | null; total: number }
 /** Immutable assignment evidence on an ordinary Session input, not another task. */
 export interface ToolObservationReference { operationId: string; runOperationId: string }
-export interface SourceMaterialReference { sessionId: string; messageId: string; contentHash: string; observation?: ToolObservationReference; readPurpose?: 'historical' }
+export interface SourceMaterialReference { sessionId: string; messageId: string; contentHash: string; projectId?: string | null; materialMode?: 'reference' | 'content'; observation?: ToolObservationReference; readPurpose?: 'historical' }
 export interface KnowledgeMaterialReference { sourceSlug: string; version: string }
+export interface ContextReadMetrics { bytesRead: number; indexScanBytes: number; decodedRecords: number; selectedCharacters: number; rebuilds: number }
 
 export interface SessionDelegationInput {
+  contextBinding?: { assistantSessionId: string; branchRevisions: Record<string, number>; reading?: ContextReadMetrics }
   executionPermissionCeiling?: NonNullable<SessionExecutionConfig['permissionMode']>
   originGrant?: SourceMaterialReference & { quote: string }
   attachmentMaterials?: Array<{ attachmentId: string; originSessionId: string; originMessageId: string; path: string; contentHash: string }>

@@ -175,6 +175,7 @@ export interface SessionToolContext {
   assistantMemoryUpdate?: (input: import('./memory-contracts').MemoryMutation) => Promise<unknown>;
   assistantMemoryMaintenance?: (input: import('./memory-maintenance-contracts').MemoryMaintenanceCommand) => Promise<import('./memory-maintenance-contracts').MemoryMaintenanceResult>;
   assistantContextHistory?: (input: { query?: string; offset?: number; limit?: number }) => Promise<unknown>;
+  assistantContext?: (input: import('./resident-context-contracts').ResidentContextCommand) => Promise<import('./resident-context-contracts').ResidentContextState>;
   assistantDeliveryAck?: (input: import('./task-result-contracts').AssistantDeliveryAck) => Promise<unknown>;
   reportTaskResult?: (input: import('./task-result-contracts').ReportTaskResult) => Promise<import('./task-result-contracts').TaskOutputManifest>;
   assistantDelegate?: (input: import('./delegation-contracts').AssistantDispatch) => Promise<import('./delegation-contracts').AssistantWork>;

@@ -37,13 +37,16 @@ await verificationWorkflow('resident-assistant-sources', async run => {
     before = store.getDiagnostics()
     assert.equal(store.readSource({ sessionId: 'derived-source', messageId: 'output' }).content, 'DERIVED_SOURCE_SNAPSHOT')
     after = store.getDiagnostics(); diagnostics.push(after)
-    assert.equal(after.sourceFileLoads - before.sourceFileLoads, 2)
+    // Lineage validation reuses the validated source checks; only the derived content is a new decode.
+    assert.equal(after.sourceFileLoads - before.sourceFileLoads, 1)
     scenes.push('RS01-derived-graph-shares-only-current-boundary-snapshot')
     for (let index = 0; index < 16; index++) store.mutate({ action: 'remember', requestId: `source-${index}`, key: `source-${index}`, content: `Source ${index}`, kind: 'fact', basis: 'user_stated', sources: [{ sessionId: 'many-sources', messageId: messages[index]!.id }] })
     before = store.getDiagnostics()
     assert.equal(store.query({ limit: 20 }).items.length, 16)
     after = store.getDiagnostics(); diagnostics.push(after)
-    assert.equal(after.sourceFileLoads - before.sourceFileLoads, 1)
+    // The validated source checks are warm; the query must not re-decode every record.
+    assert(after.sourceFileLoads - before.sourceFileLoads <= 1)
+    assert(after.sourceCacheHits > before.sourceCacheHits)
     scenes.push('RS01-memory-query-validates-all-records-with-one-source-decode')
     const longContent = 'LOOKUP_BUDGET_material '.repeat(300)
     for (let index = 0; index < 20; index++) store.mutate({ action: 'remember', requestId: `lookup-${index}`, key: `lookup-${index}`, content: longContent, kind: 'fact', basis: 'user_stated', sources: [{ sessionId: 'many-sources', messageId: messages[index + 20]!.id }] })

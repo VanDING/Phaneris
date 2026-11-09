@@ -14,6 +14,7 @@ import { successResponse, errorResponse } from './response.ts';
 
 import { z } from 'zod';
 import { SessionHistoryQuerySchema } from './session-history-contracts.ts';
+import { AssistantContextSchema } from './resident-context-contracts.ts';
 import { WorkerControlSchema } from './worker-control-contracts.ts';
 import type { ZodObject } from 'zod';
 import type { ToolResult } from './types.ts';
@@ -941,6 +942,12 @@ export const SourceGetPromptSchema = z.object({
 });
 
 export const SESSION_TOOL_DEFS: SessionToolDef[] = [
+  { name: 'assistant_context', family: 'session-management', exposure: 'direct', executionMode: 'registry', safeMode: 'allow',
+    description: 'Manage this assistant working context. Before doing work, select the relevant branch(es) or create an independent goal; ordinary chat needs no branch. branches lists/searches a bounded directory. create uses stable requestId and links the current input. select restores exact requirements/checkpoint in the NEXT model request of this same turn. associate links the current input or exact source/range to one or more branches; supersedes replaces requirements without changing originals. Use ranges for mixed A/B inputs; shared evidence is not a new instruction. checkpoint saves conclusions, unresolved issues, next steps and Host-validated source coverage, never task success or authorization. hibernate releases working material without cancelling Workers or finishing tasks. For a late inbox event use temporary select and its original branch; preserve the foreground focus. Discover old goals with branches query/pagination and expand original evidence with assistant_memory_read. Never recreate already executed effects on restore.',
+    inputSchema: z.object({ command: AssistantContextSchema }).strict(), handler: async (ctx, args) => {
+      if (!ctx.assistantContext) return errorResponse('Assistant context management is unavailable')
+      return successResponse(JSON.stringify(await ctx.assistantContext(args.command)))
+    } },
   { name: 'assistant_scenario_capture', family: 'session-management', exposure: 'direct', safeMode: 'allow', executionMode: 'registry',
     description: 'Capture a worthwhile historical scenario from an exact direct user goal quote, conditions, and current active decision/experience atoms. This is a derived reference set, not task status or new authorization. Preserve project ownership and conditions; do not make one for every conversation. Supply a supported durable experience assessment, stable requestId and expectedRevision for replacement. Routine learning follows workspace policy; user_request intent requires the current explicit user request. Never include secrets. The receipt does not prove continued freshness; lookup revalidates all dependencies.',
     inputSchema: z.object({ command: ScenarioCaptureSchema }).strict(), handler: (ctx, args) => handleAssistantScenarioCapture(ctx, args.command) },

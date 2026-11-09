@@ -278,11 +278,16 @@ await verificationWorkflow('resident-assistant-control', async run => {
     context.track({ memories: [{ id: support.record.id, revision: support.record.revision, observedState: support.record.state }], sources: support.record.sources }); context.close()
     holding = true; workerStarted = false; release = Promise.withResolvers<void>()
     const materials = await client.invoke(RPC_CHANNELS.residentAssistant.DISPATCH, 'alpha', { requestId: 'withdraw-materials', title: 'Material refresh',
+      context: { branchIds: [], sources: support.record.sources.map(source => ({ sessionId: source.sessionId, messageId: source.messageId, expectedContentHash: source.contentHash })) },
       goalQuote: materialGoal, instructions: `${materialGoal}\nCONTROL_WITHDRAWN_SUPPORT_ONLY`, config: { permissionMode: 'safe', workingDirectory: 'none' } })
     const materialsWork = async () => (await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: materials.id })).items[0]!
     await until(() => workerStarted)
     await client.invoke('residentAssistant:control', 'alpha', { commandId: 'pause-materials', id: materials.id, expectedSeq: (await materialsWork()).seq, action: 'pause' })
     const { getSessionScopedToolCallbacks } = await import('../../packages/shared/src/agent/session-scoped-tool-callback-registry')
+    // The new context contract deliberately does not inherit a previous global
+    // view. Bind the source actually used for this supplement at its boundary.
+    const supplementContext = new AssistantContextStore(workspace, assistant.id, memory)
+    supplementContext.track({ memories: [{ id: support.record.id, revision: support.record.revision, observedState: support.record.state }], sources: support.record.sources }); supplementContext.close()
     await getSessionScopedToolCallbacks(assistant.id)!.assistantWorkerControlFn!({ commandId: 'derived-support-message', id: materials.id, expectedSeq: (await materialsWork()).seq,
       action: 'message', message: 'CONTROL_WITHDRAWN_SUPPORT_ONLY: a supplement derived from the recalled support.' })
     memory.mutate({ action: 'transition', requestId: 'forget-control-support', id: support.record.id, expectedRevision: support.record.revision, state: 'forgotten' }, 'user_request')

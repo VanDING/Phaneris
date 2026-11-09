@@ -2,6 +2,7 @@ import { AbortReason, type AgentBackend, type CoreBackendConfig, type ChatOption
 import type { FileAttachment } from '@phaneris/shared/utils'
 import type { Message } from '@phaneris/core/types'
 import { reportLegacyProjectionParity } from './projection-audit.js'
+import { assembleContext } from '../context/assembler'
 import type { DurableRuntime, RuntimeDriver, RuntimeInputReceipt, RuntimeExecutionHandle, RuntimeScope } from '../durable-runtime/index.js'
 
 export interface PiDriverInput { message: string; attachments?: FileAttachment[]; options?: ChatOptions; beforeRun?: () => void }
@@ -60,7 +61,7 @@ export interface ModelContextPolicy {
   valid(request?: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest): boolean
   /** Owns both request identity and validity at the prepare boundary when supplied. */
   assert?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
-  assertTool?(request: import('@phaneris/shared/durable-runtime/types').DurableToolPrepareRequest): void
+  assertTool?(request: import('@phaneris/shared/durable-runtime/types').DurableToolPrepareRequest): void | Promise<void>
   entered?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
   committed?(request: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest, valid: boolean): void
 }
@@ -75,8 +76,8 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
   const { workspaceRootPath: workspace, sessionId } = scope
   const utilityLeases = new Map<string, () => void>()
   return {
-    durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: request => {
-      options.modelContext?.assertTool?.(request)
+    durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: async request => {
+      await options.modelContext?.assertTool?.(request)
       if (options.modelContext && !options.modelContext.valid()) return Promise.reject(new Error('Model context changed; execution is paused until the original requirements are reviewed'))
       return runtime.effects.boundaryFor(workspace).prepare({ ...request, recoverySessionIds: scope.recoverySessionIds })
     } },
@@ -96,7 +97,8 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
     } },
     getCanonicalModelContext: excludeOperationId => {
       const materialContext = options.modelContext?.select(excludeOperationId)
-      if (materialContext) return materialContext
+      if (materialContext) return assembleContext({ strategy: materialContext.resident ? 'branches' : 'task', canonical: materialContext,
+        items: materialContext.items, segmentId: materialContext.resident?.segmentId, contextText: materialContext.resident?.contextText, blocked: materialContext.blocked })
       try {
       // Until a known result is backfilled, the native journal has the newer
       // working transcript. An older projection must not overwrite it.
@@ -105,7 +107,7 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
         const parity = reportLegacyProjectionParity(runtime.queries.events(workspace, { sessionId }), [...options.compatibilityMessages()])
         if (!parity.canonicalFacts || parity.issueCount) return undefined
       }
-      return runtime.queries.getCanonicalModelContext(workspace, sessionId, excludeOperationId)
+      return assembleContext({ strategy: 'linear', canonical: runtime.queries.getCanonicalModelContext(workspace, sessionId, excludeOperationId) })
       } catch (error) { options.observerError?.(error); return undefined }
     },
     beginDurableUtilityRun: ({ requestId, prompt }) => {

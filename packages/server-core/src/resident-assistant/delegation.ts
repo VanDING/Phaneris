@@ -21,7 +21,7 @@ export class SessionDelegationConflict extends Error {}
 export interface DelegationHost {
   plan(request: AssistantDispatch): Promise<SessionDelegationPlan>
   prepare(receipt: AssistantDelegationReceipt, request: AssistantDispatch, plan: SessionDelegationPlan,
-    bind: (sessionId: string) => void): Promise<{ sessionId: string; inputMessageId: string }>
+    bind: (sessionId: string) => void): Promise<{ sessionId: string; inputMessageId: string; branchIds?: string[] }>
   snapshot(receipt: AssistantDelegationReceipt): Promise<SessionDelegationInput | undefined>
   execution?(receipt: AssistantDelegationReceipt, options: { before?: number; limit: number }): Promise<AssistantWork['execution']>
   recover(receipt: AssistantDelegationReceipt): Promise<{ sessionId?: string; inputMessageId?: string; resume?: 'original' | 'materials'; completedResult?: { sessionId: string; messageId: string } }>
@@ -152,7 +152,7 @@ export class AssistantDelegation {
       if (receipt.state === 'result_ready' && receipt.result) this.results.seal(receipt, receipt.result)
       const eventId = `${receipt.id}:${receipt.state}:${receipt.result?.messageId ?? ''}`
       const event = { eventId, workspaceId: receipt.workspaceId, delegationId: receipt.id, assistantSessionId: receipt.assistantSessionId,
-        originMessageId: receipt.originMessageId, kind: receipt.state, sessionId: receipt.sessionId, inputMessageId: receipt.inputMessageId,
+        originMessageId: receipt.originMessageId, branchIds: receipt.branchIds, projectId: receipt.projectId ?? null, kind: receipt.state, sessionId: receipt.sessionId, inputMessageId: receipt.inputMessageId,
         result: receipt.result, createdAt: saved.updatedAt }
       this.db.prepare('INSERT OR IGNORE INTO inbox_events(event_id,body) VALUES(?,?)').run(eventId, JSON.stringify(event))
       this.db.exec('COMMIT')
@@ -193,7 +193,7 @@ export class AssistantDelegation {
     if (concurrent) return this.view(concurrent)
     if (request.targetSessionId && this.reserved(request.targetSessionId)) throw new Error('Target Session has a pending delegation')
     const receipt = this.save({ formatVersion: 2, id: randomUUID(), workspaceId: this.workspace.id,
-      assistantSessionId, originMessageId, requestId: request.requestId, fingerprint, targetSessionId: request.targetSessionId,
+      assistantSessionId, originMessageId, projectId: plan.config.projectId, requestId: request.requestId, fingerprint, targetSessionId: request.targetSessionId,
       state: 'preparing', seq: 0, createdAt: Date.now(), updatedAt: Date.now() }, { requestId: request.requestId, fingerprint, title: request.title, projectId: plan.config.projectId })
     try {
       const binding = await this.host.prepare(receipt, request, plan, sessionId => {
