@@ -469,7 +469,7 @@ P1/P2 可以吸收腾讯模块，但应先验证最小边界：提取与去重�
 - [受限历史提取](../../packages/server-core/src/resident-assistant/history-extraction.ts)
 - [模型上下文及依赖检查](../../packages/server-core/src/resident-assistant/context-store.ts)
 - [Worker 实际配置与权限 clamp](../../packages/server-core/src/resident-assistant/worker-config.ts)
-- [记忆 UI](../../apps/electron/src/renderer/components/resident-assistant/ResidentAssistantDetails.tsx)
+- [历史记忆 UI](https://github.com/VanDING/Phaneris/blob/48c2450ed581203391882e968f9ff0103a086199/apps/electron/src/renderer/components/resident-assistant/ResidentAssistantDetails.tsx)（专用上下文前台于 2026-11-13 收回）
 - [全局偏好及 prompt 格式化](../../packages/shared/src/config/preferences.ts)
 - [Guarded 当前运行规则](../../packages/shared/src/agent/core/guarded-mode.ts)
 - [现有项目记忆追加路径](../../packages/session-tools-core/src/handlers/project-memory.ts)

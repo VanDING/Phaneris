@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
-import { Layers, MoreHorizontal } from 'lucide-react'
+import { MoreHorizontal } from 'lucide-react'
 import { PreviewHeaderIconButton } from '@phaneris/ui'
 import type { ResolvedArtifact } from '@phaneris/shared/artifacts'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
@@ -12,7 +12,6 @@ import './resident-assistant.css'
 
 const panelPreferences = atom<Record<string, { open: boolean; width: number }>>({})
 const FilePreview = React.lazy(() => import('@/components/content-panels/FilePreviewContent').then(module => ({ default: module.FilePreviewContent })))
-const ContextDetails = React.lazy(() => import('./ResidentAssistantDetails').then(module => ({ default: module.ResidentAssistantDetails })))
 
 /** Presentation is workspace-local; the owning assistant page controls its lifetime. */
 export function ResidentAssistantControls({ workspaceId, sessionId }: { workspaceId: string; sessionId: string }) {
@@ -22,22 +21,11 @@ export function ResidentAssistantControls({ workspaceId, sessionId }: { workspac
   const visible = presentation?.workspaceId !== workspaceId || presentation.open
   const preference = preferences[workspaceId] ?? { open: false, width: 384 }
   const [preview, setPreview] = React.useState<ResolvedArtifact>()
-  const [contextOpen, setContextOpen] = React.useState(false)
   const trigger = React.useRef<HTMLButtonElement>(null)
   const drag = React.useRef<{ x: number; width: number } | undefined>(undefined)
   const change = (patch: Partial<typeof preference>) => setPreferences(current => ({ ...current, [workspaceId]: { ...(current[workspaceId] ?? preference), ...patch } }))
   const resize = (width: number) => change({ width: Math.min(640, Math.max(320, width)) })
   return <>
-    <Popover open={contextOpen && visible} onOpenChange={setContextOpen} modal={false}>
-      <PopoverTrigger asChild><PreviewHeaderIconButton data-testid="resident-context-trigger" tooltip={t('residentAssistant.contextInspector')} aria-label={t('residentAssistant.contextInspector')} aria-pressed={contextOpen}>
-        <Layers className="size-4" />
-      </PreviewHeaderIconButton></PopoverTrigger>
-      <PopoverContent data-testid="resident-context-inspector" className="resident-context-inspector shadow-middle" align="end" side="bottom" sideOffset={8} collisionPadding={12}
-        onFocusOutside={event => event.preventDefault()}>
-        <h2 className="text-title font-medium">{t('residentAssistant.contextInspector')}</h2>
-        <React.Suspense fallback={<p role="status">{t('residentAssistant.loading')}</p>}><ContextDetails workspaceId={workspaceId} detail="context" /></React.Suspense>
-      </PopoverContent>
-    </Popover>
     <Popover open={preference.open && visible} onOpenChange={open => { if (!preview) change({ open }) }} modal={false}>
       <PopoverTrigger asChild><PreviewHeaderIconButton ref={trigger} data-testid="resident-details-trigger"
         tooltip={t('residentAssistant.details')} aria-label={t('residentAssistant.details')} aria-pressed={preference.open}><MoreHorizontal className="size-4" /></PreviewHeaderIconButton></PopoverTrigger>

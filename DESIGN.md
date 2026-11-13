@@ -456,6 +456,10 @@ outputs grouped by task, with supporting files disclosed underneath and pinned
 revision previews. Legacy artifacts do not implicitly enter this list. Memory and context
 are excluded from this surface.
 
+Context management is internal to the assistant. Do not add a separate context
+inspector, branch picker or source-attribution form to the conversation header;
+it keeps the standard More, Share and Close actions.
+
 Messaging collapses bound channel management by default. An unbound assistant has one connection entry;
 available platforms appear only in its transient picker. Setup, pairing and
 credential entry reuse existing messaging flows. Connection errors and progress

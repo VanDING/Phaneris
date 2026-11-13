@@ -34,7 +34,7 @@ export class AssistantMemoryStore {
   private readonly db: SqliteDatabase
   private readonly resolvingSources = new Set<string>()
   private readonly sourceSnapshot = new Map<string, ReturnType<SourceReader['read']>>()
-  private readonly sourceSessions = new Map<string, Map<string, ReturnType<SourceReader['read']>>>()
+  private readonly sourceValidations = new Map<string, MemorySourceResult>()
   private readonly sourceChecks = new Map<string, { version: string; message: import('@phaneris/shared/sessions').StoredMessage; contentHash: string; directUser: boolean; observation?: MemorySourceResult['observation'] }>()
   private snapshotDepth = 0
   private sourceFileLoads = 0
@@ -87,7 +87,7 @@ export class AssistantMemoryStore {
   private withSourceSnapshot<T>(operation: () => T): T {
     this.snapshotDepth++
     try { return operation() }
-    finally { if (--this.snapshotDepth === 0) { this.sourceSnapshot.clear(); this.sourceSessions.clear() } }
+    finally { if (--this.snapshotDepth === 0) { this.sourceSnapshot.clear(); this.sourceValidations.clear() } }
   }
   extractionCoverage() { return historyExtractionCoverage(this.db) }
   contextVersion(): number { return this.version() }
@@ -276,6 +276,12 @@ export class AssistantMemoryStore {
   }
   readSource(source: MemorySource & { expectedContentHash?: string; readPurpose?: 'historical' }, validateOnly = false): MemorySourceResult {
     return this.withSourceSnapshot(() => {
+      // Successful graph nodes are reusable only inside this synchronous read
+      // boundary. Cache neither failures nor in-progress nodes: cycles must
+      // still fail, and the next boundary must observe edits and revocation.
+      const validationKey = JSON.stringify([source.sessionId, source.messageId, source.expectedContentHash, source.readPurpose])
+      const validated = validateOnly ? this.sourceValidations.get(validationKey) : undefined
+      if (validated) { this.sourceCacheHits++; return validated }
       validateSessionId(source.sessionId)
       if (this.suppressed(source)) throw new Error('Source suppressed by a forgotten memory')
       const cacheKey = this.sourceKey(source)
@@ -285,23 +291,8 @@ export class AssistantMemoryStore {
       let original = this.sourceSnapshot.get(cacheKey)
       if (original || checked) this.sourceCacheHits++
       else {
-        // One decoded session serves every reference in this snapshot. The
-        // snapshot is bounded to the current validation call and cleared on
-        // exit; repeated message reads therefore do not count as file loads.
-        let session = this.sourceSessions.get(source.sessionId)
-        if (!session) {
-          session = new Map()
-          for (const entry of reader.catalog(source.sessionId).entries) session.set(entry.id, reader.read(source.sessionId, entry.id))
-          this.sourceSessions.set(source.sessionId, session)
-          this.sourceFileLoads++
-        }
-        original = session.get(source.messageId)
-        if (original) this.sourceCacheHits++
-        else {
-          this.sourceFileLoads++
-          original = reader.read(source.sessionId, source.messageId)
-          session.set(source.messageId, original)
-        }
+        this.sourceFileLoads++
+        original = reader.read(source.sessionId, source.messageId)
         this.sourceSnapshot.set(cacheKey, original)
       }
       const session = original?.header ?? location.header, message = original?.message ?? checked!.message
@@ -337,9 +328,11 @@ export class AssistantMemoryStore {
         ? this.verifyObservation?.({ sessionId: source.sessionId, operationId: message.durableOperationId, providerToolCallId: message.toolUseId,
           toolName: message.toolName, toolInput: message.toolInput, toolResult: message.toolResult }) : undefined
       if (original) this.sourceChecks.get(cacheKey)!.observation = observation
-      return { sessionId: source.sessionId, messageId: source.messageId, content, role: message.type, timestamp: message.timestamp,
+      const result = { sessionId: source.sessionId, messageId: source.messageId, content, role: message.type, timestamp: message.timestamp,
         projectId: message.projectScope ? message.projectScope.projectId ?? undefined : session?.projectId,
         directUser, contentHash, observation }
+      if (validateOnly) this.sourceValidations.set(validationKey, result)
+      return result
     })
   }
 

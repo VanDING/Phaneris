@@ -2,6 +2,8 @@
 
 Status: accepted — 2026-11-09。本稿按用户要求，结合主线/分支、存储统一性、按需读取及普通 Session / Worker 边界的讨论重新设计，替代同日初稿。实施、验收与限制见[实施记录](../process/resident-context-0.6.3-implementation-2026-11-08.md)、[失败矩阵](../verification/resident-context-0.6.3-failure-matrix-2026-11-08.md)与[最终验收报告](../verification/resident-context-0.6.3-final-report-2026-11-09.md)。
 
+2026-11-13 产品修订：上下文管理由助手内部使用，不提供专用前台检查器、分支恢复/休眠或来源归属表单。本文此前的 UI 条目保留为历史设计；当前验收以[稳定性专项失败矩阵](../verification/resident-context-063-stability-failure-matrix-2026-11-13.md)为准，底层契约和模型管理能力继续保留。调查和修复结果见[稳定性专项报告](../verification/resident-context-063-stability-report-2026-11-13.md)。
+
 版本顺序保持：**0.6.3 共用上下文核心与助手分支管理 → 0.6.4 助手任务管理 → 0.6.5 助手与 Board 并排交互**。
 
 核对基线：Phaneris `aab3af835`；Pizza 固定提交 `ffa72f018e35ec556a71299dfede3fa3884cdbcb`。现状来自源码与此前只读调查；本文的目标结构、策略和验收要求均为待实现方案，不表示已具备相应行为。

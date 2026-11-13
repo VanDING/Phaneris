@@ -274,7 +274,7 @@ P1–P4 共同构成本轮目标。只修并发和看板，不能宣布助手任
 - [控制命令现有契约](../../packages/session-tools-core/src/worker-control-contracts.ts)及[控制回执](../../packages/server-core/src/resident-assistant/worker-controls.ts)。
 - [现有状态工具的 closed 限制](../../packages/session-tools-core/src/handlers/set-session-status.ts)、[结果 review 的实际写入](../../packages/server-core/src/resident-assistant/task-results.ts)及[默认 Session 状态](../../packages/shared/src/statuses/storage.ts)。
 - [模型准备/结果边界的有效性检查](../../packages/server-core/src/runtime-adapters/pi-driver.ts)、[材料依赖检查](../../packages/server-core/src/resident-assistant/memory-store.ts)及[项目材料有效性](../../packages/shared/src/agent/pi-agent.ts)。
-- [现有 topic/focus 契约](../../packages/session-tools-core/src/resident-context-contracts.ts)、[显式议题界面](../../apps/electron/src/renderer/components/resident-assistant/ResidentAssistantDetails.tsx)和[普通会话家族收纳](../../apps/electron/src/renderer/utils/session-families.ts)。
+- [现有 topic/focus 契约](../../packages/session-tools-core/src/resident-context-contracts.ts)、[历史显式议题界面](https://github.com/VanDING/Phaneris/blob/48c2450ed581203391882e968f9ff0103a086199/apps/electron/src/renderer/components/resident-assistant/ResidentAssistantDetails.tsx)（2026-11-13 已收回前台展示）和[普通会话家族收纳](../../apps/electron/src/renderer/utils/session-families.ts)。
 - [原会话消息工具](../../packages/session-tools-core/src/handlers/send-agent-message.ts)及[spawn_session](../../packages/shared/src/agent/spawn-session-tool.ts)。
 - [现有 Tasks 并行执行](../../packages/server-core/src/tasks/TaskRunner.ts)及[文件范围规划指导](../../packages/shared/src/tasks/generator-prompt.ts)。
 - [旧串行 fixture](../../scripts/verification/fixtures/resident-assistant-delegation.ts)和[旧失败矩阵 RW07](../verification/resident-assistant-failure-matrix-2026-11-03.md)。
