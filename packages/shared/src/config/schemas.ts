@@ -29,6 +29,8 @@ export interface ValidationResult {
 
 // --- config.json ---
 
+export const AssistantTasksSchema = z.object({ concurrency: z.number().int().min(1).max(16) }).strict();
+
 export const WorkspaceSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),

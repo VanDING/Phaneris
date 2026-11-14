@@ -8,7 +8,7 @@ import { WorkerManagement } from './WorkerManagement'
 import { SessionOriginals } from './SessionOriginals'
 
 export function workActivity(work: AssistantWork): NonNullable<AssistantWorkExecution['activity']> {
-  return work.execution?.activity ?? ({ accepted: 'queued', preparing: 'queued', submitting: 'requesting', submitted: 'requesting',
+  return work.execution?.activity ?? work.runtime?.activity ?? ({ accepted: 'queued', preparing: 'queued', submitting: 'unknown', submitted: 'unknown',
     result_ready: 'completed', needs_attention: 'waiting', failed: 'failed', cancel_requested: 'waiting', cancelled: 'cancelled', pause_requested: 'waiting', paused: 'waiting' } as const)[work.state]
 }
 
@@ -57,6 +57,7 @@ export function ResidentTaskDetail({ workspaceId, id, connected, assistantBusy, 
       <h3 className="text-body font-medium break-words mt-3">{work.title ?? t('residentAssistant.panel.untitled')}</h3>
       <p className="resident-work-state text-label mt-1" data-activity={workActivity(work)}>{t(work.state === 'paused' || work.state === 'pause_requested' ? `residentAssistant.control.${work.state}` : `residentAssistant.panel.activity.${workActivity(work)}`)}</p>
       {work.error && <p className="resident-panel-notice text-label text-destructive-text">{work.error}</p>}
+      {work.invalidation && <p className="resident-panel-notice text-label text-destructive-text">{work.invalidation.detail}</p>}
       {work.waitingFor && <p className="resident-panel-notice text-label text-text-secondary">{t(`residentAssistant.panel.blocker.${work.waitingFor.reason}`)}</p>}
       {work.result && <WorkResult workspaceId={workspaceId} {...work.result} />}
       {work.execution?.followUp && <p className="text-meta text-text-secondary mt-3">{t(work.execution.followUp.isProcessing ? 'residentAssistant.panel.followUpRunning'
@@ -83,7 +84,7 @@ export function ResidentTaskDetail({ workspaceId, id, connected, assistantBusy, 
       {work.effectiveConfig && <details className="resident-work-disclosure text-label"><summary className="craft-control resident-panel-summary">{t('residentAssistant.panel.taskDetails')}</summary>
         <dl className="resident-execution-config">{Object.entries(work.effectiveConfig).map(([key, value]) => <div key={key}><dt className="text-text-secondary">{key}</dt><dd className="break-words">{Array.isArray(value) ? value.join(', ') || '—' : String(value ?? '—')}</dd></div>)}</dl>
         {work.adjustments?.map(reason => <p key={reason} className="text-label text-text-secondary break-words">{reason}</p>)}
-        <p className="text-meta text-text-secondary tabular-nums">{t('residentAssistant.panel.duration', { seconds: Math.max(0, Math.round((work.updatedAt - work.createdAt) / 1000)) })}</p>
+        <p className="text-meta text-text-secondary tabular-nums">{t('residentAssistant.panel.duration', { seconds: Math.max(0, Math.round((work.runtime?.elapsedMs ?? work.updatedAt - work.createdAt) / 1000)) })}</p>
       </details>}
       {originalsSessionId && <SessionOriginals key={originalsSessionId} workspaceId={workspaceId} sessionId={originalsSessionId} connected={connected} />}
       <WorkerManagement key={work.id} workspaceId={workspaceId} work={work} connected={connected} onChange={updated => { invalidate(); setWork(updated); onChanged() }} />

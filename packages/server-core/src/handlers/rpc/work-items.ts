@@ -27,20 +27,26 @@ function projectPreview(session: Session): string | undefined {
   return preview.length > PREVIEW_LIMIT ? preview.slice(0, PREVIEW_LIMIT) : preview
 }
 
-function sessionToWorkItem(session: Session): WorkItem {
+function residentSessionIds(sessions: readonly Session[]): Set<string> {
+  return new Set(sessions.filter(session => session.sessionKind === 'resident_assistant').map(session => session.id))
+}
+
+function sessionToWorkItem(session: Session, residentIds: ReadonlySet<string>): WorkItem {
+  const managedBy = session.parentSessionId && residentIds.has(session.parentSessionId) ? session.parentSessionId : undefined
   return {
     id: session.id,
     title: session.name?.trim() || projectPreview(session) || 'Untitled task',
     description: session.description,
     acceptanceCriteria: session.acceptanceCriteria,
     projectId: session.projectId,
-    statusId: session.sessionStatus ?? 'backlog',
+    statusId: session.sessionStatus ?? 'todo',
     columnId: session.kanbanColumn,
     startAt: session.startAt,
     dueAt: session.dueAt,
     progress: session.progress,
     dependencyIds: session.dependencySessionIds ?? [],
-    parentId: session.parentSessionId,
+    parentId: managedBy && !session.handoffFromSessionId ? undefined : session.parentSessionId,
+    managedBySessionId: managedBy,
     sessionIds: [session.id],
     primarySessionId: session.id,
     isMilestone: session.isMilestone,
@@ -88,7 +94,7 @@ async function updateSessionFromWorkItem(
   })
   const updated = deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === sessionId)
   if (!updated) throw new Error(`Session not found after update: ${sessionId}`)
-  return sessionToWorkItem(updated)
+  return sessionToWorkItem(updated, residentSessionIds(deps.sessionManager.getSessions(workspaceId)))
 }
 
 /**
@@ -101,7 +107,9 @@ async function updateSessionFromWorkItem(
 export function registerWorkItemHandlers(server: RpcServer, deps: HandlerDeps): void {
   server.handle(RPC_CHANNELS.workItems.LIST, async (_ctx, workspaceId: string) => {
     await deps.sessionManager.waitForInit()
-    return visiblePlanningSessions(deps, workspaceId).map(sessionToWorkItem)
+    const sessions = deps.sessionManager.getSessions(workspaceId)
+    const residentIds = residentSessionIds(sessions)
+    return visiblePlanningSessions(deps, workspaceId).map(session => sessionToWorkItem(session, residentIds))
   })
 
   server.handle(RPC_CHANNELS.workItems.CREATE, async (_ctx, workspaceId: string, input: CreateWorkItemInput) => {
@@ -120,7 +128,7 @@ export function registerWorkItemHandlers(server: RpcServer, deps: HandlerDeps): 
     })
     if (input.columnId) await deps.sessionManager.setKanbanColumn(session.id, input.columnId)
     const created = deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === session.id) ?? session
-    return sessionToWorkItem(created)
+    return sessionToWorkItem(created, residentSessionIds(deps.sessionManager.getSessions(workspaceId)))
   })
 
   server.handle(RPC_CHANNELS.workItems.UPDATE, async (_ctx, workspaceId: string, itemId: string, patch: UpdateWorkItemInput) => {

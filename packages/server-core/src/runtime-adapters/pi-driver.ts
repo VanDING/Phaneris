@@ -57,6 +57,7 @@ export class PiRuntimeDriver implements RuntimeDriver {
 
 type RuntimeConfig = Pick<CoreBackendConfig, 'durableToolBoundary' | 'durableModelBoundary' | 'getCanonicalModelContext' | 'beginDurableUtilityRun' | 'completeDurableUtilityRun'>
 export interface ModelContextPolicy {
+  invalidReason?(): string | undefined
   select(excludeOperationId?: string): import('@phaneris/shared/durable-runtime/types').DurableCanonicalModelContext | undefined
   valid(request?: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest): boolean
   /** Owns both request identity and validity at the prepare boundary when supplied. */
@@ -78,22 +79,22 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
   return {
     durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: async request => {
       await options.modelContext?.assertTool?.(request)
-      if (options.modelContext && !options.modelContext.valid()) return Promise.reject(new Error('Model context changed; execution is paused until the original requirements are reviewed'))
+      if (options.modelContext && !options.modelContext.valid()) return Promise.reject(new Error(options.modelContext.invalidReason?.() ?? 'Model context changed; execution is paused until the original requirements are reviewed'))
       return runtime.effects.boundaryFor(workspace).prepare({ ...request, recoverySessionIds: scope.recoverySessionIds })
     } },
     durableModelBoundary: { ...runtime.effects.modelBoundaryFor(workspace), prepare: async request => {
       if (options.modelContext?.assert) options.modelContext.assert(request)
-      else if (options.modelContext && !options.modelContext.valid()) throw new Error('Model context changed; prepare a fresh input before continuing')
+      else if (options.modelContext && !options.modelContext.valid()) throw new Error(options.modelContext.invalidReason?.() ?? 'Model context changed; prepare a fresh input before continuing')
       const result = await runtime.effects.modelBoundaryFor(workspace).prepare(request)
       options.modelContext?.entered?.(request)
       return result
     }, commitOutcome: async request => {
-      const valid = (options.modelContext?.valid(request) ?? true)
+      const valid = request.contextDisposition !== 'stale' && (options.modelContext?.valid(request) ?? true)
       const result = await runtime.effects.commitModelOutcome(workspace, valid ? request : { ...request, contextDisposition: 'stale' })
       const finalValid = valid && (options.modelContext?.valid(request) ?? true)
       options.modelContext?.committed?.(request, finalValid)
       if (request.purpose === 'cache_warm') notify()
-      return { ...result, ...(!finalValid ? { discard: true as const } : {}) }
+      return { ...result, ...(!finalValid ? { discard: true as const, reason: options.modelContext?.invalidReason?.() } : {}) }
     } },
     getCanonicalModelContext: excludeOperationId => {
       const materialContext = options.modelContext?.select(excludeOperationId)

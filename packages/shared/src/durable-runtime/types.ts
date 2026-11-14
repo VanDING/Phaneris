@@ -307,6 +307,7 @@ export interface DurableModelOutcomeRequest {
 
 export interface DurableModelOutcomeResponse {
   discard?: true
+  reason?: string
   committedSeq?: number
   deferred?: true
 }

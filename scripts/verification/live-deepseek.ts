@@ -14,13 +14,15 @@ import { getBuiltinModels } from '@earendil-works/pi-ai/providers/all'
 export const liveOutput = resolve(import.meta.dir, '../../.cache/capability-integration')
 // Conservative peak catalog prices, independently checked against the official pricing page.
 const price = { input: .3, output: 1.2, cacheRead: .006 }
-export async function liveDeepSeek(outputDirectory = liveOutput) {
+export async function liveDeepSeek(outputDirectory = liveOutput, configured?: { slug: string; model: string; limits?: { maxRequests: number; maxInputBytes: number } }) {
   mkdirSync(outputDirectory, { recursive: true })
   const ledgerPath = resolve(outputDirectory, 'live-deepseek-budget.json')
-  const connection = getLlmConnections().find(c => c.name.toLowerCase() === 'deepseek' && c.defaultModel?.replace(/^pi\//, '') === 'deepseek-flash')
+  const connection = getLlmConnections().find(c => configured ? c.slug === configured.slug : c.name.toLowerCase() === 'deepseek' && c.defaultModel?.replace(/^pi\//, '') === 'deepseek-flash')
   if (!connection) throw new Error('Configured DeepSeek Flash connection is unavailable')
   const endpoint = new URL(connection.baseUrl ?? 'https://api.deepseek.com')
-  if (endpoint.origin !== 'https://api.deepseek.com') throw new Error('Live fixture benchmark requires the configured official DeepSeek endpoint')
+  if (!configured && endpoint.origin !== 'https://api.deepseek.com') throw new Error('Live fixture benchmark requires the configured official DeepSeek endpoint')
+  if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search) throw new Error('Live provider requires a configured HTTPS endpoint without embedded secrets')
+  if (configured && !connection.models?.some(model => typeof model === 'string' ? model === configured.model : model.id === configured.model)) throw new Error('Live model must exist in the configured connection catalog')
   if (existsSync(CREDENTIALS_KEY_FILE)) {
     // Use the same OS backend as the desktop app. IPC is captured privately;
     // neither the key nor credential is written to an artifact or tool output.
@@ -53,29 +55,35 @@ stage='emit';process.stdout.write(JSON.stringify({key}));app.quit();}).catch(()=
   }
   const apiKey = await getCredentialManager().getLlmApiKey(connection.slug)
   if (!apiKey) throw new Error('Configured DeepSeek credential is unavailable')
-  const catalog = getBuiltinModels('deepseek').find(m => m.id === 'deepseek-flash')!
+  const officialCatalog = getBuiltinModels('deepseek').find(m => m.id === 'deepseek-flash')!
+  const catalog = { ...officialCatalog, id: configured?.model ?? officialCatalog.id }
+  const configuredModel = configured ? connection.models?.find(model => typeof model !== 'string' && model.id === configured.model) : undefined
+  const thinkingOff = configuredModel && typeof configuredModel !== 'string' ? configuredModel.thinkingLevelMap?.off : undefined
   const ledger: any = existsSync(ledgerPath) ? JSON.parse(readFileSync(ledgerPath, 'utf8')) : {
-    authorizedModel: 'deepseek-flash', maxRequests: 16, estimatedBudgetUsd: .10, pricePerMillion: price,
-    priceSource: 'https://api-docs.deepseek.com/quick_start/pricing/',
-    costBasis: 'Conservative peak catalog estimate; provider token usage, no account billing claim', requests: [],
+    authorizedModel: catalog.id, maxRequests: configured?.limits?.maxRequests ?? 16, estimatedBudgetUsd: configured ? null : .10, pricePerMillion: configured ? null : price,
+    priceSource: configured ? null : 'https://api-docs.deepseek.com/quick_start/pricing/',
+    maxInputBytes: configured ? configured.limits?.maxInputBytes ?? 2097152 : 512000, maxOutputTokens: 25600,
+    costBasis: configured ? 'Configured provider pricing unknown; bounded requests/input bytes/output tokens only, no monetary ceiling or billing claim' : 'Conservative peak catalog estimate; provider token usage, no account billing claim', requests: [],
   }
   const save = () => writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + '\n')
   return { connection: { slug: connection.slug, model: catalog.id, endpoint: endpoint.origin }, catalog, ledger,
     async request(input: any, tag: string, maxOutput = 1200) {
-      const body = { ...input, model: catalog.id, max_tokens: Math.min(input.max_tokens ?? maxOutput, maxOutput),
-        thinking: { type: 'disabled' }, ...(input.stream ? { stream_options: { include_usage: true } } : {}) }
+      const remainingOutput = (ledger.maxOutputTokens ?? 25600) - ledger.requests.reduce((sum: number, request: any) => sum + (request.usage?.completion_tokens ?? request.maxOutputTokens ?? maxOutput), 0)
+      const body = { ...input, model: catalog.id, max_tokens: Math.min(input.max_tokens ?? maxOutput, maxOutput, remainingOutput),
+        ...(!configured ? { thinking: { type: 'disabled' } } : thinkingOff ? { reasoning_effort: thinkingOff } : {}), ...(input.stream ? { stream_options: { include_usage: true } } : {}) }
       delete body.max_completion_tokens
       // UTF-8 bytes are a deliberately conservative reservation, not a token measurement.
       const bytes = Buffer.byteLength(JSON.stringify(body)), reservation = (bytes * price.input + body.max_tokens * price.output) / 1e6
       const spent = ledger.requests.reduce((sum: number, r: any) => sum + (r.estimatedCostUsd ?? r.reservationUsd), 0)
-      if (ledger.requests.length >= 16 || spent + reservation > .10) throw new Error('Authorized live benchmark request or estimated cost limit reached')
-      const record: any = { number: ledger.requests.length + 1, tag, startedAt: new Date().toISOString(), reservationUsd: reservation,
-        requestBytes: bytes, schemaBytes: Buffer.byteLength(JSON.stringify(body.tools ?? [])), requestedModel: body.model, thinking: 'disabled' }
+      if (body.max_tokens <= 0 || ledger.requests.length >= ledger.maxRequests || !configured && spent + reservation > .10
+        || configured && ledger.requests.reduce((sum: number, r: any) => sum + r.requestBytes, bytes) > ledger.maxInputBytes) throw new Error('Authorized live benchmark request, input byte or estimated cost limit reached')
+      const record: any = { number: ledger.requests.length + 1, tag, startedAt: new Date().toISOString(), reservationUsd: configured ? undefined : reservation,
+        requestBytes: bytes, maxOutputTokens: body.max_tokens, schemaBytes: Buffer.byteLength(JSON.stringify(body.tools ?? [])), requestedModel: body.model, thinking: 'disabled' }
       ledger.requests.push(record); save()
       const started = performance.now()
       let response: Response
       try {
-        response = await fetch(new URL('/chat/completions', endpoint), { method: 'POST', headers: {
+        response = await fetch(new URL(`${endpoint.pathname.replace(/\/$/, '')}/chat/completions`, endpoint), { method: 'POST', headers: {
           authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(60_000) })
       } catch {
         record.status = 'network_failed'; record.costStatus = 'unknown'; save()
@@ -91,6 +99,7 @@ stage='emit';process.stdout.write(JSON.stringify({key}));app.quit();}).catch(()=
         if (chunk.model) record.responseModel = chunk.model
         if (!chunk.usage) return
         record.usage = chunk.usage
+        if (configured) { record.costStatus = 'unknown'; return }
         const inputTokens = chunk.usage.prompt_tokens ?? 0, outputTokens = chunk.usage.completion_tokens ?? 0
         const cache = chunk.usage.prompt_cache_hit_tokens ?? chunk.usage.prompt_tokens_details?.cached_tokens ?? 0
         record.estimatedCostUsd = ((inputTokens - cache) * price.input + cache * price.cacheRead + outputTokens * price.output) / 1e6
@@ -109,11 +118,17 @@ stage='emit';process.stdout.write(JSON.stringify({key}));app.quit();}).catch(()=
             if (result.done) { record.status = 'completed'; record.elapsedMs = performance.now() - started; record.costStatus ??= 'unknown'; save(); controller.close(); return }
             pending += decoder.decode(result.value, { stream: true })
             const lines = pending.split('\n'); pending = lines.pop()!
+            let completed = false
+            for (const line of lines) if (line.trim() === 'data: [DONE]') completed = true
             for (const line of lines) if (line.startsWith('data: ') && line !== 'data: [DONE]') {
               try { observe(JSON.parse(line.slice(6))) } catch { /* Ignore only incomplete/non-JSON envelopes. */ }
             }
             controller.enqueue(result.value)
-          } catch { record.status = 'stream_failed'; record.costStatus ??= 'unknown'; save(); controller.error(new Error('Live provider stream failed')) }
+            if (completed) {
+              record.status = 'completed'; record.completionBoundary = 'sse_done'; record.elapsedMs = performance.now() - started; record.costStatus ??= 'unknown'; save()
+              controller.close(); void reader.cancel().catch(() => undefined)
+            }
+            } catch (error) { record.status = 'stream_failed'; record.failureType = error instanceof Error ? error.name : 'unknown'; record.costStatus ??= 'unknown'; save(); controller.error(new Error('Live provider stream failed')) }
         },
         async cancel() { record.status = 'cancelled'; record.costStatus ??= 'unknown'; save(); await reader.cancel() },
       })

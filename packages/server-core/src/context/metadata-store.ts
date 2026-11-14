@@ -283,10 +283,19 @@ export class ContextMetadataStore {
     })()
   }
   /** A Worker keeps only explicitly selected sources. Branch revisions carry relevant corrections, never focus/hibernation. */
-  taskMaterials(branchIds: string[], sources: ResidentSource[] = []): ResidentDependencies {
+  taskMaterials(branchIds: string[], sources: ResidentSource[] = [], originScope?: { sessionId: string; messageId: string; quote: string }): ResidentDependencies {
     for (const id of branchIds) if (this.branch(id).imported && !this.associations(id).some(ref => ref.role === 'requirement')) throw new Error('context_legacy_scope_required: Imported work has unclassified historical references; read its sources and associate the current requirements before delegation')
     const refs = [...branchIds.flatMap(id => materialReferences(this.associations(this.branch(id).id)).filter(r => r.role === 'requirement')), ...sources]
-    const resolved = refs.map(ref => { const source = this.memory.readSource({ ...ref, expectedContentHash: 'contentHash' in ref ? ref.contentHash as string : ref.expectedContentHash }); const range = this.resolveRange(ref, source.content); return { sessionId: ref.sessionId, messageId: ref.messageId, contentHash: source.contentHash, projectId: source.projectId ?? null, ...(range ? { ranges: [range] } : {}) } })
+    const resolved = refs.map(ref => {
+      const source = this.memory.readSource({ ...ref, expectedContentHash: 'contentHash' in ref ? ref.contentHash as string : ref.expectedContentHash })
+      let range = this.resolveRange(ref, source.content)
+      if (originScope && ref.sessionId === originScope.sessionId && ref.messageId === originScope.messageId) {
+        const authorized = this.resolveRange(originScope, source.content)!
+        range = range ? { offset: Math.max(range.offset, authorized.offset), end: Math.min(range.end, authorized.end) } : authorized
+        if (range.offset >= range.end) throw new Error('context_task_scope_conflict: The selected original requirement is outside this task goalQuote; select its exact task sources')
+      }
+      return { sessionId: ref.sessionId, messageId: ref.messageId, contentHash: source.contentHash, projectId: source.projectId ?? null, ...(range ? { ranges: [range] } : {}) }
+    })
     return { sources: [...new Map(resolved.map(source => [JSON.stringify(source), source])).values()], memories: [] }
   }
 }

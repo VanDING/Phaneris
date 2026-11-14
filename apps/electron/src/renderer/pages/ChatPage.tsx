@@ -123,6 +123,10 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   const sessionMeta = sessionMetaMap.get(sessionId)
   const resident = (session?.sessionKind ?? sessionMeta?.sessionKind) === 'resident_assistant'
   const displayedPermissionMode = resident ? session?.workerPermissionMode ?? sessionMeta?.workerPermissionMode ?? sessionOpts.permissionMode : sessionOpts.permissionMode
+  const changeExecutionMode = React.useCallback((mode: typeof displayedPermissionMode) => {
+    if (resident && activeWorkspaceId) void window.electronAPI.setAssistantExecutionMode(activeWorkspaceId, mode).catch(error => toast.error(String(error)))
+    else setPermissionMode(mode)
+  }, [resident, activeWorkspaceId, setPermissionMode])
   const { focusZone } = useFocusContext()
   React.useEffect(() => {
     if (!resident || !messagesLoaded || !residentAssistantPresentation || isFocusedPanel === false) return
@@ -816,7 +820,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
                 onThinkingLevelChange={(level) => setOption('thinkingLevel', level)}
                 permissionMode={displayedPermissionMode}
                 previousPermissionMode={sessionOpts.previousPermissionMode}
-                onPermissionModeChange={setPermissionMode}
+                onPermissionModeChange={changeExecutionMode}
                 enabledModes={enabledModes}
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
@@ -901,7 +905,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
             onThinkingLevelChange={(level) => setOption('thinkingLevel', level)}
             permissionMode={displayedPermissionMode}
             previousPermissionMode={sessionOpts.previousPermissionMode}
-            onPermissionModeChange={setPermissionMode}
+            onPermissionModeChange={changeExecutionMode}
             enabledModes={enabledModes}
             inputValue={inputValue}
             onInputChange={handleInputChange}

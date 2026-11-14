@@ -41,6 +41,14 @@ export interface KnowledgeMaterialReference { sourceSlug: string; version: strin
 export interface ContextReadMetrics { bytesRead: number; indexScanBytes: number; decodedRecords: number; selectedCharacters: number; rebuilds: number }
 
 export interface SessionDelegationInput {
+  invalidation?: { code: 'task_requirements_changed' | 'attachments_changed' | 'materials_withdrawn' | 'permission_ceiling_tightened' | 'configuration_changed' | 'capability_changed' | 'management_pending'; detail: string; action: 'configure' | 'refresh_materials' | 'inspect_effects'; at: number; boundary: 'prepare' | 'tool' | 'response'; providerRequestId?: string; runOperationId?: string }
+  /** Literal paths relative to the effective working directory. Scheduling
+   * contract shared with Tasks, not an operating-system sandbox. */
+  fileScope?: { read: string[]; write: string[] }
+  completionPolicy?: 'assistant_review' | 'user_review'
+  /** Optimistic ownership of automatic Session status changes, not a task state.
+   * A manual status edit withdraws this guard. Review is bound to one result. */
+  statusControl?: { expectedStatus: string; withdrawn?: true; review?: { result: { sessionId: string; messageId: string }; outcome: 'accepted' | 'rework' | 'needs_user_review'; reason: string } }
   contextBinding?: { assistantSessionId: string; branchRevisions: Record<string, number>; reading?: ContextReadMetrics }
   executionPermissionCeiling?: NonNullable<SessionExecutionConfig['permissionMode']>
   originGrant?: SourceMaterialReference & { quote: string }

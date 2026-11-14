@@ -17,9 +17,20 @@ export const ReportTaskResultSchema = z.object({
 })
 export type ReportTaskResult = z.infer<typeof ReportTaskResultSchema>
 export const TaskDeliverableSelectionSchema = z.object({ delegationId: id, expectedRevision: z.number().int().positive(), keys: z.array(id).max(32) }).strict()
+export const TaskReviewSchema = z.object({
+  delegationId: id, expectedSeq: z.number().int().nonnegative(),
+  result: z.object({ sessionId: id, messageId: id }).strict(),
+  outcome: z.enum(['accepted', 'rework', 'needs_user_review']), reason: z.string().trim().min(1).max(2000),
+}).strict()
+export type TaskReview = z.infer<typeof TaskReviewSchema>
 export const AssistantDeliveryAckSchema = z.object({
-  eventIds: z.array(z.string().min(1).max(500)).min(1).max(20), deliverables: z.array(TaskDeliverableSelectionSchema).max(20).optional(),
+  eventIds: z.array(z.string().min(1).max(500)).max(20), deliverables: z.array(TaskDeliverableSelectionSchema).max(20).optional(),
+  reviews: z.array(TaskReviewSchema).min(1).max(20).optional()
+    .describe('Explicit review of the actual result against the original requirements. accepted completes the managed Session, rework reopens it, needs_user_review keeps it pending. ACK/output selection alone never completes work. Read the exact result first; use the current receipt seq. A settled review cannot be changed for the same result.'),
 }).strict().superRefine((command, ctx) => {
+  if (!command.eventIds.length && !command.reviews?.length) ctx.addIssue({ code: 'custom', message: 'Select events or an explicit task review' })
+  if (command.reviews && new Set(command.reviews.map(item => item.delegationId)).size !== command.reviews.length)
+    ctx.addIssue({ code: 'custom', message: 'Review each task only once per command' })
   if (command.deliverables && new Set(command.deliverables.map(item => item.delegationId)).size !== command.deliverables.length)
     ctx.addIssue({ code: 'custom', message: 'Select each task manifest only once' })
 })

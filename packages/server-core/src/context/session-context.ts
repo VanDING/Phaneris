@@ -23,14 +23,14 @@ export function uniqueDependencies(d: ResidentDependencies): ResidentDependencie
 /** Shared Session context owner. Branch policy builds references; Pi still owns
  * native compaction and Runtime still owns input/effect ordering. */
 export class SessionContext extends ContextMetadataStore {
-  recordNativeRequest(request: DurableModelPrepareRequest, cursor: number, inputMessageId: string, dependencies: ResidentDependencies, branchRevisions?: Record<string, number>, reading?: ResidentSegment['reading']) {
+  recordNativeRequest(request: DurableModelPrepareRequest, cursor: number, inputMessageId: string, dependencies: ResidentDependencies, branchRevisions?: Record<string, number>, reading?: ResidentSegment['reading'], configRevision?: string) {
     if (request.purpose) return
     const prior = this.segmentForRun(request.runOperationId)
     const view: ResidentSegment = prior ?? { id: randomUUID(), runOperationId: request.runOperationId, inputMessageId, createdAt: Date.now(), cursor,
       generationFloor: cursor, memoryVersion: this.memory.contextVersion(), dependencies, selectedInputs: [inputMessageId], omittedItems: 0, eventIds: [], requests: [] }
     view.cursor = cursor; view.dependencies = uniqueDependencies(dependencies); view.branchRevisions = branchRevisions; view.reading = reading
     view.requests.push({ providerRequestId: request.providerRequestId, requestHash: request.canonicalRequestHash, dependencies: structuredClone(view.dependencies),
-      branchRevisions, snapshot: request.contextSnapshot, disposition: 'entered' })
+      branchRevisions, configRevision, snapshot: request.contextSnapshot, disposition: 'entered' })
     this.db.transaction(() => { this.saveSegment(view); this.savePointer({ ...this.pointer(), activeSegmentId: view.id }) })()
   }
   prepare(canonical: DurableCanonicalModelContext, messages: readonly Message[], runOperationId: string, inputMessageId: string, events: ResidentInboxEvent[] = []): DurableCanonicalModelContext {
@@ -177,9 +177,9 @@ export class SessionContext extends ContextMetadataStore {
     const actual = segment?.requests.find(r => r.providerRequestId === request.providerRequestId)
     return !!segment && (actual ? this.memory.dependenciesValid(actual.dependencies) && this.revisionsValid(actual.branchRevisions) : this.valid(segment))
   }
-  committed(request: DurableModelOutcomeRequest, valid: boolean): void {
+  committed(request: DurableModelOutcomeRequest, valid: boolean, invalidation?: import('@phaneris/core/types').SessionDelegationInput['invalidation']): void {
     const segment = this.segmentForRun(request.runOperationId), item = segment?.requests.find(r => r.providerRequestId === request.providerRequestId)
-    if (segment && item) { item.disposition = valid ? 'committed' : 'stale'; this.saveSegment(segment) }
+    if (segment && item) { item.disposition = valid ? 'committed' : 'stale'; if (!valid) item.invalidation = invalidation; this.saveSegment(segment) }
   }
   requestRefresh(originalInputId: string): void {
     this.db.prepare(`INSERT INTO material_refresh VALUES(?,?,'pending',NULL,0,?) ON CONFLICT(session_id,original_input) DO UPDATE SET state='pending',next_at=excluded.next_at

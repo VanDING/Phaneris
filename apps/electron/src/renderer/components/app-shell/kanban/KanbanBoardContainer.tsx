@@ -35,28 +35,19 @@ import type {
 import { projectToolbarProps } from '../project-toolbar'
 
 /**
- * Subtask run-state from the child session. A closed status wins (done), then an
- * in-flight turn (running). A subtask that has exchanged at least one message has
- * been dispatched — in the create-then-run flow these are one-shot, so a finished
- * turn reads as done. Only a created-but-never-run child (no messages) is pending —
- * and that is exactly what the tile's Play button dispatches. `lastMessageAt` can't
- * carry this distinction: the server stamps it at creation time as a sort key.
+ * Execution hint for an ordinary subtask. A saved assignment is pending until
+ * execution or a committed final response provides evidence of progress.
  */
 function deriveRunState(child: SessionMeta, statusesById: Map<string, SessionStatus>): SubtaskRunState {
-  if (statusesById.get(child.sessionStatus ?? '')?.category === 'closed') return 'done'
-  // The Conductor marks a failed node 'needs-review' (there is no 'failed' session
-  // status), so within a task that reads as a failed subtask on the board. v1 heuristic;
-  // the precise source is the run-log node-state (P1 inspector wires the live run snapshot).
-  if (child.sessionStatus === 'needs-review') return 'failed'
   if (child.isProcessing) return 'running'
-  if ((child.messageCount ?? 0) > 0) return 'done'
+  if (child.sessionStatus === 'cancelled' || child.lastMessageRole === 'error') return 'failed'
+  if (statusesById.get(child.sessionStatus ?? '')?.category === 'closed') return 'done'
+  if (child.lastMessageRole === 'assistant' && child.lastFinalMessageId) return 'done'
   return 'pending'
 }
 
 /**
- * Live Kanban projection of durable WorkItems. Sessions are optional execution
- * links: a standalone task still renders and gains a conversation lazily when
- * the user opens execution-oriented actions such as adding a subtask.
+ * Live Kanban view of Session planning projections and their ordinary subtasks.
  */
 export function KanbanBoardContainer() {
   const { activeWorkspaceId, llmConnections, workspaceDefaultLlmConnection, sessionStatuses, onCreateSession, onSendMessage, onJumpToTaskSessions, trailingAction, expandButton } =

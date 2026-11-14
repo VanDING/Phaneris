@@ -8738,7 +8738,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 107,
+          "line": 115,
           "args": [
             "workspaceId: string",
             "input: CreateWorkItemInput"
@@ -8760,7 +8760,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 131,
+          "line": 139,
           "args": [
             "workspaceId: string",
             "itemId: string"
@@ -8782,7 +8782,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 102,
+          "line": 108,
           "args": [
             "workspaceId: string"
           ],
@@ -8803,7 +8803,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 126,
+          "line": 134,
           "args": [
             "workspaceId: string",
             "itemId: string",

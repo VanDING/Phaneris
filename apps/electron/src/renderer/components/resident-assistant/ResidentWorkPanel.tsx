@@ -75,6 +75,7 @@ export function ResidentWorkPanel({ workspaceId, sessionId, onClose, onPreview }
       <input className="craft-field" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder={t('residentAssistant.panel.search')} aria-label={t('residentAssistant.panel.search')} /></label>}
     <div ref={scroll} className="resident-panel-scroll text-body">
       {!detailId && view === 'current' && <p className="resident-panel-notice text-meta text-text-secondary">{t('residentAssistant.control.executionHint')}</p>}
+      {!detailId && view === 'current' && data.page.scheduling && <p className="resident-panel-notice text-meta text-text-secondary tabular-nums">{t('residentAssistant.panel.capacity', data.page.scheduling)}</p>}
       {actionError && <p role="alert" className="resident-panel-notice text-label text-destructive-text">{actionError}</p>}
       {detailId ? <ResidentTaskDetail key={detailId} workspaceId={workspaceId} id={detailId} connected={data.connected} assistantBusy={!!metadata.get(sessionId)?.isProcessing}
         onBack={back} onSession={openSession} onPreview={preview} onChanged={() => void data.refresh('background')}
