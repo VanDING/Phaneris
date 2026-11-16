@@ -140,7 +140,7 @@ import * as storage from "@/lib/local-storage"
 import { toast } from "sonner"
 import { navigate, routes } from "@/lib/navigate"
 import { useWorkspaceChatStarters } from '@/hooks/useWorkspaceChatStarters'
-import { buildNavigatorRootRoute, hasNavigator } from "@/lib/nav-helpers"
+import { buildNavigatorRootRoute, hasNavigator, fitColumns } from "@/lib/nav-helpers"
 import { navigatorOwnsHeadingOne as navigatorOwnsH1 } from "@/lib/navigator-heading"
 import {
   useNavigation,
@@ -307,7 +307,9 @@ function AppShellContent({
   const effectiveSidebarAndNavigatorHidden = isSidebarAndNavigatorHidden || isAutoCompact
   const coarsePointer = useCoarsePointer()
   const sidebarRailWidth = coarsePointer ? SIDEBAR_TOUCH_RAIL_WIDTH : SIDEBAR_RAIL_WIDTH
-  const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible ? sidebarWidth : sidebarRailWidth)
+  // Content never yields; the sidebar falls back to its rail, navigator narrows first.
+  const columns = fitColumns(shellWidth, sidebarWidth, sidebarRailWidth, sessionListWidth)
+  const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible && !columns.sidebarRail ? sidebarWidth : sidebarRailWidth)
   const reduceSidebarMotion = useReducedMotionConfig()
   const sidebarSashTransition = reduceSidebarMotion ? undefined : 'left 280ms cubic-bezier(0.2, 0, 0, 1)'
 
@@ -1035,15 +1037,9 @@ function AppShellContent({
     }
   })
 
-  // F6 / Shift+F6 cycle zones. Tab is left to the platform so every control in
-  // a zone is reachable in order; see nav.nextZone in actions/definitions.
-  useAction('nav.nextZone', () => {
-    focusNextZone()
-  }, { enabled: () => !document.querySelector('[role="dialog"]') })
-
-  useAction('nav.previousZone', () => {
-    focusPreviousZone()
-  }, { enabled: () => !document.querySelector('[role="dialog"]') })
+  // F6 / Shift+F6 cycle zones; Tab belongs to the platform (see nav.nextZone).
+  useAction('nav.nextZone', () => focusNextZone(), { enabled: () => !document.querySelector('[role="dialog"]') })
+  useAction('nav.previousZone', () => focusPreviousZone(), { enabled: () => !document.querySelector('[role="dialog"]') })
 
   // Shift+Tab cycles permission mode through enabled modes (the textarea handles its own).
   const effectiveSessionId = primarySessionId ?? session.selected
@@ -2221,7 +2217,7 @@ function AppShellContent({
     }
   }, [sidebarFocused, focusedSidebarItemId, unifiedSidebarItems])
 
-  const navigatorOwnsHeadingOne = navigatorOwnsH1(navState, { isSessionsListVisible, isWorkbenchFullWidth })
+
 
   // Get title based on navigation state
   const listTitle = React.useMemo(() => {
@@ -2727,7 +2723,7 @@ function AppShellContent({
             >
             <PanelHeader
               title={listTitle}
-              headingLevel={navigatorOwnsHeadingOne ? 1 : 2}
+              headingLevel={navigatorOwnsH1(navState, { isSessionsListVisible, isWorkbenchFullWidth }) ? 1 : 2}
               compensateForStoplight={effectiveSidebarWidth === 0}
               badge={automationFilter?.automationType === 'scheduled' ? (
                 <Tooltip>
@@ -3625,7 +3621,7 @@ function AppShellContent({
             )}
             </div>
           }
-          navigatorWidth={isAutoCompact ? sessionListWidth : (effectiveSidebarAndNavigatorHidden || isFullWidthView || isPagesView || isWorkbenchFullWidth || !isCurrentNavigatorVisible ? 0 : sessionListWidth)}
+          navigatorWidth={isAutoCompact ? sessionListWidth : (effectiveSidebarAndNavigatorHidden || isFullWidthView || isPagesView || isWorkbenchFullWidth || !isCurrentNavigatorVisible ? 0 : columns.navigator)}
           isSidebarAndNavigatorHidden={effectiveSidebarAndNavigatorHidden}
           isCompact={isAutoCompact}
           isResizing={!!isResizing}
@@ -3939,3 +3935,8 @@ function AppShellContent({
     </AppShellProvider>
   )
 }
+
+
+
+
+
