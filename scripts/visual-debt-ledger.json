@@ -3634,36 +3634,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/webui/src/main.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "851aa89a7a9d3afa5da2fb87f27787c966655df9858d3c95a9a04ac66388dfa7",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/webui/src/App.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "1d9ad6ca16d226aab42d2cd884b0e4c73dd1614c13454f1cbc1e5a721d1a747c",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/webui/src/App.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "2f591ceb5926fc00f05ebee95477c7031a3063292fe291bad8db6b19ac12183d",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/App.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",

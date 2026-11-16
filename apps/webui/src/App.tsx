@@ -14,7 +14,7 @@ import { useAtomValue } from 'jotai'
 import { createWebApi } from './adapter/web-api'
 import type { WsRpcClient } from '@phaneris/server-core/transport/client'
 import { createClientPlatform, initializeClient } from '@/platform/client'
-import { Center, Cluster, Stack } from '@phaneris/ui'
+import { Button, Center, Cluster, Stack } from '@phaneris/ui'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { windowWorkspaceIdAtom } from '@/atoms/sessions'
 import { Toaster } from '@/components/ui/sonner'
@@ -75,22 +75,19 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
             <p className="mt-2 text-meta text-text-secondary text-center break-words">{message}</p>
           </details>
           <Cluster gap="sm" className="mt-2">
-            <button
-              onClick={onRetry}
-              className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
-            >
+            <Button variant="outline" onClick={onRetry}>
               {t("common.retry")}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => {
                 fetch('/api/auth/logout', { method: 'POST' }).then(() => {
                   window.location.href = '/login'
                 })
               }}
-              className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
             >
               {t("webui.logOut")}
-            </button>
+            </Button>
           </Cluster>
         </Stack>
       </Center>
@@ -183,4 +180,5 @@ export default function App() {
 
   return <ConnectedApp />
 }
+
 

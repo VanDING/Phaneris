@@ -374,6 +374,9 @@ export {
 // Layout primitives — Stack / Cluster / Center / Truncate / Switcher
 export { Stack, Cluster, Center, Truncate, Switcher } from './components/layout'
 
+// Form atoms — shared by every host so both products inherit one control
+export { Button, buttonVariants, type ButtonProps } from './components/ui/Button'
+
 // Layout constants and hooks
 export {
   CHAT_LAYOUT,
@@ -417,4 +420,5 @@ export {
   Icon_Inbox,
   type IconProps,
 } from './components/icons'
+
 
