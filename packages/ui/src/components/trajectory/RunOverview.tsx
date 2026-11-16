@@ -194,7 +194,7 @@ export function RunOverview({
         <div className={css.overviewGrid}>
           <section className={css.paper} data-run-context-trend>
             <div className={css.paperHead}>
-              <h3>{t('run.overview.contextEvolution')} <span className={css.paperMeta}>{t('run.overview.requestCount', { count: contexts.length })}</span></h3>
+              <h2>{t('run.overview.contextEvolution')} <span className={css.paperMeta}>{t('run.overview.requestCount', { count: contexts.length })}</span></h2>
               <button type="button" className={`${css.textButton} craft-control`} onClick={() => onOpenContext(latestSeq)}>
                 {t('run.overview.inspectContext')}<ArrowRight />
               </button>
@@ -235,7 +235,7 @@ export function RunOverview({
 
           <section className={css.paper} data-run-occupancy data-context-total={latestTotal}>
             <div className={css.paperHead}>
-              <h3>{t('run.overview.occupancy')}</h3>
+              <h2>{t('run.overview.occupancy')}</h2>
               <span className={css.paperMeta}>{contextWindow
                 ? t('run.overview.window', { used: latestSeq ?? '—', window: formatTokens(contextWindow) })
                 : t('run.overview.windowUnknown')}</span>
@@ -282,7 +282,7 @@ export function RunOverview({
         <div className={css.overviewBottom}>
           <section className={css.paper} data-run-performance>
             <div className={css.paperHead}>
-              <h3>{t('run.overview.outputPerformance')}</h3>
+              <h2>{t('run.overview.outputPerformance')}</h2>
               <span className={css.paperMeta}>{legacySamples
                 ? t('run.overview.legacySamples')
                 : t('run.overview.rateSamples', { valid: performance.rateCount, total: performance.requests.length })}</span>
@@ -301,7 +301,7 @@ export function RunOverview({
 
           <section className={css.paper} data-run-decision-impact>
             <div className={css.paperHead}>
-              <h3>{t('run.overview.decisionImpact')}</h3>
+              <h2>{t('run.overview.decisionImpact')}</h2>
               <button type="button" className={`${css.textButton} craft-control`} onClick={onOpenDecisions}>
                 {t('run.overview.decisionAll')}<ArrowRight />
               </button>
@@ -374,7 +374,7 @@ export function RunOverview({
         <div className={css.overviewInfoGrid}>
           <section className={`${css.paper} ${css.diagnosticCard}`} data-run-diagnostics>
             <div className={css.paperHead}>
-              <h3>{t('run.overview.diagnostics')}</h3>
+              <h2>{t('run.overview.diagnostics')}</h2>
               <button type="button" className={`${css.textButton} craft-control`} onClick={() => onOpenTrajectory()}>
                 {t('run.overview.openTrajectory')}<ArrowRight />
               </button>
@@ -436,7 +436,7 @@ export function RunOverview({
 
           <section className={`${css.paper} ${css.environmentCard}`} data-run-environment>
             <div className={css.paperHead}>
-              <h3>{t('run.overview.environmentAndScope')}</h3>
+              <h2>{t('run.overview.environmentAndScope')}</h2>
               <span className={css.paperMeta}>{contextSummary?.remote ? t('run.overview.remote') : t('run.overview.local')}</span>
             </div>
             <div className={css.infoCardBody}>
@@ -531,3 +531,4 @@ function toolRecordLabel(record: TrajectoryRenderRecord): string {
 }
 
 export type { TrajectoryContextCategory }
+

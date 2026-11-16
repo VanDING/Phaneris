@@ -3194,16 +3194,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "d0593daf2e7c7468f608ae4b9f681b2be8c211ac5131d3643c7ec2164f484269",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
@@ -4961,6 +4951,16 @@
       "count": 1,
       "owner": "Electron / a11y owner",
       "reason": "Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.",
+      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+      "rule": "theme-contracts/roles",
+      "message": "control",
+      "fingerprint": "ecd972be3aa74b921f571dac33e4db8c7743741378d20d4a89a126dc03dfaccd",
+      "count": 1,
+      "owner": "Electron / feature owner",
+      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     }
   ]

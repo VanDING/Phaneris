@@ -141,6 +141,7 @@ import { toast } from "sonner"
 import { navigate, routes } from "@/lib/navigate"
 import { useWorkspaceChatStarters } from '@/hooks/useWorkspaceChatStarters'
 import { buildNavigatorRootRoute, hasNavigator } from "@/lib/nav-helpers"
+import { navigatorOwnsHeadingOne as navigatorOwnsH1 } from "@/lib/navigator-heading"
 import {
   useNavigation,
   isSessionsNavigation,
@@ -2215,6 +2216,12 @@ function AppShellContent({
     }
   }, [sidebarFocused, focusedSidebarItemId, unifiedSidebarItems])
 
+  // Which surface owns the screen's single `h1` (see lib/navigator-heading).
+  const navigatorOwnsHeadingOne = React.useMemo(
+    () => navigatorOwnsH1(navState, { isSessionsListVisible, isWorkbenchFullWidth }),
+    [isSessionsListVisible, isWorkbenchFullWidth, navState],
+  )
+
   // Get title based on navigation state
   const listTitle = React.useMemo(() => {
     // Sources navigator
@@ -2719,7 +2726,7 @@ function AppShellContent({
             >
             <PanelHeader
               title={listTitle}
-              headingLevel={2}
+              headingLevel={navigatorOwnsHeadingOne ? 1 : 2}
               compensateForStoplight={effectiveSidebarWidth === 0}
               badge={automationFilter?.automationType === 'scheduled' ? (
                 <Tooltip>

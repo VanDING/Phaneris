@@ -156,7 +156,7 @@ export function PluginsListPanel({
         if (row.kind === 'plugin') onPluginClick?.(row.plugin)
       }}
       className={className}
-      containerProps={{ 'data-list-role': 'plugins' }}
+      containerProps={{ 'data-list-role': 'plugins', 'aria-label': t('sidebar.allPlugins') }}
       emptyState={
         <EntityListEmptyScreen
           icon={<Shapes />}

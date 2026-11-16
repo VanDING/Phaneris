@@ -2087,6 +2087,11 @@ export function FreeFormInput({
                   <button
                     type="button"
                     disabled={isProcessing}
+                    // The visible content is a provider icon plus a model name, and
+                    // on a locked single-model connection the name can be absent —
+                    // axe then reports a button with no discernible text. A name
+                    // that states the control's purpose covers every state.
+                    aria-label={t('common.model')}
                     className={cn(
                       "craft-focus input-toolbar-btn inline-flex items-center h-7 px-1.5 gap-0.5 text-body shrink-0 rounded-shape-md hover:bg-foreground/5 transition-colors select-none",
                       modelDropdownOpen && "bg-foreground/5",

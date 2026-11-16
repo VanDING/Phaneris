@@ -29,6 +29,7 @@ import { MainContentPanel } from './MainContentPanel'
 import { residentNavigationAtom } from '../resident-assistant/resident-navigation'
 import { BoundPanelContent, isBoundPanelType } from '@/components/content-panels/bound-panel-content'
 import { RADIUS_EDGE, RADIUS_INNER } from './panel-constants'
+import { surfaceLauncherLabelKey, type SurfaceLauncherKind } from '@/lib/surface-launchers'
 
 interface SurfaceSlotProps {
   entry: SurfaceRenderEntry
@@ -176,6 +177,14 @@ export function SurfaceSlot({
         )}
         <div className="h-full flex flex-col">
           {topSlot}
+          {/* A workbench panel that fills the whole content row has no header of
+              its own (its tabs carry the names visually), so the screen would
+              have no `h1` (`page-has-heading-one` on every full-width workbench).
+              Give assistive technology the same name the active tab shows. Only
+              when it is the only surface: beside a chat, that chat owns the h1. */}
+          {isOnly && entry.surfaceRole === 'workbench' && (
+            <h1 className="sr-only">{t(surfaceLauncherLabelKey(entry.panelType as SurfaceLauncherKind))}</h1>
+          )}
           <div className="min-h-0 flex-1">
             <AppShellProvider value={contextOverride}>
               {isBoundPanelType(entry.panelType) ? (

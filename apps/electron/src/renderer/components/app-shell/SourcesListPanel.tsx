@@ -86,7 +86,7 @@ export function SourcesListPanel({
       selectedId={selectedSourceSlug}
       onItemClick={onSourceClick}
       className={className}
-      containerProps={{ 'data-list-role': 'sources' }}
+      containerProps={{ 'data-list-role': 'sources', 'aria-label': t('sidebar.sources') }}
       emptyState={
         <EntityListEmptyScreen
           icon={<DatabaseZap />}

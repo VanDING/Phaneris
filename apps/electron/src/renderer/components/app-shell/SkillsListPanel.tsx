@@ -52,7 +52,7 @@ export function SkillsListPanel({
       selectedId={selectedSkillSlug}
       onItemClick={onSkillClick}
       className={className}
-      containerProps={{ 'data-list-role': 'skills' }}
+      containerProps={{ 'data-list-role': 'skills', 'aria-label': t('sidebar.allSkills') }}
       emptyState={
         <EntityListEmptyScreen
           icon={<Zap />}

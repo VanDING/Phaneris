@@ -129,7 +129,9 @@ export function PagesHome() {
       {/* Sticky header: title + count, project filter, primary action */}
       <div className="flex items-center justify-between gap-2 border-b border-border/50 px-4 py-2.5">
         <div className="flex min-w-0 items-center gap-2.5">
-          <span className="text-body font-medium">{t('sidebar.pages')}</span>
+          {/* The library is the primary surface for this route and the navigator
+              is collapsed to 0 width here, so this row carries the screen's h1. */}
+          <h1 className="text-body font-medium">{t('sidebar.pages')}</h1>
           <span className="text-meta text-text-secondary">{pages.length}</span>
           {(projectOptions.length > 0 || projectFilter.length > 0) && (
             <ProjectMultiSelectFilter

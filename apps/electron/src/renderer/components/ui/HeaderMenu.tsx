@@ -50,7 +50,9 @@ export function HeaderMenu({ route, children, helpFeature }: HeaderMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <HeaderIconButton icon={<MoreHorizontal className="h-4 w-4" />} />
+        {/* The icon is the only content, so the trigger had no accessible name
+            (axe `button-name` on every page that uses a header menu). */}
+        <HeaderIconButton icon={<MoreHorizontal className="h-4 w-4" />} tooltip={t("common.moreActions")} />
       </DropdownMenuTrigger>
       <StyledDropdownMenuContent align="end">
         {children}
