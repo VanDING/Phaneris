@@ -76,7 +76,11 @@ export function WorkbenchLayout({ entry, fullWidth, primaryWidth, conversations,
   const rendered = entry ?? retained
 
   return (
-    <div ref={rowRef} className="flex h-full min-w-0 flex-1" data-workbench-row>
+    // The content row is the document's main landmark: everything the user came
+    // to read or act on lives here. Without it the whole app had no `main`, so a
+    // screen reader had no "skip to content" target and every axe run reported
+    // `landmark-one-main` on all 25 surfaces.
+    <div ref={rowRef} className="flex h-full min-w-0 flex-1" data-workbench-row role="main">
       <motion.div ref={primaryRef} className="flex h-full shrink-0" style={{ gap: PANEL_GAP, width: primarySize }} initial={false}>
         {primary}
       </motion.div>

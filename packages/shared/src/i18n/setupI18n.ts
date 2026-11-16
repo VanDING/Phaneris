@@ -17,6 +17,27 @@ let startupReady: Promise<void> = Promise.resolve();
 export function whenI18nReady(): Promise<void> { return startupReady; }
 
 /**
+ * Keep `<html lang>` in step with the active locale.
+ *
+ * The document is authored as `lang="en"`, and nothing used to update it, so a
+ * Simplified Chinese UI still announced itself as English: a screen reader picks
+ * its pronunciation rules from this attribute, so every Chinese sentence was
+ * read with English phonetics (WCAG 3.1.1). Owning it here means every browser
+ * host — Electron, WebUI, Viewer — inherits the fix from one place.
+ *
+ * This module also runs in the main process, where `document` does not exist and
+ * i18n still runs to generate titles, so the DOM is reached through a guarded
+ * lookup rather than a global type: the shared package does not include the DOM
+ * lib, and pulling it in would let Node-only files reference browser APIs.
+ */
+function syncDocumentLanguage(language: string): void {
+  const root = (globalThis as { document?: { documentElement?: { lang: string } } }).document?.documentElement
+  if (!root) return;
+  const resolved = (i18n.resolvedLanguage || language || "en").replace("_", "-");
+  if (root.lang !== resolved) root.lang = resolved;
+}
+
+/**
  * Initialize i18next with the bundled English fallback.
  * Call once at app startup. Pass `plugins` to add framework integrations
  * (e.g. initReactI18next for React apps, LanguageDetector for browser apps).
@@ -46,6 +67,10 @@ export function setupI18n(
 
   initialized = true;
 
+  // `lang` follows every later switch, including the detected-locale re-emit below.
+  i18n.on("languageChanged", syncDocumentLanguage);
+  syncDocumentLanguage(i18n.resolvedLanguage || i18n.language || "en");
+
   // Browser language detectors may resolve to a non-English locale during
   // init even though only English is bundled. Load that locale and re-emit
   // languageChanged once its resources are present.
@@ -73,6 +98,7 @@ export async function ensureLocaleResources(code: string): Promise<void> {
 export async function changeAppLanguage(code: string): Promise<void> {
   await ensureLocaleResources(code);
   await i18n.changeLanguage(code);
+  syncDocumentLanguage(code);
 }
 
 export { i18n };

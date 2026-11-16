@@ -54,6 +54,11 @@ export function CompactPanelTransition({
   return (
     <motion.div
       className="absolute left-0 right-0 bottom-0"
+      // Compact mode mounts no content row, so the detail slot is the main
+      // landmark there. It is the only element that can be `main`: the navigator
+      // sibling is navigation, and an off-screen slot is inert + aria-hidden, so
+      // this never yields two main landmarks.
+      role={panelRole === 'detail' ? 'main' : undefined}
       style={{
         top: 'var(--compact-panel-stack-top, 0px)',
         // Detail layers above navigator during the transition.

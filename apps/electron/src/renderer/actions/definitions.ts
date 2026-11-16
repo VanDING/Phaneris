@@ -1,4 +1,19 @@
-import type { ActionDefinition } from './types'
+import type { ActionCategory, ActionDefinition } from './types'
+
+/**
+ * Section order and labels for the shortcuts page. The key is written literally
+ * (not interpolated) so `lint:i18n:coverage` can prove every section has a
+ * translation; `satisfies` makes a new category a compile error until it is
+ * added here and in every locale.
+ */
+export const ACTION_CATEGORY_LABEL_KEYS = {
+  General: 'shortcuts.category.general',
+  Navigation: 'shortcuts.category.navigation',
+  Navigator: 'shortcuts.category.navigator',
+  View: 'shortcuts.category.view',
+  Panels: 'shortcuts.category.panels',
+  Chat: 'shortcuts.category.chat',
+} as const satisfies Record<ActionCategory, string>
 
 export const actions = {
   // ═══════════════════════════════════════════
@@ -251,8 +266,7 @@ export type ActionId = keyof typeof actions
 export const actionList = Object.values(actions)
 
 // Get actions by category (for organized display)
-export const actionsByCategory = actionList.reduce((acc, action) => {
-  if (!acc[action.category]) acc[action.category] = []
-  acc[action.category].push(action)
+export const actionsByCategory = actionList.reduce<Partial<Record<ActionCategory, ActionDefinition[]>>>((acc, action) => {
+  ;(acc[action.category] ??= []).push(action)
   return acc
-}, {} as Record<string, ActionDefinition[]>)
+}, {})

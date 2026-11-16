@@ -51,7 +51,7 @@ export function ProfileActivityHeatmap({ calendar, locale }: { calendar: Profile
               </Tooltip>
             ))}
           </div>
-          <div className="craft-text-caption mt-2 grid gap-[3px] text-text-secondary" style={{ gridTemplateColumns: `repeat(${weeks.length},minmax(0,1fr))` }} aria-hidden="true">
+          <div className="text-meta mt-2 grid gap-[3px] text-text-secondary" style={{ gridTemplateColumns: `repeat(${weeks.length},minmax(0,1fr))` }} aria-hidden="true">
             {weeks.map((week, i) => {
               const month = week.find(day => day.date.getDate() === 1)?.date
               // Keep the final label inside the calendar instead of clipping it.

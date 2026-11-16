@@ -26,6 +26,8 @@ import { MultiSelectPanel } from './MultiSelectPanel'
 import { MessagesSquare, Shapes } from 'lucide-react'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { sessionMetaMapAtom, type SessionMeta } from '@/atoms/sessions'
+import { sourcesAtom } from '@/atoms/sources'
+import { skillsAtom } from '@/atoms/skills'
 import { StoplightProvider } from '@/context/StoplightContext'
 import {
   useNavigationState,
@@ -109,6 +111,12 @@ export function MainContentPanel({
   const { clearMultiSelect } = useSessionSelection()
   const sessionMetaMap = useAtomValue(sessionMetaMapAtom)
   const automations = useAtomValue(automationsAtom)
+  // The detail pane used to repeat the navigator's "nothing configured" sentence,
+  // so an empty section said the same thing twice in one screen. Which sentence is
+  // true depends on whether the list itself is empty: "select an item" when items
+  // exist, "nothing here yet" when they do not.
+  const sources = useAtomValue(sourcesAtom)
+  const skills = useAtomValue(skillsAtom)
 
   // Execution history for the selected automation
   const selectedAutomationId = isAutomationsNavigation(navState) ? navState.details?.automationId : undefined
@@ -297,7 +305,7 @@ export function MainContentPanel({
     // No source selected - empty state
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
-        <PanelEmptyState title={t("sourcesList.noSourcesConfigured")} />
+        <PanelEmptyState title={t(sources.length === 0 ? "emptyState.nothingYet" : "emptyState.selectItem")} />
       </Panel>
     )
   }
@@ -330,7 +338,7 @@ export function MainContentPanel({
     // No skill selected - empty state
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
-        <PanelEmptyState title={t("skillsList.noSkillsConfigured")} />
+        <PanelEmptyState title={t(skills.length === 0 ? "emptyState.nothingYet" : "emptyState.selectItem")} />
       </Panel>
     )
   }
@@ -396,7 +404,7 @@ export function MainContentPanel({
     }
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
-        <PanelEmptyState title={t("automations.noAutomationsConfigured")} />
+        <PanelEmptyState title={t(automations.length === 0 ? "emptyState.nothingYet" : "emptyState.selectItem")} />
       </Panel>
     )
   }

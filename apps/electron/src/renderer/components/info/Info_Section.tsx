@@ -31,7 +31,7 @@ export function Info_Section({
     <section className={cn('space-y-3 pt-2', className)}>
       <div className="flex items-start justify-between pl-1">
         <div className="space-y-0.5">
-          <h3 className="text-reading font-semibold">
+          <h3 className="text-body font-semibold">
             {title}
           </h3>
           {description && (

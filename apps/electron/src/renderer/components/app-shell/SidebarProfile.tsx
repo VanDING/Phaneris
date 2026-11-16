@@ -68,7 +68,7 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
               type="button"
               title={displayName}
               aria-label={displayName}
-              className="sidebar-profile-trigger craft-control craft-row-focus craft-text-label flex min-w-0 items-center gap-2 rounded-control text-left font-normal"
+              className="sidebar-profile-trigger craft-control craft-row-focus text-body flex min-w-0 items-center gap-2 rounded-control text-left font-normal"
             >
               {avatar('sidebar-profile-avatar shrink-0 rounded-full')}
               <span className="sidebar-label truncate">{displayName}</span>

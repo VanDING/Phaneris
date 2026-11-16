@@ -116,6 +116,13 @@ interface LeftSidebarProps {
   focusedItemId?: string | null
   /** Whether this is a nested sidebar (child of expandable item) */
   isNested?: boolean
+  /**
+   * Accessible name for the nested navigation landmark. A nested list is a
+   * landmark of its own, so every one needs a distinct name: four sections all
+   * called "Sub navigation" gave screen-reader users four identical landmarks
+   * (`landmark-unique`). Callers pass the parent section's title.
+   */
+  nestedLabel?: string
 }
 
 // Stagger animation for child items
@@ -175,7 +182,7 @@ const itemVariants: Variants = {
  * - Uses @dnd-kit with DragOverlay portaled to document.body (no clipping)
  * - Two-phase drop animation: overlay fades out, ghost fades in
  */
-export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, isNested }: LeftSidebarProps) {
+export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, isNested, nestedLabel }: LeftSidebarProps) {
   // For nested sidebars, wrap in motion container for stagger effect
   const NavWrapper = isNested ? motion.nav : 'nav'
   const navProps = isNested ? {
@@ -193,7 +200,7 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
           isNested ? "pl-5 pr-0 relative" : "sidebar-nav-inset"
         )}
         role="navigation"
-        aria-label={isNested ? "Sub navigation" : "Main navigation"}
+        aria-label={isNested ? (nestedLabel ?? "Sub navigation") : "Main navigation"}
         {...navProps}
       >
         {/* Vertical line for nested items - 4px left of chevron center */}
@@ -339,6 +346,7 @@ function renderExpandedContent(
     <LeftSidebar
       isCollapsed={false}
       isNested={true}
+      nestedLabel={link.title}
       getItemProps={getItemProps}
       focusedItemId={focusedItemId}
       links={link.items!}
@@ -501,19 +509,32 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         data-tutorial={link.dataTutorial}
         aria-label={link.title}
         aria-expanded={link.expandable ? link.expanded : undefined}
+        // The selected row is the current destination. Without this the state
+        // only existed as a 6% background tint, which assistive technology cannot
+        // see and low-vision users read as "hovered".
+        aria-current={link.variant === "default" ? "page" : undefined}
         title={undefined}
         className={cn(
-          "sidebar-nav-button craft-control craft-row-focus craft-text-label group flex w-full items-center gap-2 rounded-control select-none",
+          "sidebar-nav-button craft-control craft-row-focus text-body group relative flex w-full items-center gap-2 rounded-control select-none",
           // Named row height supplies the floor; content can expand with text.
           link.compact ? "py-0.5" : "py-1",
           "px-2",
           link.variant === "default"
-            ? "bg-foreground/[0.06]"
+            ? "bg-foreground/[0.06] font-medium"
             // Highlight on hover, context menu open (data-state), or EditPopover active (data-edit-active)
             : "hover:bg-sidebar-hover data-[state=open]:bg-sidebar-hover data-[edit-active=true]:bg-sidebar-hover",
           extraClassName,
         )}
       >
+        {/* Selected marker: a shape cue, not a second shade of grey. The 6%
+            background above is 1.05:1 against the sidebar, so it cannot carry
+            the state alone. */}
+        {link.variant === "default" && (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-full bg-accent"
+          />
+        )}
         {/* Icon container with hover toggle for expandable items */}
         <span className="navigation-icon relative size-4 shrink-0 flex items-center justify-center [&_svg]:size-4!">
           {link.expandable && !isOverlay ? (

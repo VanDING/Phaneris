@@ -42,14 +42,18 @@
   --z-index-component-calendar: var(--z-component-calendar);
 }
 @layer components {
-  .craft-text-caption { font-size: calc(var(--ui-caption-size) * var(--ui-scale)); line-height: var(--ui-line-height); }
-  .craft-text-label { font-size: calc(var(--ui-label-size) * var(--ui-scale)); line-height: var(--ui-line-height); }
-  .craft-text-body { font-size: calc(var(--ui-body-size) * var(--ui-scale)); line-height: var(--ui-line-height); }
-  .craft-text-title { font-size: calc(var(--ui-title-size) * var(--ui-scale)); line-height: var(--ui-line-height); font-weight: 600; }
-  .craft-text-heading { font-size: calc(var(--ui-heading-size) * var(--ui-scale)); line-height: 1.4; font-weight: 600; }
   .craft-text-code { font: calc(var(--code-size) * var(--reading-scale))/var(--reading-line-height) var(--font-mono); }
-  /* Contract type tiers. Weights stay explicit at the call site: migrating a
-     size literal must never change how heavy the text looks. */
+  /* Contract type tiers — the ONLY type vocabulary. Weights stay explicit at the
+     call site: migrating a size literal must never change how heavy the text
+     looks.
+
+     A second family (`craft-text-caption/label/body/title/heading`) used to sit
+     here with its own scale: `craft-text-title` resolved to 15px while the
+     contract's title tier is 16px, and `craft-text-body` was 13.125px — a size
+     in no tier at all. Three of the five classes had no production caller, so
+     the family was mostly a trap: a new component could pick 15px/18px and stay
+     inside the lint contract while leaving the visible hierarchy. */
+
   .text-micro { font-size: calc(var(--type-micro-size) * var(--ui-scale)); line-height: 1.4; }
   .text-meta { font-size: calc(var(--type-meta-size) * var(--ui-scale)); line-height: 1.45; }
   .text-label { font-size: calc(var(--type-label-size) * var(--ui-scale)); line-height: 1.5; }
@@ -119,7 +123,7 @@
 @media (pointer: coarse) {
   :root {
     --panel-header-height: max(52px, calc(2rem * var(--ui-scale) + 6px));
-    --sidebar-row-height: max(var(--touch-target), calc(var(--ui-label-size) * var(--ui-scale) * var(--ui-line-height) + 10px));
+    --sidebar-row-height: max(var(--touch-target), calc(var(--type-body-size) * var(--ui-scale) * 1.5 + 10px));
     --sidebar-item-inset: 14px;
     --sidebar-rail-control-size: var(--touch-target);
     --sidebar-rail-item-inset: 14px;

@@ -43,10 +43,10 @@ function LoadingScreen() {
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
+    <main className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
       <div className="animate-spin w-6 h-6 border-2 border-current border-t-transparent rounded-full" />
       <p className="text-body">{t("webui.connectingToServer")}</p>
-    </div>
+    </main>
   )
 }
 
@@ -54,9 +54,19 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
-      <p className="text-reading font-medium text-destructive">{t("webui.connectionFailed")}</p>
-      <p className="text-body max-w-md text-center">{message}</p>
+    <main className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
+      <h1 className="text-reading font-medium text-destructive">{t("webui.connectionFailed")}</h1>
+      {/* The raw failure used to be the only thing on this screen, so a server
+          that answered with HTML produced `Unexpected token '<', "<!DOCTYPE "...`
+          — a parser message the user cannot act on. The actionable sentence is
+          now the copy; the exception is kept, but demoted to a disclosure. */}
+      <p className="text-body max-w-md text-center">{t("webui.connectionFailedBody")}</p>
+      <details className="max-w-md w-full">
+        <summary className="text-meta text-text-secondary cursor-pointer text-center">
+          {t("webui.connectionFailedDetails")}
+        </summary>
+        <p className="mt-2 text-meta text-text-secondary text-center break-words">{message}</p>
+      </details>
       <div className="flex gap-2 mt-2">
         <button
           onClick={onRetry}
@@ -75,7 +85,7 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
           {t("webui.logOut")}
         </button>
       </div>
-    </div>
+    </main>
   )
 }
 

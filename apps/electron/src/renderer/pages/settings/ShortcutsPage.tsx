@@ -11,7 +11,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { SettingsSection, SettingsCard, SettingsRow } from '@/components/settings'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
 import { isMac } from '@/lib/platform'
-import { actionsByCategory, useActionLabel, type ActionId } from '@/actions'
+import { actionsByCategory, ACTION_CATEGORY_LABEL_KEYS, useActionLabel, type ActionId } from '@/actions'
+import type { ActionCategory } from '@/actions'
+import type { ActionDefinition } from '@/actions/types'
 
 export const meta: DetailsPageMeta = {
   navigator: 'settings',
@@ -133,9 +135,11 @@ export default function ShortcutsPage() {
       <div className="flex-1 min-h-0">
         <ScrollArea className="h-full" viewportClassName="mask-fade-y">
           <div className="px-5 py-7 max-w-3xl mx-auto space-y-8">
-            {/* Registry-driven sections */}
-            {Object.entries(actionsByCategory).map(([category, actions]) => (
-              <SettingsSection key={category} title={t(`shortcuts.category.${category.toLowerCase()}`)}>
+            {/* Registry-driven sections. The label key is resolved through the
+                literal map in actions/definitions so a missing translation fails
+                `lint:i18n:coverage` instead of rendering the raw key. */}
+            {(Object.entries(actionsByCategory) as [ActionCategory, ActionDefinition[]][]).map(([category, actions]) => (
+              <SettingsSection key={category} title={t(ACTION_CATEGORY_LABEL_KEYS[category])}>
                 <SettingsCard>
                   {actions.map(action => (
                     <ActionShortcutRow key={action.id} actionId={action.id as ActionId} />

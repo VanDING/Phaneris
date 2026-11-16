@@ -46,14 +46,22 @@ export function SettingsSection({
     <section className={cn('space-y-3', className)}>
       <div className="flex items-start justify-between gap-4 pl-1">
         <div className="space-y-0.5">
-          <h3
+          <h2
             className={cn(
-              'text-reading font-semibold',
+              // Body tier, not the reading tier. Section headings sat at 14px
+              // while the panel title above them is 13px, so a settings page's
+              // own title was smaller than its subsections — an inverted
+              // hierarchy. Reading is a prose tier; a heading should never take it.
+              //
+              // `h2`, not `h3`: the page's PanelHeader emits the `h1`, and a jump
+              // from h1 straight to h3 fails `heading-order` (axe) on every
+              // settings page.
+              'text-body font-semibold',
               variant === 'danger' && 'text-destructive-text'
             )}
           >
             {title}
-          </h3>
+          </h2>
           {description && (
             <p className="text-body text-text-secondary">{description}</p>
           )}

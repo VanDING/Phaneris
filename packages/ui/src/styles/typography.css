@@ -58,6 +58,14 @@
      to the 0.5em Latin advance, so monospace columns stay aligned. */
   --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono Variable", ui-monospace, Consolas, "Noto Sans SC Variable", "Microsoft YaHei UI", monospace;
   --font-default: var(--font-sans);
+
+  /* Weight tiers. These are hierarchy steps, not numbers: "semibold" means the
+     same visual step in every mode, while the number behind it is what dark mode
+     compensates (see the block below). Light mode is the reference ladder. */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 }
 
 @theme inline {
@@ -89,19 +97,24 @@ html[data-font="system"] {
 /* Dark-mode retinal compensation. White text on a dark ground blooms; reducing
    the variable-font weight keeps the perceived stroke equal to light mode. Only
    the explicit Inter preference is affected, and font-weight (not
-   font-variation-settings) keeps <strong>, headings and explicit weights intact. */
+   font-variation-settings) keeps <strong>, headings and explicit weights intact.
+
+   The compensated values are tokens rather than literals because "semibold" is
+   a hierarchy step, not a number: 600 in light and 550 in dark are the same step.
+   Writing the two numbers here made that relationship invisible to the contract
+   and unreachable for any other face. Components still ask for the tier
+   (`--font-weight-medium` / `-semibold` / `-bold`, exposed as `font-medium` etc.
+   through the theme adapter); only this block decides what the tier weighs. */
 html[data-font="inter"].dark {
-  font-weight: 360;
+  --font-weight-normal: 360;
+  --font-weight-medium: 460;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 660;
+  font-weight: var(--font-weight-normal);
 }
-html[data-font="inter"].dark .font-medium {
-  font-weight: 460;
-}
-html[data-font="inter"].dark .font-semibold {
-  font-weight: 550;
-}
-html[data-font="inter"].dark .font-bold {
-  font-weight: 660;
-}
+html[data-font="inter"].dark .font-medium { font-weight: var(--font-weight-medium); }
+html[data-font="inter"].dark .font-semibold { font-weight: var(--font-weight-semibold); }
+html[data-font="inter"].dark .font-bold { font-weight: var(--font-weight-bold); }
 
 /* Typographic defaults: balance headings, avoid runts in prose. */
 @layer base {

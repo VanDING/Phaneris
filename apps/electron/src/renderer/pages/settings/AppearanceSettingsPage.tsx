@@ -291,7 +291,7 @@ export default function AppearanceSettingsPage() {
                   </p>
                 )}
                 {!themeLoadError && snapshot.diagnostics.some(item => item.severity === 'warning') && (
-                  <ul role="status" className="mt-2 craft-text-caption text-text-secondary space-y-1">
+                  <ul role="status" className="mt-2 text-meta text-text-secondary space-y-1">
                     {snapshot.diagnostics.filter(item => item.severity === 'warning').map((item, index) => <li key={`${item.path}:${index}`}>
                       {t('settings.appearance.themeWarning')} {item.path}: {item.message}
                     </li>)}

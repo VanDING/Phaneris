@@ -804,6 +804,12 @@ export const RichTextInput = React.forwardRef<RichTextInputHandle, RichTextInput
           onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}
           aria-disabled={disabled}
+          // `role="textbox"` needs a name of its own: `aria-placeholder` is a hint,
+          // not a name, so a screen reader announced the composer as an unnamed
+          // edit field (axe `aria-input-field-name`). A stable label is used rather
+          // than the rotating placeholder — a name that changes while the user
+          // listens is worse than no name.
+          aria-label={restProps['aria-label'] ?? t('chat.composerLabel')}
           aria-placeholder={Array.isArray(placeholder) ? placeholder[0] : placeholder}
           role="textbox"
           aria-multiline="true"

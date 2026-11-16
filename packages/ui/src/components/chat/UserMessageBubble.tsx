@@ -220,7 +220,7 @@ function renderContentWithBadges(
             mode="minimal"
             onUrlClick={onUrlClick}
             onFileClick={onFileClick}
-            className="inline text-reading [&_a]:underline [&_code]:bg-foreground/10 [&_p]:whitespace-pre-wrap [&_p]:inline"
+            className="inline text-body [&_a]:underline [&_code]:bg-foreground/10 [&_p]:whitespace-pre-wrap [&_p]:inline"
           >
             {textBefore}
           </Markdown>
@@ -264,8 +264,10 @@ function renderContentWithBadges(
     }
   }
 
-  // Use <p> to match Markdown's block-level line-height behavior
-  return <p className="text-reading">{elements}</p>
+  // Use <p> to match Markdown's block-level line-height behavior. Body tier, not
+  // reading: the user's own short prompt is not the surface being read at length,
+  // and the assistant's answer (the reading surface) must stay the larger one.
+  return <p className="text-body">{elements}</p>
 }
 
 export interface UserMessageBubbleProps {
@@ -489,7 +491,7 @@ export function UserMessageBubble({
               mode="minimal"
               onUrlClick={onUrlClick}
               onFileClick={onFileClick}
-              className="text-reading [&_a]:underline [&_code]:bg-foreground/10 [&_p]:whitespace-pre-wrap"
+              className="text-body [&_a]:underline [&_code]:bg-foreground/10 [&_p]:whitespace-pre-wrap"
             >
               {displayContent}
             </Markdown>
