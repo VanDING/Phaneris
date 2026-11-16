@@ -1,10 +1,14 @@
 # Architecture implementation record
 
+Status: accepted
+
 The reviewed baseline is `555ddd7822577e7299f7b84a642311faa39a1abe`.
 The original audit and the two independent implementation ledgers are local,
 Git-ignored evidence at `E:\Phaneris\.verify\architecture-audit-2026-11-14`.
 The ledgers track all 13 issues and all 126 areas, including unchanged areas.
-Implementation is in progress; this checkpoint is not the final project review.
+Implementation and the first review of all 126 areas have been carried out.
+The local ledger records the exact reviewed revision, subsequent fixes, final
+validation results and platform limits.
 
 Completed local batches cover workspace images, task publication preflight,
 privileged command/permission integrity, request workspace scope, gateway
@@ -43,8 +47,10 @@ signed installers and the complete client-version matrix remain unverified.
 The standalone server assembly script rejects Windows explicitly; its smoke-suite
 failure is retained in the evidence, not counted as a successful server build.
 
-Remaining work includes broader UI workflows, cold-start navigation investigation,
-resource recovery review, and a fresh review of every module at the resulting HEAD.
+Broader list/mention/preview workflows and cold-start navigation now have browser
+evidence. The project-wide review also found and fixed shared temporary-file
+corruption, cold-load edit ordering, remaining fixture callers and documentation
+registration. Its inventory and per-area decisions include all unchanged areas.
 Backend implementation now continues in `E:\Phaneris-architecture-impl`, on
 `codex/architecture-implementation`; the original workspace and its frontend branch
 remain independent. The ignored evidence still lives at the original absolute path. No aggregate pass rate is computed from overlapping suites.

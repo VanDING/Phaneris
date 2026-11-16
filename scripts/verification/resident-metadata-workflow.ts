@@ -1,10 +1,11 @@
 #!/usr/bin/env bun
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, readFileSync, rmdirSync } from 'node:fs'
-import { join } from 'node:path'
+import { mkdirSync, readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import { createStore } from 'jotai/vanilla'
 import { verificationWorkflow } from './verification-artifacts'
+import { obstructDirectory } from './fixtures/directory-obstruction'
 import type { HandlerDeps } from '../../packages/server-core/src/handlers/handler-deps'
 
 // Before implementation: metadata/settings must not hydrate timelines or erase
@@ -97,12 +98,12 @@ await verificationWorkflow('resident-metadata', async run => {
     await scene('failed-header-write-preserves-mode-body-and-retry', async () => {
       cold()
       const old = await api.getResidentAssistantMetadata(ws.id), hash = bodyHash()
-      mkdirSync(file + '.tmp')
+      const restore = obstructDirectory(join(dirname(file), 'tmp'))
       try {
         await assert.rejects(api.changeResidentExecutionMode(ws.id, 'guarded'))
         assert.equal((await api.getResidentAssistantMetadata(ws.id)).workerPermissionMode, old.workerPermissionMode)
         assert.equal(bodyHash(), hash)
-      } finally { rmdirSync(file + '.tmp') }
+      } finally { restore() }
       await api.changeResidentExecutionMode(ws.id, 'guarded')
       assert.equal((await api.getResidentAssistantMetadata(ws.id)).workerPermissionMode, 'guarded')
     })

@@ -1,5 +1,7 @@
 # Mutation acknowledgement and recovery
 
+Status: accepted
+
 ## Permissions
 
 Ask classification and the privileged approval broker share the exact simple-command
@@ -154,3 +156,11 @@ Initial navigation restoration waits for both ordinary metadata and resident ide
 The latest explicit navigation queued during that wait takes precedence over the
 default assistant presentation. Ordinary auto-selection does not close an assistant
 opened earlier in the same commit. Explicit deep links keep their previous behavior.
+
+Product snapshots and header edits open exclusive temporary files under the Session's
+existing export-excluded `tmp/` directory. Independent queue owners cannot overwrite
+each other's in-progress transcript. Failed attempts retain their private evidence;
+the prior complete snapshot remains intact. Local queue order remains authoritative;
+independent Hosts do not share a metadata transaction. Cold readers share the exact
+loading promise through completion so a later status edit cannot overtake an earlier
+edit merely because synchronous hydration already set the loaded flag.

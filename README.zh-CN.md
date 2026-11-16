@@ -11,8 +11,8 @@
 让 AI Agent 在文件、工具、服务和文档之间完成真正的工作，并让每个关键动作都可以检查、理解和确认。
 
 [![版本](https://img.shields.io/badge/版本-0.5.5-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.5.5.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.3.0-5b7cfa?style=flat-square)](docs/guides/pi-kernel.md)
-[![Bun](https://img.shields.io/badge/Bun-1.4.3-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.5.0-5b7cfa?style=flat-square)](docs/guides/pi-kernel.md)
+[![Bun](https://img.shields.io/badge/Bun-1.4.4-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-2f855a?style=flat-square)](README.md)
 
@@ -78,7 +78,7 @@ Markdown 草稿在能够无损往返时提供可视化编辑，复杂语法保�
 
 MCP 工具保留输出 Schema 和结构化结果；`tool_search` 按需发现工具，沙箱 `codemode` 的每次嵌套调用都经过宿主权限与持久执行边界，模型访问关闭。配置、记账及条件式迁移结论见[能力采用指南](docs/architecture/capability-adoption-2026-10.md)，实测收益与验收范围见[闭合记录](docs/archive/capability-completion-2026-10-04.md)。
 
-Pi SDK 运行时已统一固定为 1.3.0；1.1.0 阶段的升级验证、Craft 0.14.1 选择性吸收与迁移边界保留在[历史实施记录](docs/archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
+Pi SDK 运行时已统一固定为 1.5.0；1.1.0 阶段的升级验证、Craft 0.14.1 选择性吸收与迁移边界保留在[历史实施记录](docs/archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
 
 ## 真正属于个人的工作空间
 
@@ -107,9 +107,9 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
 
 | 层级 | 基线 |
 | --- | --- |
-| Agent 内核 | Pi SDK `1.3.0` |
+| Agent 内核 | Pi SDK `1.5.0` |
 | 桌面端 | Electron `44.9.0`、React `19.3` |
-| 运行时与工具链 | Bun `1.4.3`、TypeScript `7`、Vite `8.3` |
+| 运行时与工具链 | Bun `1.4.4`、TypeScript `7`、Vite `8.3` |
 | 集成协议 | MCP SDK `1.32`、原生 REST/本地文件/浏览器工具 |
 | 存储 | 本地会话数据 + 工作空间级 SQLite/WAL Durable Runtime |
 
@@ -117,7 +117,7 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
 
 ### 环境要求
 
-- [Bun](https://bun.sh/)：与 `package.json` 固定的版本一致（`1.4.3`）
+- [Bun](https://bun.sh/)：与 `package.json` 固定的版本一致（`1.4.4`）
 - 至少一个受支持模型 provider 的凭据
 - macOS、Windows 或 Linux
 

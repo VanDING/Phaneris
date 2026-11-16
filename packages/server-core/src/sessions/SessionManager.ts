@@ -1276,7 +1276,6 @@ export class SessionManager implements ISessionManager {
   // Automation systems for workspace event automations - one per workspace (includes scheduler, diffing, and handlers)
   private automationSystems: Map<string, AutomationSystem> = new Map()
   // Pending credential request resolvers (keyed by requestId)
-  private pendingCredentialResolvers: Map<string, (response: import('@phaneris/shared/protocol').CredentialResponse) => void> = new Map()
   // Permission request metadata tracking (keyed by requestId)
   private pendingPermissionRequests: Map<string, {
     sessionId: string
@@ -2858,25 +2857,20 @@ export class SessionManager implements ISessionManager {
    * concurrent calls (e.g., rapid session switches + message send) try
    * to load messages simultaneously.
    */
-  private async ensureMessagesLoaded(managed: ManagedSession): Promise<void> {
+  private ensureMessagesLoaded(managed: ManagedSession): Promise<void> {
     this.activateManagedSession(managed)
     managed.lastAccessAt = Date.now()
-    if (managed.messagesLoaded) return
-
-    // Deduplicate concurrent loads - return existing promise if already loading
+    // Share the exact promise, including its completion barrier. The disk read
+    // can mark loaded synchronously before the first caller resumes; a second
+    // caller must not bypass it and reverse two ordered metadata edits.
     const existingPromise = this.messageLoadingPromises.get(managed.id)
-    if (existingPromise) {
-      return existingPromise
-    }
-
-    const loadPromise = this.loadMessagesFromDisk(managed)
+    if (existingPromise) return existingPromise
+    if (managed.messagesLoaded) return Promise.resolve()
+    const loadPromise = this.loadMessagesFromDisk(managed).finally(() => {
+      if (this.messageLoadingPromises.get(managed.id) === loadPromise) this.messageLoadingPromises.delete(managed.id)
+    })
     this.messageLoadingPromises.set(managed.id, loadPromise)
-
-    try {
-      await loadPromise
-    } finally {
-      this.messageLoadingPromises.delete(managed.id)
-    }
+    return loadPromise
   }
 
   /**
@@ -9816,13 +9810,10 @@ initialSources: {
   /**
    * Respond to a pending credential request
    * Returns true if the response was delivered, false if no pending request found
-   *
-   * Supports both:
-   * - New unified auth flow (via handleCredentialInput)
-   * - Legacy callback flow (via pendingCredentialResolvers)
+   * The live session auth request owns delivery and credential persistence.
    */
   async respondToCredential(sessionId: string, requestId: string, response: import('@phaneris/shared/protocol').CredentialResponse): Promise<boolean> {
-    // First, check if this is a new unified auth flow request
+    // Only the matching live request can consume this response.
     const managed = this.sessions.get(sessionId)
     if (managed?.pendingAuthRequest && managed.pendingAuthRequest.requestId === requestId) {
       sessionLog.info(`Credential response (unified flow) for ${requestId}: cancelled=${response.cancelled}`)
@@ -9830,17 +9821,8 @@ initialSources: {
       return true
     }
 
-    // Fall back to legacy callback flow
-    const resolver = this.pendingCredentialResolvers.get(requestId)
-    if (resolver) {
-      sessionLog.info(`Credential response (legacy flow) for ${requestId}: cancelled=${response.cancelled}`)
-      resolver(response)
-      this.pendingCredentialResolvers.delete(requestId)
-      return true
-    } else {
-      sessionLog.warn(`Cannot respond to credential - no pending request for ${requestId}`)
-      return false
-    }
+    sessionLog.warn(`Cannot respond to credential - no pending request for ${requestId}`)
+    return false
   }
 
   /**
@@ -12446,8 +12428,6 @@ resources: {
     // Clear all pending delta flush timers
     this.deltas.dispose()
 
-    // Clear pending credential resolvers (they won't be resolved, but prevents memory leak)
-    this.pendingCredentialResolvers.clear()
     this.pendingPermissionRequests.clear()
     this.pendingAskUserRequests.clear()
     this.adminRememberApprovals.clear()

@@ -18,7 +18,8 @@ describe('workflow background-task progress', () => {
     sm = new SessionManager()
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    await sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 
@@ -26,8 +27,8 @@ describe('workflow background-task progress', () => {
     const workspace = { id: 'ws_test', name: 'Test Workspace', rootPath: tmpRoot, createdAt: Date.now() }
     const managed = createManagedSession({ id, name: 'wf test' }, workspace as never, { messagesLoaded: true })
     ;(sm as any).registerManagedSession(managed)
-    // Stub sendMessage so the idle completion auto-surface doesn't run the full turn path.
-    ;(sm as unknown as { sendMessage: (...a: unknown[]) => Promise<void> }).sendMessage = async () => {}
+    // Stub the production input port so auto-surfacing does not run a real turn.
+    sm.submitInput = () => ({ accepted: Promise.resolve({ accepted: true as const, messageId: 'workflow-fixture' }), finished: Promise.resolve() })
     return managed
   }
 

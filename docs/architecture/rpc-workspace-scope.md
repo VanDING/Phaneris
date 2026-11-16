@@ -1,5 +1,7 @@
 # Session and task RPC workspace scope
 
+Status: accepted
+
 The server token grants access to the server. A client's claimed workspace is
 the current routing scope, not an account authorization boundary. Unbound legacy
 clients retain explicit workspace access. Changing that deployment model requires

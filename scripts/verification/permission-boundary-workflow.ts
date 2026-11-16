@@ -123,6 +123,22 @@ await verificationWorkflow('permission-boundary', async run => {
       assert.equal(PiAgent.prototype.respondToPermission.call(port, 'pending', true), true)
       assert.equal(PiAgent.prototype.respondToPermission.call(port, 'pending', true), false)
     })
+    await scene('credential-response-retains-current-auth-request-routing', async () => {
+      const original = manager.handleCredentialInput
+      const forwarded: string[] = []
+      const response: import('@phaneris/shared/protocol').CredentialResponse = { type: 'credential', cancelled: true }
+      manager.handleCredentialInput = async (sessionId, requestId) => { forwarded.push(sessionId + ':' + requestId) }
+      state.sessions.set('credential-a', { id: 'credential-a', workspace: { id: 'permissions' }, pendingAuthRequest: { requestId: 'credential-request' } })
+      state.sessions.set('credential-b', { id: 'credential-b', workspace: { id: 'permissions' } })
+      try {
+        assert.equal(await client.invoke(c.sessions.RESPOND_TO_CREDENTIAL, 'credential-b', 'credential-request', response), false)
+        assert.equal(await client.invoke(c.sessions.RESPOND_TO_CREDENTIAL, 'credential-a', 'unknown', response), false)
+        assert.equal(await client.invoke(c.sessions.RESPOND_TO_CREDENTIAL, 'credential-a', 'credential-request', response), true)
+        assert.deepEqual(forwarded, ['credential-a:credential-request'])
+        manager.handleCredentialInput = async () => { throw new Error('Credential handler failure fixture') }
+        await assert.rejects(client.invoke(c.sessions.RESPOND_TO_CREDENTIAL, 'credential-a', 'credential-request', response), /Credential handler failure fixture/)
+      } finally { manager.handleCredentialInput = original; state.sessions.delete('credential-a'); state.sessions.delete('credential-b') }
+    })
     await scene('mac-wrapper-quotes-validated-argv', async () => {
       const { parsePrivilegedCommand, buildMacAdminCommand } = await import('../../packages/shared/src/agent/privileged-command')
       const parsed = parsePrivilegedCommand(`installer -pkg "/tmp/Example's App.pkg" -target /`)
