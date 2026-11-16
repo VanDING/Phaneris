@@ -507,7 +507,11 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         }}
         onClick={isOverlay ? undefined : link.onClick}
         data-tutorial={link.dataTutorial}
-        aria-label={link.title}
+        // The badge is visible text ("积压 1"), so it has to be part of the
+        // accessible name: an `aria-label` of just the title says "积压" while the
+        // row shows a count, which fails `label-content-name-mismatch` and, more
+        // practically, hides the count from anyone navigating by name.
+        aria-label={link.label ? `${link.title} ${link.label}` : link.title}
         aria-expanded={link.expandable ? link.expanded : undefined}
         // The selected row is the current destination. Without this the state
         // only existed as a 6% background tint, which assistive technology cannot
