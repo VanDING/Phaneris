@@ -26,7 +26,7 @@ type EntityType = 'source' | 'file' | 'folder' | 'skill'
 /** Parsed segment of a hint - either text or an entity */
 type HintSegment =
   | { type: 'text'; content: string }
-  | { type: 'entity'; entityType: EntityType; label: string; provider?: string }
+  | { type: 'entity'; label: string }
 
 /** A complete hint with its segments */
 interface ParsedHint {
@@ -94,22 +94,7 @@ function parseHintTemplate(template: string, id: string): ParsedHint {
     const entityType = match[1] as EntityType
     const labelOrProvider = match[2]
 
-    // For source type, the second part is the provider/label
-    // For other types, it's just a custom label
-    if (entityType === 'source') {
-      segments.push({
-        type: 'entity',
-        entityType,
-        label: labelOrProvider || 'source',
-        provider: labelOrProvider?.toLowerCase(),
-      })
-    } else {
-      segments.push({
-        type: 'entity',
-        entityType,
-        label: labelOrProvider || entityType,
-      })
-    }
+    segments.push({ type: 'entity', label: labelOrProvider || entityType })
 
     lastIndex = match.index + match[0].length
   }
@@ -137,9 +122,7 @@ function parseAllHints(t: (key: string) => string): ParsedHint[] {
 // ============================================================================
 
 interface EntityBadgeProps {
-  entityType: EntityType
   label: string
-  provider?: string
 }
 
 /**
@@ -204,9 +187,7 @@ export function EmptyStateHint({ hintIndex, className }: EmptyStateHintProps) {
         return (
           <EntityBadge
             key={index}
-            entityType={segment.entityType}
             label={segment.label}
-            provider={segment.provider}
           />
         )
       })}

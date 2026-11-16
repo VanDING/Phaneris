@@ -49,6 +49,8 @@ export type BuiltInStatusId = 'backlog' | 'todo' | 'in-progress' | 'needs-review
  * Electron-specific Session type (includes runtime state).
  * Extends core Session with messages array and processing state.
  */
+export type ResidentAssistantMetadata = Omit<Session, 'messages'>
+
 export interface Session extends SessionPlanningFields {
   id: string
   workerPermissionMode?: PermissionMode

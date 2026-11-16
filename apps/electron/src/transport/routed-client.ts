@@ -12,7 +12,7 @@ import type { RpcCallback, CapabilityHandler } from '@phaneris/server-core/trans
  *   listeners are re-subscribed transparently (make-before-break)
  */
 
-import type { WsRpcClient, TransportConnectionState } from './client'
+import type { WsRpcClient, TransportConnectionState } from '@phaneris/server-core/transport/client'
 import type { RpcClient } from '@phaneris/server-core/transport'
 import type { RemoteServerConfig } from '@phaneris/core/types'
 import { isLocalOnly, RPC_CHANNELS } from '@phaneris/shared/protocol'

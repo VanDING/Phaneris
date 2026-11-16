@@ -42,7 +42,6 @@ const PLATFORM_PILL: Record<string, { label: string; colorClass: string }> = {
 };
 export interface SessionItemProps {
   item: SessionMeta
-  index: number
   itemProps: Record<string, unknown>
   isSelected: boolean
   isFirstInGroup: boolean

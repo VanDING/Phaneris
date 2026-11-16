@@ -11,17 +11,18 @@
 
 import { createHash } from 'node:crypto'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import type { WsRpcClient } from '../transport/client'
+
+interface ImportRpcClient { invoke(channel: string, ...args: unknown[]): Promise<unknown> }
 
 /**
  * 2MB raw → ~2.7MB after base64 encoding.
  * Larger chunks = fewer round trips (a 250MB payload = ~125 chunks instead of 651).
  * Still well under common per-message proxy limits.
  */
-export const CHUNK_SIZE = 2 * 1024 * 1024
+const CHUNK_SIZE = 2 * 1024 * 1024
 
 /** Threshold above which we switch from direct RPC to chunked transfer. */
-export const CHUNKED_TRANSFER_THRESHOLD = 5 * 1024 * 1024
+const CHUNKED_TRANSFER_THRESHOLD = 5 * 1024 * 1024
 
 /** Max retries per chunk before giving up. */
 const MAX_CHUNK_RETRIES = 3
@@ -29,17 +30,17 @@ const MAX_CHUNK_RETRIES = 3
 /** Delay between chunk retries (ms). */
 const CHUNK_RETRY_DELAY = 1000
 
-export interface PreparedChunkedPayload {
+interface PreparedChunkedPayload {
   bytes: Buffer
   checksum: string
   chunkCount: number
 }
 
-export function getChunkCount(totalBytes: number): number {
+function getChunkCount(totalBytes: number): number {
   return Math.ceil(totalBytes / CHUNK_SIZE)
 }
 
-export function prepareChunkedPayload(value: unknown): PreparedChunkedPayload {
+function prepareChunkedPayload(value: unknown): PreparedChunkedPayload {
   const json = JSON.stringify(value)
   const bytes = Buffer.from(json, 'utf-8')
   return {
@@ -60,14 +61,14 @@ export function prepareChunkedPayload(value: unknown): PreparedChunkedPayload {
  * @param prepared       Optional pre-serialized payload so callers can inspect size without re-serializing
  * @returns              The result from the remote handler (same as a direct invoke)
  */
-export async function invokeChunked(
-  client: WsRpcClient,
+async function invokeChunked(
+  client: ImportRpcClient,
   channel: string,
-  args: any[],
+  args: unknown[],
   largeArgIndex: number,
   onProgress?: (sent: number, total: number) => void,
   prepared?: PreparedChunkedPayload,
-): Promise<any> {
+): Promise<unknown> {
   const payload = prepared ?? prepareChunkedPayload(args[largeArgIndex])
 
   // Build deferred args (replace large arg with null placeholder)
@@ -127,7 +128,7 @@ export async function invokeChunked(
     }
 
     console.log('[ChunkedRPC] All chunks sent, committing...')
-    const result = await client.invoke(RPC_CHANNELS.transfer.COMMIT, { transferId })
+    const result = await confirmImportResult(client.invoke(RPC_CHANNELS.transfer.COMMIT, { transferId }))
     console.log('[ChunkedRPC] Transfer committed successfully')
     transferId = null
     return result
@@ -141,4 +142,31 @@ export async function invokeChunked(
     }
     throw error
   }
+}
+
+function confirmImportResult(result: Promise<unknown>): Promise<unknown> {
+  return result.catch((error: unknown) => {
+    const code = (error as { code?: string } | null)?.code
+    if (code && !['CLIENT_DISCONNECTED', 'REQUEST_TIMEOUT', 'CLIENT_REQUEST_TIMEOUT'].includes(code)) throw error
+    throw new Error('Import result is unconfirmed. Check the destination before starting another fork; the server may already have completed the import.', { cause: error })
+  })
+}
+
+/** The caller supplies import intent; encoding, threshold and retries belong here. */
+export async function importSessionRemotely(client: ImportRpcClient, input: {
+  workspaceId: string
+  bundle: unknown
+  mode: 'move' | 'fork'
+  onProgress?: (sent: number, total: number) => void
+}): Promise<unknown> {
+  const prepared = prepareChunkedPayload(input.bundle)
+  const args = [input.workspaceId, input.bundle, input.mode]
+  if (prepared.bytes.length < CHUNKED_TRANSFER_THRESHOLD) {
+    input.onProgress?.(0, 1)
+    const result = await confirmImportResult(client.invoke(RPC_CHANNELS.sessions.IMPORT, ...args))
+    input.onProgress?.(1, 1)
+    return result
+  }
+  input.onProgress?.(0, prepared.chunkCount)
+  return invokeChunked(client, RPC_CHANNELS.sessions.IMPORT, args, 1, input.onProgress, prepared)
 }

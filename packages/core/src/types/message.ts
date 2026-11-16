@@ -330,6 +330,7 @@ export interface Message {
   skillSlugs?: string[];
   /** Host-attributed non-human input; provider role=user does not grant user authority. */
   inputSource?: { kind: 'session_message' } | { kind: 'delegation'; delegationId: string; assistantSessionId: string; originMessageId: string }
+    | { kind: 'imported_history'; importId: string; importedAt: number }
     | { kind: 'resident_event'; eventIds: string[] }
     | { kind: 'memory_maintenance'; jobId: string; sourceSessionId: string }
     | { kind: 'runtime_continuation'; reason: 'source_activation' | 'memory_refresh' | 'worker_control' | 'context_handoff'; inputMessageIds: string[] };

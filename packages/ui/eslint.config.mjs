@@ -11,7 +11,7 @@ import { visualConfig } from '../../scripts/eslint-visual.mjs'
 import babelParser from '@babel/eslint-parser'
 import noHardcodedZIndex from './eslint-rules/no-hardcoded-z-index.cjs'
 import noFloatingZTokensInIsland from './eslint-rules/no-floating-z-tokens-in-island.cjs'
-import noNonstandardShadows from './eslint-rules/no-nonstandard-shadows.cjs'
+import noNonstandardShadows from '../../scripts/eslint-rules/no-nonstandard-shadows.cjs'
 import noTransitionAll from '../../scripts/eslint-rules/no-transition-all.cjs'
 
 export default [

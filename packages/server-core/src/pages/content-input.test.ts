@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { resolvePageContentInput } from './content-input'
 import { buildPagesToolCallbacks } from './tool-callbacks'
+import { createWorkspacePages } from './workspace-pages'
 
 describe('Pages compiled HTML import', () => {
   let parent: string
@@ -46,8 +47,10 @@ describe('Pages compiled HTML import', () => {
     const thumbnails: string[] = []
     const callbacks = buildPagesToolCallbacks({
       workspaceId: 'test', workspaceRootPath: workspace,
-      onPagesMutated: slug => { notifications.push(slug) },
-      onContentChanged: slug => { thumbnails.push(slug) },
+      pages: createWorkspacePages({ id: 'test', rootPath: workspace }, {
+        notify: path => { notifications.push(path.split('/')[1]!) }, changed: () => {},
+        thumbnail: slug => { thumbnails.push(slug) },
+      }),
     })
     const created = await callbacks.createPage({ name: 'React Page', kind: 'live', contentFile: 'page-src/dist/index.html' })
     expect((await callbacks.getPage(created.slug, { includeContent: true }))?.content).toBe(html)

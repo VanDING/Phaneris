@@ -202,7 +202,7 @@ function WorkspaceChatStarters({ workspaceId, onSaved }: ChatStartersSectionProp
           filter={inlineMention.filter}
           position={inlineMention.position}
           workspaceId={workspaceId}
-          isSearching={inlineMention.isSearching}
+
         />
         <div className="flex items-center justify-between gap-3">
           <p className="text-meta text-text-secondary">

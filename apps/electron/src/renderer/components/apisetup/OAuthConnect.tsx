@@ -28,12 +28,8 @@ export interface OAuthConnectProps {
   errorMessage?: string
   /** Whether we're waiting for user to paste an auth code */
   isWaitingForCode?: boolean
-  /** Start the OAuth browser flow */
-  onStartOAuth: () => void
   /** Submit the authorization code from the browser */
   onSubmitAuthCode?: (code: string) => void
-  /** Cancel the OAuth flow (while waiting for code) */
-  onCancelOAuth?: () => void
   /** Form ID for auth code form (default: "auth-code-form") */
   formId?: string
 }

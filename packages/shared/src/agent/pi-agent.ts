@@ -2955,13 +2955,15 @@ export class PiAgent extends BaseAgent {
    * Respond to a pending permission request.
    * Permission checking now happens in the main process, so this resolves locally.
    */
-  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void {
+  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): boolean {
     const pending = this.pendingPermissions.get(requestId);
     if (pending) {
       this.pendingPermissions.delete(requestId);
       if (allowed && alwaysAllow && pending.remember) this.permissionManager.remember(pending.remember);
       pending.resolve(allowed);
+      return true;
     }
+    return false;
   }
 
   /**

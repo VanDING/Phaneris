@@ -3,6 +3,7 @@ import { mkdtempSync, rmSync, existsSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { buildPagesToolCallbacks } from './tool-callbacks'
+import { createWorkspacePages } from './workspace-pages'
 
 // Pin dev-mode runtime resolution: write_page_data spawns the real Bun runtime
 // via resolveScriptRuntime; under a packaged Phaneris host (agent Bash
@@ -27,7 +28,9 @@ describe('pages tool callbacks (end-to-end against a temp workspace)', () => {
     callbacks = buildPagesToolCallbacks({
       workspaceId: 'test-ws',
       workspaceRootPath: workspace,
-      onPagesMutated: (slug) => { mutations.push(slug) },
+      pages: createWorkspacePages({ id: 'test-ws', rootPath: workspace }, {
+        notify: path => { mutations.push(path.split('/')[1]!) }, changed: () => {},
+      }),
     })
   })
   afterAll(() => {

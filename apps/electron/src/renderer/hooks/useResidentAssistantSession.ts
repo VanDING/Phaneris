@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useStore } from 'jotai'
-import { addSessionAtom, sessionMetaMapAtom } from '@/atoms/sessions'
+import { upsertSessionMetadataAtom } from '@/atoms/sessions'
 
 /** The same Host singleton is registered in the normal Session view model. */
 export function useResidentAssistantSession(workspaceId: string | null, enabled: boolean): { ready: boolean; sessionId?: string; error?: string } {
@@ -9,9 +9,9 @@ export function useResidentAssistantSession(workspaceId: string | null, enabled:
   React.useEffect(() => {
     if (!workspaceId || !enabled) return
     let cancelled = false
-    window.electronAPI.getResidentAssistant(workspaceId).then(session => {
+    window.electronAPI.getResidentAssistantMetadata(workspaceId).then(session => {
       if (cancelled) return
-      if (!store.get(sessionMetaMapAtom).has(session.id)) store.set(addSessionAtom, session)
+      store.set(upsertSessionMetadataAtom, session)
       setState({ workspaceId, sessionId: session.id })
     }).catch(error => { if (!cancelled) setState({ workspaceId, error: String(error) }) })
     return () => { cancelled = true }

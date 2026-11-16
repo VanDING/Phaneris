@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'bun:test'
-import { setDismissibleLayerBridge } from '../dismissible-layer-bridge'
+import { setDismissibleLayerBridge } from '@phaneris/ui/dismissible-layer-bridge'
 import { hasOpenOverlay } from '../overlay-detection'
 
 const originalDocument = globalThis.document

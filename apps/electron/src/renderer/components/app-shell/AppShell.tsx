@@ -3567,9 +3567,6 @@ function AppShellContent({
                   onFocusChatInput={(targetSessionId) => {
                     focusChatInputForSession(targetSessionId ?? primarySessionId ?? session.selected)
                   }}
-                  onSessionSelect={(selectedMeta) => {
-                    navigateToSession(selectedMeta.id)
-                  }}
                   onOpenSideBySide={(selectedMeta) => {
                     if (!store.get(primarySessionIdAtom)) {
                       navigateToSession(selectedMeta.id)
@@ -3585,13 +3582,6 @@ function AppShellContent({
                   onOpenInNewWindow={(selectedMeta) => {
                     if (activeWorkspaceId) {
                       window.electronAPI.openSessionInNewWindow(activeWorkspaceId, selectedMeta.id)
-                    }
-                  }}
-                  onNavigateToView={(view) => {
-                    if (view === 'allSessions') {
-                      navigate(routes.view.allSessions())
-                    } else if (view === 'flagged') {
-                      navigate(routes.view.flagged())
                     }
                   }}
                   sessionOptions={sessionOptions}

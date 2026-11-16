@@ -44,7 +44,7 @@ import {
   DEFAULT_REPAIR_ATTEMPTS,
   MAX_REPAIR_ATTEMPTS_CAP,
 } from '@phaneris/shared/tasks'
-import { isValidPlanValue } from '@phaneris/shared/work-items'
+import { planRangeError } from '@phaneris/shared/work-items'
 import { createLogger } from '@phaneris/shared/utils'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -181,21 +181,6 @@ export function registerTasksHandlers(server: RpcServer, deps: HandlerDeps): voi
     return toValidationDto(parseTaskYaml(yaml))
   })
 
-/**
- * Reject a planning value the read path could not interpret.
- *
- * The session store's plan values are the calendar's and the timeline's only input,
- * so a malformed one is not a cosmetic problem: `2026-9-2` passed every check once
- * and then produced `NaN-NaN-NaN` on drag and corrupted range comparison. Failing
- * at the boundary keeps the store interpretable and gives the editor a message.
- */
-function assertPlanValue(value: string | null | undefined, field: string): void {
-  if (value === null || value === undefined) return
-  if (!isValidPlanValue(value)) {
-    throw new Error(`Invalid ${field}: expected YYYY-MM-DD or YYYY-MM-DDTHH:mm, received "${value}"`)
-  }
-}
-
   // tasks:create — write task.yaml + create the orchestrator parent session.
   /**
    * Put the work on the calendar.
@@ -206,8 +191,6 @@ function assertPlanValue(value: string | null | undefined, field: string): void 
    */
   const applyPlanning = async (sessionId: string, planning: TaskPlanningInput | undefined): Promise<void> => {
     if (!planning) return
-    assertPlanValue(planning.startAt, 'startAt')
-    assertPlanValue(planning.dueAt, 'dueAt')
     if (planning.statusId) await deps.sessionManager.setSessionStatus(sessionId, planning.statusId)
     await deps.sessionManager.updateSessionPlanning(sessionId, {
       ...(planning.startAt !== undefined ? { startAt: planning.startAt } : {}),
@@ -227,6 +210,22 @@ function assertPlanValue(value: string | null | undefined, field: string): void 
       return { slug: '', orchestratorSessionId: '', validation }
     }
     const spec = parsed.spec
+
+    // Precommit protection: an explicit bind must be valid before task.yaml is
+    // created or replaced. A foreign draft is not an absent/discarded draft.
+    const targetId = req.attachToExistingSession || req.orchestratorSessionId
+    if (targetId) {
+      const owner = deps.sessionManager.getSessionWorkspaceId(targetId)
+      if (owner && owner !== ws.id) throw new Error(`Session ${targetId} does not belong to workspace ${ws.id}`)
+      if (req.attachToExistingSession) {
+        const target = deps.sessionManager.getSessions(ws.id).find(session => session.id === targetId)
+        if (!target || (target.taskSlug && target.taskSlug !== spec.id)) {
+          throw new Error(`Cannot attach task "${spec.id}" to session ${targetId}: session is missing or already bound to a different task.`)
+        }
+      }
+    }
+    const rangeError = planRangeError(req.planning?.startAt?.trim() || undefined, req.planning?.dueAt?.trim() || undefined)
+    if (rangeError) throw new Error(rangeError)
     saveTaskSpec(ws.rootPath, spec)
 
     // Single choke point for ALL orchestrator paths (attach / adopt / fresh): apply the reserved

@@ -11,6 +11,7 @@
     "preview": "bun run vite preview"
   },
   "dependencies": {
+    "@phaneris/server-core": "workspace:*",
     "@phaneris/shared": "workspace:*",
     "@phaneris/ui": "workspace:*",
     "i18next": "~26.7.2",

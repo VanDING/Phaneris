@@ -18,7 +18,7 @@ import noHardcodedPathSeparator from './eslint-rules/no-hardcoded-path-separator
 import noDirectFileOpen from './eslint-rules/no-direct-file-open.cjs'
 import noInlineSourceAuthCheck from './eslint-rules/no-inline-source-auth-check.cjs'
 import noHardcodedZIndex from './eslint-rules/no-hardcoded-z-index.cjs'
-import noNonstandardShadows from './eslint-rules/no-nonstandard-shadows.cjs'
+import noNonstandardShadows from '../../scripts/eslint-rules/no-nonstandard-shadows.cjs'
 import noTransitionAll from '../../scripts/eslint-rules/no-transition-all.cjs'
 
 export default [

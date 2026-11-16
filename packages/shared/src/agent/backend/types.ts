@@ -663,7 +663,8 @@ export interface AgentBackend {
    * @param allowed - Whether permission was granted
    * @param alwaysAllow - Whether to remember this permission for session
    */
-  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void;
+  /** Legacy providers may return void; only true confirms delivery to a live request. */
+  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): boolean | void;
 
   /**
    * Resolve a pending ask_user question with the human's answer.

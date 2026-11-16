@@ -234,8 +234,7 @@ export interface FreeFormInputProps {
   // Connection selection (hierarchical connection → model selector)
   /** Current LLM connection slug */
   currentConnection?: string
-  /** Callback when connection changes */
-  onConnectionChange?: (connectionSlug: string) => void
+
   /** When true, the session's locked connection has been removed */
   connectionUnavailable?: boolean
   /**
@@ -305,7 +304,7 @@ export function FreeFormInput({
   compactMode = false,
   enableCompactModelPicker = false,
   currentConnection,
-  onConnectionChange,
+
   connectionUnavailable = false,
   isCollapsedInCompact = false,
   onRequestExpand,
@@ -1328,7 +1327,7 @@ export function FreeFormInput({
     // Don't submit when mention menu is open AND has visible content
     if (inlineMention.isOpen) {
       // Only intercept navigation/selection keys if menu actually shows items or is loading
-      const hasVisibleContent = inlineMention.sections.some(s => s.items.length > 0) || inlineMention.isSearching
+      const hasVisibleContent = inlineMention.sections.some(s => s.items.length > 0)
       if (hasVisibleContent && (e.key === 'Enter' || e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
         // These keys are handled by the InlineMentionMenu component
         return
@@ -1638,7 +1637,7 @@ export function FreeFormInput({
           position={inlineMention.position}
           workspaceId={workspaceId}
           maxWidth={280}
-          isSearching={inlineMention.isSearching}
+
         />
 
         {/* Inline Label & State Autocomplete (#labels / #states) */}
@@ -1847,7 +1846,7 @@ export function FreeFormInput({
               currentModel={currentModel}
               currentConnection={currentConnection}
               onModelChange={onModelChange}
-              onConnectionChange={onConnectionChange}
+
               thinkingLevel={thinkingLevel}
               onThinkingLevelChange={onThinkingLevelChange}
               isEmptySession={isEmptySession}

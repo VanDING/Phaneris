@@ -56,7 +56,9 @@ export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>>
   [c.sessions.DELETE]: tuple(id),
   [c.sessions.CANCEL]: tuple(id, z.boolean().optional()),
   [c.sessions.KILL_SHELL]: tuple(id, id),
-  [c.sessions.RESPOND_TO_PERMISSION]: tuple(id, id, z.boolean(), z.boolean()),
+  [c.sessions.RESPOND_TO_PERMISSION]: tuple(id, id, z.boolean(), z.boolean(), z.object({
+    rememberForMinutes: z.number().finite().int().min(1).max(60).optional(),
+  }).passthrough().optional()),
   [c.sessions.RESPOND_TO_CREDENTIAL]: tuple(id, id, credential),
   [c.sessions.RESPOND_TO_ASK_USER]: tuple(id, id, object),
   [c.sessions.COMMAND]: tuple(id, object),

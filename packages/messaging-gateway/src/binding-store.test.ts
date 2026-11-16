@@ -48,7 +48,7 @@ describe('BindingStore.save() failure semantics', () => {
 
     // Trigger a save through `bind()`. The write must fail because
     // storageDir cannot be created (ENOTDIR on a path nested under a file).
-    store.bind('ws-1', 'sess-1', 'telegram', 'chan-1')
+    expect(() => store.bind('ws-1', 'sess-1', 'telegram', 'chan-1')).toThrow()
 
     expect(fired).toBe(0)
   })

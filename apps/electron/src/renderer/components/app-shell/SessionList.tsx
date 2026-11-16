@@ -62,14 +62,10 @@ interface SessionListProps {
   onRename: (sessionId: string, name: string) => void
   /** Called when Enter is pressed to focus chat input for a specific session */
   onFocusChatInput?: (sessionId?: string) => void
-  /** Called when a session is selected */
-  onSessionSelect?: (session: SessionMeta) => void
   /** Called when user wants to open a session in a new window */
   onOpenInNewWindow?: (session: SessionMeta) => void
   /** Called when user wants to add a session to the foreground layout. */
   onOpenSideBySide?: (session: SessionMeta) => void
-  /** Called to navigate to a specific view (e.g., 'allSessions', 'flagged') */
-  onNavigateToView?: (view: 'allSessions' | 'flagged') => void
   /** Unified session options per session (real-time state) */
   sessionOptions?: Map<string, import('../../hooks/useSessionOptions').SessionOptions>
   /** Whether search mode is active */
@@ -816,7 +812,7 @@ export function SessionList({
       <div key={item.id} data-session-depth={depth}>
         <SessionItem
           item={item}
-          index={flatIndex}
+
           itemProps={{ ...rowProps.buttonProps, 'aria-selected': rowProps.isSelected || rowProps.isInMultiSelect }}
           isSelected={rowProps.isSelected}
           isFirstInGroup={isFirstInGroup || depth > 0}

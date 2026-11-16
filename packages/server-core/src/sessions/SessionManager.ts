@@ -62,6 +62,7 @@ import { InitGate } from '@phaneris/server-core/domain'
 import { createDurableRuntime, type DurableRuntime, type RuntimeSettled, type RuntimeQueueBatch } from '../durable-runtime/index'
 import { TaskRuntimeFacts } from '../tasks/runtime-facts'
 import { importLegacyContext } from '../runtime-adapters/legacy-context'
+import { sessionBundleDigest, readSessionImport, completeSessionImport, publishSessionImport, recoverSessionImports } from './import-commit'
 import { PiRuntimeDriver, bindPiRuntime, type PiAgentControls } from '../runtime-adapters/pi-driver'
 import { recoverSessionQueue } from '../runtime-adapters/session-input-recovery'
 import { sessionRuntimeView, DISCONNECTED_RUNTIME_VIEW, type SessionRuntimeView, type QueuedSessionInput } from '../runtime-adapters/session-runtime-view'
@@ -95,7 +96,6 @@ import {
   serializeSession,
   copySessionContent,
   sessionFromBundle,
-  restoreSessionBundle,
   getSessionDraft,
   validateBundle,
   type SessionBundle,
@@ -129,6 +129,7 @@ import {
 import { createTaskFromSpec, resolveCreateTaskProjectId } from '../tasks'
 import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config';
 import { buildPagesToolCallbacks } from '../pages/tool-callbacks'
+import { createWorkspacePages, type WorkspacePages } from '../pages/workspace-pages'
 import { buildMcpSourceToolCallbacks } from '../sources/mcp-source-tool-callbacks'
 import { redactBrowserToolArguments } from '@phaneris/shared/utils/browser-input-privacy'
 import { buildDecisionToolCallbacks } from '../decisions/tool-callbacks'
@@ -1262,6 +1263,7 @@ export class SessionManager implements ISessionManager {
   private readonly deltas = new SessionDeltaBatcher((event, workspace) => this.sendEvent(event, workspace))
   // Config watchers for live updates (sources, etc.) - one per workspace
   private configWatchers: Map<string, ConfigWatcher> = new Map()
+  private workspacePages = new Map<string, WorkspacePages>()
   // App-scoped watcher: exactly one regardless of workspace count.
   private userThemeWatcher: UserThemeWatcher | null = null
   // Automation systems for workspace event automations - one per workspace (includes scheduler, diffing, and handlers)
@@ -1838,7 +1840,7 @@ export class SessionManager implements ISessionManager {
         // Rebuild the synthetic page-refresh cron matchers (page.json is the
         // completion marker, so this also fires after every refresh run)
         this.automationSystems.get(workspaceRootPath)?.reloadPageRefreshMatchers()
-        this.broadcastPagesChanged(workspaceId, pages)
+        this.getWorkspacePages(workspaceId).publishList(pages)
       },
       onLlmConnectionsChange: () => {
         sessionLog.info(`LLM connections changed in ${workspaceId}`)
@@ -1945,6 +1947,22 @@ export class SessionManager implements ISessionManager {
   notifyConfigFileChange(workspaceRootPath: string, relativePath: string): void {
     const watcher = this.configWatchers.get(workspaceRootPath)
     watcher?.notifyFileChange(relativePath)
+  }
+
+  getWorkspacePages(workspaceId: string): WorkspacePages {
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
+    let pages = this.workspacePages.get(workspace.rootPath)
+    if (!pages) {
+      pages = createWorkspacePages(workspace, {
+        notify: path => this.notifyConfigFileChange(workspace.rootPath, path),
+        changed: list => this.broadcastPagesChanged(workspace.id, list),
+        thumbnail: slug => this.enqueuePageThumbnail(workspace.id, workspace.rootPath, slug),
+        log: message => sessionLog.warn(message),
+      })
+      this.workspacePages.set(workspace.rootPath, pages)
+    }
+    return pages
   }
 
   /**
@@ -2232,6 +2250,7 @@ export class SessionManager implements ISessionManager {
       // Iterate over each workspace and load its sessions
       for (const workspace of workspaces) {
         const workspaceRootPath = workspace.rootPath
+        const unresolvedImports = recoverSessionImports(this.durableRuntime, workspaceRootPath, sessionLog)
         let sessionMetadata: ReturnType<typeof listStoredSessions>
         try { sessionMetadata = listStoredSessions(workspaceRootPath) }
         catch (error) { sessionLog.error('Session storage requires recovery for this workspace:', workspace.id, error); continue }
@@ -2243,6 +2262,7 @@ export class SessionManager implements ISessionManager {
         try { labelTree = listLabels(workspaceRootPath) } catch (e) { sessionLog.warn(`Could not read labels for ${workspaceRootPath}:`, e) }
 
         for (const meta of sessionMetadata) {
+          if (unresolvedImports.has(meta.id)) continue
           const existing = this.sessions.get(meta.id)
           if (existing && this.activatedSessions.has(existing)) continue
           // Create managed session from metadata only (messages lazy-loaded on demand)
@@ -3207,17 +3227,17 @@ export class SessionManager implements ISessionManager {
 
   private readonly taskNodeCreations = new Map<string, Promise<Session>>()
 
-  async getOrCreateResidentAssistant(workspaceId: string): Promise<Session> {
+  private async ensureResidentAssistant(workspaceId: string): Promise<ManagedSession> {
     await this.waitForInit()
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error('Workspace not found')
     this.residentService(workspace)
     const pending = this.residentAssistantCreations.get(workspace.id)
-    if (pending) return pending
+    if (pending) return this.sessions.get((await pending).id)!
     const existing = [...this.sessions.values()].filter(session =>
       session.workspace.id === workspace.id && session.sessionKind === 'resident_assistant')
     if (existing.length > 1) throw new Error('Workspace has conflicting resident assistant identities')
-    if (existing[0]) return (await this.getSession(existing[0].id))!
+    if (existing[0]) return existing[0]
     const creation = this.createSessionInternal(workspace.id, {
       name: 'Assistant', hidden: true, workingDirectory: 'none', enabledSourceSlugs: [],
       systemPromptPreset: 'resident_assistant', contextPolicy: 'compact',
@@ -3226,7 +3246,20 @@ export class SessionManager implements ISessionManager {
       return session
     }).finally(() => this.residentAssistantCreations.delete(workspace.id))
     this.residentAssistantCreations.set(workspace.id, creation)
-    return creation
+    return this.sessions.get((await creation).id)!
+  }
+
+  async getOrCreateResidentAssistant(workspaceId: string): Promise<Session> {
+    const managed = await this.ensureResidentAssistant(workspaceId)
+    return (await this.getSession(managed.id))!
+  }
+
+  async getResidentAssistantMetadata(workspaceId: string): Promise<import('@phaneris/shared/protocol').ResidentAssistantMetadata> {
+    const managed = await this.ensureResidentAssistant(workspaceId)
+    const { messages: _messages, ...metadata } = managedToSession(managed, {
+      messageCount: managed.messagesLoaded ? managed.messages.length : managed.messageCount,
+    })
+    return metadata
   }
 
   private withResidentContext<T>(managed: ManagedSession, operation: (context: AssistantContextStore) => T): T {
@@ -3234,7 +3267,7 @@ export class SessionManager implements ISessionManager {
   }
 
   async assistantContext(workspaceId: string, command: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextCommand) {
-    const assistant = await this.getOrCreateResidentAssistant(workspaceId)
+    const assistant = await this.getResidentAssistantMetadata(workspaceId)
     const managed = this.sessions.get(assistant.id)!
     await this.ensureMessagesLoaded(managed)
     if (command.action === 'get' || command.action === 'topics' || command.action === 'branches') return this.withResidentContext(managed, context => context.command(command, managed.messages, undefined, managed.projectId))
@@ -3301,15 +3334,17 @@ export class SessionManager implements ISessionManager {
   private residentExecutionMode(managed: ManagedSession): PermissionMode {
     return managed.workerPermissionMode ?? getPermissionModeDiagnostics(managed.id).permissionMode
   }
-  async setAssistantExecutionMode(workspaceId: string, mode: PermissionMode): Promise<Session> {
-    const session = await this.getOrCreateResidentAssistant(workspaceId)
-    const managed = this.sessions.get(session.id)!
-    managed.workerPermissionMode = mode
-    this.persistSession(managed)
-    await this.flushSession(managed.id)
+  async changeResidentExecutionMode(workspaceId: string, mode: PermissionMode): Promise<import('@phaneris/shared/protocol').ResidentAssistantMetadata> {
+    const managed = await this.ensureResidentAssistant(workspaceId)
+    await this.productRepository.commitMetadata(managed.workspace.rootPath, managed.id, managed, { workerPermissionMode: mode })
     this.sendEvent({ type: 'session_metadata_changed', sessionId: managed.id, changes: { workerPermissionMode: mode } }, managed.workspace.id)
     this.residentServices.get(workspaceId)?.delegation?.resumeQueue()
-    return (await this.getSession(managed.id))!
+    return this.getResidentAssistantMetadata(workspaceId)
+  }
+
+  async setAssistantExecutionMode(workspaceId: string, mode: PermissionMode): Promise<Session> {
+    const metadata = await this.changeResidentExecutionMode(workspaceId, mode)
+    return (await this.getSession(metadata.id))!
   }
   scheduleAssistantMemory(workspaceId: string): void {
     const assistant = [...this.sessions.values()].find(session => session.workspace.id === workspaceId && session.sessionKind === 'resident_assistant')
@@ -3561,7 +3596,7 @@ export class SessionManager implements ISessionManager {
   }
 
   private async residentWork(workspaceId: string): Promise<AssistantDelegation> {
-    const assistant = await this.getOrCreateResidentAssistant(workspaceId)
+    const assistant = await this.getResidentAssistantMetadata(workspaceId)
     const managed = this.sessions.get(assistant.id)!
     const existing = this.residentServices.get(managed.workspace.id)?.delegation
     if (existing) { await existing.ready; return existing }
@@ -3886,7 +3921,7 @@ export class SessionManager implements ISessionManager {
 
   async dispatchAssistantWork(workspaceId: string, request: AssistantDispatch): Promise<AssistantWork> {
     await this.residentWork(workspaceId)
-    const assistant = await this.getOrCreateResidentAssistant(workspaceId)
+    const assistant = await this.getResidentAssistantMetadata(workspaceId)
     const managed = this.sessions.get(assistant.id)!
     await this.ensureMessagesLoaded(managed)
     return this.residentService(managed.workspace).dispatch(assistant.id, managed.messages, request)
@@ -6028,26 +6063,14 @@ initialSources: {
         })
 
         if (request.type === 'admin_approval' && effectiveCommandHash && this.hasActiveAdminRememberApproval(managed.id, effectiveCommandHash)) {
-          const brokerResult = this.privilegedExecutionBroker.resolveApproval(request.requestId, true, {
-            expectedCommandHash: effectiveCommandHash,
-          })
-
-          this.pendingPermissionRequests.delete(request.requestId)
-
-          if (brokerResult.ok) {
+          if (this.respondToPermission(managed.id, request.requestId, true, false)) {
             this.privilegedExecutionBroker.auditEvent('privileged_auto_approved_remember_window', {
               sessionId: managed.id,
               requestId: request.requestId,
               commandHash: effectiveCommandHash,
             })
-            const liveAgent = backend
-            if (liveAgent) {
-              liveAgent.respondToPermission(request.requestId, true, false)
-              return
-            }
           }
-
-          sessionLog.warn(`Remember-window auto-approval skipped for ${request.requestId}: ${brokerResult.reason}`)
+          return
         }
 
         this.sendEvent({
@@ -6668,14 +6691,7 @@ initialSources: {
           workspaceId: managed.workspace.id,
           workspaceRootPath: managed.workspace.rootPath,
           log: (message: string) => sessionLog.info(message),
-          onPagesMutated: async (pageSlug: string) => {
-            this.notifyConfigFileChange(managed.workspace.rootPath, `pages/${pageSlug}/page.json`)
-            const { loadWorkspacePages } = await import('@phaneris/shared/pages')
-            this.broadcastPagesChanged(managed.workspace.id, loadWorkspacePages(managed.workspace.rootPath))
-          },
-          onContentChanged: (pageSlug: string) => {
-            this.enqueuePageThumbnail(managed.workspace.id, managed.workspace.rootPath, pageSlug)
-          },
+          pages: this.getWorkspacePages(managed.workspace.id),
         }),
         // Decision model (`decide`) — always wired; the callback re-checks the
         // Settings switch, the feature toggle and the key on every call, so an
@@ -9653,7 +9669,7 @@ initialSources: {
    * @param taskId - The task or shell ID
    * @returns Task output content, or null if task not found
    */
-  async getTaskOutput(taskId: string): Promise<string | null> {
+  async getTaskOutput(taskId: string, expectedWorkspaceId?: string): Promise<string | null> {
     // O(1) lookup via taskOutputIndex
     const sessionId = this.taskOutputIndex.get(taskId)
     if (!sessionId) {
@@ -9662,6 +9678,9 @@ initialSources: {
     }
 
     const managed = this.sessions.get(sessionId)
+    if (managed && expectedWorkspaceId && managed.workspace.id !== expectedWorkspaceId) {
+      throw new Error(`Task ${taskId} does not belong to workspace ${expectedWorkspaceId}`)
+    }
     const info = managed?.backgroundTaskOutputs.get(taskId)
     if (!info) {
       // Index out of sync — clean up stale entry
@@ -9694,14 +9713,16 @@ initialSources: {
     alwaysAllow: boolean,
     options?: import('@phaneris/shared/protocol').PermissionResponseOptions,
   ): boolean {
+    const requestMeta = this.pendingPermissionRequests.get(requestId)
+    if (!requestMeta || requestMeta.sessionId !== sessionId) return false
     const managed = this.sessions.get(sessionId)
     if (managed?.runtime.agent) {
-      const requestMeta = this.pendingPermissionRequests.get(requestId)
       this.pendingPermissionRequests.delete(requestId)
 
-      if (requestMeta?.type === 'admin_approval') {
+      if (requestMeta.type === 'admin_approval') {
         const brokerResult = this.privilegedExecutionBroker.resolveApproval(requestId, allowed, {
           expectedCommandHash: requestMeta.commandHash,
+          expectedSessionId: sessionId,
         })
         if (!brokerResult.ok) {
           sessionLog.warn(`Admin approval rejected by broker for ${requestId}: ${brokerResult.reason}`)
@@ -9709,15 +9730,14 @@ initialSources: {
           managed.runtime.agent.respondToPermission(requestId, false, false)
           return false
         }
-
-        if (allowed && requestMeta.commandHash && options?.rememberForMinutes) {
-          this.storeAdminRememberApproval(sessionId, requestMeta.commandHash, requestId, options.rememberForMinutes)
-        }
       }
 
       sessionLog.info(`Permission response for ${requestId}: allowed=${allowed}, alwaysAllow=${alwaysAllow}`)
-      managed.runtime.agent.respondToPermission(requestId, allowed, alwaysAllow)
-      return true
+      const delivered = managed.runtime.agent.respondToPermission(requestId, allowed, alwaysAllow) === true
+      if (delivered && requestMeta.type === 'admin_approval' && allowed && requestMeta.commandHash && options?.rememberForMinutes) {
+        this.storeAdminRememberApproval(sessionId, requestMeta.commandHash, requestId, options.rememberForMinutes)
+      }
+      return delivered
     } else {
       sessionLog.warn(`Cannot respond to permission - no agent for session ${sessionId}`)
       return false
@@ -12073,11 +12093,24 @@ resources: {
 
     const warnings: string[] = []
     const workspaceRootPath = workspace.rootPath
+    const sourceDigest = sessionBundleDigest(bundle)
 
     // Determine session ID
     const sessionId = mode === 'move'
       ? bundle.session.header.id
       : generateSessionId(workspaceRootPath)
+
+    const previousImport = mode === 'move' ? readSessionImport(workspaceRootPath, sessionId) : null
+    if (previousImport) {
+      if (previousImport.sourceDigest !== sourceDigest) throw new Error(`Session ${sessionId} was imported from different content`)
+      completeSessionImport(this.durableRuntime, workspaceRootPath, sessionId)
+      if (!this.sessions.has(sessionId)) {
+        const stored = this.productRepository.load(workspaceRootPath, sessionId)
+        if (!stored) throw new Error(`Published import ${sessionId} is missing its product session`)
+        this.registerImportedSession(stored, workspace)
+      }
+      return { sessionId, warnings: previousImport.warnings.length ? previousImport.warnings : undefined }
+    }
 
     // Check for ID collision on move
     if (mode === 'move' && this.sessions.has(sessionId)) {
@@ -12159,14 +12192,21 @@ resources: {
       sessionLog.info('[import] No LLM connection in bundle — will use default')
     }
 
-    restoreSessionBundle(storedSession, bundle.files, directory => {
+    publishSessionImport(this.durableRuntime, storedSession, bundle.files, sourceDigest, warnings, directory => {
       const artifactIds = rebindSessionArtifactCopy(directory, workspaceRootPath, workspaceId, sessionId, mode === 'fork')
       storedSession.messages = storedSession.messages.map(message => ({ ...message,
         content: rebindArtifactEvent(message.content, artifactIds, sessionId) ?? '',
         toolResult: rebindArtifactEvent(message.toolResult, artifactIds, sessionId),
       }))
-      importLegacyContext(this.durableRuntime, workspaceRootPath, sessionId, storedSession.messages.map(storedToMessage))
     })
+
+    const managed = this.registerImportedSession(storedSession, workspace)
+    sessionLog.info(`[import] Complete: sessionId=${sessionId}, transferredSummary=${managed.transferredSessionSummary ? `${managed.transferredSessionSummary.length} chars` : 'none'}, applied=${managed.transferredSessionSummaryApplied}, warnings=${warnings.length > 0 ? warnings.join('; ') : 'none'}`)
+    return { sessionId, warnings: warnings.length > 0 ? warnings : undefined }
+  }
+
+  private registerImportedSession(storedSession: StoredSession, workspace: Workspace): ManagedSession {
+    const sessionId = storedSession.id, workspaceId = workspace.id, workspaceRootPath = workspace.rootPath
 
     // Register in-memory — pass session metadata without messages to avoid
     // StoredMessage[] vs Message[] type mismatch, then convert messages separately
@@ -12199,8 +12239,7 @@ resources: {
     // Built by hand (not via createSession), so announce it explicitly.
     this.notifySessionCreated(workspaceId, sessionId)
 
-    sessionLog.info(`[import] Complete: sessionId=${sessionId}, transferredSummary=${managed.transferredSessionSummary ? `${managed.transferredSessionSummary.length} chars` : 'none'}, applied=${managed.transferredSessionSummaryApplied}, warnings=${warnings.length > 0 ? warnings.join('; ') : 'none'}`)
-    return { sessionId, warnings: warnings.length > 0 ? warnings : undefined }
+    return managed
   }
 
   /**
@@ -12248,6 +12287,7 @@ resources: {
       sessionLog.info(`Stopped config watcher for ${path}`)
     }
     this.configWatchers.clear()
+    this.workspacePages.clear()
 
     this.userThemeWatcher?.stop()
     this.userThemeWatcher = null

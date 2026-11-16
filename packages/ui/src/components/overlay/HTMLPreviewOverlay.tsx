@@ -166,7 +166,7 @@ export function HTMLPreviewOverlay({
   const headerActions = (
     <div className="flex items-center gap-2">
       <ItemNavigator items={resolvedItems} activeIndex={activeIdx} onSelect={setActiveIdx} size="md" />
-      <CopyButton content={activeContent || ''} label="Copy HTML" className="bg-background shadow-minimal" />
+      <CopyButton content={activeContent || ''} className="bg-background shadow-minimal" />
     </div>
   )
 

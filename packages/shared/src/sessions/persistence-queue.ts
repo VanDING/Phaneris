@@ -1,4 +1,4 @@
-import { open, rename } from 'fs/promises'
+import { open, rename, stat } from 'fs/promises'
 import { createHash } from 'node:crypto'
 import { SnapshotEncoder } from '@phaneris/core/utils'
 import { dirname } from 'path'
@@ -7,6 +7,16 @@ import { getSessionFilePath, ensureSessionsDir, ensureSessionDir } from './paths
 import { toPortablePath } from '../utils/paths.js'
 import { createSessionHeader, makeSessionPathPortable, readSessionHeader } from './jsonl.js'
 import { debug } from '../utils/debug.js'
+import { stripBom } from '../utils/json'
+
+async function syncParentDirectory(filePath: string): Promise<void> {
+  let handle: Awaited<ReturnType<typeof open>> | undefined
+  try { handle = await open(dirname(filePath), 'r'); await handle.sync() }
+  catch (error) {
+    const code = (error as NodeJS.ErrnoException).code
+    if (process.platform !== 'win32' || !['EPERM', 'EINVAL', 'ENOTSUP'].includes(code ?? '')) throw error
+  } finally { await handle?.close() }
+}
 
 interface PendingWrite {
   data: StoredSession | (() => StoredSession)
@@ -102,6 +112,59 @@ class SessionPersistenceQueue {
         this.metadataFailures.add(writePromise)
         throw error
       }
+    })
+    return writePromise
+  }
+
+  /** Header-only owner edit: serialize with product writes and preserve encoded rows verbatim. */
+  patchHeader(workspaceRootPath: string, sessionId: string, patch: Partial<Omit<SessionHeader, 'id' | 'workspaceRootPath' | 'messageCount' | 'tokenUsage'>>, publish: () => void): Promise<void> {
+    if (this.pending.has(sessionId)) void this.write(sessionId)
+    const writePromise = this.serializeWrite(sessionId, async () => {
+      try {
+        const filePath = getSessionFilePath(workspaceRootPath, sessionId), temporary = filePath + '.tmp'
+        const source = await open(filePath, 'r')
+        let header!: SessionHeader, initial!: Awaited<ReturnType<typeof source.stat>>
+        try {
+          initial = await source.stat()
+          const parts: Buffer[] = []
+          let offset = 0
+          for (;;) {
+            const buffer = Buffer.alloc(64 * 1024)
+            const { bytesRead } = await source.read(buffer, 0, buffer.length, offset)
+            if (!bytesRead) break
+            const newline = buffer.subarray(0, bytesRead).indexOf(10)
+            if (newline >= 0) { parts.push(buffer.subarray(0, newline)); offset += newline + 1; break }
+            parts.push(buffer.subarray(0, bytesRead)); offset += bytesRead
+          }
+          header = { ...JSON.parse(stripBom(Buffer.concat(parts).toString('utf8'))) as SessionHeader, ...patch }
+          if (header.id !== sessionId) throw new Error('Product metadata session identity mismatch')
+          const target = await open(temporary, 'w', 0o600)
+          try {
+            await target.writeFile(makeSessionPathPortable(JSON.stringify(header), dirname(filePath)) + '\n')
+            const buffer = Buffer.alloc(256 * 1024)
+            for (;;) {
+              const { bytesRead } = await source.read(buffer, 0, buffer.length, offset)
+              if (!bytesRead) break
+              await target.writeFile(buffer.subarray(0, bytesRead)); offset += bytesRead
+            }
+            await target.sync()
+          } finally { await target.close() }
+        } finally { await source.close() }
+        const current = await stat(filePath)
+        if (current.dev !== initial.dev || current.ino !== initial.ino || current.size !== initial.size || current.mtimeMs !== initial.mtimeMs) {
+          throw new Error('Session changed externally during metadata commit; retry the edit')
+        }
+        const previous = this.lastWrittenHeaderSignature.get(sessionId)
+        this.lastWrittenHeaderSignature.set(sessionId, getHeaderMetadataSignature(header))
+        try { await rename(temporary, filePath) }
+        catch (error) {
+          if (previous === undefined) this.lastWrittenHeaderSignature.delete(sessionId)
+          else this.lastWrittenHeaderSignature.set(sessionId, previous)
+          throw error
+        }
+        publish()
+        await syncParentDirectory(filePath)
+      } catch (error) { this.metadataFailures.add(writePromise); throw error }
     })
     return writePromise
   }
@@ -226,18 +289,7 @@ class SessionPersistenceQueue {
       // itself was fsynced and rename is atomic on the same volume, so only
       // suppress that documented platform limitation; every other failure is
       // still fatal and leaves the caller aware persistence was incomplete.
-      let directoryHandle: Awaited<ReturnType<typeof open>> | undefined
-      try {
-        directoryHandle = await open(dirname(filePath), 'r')
-        await directoryHandle.sync()
-      } catch (error) {
-        const code = (error as NodeJS.ErrnoException).code
-        const unsupportedOnWindows = process.platform === 'win32'
-          && (code === 'EPERM' || code === 'EINVAL' || code === 'ENOTSUP')
-        if (!unsupportedOnWindows) throw error
-      } finally {
-        await directoryHandle?.close()
-      }
+      await syncParentDirectory(filePath)
       debug(`[PersistenceQueue] Wrote session ${sessionId}`)
     } catch (error) {
       console.error(`[PersistenceQueue] Failed to write session ${sessionId}:`, error)

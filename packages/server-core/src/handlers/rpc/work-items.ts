@@ -136,7 +136,7 @@ export function registerWorkItemHandlers(server: RpcServer, deps: HandlerDeps): 
     return item
   })
 
-  server.handle(RPC_CHANNELS.workItems.DELETE, async (_ctx, workspaceId: string, itemId: string) => {
+  server.handle(RPC_CHANNELS.workItems.DELETE, async (_ctx, workspaceId: string, itemId: string): Promise<void> => {
     const exists = deps.sessionManager.getSessions(workspaceId).some(({ id }) => id === itemId)
     if (exists) await deps.sessionManager.deleteSession(itemId)
   })

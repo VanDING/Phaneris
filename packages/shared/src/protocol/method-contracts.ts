@@ -76,6 +76,6 @@ export interface RpcMethodResults {
   [c.workItems.LIST]: WorkItem[]
   [c.workItems.CREATE]: WorkItem
   [c.workItems.UPDATE]: WorkItem | null
-  [c.workItems.DELETE]: boolean
+  [c.workItems.DELETE]: void
 }
 export type RpcResult<Channel extends string> = Channel extends keyof RpcMethodResults ? RpcMethodResults[Channel] : unknown

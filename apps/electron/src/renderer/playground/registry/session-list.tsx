@@ -196,7 +196,7 @@ function SessionListSearchPreview({
                   <SessionItem
                     key={session.id}
                     item={session}
-                    index={index}
+
                     itemProps={{ tabIndex: 0, onKeyDown: noopKeyDown }}
                     isSelected={session.id === selectedSessionId}
                     isFirstInGroup={index === 0}
@@ -260,7 +260,7 @@ function SessionItemPreview({
       <SessionListProvider value={ctx}>
         <SessionItem
           item={resolvedItem}
-          index={0}
+
           itemProps={{ tabIndex: 0, onKeyDown: noopKeyDown }}
           isSelected={isSelected}
           isFirstInGroup

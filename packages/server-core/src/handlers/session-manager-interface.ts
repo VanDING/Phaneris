@@ -48,6 +48,8 @@ export interface ISessionManager {
   getSessionWorkspaceId(sessionId: string): string | null
   getSession(sessionId: string): Promise<Session | null>
   getOrCreateResidentAssistant(workspaceId: string): Promise<Session>
+  getResidentAssistantMetadata(workspaceId: string): Promise<import('@phaneris/shared/protocol').ResidentAssistantMetadata>
+  changeResidentExecutionMode(workspaceId: string, mode: import('@phaneris/shared/agent/mode-types').PermissionMode): Promise<import('@phaneris/shared/protocol').ResidentAssistantMetadata>
   getAssistantMemoryStore(workspaceId: string): import('../resident-assistant/memory-store').AssistantMemoryStore
   scheduleAssistantMemory?(workspaceId: string): void
   assistantContext(workspaceId: string, command: import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextCommand): Promise<import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState>
@@ -183,7 +185,7 @@ export interface ISessionManager {
   ): Promise<void>
   cancelProcessing(sessionId: string, silent?: boolean): Promise<void>
   killShell(sessionId: string, shellId: string): Promise<{ success: boolean; error?: string }>
-  getTaskOutput(taskId: string): Promise<string | null>
+  getTaskOutput(taskId: string, expectedWorkspaceId?: string): Promise<string | null>
 
   // --- Tasks Conductor seams (in-process; not renderer events, not agent-facing) ---
   /**
@@ -312,6 +314,7 @@ export interface ISessionManager {
    * Workaround for Bun's fs.watch on Linux not detecting atomic renames.
    */
   notifyConfigFileChange(workspaceRootPath: string, relativePath: string): void
+  getWorkspacePages(workspaceId: string): import('../pages/workspace-pages').WorkspacePages
 
   /**
    * Request a (re)capture of a page's preview poster. No-op unless a capturer

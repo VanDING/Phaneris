@@ -17,6 +17,7 @@
     "./annotations/follow-up-state": "./src/components/annotations/follow-up-state.ts",
     "./motion": "./src/lib/motion.ts",
     "./roving-focus": "./src/lib/roving-focus.ts",
+    "./dismissible-layer-bridge": "./src/lib/dismissible-layer-bridge.ts",
     "./scale-contract": "./src/lib/scale-contract.ts",
     "./utils": "./src/lib/utils.ts",
     "./presence": "./src/lib/presence.ts",

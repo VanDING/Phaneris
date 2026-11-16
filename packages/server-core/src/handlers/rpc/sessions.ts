@@ -163,16 +163,6 @@ export const HANDLED_CHANNELS = [
 ] as const
 
 /**
- * Resolve the workspace a session belongs to.
- *
- * A single registry lookup; ownership checks must not serialize the directory.
- * Returns null when the session is unknown to the session manager.
- */
-function resolveSessionWorkspaceId(sessionManager: ISessionManager, sessionId: string): string | null {
-  return sessionManager.getSessionWorkspaceId(sessionId)
-}
-
-/**
  * M-1: enforce session→workspace ownership at the RPC layer.
  *
  * When the calling client has a claimed workspace (ctx.workspaceId — set at
@@ -192,7 +182,7 @@ function assertSessionWorkspaceOwnership(
   const claimedWorkspace = ctx.workspaceId
   if (!claimedWorkspace) return
 
-  const sessionWorkspaceId = resolveSessionWorkspaceId(sessionManager, sessionId)
+  const sessionWorkspaceId = sessionManager.getSessionWorkspaceId(sessionId)
   if (sessionWorkspaceId !== null && sessionWorkspaceId !== claimedWorkspace) {
     throw new Error(`Session ${sessionId} does not belong to workspace ${claimedWorkspace}`)
   }
@@ -201,6 +191,14 @@ function assertSessionWorkspaceOwnership(
 export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): void {
   const { sessionManager, platform } = deps
   const log = platform.logger
+
+  // Bound clients may only operate on their current workspace for these
+  // commands. Unbound legacy clients retain explicit-target compatibility.
+  const currentWorkspace = (ctx: RequestContext, requested?: string): string | undefined => {
+    const bound = ctx.workspaceId ?? (ctx.webContentsId != null ? deps.windowManager?.getWorkspaceForWindow(ctx.webContentsId) : undefined)
+    if (bound && requested && bound !== requested) throw new Error(`Request does not belong to workspace ${bound}`)
+    return bound ?? requested
+  }
 
   // Get all sessions for the calling window's workspace
   // Waits for initialization to complete so sessions are never returned empty during startup
@@ -241,8 +239,8 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
     return sessionManager.getUnreadSummary()
   })
 
-  server.handle(RPC_CHANNELS.sessions.MARK_ALL_READ, async (_ctx, workspaceId: string) => {
-    return sessionManager.markAllSessionsRead(workspaceId)
+  server.handle(RPC_CHANNELS.sessions.MARK_ALL_READ, async (ctx, workspaceId: string) => {
+    return sessionManager.markAllSessionsRead(currentWorkspace(ctx, workspaceId)!)
   })
 
   // Get a single session with messages (for lazy loading)
@@ -405,9 +403,9 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   })
 
   // Get background task output
-  server.handle(RPC_CHANNELS.tasks.GET_OUTPUT, async (_ctx, taskId: string) => {
+  server.handle(RPC_CHANNELS.tasks.GET_OUTPUT, async (ctx, taskId: string) => {
     try {
-      const output = await sessionManager.getTaskOutput(taskId)
+      const output = await sessionManager.getTaskOutput(taskId, currentWorkspace(ctx))
       return output
     } catch (err) {
       log.error('Failed to get task output:', err)
@@ -417,9 +415,9 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
 
   // Respond to a permission request (bash command approval)
   // Returns true if the response was delivered, false if agent/session is gone
-  server.handle(RPC_CHANNELS.sessions.RESPOND_TO_PERMISSION, async (ctx, sessionId: string, requestId: string, allowed: boolean, alwaysAllow: boolean) => {
+  server.handle(RPC_CHANNELS.sessions.RESPOND_TO_PERMISSION, async (ctx, sessionId: string, requestId: string, allowed: boolean, alwaysAllow: boolean, options?: import('@phaneris/shared/protocol').PermissionResponseOptions) => {
     assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
-    return sessionManager.respondToPermission(sessionId, requestId, allowed, alwaysAllow)
+    return sessionManager.respondToPermission(sessionId, requestId, allowed, alwaysAllow, options)
   })
 
   // Respond to a credential request (secure auth input)
@@ -566,6 +564,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
 
   // Search session content using ripgrep
   server.handle(RPC_CHANNELS.sessions.SEARCH_CONTENT, async (ctx, workspaceId: string, query: string, searchId?: string) => {
+    workspaceId = currentWorkspace(ctx, workspaceId)!
     const id = searchId || Date.now().toString(36)
     log.info('[search]','ipc:request', { searchId: id, query })
 
@@ -590,7 +589,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
     })
 
     // Filter out hidden sessions (e.g., mini edit sessions)
-    const allSessions = await sessionManager.getSessions()
+    const allSessions = sessionManager.getSessions(workspaceId)
     const hiddenSessionIds = new Set(
       allSessions.filter(s => s.hidden).map(s => s.id)
     )

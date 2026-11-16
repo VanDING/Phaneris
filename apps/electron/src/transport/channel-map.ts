@@ -36,6 +36,11 @@ export const CHANNEL_MAP = {
   reconcileModel: invoke(RPC_CHANNELS.sessions.RECONCILE_MODEL),
   createSession: invoke(RPC_CHANNELS.sessions.CREATE),
   getResidentAssistant: invoke(RPC_CHANNELS.residentAssistant.GET),
+  getResidentAssistantMetadata: invoke(RPC_CHANNELS.residentAssistant.GET, result => {
+    const { messages: _messages, ...metadata } = result as import('../shared/types').Session
+    return metadata
+  }),
+  changeResidentExecutionMode: invoke(RPC_CHANNELS.residentAssistant.EXECUTION_MODE, () => undefined),
   dispatchAssistantWork: invoke(RPC_CHANNELS.residentAssistant.DISPATCH),
   getAssistantWork: invoke(RPC_CHANNELS.residentAssistant.WORK),
   cancelAssistantWork: invoke(RPC_CHANNELS.residentAssistant.CANCEL_WORK),

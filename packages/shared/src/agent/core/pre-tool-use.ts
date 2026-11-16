@@ -16,6 +16,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { parsePrivilegedCommand, buildMacAdminCommand } from '../privileged-command';
 import { join, resolve } from 'node:path';
 import { expandPath } from '../../utils/paths.ts';
 import { PI_TOOL_NAME_MAP } from '../backend/pi/constants.ts';
@@ -885,7 +886,7 @@ export function runPreToolUseChecks(ctx: PreToolUseInput): PreToolUseCheckResult
         promptInfo.command &&
         typeof currentInput.command === 'string' &&
         process.platform === 'darwin'
-          ? { ...currentInput, command: wrapCommandForMacAdminPrompt(promptInfo.command) }
+          ? { ...currentInput, command: buildMacAdminCommand(parsePrivilegedCommand(promptInfo.command)!) }
           : undefined;
 
       return {
@@ -944,68 +945,27 @@ function toDisplayName(token: string): string {
 
 function classifyAdminApproval(command: string): PromptInfo | null {
   const trimmed = command.trim();
-  const normalized = trimmed.toLowerCase();
-
-  const brewInstallCask = normalized.match(/^brew\s+install\s+--cask\s+([^\s]+).*$/);
-  if (brewInstallCask) {
-    const appToken = brewInstallCask[1] ?? 'application';
-    return {
-      promptType: 'admin_approval',
-      description: `Admin approval required for cask install: ${appToken}`,
-      command: trimmed,
-      appName: toDisplayName(appToken),
-      reason: 'Homebrew needs admin access to complete post-install steps.',
-      impact: 'May install files in /Applications and system-managed directories.',
-      requiresSystemPrompt: process.platform === 'darwin',
-      rememberForMinutes: 10,
-      commandHash: hashCommand(trimmed),
-      approvalTtlSeconds: 120,
-    };
-  }
-
-  const brewUpgradeCask = normalized.match(/^brew\s+upgrade\s+--cask\s+([^\s]+).*$/);
-  if (brewUpgradeCask) {
-    const appToken = brewUpgradeCask[1] ?? 'application';
-    return {
-      promptType: 'admin_approval',
-      description: `Admin approval required for cask upgrade: ${appToken}`,
-      command: trimmed,
-      appName: toDisplayName(appToken),
-      reason: 'Homebrew needs admin access to replace app files in protected locations.',
-      impact: 'May replace app binaries in /Applications and system-managed directories.',
-      requiresSystemPrompt: process.platform === 'darwin',
-      rememberForMinutes: 10,
-      commandHash: hashCommand(trimmed),
-      approvalTtlSeconds: 120,
-    };
-  }
-
-  if (/^installer\s+-pkg\s+.+\s+-target\s+\//.test(normalized)) {
-    return {
-      promptType: 'admin_approval',
-      description: 'Admin approval required for macOS installer package',
-      command: trimmed,
-      appName: 'Installer Package',
-      reason: 'The installer writes files to protected system locations.',
-      impact: 'May install system services, app files, or startup items.',
-      requiresSystemPrompt: process.platform === 'darwin',
-      rememberForMinutes: 5,
-      commandHash: hashCommand(trimmed),
-      approvalTtlSeconds: 120,
-    };
-  }
-
-  return null;
-}
-
-function wrapCommandForMacAdminPrompt(command: string): string {
-  // Escape for AppleScript shell string: \ -> \\, " -> \", $ -> \$
-  const escaped = command
-    .replace(/\\/g, '\\\\')
-    .replace(/"/g, '\\"')
-    .replace(/\$/g, '\\$');
-
-  return `osascript -e 'do shell script "${escaped}" with administrator privileges'`;
+  const parsed = parsePrivilegedCommand(trimmed);
+  if (!parsed) return null;
+  const installer = parsed.kind === 'installer';
+  const upgrade = parsed.kind === 'cask-upgrade';
+  return {
+    promptType: 'admin_approval',
+    description: installer ? 'Admin approval required for macOS installer package'
+      : `Admin approval required for cask ${upgrade ? 'upgrade' : 'install'}: ${parsed.application}`,
+    command: trimmed,
+    appName: installer ? parsed.application : toDisplayName(parsed.application),
+    reason: installer ? 'The installer writes files to protected system locations.'
+      : upgrade ? 'Homebrew needs admin access to replace app files in protected locations.'
+      : 'Homebrew needs admin access to complete post-install steps.',
+    impact: installer ? 'May install system services, app files, or startup items.'
+      : upgrade ? 'May replace app binaries in /Applications and system-managed directories.'
+      : 'May install files in /Applications and system-managed directories.',
+    requiresSystemPrompt: process.platform === 'darwin',
+    rememberForMinutes: installer ? 5 : 10,
+    commandHash: hashCommand(trimmed),
+    approvalTtlSeconds: 120,
+  };
 }
 
 /**

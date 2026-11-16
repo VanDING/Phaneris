@@ -95,6 +95,7 @@ export type {
 } from './server-builder.ts';
 
 // API Tools (types)
+export { createApiSourceAccess } from './api-access';
 export type { SummarizeCallback } from './api-tools.ts';
 export {
   executeApiRequest,

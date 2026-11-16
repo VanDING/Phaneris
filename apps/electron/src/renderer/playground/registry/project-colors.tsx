@@ -360,7 +360,7 @@ function ProjectColorsPreview({ variant = 'stripe' }: ProjectColorsPreviewProps)
                           <ColoredRowWrapper key={session.id} color={color} variant={variant}>
                             <SessionItem
                               item={session}
-                              index={index}
+
                               itemProps={{ tabIndex: 0, onKeyDown: noopKeyDown }}
                               isSelected={isSelected}
                               isFirstInGroup={index === 0}

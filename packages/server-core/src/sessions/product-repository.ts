@@ -1,5 +1,5 @@
 /** Product persistence adapter. Execution recovery and admission remain on the Runtime Host. */
-import { loadSession, sessionPersistenceQueue, type StoredSession } from '@phaneris/shared/sessions'
+import { loadSession, sessionPersistenceQueue, type StoredSession, type SessionHeader } from '@phaneris/shared/sessions'
 import { messageToStored, type Message } from '@phaneris/core/types'
 
 export type SessionProductSnapshot = Omit<StoredSession, 'messages' | 'tokenUsage' | 'createdAt' | 'lastUsedAt'> & {
@@ -19,6 +19,9 @@ export class SessionProductRepository {
     })
   }
   flush(sessionId: string): Promise<void> { return sessionPersistenceQueue.flush(sessionId) }
+  commitMetadata<T extends Partial<SessionHeader>>(workspaceRootPath: string, sessionId: string, owner: T, patch: Partial<Omit<SessionHeader, 'id' | 'workspaceRootPath' | 'messageCount' | 'tokenUsage'>>): Promise<void> {
+    return sessionPersistenceQueue.patchHeader(workspaceRootPath, sessionId, patch, () => Object.assign(owner, patch))
+  }
   flushAll(): Promise<void> { return sessionPersistenceQueue.flushAll() }
   cancel(sessionId: string): void { sessionPersistenceQueue.cancel(sessionId) }
   async cancelAndWait(sessionId: string): Promise<void> {

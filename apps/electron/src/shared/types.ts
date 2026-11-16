@@ -338,6 +338,8 @@ export interface ElectronAPI {
   ): Promise<import('@phaneris/shared/durable-runtime').ModelReconciliationResult>
   createSession(workspaceId: string, options?: CreateSessionOptions): Promise<Session>
   getResidentAssistant(workspaceId: string): Promise<Session>
+  getResidentAssistantMetadata(workspaceId: string): Promise<import('@phaneris/shared/protocol').ResidentAssistantMetadata>
+  changeResidentExecutionMode(workspaceId: string, mode: PermissionMode): Promise<void>
   dispatchAssistantWork(workspaceId: string, request: import('@phaneris/session-tools-core/delegation-contracts').AssistantDispatch): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
   getAssistantWork(workspaceId: string, query: import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkQuery): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage>
   cancelAssistantWork(workspaceId: string, id: string): Promise<import('@phaneris/session-tools-core/delegation-contracts').AssistantWork>
@@ -741,7 +743,7 @@ export interface ElectronAPI {
   saveViews(workspaceId: string, views: import('@phaneris/shared/views').ViewConfig[]): Promise<void>
 
   // Generic workspace image loading/saving
-  readWorkspaceImage(workspaceId: string, relativePath: string): Promise<string>
+  readWorkspaceImage(workspaceId: string, relativePath: string): Promise<string | null>
   writeWorkspaceImage(workspaceId: string, relativePath: string, base64: string, mimeType: string): Promise<void>
 
   // Tool icon mappings

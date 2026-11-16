@@ -308,9 +308,7 @@ export function CredentialsStep({
             status={status as OAuthStatus}
             errorMessage={errorMessage}
             isWaitingForCode={true}
-            onStartOAuth={onStartOAuth!}
             onSubmitAuthCode={onSubmitAuthCode}
-            onCancelOAuth={onCancelOAuth}
           />
         </StepFormLayout>
       )
@@ -339,9 +337,7 @@ export function CredentialsStep({
           status={status as OAuthStatus}
           errorMessage={errorMessage}
           isWaitingForCode={false}
-          onStartOAuth={onStartOAuth!}
           onSubmitAuthCode={onSubmitAuthCode}
-          onCancelOAuth={onCancelOAuth}
         />
       </StepFormLayout>
     )

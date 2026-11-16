@@ -4,7 +4,7 @@
 
 import { describe, it, expect, mock } from 'bun:test'
 import { RoutedClient } from '../routed-client'
-import type { WsRpcClient, TransportConnectionState } from '../client'
+import type { WsRpcClient, TransportConnectionState } from '@phaneris/server-core/transport/client'
 
 // ---------------------------------------------------------------------------
 // Minimal WsRpcClient stub

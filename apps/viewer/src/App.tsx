@@ -33,6 +33,7 @@ import {
 } from '@phaneris/ui'
 import { SessionUpload } from './components/SessionUpload'
 import { Header } from './components/Header'
+import { decodePublicSession } from './decode-session'
 
 /** Default session ID for development */
 const DEV_SESSION_ID = 'tz5-13I84pwK_he'
@@ -94,7 +95,8 @@ export function App() {
           return
         }
 
-        const data = await response.json()
+        const data = decodePublicSession(await response.json())
+        if (!data) throw new Error('Invalid session format')
         if (!controller.signal.aborted) setSession(data)
       } catch (err) {
         if (controller.signal.aborted) return
