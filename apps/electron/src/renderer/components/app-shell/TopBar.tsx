@@ -165,7 +165,16 @@ export function TopBar({
   const menuLeftPadding = isMac && !isWebUI ? 86 : 12
 
   return (
+    // `role="banner"` (the `<header>` landmark at page level): this is the app's
+    // global toolbar, not page content. Without a landmark every control in it —
+    // the main-view switcher, the tool group, the workspace picker — was reported
+    // as "content not contained by landmarks", which was the single largest source
+    // of the `region` rule (23 nodes for the switcher group alone). It is also the
+    // correct semantics: a fixed toolbar that owns the window's identity belongs in
+    // the banner.
     <div
+      role="banner"
+      aria-label={t('topBar.label')}
       className="resident-topbar fixed top-0 left-0 right-0 z-panel titlebar-drag-region"
       style={{
         height: 'var(--topbar-height)',

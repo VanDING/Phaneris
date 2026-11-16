@@ -16,6 +16,8 @@ import { X, ChevronLeft } from 'lucide-react'
 import { parseRouteToNavigationState } from '../../../shared/route-parser'
 import type { ViewRoute } from '../../../shared/routes'
 import { navigate } from '@/lib/navigate'
+import { sessionMetaMapAtom } from '@/atoms/sessions'
+import { getSessionTitle } from '@/utils/session'
 import {
   activateForegroundSessionAtom,
   focusedSurfaceEntryIdAtom,
@@ -76,6 +78,16 @@ export function SurfaceSlot({
   const assistantPresentation = useAtomValue(residentNavigationAtom)
   const assistantOpen = !!(assistantPresentation?.open || assistantPresentation?.closing) && assistantPresentation?.workspaceId === parentContext.activeWorkspaceId
   const navState = parseRouteToNavigationState(entry.route)
+  // Session titles, for naming the content landmark uniquely per pane.
+  const sessionMetaMap = useAtomValue(sessionMetaMapAtom)
+  const sessionTitles = useMemo(() => {
+    const titles = new Map<string, string>()
+    for (const [id, meta] of sessionMetaMap) {
+      const title = getSessionTitle(meta).trim()
+      if (title) titles.set(id, title)
+    }
+    return titles
+  }, [sessionMetaMap])
 
   // Build close button for PanelHeader (via context override)
   const closeButton = useMemo(() => {
@@ -105,6 +117,17 @@ export function SurfaceSlot({
     )
   }, [isCompact, onCompactBack, t])
 
+  // A landmark needs a name that is unique on the page. Several conversation
+  // panes can be open side by side, all sharing the "Sessions" launcher label, so
+  // the name is qualified by the pane's own identity: its session title when it
+  // has one, otherwise its position among the open surfaces.
+  const paneLabel = useMemo(() => {
+    const base = t(surfaceLauncherLabelKey(entry.panelType as SurfaceLauncherKind))
+    const title = entry.sessionId ? sessionTitles.get(entry.sessionId) : undefined
+    if (title) return `${base} — ${title}`
+    return isOnly ? base : `${base} ${entry.id}`
+  }, [entry.id, entry.panelType, entry.sessionId, isOnly, sessionTitles, t])
+
   // Override AppShellContext so page headers receive surface controls and
   // session input behavior follows the currently focused surface.
   const contextOverride = useMemo(() => ({
@@ -129,6 +152,14 @@ export function SurfaceSlot({
         onPointerDown={handlePointerDown}
         data-panel-role="content"
         data-surface-id={entry.id}
+        // A content pane is a landmark: it holds the pane's header and its
+        // scrolling body. Without one, axe reported every panel header and its
+        // masked scroll viewport as "content not contained by landmarks" — 139
+        // nodes across the app, the largest remaining accessibility rule. Named
+        // so several panes side by side stay distinguishable in a landmark list
+        // (the workbench and the converse make that the normal case).
+        role="region"
+        aria-label={paneLabel}
         inert={hidden}
         aria-hidden={hidden || undefined}
         data-compact={isCompact || undefined}
@@ -202,3 +233,4 @@ export function SurfaceSlot({
     </>
   )
 }
+
