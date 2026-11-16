@@ -169,6 +169,8 @@ export function PluginsListPanel({
           docKey="plugins"
         />
       }
+      filterText={(row) => row.kind === 'error' ? (row.error.pluginName ?? row.error.path ?? '') : row.plugin.name}
+      filterPlaceholder={t('sidebar.filterPlugins')}
       mapItem={(row) => {
         if (row.kind === 'error') {
           return {
@@ -286,4 +288,5 @@ export function PluginsListPanel({
     </>
   )
 }
+
 

@@ -114,6 +114,8 @@ export function SourcesListPanel({
           )}
         </EntityListEmptyScreen>
       }
+      filterText={(source) => source.config.name}
+      filterPlaceholder={t('sidebar.filterSources')}
       mapItem={(source) => {
         const connectionStatus = deriveConnectionStatus(source, localMcpEnabled)
         const typeConfig = SOURCE_TYPE_CONFIG[source.config.type]
@@ -166,4 +168,6 @@ export function SourcesListPanel({
     </>
   )
 }
+
+
 
