@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 import assert from 'node:assert/strict'
-import { join } from 'node:path'
-import { mkdirSync, rmdirSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import { verificationWorkflow } from './verification-artifacts'
+import { obstructDirectory } from './fixtures/directory-obstruction'
 import type { HandlerDeps } from '../../packages/server-core/src/handlers/handler-deps'
 import type { Message, StoredMessage } from '../../packages/core/src/types'
 
@@ -55,11 +55,11 @@ await verificationWorkflow('input-intent', async run => {
     })
     await scene('pre-persist-failure-rejects-both-await-points-and-retry-reuses-id', async () => {
       const session = await manager.createSession(ws.id, { name: 'Failed input' }), file = getSessionFilePath(ws.rootPath, session.id)
-      mkdirSync(file + '.tmp')
+      const restore = obstructDirectory(join(dirname(file), 'tmp'))
       const input = { text: 'Same stable input', messageId: 'delivery-fixture' }
       const failed = manager.submitInput(session.id, input, { kind: 'session_message' })
       try { assert((await Promise.allSettled([failed.accepted, failed.finished])).every(result => result.status === 'rejected')) }
-      finally { rmdirSync(file + '.tmp') }
+      finally { restore() }
       const retry = manager.submitInput(session.id, input, { kind: 'session_message' })
       assert.equal((await retry.accepted).messageId, 'delivery-fixture')
       assert.equal(loadSession(ws.rootPath, session.id)!.messages.filter(message => message.id === 'delivery-fixture').length, 1)
