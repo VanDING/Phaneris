@@ -158,6 +158,8 @@ export function createWorkspaceBackup(workspaceRootPath: string, outputPath: str
       const relativePath = relative(root, source).replaceAll('\\', '/');
       if (/^runtime\/runtime\.db(?:-wal|-shm)?$/.test(relativePath)) continue;
       if (relativePath === 'assistant/.writer.lock' || /^assistant\/\.writer-stale-/.test(relativePath)) continue;
+      if (/^assistant\/\.writer\.sqlite(?:-(?:journal|wal|shm))?$/.test(relativePath)
+        || /^tasks\/\.publications\/writer\.sqlite(?:-(?:journal|wal|shm))?$/.test(relativePath)) continue;
       if (/^assistant\/migrations\/.*\/memory\.db-(wal|shm)$/.test(relativePath)) continue;
       if ([...assistantCopies.keys()].some(path => relativePath === path || relativePath === path + '-wal' || relativePath === path + '-shm')) continue;
       if (relativePath === MANIFEST_NAME) throw new Error('Workspace contains reserved manifest.json');

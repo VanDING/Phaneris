@@ -23,6 +23,8 @@ interface PendingWrite {
   timer: ReturnType<typeof setTimeout>
 }
 
+type HeaderPatch = Partial<Omit<SessionHeader, 'id' | 'workspaceRootPath' | 'messageCount' | 'tokenUsage'>>
+
 /** Fields protected when an external editor changes a Session header. */
 const EXTERNAL_METADATA_FIELDS = ['name', 'labels', 'isFlagged', 'sessionStatus', 'permissionMode',
   'hasUnread', 'lastReadMessageId', 'projectId', 'kanbanColumn'] as const satisfies readonly (keyof SessionHeader)[]
@@ -117,7 +119,7 @@ class SessionPersistenceQueue {
   }
 
   /** Header-only owner edit: serialize with product writes and preserve encoded rows verbatim. */
-  patchHeader(workspaceRootPath: string, sessionId: string, patch: Partial<Omit<SessionHeader, 'id' | 'workspaceRootPath' | 'messageCount' | 'tokenUsage'>>, publish: () => void): Promise<void> {
+  patchHeader(workspaceRootPath: string, sessionId: string, patch: HeaderPatch | ((current: Readonly<SessionHeader>) => HeaderPatch), publish: (committed: SessionHeader) => void): Promise<void> {
     if (this.pending.has(sessionId)) void this.write(sessionId)
     const writePromise = this.serializeWrite(sessionId, async () => {
       try {
@@ -136,7 +138,8 @@ class SessionPersistenceQueue {
             if (newline >= 0) { parts.push(buffer.subarray(0, newline)); offset += newline + 1; break }
             parts.push(buffer.subarray(0, bytesRead)); offset += bytesRead
           }
-          header = { ...JSON.parse(stripBom(Buffer.concat(parts).toString('utf8'))) as SessionHeader, ...patch }
+          const current = JSON.parse(stripBom(Buffer.concat(parts).toString('utf8'))) as SessionHeader
+          header = { ...current, ...(typeof patch === 'function' ? patch(current) : patch) }
           if (header.id !== sessionId) throw new Error('Product metadata session identity mismatch')
           const target = await open(temporary, 'w', 0o600)
           try {
@@ -162,7 +165,7 @@ class SessionPersistenceQueue {
           else this.lastWrittenHeaderSignature.set(sessionId, previous)
           throw error
         }
-        publish()
+        publish(header)
         await syncParentDirectory(filePath)
       } catch (error) { this.metadataFailures.add(writePromise); throw error }
     })

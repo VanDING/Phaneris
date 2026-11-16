@@ -65,6 +65,19 @@ export function createWorkspacePages(workspace: { id: string; rootPath: string }
       await complete(slug)
       return outcome
     },
+    async unbindProject(projectId: string): Promise<void> {
+      const committed: string[] = []
+      try {
+        for (const page of loadWorkspacePages(root)) {
+          if (page.config.projectId !== projectId) continue
+          updatePage(root, page.config.slug, { projectId: null })
+          committed.push(page.config.slug)
+        }
+      } finally {
+        // Earlier releases are durable even when a later page is locked.
+        for (const slug of committed) await complete(slug)
+      }
+    },
     async issueGrant(slug: string, input: AddPageGrantInput) {
       const grant = addPageGrant(root, slug, input)
       await complete(slug)

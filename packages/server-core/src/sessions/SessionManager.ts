@@ -133,6 +133,7 @@ import { resolveCreateTaskProjectId } from '../tasks'
 import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config';
 import { buildPagesToolCallbacks } from '../pages/tool-callbacks'
 import { createWorkspacePages, type WorkspacePages } from '../pages/workspace-pages'
+import { createWorkspaceProjects, type WorkspaceProjects } from '../projects/workspace-projects'
 import { buildMcpSourceToolCallbacks } from '../sources/mcp-source-tool-callbacks'
 import { redactBrowserToolArguments } from '@phaneris/shared/utils/browser-input-privacy'
 import { buildDecisionToolCallbacks } from '../decisions/tool-callbacks'
@@ -1268,6 +1269,7 @@ export class SessionManager implements ISessionManager {
   // Config watchers for live updates (sources, etc.) - one per workspace
   private configWatchers: Map<string, ConfigWatcher> = new Map()
   private workspacePages = new Map<string, WorkspacePages>()
+  private workspaceProjects = new Map<string, WorkspaceProjects>()
   private workspaceTaskPublishers = new Map<string, WorkspaceTaskPublisher>()
   // App-scoped watcher: exactly one regardless of workspace count.
   private userThemeWatcher: UserThemeWatcher | null = null
@@ -1968,6 +1970,39 @@ export class SessionManager implements ISessionManager {
       this.workspacePages.set(workspace.rootPath, pages)
     }
     return pages
+  }
+
+  getWorkspaceProjects(workspaceId: string): WorkspaceProjects {
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
+    let projects = this.workspaceProjects.get(workspace.rootPath)
+    if (!projects) {
+      projects = createWorkspaceProjects(workspace.rootPath, {
+        ready: () => this.waitForInit(),
+        unbindSessions: async projectId => {
+          const stored = listStoredSessions(workspace.rootPath)
+          const ids = new Set(stored.filter(session => session.projectId === projectId).map(session => session.id))
+          for (const managed of this.sessions.values()) {
+            if (managed.workspace.id === workspace.id && managed.projectId === projectId) ids.add(managed.id)
+          }
+          for (const id of ids) {
+            let managed = this.sessions.get(id)
+            if (managed && managed.workspace.rootPath !== workspace.rootPath) throw new Error(`Session identity belongs to another workspace: ${id}`)
+            if (!managed) {
+              managed = createManagedSession(stored.find(session => session.id === id)!, workspace)
+              this.registerManagedSession(managed, false)
+            }
+            await this.productRepository.releaseProject(workspace.rootPath, id, managed, projectId)
+            this.publishSessionProjectChanged(managed)
+          }
+        },
+        unbindPages: projectId => this.getWorkspacePages(workspace.id).unbindProject(projectId),
+        changed: list => this.eventSink?.(RPC_CHANNELS.projects.CHANGED, { to: 'workspace', workspaceId: workspace.id }, workspace.id, list),
+        log: message => sessionLog.warn(message),
+      })
+      this.workspaceProjects.set(workspace.rootPath, projects)
+    }
+    return projects
   }
 
   /**
@@ -10033,21 +10068,16 @@ initialSources: {
   async setSessionProjectId(sessionId: string, projectId: string | null): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (managed) {
-      managed.projectId = projectId ?? undefined
-      this.broadcastPlanningChanged(managed.workspace.id)
-      this.setMetadataWriteGuard(managed)
-
-      this.sendEvent({
-        type: 'project_id_changed',
-        sessionId: managed.id,
-        projectId: managed.projectId ?? null,
-      }, managed.workspace.id)
-
-      this.persistSession(managed)
-      await this.flushSession(managed.id)
-      const watcher = this.configWatchers.get(managed.workspace.rootPath)
-      watcher?.notifyFileChange(`sessions/${sessionId}/session.jsonl`)
+      await this.productRepository.commitMetadata(managed.workspace.rootPath, managed.id, managed, { projectId: projectId ?? undefined })
+      this.publishSessionProjectChanged(managed)
     }
+  }
+
+  private publishSessionProjectChanged(managed: ManagedSession): void {
+    this.broadcastPlanningChanged(managed.workspace.id)
+    this.setMetadataWriteGuard(managed)
+    this.sendEvent({ type: 'project_id_changed', sessionId: managed.id, projectId: managed.projectId ?? null }, managed.workspace.id)
+    this.notifyConfigFileChange(managed.workspace.rootPath, `sessions/${managed.id}/session.jsonl`)
   }
 
   /**
@@ -12396,6 +12426,7 @@ resources: {
     }
     this.configWatchers.clear()
     this.workspacePages.clear()
+    this.workspaceProjects.clear()
     this.workspaceTaskPublishers.clear()
 
     this.userThemeWatcher?.stop()

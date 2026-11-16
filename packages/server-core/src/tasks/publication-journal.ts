@@ -9,7 +9,7 @@ export interface PreparedTaskPlanning {
   patch: Partial<SessionPlanningFields> & { parentSessionId?: string }
   statusId?: string
 }
-import { openSqliteDatabase } from '../runtime/sqlite'
+import { acquireWriterLease } from '../runtime/writer-lease'
 
 const text = z.string(), optionalText = text.nullable().optional()
 const planningPatch = z.object({
@@ -68,13 +68,6 @@ export function decodePreparedPlanning(prepared: PublicationRecord['prepared']):
  * lock without stale-PID reclamation or blocking the execution database. */
 export async function withPublicationWriter<T>(root: string, operation: () => Promise<T>): Promise<T> {
   const directory = join(root, 'tasks', '.publications'); mkdirSync(directory, { recursive: true })
-  const database = openSqliteDatabase(join(directory, 'writer.sqlite'))
-  let acquired = false
-  try {
-    database.exec('PRAGMA busy_timeout = 0')
-    database.exec('BEGIN IMMEDIATE'); acquired = true
-    return await operation()
-  } finally {
-    try { if (acquired) database.exec('ROLLBACK') } finally { database.close() }
-  }
+  const release = acquireWriterLease(join(directory, 'writer.sqlite'))
+  try { return await operation() } finally { release() }
 }

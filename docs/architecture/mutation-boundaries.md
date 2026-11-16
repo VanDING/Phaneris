@@ -122,3 +122,24 @@ changing title, project, status, column or schedule. Internal edits exclude deri
 conversation IDs. Null clears optional scalar values and omission retains them.
 The old calendar projection keeps its titles/long previews and deletion clears only
 the schedule; work-item deletion removes the Session and has a void result port.
+
+## Project removal and writer lifetime
+
+`getWorkspaceProjects(workspaceId).remove(slug)` releases Session and Page references
+before deleting the project. Each durable release updates Host metadata and emits
+its change; a later failure retains the project for retry. Sessions created outside
+the running Host are included. A queued conditional header edit preserves a different
+external project assignment and synchronizes the cached value without loading history.
+The shared storage helpers remain available to offline and external callers.
+Missing-project removal still returns void. A failed final notification cannot turn
+an already committed deletion into an RPC failure.
+
+Assistant service writers and task publication use the same small runtime OS-lease
+primitive with distinct resource files. The assistant retains its legacy PID/nonce
+lease for older Hosts and archives stale ownership evidence only under the OS lease.
+Invalid or unknown-version evidence is retained. Closing the service or losing the
+process releases the SQLite lock; transient locks are excluded from workspace backups.
+Bun and Node interoperability is verified with real local subprocesses.
+
+WS shutdown still invokes disconnect callbacks and rejects pending requests, but late
+close events do not recreate reconnect buffers or their retention timers.

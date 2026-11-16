@@ -781,19 +781,22 @@ export class WsRpcServer implements RpcServer {
       transportLog.info('Client disconnected', { clientId: client.id })
       this.clients.delete(client.id)
 
-      // Retain buffer for potential reconnect
-      const timer = setTimeout(() => {
-        this.disconnectedClients.delete(client.id)
-      }, DISCONNECTED_CLIENT_TTL_MS)
-      this.disconnectedClients.set(client.id, { client, timer })
+      // close() can drain retained clients before this asynchronous event.
+      // A stopped server must not recreate reconnect buffers or TTL timers.
+      if (!this.closing) {
+        const timer = setTimeout(() => {
+          this.disconnectedClients.delete(client.id)
+        }, DISCONNECTED_CLIENT_TTL_MS)
+        this.disconnectedClients.set(client.id, { client, timer })
 
-      // Cap disconnectedClients to prevent unbounded growth
-      if (this.disconnectedClients.size > 50) {
-        const oldestKey = this.disconnectedClients.keys().next().value
-        if (oldestKey) {
-          const oldest = this.disconnectedClients.get(oldestKey)
-          if (oldest) clearTimeout(oldest.timer)
-          this.disconnectedClients.delete(oldestKey)
+        // Cap disconnectedClients to prevent unbounded growth
+        if (this.disconnectedClients.size > 50) {
+          const oldestKey = this.disconnectedClients.keys().next().value
+          if (oldestKey) {
+            const oldest = this.disconnectedClients.get(oldestKey)
+            if (oldest) clearTimeout(oldest.timer)
+            this.disconnectedClients.delete(oldestKey)
+          }
         }
       }
 

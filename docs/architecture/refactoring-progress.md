@@ -15,6 +15,8 @@ published Copilot compatibility path, unused component parameters, Host input
 intent/provenance, workspace planning commands, task publication/recovery and
 typed RPC registration. Real production editor flows cover response loss, adopted
 draft run refusal and subsequent editing without a second card.
+Further batches cover assistant writer races, retryable project removal with live
+cache consistency, and WebSocket shutdown without retained reconnect timers.
 
 Compatibility decisions confirmed by the project owner:
 

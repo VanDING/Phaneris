@@ -317,6 +317,7 @@ export interface ISessionManager {
    */
   notifyConfigFileChange(workspaceRootPath: string, relativePath: string): void
   getWorkspacePages(workspaceId: string): import('../pages/workspace-pages').WorkspacePages
+  getWorkspaceProjects(workspaceId: string): import('../projects/workspace-projects').WorkspaceProjects
   getWorkspaceTaskPublisher(workspaceId: string): import('../tasks/workspace-task-publisher').WorkspaceTaskPublisher
   getWorkspacePlanning(workspaceId: string): import('../planning/workspace-planning').WorkspacePlanning
 

@@ -20,6 +20,7 @@ import type { LoadedSkill } from '../skills/types'
 
 /** Ports whose domain already owns runtime validation do not gain a second schema. */
 export interface RpcMethodArguments {
+  [c.projects.DELETE]: [workspaceId: string, slug: string]
   // Normal calls use the DTO; the tasks wire also retains legacy null fields.
   [c.tasks.CREATE]: [workspaceId: string, request: import('./dto').TaskCreateRequest]
   // Coarse object schemas retain their runtime compatibility rules. These
@@ -66,6 +67,7 @@ export type RpcArguments<Channel extends string> = Channel extends keyof RpcMeth
   ? RpcMethodArguments[Channel] : Channel extends keyof typeof RPC_INPUT_CONTRACTS ? RpcSchemaArguments<Channel> : unknown[]
 
 export interface RpcMethodResults {
+  [c.projects.DELETE]: void
   [c.tasks.CREATE]: import('./dto').TaskCreateResult
   [c.pages.GET]: LoadedPage[]
   [c.pages.GET_ONE]: LoadedPage | null
