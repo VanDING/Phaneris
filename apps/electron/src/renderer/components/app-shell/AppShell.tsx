@@ -143,6 +143,7 @@ import { navigate, routes } from "@/lib/navigate"
 import { useWorkspaceChatStarters } from '@/hooks/useWorkspaceChatStarters'
 import { buildNavigatorRootRoute, hasNavigator, fitColumns } from "@/lib/nav-helpers"
 import { navigatorOwnsHeadingOne as navigatorOwnsH1 } from "@/lib/navigator-heading"
+import { filterSessions } from "@/lib/session-filter-model"
 import {
   useNavigation,
   isSessionsNavigation,
@@ -1340,119 +1341,16 @@ function AppShellContent({
   }, [automations])
 
   // Filter session metadata based on sidebar mode and chat filter
-  const filteredSessionMetas = useMemo(() => {
-    // When in sources mode, return empty (no sessions to show)
-    if (!sessionFilter) {
-      return []
-    }
-
-    let result: SessionMeta[]
-
-    switch (sessionFilter.kind) {
-      case 'allSessions':
-        // "All Sessions" - shows active (non-archived) sessions
-        result = activeSessionMetas
-        break
-      case 'flagged':
-        result = activeSessionMetas.filter(s => s.isFlagged)
-        break
-      case 'archived':
-        // Archived view shows only archived sessions
-        result = workspaceSessionMetas.filter(s => s.isArchived)
-        break
-      case 'state':
-        // Filter by specific todo state (excludes archived)
-        result = activeSessionMetas.filter(s => (s.sessionStatus || 'todo') === sessionFilter.stateId)
-        break
-      case 'label': {
-        // Shared predicate (handles '__all__', descendant labels, and the optional
-        // project scope) — the same implementation the session list filters with,
-        // so the two stay aligned by construction.
-        result = activeSessionMetas.filter(s => matchesLabelFilter(s, sessionFilter, labelConfigs))
-        break
-      }
-      case 'view': {
-        // Filter by view: __all__ shows any session matched by any view,
-        // otherwise filter to the specific view (excludes archived)
-        result = activeSessionMetas.filter(s => {
-          const matched = evaluateViews(s)
-          if (sessionFilter.viewId === '__all__') {
-            return matched.length > 0
-          }
-          return matched.some(v => v.id === sessionFilter.viewId)
-        })
-        break
-      }
-      default:
-        result = activeSessionMetas
-    }
-
-    // Apply secondary filters (status + labels, AND-ed together) in ALL views.
-    // These layer on top of the primary sessionFilter to allow further narrowing.
-    // Each filter supports include/exclude modes:
-    //   - Includes: if any exist, only matching items pass
-    //   - Excludes: matching items are removed (applied after includes)
-    if (listFilter.size > 0) {
-      const statusIncludes = new Set<SessionStatusId>()
-      const statusExcludes = new Set<SessionStatusId>()
-      for (const [id, mode] of listFilter) {
-        if (mode === 'include') statusIncludes.add(id)
-        else statusExcludes.add(id)
-      }
-      if (statusIncludes.size > 0) {
-        result = result.filter(s => statusIncludes.has((s.sessionStatus || 'todo') as SessionStatusId))
-      }
-      if (statusExcludes.size > 0) {
-        result = result.filter(s => !statusExcludes.has((s.sessionStatus || 'todo') as SessionStatusId))
-      }
-    }
-    // Filter by labels — supports include/exclude with descendant expansion
-    if (labelFilter.size > 0) {
-      const labelIncludes = new Set<string>()
-      const labelExcludes = new Set<string>()
-      for (const [id, mode] of labelFilter) {
-        // Expand to include descendant label IDs
-        const ids = [id, ...getDescendantIds(labelConfigs, id)]
-        for (const expandedId of ids) {
-          if (mode === 'include') labelIncludes.add(expandedId)
-          else labelExcludes.add(expandedId)
-        }
-      }
-      if (labelIncludes.size > 0) {
-        result = result.filter(s =>
-          s.labels?.some(l => labelIncludes.has(extractLabelId(l)))
-        )
-      }
-      if (labelExcludes.size > 0) {
-        result = result.filter(s =>
-          !s.labels?.some(l => labelExcludes.has(extractLabelId(l)))
-        )
-      }
-    }
-    // Filter by project — supports include/exclude on session.projectId
-    if (projectFilter.size > 0) {
-      const projectIncludes = new Set<string>()
-      const projectExcludes = new Set<string>()
-      for (const [id, mode] of projectFilter) {
-        if (mode === 'include') projectIncludes.add(id)
-        else projectExcludes.add(id)
-      }
-      if (projectIncludes.size > 0) {
-        result = result.filter(s => {
-          const pid = (s as { projectId?: string }).projectId
-          return pid !== undefined && projectIncludes.has(pid)
-        })
-      }
-      if (projectExcludes.size > 0) {
-        result = result.filter(s => {
-          const pid = (s as { projectId?: string }).projectId
-          return pid === undefined || !projectExcludes.has(pid)
-        })
-      }
-    }
-
-    return result
-  }, [workspaceSessionMetas, activeSessionMetas, sessionFilter, listFilter, labelFilter, projectFilter, labelConfigs, evaluateViews])
+  const filteredSessionMetas = useMemo(() => filterSessions({
+    workspaceMetas: workspaceSessionMetas,
+    activeMetas: activeSessionMetas,
+    sessionFilter,
+    listFilter,
+    labelFilter,
+    projectFilter,
+    labelConfigs,
+    evaluateViews,
+  }), [workspaceSessionMetas, activeSessionMetas, sessionFilter, listFilter, labelFilter, projectFilter, labelConfigs, evaluateViews])
 
   // Derive "pinned" (non-removable) filters from the current sessionFilter path.
   // These represent filters that are implicit in the current deeplink/route and
@@ -3840,6 +3738,7 @@ function AppShellContent({
     </AppShellProvider>
   )
 }
+
 
 
 
