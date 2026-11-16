@@ -12,8 +12,9 @@ persistence, transfer retry ownership, recoverable imports, duplicate bridges
 and rules, Viewer decoding, the work-item deletion result, resident metadata,
 source credential selection, Pages mutations, client request exchange, the
 published Copilot compatibility path, unused component parameters, Host input
-intent/provenance and workspace planning commands. Typed RPC registration is
-being validated against the existing input schemas and authoritative result ports.
+intent/provenance, workspace planning commands, task publication/recovery and
+typed RPC registration. Real production editor flows cover response loss, adopted
+draft run refusal and subsequent editing without a second card.
 
 Compatibility decisions confirmed by the project owner:
 
@@ -40,6 +41,8 @@ signed installers and the complete client-version matrix remain unverified.
 The standalone server assembly script rejects Windows explicitly; its smoke-suite
 failure is retained in the evidence, not counted as a successful server build.
 
-Remaining implementation includes task publication/recovery, completion of typed
-RPC verification, broader UI workflows, cold-start navigation investigation, and
-a fresh review of every module at the resulting HEAD. No aggregate pass rate is computed from overlapping suites.
+Remaining work includes broader UI workflows, cold-start navigation investigation,
+resource recovery review, and a fresh review of every module at the resulting HEAD.
+Backend implementation now continues in `E:\Phaneris-architecture-impl`, on
+`codex/architecture-implementation`; the original workspace and its frontend branch
+remain independent. The ignored evidence still lives at the original absolute path. No aggregate pass rate is computed from overlapping suites.

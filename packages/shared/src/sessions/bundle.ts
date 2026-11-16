@@ -179,7 +179,7 @@ export function sessionFromBundle(bundle: SessionBundle, workspaceRootPath: stri
   delete session.delegationIds
   // These IDs address source-workspace objects, not portable product content.
   for (const field of ['projectId', 'parentSessionId', 'dependencySessionIds', 'triggeredBy',
-    'taskSlug', 'taskRunId', 'taskNodeId', 'taskNodeDispatchId', 'taskNodeCount',
+    'taskSlug', 'taskPublicationId', 'taskRunId', 'taskNodeId', 'taskNodeDispatchId', 'taskNodeCount',
     'contextPolicy', 'handoffRootSessionId', 'handoffFromSessionId', 'handoffSequence', 'contextHandoff',
     'pendingPlanExecution', 'branchFromSessionId', 'branchFromMessageId', 'branchFromSdkSessionId',
     'branchFromSessionPath', 'branchFromSdkCwd', 'branchFromSdkTurnId', 'sharedUrl', 'sharedId'] as const) delete session[field]

@@ -68,6 +68,7 @@ export const SESSION_PERSISTENT_FIELDS = [
   'kanbanColumn',
   // Tasks Conductor: link a session back to the task spec / run / DAG node that owns it
   'taskSlug',
+  'taskPublicationId',
   'taskRunId',
   'taskNodeId',
   'taskNodeDispatchId',
@@ -281,6 +282,8 @@ export interface SessionConfig extends SessionPlanningFields {
   kanbanColumn?: string;
   /** Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes). */
   taskSlug?: string;
+  /** Host-owned publication identity; never imported as authority. */
+  taskPublicationId?: string;
   /** Tasks Conductor: id of the run that spawned this child session (child nodes only). */
   taskRunId?: string;
   /** Tasks Conductor: id of the DAG node this child session executes (child nodes only). */
@@ -407,6 +410,8 @@ export interface SessionMetadata extends SessionPlanningFields {
   kanbanColumn?: string;
   /** Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes). */
   taskSlug?: string;
+  /** Host-owned publication identity; never imported as authority. */
+  taskPublicationId?: string;
   /** Tasks Conductor: id of the run that spawned this child session (child nodes only). */
   taskRunId?: string;
   /** Tasks Conductor: id of the DAG node this child session executes (child nodes only). */

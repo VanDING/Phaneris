@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "channels": 445,
-  "centrallyValidatedMethods": 68,
-  "typedResultPorts": 81,
+  "centrallyValidatedMethods": 69,
+  "typedResultPorts": 82,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -7443,13 +7443,13 @@
       "domain": "tasks",
       "routing": "remote-eligible",
       "kind": "method",
-      "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./dto').TaskCreateResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 205,
+          "line": 182,
           "args": [
             "workspaceId: string",
             "req: TaskCreateRequest"
@@ -7471,7 +7471,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 299,
+          "line": 205,
           "args": [
             "workspaceId: string",
             "req: TaskGenerateRequest"
@@ -7504,7 +7504,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 418,
+          "line": 324,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7548,7 +7548,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 440,
+          "line": 346,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7571,7 +7571,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 433,
+          "line": 339,
           "args": [
             "workspaceId: string"
           ],
@@ -7592,7 +7592,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 405,
+          "line": 311,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7615,7 +7615,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 409,
+          "line": 315,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7638,7 +7638,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 397,
+          "line": 303,
           "args": [
             "workspaceId: string",
             "req: TaskRunRequest"
@@ -7660,7 +7660,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 413,
+          "line": 319,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7683,7 +7683,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 180,
+          "line": 177,
           "args": [
             "_workspaceId: string",
             "yaml: string"

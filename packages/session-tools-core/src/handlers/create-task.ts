@@ -12,7 +12,7 @@ export type CreateTaskArgs = CreateTaskInput;
  * package must stay dependency-free of @phaneris/shared.
  */
 export async function handleCreateTask(
-  ctx: SessionToolContext,
+  ctx: Pick<SessionToolContext, 'createTask' | 'toolExecutionId'>,
   args: CreateTaskArgs
 ): Promise<ToolResult> {
   if (!ctx.createTask) {
@@ -26,7 +26,7 @@ export async function handleCreateTask(
   }
 
   try {
-    const result = await ctx.createTask(args);
+    const result = await ctx.createTask(args, { operationId: ctx.toolExecutionId });
     return successResponse(JSON.stringify(result, null, 2));
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';

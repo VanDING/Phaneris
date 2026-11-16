@@ -37,6 +37,12 @@ const tuple = <Items extends [z.ZodType, ...z.ZodType[]] | []>(...items: Items):
   return (checked.length ? z.tuple(checked as [z.ZodType, ...z.ZodType[]]) : z.tuple([])).rest(z.unknown()) as z.ZodTuple<Items, z.ZodUnknown>
 }
 export const RPC_INPUT_CONTRACTS = {
+  [c.tasks.CREATE]: tuple(id, z.object({
+    yaml: text, operationId: text.min(1).max(256).nullish(), orchestratorSessionId: text.nullish(), attachToExistingSession: text.nullish(),
+    planning: z.object({ startAt: text.nullish(), dueAt: text.nullish(), statusId: text.nullish(),
+      progress: z.number().nullish(), isMilestone: z.boolean().nullish(), parentId: text.nullish(), dependencyIds: strings.nullish(),
+    }).passthrough().nullish(),
+  }).passthrough()),
   [c.residentAssistant.GET]: tuple(id),
   [c.residentAssistant.CONTEXT]: tuple(id, ResidentContextSchema),
   [c.residentAssistant.EVENTS]: tuple(id, ResidentEventsQuerySchema),

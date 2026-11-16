@@ -1,3 +1,4 @@
+import { createWorkspaceTaskPublisher, type WorkspaceTaskPublisher, type PreparedTaskPlanning } from '../tasks/workspace-task-publisher'
 import { createWorkspacePlanning, type PlanningCreate, type PlanningUpdate } from '../planning/workspace-planning'
 import { isDirectUserSource, hasDirectUserAuthority, type InputOrigin, type InputTurn, type SessionInputIntent } from './input-contracts'
 import { SessionDeltaBatcher, type ThinkingDelta } from './session-deltas'
@@ -85,6 +86,7 @@ import { loadWorkspaceConfig, readAssistantMemoryPolicy } from '@phaneris/shared
 import {
   // Session persistence functions
   listSessions as listStoredSessions,
+  readSessionHeader,
   saveSession as saveStoredSession,
   createSession as createStoredSession,
   deleteSession as deleteStoredSession,
@@ -111,7 +113,6 @@ import {
   pickSessionFields,
 } from '@phaneris/shared/sessions'
 import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager, serializeHeaderCredential } from '@phaneris/shared/sources'
-import { listTaskSlugs, parseTaskSpec, uniqueTaskSlug } from '@phaneris/shared/tasks'
 import { readSessionReliabilityReport, safelyBuildReliabilityReport } from '../observability/reliability-report'
 import {
   acquireArtifactLease,
@@ -128,7 +129,7 @@ import {
   type ArtifactStorageScope,
   type ResolvedArtifact,
 } from '@phaneris/shared/artifacts'
-import { createTaskFromSpec, resolveCreateTaskProjectId } from '../tasks'
+import { resolveCreateTaskProjectId } from '../tasks'
 import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config';
 import { buildPagesToolCallbacks } from '../pages/tool-callbacks'
 import { createWorkspacePages, type WorkspacePages } from '../pages/workspace-pages'
@@ -789,6 +790,7 @@ interface ManagedSession extends SessionPlanningFields {
   kanbanColumn?: string
   // Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes)
   taskSlug?: string
+  taskPublicationId?: string
   // Tasks Conductor: id of the run that spawned this child session (child nodes only)
   taskRunId?: string
   // Tasks Conductor: id of the DAG node this child session executes (child nodes only)
@@ -1266,6 +1268,7 @@ export class SessionManager implements ISessionManager {
   // Config watchers for live updates (sources, etc.) - one per workspace
   private configWatchers: Map<string, ConfigWatcher> = new Map()
   private workspacePages = new Map<string, WorkspacePages>()
+  private workspaceTaskPublishers = new Map<string, WorkspaceTaskPublisher>()
   // App-scoped watcher: exactly one regardless of workspace count.
   private userThemeWatcher: UserThemeWatcher | null = null
   // Automation systems for workspace event automations - one per workspace (includes scheduler, diffing, and handlers)
@@ -2233,6 +2236,12 @@ export class SessionManager implements ISessionManager {
 
       // Signal that initialization is complete — IPC handlers waiting on initGate will proceed
       this.initGate.markReady()
+      for (const workspace of workspaces) {
+        try {
+          const failures = await this.getWorkspaceTaskPublisher(workspace.id).recover()
+          for (const failure of failures) sessionLog.error('Task publication retained for recovery:', workspace.id, failure)
+        } catch (error) { sessionLog.error('Task publication recovery could not acquire or read its workspace:', workspace.id, error) }
+      }
       for (const workspace of workspaces) if ([...this.sessions.values()].some(session => session.workspace.id === workspace.id && session.sessionKind === 'resident_assistant')) {
         void this.residentWork(workspace.id).then(() => this.scheduleResidentInbox(workspace.id)).catch(error => sessionLog.warn('Resident inbox recovery needs attention:', error))
       }
@@ -4229,7 +4238,7 @@ export class SessionManager implements ISessionManager {
   async createSession(
     workspaceId: string,
     options?: import('@phaneris/shared/protocol').CreateSessionOptions,
-    internal?: { emitCreatedEvent?: boolean; sessionKind?: 'resident_assistant'; delegationId?: string },
+    internal?: { emitCreatedEvent?: boolean; sessionKind?: 'resident_assistant'; delegationId?: string; taskPublicationId?: string },
   ): Promise<Session> {
     if (!options?.taskNodeDispatchId) return this.createSessionInternal(workspaceId, options, internal)
     const workspace = getWorkspaceByNameOrId(workspaceId)
@@ -4254,7 +4263,7 @@ export class SessionManager implements ISessionManager {
     // announced to the renderer (see notifySessionCreated). Callers that register the session
     // themselves — the `sessions:create` RPC adds it from the return value — pass
     // `{ emitCreatedEvent: false }` to avoid a redundant hydrate.
-    internal?: { emitCreatedEvent?: boolean; sessionKind?: 'resident_assistant'; delegationId?: string },
+    internal?: { emitCreatedEvent?: boolean; sessionKind?: 'resident_assistant'; delegationId?: string; taskPublicationId?: string },
   ): Promise<Session> {
     if (options?.systemPromptPreset === 'resident_assistant' && internal?.sessionKind !== 'resident_assistant') {
       throw new Error('The resident assistant preset is reserved for the workspace assistant entry')
@@ -4546,6 +4555,7 @@ export class SessionManager implements ISessionManager {
       handoffSequence: options?.handoffSequence,
       branchFromSessionId: validatedBranch?.sourceSessionId,
       taskSlug: options?.taskSlug,
+      taskPublicationId: internal?.taskPublicationId,
       taskRunId: options?.taskRunId,
       taskNodeId: options?.taskNodeId,
       taskNodeDispatchId: options?.taskNodeDispatchId,
@@ -6610,67 +6620,10 @@ initialSources: {
             await this.unarchiveSession(sessionId)
           }
         },
-        // create_task — create a Task (board card + task.yaml + orchestrator session)
-        // WITHOUT running it. Spec building happens here (not in session-tools-core,
-        // which must stay dependency-free of @phaneris/shared); the creation flow
-        // itself is createTaskFromSpec, shared verbatim with the tasks:create RPC.
-        createTaskFn: async (input) => {
-          const ws = managed.workspace
-          // Match spawn_session: an explicit project wins, otherwise keep newly
-          // captured work in the project that owns the invoking session.
-          const projectId = resolveCreateTaskProjectId(input.projectId, managed.projectId)
-          // Slug is derived from the title and must never overwrite an existing task
-          // (unlike the TaskEditor, where re-saving the same slug is the edit flow).
-          const slug = uniqueTaskSlug(input.title, new Set(listTaskSlugs(ws.rootPath)))
-
-          // Fail-soft reference checks: unknown slugs warn, they don't block creation
-          // (matching the finish() philosophy in the tasks:create handler).
-          const warnings: string[] = []
-          if (input.sources?.length) {
-            const available = new Set(loadWorkspaceSources(ws.rootPath).map(s => s.config.slug))
-            const missing = input.sources.filter(s => !available.has(s))
-            if (missing.length) warnings.push(`Unknown sources (kept in the spec, but they don't exist in this workspace): ${missing.join(', ')}`)
-          }
-          if (input.skills?.length) {
-            // loadAllSkills matches dispatch-time [skill:slug] resolution (global + workspace).
-            const available = new Set(loadAllSkills(ws.rootPath).map(s => s.slug))
-            const missing = input.skills.filter(s => !available.has(s))
-            if (missing.length) warnings.push(`Unknown skills (kept in the spec, but they don't exist in this workspace): ${missing.join(', ')}`)
-          }
-
-          // A spec requires ≥1 node; synthesize the single executable node from the
-          // description. Multi-node DAG authoring stays with the TaskEditor/generate flow.
-          const parsed = parseTaskSpec({
-            id: slug,
-            title: input.title,
-            goal: input.description,
-            ...(input.acceptanceCriteria ? { acceptance_criteria: input.acceptanceCriteria } : {}),
-            ...(projectId ? { project: projectId } : {}),
-            ...(input.workingDirectory ? { cwd: input.workingDirectory } : {}),
-            ...(input.sources?.length ? { sources: input.sources } : {}),
-            ...(input.skills?.length ? { skills: input.skills } : {}),
-            ...(input.model || input.llmConnection
-              ? { defaults: { ...(input.model ? { model: input.model } : {}), ...(input.llmConnection ? { llmConnection: input.llmConnection } : {}) } }
-              : {}),
-            nodes: [{ id: 'main', title: input.title, prompt: input.description }],
-          })
-          if (!parsed.success) {
-            throw new Error(`Invalid task spec: ${parsed.error.issues.map(i => i.message).join('; ')}`)
-          }
-
-          const created = await createTaskFromSpec(this, ws.id, ws.rootPath, parsed.data)
-          await this.updateSessionPlanning(created.orchestratorSessionId, {
-            description: input.description,
-            acceptanceCriteria: input.acceptanceCriteria,
-            startAt: input.startAt,
-            dueAt: input.dueAt,
-            progress: input.progress,
-            dependencySessionIds: input.dependencySessionIds,
-            parentSessionId: input.parentSessionId,
-            isMilestone: input.isMilestone,
-          })
-          return { ...created, warnings: [...warnings, ...created.warnings] }
-        },
+        // The tool parses user input; publication and slug allocation belong to the workspace.
+        createTaskFn: (input, context) => this.getWorkspaceTaskPublisher(managed.workspace.id).capture({
+          ...input, projectId: resolveCreateTaskProjectId(input.projectId, managed.projectId),
+        }, context),
         // Pages tools (list_pages/get_page/create_page/update_page/
         // write_page_data/delete_page) — grouped callbacks bound to the
         // invoking session's workspace. Storage flows are shared with the
@@ -10118,6 +10071,70 @@ initialSources: {
     }
   }
 
+  readTaskPublicationSession(workspaceId: string, sessionId: string): Record<string, unknown> | undefined {
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    if (!workspace || this.getSessionWorkspaceId(sessionId) !== workspace.id) return undefined
+    const header = readSessionHeader(join(getSessionStoragePath(workspace.rootPath, sessionId), 'session.jsonl'))
+    return header ? Object.fromEntries(Object.entries(header)) : undefined
+  }
+
+  findTaskPublicationSession(workspaceId: string, publicationId: string): Session | undefined {
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
+    let managed = [...this.sessions.values()].find(session => session.workspace.id === workspace.id && session.taskPublicationId === publicationId)
+    if (!managed) {
+      // Creation may have published its header immediately before the process
+      // or caller failed, without reaching the in-memory registration step.
+      const metadata = listStoredSessions(workspace.rootPath).find(session => session.taskPublicationId === publicationId)
+      if (metadata) {
+        managed = createManagedSession(metadata, workspace)
+        this.registerManagedSession(managed, false)
+      }
+    }
+    return managed ? managedToSession(managed) : undefined
+  }
+
+  async createTaskPublicationSession(workspaceId: string, options: import('@phaneris/shared/protocol').CreateSessionOptions, publicationId: string): Promise<Session> {
+    const existing = this.findTaskPublicationSession(workspaceId, publicationId)
+    if (existing) return existing
+    return this.createSession(workspaceId, options, { taskPublicationId: publicationId })
+  }
+
+  getWorkspaceTaskPublisher(workspaceId: string): WorkspaceTaskPublisher {
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
+    let publisher = this.workspaceTaskPublishers.get(workspace.rootPath)
+    if (!publisher) {
+      publisher = createWorkspaceTaskPublisher(workspace.id, workspace.rootPath, this)
+      this.workspaceTaskPublishers.set(workspace.rootPath, publisher)
+    }
+    return publisher
+  }
+
+  prepareTaskPublicationPlanning(workspaceId: string, sessionId: string | undefined, patch: PlanningUpdate): PreparedTaskPlanning {
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
+    const managed = sessionId ? this.sessions.get(sessionId) : undefined
+    if (sessionId && (!managed || managed.workspace.id !== workspace.id)) throw new Error(`Session not found: ${sessionId}`)
+    if (patch.statusId && managed?.sessionKind === 'resident_assistant') throw new Error('The resident assistant is not a task and cannot change task status')
+    return { statusId: patch.statusId, patch: this.prepareSessionPlanning(managed ?? { id: '', workspace, createdAt: Date.now() }, {
+      ...('description' in patch ? { description: patch.description } : {}),
+      ...('acceptanceCriteria' in patch ? { acceptanceCriteria: patch.acceptanceCriteria } : {}),
+      ...('startAt' in patch ? { startAt: patch.startAt } : {}), ...('dueAt' in patch ? { dueAt: patch.dueAt } : {}),
+      ...('progress' in patch ? { progress: patch.progress } : {}),
+      ...('isMilestone' in patch ? { isMilestone: patch.isMilestone } : {}),
+      ...('parentId' in patch ? { parentSessionId: patch.parentId } : {}),
+      ...('dependencyIds' in patch ? { dependencySessionIds: patch.dependencyIds } : {}),
+    }) }
+  }
+
+  async applyTaskPublicationPlanning(sessionId: string, planning: PreparedTaskPlanning): Promise<void> {
+    const managed = this.sessions.get(sessionId)
+    if (!managed) throw new Error(`Session not found: ${sessionId}`)
+    if (planning.statusId) await this.setSessionStatus(sessionId, planning.statusId)
+    await this.commitSessionPlanning(managed, planning.patch)
+  }
+
   getWorkspacePlanning(workspaceId: string) { return createWorkspacePlanning(workspaceId, this) }
 
   async createPlanningItem(workspaceId: string, input: PlanningCreate): Promise<Session> {
@@ -10307,10 +10324,9 @@ initialSources: {
       sessionLog.warn('adoptGeneratedTaskOrchestrator: session not found', { sessionId, taskSlug })
       return false
     }
-    // Idempotency: already bound to this slug → no-op success. Bound to a different slug → refuse,
+    // An already-bound slug is eligible for reconciliation on an explicit edit. Bound to a different slug → refuse,
     // so a stale draft ref can't hijack an unrelated orchestrator.
-    if (managed.taskSlug) {
-      if (managed.taskSlug === taskSlug) return true
+    if (managed.taskSlug && managed.taskSlug !== taskSlug) {
       sessionLog.warn('adoptGeneratedTaskOrchestrator: slug mismatch, refusing to rebind', {
         sessionId, existing: managed.taskSlug, requested: taskSlug,
       })
@@ -10318,7 +10334,7 @@ initialSources: {
     }
     // Only hidden generate-time drafts are eligible. A non-draft session without a slug isn't a
     // generate orchestrator and must not be silently captured.
-    if (!managed.taskDraft) {
+    if (!managed.taskDraft && managed.taskSlug !== taskSlug) {
       sessionLog.warn('adoptGeneratedTaskOrchestrator: session is not a task draft', { sessionId, taskSlug })
       return false
     }
@@ -10402,8 +10418,7 @@ initialSources: {
       sessionLog.warn('bindExistingSessionToTask: session not found', { sessionId, taskSlug })
       return false
     }
-    if (managed.taskSlug) {
-      if (managed.taskSlug === taskSlug) return true
+    if (managed.taskSlug && managed.taskSlug !== taskSlug) {
       sessionLog.warn('bindExistingSessionToTask: slug mismatch, refusing to rebind', {
         sessionId, existing: managed.taskSlug, requested: taskSlug,
       })
@@ -12381,6 +12396,7 @@ resources: {
     }
     this.configWatchers.clear()
     this.workspacePages.clear()
+    this.workspaceTaskPublishers.clear()
 
     this.userThemeWatcher?.stop()
     this.userThemeWatcher = null

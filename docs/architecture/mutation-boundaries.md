@@ -65,8 +65,7 @@ File/SQLite import recovery is a separate domain responsibility.
 Repeatable workflows are in `scripts/verification`: `permission-boundary`,
 `workspace-image`, `workspace-scope`, `messaging-persistence`, `transfer-retry`, and
 `task-publish-boundary`. Each workflow writes a source identity, scenario results and
-artifact hashes. Task publication currently has precommit target/date protection;
-its complete multi-store publication/recovery migration remains pending.
+artifact hashes. Task publication uses the recovery boundary described below.
 
 Resident identity and settings use metadata intents. They never load the product
 timeline or request a message snapshot. A setting is serialized by the existing
@@ -76,3 +75,50 @@ decoding; this still requires copying the file body. Renderer metadata updates
 preserve loaded messages and their independent load marker. Unknown header counts
 remain unknown. The legacy assistant GET/SET bridge methods continue reading the
 complete snapshot, including diagnostic fields, for existing clients.
+
+
+## Task publication
+
+`getWorkspaceTaskPublisher(workspaceId)` owns fresh creation, explicit attachment,
+optional draft adoption, slug allocation, planning preflight and setup. RPC parses
+YAML and supplies a target; Agent tools supply capture intent and their invoking
+project. Production callers do not save a spec separately or pass `save:false`.
+The previously exported creation/setup helpers keep their compatibility contracts.
+
+Each attempt records versioned facts under `tasks/.publications`. The record binds
+its spec digest, target, prepared planning, original live/header values and receipt.
+A data-free SQLite transaction holds only this workspace's publication lock through
+the existing Bun/Electron adapter. It does not lock the execution database. Process
+exit releases the OS lock without stale PID reclamation.
+
+Fresh Session headers carry a Host-owned `taskPublicationId`; RPC creation options
+cannot set it and imports remove it. Recovery locates that identity even if the
+caller died before receiving the new Session. Startup resumes pending records;
+changed spec bytes or conflicting target values are retained and reported rather
+than overwritten. Live defaults and actual header values have separate baselines.
+Already-complete retries do not reapply metadata changed by a later user edit.
+
+The normal client sends one operation ID per intent, and a durable Agent tool uses
+its existing tool operation ID. Legacy requests without an ID reuse matching
+pending/completed receipts while their spec is still current. Changed intent cannot
+reuse an explicit ID. Legacy nullable task fields remain accepted on the wire.
+The editor retains a committed request after a run refusal; editing that task keeps
+its original slug and Session while assigning the changed intent a new ID.
+
+Label/source problems remain warnings. A later source selection is retained during
+recovery. A successful publication waits for queued product writes before recording
+its completion receipt; the editor displays setup warnings after closing.
+
+## Input and planning
+
+The Host receives a `SessionInputIntent` and trusted `InputOrigin`. Callers choose
+`accepted` after durable receipt or `finished` after execution. RPC no longer owns
+a separate acknowledgement/error state machine. Imports, automations, tasks and
+runtime continuations retain their sources; a new management grant requires an
+explicit direct-user origin. Existing local history remains readable evidence.
+
+Workspace planning reads one Session snapshot and validates the complete edit before
+changing title, project, status, column or schedule. Internal edits exclude derived
+conversation IDs. Null clears optional scalar values and omission retains them.
+The old calendar projection keeps its titles/long previews and deletion clears only
+the schedule; work-item deletion removes the Session and has a void result port.
