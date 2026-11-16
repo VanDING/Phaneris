@@ -131,21 +131,18 @@ export function TaskTile({
   const hasMessages = typeof task.messageCount === 'number' && task.messageCount > 0
 
   const card = (
+    /**
+     * A card is not a control: it carries its own edit, status and menu buttons.
+     * `role="button"` around them made every tile a button containing buttons
+     * (axe `nested-interactive`), which a screen reader cannot describe. The
+     * clickable surface is a real `<button>` covering the content area, rendered
+     * below as a sibling of those controls, and the tile keeps only layout.
+     */
     <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onClick?.()
-        }
-      }}
       className={cn(
         'group relative overflow-hidden rounded-lg border border-border/60 bg-surface-raised shadow-minimal',
         isLive && 'shadow-tinted',
-        'cursor-pointer transition-colors hover:border-border focus-visible:outline-none',
-        'focus-visible:ring-2 focus-visible:ring-ring/50'
+        'cursor-pointer transition-colors hover:border-border',
       )}
       style={
         isLive
@@ -188,11 +185,17 @@ export function TaskTile({
         </button>
       )}
 
-      <div className="relative p-3 pl-3.5">
+      {/* Not `relative`: the title button's stretched `::after` must anchor to the
+          tile so the whole card is clickable, not just the text row. */}
+      <div className="p-3 pl-3.5">
         {(project || task.isFlagged) && (
-          // Right padding keeps the flag clear of the hover-revealed corner pencil.
-          <div className={cn('mb-1.5 flex items-center justify-between gap-2', onEdit && task.isFlagged && 'pr-7')}>
-            {project ? (
+          /* The flag sits next to what it labels, in the same outline style the
+             session list uses. It used to be a solid `fill-info` blob pushed to
+             the far edge by `justify-between`, so it read as a stray amber dot
+             rather than "this task is flagged" — and it disagreed with the
+             outline flag everywhere else in the app. */
+          <div className={cn('mb-1.5 flex min-w-0 items-center gap-1.5', onEdit && task.isFlagged && 'pr-7')}>
+            {project && (
               <span className="inline-flex min-w-0 items-center gap-1 text-meta font-medium text-text-secondary">
                 <span
                   className="h-1.5 w-1.5 shrink-0 rounded-full"
@@ -201,26 +204,34 @@ export function TaskTile({
                 />
                 <span className="truncate">{project.name}</span>
               </span>
-            ) : (
-              <span />
             )}
             {task.isFlagged && (
-              <Flag className="h-3.5 w-3.5 shrink-0 fill-info text-info" aria-hidden />
+              <Flag className="h-3.5 w-3.5 shrink-0 text-info" role="img" aria-label={t('kanban.flagged')} />
             )}
           </div>
         )}
 
-        <div
+        <button
+          type="button"
+          onClick={e => {
+            e.stopPropagation()
+            onClick?.()
+          }}
           className={cn(
-            'text-body font-medium leading-snug line-clamp-2',
+            'craft-row-focus block w-full rounded-sm text-left text-body font-medium leading-snug line-clamp-2',
+            // Stretched hit area: the activation target covers the tile, while
+            // the tile's own controls sit above it and keep their own clicks.
+            'after:absolute after:inset-0 after:content-[""]',
             // Strike done/cancelled by *status* (not column — placement ≠ status).
             status?.category === 'closed' ? 'text-text-secondary line-through' : 'text-foreground'
           )}
         >
           {task.title}
-        </div>
+        </button>
 
-        <div className="mt-2">
+        {/* elative so these controls paint above the title's stretched
+            ::after hit area and keep receiving their own clicks. */}
+        <div className="relative mt-2">
           {status &&
             (onStatusChange && statuses && statuses.length > 0 ? (
               <StatusPicker
@@ -236,7 +247,7 @@ export function TaskTile({
         </div>
 
         {(subtaskCount > 0 || onAddSubtask) && (
-          <div className="mt-2.5 border-t border-border/40 pt-2">
+          <div className="relative mt-2.5 border-t border-border/40 pt-2">
             {subtaskCount > 0 && (
               <div className="flex items-center gap-1.5">
                 <button
@@ -548,4 +559,9 @@ function AddSubtask({
     </div>
   )
 }
+
+
+
+
+
 

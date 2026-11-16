@@ -748,6 +748,7 @@
   "kanban.column.todo": "Do zrobienia",
   "kanban.describeSubtask": "Opisz podzadanie…",
   "kanban.editTask": "Edytuj zadanie",
+  "kanban.flagged": "Oznaczone",
   "kanban.newTask": "Nowe zadanie",
   "kanban.newTaskTitle": "Tytuł zadania…",
   "kanban.projectsSelected_one": "{{count}} projekt",

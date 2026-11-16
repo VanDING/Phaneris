@@ -748,6 +748,7 @@
   "kanban.column.todo": "ToDo",
   "kanban.describeSubtask": "Describe a subtask…",
   "kanban.editTask": "Edit task",
+  "kanban.flagged": "Flagged",
   "kanban.newTask": "New Task",
   "kanban.newTaskTitle": "Task title…",
   "kanban.projectsSelected_one": "{{count}} project",

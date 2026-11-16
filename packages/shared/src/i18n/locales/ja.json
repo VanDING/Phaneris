@@ -748,6 +748,7 @@
   "kanban.column.todo": "Todo",
   "kanban.describeSubtask": "サブタスクを記述…",
   "kanban.editTask": "タスクを編集",
+  "kanban.flagged": "フラグ付き",
   "kanban.newTask": "新規タスク",
   "kanban.newTaskTitle": "タスクのタイトル…",
   "kanban.projectsSelected_one": "{{count}} 件のプロジェクト",

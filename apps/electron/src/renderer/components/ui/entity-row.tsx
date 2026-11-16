@@ -68,6 +68,10 @@ export interface EntityRowProps {
   trailing?: React.ReactNode
   /** Content rendered below the main button (e.g. expanded child list) */
   children?: React.ReactNode
+  /** Independent action at the row's leading edge, rendered *outside* the row
+   *  button. A listbox option must not contain other interactive controls, so a
+   *  status chip that opens its own menu lives here rather than in `icon`. */
+  leadingAction?: React.ReactNode
   /** Independent action immediately before the more menu; outside the row button. */
   beforeMenu?: React.ReactNode
   /** Absolutely-positioned overlay (e.g. match count badge) */
@@ -132,6 +136,7 @@ export function EntityRow({
   badges,
   trailing,
   children,
+  leadingAction,
   beforeMenu,
   overlay,
   isSelected = false,
@@ -278,6 +283,22 @@ export function EntityRow({
         <div className="absolute left-0 inset-y-0 w-[2px] bg-accent" />
       )}
 
+      {/* A row whose leading control is its own button (a status chip with a
+          menu) cannot be a single interactive element: a listbox option must not
+          contain other controls. The chip is rendered here, as a sibling of the
+          row button, and the row's left padding makes space for it. */}
+      {leadingAction && (
+        <div
+          role="presentation"
+          className="absolute left-2 top-[var(--theme-row-padding-y)] z-component-chrome"
+          onMouseDown={event => event.stopPropagation()}
+          onClick={event => event.stopPropagation()}
+          onKeyDown={event => event.stopPropagation()}
+        >
+          {leadingAction}
+        </div>
+      )}
+
       {/* Composite row can contain independent status/menu buttons. */}
       <div
         role="button"
@@ -286,6 +307,7 @@ export function EntityRow({
         className={cn(
           "craft-focus craft-row-focus entity-row-btn flex w-full items-start gap-2 pl-2 pr-4 py-[var(--theme-row-padding-y)] text-left text-body rounded-lg",
           "motion-interactive transition-[background-color]",
+          leadingAction && "pl-11",
           beforeMenu && "pr-[96px]",
           (isSelected || isInMultiSelect)
             ? "bg-foreground/3"
@@ -499,4 +521,5 @@ export function EntityRow({
     </div>
   )
 }
+
 

@@ -748,6 +748,7 @@
   "kanban.column.todo": "Por hacer",
   "kanban.describeSubtask": "Describe una subtarea…",
   "kanban.editTask": "Editar tarea",
+  "kanban.flagged": "Marcado",
   "kanban.newTask": "Nueva tarea",
   "kanban.newTaskTitle": "Título de la tarea…",
   "kanban.projectsSelected_one": "{{count}} proyecto",

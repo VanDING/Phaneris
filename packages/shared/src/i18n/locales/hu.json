@@ -748,6 +748,7 @@
   "kanban.column.todo": "Teendő",
   "kanban.describeSubtask": "Írj le egy részfeladatot…",
   "kanban.editTask": "Feladat szerkesztése",
+  "kanban.flagged": "Megjelölve",
   "kanban.newTask": "Új feladat",
   "kanban.newTaskTitle": "Feladat címe…",
   "kanban.projectsSelected_one": "{{count}} projekt",
