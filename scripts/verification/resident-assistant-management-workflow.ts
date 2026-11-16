@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../../packages/server-core/src/sessions/input-contracts'
 import assert from 'node:assert/strict'
 import { verificationWorkflow } from './verification-artifacts'
 import { createResidentTaskHost, taskModelResponse } from './fixtures/resident-task-host'
@@ -104,7 +105,7 @@ await verificationWorkflow('resident-assistant-management', async run => {
     scenes.push('TM14-real-main-requests-receive-bounded-runtime-task-overviews')
     const clauseA = 'SCOPED_A: complete this isolated report.', privateB = 'ISOLATED_B_PRIVATE_DRAFT: unrelated confidential synthetic discussion.'
     await fixture.sendMain(`${clauseA}\n${privateB}`)
-    const mixed = (await fixture.manager.getSession(fixture.assistant.id))!.messages.findLast(message => message.role === 'user' && !message.inputSource)!
+    const mixed = (await fixture.manager.getSession(fixture.assistant.id))!.messages.findLast(message => message.role === 'user' && isDirectUserSource(message.inputSource))!
     const branch = await fixture.manager.assistantContext('alpha', { action: 'create', requestId: 'scoped-revision', label: 'Scoped A' })
     const branchId = branch.focus.topicId!, ref = { sessionId: fixture.assistant.id, messageId: mixed.id }
     // Intentionally leave the original mixed source broad. The Host must
@@ -112,7 +113,7 @@ await verificationWorkflow('resident-assistant-management', async run => {
     const scoped = await fixture.dispatch('scoped-revision', { startPaused: true, goalQuote: clauseA, context: { branchIds: [branchId] }, instructions: 'SCOPED_A only' })
     const revisedClause = 'SCOPED_A: BOUNDARY_REVISION_NEW; complete this isolated report.'
     await fixture.sendMain(`${revisedClause}\n${privateB}`)
-    const correction = (await fixture.manager.getSession(fixture.assistant.id))!.messages.findLast(message => message.role === 'user' && !message.inputSource)!
+    const correction = (await fixture.manager.getSession(fixture.assistant.id))!.messages.findLast(message => message.role === 'user' && isDirectUserSource(message.inputSource))!
     await fixture.manager.assistantContext('alpha', { action: 'associate', branchIds: [branchId], role: 'requirement',
       source: { sessionId: fixture.assistant.id, messageId: correction.id, quote: revisedClause }, supersedes: [ref] })
     const correctedAt = requests.length

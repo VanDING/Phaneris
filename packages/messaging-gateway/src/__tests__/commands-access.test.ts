@@ -53,7 +53,7 @@ function makeSessionManager(sessions: Session[] = []): ISessionManager {
     getSession: async (sessionId: string) => sessions.find((s) => s.id === sessionId) ?? null,
     createSession: async (_workspaceId: string, opts?: { name?: string }) =>
       makeSession(opts?.name ?? 'created'),
-    sendMessage: async () => {},
+    submitInput: () => ({ accepted: Promise.resolve({ accepted: true, messageId: 'fixture' }), finished: Promise.resolve() }),
     cancelProcessing: async () => {},
     respondToPermission: () => true,
   } as unknown as ISessionManager

@@ -1,3 +1,4 @@
+import type { HandlerFn } from '../../../packages/server-core/src/transport/types'
 /** Offline C02 host: production bootstrap, handlers, SessionManager and Web UI. */
 import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -68,7 +69,7 @@ const instance = await bootstrapServer({
       if (changes.has(channel)) pushes.push({ channel, workspaceId: String(args[0]), at: Date.now() })
       return push(channel, target, ...args)
     }
-    server.handle = (channel, handler) => register(channel, async (ctx, ...args) => {
+    server.handle = (channel: string, handler: HandlerFn) => register(channel, async (ctx, ...args) => {
       const isList = lists.has(channel), start = performance.now(), startedAt = Date.now()
       if (isList) { inFlight++; maxInFlight = Math.max(maxInFlight, inFlight) }
       try {

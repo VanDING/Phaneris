@@ -93,7 +93,7 @@ describe('source_activated auto-retry', () => {
   }
 
   /**
-   * Replace `sendMessage` with a spy that records the call and appends a
+   * Replace `submitInput` with a spy that records the call and appends a
    * placeholder user message to `managed.messages`. Appending makes the
    * content-match dedup observable through the real code path — without it,
    * subsequent "duplicate" calls wouldn't even reach the dedup check (no
@@ -102,11 +102,13 @@ describe('source_activated auto-retry', () => {
   function spyOnSendMessage(sessionId: string) {
     const calls: string[] = []
     const managed = (sm as unknown as { sessions: Map<string, { messages: unknown[] }> }).sessions.get(sessionId)!
-    ;(sm as unknown as { sendMessage: (id: string, msg: string) => Promise<void> }).sendMessage = async (id, msg) => {
+    sm.submitInput = (id, { text: msg }) => {
       const m = (sm as unknown as { sessions: Map<string, { autoRetryPending?: { content: string; deadlineMs: number; committed: boolean }; messages: unknown[] }> }).sessions.get(id)!
-      if (claimAutoRetryPending(m, msg) === 'drop') return
-      calls.push(msg)
-      managed.messages.push({ id: `m-${calls.length}`, role: 'user', content: msg, timestamp: Date.now() })
+      if (claimAutoRetryPending(m, msg) !== 'drop') {
+        calls.push(msg)
+        managed.messages.push({ id: `m-${calls.length}`, role: 'user', content: msg, timestamp: Date.now() })
+      }
+      return { accepted: Promise.resolve({ accepted: true, messageId: `m-${calls.length}` }), finished: Promise.resolve() }
     }
     return calls
   }

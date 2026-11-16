@@ -27,7 +27,7 @@ function makeSessionManager(sessions: Session[]): ISessionManager {
     getSessions: () => sessions,
     getSession: async (sessionId: string) => sessions.find((session) => session.id === sessionId) ?? null,
     createSession: async () => { throw new Error('not implemented') },
-    sendMessage: async () => {},
+    submitInput: () => ({ accepted: Promise.resolve({ accepted: true, messageId: 'fixture' }), finished: Promise.resolve() }),
     cancelProcessing: async () => {},
     respondToPermission: () => true,
   } as unknown as ISessionManager

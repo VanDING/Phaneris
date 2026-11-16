@@ -25,7 +25,7 @@ import {
   type PushTarget,
   type ErrorCode,
 } from '@phaneris/shared/protocol'
-import type { RpcServer, HandlerFn, RequestContext } from './types'
+import type { RpcServer, HandlerFn, RequestContext, RegisteredHandler } from './types'
 import { serializeEnvelope, deserializeEnvelope } from './codec'
 import { createLogger } from '@phaneris/shared/utils'
 
@@ -185,6 +185,7 @@ export class WsRpcServer implements RpcServer {
   // RpcServer interface
   // -------------------------------------------------------------------------
 
+  handle<Channel extends string>(channel: Channel, handler: RegisteredHandler<NoInfer<Channel>>): void
   handle(channel: string, handler: HandlerFn): void {
     if (this.handlers.has(channel)) {
       throw new Error(`Handler already registered for channel: ${channel}`)

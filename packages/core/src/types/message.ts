@@ -328,12 +328,15 @@ export interface Message {
   badges?: ContentBadge[];
   /** Explicit input selection; undefined preserves legacy inline mentions, [] clears selection. */
   skillSlugs?: string[];
-  /** Host-attributed non-human input; provider role=user does not grant user authority. */
-  inputSource?: { kind: 'session_message' } | { kind: 'delegation'; delegationId: string; assistantSessionId: string; originMessageId: string }
+  /** Host-attributed actor; provider role=user alone does not grant user authority. */
+  inputSource?: { kind: 'direct_user'; channel: 'rpc' | 'messaging' | 'host' | 'legacy' }
+    | { kind: 'automation'; automationId?: string; automationName?: string }
+    | { kind: 'task'; taskRunId?: string }
+    | { kind: 'session_message' } | { kind: 'delegation'; delegationId: string; assistantSessionId: string; originMessageId: string }
     | { kind: 'imported_history'; importId: string; importedAt: number }
     | { kind: 'resident_event'; eventIds: string[] }
     | { kind: 'memory_maintenance'; jobId: string; sourceSessionId: string }
-    | { kind: 'runtime_continuation'; reason: 'source_activation' | 'memory_refresh' | 'worker_control' | 'context_handoff'; inputMessageIds: string[] };
+    | { kind: 'runtime_continuation'; reason: 'source_activation' | 'memory_refresh' | 'worker_control' | 'context_handoff' | 'background_task' | 'plan' | 'decision'; inputMessageIds: string[] };
   delegationInput?: import('./session-execution').SessionDelegationInput;
   /** Host-captured turn ownership. Explicit null remains unassigned after later project switches. */
   projectScope?: { projectId: string | null };

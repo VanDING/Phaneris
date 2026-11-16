@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../../../packages/server-core/src/sessions/input-contracts'
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -56,8 +57,8 @@ export async function createResidentTaskHost(directory: string,
     while (!await condition()) { assert(Date.now() < deadline, 'Task management condition did not settle'); await Bun.sleep(25) }
   }
   const sendMain = async (text: string) => {
-    await manager.sendMessage(assistant.id, text)
-    await until(async () => { const value = (await manager.getSession(assistant.id))!; return !value.isProcessing && !value.messages.some(m => m.role === 'user' && !m.inputSource && m.isQueued) })
+    await manager.submitInput(assistant.id, { text }, { kind: 'direct_user', channel: 'host' }).finished
+    await until(async () => { const value = (await manager.getSession(assistant.id))!; return !value.isProcessing && !value.messages.some(m => m.role === 'user' && isDirectUserSource(m.inputSource) && m.isQueued) })
   }
   const goal = options.initialGoal ?? '完成各项独立报告，按前置依赖推进；可以修订、复核和继续原目标内未完成的工作。'
   await sendMain(goal)

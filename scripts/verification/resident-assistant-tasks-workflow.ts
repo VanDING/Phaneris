@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../../packages/server-core/src/sessions/input-contracts'
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -79,7 +80,7 @@ await verificationWorkflow('resident-assistant-tasks', async run => {
       await manager.sendMessage(assistant.id, text)
       await until(async () => {
         const session = (await manager.getSession(assistant.id))!
-        return !session.isProcessing && !session.messages.some(message => message.role === 'user' && !message.inputSource && message.isQueued)
+        return !session.isProcessing && !session.messages.some(message => message.role === 'user' && isDirectUserSource(message.inputSource) && message.isQueued)
       })
     }
     const goal = '按要求交付任务报告，并由助手复核完成；需要修改时继续原会话。'

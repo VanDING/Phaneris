@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "channels": 445,
   "centrallyValidatedMethods": 68,
-  "typedResultPorts": 59,
+  "typedResultPorts": 81,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -51,7 +51,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "AcceptArtifactResult",
+      "resultContract": "AcceptArtifactResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -97,7 +97,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "ResolvedArtifact",
+      "resultContract": "ResolvedArtifact\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -131,7 +131,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "ResolvedArtifact",
+      "resultContract": "ResolvedArtifact\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -153,7 +153,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "ResolvedArtifact",
+      "resultContract": "ResolvedArtifact\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -175,7 +175,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "ResolvedArtifact | null",
+      "resultContract": "ResolvedArtifact | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -221,7 +221,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "ResolvedArtifact[]",
+      "resultContract": "ResolvedArtifact[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -243,7 +243,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "ResolvedArtifact",
+      "resultContract": "ResolvedArtifact\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -310,7 +310,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "ResolvedArtifact",
+      "resultContract": "ResolvedArtifact\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -345,7 +345,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('./assistant-memory').HistoryPage",
+      "resultContract": "import('./assistant-memory').HistoryPage\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -367,7 +367,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('./assistant-memory').MemoryMutationResult",
+      "resultContract": "import('./assistant-memory').MemoryMutationResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -389,7 +389,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('./assistant-memory').MemoryQueryResult",
+      "resultContract": "import('./assistant-memory').MemoryQueryResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -411,7 +411,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('./assistant-memory').MemorySourcePage",
+      "resultContract": "import('./assistant-memory').MemorySourcePage\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -433,7 +433,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('./assistant-memory').MemorySuppressionPage",
+      "resultContract": "import('./assistant-memory').MemorySuppressionPage\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -455,7 +455,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('./assistant-memory').MemorySuppressionMergeResult",
+      "resultContract": "import('./assistant-memory').MemorySuppressionMergeResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -707,7 +707,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "TestAutomationResult",
+      "resultContract": "TestAutomationResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -1364,7 +1364,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 70,
+          "line": 23,
           "args": [
             "workspaceId: string",
             "input: CalendarEntryInput"
@@ -1386,12 +1386,12 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 103,
+          "line": 28,
           "args": [
             "workspaceId: string",
             "entryId: string"
           ],
-          "result": "inferred by TypeScript; see handler return",
+          "result": "Promise<void>",
           "owner": "authenticated host or handler-specific policy"
         }
       ]
@@ -1408,7 +1408,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 60,
+          "line": 21,
           "args": [
             "workspaceId: string"
           ],
@@ -1429,7 +1429,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 86,
+          "line": 25,
           "args": [
             "workspaceId: string",
             "entryId: string",
@@ -1468,7 +1468,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ success: boolean; error?: string }",
+      "resultContract": "{ success: boolean; error?: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -1531,7 +1531,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ flowId: string; state: string; authUrl: string }",
+      "resultContract": "{ flowId: string; state: string; authUrl: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -1645,7 +1645,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "CredentialHealthStatus",
+      "resultContract": "CredentialHealthStatus\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -1715,7 +1715,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "SessionDecisionReport",
+      "resultContract": "SessionDecisionReport\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -1737,7 +1737,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "DecisionLayerSettings",
+      "resultContract": "DecisionLayerSettings\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -1775,7 +1775,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "DecisionUsageReport",
+      "resultContract": "DecisionUsageReport\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -2502,7 +2502,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "LabelConfig",
+      "resultContract": "LabelConfig\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -2599,7 +2599,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "LlmConnection | null",
+      "resultContract": "LlmConnection | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -2620,7 +2620,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "string | null",
+      "resultContract": "string | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -2641,7 +2641,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "LlmConnection[]",
+      "resultContract": "LlmConnection[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -2660,7 +2660,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "LlmConnectionWithStatus[]",
+      "resultContract": "LlmConnectionWithStatus[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4069,7 +4069,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ success: boolean; error?: string; email?: string }",
+      "resultContract": "{ success: boolean; error?: string; email?: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4111,7 +4111,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "| { joined: true; flowId: string; expiresInMs?: number }",
+      "resultContract": "| { joined: true; flowId: string; expiresInMs?: number }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4132,7 +4132,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('../auth/oauth-flow-store').OAuthFlowStatus",
+      "resultContract": "import('../auth/oauth-flow-store').OAuthFlowStatus\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4179,7 +4179,7 @@
       "routing": "local-only",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ success: boolean }",
+      "resultContract": "{ success: boolean }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4237,7 +4237,7 @@
       "routing": "local-only",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ authState: AuthState; setupNeeds: SetupNeeds }",
+      "resultContract": "{ authState: AuthState; setupNeeds: SetupNeeds }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4289,7 +4289,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ success: boolean; authUrl?: string; error?: string }",
+      "resultContract": "{ success: boolean; authUrl?: string; error?: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4379,7 +4379,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "boolean\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4412,7 +4412,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4434,7 +4434,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ lease: PageRenderLease; content: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4456,7 +4456,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ publicCopyMayRemain: boolean }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4478,7 +4478,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageActionResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4500,7 +4500,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "LoadedPage[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4521,7 +4521,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ content: string | null; contentDigest?: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4543,7 +4543,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageDataSnapshot | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4565,7 +4565,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "LoadedPage | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4587,7 +4587,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ sharingEnabled: boolean }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4606,7 +4606,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageShareDataScan\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4628,7 +4628,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ dataUrl: string; digest: string } | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4650,7 +4650,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageActionGrant\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4673,7 +4673,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageActionGrant[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4695,7 +4695,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4718,7 +4718,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "boolean\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4740,7 +4740,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "void\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4762,7 +4762,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "boolean\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4785,7 +4785,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4808,7 +4808,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4831,7 +4831,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "UnpublishResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -4853,7 +4853,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5475,7 +5475,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWork",
+      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWork\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5497,7 +5497,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState",
+      "resultContract": "import('@phaneris/session-tools-core/resident-context-contracts').ResidentContextState\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5519,7 +5519,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/worker-control-contracts').WorkerControlResult",
+      "resultContract": "import('@phaneris/session-tools-core/worker-control-contracts').WorkerControlResult\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5541,7 +5541,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWork",
+      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWork\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5563,7 +5563,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage",
+      "resultContract": "import('@phaneris/session-tools-core/resident-context-contracts').ResidentEventsPage\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5585,7 +5585,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "Session",
+      "resultContract": "Session\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5607,7 +5607,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "Session",
+      "resultContract": "Session\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5628,7 +5628,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryPage",
+      "resultContract": "import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryPage\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5651,7 +5651,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest",
+      "resultContract": "import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5673,7 +5673,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage",
+      "resultContract": "import('@phaneris/session-tools-core/delegation-contracts').AssistantWorkPage\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5898,7 +5898,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "Workspace[]",
+      "resultContract": "WorkspaceInfo[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -6026,7 +6026,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 394,
+          "line": 354,
           "args": [
             "sessionId: string",
             "silent?: boolean"
@@ -6070,7 +6070,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 442,
+          "line": 402,
           "args": [
             "sessionId: string",
             "command: import('@phaneris/shared/protocol').SessionCommand"
@@ -6087,7 +6087,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "Session",
+      "resultContract": "Session\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -6135,7 +6135,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 741,
+          "line": 701,
           "args": [
             "sessionId: string"
           ],
@@ -6151,12 +6151,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "RemoteSessionTransferPayload | null",
+      "resultContract": "RemoteSessionTransferPayload | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 767,
+          "line": 727,
           "args": [
             "sessionId: string"
           ],
@@ -6183,7 +6183,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "Session[]",
+      "resultContract": "Session[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -6207,7 +6207,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 627,
+          "line": 587,
           "args": [
             "sessionId: string",
             "scope: SessionFileScope = 'session'"
@@ -6224,7 +6224,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "Session | null",
+      "resultContract": "Session | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -6250,7 +6250,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 704,
+          "line": 664,
           "args": [
             "sessionId: string"
           ],
@@ -6271,7 +6271,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 544,
+          "line": 504,
           "args": [
             "sessionId: string"
           ],
@@ -6292,7 +6292,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 553,
+          "line": 513,
           "args": [
             "sessionId: string"
           ],
@@ -6354,7 +6354,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 762,
+          "line": 722,
           "args": [
             "named handler; see source"
           ],
@@ -6375,7 +6375,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 779,
+          "line": 739,
           "args": [
             "targetWorkspaceId: string",
             "payload: import('@phaneris/shared/protocol').RemoteSessionTransferPayload"
@@ -6397,7 +6397,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 400,
+          "line": 360,
           "args": [
             "sessionId: string",
             "shellId: string"
@@ -6457,7 +6457,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "SessionReadChunk | null",
+      "resultContract": "SessionReadChunk | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -6528,7 +6528,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 432,
+          "line": 392,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6551,7 +6551,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 425,
+          "line": 385,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6574,7 +6574,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 418,
+          "line": 378,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6599,7 +6599,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 566,
+          "line": 526,
           "args": [
             "workspaceId: string",
             "query: string",
@@ -6617,7 +6617,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "{ accepted: true; messageId: string }",
+      "resultContract": "{ accepted: true; messageId: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -6647,7 +6647,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 720,
+          "line": 680,
           "args": [
             "sessionId: string",
             "content: string"
@@ -6680,7 +6680,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 696,
+          "line": 656,
           "args": [
             "scope: SessionFileScope = 'session'"
           ],
@@ -6701,7 +6701,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 646,
+          "line": 606,
           "args": [
             "sessionId: string",
             "scope: SessionFileScope = 'session'"
@@ -7062,7 +7062,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "LoadedSkill[]",
+      "resultContract": "LoadedSkill[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -7161,7 +7161,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "FolderSourceConfig",
+      "resultContract": "FolderSourceConfig\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -7205,7 +7205,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "LoadedSource[]",
+      "resultContract": "LoadedSource[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -7418,7 +7418,7 @@
       "routing": "local-only",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ node: string; chrome?: string; electron?: string }",
+      "resultContract": "{ node: string; chrome?: string; electron?: string }\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -7527,7 +7527,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 406,
+          "line": 366,
           "args": [
             "taskId: string"
           ],
@@ -8734,12 +8734,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "WorkItem",
+      "resultContract": "WorkItem\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 115,
+          "line": 26,
           "args": [
             "workspaceId: string",
             "input: CreateWorkItemInput"
@@ -8756,12 +8756,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "void",
+      "resultContract": "void\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 139,
+          "line": 30,
           "args": [
             "workspaceId: string",
             "itemId: string"
@@ -8778,12 +8778,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "WorkItem[]",
+      "resultContract": "WorkItem[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 108,
+          "line": 24,
           "args": [
             "workspaceId: string"
           ],
@@ -8799,12 +8799,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "WorkItem | null",
+      "resultContract": "WorkItem | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 134,
+          "line": 28,
           "args": [
             "workspaceId: string",
             "itemId: string",
@@ -8933,7 +8933,7 @@
       "routing": "local-only",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "Workspace[]",
+      "resultContract": "Workspace[]\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -8974,7 +8974,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "WorkspaceSettings | null",
+      "resultContract": "WorkspaceSettings | null\r",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {

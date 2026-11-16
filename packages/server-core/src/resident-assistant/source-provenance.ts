@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../sessions/input-contracts'
 import type { StoredMessage } from '@phaneris/core/types'
 import { createHash } from 'node:crypto'
 import { join } from 'node:path'
@@ -5,7 +6,7 @@ import { getSessionPath } from '@phaneris/shared/sessions/paths'
 
 /** A historical role=user is insufficient for either a user assertion or authorization. */
 export function isDirectUserMessage(message: StoredMessage): boolean {
-  return message.type === 'user' && !message.hidden && !message.inputSource
+  return message.type === 'user' && !message.hidden && isDirectUserSource(message.inputSource)
     && !/^(?:assistant-work:|agent-message:)/.test(message.id)
     && !/^\s*\[Message from session\b/i.test(message.content)
 }

@@ -345,49 +345,9 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   // attachments: FileAttachment[] for Claude (has content), storedAttachments: StoredAttachment[] for persistence (has thumbnailBase64)
   server.handle(RPC_CHANNELS.sessions.SEND_MESSAGE, async (ctx, sessionId: string, message: string, attachments?: FileAttachment[], storedAttachments?: StoredAttachment[], options?: SendMessageOptions) => {
     assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
-    // Capture the caller's clientId for error routing
-    const callerClientId = ctx.clientId
+    return sessionManager.submitInput(sessionId, { text: message, attachments, storedAttachments, options },
+      { kind: 'direct_user', channel: 'rpc', callerClientId: ctx.clientId }).accepted
 
-    return await new Promise<{ accepted: true; messageId: string }>((resolve, reject) => {
-      let acked = false
-      const onAck = (messageId: string) => {
-        if (!acked) {
-          acked = true
-          resolve({ accepted: true, messageId })
-        }
-      }
-
-      sessionManager
-        .sendMessage(sessionId, message, attachments, storedAttachments, options, undefined, undefined, onAck, { callerClientId })
-        .then(() => {
-          // sendMessage finished without firing onAck — should not happen in
-          // practice (every code path that creates a user message acks).
-          // Treat as a defensive failure rather than silently dropping.
-          if (!acked) {
-            acked = true
-            reject(new Error('sendMessage completed without persisting a user message'))
-          }
-        })
-        .catch(err => {
-          log.error('Error in sendMessage:', err)
-          if (!acked) {
-            // Pre-persist error — surface synchronously to the caller.
-            acked = true
-            reject(err)
-            return
-          }
-          // Post-persist error — route via the event stream as today.
-          pushTyped(server, RPC_CHANNELS.sessions.EVENT, { to: 'client', clientId: callerClientId }, {
-            type: 'error',
-            sessionId,
-            error: err instanceof Error ? err.message : 'Unknown error'
-          } as SessionEvent)
-          pushTyped(server, RPC_CHANNELS.sessions.EVENT, { to: 'client', clientId: callerClientId }, {
-            type: 'complete',
-            sessionId
-          } as SessionEvent)
-        })
-    })
   })
 
   // Cancel processing

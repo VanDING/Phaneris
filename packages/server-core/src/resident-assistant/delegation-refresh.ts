@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../sessions/input-contracts'
 import type { Message, SessionDelegationInput } from '@phaneris/core/types'
 import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
 import type { AssistantMemoryStore } from './memory-store'
@@ -6,7 +7,7 @@ import type { AssistantMemoryStore } from './memory-store'
 export function prepareDelegationRefresh(input: { original: Message; snapshot: SessionDelegationInput; messages: readonly Message[];
   facts: readonly RuntimeEvent[]; runOperationIds: ReadonlySet<string>; retiredRunOperationId: string; memory: AssistantMemoryStore }): Message | undefined {
   const { original, snapshot, messages, memory } = input, grant = snapshot.originGrant
-  if (!grant || original.inputSource?.kind !== 'delegation' || messages.some(message => message.role === 'user' && !message.inputSource && messages.indexOf(message) > messages.indexOf(original))) return
+  if (!grant || original.inputSource?.kind !== 'delegation' || messages.some(message => message.role === 'user' && isDirectUserSource(message.inputSource) && messages.indexOf(message) > messages.indexOf(original))) return
   const attempts = messages.filter(message => message.delegationRefresh?.originalInputId === original.id).length
   if (attempts >= 2 || !input.runOperationIds.size) return
   // An uncertain or non-read-only dispatch must be reconciled through its original

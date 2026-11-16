@@ -172,6 +172,8 @@ export interface ISessionManager {
   // Messaging
   // ---------------------------------------------------------------------------
 
+  submitInput(sessionId: string, input: import('../sessions/input-contracts').SessionInputIntent,
+    origin: import('../sessions/input-contracts').InputOrigin): import('../sessions/input-contracts').InputTurn
   sendMessage(
     sessionId: string,
     message: string,
@@ -315,6 +317,7 @@ export interface ISessionManager {
    */
   notifyConfigFileChange(workspaceRootPath: string, relativePath: string): void
   getWorkspacePages(workspaceId: string): import('../pages/workspace-pages').WorkspacePages
+  getWorkspacePlanning(workspaceId: string): import('../planning/workspace-planning').WorkspacePlanning
 
   /**
    * Request a (re)capture of a page's preview poster. No-op unless a capturer

@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../sessions/input-contracts'
 import { randomUUID } from 'node:crypto'
 import type { Message } from '@phaneris/core/types'
 import type { DurableCanonicalModelContext, DurableModelPrepareRequest, DurableModelOutcomeRequest } from '@phaneris/shared/durable-runtime/types'
@@ -59,7 +60,7 @@ export class SessionContext extends ContextMetadataStore {
     const dependencies: ResidentDependencies = { sources: [], memories: [] }, materials: NonNullable<ResidentSegment['materials']> = []
     const reader = getSourceReader(this.workspace.rootPath), before = reader.metrics()
     if (input) {
-      const readPurpose = input.inputSource ? 'historical' as const : undefined
+      const readPurpose = !isDirectUserSource(input.inputSource) ? 'historical' as const : undefined
       const source = this.memory.readSource({ sessionId: this.sessionId, messageId: input.id, readPurpose })
       dependencies.sources.push({ sessionId: this.sessionId, messageId: input.id, contentHash: source.contentHash, readPurpose, projectId: source.projectId ?? null })
     }

@@ -1,3 +1,4 @@
+import { hasDirectUserAuthority } from '../sessions/input-contracts'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { randomBytes } from 'node:crypto'
 import { join } from 'node:path'
@@ -83,7 +84,7 @@ export class ResidentAssistantService {
   async dispatch(sessionId: string, messages: readonly Message[], request: AssistantDispatch): Promise<AssistantWork> {
     const continuation = request.continuationOf ? await this.delegation!.continuation(request.continuationOf, sessionId) : undefined
     const origin = continuation ? messages.find(message => message.id === continuation.receipt.originMessageId)
-      : messages.findLast(message => message.role === 'user' && !message.hidden && !message.inputSource
+      : messages.findLast(message => message.role === 'user' && !message.hidden && hasDirectUserAuthority(message.inputSource)
       && !/^(?:assistant-work:|agent-message:)/.test(message.id) && !/^\s*\[Message from session\b/i.test(message.content))
     if (!origin) throw new Error('Delegation requires a direct user instruction in the resident assistant')
     if (origin.isQueued) throw new Error('A newer user instruction is pending; wait for it before dispatching work')
@@ -237,7 +238,7 @@ export class ResidentAssistantService {
         return { ...state, activeSegment: state.activeSegment ? { ...state.activeSegment, requests: [] } : undefined }
       },
       assistantScenarioCaptureFn: async command => {
-        const input = session.input(), direct = input?.role === 'user' && !input.hidden && !input.inputSource
+        const input = session.input(), direct = input?.role === 'user' && !input.hidden && hasDirectUserAuthority(input.inputSource)
         if (command.intent === 'user_request' && !direct) throw new Error('An internal input cannot authorize an explicit scenario operation')
         if (input?.inputSource?.kind === 'memory_maintenance') throw new Error('Background extraction cannot widen its source grant through scenario capture')
         const result = this.memory.captureScenario(command, direct && command.intent === 'user_request' ? 'user_request' : 'automatic')
@@ -261,7 +262,7 @@ export class ResidentAssistantService {
         } }),
       assistantMemoryUpdateFn: async command => {
         const input = session.input()
-        const direct = input?.role === 'user' && !input.hidden && !input.inputSource
+        const direct = input?.role === 'user' && !input.hidden && hasDirectUserAuthority(input.inputSource)
         const explicit = direct && command.intent === 'user_request'
         if (command.intent === 'user_request' && !direct) throw new Error('Internal or historical inputs cannot authorize an explicit memory operation')
         if (command.action === 'transition' && command.state === 'forgotten' && !explicit) throw new Error('Permanent forgetting requires an explicit current user request')
@@ -303,7 +304,7 @@ export class ResidentAssistantService {
         const input = session.input(), segment = context.get().activeSegment
         const sourceContinuation = input?.inputSource?.kind === 'runtime_continuation' && input.inputSource.reason === 'source_activation'
         const resultContinuation = input?.inputSource?.kind === 'resident_event' && !!request.continuationOf
-        if (!input || (input.inputSource || input.hidden) && !sourceContinuation && !resultContinuation) throw new Error('Internal events require a verified continuationOf the original user grant')
+        if (!input || (!hasDirectUserAuthority(input.inputSource) || input.hidden) && !sourceContinuation && !resultContinuation) throw new Error('Internal events require a verified continuationOf the original user grant')
         if (!segment || !context.valid(segment)) throw new Error('Resident materials changed; review current requirements in a fresh turn before delegation')
         return session.dispatch(request)
       },

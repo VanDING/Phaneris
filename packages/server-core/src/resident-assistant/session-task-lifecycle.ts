@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../sessions/input-contracts'
 import type { Message, SessionDelegationInput } from '@phaneris/core/types'
 import type { AssistantDelegationReceipt } from '@phaneris/session-tools-core/delegation-contracts'
 import type { TaskReview } from '@phaneris/session-tools-core/task-result-contracts'
@@ -25,7 +26,7 @@ export class SessionTaskLifecycle {
     if (input?.inputSource?.kind !== 'delegation' || input.inputSource.delegationId !== receipt.id || !input.delegationInput) return
     const messages = owner.chain.flatMap(session => session.messages)
     const following = messages.slice(messages.indexOf(input) + 1)
-    if (following.some(message => message.role === 'user' && (!message.inputSource || message.inputSource.kind === 'delegation'))) return
+    if (following.some(message => message.role === 'user' && (isDirectUserSource(message.inputSource) || message.inputSource?.kind === 'delegation'))) return
     return input
   }
 

@@ -61,7 +61,9 @@ export interface ConductorSessionHost {
   /** Creates the child session AND announces it to the renderer (createSession emits
    *  session_created by default), so the subtask appears on the board with its real title. */
   createSession(workspaceId: string, options: CreateSessionOptions): Promise<{ id: string }>;
+  /** Legacy published Host port; modern hosts additionally expose submitInput. */
   sendMessage(sessionId: string, message: string): Promise<void>;
+  submitInput?(sessionId: string, input: import('../sessions/input-contracts').SessionInputIntent, origin: import('../sessions/input-contracts').InputOrigin): import('../sessions/input-contracts').InputTurn;
   setSessionStatus(sessionId: string, status: string): Promise<void>;
   setKanbanColumn(sessionId: string, column: string | null): Promise<void>;
   /** Records the total DAG node count on the orchestrator session for a stable board progress denominator. */
@@ -644,7 +646,7 @@ class ActiveRun {
       if (existing?.finalText !== undefined) {
         this.onSessionComplete({ sessionId: child.id, workspaceId: this.deps.workspaceId, reason: 'complete', finalText: existing.finalText });
       } else if (!existing?.processing) {
-        await this.deps.host.sendMessage(child.id, existing?.hasInput || previousSessionId
+        await this.sendTaskInput(child.id, existing?.hasInput || previousSessionId
           ? `Resume this task from its prior execution${previousSessionId ? ` (session ${previousSessionId})` : ''}. Inspect prior messages, tool results and produced files first. Continue only unfinished work; an interrupted result is unknown, so do not blindly repeat non-idempotent effects.\n\nOriginal task scope:\n${prompt}`
           : prompt);
       }
@@ -933,10 +935,18 @@ class ActiveRun {
     });
   }
 
+  /** Preserve the published legacy Host port without using it in our Host. */
+  private sendTaskInput(sessionId: string, text: string): Promise<void> {
+    const host = this.deps.host;
+    return host.submitInput
+      ? host.submitInput(sessionId, { text }, { kind: 'task', taskRunId: this.runId }).finished
+      : host.sendMessage(sessionId, text);
+  }
+
   /** Send to the orchestrator, failing the run (rather than hanging in `verifying`) if the send rejects. */
   private async sendToOrchestrator(orchestrator: string, message: string): Promise<void> {
     try {
-      await this.deps.host.sendMessage(orchestrator, message);
+      await this.sendTaskInput(orchestrator, message);
     } catch {
       // The verdict will never arrive — detach the listener and settle as failed instead of hanging.
       this.verdictOff?.();

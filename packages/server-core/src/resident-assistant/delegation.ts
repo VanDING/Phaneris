@@ -118,15 +118,25 @@ export class AssistantDelegation {
       try {
         const { completedResult, resume, ...binding } = await this.host.recover(receipt)
         Object.assign(receipt, binding)
+        if (receipt.state === 'cancel_requested') {
+          const waiting = this.host.heldSessionIds?.().includes(receipt.sessionId!)
+          const saved = this.save({ ...receipt, state: waiting ? 'cancel_requested' : 'cancelled' })
+          if (!waiting) {
+            await this.host.rejectStaged(saved, 'Original assignment was cancelled before Host restart')
+            this.controls.settled(receipt.id)
+          }
+          await this.syncSessionStatus(saved)
+          continue
+        }
         if (receipt.state === 'pause_requested') {
           this.save({ ...receipt, state: this.host.heldSessionIds?.().includes(receipt.sessionId!) ? 'pause_requested' : 'paused' })
           this.controls.settled(receipt.id); continue
         }
-        if (completedResult && receipt.state !== 'cancel_requested') {
+        if (completedResult) {
           const saved = this.save({ ...receipt, state: 'result_ready', result: completedResult, error: undefined })
           await this.syncSessionStatus(saved); continue
         }
-        if (resume && receipt.state !== 'cancel_requested') {
+        if (resume) {
           this.save({ ...receipt, state: resume === 'original' ? 'accepted' : 'submitted', error: undefined }); continue
         }
       }

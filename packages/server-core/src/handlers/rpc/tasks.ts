@@ -333,7 +333,7 @@ export function registerTasksHandlers(server: RpcServer, deps: HandlerDeps): voi
 
     const askOrchestrator = (prompt: string) =>
       waitForTurnReply(deps.sessionManager, sessionId, () =>
-        deps.sessionManager.sendMessage(sessionId, prompt, undefined, undefined, { thinkingLevel: GENERATE_THINKING_LEVEL }))
+        deps.sessionManager.submitInput(sessionId, { text: prompt, options: { thinkingLevel: GENERATE_THINKING_LEVEL } }, { kind: 'task' }).finished)
 
     // Run the generate→repair loop in the background and push the result when done. Awaiting
     // here would re-introduce the synchronous-RPC-over-WS timeout this async path exists to avoid.

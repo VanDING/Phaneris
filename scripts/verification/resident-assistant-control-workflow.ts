@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../../packages/server-core/src/sessions/input-contracts'
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -91,7 +92,7 @@ await verificationWorkflow('resident-assistant-control', async run => {
     const assistant = await client.invoke(RPC_CHANNELS.residentAssistant.GET, 'alpha')
     const sendMain = async (message: string) => {
       await manager.sendMessage(assistant.id, message)
-      await until(async () => { const current = (await manager.getSession(assistant.id))!; return !current.isProcessing && !current.messages.some(input => input.role === 'user' && !input.inputSource && input.isQueued) })
+      await until(async () => { const current = (await manager.getSession(assistant.id))!; return !current.isProcessing && !current.messages.some(input => input.role === 'user' && isDirectUserSource(input.inputSource) && input.isQueued) })
     }
     const goal = 'CONTROL_TARGET：完成授权报告，可以按原目标调整执行方式。'
     await sendMain(goal)

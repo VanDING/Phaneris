@@ -58,6 +58,10 @@ export function annotateToolSources(events: RuntimeEvent[], messages: Message[],
  */
 export function projectCanonicalSessionMessages(events: RuntimeEvent[], legacy: Message[]): Message[] {
   const byMessageId = indexSessionMessages(events, legacy)
+  const origins = new Map(events.filter(event => event.type === 'user_input_admitted').map(event => {
+    const input = event.payload as { messageId: string; inputSource?: Message['inputSource'] }
+    return [input.messageId, input.inputSource] as const
+  }))
   const byToolCallId = new Map(legacy.filter(message => message.toolUseId).map(message => [message.toolUseId!, message]))
   const canonical: Message[] = []
   const canonicalToolIndex = new Map<string, number>()
@@ -102,6 +106,7 @@ export function projectCanonicalSessionMessages(events: RuntimeEvent[], legacy: 
         id: payload.messageId, timestamp: event.createdAt, turnId: event.turnId,
         isIntermediate: payload.isIntermediate, ...cached,
         role: event.type === 'user_message_committed' ? 'user' : 'assistant',
+        ...(event.type === 'user_message_committed' ? { inputSource: cached?.inputSource ?? origins.get(payload.messageId) } : {}),
         content: payload.content,
         durableOperationId: event.operationId,
         durableSeq: event.seq,

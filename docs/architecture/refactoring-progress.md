@@ -11,7 +11,9 @@ privileged command/permission integrity, request workspace scope, gateway
 persistence, transfer retry ownership, recoverable imports, duplicate bridges
 and rules, Viewer decoding, the work-item deletion result, resident metadata,
 source credential selection, Pages mutations, client request exchange, the
-published Copilot compatibility path, and unused component parameters.
+published Copilot compatibility path, unused component parameters, Host input
+intent/provenance and workspace planning commands. Typed RPC registration is
+being validated against the existing input schemas and authoritative result ports.
 
 Compatibility decisions confirmed by the project owner:
 
@@ -38,7 +40,6 @@ signed installers and the complete client-version matrix remain unverified.
 The standalone server assembly script rejects Windows explicitly; its smoke-suite
 failure is retained in the evidence, not counted as a successful server build.
 
-Remaining implementation includes the complete input intent/provenance migration,
-task publication/recovery, planning commands and compatibility projections, typed
-RPC registration, broader UI workflows, and a fresh review of every module at the
-resulting HEAD. No aggregate pass rate is computed from overlapping suites.
+Remaining implementation includes task publication/recovery, completion of typed
+RPC verification, broader UI workflows, cold-start navigation investigation, and
+a fresh review of every module at the resulting HEAD. No aggregate pass rate is computed from overlapping suites.

@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../sessions/input-contracts'
 import { randomUUID } from 'node:crypto'
 import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
@@ -132,7 +133,7 @@ export class ContextMetadataStore {
       const branches = this.directory(command.action === 'branches' ? command.query : '', command.offset, command.limit)
       return { ...this.get(), branches, topics: { items: branches.items.map(b => ({ ...b, anchorCount: this.associations(b.id).length, originalInputCount: this.associations(b.id).filter(r => r.sessionId === this.sessionId).length })), nextOffset: branches.nextOffset } }
     }
-    const input = messages.find(m => m.id === currentInputId) ?? messages.findLast(m => m.role === 'user' && !m.hidden && !m.inputSource)
+    const input = messages.find(m => m.id === currentInputId) ?? messages.findLast(m => m.role === 'user' && !m.hidden && isDirectUserSource(m.inputSource))
     if (command.action === 'select' && command.temporary && input?.inputSource?.kind !== 'resident_event') throw new Error('context_temporary_event_required: Temporary selection is only for Host inbox events. For a direct user resumption select without temporary to update foreground work')
     const projectId = currentInputId && input?.projectScope ? input.projectScope.projectId ?? undefined : currentProjectId
     const state = this.pointer(), fingerprint = JSON.stringify(command)
@@ -145,7 +146,7 @@ export class ContextMetadataStore {
         if (command.projectId !== undefined && command.projectId !== projectId) throw new Error('context_project_conflict: Select the project before creating its branch')
         const branch: ContextBranch = { id: randomUUID(), sessionId: this.sessionId, label: command.label, projectId: command.projectId ?? projectId, revision: 1, state: 'active', createdAt: Date.now(), updatedAt: Date.now() }
         this.saveBranch(branch); ids = [branch.id]; resultId = branch.id
-        if (command.action === 'create' && input && !input.inputSource) this.link(branch.id, { sessionId: this.sessionId, messageId: input.id }, 'requirement')
+        if (command.action === 'create' && input && isDirectUserSource(input.inputSource)) this.link(branch.id, { sessionId: this.sessionId, messageId: input.id }, 'requirement')
         if (command.action === 'focus') for (const source of command.anchors) this.link(branch.id, source, 'evidence', true)
       } else if (command.action === 'select' || command.action === 'resume') ids = command.action === 'select' ? command.branchIds : [command.topicId]
       else if (command.action === 'hibernate') {
@@ -273,7 +274,7 @@ export class ContextMetadataStore {
     const ids = segment.branchIds ?? [], start = messages.findIndex(m => m.id === segment.inputMessageId)
     if (start < 0) return
     this.db.transaction(() => {
-      if (!ids.length && !messages[start]?.inputSource) {
+      if (!ids.length && isDirectUserSource(messages[start]?.inputSource)) {
         const current = this.pointer()
         this.savePointer({ ...current, recentMainline: [...current.recentMainline ?? [], ...messages.slice(start).filter(m => !m.hidden && (m.role === 'user' || m.role === 'assistant' && !m.isIntermediate)).map(m => ({ sessionId: this.sessionId, messageId: m.id }))].slice(-4) })
       }

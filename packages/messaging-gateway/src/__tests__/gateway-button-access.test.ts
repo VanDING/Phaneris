@@ -83,7 +83,7 @@ function makeFakeAdapter(): FakeAdapter {
 function makeStubSessionManager(): ISessionManager {
   return {
     getSession: async (id: string) => ({ id, name: id } as never),
-    sendMessage: async () => {},
+    submitInput: () => ({ accepted: Promise.resolve({ accepted: true, messageId: 'fixture' }), finished: Promise.resolve() }),
     cancelProcessing: async () => {},
     respondToPermission: mock(() => true),
     acceptPlan: mock(async () => {}),

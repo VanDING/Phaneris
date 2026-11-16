@@ -1,3 +1,5 @@
+import { createWorkspacePlanning, type PlanningCreate, type PlanningUpdate } from '../planning/workspace-planning'
+import { isDirectUserSource, hasDirectUserAuthority, type InputOrigin, type InputTurn, type SessionInputIntent } from './input-contracts'
 import { SessionDeltaBatcher, type ThinkingDelta } from './session-deltas'
 import { getContextPolicy, getCompactionThreshold } from '@phaneris/shared/config/appearance';
 import { assembleSessionAgent } from './agent-assembly'
@@ -2497,7 +2499,7 @@ export class SessionManager implements ISessionManager {
 
     // Send the result as a new message to resume conversation
     // Use empty arrays for attachments since this is a system-generated message
-    await this.sendMessage(sessionId, resultContent, [], [], {})
+    await this.submitInput(sessionId, { text: resultContent }, { kind: 'runtime_continuation', reason: 'source_activation', inputMessageIds: managed.lastSentMessageIds ?? [] }).finished
 
     sessionLog.info(`Auth request completed for ${result.sourceSlug}: ${result.success ? 'success' : 'failed'}`)
   }
@@ -3367,10 +3369,10 @@ export class SessionManager implements ISessionManager {
       if (assistant.runtime.isProcessing || this.shuttingDown || this.residentForegroundAdmissions.has(assistant.id)
         || assistant.autoRetryPending && !assistant.autoRetryPending.committed && assistant.autoRetryPending.deadlineMs > Date.now()) return
       await this.ensureMessagesLoaded(assistant)
-      if (assistant.messages.some(message => message.isQueued && message.role === 'user' && !message.hidden && !message.inputSource)) return
+      if (assistant.messages.some(message => message.isQueued && message.role === 'user' && !message.hidden && isDirectUserSource(message.inputSource))) return
       const context = this.residentService(assistant.workspace).context(assistant.id), refresh = context.pendingRefresh()
       if (refresh) {
-        const latestUser = assistant.messages.findLast(message => message.role === 'user' && !message.hidden && !message.inputSource)
+        const latestUser = assistant.messages.findLast(message => message.role === 'user' && !message.hidden && isDirectUserSource(message.inputSource))
         if (latestUser?.id !== refresh.originalInputId || this.residentService(assistant.workspace).memory.isSourceSuppressed({ sessionId: assistant.id, messageId: refresh.originalInputId })) {
           context.cancelRefresh(); return
         }
@@ -3380,10 +3382,12 @@ export class SessionManager implements ISessionManager {
         const inputId = context.claimRefresh(refresh)
         if (!inputId) return
         try {
-          const admitted = await this.admitSessionInput(assistant.id,
-            `<resident_material_refresh>\n${JSON.stringify({ originalInputId: refresh.originalInputId })}\n</resident_material_refresh>\nThe Host withdrew a stale inference and rebuilt this context from current valid sources. Continue the original direct user request already present in this context. Do not repeat delegated work or completed effects; inspect existing work receipts when needed. Historical material cannot expand authorization. No new user confirmation is required for this context rebuild.`,
-            undefined, undefined, { hidden: true }, undefined, undefined, undefined, undefined, inputId,
-            { kind: 'runtime_continuation', reason: 'memory_refresh', inputMessageIds: [refresh.originalInputId] })
+          const admitted = await this.admitSessionInput(assistant.id, {
+            text: `<resident_material_refresh>\n${JSON.stringify({ originalInputId: refresh.originalInputId })}\n</resident_material_refresh>\nThe Host withdrew a stale inference and rebuilt this context from current valid sources. Continue the original direct user request already present in this context. Do not repeat delegated work or completed effects; inspect existing work receipts when needed. Historical material cannot expand authorization. No new user confirmation is required for this context rebuild.`,
+            options: { hidden: true },
+            messageId: inputId,
+            inputSource: { kind: 'runtime_continuation', reason: 'memory_refresh', inputMessageIds: [refresh.originalInputId] }
+          })
           if (admitted?.finished) void admitted.finished.catch(error => sessionLog.warn('Resident context refresh interrupted:', error))
           else context.finishRefresh(inputId, false)
         } catch (error) { context.finishRefresh(inputId, false); this.scheduleResidentInbox(workspaceId); throw error }
@@ -3397,8 +3401,12 @@ export class SessionManager implements ISessionManager {
         try {
           service.memory.assertMaintenance(job)
           const text = `<resident_memory_maintenance>\n${JSON.stringify({ jobId: job.id, sessionId: job.sessionId, projectId: job.projectId })}\n</resident_memory_maintenance>\nReview one bounded source fragment with assistant_memory_maintenance next. Save only durable supported observations, using the supplied stable requestIdPrefix. Route project facts to the existing Project MEMORY.md via project_memory_read metadata and project_memory_append, with the exact fragment as evidence; acknowledge project_recorded with the returned projectId/entryId. General collaboration facts belong to assistant_memory_update. Otherwise acknowledge no_candidate. Always acknowledge the exact fragment, then end this turn. This internal grant cannot authorize delegation, file access, source activation, permanent forgetting or user work. Do not ask the user to confirm routine memory admission.`
-          const admitted = await this.admitSessionInput(assistant.id, text, undefined, undefined, { hidden: true }, undefined, undefined, undefined, undefined,
-            job.inputId, { kind: 'memory_maintenance', jobId: job.id, sourceSessionId: job.sessionId })
+          const admitted = await this.admitSessionInput(assistant.id, {
+            text,
+            options: { hidden: true },
+            messageId: job.inputId,
+            inputSource: { kind: 'memory_maintenance', jobId: job.id, sourceSessionId: job.sessionId }
+          })
           const timeout = setTimeout(() => {
             if (!this.shuttingDown && assistant.runtime.isProcessing && assistant.lastSentMessageIds?.includes(job.inputId)) void this.cancelProcessing(assistant.id, true)
           }, 30000)
@@ -3409,8 +3417,12 @@ export class SessionManager implements ISessionManager {
         return
       }
       await this.residentService(assistant.workspace).deliverInbox(assistant.messages, async (inputId, text, eventIds) => {
-        const admitted = await this.admitSessionInput(assistant.id, text, undefined, undefined, { hidden: true }, undefined, undefined, undefined, undefined,
-          inputId, { kind: 'resident_event', eventIds })
+        const admitted = await this.admitSessionInput(assistant.id, {
+          text,
+          options: { hidden: true },
+          messageId: inputId,
+          inputSource: { kind: 'resident_event', eventIds }
+        })
         if (admitted?.finished) void admitted.finished.catch(error => sessionLog.warn('Resident delivery failed:', error))
       })
     })
@@ -3515,14 +3527,14 @@ export class SessionManager implements ISessionManager {
         return
       }
       const origin = assistant.messages.find(message => message.id === receipt.originMessageId)
-      if (!origin || origin.inputSource || origin.hidden || origin.role !== 'user') throw new Error('Original user input is unavailable for attachment handoff')
+      if (!origin || !isDirectUserSource(origin.inputSource) || origin.hidden || origin.role !== 'user') throw new Error('Original user input is unavailable for attachment handoff')
       const files = copyAssignmentAttachments(target.workspace.rootPath, assistant.id, origin, target.id, request.instructions, request.attachmentIds)
       let reopenReviewed = false
       if (request.continuationOf) {
         const prior = await this.residentService(assistant.workspace).delegation!.continuation(request.continuationOf, assistant.id)
         const owner = await this.workerSessionChain(assistant.workspace.id, prior.receipt.sessionId!)
         const original = owner.messages.find(message => message.id === prior.receipt.inputMessageId)
-        if (!original || owner.messages.slice(owner.messages.indexOf(original) + 1).some(message => message.role === 'user' && (!message.inputSource || message.inputSource.kind === 'delegation')))
+        if (!original || owner.messages.slice(owner.messages.indexOf(original) + 1).some(message => message.role === 'user' && (isDirectUserSource(message.inputSource) || message.inputSource?.kind === 'delegation')))
           throw new Error('A later human input or assignment owns the original Session; its old result cannot take it over')
         if (!assignmentAttachmentsValid(prior.input.attachmentMaterials) || files.materials.some(material => !prior.input.attachmentMaterials?.some(old => old.attachmentId === material.attachmentId && old.contentHash === material.contentHash)))
           throw new Error('Original attachment bytes changed; continuation requires current user authorization')
@@ -3716,7 +3728,7 @@ export class SessionManager implements ISessionManager {
           const latest = latestDelegationInput(messages, input.id)!
           const aliases = runtimeInputAliases(messages, input.id)
           const page = this.durableRuntime.queries.inputExecutions(managed.workspace.rootPath, target.id, aliases, { limit: 20 })
-          const newerUser = messages.slice(messages.indexOf(input) + 1).some(message => message.role === 'user' && !message.inputSource)
+          const newerUser = messages.slice(messages.indexOf(input) + 1).some(message => message.role === 'user' && isDirectUserSource(message.inputSource))
           const unsettled = chain.some(session => this.durableRuntime.queries.unsettledTools(managed.workspace.rootPath, undefined, session.id).length > 0)
           if (!newerUser && !unsettled && !page.nextBefore && this.delegatedCapabilitiesValid(target, latest.delegationInput!)) {
             if (latest.inputSource?.kind === 'runtime_continuation' && latest.inputSource.reason === 'worker_control'
@@ -3792,7 +3804,7 @@ export class SessionManager implements ISessionManager {
           catch (error) { throw new SessionDelegationConflict(error instanceof Error ? error.message : 'Artifact feedback baseline is unavailable') }
           if (snapshot.materialDependencies && !this.delegatedMaterialsValid(target, snapshot.materialDependencies)) throw new SessionDelegationConflict('Delegated materials changed after acceptance; review the current requirements before executing')
           const controlled = input.inputSource?.kind === 'runtime_continuation' && input.inputSource.reason === 'worker_control'
-          if (controlled ? messages.slice(messages.indexOf(rootInput) + 1).some(message => message.role === 'user' && !message.inputSource)
+          if (controlled ? messages.slice(messages.indexOf(rootInput) + 1).some(message => message.role === 'user' && isDirectUserSource(message.inputSource))
             : target.messages.filter(message => message.id !== input.id).at(-1)?.id !== snapshot.baseMessageId) {
             throw new SessionDelegationConflict('Session history changed after acceptance; review the latest user input before continuing')
           }
@@ -3818,7 +3830,7 @@ export class SessionManager implements ISessionManager {
           if (previous?.deliveryObserved) throw new Error('Input already reached the model; inspect its original execution rather than resubmit')
           if (!maySubmit()) throw new SessionDelegationConflict('Delegation or its file scope lease changed before model submission')
           if (!previous) this.durableRuntime.commands.recordUserInputAdmission({ workspaceRootPath: target.workspace.rootPath, sessionId: target.id,
-            messageId: input.id, content: input.content, createdAt: input.timestamp, options: { skillSlugs: snapshot.effectiveConfig.skillSlugs } })
+            messageId: input.id, content: input.content, createdAt: input.timestamp, options: { skillSlugs: snapshot.effectiveConfig.skillSlugs }, inputSource: input.inputSource })
           snapshot.submittedAt = Date.now()
           // A delegated FIFO supplement is recovered by this scheduler, not
           // by the generic queue (which excludes unsubmitted snapshots).
@@ -3830,8 +3842,15 @@ export class SessionManager implements ISessionManager {
           if (currentDependency) throw new SessionDelegationWait(currentDependency)
           if (!maySubmit()) throw new SessionDelegationConflict('Delegation or its resource lease changed before input admission')
           const attachments = input.attachments?.map(attachment => readFileAttachment(attachment.storedPath)).filter((attachment): attachment is FileAttachment => attachment !== null)
-          const admitted = await this.admitSessionInput(target.id, input.content, attachments, input.attachments,
-            { skillSlugs: snapshot.effectiveConfig.skillSlugs }, input.id, undefined, undefined, undefined, input.id, input.inputSource)
+          const admitted = await this.admitSessionInput(target.id, {
+            text: input.content,
+            attachments,
+            storedAttachments: input.attachments,
+            options: { skillSlugs: snapshot.effectiveConfig.skillSlugs },
+            messageId: input.id,
+            inputSource: input.inputSource,
+            replay: { messageId: input.id }
+          })
           if (admitted?.finished) void admitted.finished.catch(error => sessionLog.error('Delegated Session execution failed:', error))
           if (!admitted?.receipt) throw new Error('Session input was not durably admitted')
         })
@@ -3891,7 +3910,7 @@ export class SessionManager implements ISessionManager {
         const context = this.residentService(managed.workspace).context(managed.id)
         const scoped = context.taskMaterials(Object.keys(snapshot?.contextBinding?.branchRevisions ?? {}), [], snapshot?.originGrant)
         const segment = context.get().activeSegment
-        const direct = managed.messages.find(message => message.id === segment?.inputMessageId && message.role === 'user' && !message.inputSource && !message.hidden)
+        const direct = managed.messages.find(message => message.id === segment?.inputMessageId && message.role === 'user' && isDirectUserSource(message.inputSource) && !message.hidden)
         if (direct) {
           const source = this.residentService(managed.workspace).memory.readSource({ sessionId: managed.id, messageId: direct.id })
           scoped.sources.push({ sessionId: managed.id, messageId: direct.id, contentHash: source.contentHash })
@@ -3962,7 +3981,7 @@ export class SessionManager implements ISessionManager {
     const original = root.messages.find(message => message.id === receipt.inputMessageId)
     const latest = receipt.inputMessageId ? latestDelegationInput(messages, receipt.inputMessageId) : undefined
     if (!original?.delegationInput || !latest?.delegationInput) throw new Error('The original Worker assignment is unavailable')
-    if (messages.slice(messages.indexOf(original) + 1).some(message => message.role === 'user' && !message.inputSource)) throw new Error('A later direct user input owns this Session; the old task cannot take it over')
+    if (messages.slice(messages.indexOf(original) + 1).some(message => message.role === 'user' && isDirectUserSource(message.inputSource))) throw new Error('A later direct user input owns this Session; the old task cannot take it over')
     if (target.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[target.contextHandoff.phase]) throw new Error('Worker context transfer is still preparing; inspect its handoff before changing execution')
     const memory = this.residentService(assistant.workspace).memory
     const snapshot = latest.delegationInput
@@ -3977,7 +3996,7 @@ export class SessionManager implements ISessionManager {
     let halted = false
     return this.execution.admission<WorkerControlApplication>(target.id, async () => {
       if (!mayApply()) throw new Error('Worker command was superseded')
-      if (chain.flatMap(session => session.messages).slice(messages.indexOf(original) + 1).some(message => message.role === 'user' && !message.inputSource)) throw new Error('A later direct user input owns this Session')
+      if (chain.flatMap(session => session.messages).slice(messages.indexOf(original) + 1).some(message => message.role === 'user' && isDirectUserSource(message.inputSource))) throw new Error('A later direct user input owns this Session')
       const unknown = () => chain.some(session => this.durableRuntime.queries.unsettledTools(target.workspace.rootPath, undefined, session.id).length > 0)
       const running = target.runtime.isProcessing
       const appliedInput = target.messages.find(message => message.id === `worker-control:${command.commandId}`)
@@ -4081,9 +4100,14 @@ export class SessionManager implements ISessionManager {
       if (queued) {
         const input = target.messages.find(message => message.id === id)!
         this.durableRuntime.commands.recordUserInputAdmission({ workspaceRootPath: target.workspace.rootPath, sessionId: target.id,
-          messageId: id, content: input.content, createdAt: input.timestamp, options: { hidden: true, skillSlugs: plan.config.skillSlugs } })
-        const admitted = await this.admitSessionInput(target.id, input.content, undefined, input.attachments, { hidden: true, skillSlugs: plan.config.skillSlugs }, id,
-          undefined, undefined, undefined, undefined, input.inputSource)
+          messageId: id, content: input.content, createdAt: input.timestamp, options: { hidden: true, skillSlugs: plan.config.skillSlugs }, inputSource: input.inputSource })
+        const admitted = await this.admitSessionInput(target.id, {
+          text: input.content,
+          storedAttachments: input.attachments,
+          options: { hidden: true, skillSlugs: plan.config.skillSlugs },
+          inputSource: input.inputSource,
+          replay: { messageId: id }
+        })
         if (admitted?.finished) void admitted.finished.catch(error => sessionLog.error('Queued Worker revision failed:', error))
         return { state: 'submitted', delivery: admitted?.receipt?.delivery ?? 'queued', input: { sessionId: target.id, messageId: id } }
       }
@@ -4198,7 +4222,7 @@ export class SessionManager implements ISessionManager {
     if (!stale) return { ...canonical, fenced: true }
     return { cursor: canonical.cursor, fenced: true, resident: { segmentId: randomUUID(),
       contextText: 'Prior delegated materials became unavailable. Their derived model history has been retired. Original direct user requirements below remain authoritative; inspect current evidence before continuing.' },
-      items: managed.messages.filter(message => message.role === 'user' && !message.inputSource && !message.hidden && !message.isQueued && !managed.lastSentMessageIds?.includes(message.id))
+      items: managed.messages.filter(message => message.role === 'user' && isDirectUserSource(message.inputSource) && !message.hidden && !message.isQueued && !managed.lastSentMessageIds?.includes(message.id))
         .map((message, index) => ({ kind: 'user', eventId: `source:${message.id}`, seq: index + 1, operationId: `source:${message.id}`, content: message.content })) }
   }
 
@@ -5233,7 +5257,6 @@ export class SessionManager implements ISessionManager {
       if (unknownActions.length) seed += `\n\n<unconfirmed_actions>These are historical observations, not a request to repeat actions. Inspect existing outputs and receipts when relevant; independent work can continue.\n${JSON.stringify(unknownActions)}\n</unconfirmed_actions>`
       // The queue hands over with the task: the successor receives the messages
       // verbatim, so replaying them in the original session would duplicate them.
-      const admission = Promise.withResolvers<void>()
       const selection = parseMentions(continuity.selectedSkillMessage ?? '', loadAllSkills(managed.workspace.rootPath, managed.workingDirectory).map(skill => skill.slug), [])
       const root = this.sessions.get(rootId)!
       await this.ensureMessagesLoaded(root)
@@ -5247,26 +5270,16 @@ export class SessionManager implements ISessionManager {
         ...(snapshot ? { delegationInput: { ...snapshot, submittedAt: Date.now(), baseMessageId: child.messages.at(-1)?.id } } : {}) })
       this.persistSession(child)
       await this.flushSession(child.id)
-      void this.sendMessage(child.id, seed, undefined, undefined, { skillSlugs: [...selection.skills, ...selection.invalidSkills] }, seedId, false, () => {
-        void (async () => {
-          if (managed.contextHandoff?.phase === 'cancelled' || managed.runtime.stopRequested) {
-            await this.cancelProcessing(child.id, true)
-          } else {
-            await this.updateContextHandoff(managed, { ...managed.contextHandoff!, phase: 'complete' })
-            this.execution.clearQueue(managed.id)
-          }
-          admission.resolve()
-        })().catch(admission.reject)
-      }).catch(async error => {
-        // Post-ack failures (agent init, provider errors) belong to the successor's
-        // own turn and are reported there. Re-marking the handoff as failed here
-        // would strand a continuation that is already running.
-        if (managed.contextHandoff?.phase === 'complete') { admission.resolve(); return }
-        await this.updateContextHandoff(managed, { ...managed.contextHandoff!, phase: 'failed', error: error instanceof Error ? error.message : String(error) })
-        admission.reject(error)
-      })
-      // Await saved admission only; the successor owns and waits its own turn.
-      await admission.promise
+      const turn = this.submitInput(child.id, { text: seed, options: { skillSlugs: [...selection.skills, ...selection.invalidSkills] },
+        replay: { messageId: seedId } }, { kind: 'runtime_continuation', reason: 'context_handoff', inputMessageIds: original ? [original.id] : managed.lastSentMessageIds ?? [] })
+      void turn.finished.catch(error => sessionLog.warn('Successor execution failed after saved admission:', error))
+      await turn.accepted
+      if (this.sessions.get(managed.id) !== managed || this.sessions.get(managed.id)?.contextHandoff?.phase === 'cancelled' || managed.runtime.stopRequested) await this.cancelProcessing(child.id, true)
+      else {
+        await this.updateContextHandoff(managed, { ...managed.contextHandoff!, phase: 'complete' })
+        this.execution.clearQueue(managed.id)
+      }
+
     } catch (error) {
       if (managed.contextHandoff && managed.contextHandoff.phase !== 'cancelled') {
         await this.updateContextHandoff(managed, { ...managed.contextHandoff, phase: 'failed', error: error instanceof Error ? error.message : String(error) })
@@ -5302,7 +5315,7 @@ export class SessionManager implements ISessionManager {
     await agent.forceContextHandoff?.()
     // A handoff needs a request to intercept; the wrapper replaces it with
     // document generation, so this prompt is never answered by the model.
-    await this.sendMessage(sessionId, HANDOFF_INSTRUCTION, undefined, undefined, { hidden: true })
+    await this.submitInput(sessionId, { text: HANDOFF_INSTRUCTION, options: { hidden: true } }, { kind: 'runtime_continuation', reason: 'context_handoff', inputMessageIds: managed.lastSentMessageIds ?? [] }).finished
   }
 
   private async recoverContextHandoffs(): Promise<void> {
@@ -5511,8 +5524,8 @@ export class SessionManager implements ISessionManager {
         materialsStale: () => {
           if (!managed.runtime.isProcessing || managed.messages.some(message => managed.lastSentMessageIds?.includes(message.id) && message.inputSource?.kind === 'memory_maintenance')) return
           const ids = attributedRuntimeInputIds(managed.messages, managed.lastSentMessageIds)
-          const origin = managed.messages.findLast(message => ids.includes(message.id) && message.role === 'user' && !message.hidden && !message.inputSource)
-          const latest = managed.messages.findLast(message => message.role === 'user' && !message.hidden && !message.inputSource)
+          const origin = managed.messages.findLast(message => ids.includes(message.id) && message.role === 'user' && !message.hidden && isDirectUserSource(message.inputSource))
+          const latest = managed.messages.findLast(message => message.role === 'user' && !message.hidden && isDirectUserSource(message.inputSource))
           if (origin && origin.id === latest?.id && !origin.isQueued) this.residentService(managed.workspace).context(managed.id).requestRefresh(origin.id)
         },
         // Resident context preparation needs the current run's committed management
@@ -5531,7 +5544,7 @@ export class SessionManager implements ISessionManager {
         return { role: managed.sessionKind === 'resident_assistant' ? 'resident_assistant' : 'worker', sessionId: managed.id,
           projectId: maintenance ? maintenance.projectId : input?.projectScope ? input.projectScope.projectId ?? undefined : managed.projectId,
           sessionLabel: managed.name || managed.id, delegatedSource: original?.delegationInput?.originGrant,
-          currentUserSource: input?.role === 'user' && !input.hidden && !input.inputSource ? { sessionId: managed.id, messageId: input.id } : undefined,
+          currentUserSource: input?.role === 'user' && !input.hidden && hasDirectUserAuthority(input.inputSource) ? { sessionId: managed.id, messageId: input.id } : undefined,
           allowedSources: maintenance?.sources }
       }
       const modelPolicy: import('../runtime-adapters/pi-driver').ModelContextPolicy = assistantPort ? this.residentService(managed.workspace).modelContext(assistantPort) : {
@@ -6306,7 +6319,7 @@ initialSources: {
         // (session_created is emitted by createSession above.)
 
         // Fire and forget — send the message but don't await completion
-        this.sendMessage(session.id, request.prompt, fileAttachments).catch(err => {
+        this.submitInput(session.id, { text: request.prompt, attachments: fileAttachments }, { kind: 'session_message' }).finished.catch(err => {
           sessionLog.error(`Failed to send message to spawned session ${session.id}:`, err)
         })
 
@@ -7212,7 +7225,7 @@ initialSources: {
       this.setSessionPermissionMode(sessionId, planExecutionMode(managed.previousPermissionMode))
     }
 
-    await this.sendMessage(sessionId, approval)
+    await this.submitInput(sessionId, { text: approval }, { kind: 'runtime_continuation', reason: 'plan', inputMessageIds: managed.lastSentMessageIds ?? [] }).finished
   }
 
   // ============================================
@@ -8198,26 +8211,66 @@ initialSources: {
     messageId: string; delivery: 'delivered' | 'queued'; targetBusy: boolean
   }> {
     if (this.sessions.get(sessionId)?.sessionKind === 'resident_assistant') throw new Error('Use the resident assistant typed work inbox; ordinary session delivery cannot inject user input into the assistant')
-    const admitted = await this.execution.admission(sessionId, () => this.admitSessionInput(
-      sessionId, message, attachments, undefined, undefined, undefined, undefined, undefined, undefined,
-      deliveryId ? `agent-message:${deliveryId}` : undefined,
-      { kind: 'session_message' },
-    ))
+    const admitted = await this.execution.admission(sessionId, () => this.admitSessionInput(sessionId, {
+      text: message,
+      attachments,
+      messageId: deliveryId ? `agent-message:${deliveryId}` : undefined,
+      inputSource: { kind: 'session_message' }
+    }))
     if (admitted?.finished) void admitted.finished.catch(error => sessionLog.error('Delivered session input failed during execution:', error))
     if (!admitted?.receipt) throw new Error('Session input was not admitted')
     return admitted.receipt
   }
 
+  submitInput(sessionId: string, input: SessionInputIntent, origin: InputOrigin): InputTurn {
+    const receipt = Promise.withResolvers<{ accepted: true; messageId: string }>()
+    let accepted = false
+    const finished = this.runInputSubmission(sessionId, input, origin, messageId => {
+      if (accepted) return
+      accepted = true
+      receipt.resolve({ accepted: true, messageId })
+    })
+    // Every turn owns both promises even when its caller only needs one wait point.
+    void receipt.promise.catch(() => {})
+    void finished.then(() => {
+      if (!accepted) receipt.reject(new Error('Input completed without persisting a message'))
+    }, error => {
+      if (!accepted) { receipt.reject(error); return }
+      sessionLog.error('Accepted input failed during execution:', error)
+      if (origin.callerClientId) {
+        this.eventSink?.(RPC_CHANNELS.sessions.EVENT, { to: 'client', clientId: origin.callerClientId },
+          { type: 'error', sessionId, error: error instanceof Error ? error.message : 'Unknown error' })
+        this.eventSink?.(RPC_CHANNELS.sessions.EVENT, { to: 'client', clientId: origin.callerClientId }, { type: 'complete', sessionId })
+      }
+    })
+    return { accepted: receipt.promise, finished }
+  }
+
+  /** Published Host compatibility; production callers use submitInput intents. */
   async sendMessage(
     sessionId: string, message: string, attachments?: FileAttachment[], storedAttachments?: StoredAttachment[],
     options?: SendMessageOptions, existingMessageId?: string, _isAuthRetry?: boolean,
     onAck?: (messageId: string) => void, rpcContext?: { callerClientId?: string },
   ): Promise<void> {
+    const turn = this.submitInput(sessionId, { text: message, attachments, storedAttachments, options,
+      ...(existingMessageId ? { replay: { messageId: existingMessageId, authRetry: _isAuthRetry } } : {}) },
+      { kind: 'direct_user', channel: 'legacy', callerClientId: rpcContext?.callerClientId })
+    if (onAck) void turn.accepted.then(receipt => onAck(receipt.messageId), () => {})
+    await turn.finished
+  }
+
+  private async runInputSubmission(sessionId: string, input: SessionInputIntent, origin: InputOrigin, onAck: (messageId: string) => void): Promise<void> {
+    const { text: message, attachments, storedAttachments, options, messageId: admissionMessageId } = input
+    const existingMessageId = input.replay?.messageId, _isAuthRetry = input.replay?.authRetry
+    const { callerClientId, ...attributedSource } = origin
+    const rpcContext = { callerClientId }
+    const inputSource = existingMessageId ? this.sessions.get(sessionId)?.messages.find(message => message.id === existingMessageId)?.inputSource : attributedSource
+    let receipted = false
     const managed = this.sessions.get(sessionId)
     this.residentForegroundAdmissions.add(sessionId)
     let admitted: Awaited<ReturnType<SessionManager['admitSessionInput']>>
     try {
-      if (managed && managed.sessionKind !== 'resident_assistant' && !existingMessageId) {
+      if (origin.kind === 'direct_user' && managed && managed.sessionKind !== 'resident_assistant' && !existingMessageId) {
         const coordinator = this.residentServices.get(managed.workspace.id)?.delegation
         for (const input of managed.messages) if (input.isQueued && input.delegationRefresh) {
           input.isQueued = false; input.inputReception = { disposition: 'rejected', reason: 'A new direct user input superseded pending material continuation' }
@@ -8228,46 +8281,40 @@ initialSources: {
       if (managed?.sessionKind === 'resident_assistant' && managed.runtime.isProcessing
         && managed.messages.some(input => managed.lastSentMessageIds?.includes(input.id) && (input.inputSource?.kind === 'memory_maintenance'
           || input.inputSource?.kind === 'runtime_continuation' && input.inputSource.reason === 'memory_refresh'))) await this.cancelProcessing(sessionId, true)
-      admitted = await this.execution.admission(sessionId, () => this.admitSessionInput(
-        sessionId, message, attachments, storedAttachments, options, existingMessageId, _isAuthRetry, messageId => {
-          if (managed && !managed.sessionKind && !existingMessageId && !_isAuthRetry && !options?.hidden) {
+      admitted = await this.execution.admission(sessionId, () => this.admitSessionInput(sessionId, {
+        text: message,
+        attachments,
+        storedAttachments,
+        options,
+        onAccepted: messageId => {
+          receipted = true
+          onAck(messageId)
+          if (origin.kind === 'direct_user' && managed && !managed.sessionKind && !existingMessageId && !_isAuthRetry && !options?.hidden) {
             this.residentServices.get(managed.workspace.id)?.delegation?.directUserInput(managed.handoffRootSessionId ?? managed.id)
             this.retireQueuedWorkerInputs(managed, undefined, 'A later direct user input superseded this staged management continuation')
             this.persistSession(managed)
           }
-          onAck?.(messageId)
-        }, rpcContext,
-      ))
+        },
+        rpcContext,
+        messageId: admissionMessageId,
+        inputSource,
+        replay: { messageId: existingMessageId, authRetry: _isAuthRetry }
+      }))
     } finally { this.residentForegroundAdmissions.delete(sessionId) }
+    if (!receipted && admitted?.receipt) onAck(admitted.receipt.messageId)
     await admitted?.finished
   }
 
-  private async admitSessionInput(
-    sessionId: string,
-    message: string,
-    attachments?: FileAttachment[],
-    storedAttachments?: StoredAttachment[],
-    options?: SendMessageOptions,
-    existingMessageId?: string,
-    _isAuthRetry?: boolean,
-    /**
-     * Internal hook fired after the user message has been pushed to
-     * `managed.messages` and persisted to disk, but before the model-streaming
-     * work begins. The RPC handler uses this to send a synchronous "accepted"
-     * ack to the client so a crash mid-stream doesn't lose the user message
-     * (#616). Pre-persist errors still reject the outer promise as before.
-     */
-    onAck?: (messageId: string) => void,
-    /**
-     * Optional transport context. The `sessions.sendMessage` RPC handler passes
-     * `{ callerClientId: ctx.clientId }` so the SM can pin the desktop client
-     * that should host this session's browser tools. Pass undefined when calling
-     * directly (tests, intra-server flows) to leave the existing pin in place.
-     */
-    rpcContext?: { callerClientId?: string },
-    admissionMessageId?: string,
-    inputSource?: Message['inputSource'],
-  ): Promise<{ finished?: Promise<void>; receipt?: { messageId: string; delivery: 'delivered' | 'queued'; targetBusy: boolean } } | void> {
+  private async admitSessionInput(sessionId: string, request: Omit<SessionInputIntent, 'replay'> & {
+    replay?: { messageId?: string; authRetry?: boolean }
+    onAccepted?: (messageId: string) => void
+    rpcContext?: { callerClientId?: string }
+    inputSource?: Message['inputSource']
+  }): Promise<{ finished?: Promise<void>; receipt?: { messageId: string; delivery: 'delivered' | 'queued'; targetBusy: boolean } } | void> {
+    let { text: message, attachments, storedAttachments, options, messageId: admissionMessageId, inputSource } = request
+    const { onAccepted: onAck, rpcContext } = request
+    let existingMessageId = request.replay?.messageId
+    const _isAuthRetry = request.replay?.authRetry
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       throw new Error(`Session ${sessionId} not found`)
@@ -8279,10 +8326,12 @@ initialSources: {
       // thread they can see, so the optimistic bubble must not stay pending. This
       // echo is renderer-only — the parent's transcript stays frozen at the
       // handoff point, because the message now belongs to the successor.
-      return this.execution.admission(successorId, () => this.admitSessionInput(
-        successorId,
-        message, attachments, storedAttachments, options, undefined, _isAuthRetry,
-        (messageId) => {
+      return this.execution.admission(successorId, () => this.admitSessionInput(successorId, {
+        text: message,
+        attachments,
+        storedAttachments,
+        options,
+        onAccepted: (messageId) => {
           this.sendEvent({
             type: 'user_message',
             sessionId,
@@ -8301,9 +8350,9 @@ initialSources: {
           onAck?.(messageId)
         },
         rpcContext,
-        admissionMessageId,
-        inputSource,
-      ))
+        messageId: admissionMessageId,
+        inputSource
+      }))
     }
     this.setLastMessageClientId(sessionId, rpcContext?.callerClientId)
     const savedInput = existingMessageId ? managed.messages.find(input => input.id === existingMessageId) : undefined
@@ -8339,6 +8388,7 @@ initialSources: {
 
     // Ensure messages are loaded before we try to add new ones
     await this.ensureMessagesLoaded(managed)
+    if (existingMessageId) inputSource = managed.messages.find(input => input.id === existingMessageId)?.inputSource
     const originalScope = inputSource?.kind === 'runtime_continuation' ? managed.messages.find(input => inputSource.inputMessageIds.includes(input.id) && input.projectScope)?.projectScope : undefined
     const event = inputSource?.kind === 'resident_event' ? this.residentService(managed.workspace).delegation?.pendingEvents().find(event => inputSource.eventIds.includes(event.eventId)) : undefined
     const eventScope = event && event.projectId !== undefined ? { projectId: event.projectId } : undefined
@@ -8425,7 +8475,7 @@ initialSources: {
         managed.messages.push(userMessage)
         this.durableRuntime.commands.recordUserInputAdmission({ workspaceRootPath: managed.workspace.rootPath,
           sessionId, messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
-          attachments: storedAttachments, options })
+          attachments: storedAttachments, options, inputSource: userMessage.inputSource })
       }
 
       // Admit the original input before either delivery path can reach the model.
@@ -8520,7 +8570,7 @@ initialSources: {
       managed.messages.push(userMessage)
       this.durableRuntime.commands.recordUserInputAdmission({ workspaceRootPath: managed.workspace.rootPath,
         sessionId, messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
-        attachments: storedAttachments, options })
+        attachments: storedAttachments, options, inputSource: userMessage.inputSource })
 
       // Update lastMessageRole for badge display. Skip for hidden messages so the
       // session-list preview isn't briefly driven by an invisible system nudge.
@@ -9151,15 +9201,9 @@ initialSources: {
 
           managed.authRetryInProgress = false
 
-          await this.sendMessage(
-            sessionId,
-            retryMessage,
-            retryAttachments,
-            retryStoredAttachments,
-            retryOptions,
-            retryMessageId,
-            true        // _isAuthRetry - prevents infinite retry loop
-          )
+          await this.submitInput(sessionId, { text: retryMessage, attachments: retryAttachments, storedAttachments: retryStoredAttachments,
+            options: retryOptions, ...(retryMessageId ? { replay: { messageId: retryMessageId, authRetry: true } } : {}) },
+            { kind: 'runtime_continuation', reason: 'source_activation', inputMessageIds: managed.lastSentMessageIds ?? [] }).finished
           sessionLog.info(`[auth-retry] Retry completed for session ${sessionId}`)
         } else {
           managed.authRetryInProgress = false
@@ -9280,14 +9324,19 @@ initialSources: {
         const current = service.delegation?.receiptForInput(managed.id, original.id)
         if (this.shuttingDown || this.sessions.get(managed.id) !== managed || managed.runtime.isProcessing || !current
           || !['submitting', 'submitted'].includes(current.state) || continuation.inputReception?.disposition === 'rejected'
-          || managed.messages.slice(managed.messages.indexOf(original) + 1).some(message => message.role === 'user' && !message.inputSource)) return
+          || managed.messages.slice(managed.messages.indexOf(original) + 1).some(message => message.role === 'user' && isDirectUserSource(message.inputSource))) return
         if (!this.delegatedCapabilitiesValid(managed, snapshot) || !service.memory.dependenciesValid(continuation!.delegationRefresh!.materialDependencies)) {
           service.delegation?.complete({ sessionId: managed.id, workspaceId: managed.workspace.id, inputMessageIds: [original.id], reason: 'error' }); return
         }
         continuation!.isQueued = false
         const attachments = continuation!.attachments?.map(file => readFileAttachment(file.storedPath)).filter((file): file is FileAttachment => file !== null)
-        const admitted = await this.admitSessionInput(managed.id, continuation!.content, attachments, continuation!.attachments,
-          { hidden: true, skillSlugs: continuation!.skillSlugs }, continuation!.id)
+        const admitted = await this.admitSessionInput(managed.id, {
+          text: continuation!.content,
+          attachments,
+          storedAttachments: continuation!.attachments,
+          options: { hidden: true, skillSlugs: continuation!.skillSlugs },
+          replay: { messageId: continuation!.id }
+        })
         if (admitted?.finished) void admitted.finished.catch(error => sessionLog.warn('Delegated material continuation failed:', error))
         })
       })().catch(error => {
@@ -9481,14 +9530,9 @@ initialSources: {
     }
 
     // Host schedules this adapter after convergence; re-enter ordinary admission.
-    return this.sendMessage(
-        sessionId,
-        next.message,
-        next.attachments,
-        next.storedAttachments,
-        next.options,
-        next.messageId
-      ).catch(err => {
+    return this.submitInput(sessionId, { text: next.message, attachments: next.attachments, storedAttachments: next.storedAttachments,
+      options: next.options, ...(next.messageId ? { replay: { messageId: next.messageId } } : {}) },
+      { kind: 'runtime_continuation', reason: 'decision', inputMessageIds: next.messageId ? [next.messageId] : [] }).finished.catch(err => {
         sessionLog.error('replay failed', {
           sessionId,
           messageId: next.messageId,
@@ -10074,6 +10118,50 @@ initialSources: {
     }
   }
 
+  getWorkspacePlanning(workspaceId: string) { return createWorkspacePlanning(workspaceId, this) }
+
+  async createPlanningItem(workspaceId: string, input: PlanningCreate): Promise<Session> {
+    const workspace = getWorkspaceByNameOrId(workspaceId)
+    if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
+    const normalized = this.prepareSessionPlanning({ id: '', workspace, createdAt: Date.now() }, {
+      description: input.description, acceptanceCriteria: input.acceptanceCriteria, startAt: input.startAt, dueAt: input.dueAt,
+      progress: input.progress, dependencySessionIds: input.dependencyIds, parentSessionId: input.parentId, isMilestone: input.isMilestone,
+    }, false)
+    const session = await this.createSession(workspaceId, { name: input.title.trim(), projectId: input.projectId,
+      sessionStatus: input.statusId ?? 'backlog', ...normalized })
+    if (input.columnId) await this.setKanbanColumn(session.id, input.columnId)
+    return session
+  }
+
+  async updatePlanningItem(workspaceId: string, sessionId: string, patch: PlanningUpdate): Promise<void> {
+    const managed = this.sessions.get(sessionId)
+    if (!managed || managed.workspace.id !== workspaceId) throw new Error(`Session not found: ${sessionId}`)
+    if (patch.statusId !== undefined && managed.sessionKind === 'resident_assistant') throw new Error('The resident assistant is not a task and cannot change task status')
+    const normalized = this.prepareSessionPlanning(managed, {
+      ...('description' in patch ? { description: patch.description } : {}),
+      ...('acceptanceCriteria' in patch ? { acceptanceCriteria: patch.acceptanceCriteria } : {}),
+      ...('startAt' in patch ? { startAt: patch.startAt } : {}), ...('dueAt' in patch ? { dueAt: patch.dueAt } : {}),
+      ...('progress' in patch ? { progress: patch.progress } : {}),
+      ...(patch.dependencyIds ? { dependencySessionIds: patch.dependencyIds } : {}),
+      ...('parentId' in patch ? { parentSessionId: patch.parentId } : {}),
+      ...(patch.isMilestone !== undefined ? { isMilestone: patch.isMilestone } : {}),
+    })
+    // Complete preflight before any observable metadata mutation.
+    if (patch.statusId !== undefined) await this.ensureMessagesLoaded(managed)
+    if (patch.title !== undefined) { managed.name = patch.title.trim(); managed.autoTitle = undefined; managed.titleDeferred = false }
+    if ('projectId' in patch) managed.projectId = patch.projectId ?? undefined
+    if ('columnId' in patch) managed.kanbanColumn = patch.columnId ?? undefined
+    if (patch.statusId !== undefined) {
+      for (const message of managed.messages) if (message.delegationInput?.statusControl) message.delegationInput.statusControl.withdrawn = true
+      managed.sessionStatus = patch.statusId
+    }
+    await this.commitSessionPlanning(managed, normalized)
+    if (patch.title !== undefined) this.sendEvent({ type: 'title_generated', sessionId, title: managed.name! }, workspaceId)
+    if ('projectId' in patch) this.sendEvent({ type: 'project_id_changed', sessionId, projectId: managed.projectId ?? null }, workspaceId)
+    if ('columnId' in patch) this.sendEvent({ type: 'session_metadata_changed', sessionId, changes: { kanbanColumn: managed.kanbanColumn } }, workspaceId)
+    if (patch.statusId !== undefined) this.sendEvent({ type: 'session_status_changed', sessionId, sessionStatus: patch.statusId }, workspaceId)
+  }
+
   /** Update planning metadata used by every project-management projection. */
   async updateSessionPlanning(
     sessionId: string,
@@ -10082,6 +10170,16 @@ initialSources: {
     const managed = this.sessions.get(sessionId)
     if (!managed) throw new Error(`Session ${sessionId} not found`)
 
+    const normalized = this.prepareSessionPlanning(managed, patch)
+    await this.commitSessionPlanning(managed, normalized)
+  }
+
+  private prepareSessionPlanning(
+    managed: Pick<ManagedSession, 'id' | 'workspace' | 'createdAt' | 'startAt' | 'dueAt'>,
+    patch: Parameters<SessionManager['updateSessionPlanning']>[1],
+    anchorDeadline = true,
+  ): Partial<import('@phaneris/shared/sessions').SessionPlanningFields> & { parentSessionId?: string } {
+    const sessionId = managed.id
     const normalized: Partial<import('@phaneris/shared/sessions').SessionPlanningFields> & { parentSessionId?: string } = {}
     if ('description' in patch) normalized.description = patch.description?.trim() || undefined
     if ('acceptanceCriteria' in patch) normalized.acceptanceCriteria = patch.acceptanceCriteria?.trim() || undefined
@@ -10110,7 +10208,7 @@ initialSources: {
      */
     const rangeError = planRangeError(plannedStart, plannedDue)
     if (rangeError) throw new Error(rangeError)
-    if (plannedDue && !plannedStart) {
+    if (anchorDeadline && plannedDue && !plannedStart) {
       const created = new Date(managed.createdAt || Date.now())
       const year = created.getFullYear()
       const month = String(created.getMonth() + 1).padStart(2, '0')
@@ -10150,6 +10248,12 @@ initialSources: {
       throw new Error('Session start must not be after its end')
     }
 
+    return normalized
+  }
+
+  private async commitSessionPlanning(managed: ManagedSession,
+    normalized: Partial<import('@phaneris/shared/sessions').SessionPlanningFields> & { parentSessionId?: string }): Promise<void> {
+    const sessionId = managed.id
     Object.assign(managed, normalized)
     this.setMetadataWriteGuard(managed)
     this.persistSession(managed)
@@ -11526,7 +11630,7 @@ initialSources: {
           // Ride the normal turn machinery (resume + persistence). `hidden: true`
           // keeps the nudge out of the transcript — the agent's response (the
           // presented result) renders as a normal assistant turn.
-          void this.sendMessage(sessionId, nudge, [], [], { hidden: true }).catch((err) => {
+          void this.submitInput(sessionId, { text: nudge, options: { hidden: true } }, { kind: 'runtime_continuation', reason: 'background_task', inputMessageIds: managed.lastSentMessageIds ?? [] }).finished.catch((err) => {
             sessionLog.error(`[bg-lifecycle] failed to surface completed task ${event.taskId}:`, err)
           })
         }
@@ -11621,7 +11725,7 @@ initialSources: {
           // so a legacy renderer's duplicate RPC arriving ~50ms later gets dropped.
           // The pending slot is cleared by the deadline check in sendMessage, by the
           // next matching sendMessage that drops as a duplicate, or by session deletion.
-          this.sendMessage(sessionId, retryMessage, retryAttachments, retryStoredAttachments, retryOptions).catch(err => {
+          this.submitInput(sessionId, { text: retryMessage, attachments: retryAttachments, storedAttachments: retryStoredAttachments, options: retryOptions }, { kind: 'runtime_continuation', reason: 'source_activation', inputMessageIds: pendingRetry.originalInputIds ?? [] }).finished.catch(err => {
             sessionLog.error(`Auto-retry sendMessage failed for ${sessionId}:`, err)
             if (this.sessions.get(sessionId) !== current) return
             if (current.autoRetryPending === pendingRetry) current.autoRetryPending = undefined
@@ -11843,21 +11947,10 @@ initialSources: {
     // until the entire turn (including tool calls) finishes and trips the 30s
     // client timeout (craft-agents-oss#943). The session streams live either
     // way; a background failure surfaces in the session UI and is logged here.
-    if (waitForCompletion === false) {
-      void this.sendMessage(session.id, prompt, undefined, undefined, {
-        skillSlugs: resolved?.skillSlugs,
-      }).catch((err) => {
-        sessionLog.error('[Automations] background sendMessage failed for test run', {
-          sessionId: session.id,
-          error: err instanceof Error ? err.message : String(err),
-        })
-      })
-      return { sessionId: session.id }
-    }
-
-    await this.sendMessage(session.id, prompt, undefined, undefined, {
-      skillSlugs: resolved?.skillSlugs,
-    })
+    const turn = this.submitInput(session.id, { text: prompt, options: { skillSlugs: resolved?.skillSlugs } },
+      { kind: 'automation', automationId, automationName })
+    if (waitForCompletion === false) await turn.accepted
+    else await turn.finished
 
     return { sessionId: session.id }
   }
