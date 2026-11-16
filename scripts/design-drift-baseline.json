@@ -31,7 +31,7 @@
       "files": {}
     },
     "interactiveTitle": {
-      "count": 91,
+      "count": 90,
       "files": {
         "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx": 1,
         "apps/electron/src/renderer/pages/settings/PreferencesPage.tsx": 2,
@@ -49,7 +49,7 @@
         "apps/electron/src/renderer/components/chat/ChatStarters.tsx": 1,
         "apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx": 1,
         "apps/electron/src/renderer/components/app-shell/BackgroundFinishedChip.tsx": 1,
-        "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/ChatMessageBubble.tsx": 1,
         "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx": 1,
         "apps/electron/src/renderer/components/app-shell/SessionSearchHeader.tsx": 1,
         "apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx": 1,
@@ -65,8 +65,8 @@
         "packages/ui/src/components/ui/IslandFollowUpContentView.tsx": 1,
         "packages/ui/src/components/ui/PreviewHeader.tsx": 2,
         "packages/ui/src/components/trajectory/RecordInspector.tsx": 3,
-        "packages/ui/src/components/trajectory/TrajectoryContextView.tsx": 1,
-        "packages/ui/src/components/trajectory/TrajectoryOverview.tsx": 2,
+        "packages/ui/src/components/trajectory/RunCharts.tsx": 1,
+        "packages/ui/src/components/trajectory/RunOverview.tsx": 2,
         "packages/ui/src/components/trajectory/TrajectoryStrip.tsx": 1,
         "packages/ui/src/components/trajectory/TrajectoryToolbar.tsx": 3,
         "packages/ui/src/components/terminal/TerminalOutput.tsx": 2,
@@ -89,7 +89,7 @@
         "packages/ui/src/components/markdown/TiptapBubbleMenus.tsx": 6,
         "packages/ui/src/components/markdown/TiptapCodeBlockView.tsx": 2,
         "packages/ui/src/components/code-viewer/DiffViewerControls.tsx": 2,
-        "packages/ui/src/components/chat/TurnCard.tsx": 2,
+        "packages/ui/src/components/chat/TurnCard.tsx": 1,
         "apps/viewer/src/components/Header.tsx": 2
       }
     },
@@ -103,6 +103,29 @@
     "paletteHue": {
       "count": 0,
       "files": {}
+    },
+    "handRolledCenterStack": {
+      "count": 21,
+      "files": {
+        "apps/electron/src/renderer/App.tsx": 1,
+        "apps/electron/src/renderer/main.tsx": 1,
+        "apps/electron/src/renderer/pages/ChatPage.tsx": 1,
+        "apps/electron/src/renderer/components/pages/PageView.tsx": 1,
+        "apps/electron/src/renderer/components/onboarding/CredentialsStep.tsx": 1,
+        "apps/electron/src/renderer/components/info/Info_Page.tsx": 1,
+        "apps/electron/src/renderer/components/files/FileViewer.tsx": 3,
+        "apps/electron/src/renderer/components/content-panels/FilePreviewContent.tsx": 1,
+        "apps/electron/src/renderer/components/chat/NewSessionLanding.tsx": 1,
+        "apps/electron/src/renderer/components/automations/AutomationsListPanel.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/MultiSelectPanel.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/SessionList.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx": 2,
+        "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx": 1,
+        "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx": 1,
+        "apps/webui/src/main.tsx": 1,
+        "apps/viewer/src/components/SessionUpload.tsx": 1
+      }
     }
   },
   "motion": {

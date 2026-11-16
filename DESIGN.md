@@ -311,9 +311,24 @@ Rules:
   active conversation and collapsing it restores the group. Compact layouts use
   full-width replacement layers. Expanded Workbench fills the content row.
 - Chat reading column is `--reading-width: 840px` with `--reading-gutter`.
+- The three columns concede in a fixed order when the window narrows: the
+  sidebar falls back to its **48px** rail, then the navigator shrinks toward its
+  **220px** floor, and only then is the navigator hidden. The content column
+  holds a **480px** floor throughout — it is the only column whose job is
+  reading, so it is the only one that never yields. Before this rule the sidebar
+  and navigator were taken first and the content got the remainder, which left
+  an 800px window with a 288px chat (`fitColumns` in
+  `apps/electron/src/renderer/lib/nav-helpers.ts`).
 - Panel-relative responsiveness uses container queries, not viewport queries:
   `@panel-compact` (448px), `@panel-medium` (640px), `@mobile` (768px).
 - Spacing follows a 4px rhythm (`spacing.1–6`).
+- **Compose layout from the five primitives** in `@phaneris/ui` (`Stack`,
+  `Cluster`, `Center`, `Truncate`, `Switcher`) instead of hand-rolling
+  `flex flex-col items-center justify-center` and friends. They own the gap
+  scale and the `min-w-0` chain that truncation depends on, and `Switcher` keys
+  off the *container* so a narrow panel behaves like a narrow window.
+  `handRolledCenterStack` in `check:design-drift` is frozen at the pre-primitive
+  count and may only shrink.
 - Control heights are contract tiers `18/22/26/30/34/38px`. Heights above the
   control band describe layout space, not hit targets, and are not tiered.
 - One `h1` per screen: the primary surface title. Navigator, workbench and

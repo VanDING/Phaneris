@@ -371,6 +371,9 @@ export {
   type DismissibleLayerType,
 } from './lib/dismissible-layer-bridge'
 
+// Layout primitives — Stack / Cluster / Center / Truncate / Switcher
+export { Stack, Cluster, Center, Truncate, Switcher } from './components/layout'
+
 // Layout constants and hooks
 export {
   CHAT_LAYOUT,
@@ -414,3 +417,4 @@ export {
   Icon_Inbox,
   type IconProps,
 } from './components/icons'
+

@@ -98,6 +98,18 @@ const PALETTE_HUE = /(?<![\w-])(?:bg|text|border|ring|fill|stroke|from|to|via)-(
 const PALETTE_HUE_EXEMPT = ['apps/electron/src/renderer/components/icons/ConnectionIcon.tsx']
 
 /**
+ * A vertical stack that centers itself with utilities.
+ *
+ * `flex flex-col items-center justify-center` is the "empty state / loading
+ * placeholder" shape. It recurred 24 times across 21 files, each a different
+ * combination of gap and alignment, before `Stack`/`Center` existed in
+ * `@phaneris/ui`. New code has no reason to hand-roll it: the primitives own the
+ * gap scale and the `min-w-0` chain. Frozen at the current count so the pattern
+ * ratchets down instead of being copied into the next empty state.
+ */
+const HAND_ROLLED_CENTER_STACK = /flex[^"'\n]*\bflex-col\b[^"'\n]*\bitems-center\b[^"'\n]*\bjustify-center\b|flex[^"'\n]*\bflex-col\b[^"'\n]*\bjustify-center\b[^"'\n]*\bitems-center\b/g
+
+/**
  * `title=` inside a button-ish JSX opening tag.
  *
  * A line-based match misses the common multi-line form, so the tag extent is
@@ -139,13 +151,14 @@ const COUNTERS = {
   strokeWidthLiteral: STROKE_WIDTH,
   focusRingSuppressed: FOCUS_SUPPRESSED,
   paletteHue: PALETTE_HUE,
+  handRolledCenterStack: HAND_ROLLED_CENTER_STACK,
 } as const
 
 type CounterName = keyof typeof COUNTERS | 'interactiveTitle'
 
 function emptyCounters(): Record<CounterName, DriftCounter> {
   return Object.fromEntries(
-    (['defaultFontSize', 'translucentText', 'strokeWidthLiteral', 'interactiveTitle', 'focusRingSuppressed', 'paletteHue'] as CounterName[])
+    (['defaultFontSize', 'translucentText', 'strokeWidthLiteral', 'interactiveTitle', 'focusRingSuppressed', 'paletteHue', 'handRolledCenterStack'] as CounterName[])
       .map(name => [name, { count: 0, files: {} }]),
   ) as Record<CounterName, DriftCounter>
 }

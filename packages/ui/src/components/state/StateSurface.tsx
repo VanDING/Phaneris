@@ -5,6 +5,7 @@
  */
 import * as React from 'react'
 import { cn } from '../../lib/utils'
+import { Cluster, Stack } from '../layout'
 
 export type StateVariant = 'empty' | 'loading' | 'error' | 'partial' | 'denied'
 
@@ -40,27 +41,25 @@ export function StateSurface({
     <div
       role={ROLE[variant]}
       aria-live={variant === 'loading' ? 'polite' : undefined}
-      className={cn(
-        'flex flex-col items-center justify-center text-center',
-        compact ? 'gap-1.5 px-4 py-6' : 'gap-2 px-7 py-10',
-        className,
-      )}
+      className={cn('text-center', compact ? 'px-4 py-6' : 'px-7 py-10', className)}
     >
-      {icon && (
-        <div className={cn(
-          'mb-1 flex items-center justify-center rounded-card bg-foreground/[0.04] text-text-tertiary',
-          compact ? 'h-9 w-9' : 'h-12 w-12',
-        )}>
-          {icon}
-        </div>
-      )}
-      <p className={cn('font-medium text-text-primary', compact ? 'text-label' : 'text-body')}>{title}</p>
-      {description && (
-        <p className={cn('max-w-[42ch] text-text-secondary', compact ? 'text-meta' : 'text-label')}>
-          {description}
-        </p>
-      )}
-      {actions && <div className={cn('flex items-center gap-2', compact ? 'mt-2' : 'mt-3')}>{actions}</div>}
+      <Stack gap={compact ? 'xs' : 'sm'} align="center">
+        {icon && (
+          <div className={cn(
+            'mb-1 flex items-center justify-center rounded-card bg-foreground/[0.04] text-text-tertiary',
+            compact ? 'h-9 w-9' : 'h-12 w-12',
+          )}>
+            {icon}
+          </div>
+        )}
+        <p className={cn('font-medium text-text-primary', compact ? 'text-label' : 'text-body')}>{title}</p>
+        {description && (
+          <p className={cn('max-w-[42ch] text-text-secondary', compact ? 'text-meta' : 'text-label')}>
+            {description}
+          </p>
+        )}
+        {actions && <Cluster gap="sm" className={compact ? 'mt-2' : 'mt-3'}>{actions}</Cluster>}
+      </Stack>
     </div>
   )
 }
@@ -111,3 +110,4 @@ export function ErrorBanner({ tone = 'error', title, description, action, wrap =
     </div>
   )
 }
+

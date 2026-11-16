@@ -1,17 +1,17 @@
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { Center, Cluster, Stack } from "@phaneris/ui"
 
-function Empty({ className, ...props }: React.ComponentProps<"div">) {
+function Empty({ className, children, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <Center
       data-slot="empty"
-      className={cn(
-        "flex min-w-0 flex-1 flex-col items-center justify-center gap-3 rounded-lg p-6 pb-[20%] text-center text-balance",
-        className
-      )}
+      className={cn("flex-1 rounded-lg p-6 pb-[20%] text-balance", className)}
       {...props}
-    />
+    >
+      <Stack gap="md" align="center">{children}</Stack>
+    </Center>
   )
 }
 
@@ -83,12 +83,11 @@ function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
 
 function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <Cluster
       data-slot="empty-content"
-      className={cn(
-        "flex w-full max-w-sm min-w-0 flex-row items-center justify-center gap-3 mt-3 text-body",
-        className
-      )}
+      gap="md"
+      justify="center"
+      className={cn("w-full max-w-sm mt-3 text-body", className)}
       {...props}
     />
   )
@@ -102,3 +101,4 @@ export {
   EmptyContent,
   EmptyMedia,
 }
+
