@@ -47,6 +47,7 @@ import { SquarePenRounded } from "../icons/SquarePenRounded"
 import { McpIcon } from "../icons/McpIcon"
 import { cn } from "@/lib/utils"
 import { readAfterReconnect } from "@/lib/read-after-reconnect"
+import { useWorkspaceResources } from "@/hooks/useWorkspaceResources"
 import { isMac, isWindows, isWebUI } from "@/lib/platform"
 import { Button } from "@/components/ui/button"
 import { HeaderIconButton } from "@/components/ui/HeaderIconButton"
@@ -188,7 +189,7 @@ import {
   RADIUS_INNER,
 } from "./panel-constants"
 import { hasOpenOverlay } from "@/lib/overlay-detection"
-import { clearSourceIconCaches } from "@/lib/icon-cache"
+
 import { dispatchFocusInputEvent } from "./input/focus-input-events"
 
 /**
@@ -649,67 +650,6 @@ function AppShellContent({
       return next
     })
   }, [])
-  // Sources state (workspace-scoped)
-  const [sources, setSources] = React.useState<LoadedSource[]>([])
-  // Sync sources to atom for NavigationContext auto-selection
-  const setSourcesAtom = useSetAtom(sourcesAtom)
-  React.useEffect(() => {
-    setSourcesAtom(sources)
-  }, [sources, setSourcesAtom])
-
-  // Skills state (workspace-scoped)
-  const [skills, setSkills] = React.useState<LoadedSkill[]>([])
-  // Sync skills to atom for NavigationContext auto-selection
-  const setSkillsAtom = useSetAtom(skillsAtom)
-  React.useEffect(() => {
-    setSkillsAtom(skills)
-  }, [skills, setSkillsAtom])
-
-  // Plugins state (workspace-scoped) — installed bundles for the `/` roster and
-  // the Plugins section. Load errors are tracked separately: a bundle that will
-  // not load must be visible, not missing.
-  const [plugins, setPlugins] = React.useState<PluginSummary[]>([])
-  const [pluginLoadErrors, setPluginLoadErrors] = React.useState<PluginLoadError[]>([])
-  const setPluginsAtom = useSetAtom(pluginsAtom)
-  const setPluginLoadErrorsAtom = useSetAtom(pluginLoadErrorsAtom)
-  React.useEffect(() => {
-    setPluginsAtom(plugins)
-  }, [plugins, setPluginsAtom])
-  React.useEffect(() => {
-    setPluginLoadErrorsAtom(pluginLoadErrors)
-  }, [pluginLoadErrors, setPluginLoadErrorsAtom])
-
-  const reloadPlugins = React.useCallback(async (workspaceId: string) => {
-    try {
-      const result = await window.electronAPI.getPlugins(workspaceId)
-      setPlugins(result?.plugins ?? [])
-      setPluginLoadErrors(result?.errors ?? [])
-    } catch (err) {
-      console.error('[Plugins] Failed to load plugins:', err)
-      setPlugins([])
-      setPluginLoadErrors([])
-    }
-  }, [])
-
-  React.useEffect(() => {
-    if (!activeWorkspaceId) {
-      setPlugins([])
-      setPluginLoadErrors([])
-      return
-    }
-    void reloadPlugins(activeWorkspaceId)
-  }, [activeWorkspaceId, reloadPlugins])
-
-  // A bundle can change without the plugin list being replaced wholesale: edits
-  // and reinstalls happen on disk. `plugins:changed` also carries the payload.
-  React.useEffect(() => {
-    const cleanup = window.electronAPI.onPluginsChanged((workspaceId: string, payload: PluginsListResult) => {
-      if (workspaceId !== activeWorkspaceId) return
-      setPlugins(payload?.plugins ?? [])
-      setPluginLoadErrors(payload?.errors ?? [])
-    })
-    return cleanup
-  }, [activeWorkspaceId, reloadPlugins])
   // Automations — state, handlers, loading, subscriptions
   const activeWorkspace = workspaces.find(w => w.id === activeWorkspaceId)
 
@@ -826,40 +766,6 @@ function AppShellContent({
     }
 
     previousWorkspaceRef.current = activeWorkspaceId
-  }, [activeWorkspaceId])
-
-  // Load sources from backend on mount
-  React.useEffect(() => {
-    if (!activeWorkspaceId) return
-    let cancelled = false
-    readAfterReconnect(() => window.electronAPI.getSources(activeWorkspaceId)).then((loaded) => {
-      if (cancelled) return
-      setSources(loaded || [])
-    }).catch(err => {
-      if (cancelled) return
-      console.error('[Chat] Failed to load sources:', err)
-    })
-    return () => { cancelled = true }
-  }, [activeWorkspaceId])
-
-  // Subscribe to live source updates (when sources are added/removed dynamically)
-  React.useEffect(() => {
-    const cleanup = window.electronAPI.onSourcesChanged((workspaceId, updatedSources) => {
-      if (workspaceId !== activeWorkspaceId) return
-      // Clear icon cache so updated source icons are re-fetched on render
-      clearSourceIconCaches()
-      setSources(updatedSources || [])
-    })
-    return cleanup
-  }, [activeWorkspaceId])
-
-  // Subscribe to live skill updates (when skills are added/removed dynamically)
-  React.useEffect(() => {
-    const cleanup = window.electronAPI.onSkillsChanged((workspaceId, updatedSkills) => {
-      if (workspaceId !== activeWorkspaceId) return
-      setSkills(updatedSkills || [])
-    })
-    return cleanup
   }, [activeWorkspaceId])
 
   // Handle session source selection changes
@@ -1289,18 +1195,15 @@ function AppShellContent({
   const activeSessionWorkingDirectory = session.selected
     ? sessionMetaMap.get(session.selected)?.workingDirectory
     : undefined
-  React.useEffect(() => {
-    if (!activeWorkspaceId) return
-    let cancelled = false
-    readAfterReconnect(() => window.electronAPI.getSkills(activeWorkspaceId, activeSessionWorkingDirectory)).then((loaded) => {
-      if (cancelled) return
-      setSkills(loaded || [])
-    }).catch(err => {
-      if (cancelled) return
-      console.error('[Chat] Failed to load skills:', err)
-    })
-    return () => { cancelled = true }
-  }, [activeWorkspaceId, activeSessionWorkingDirectory])
+
+  // Workspace resources (sources, skills, plugins) — see useWorkspaceResources for
+  // the loaded/empty distinction the list panels depend on.
+  const resources = useWorkspaceResources(activeWorkspaceId, activeSessionWorkingDirectory)
+  const sources = resources.sources.items
+  const skills = resources.skills.items
+  const plugins = resources.plugins.items
+  const pluginLoadErrors = resources.pluginLoadErrors
+  const reloadPlugins = resources.reloadPlugins
 
   // Filter session metadata by active workspace
   // Also exclude hidden sessions (mini-agent sessions) from all counts and lists
@@ -3490,6 +3393,7 @@ function AppShellContent({
               /* Sources List - filtered by type if sourceFilter is active */
               <SourcesListPanel
                 sources={sources}
+                loading={!resources.sources.loaded}
                 sourceFilter={sourceFilter}
                 workspaceRootPath={activeWorkspace?.rootPath}
                 onDeleteSource={handleDeleteSource}
@@ -3502,6 +3406,7 @@ function AppShellContent({
               /* Skills List */
               <SkillsListPanel
                 skills={skills}
+                loading={!resources.skills.loaded}
                 workspaceId={activeWorkspaceId}
                 workspaceRootPath={activeWorkspace?.rootPath}
                 onSkillClick={handleSkillSelect}
@@ -3935,6 +3840,10 @@ function AppShellContent({
     </AppShellProvider>
   )
 }
+
+
+
+
 
 
 

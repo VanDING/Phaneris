@@ -42,6 +42,8 @@ export interface SourcesListPanelProps {
   selectedSourceSlug?: string | null
   localMcpEnabled?: boolean
   className?: string
+  /** Data still loading: withhold the empty state instead of claiming none exist. */
+  loading?: boolean
 }
 
 export function SourcesListPanel({
@@ -53,6 +55,7 @@ export function SourcesListPanel({
   selectedSourceSlug,
   localMcpEnabled = true,
   className,
+  loading,
 }: SourcesListPanelProps) {
   const { t } = useTranslation()
   const { workspaces, activeWorkspaceId } = useAppShellContext()
@@ -86,6 +89,7 @@ export function SourcesListPanel({
       selectedId={selectedSourceSlug}
       onItemClick={onSourceClick}
       className={className}
+      loading={loading}
       containerProps={{ 'data-list-role': 'sources', 'aria-label': t('sidebar.sources') }}
       emptyState={
         <EntityListEmptyScreen
@@ -162,3 +166,4 @@ export function SourcesListPanel({
     </>
   )
 }
+

@@ -53,6 +53,8 @@ export interface PluginsListPanelProps {
   /** Name of the bundle whose page is open, so its row shows selected. */
   selectedPluginName?: string | null
   className?: string
+  /** Data still loading: withhold the empty state instead of claiming none exist. */
+  loading?: boolean
 }
 
 function errorMessage(error: unknown): string {
@@ -76,6 +78,7 @@ export function PluginsListPanel({
   onPluginClick,
   selectedPluginName,
   className,
+  loading,
 }: PluginsListPanelProps) {
   const { t } = useTranslation()
   const activeWorkspace = useActiveWorkspace()
@@ -156,6 +159,7 @@ export function PluginsListPanel({
         if (row.kind === 'plugin') onPluginClick?.(row.plugin)
       }}
       className={className}
+      loading={loading}
       containerProps={{ 'data-list-role': 'plugins', 'aria-label': t('sidebar.allPlugins') }}
       emptyState={
         <EntityListEmptyScreen
@@ -282,3 +286,4 @@ export function PluginsListPanel({
     </>
   )
 }
+

@@ -51,6 +51,16 @@ export interface EntityListProps<T> {
   getKey: (item: T) => string
   /** Empty state content — rendered centered, outside ScrollArea */
   emptyState?: React.ReactNode
+  /**
+   * The list is still waiting for its data.
+   *
+   * Without this, a loading list is indistinguishable from an empty one, so the
+   * user is told "no skills configured" for the few hundred milliseconds before
+   * the skills arrive — a wrong answer stated confidently. When loading, the
+   * empty state is withheld and the container carries `aria-busy`, so assistive
+   * technology reports "busy" instead of "nothing here".
+   */
+  loading?: boolean
   /** Header content above the list (e.g. search bar) — rendered outside ScrollArea */
   header?: React.ReactNode
   /** Footer content after all items (e.g. infinite scroll sentinel) — inside ScrollArea */
@@ -153,6 +163,7 @@ export function EntityList<T>({
   renderItem,
   getKey,
   emptyState,
+  loading = false,
   header,
   footer,
   containerRef,
@@ -171,8 +182,10 @@ export function EntityList<T>({
   const hasItems = items && items.length > 0
   const isEmpty = !hasGroups && !hasItems
 
-  // Empty state — rendered outside everything for proper centering
-  if (isEmpty && emptyState) {
+  // Empty state — rendered outside everything for proper centering.
+  // Withheld while loading: an empty list that has not answered yet is not an
+  // empty list, and saying so is worse than saying nothing.
+  if (isEmpty && emptyState && !loading) {
     return (
       <div className={cn('flex flex-col flex-1', className)}>
         {header}
@@ -182,7 +195,7 @@ export function EntityList<T>({
   }
 
   return (
-    <div className={cn('flex flex-col flex-1 min-h-0', className)}>
+    <div className={cn('flex flex-col flex-1 min-h-0', className)} aria-busy={loading || undefined}>
       {header}
       <ScrollArea className={cn('flex-1', scrollAreaClassName)} viewportRef={viewportRef} viewportClassName={scrollViewportClassName}>
         <div
@@ -230,3 +243,4 @@ export function EntityList<T>({
     </div>
   )
 }
+

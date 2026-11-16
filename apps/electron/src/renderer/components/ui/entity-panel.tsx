@@ -31,6 +31,8 @@ export interface EntityPanelProps<T> {
   onItemClick: (item: T) => void
   selectedId?: string | null
   emptyState?: React.ReactNode
+  /** Items are still loading: withhold the empty state, mark the list busy. */
+  loading?: boolean
   className?: string
   /** Extra data/aria attributes merged onto the inner list container.
    *  Use to set `data-list-role` so compact-mode CSS can target the right list. */
@@ -45,6 +47,7 @@ export function EntityPanel<T>({
   onItemClick,
   selectedId,
   emptyState,
+  loading,
   className,
   containerProps,
 }: EntityPanelProps<T>) {
@@ -78,6 +81,7 @@ export function EntityPanel<T>({
       containerProps={mergedContainerProps}
       className={className}
       emptyState={emptyState}
+      loading={loading}
       renderItem={(item, index, isFirst) => {
         const mapped = mapItem(item)
         const rowProps = interactions.getRowProps(item, index)
@@ -106,3 +110,4 @@ export function EntityPanel<T>({
     />
   )
 }
+
