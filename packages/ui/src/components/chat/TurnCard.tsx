@@ -2123,7 +2123,7 @@ export function ResponseCard({
                 <button
                   onClick={handleCopy}
                   className={cn(
-                    "turn-action-btn flex items-center gap-1.5 transition-colors select-none",
+                    "craft-row-focus turn-action-btn inline-flex h-control-sm items-center gap-1.5 px-1 transition-colors select-none",
                     copied ? "text-success" : "text-muted-foreground hover:text-foreground",
                     "focus:outline-none focus-visible:underline"
                   )}
@@ -2144,7 +2144,7 @@ export function ResponseCard({
                   <button
                     onClick={onPopOut}
                     className={cn(
-                      "turn-action-btn flex items-center gap-1.5 transition-colors select-none",
+                      "craft-row-focus turn-action-btn inline-flex h-control-sm items-center gap-1.5 px-1 transition-colors select-none",
                       "text-muted-foreground hover:text-foreground",
                       "focus:outline-none focus-visible:underline"
                     )}
@@ -2988,3 +2988,8 @@ export const TurnCard = React.memo(function TurnCard({
   // leaking across session switches that may reuse turn IDs/components.
   return prev.sessionId === next.sessionId && prev.turnId === next.turnId
 })
+
+
+
+
+

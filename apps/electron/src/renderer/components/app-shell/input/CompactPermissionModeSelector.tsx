@@ -47,12 +47,12 @@ const MODE_STYLES: Record<PermissionMode, { className: string; shadowVar: string
     shadowVar: 'var(--foreground)',
   },
   ask: {
-    className: 'bg-info/10 text-info',
+    className: 'bg-info/10 text-info-text',
     shadowVar: 'var(--info)',
   },
-  guarded: { className: 'bg-success/10 text-success', shadowVar: 'var(--success)' },
+  guarded: { className: 'bg-success/10 text-success-text', shadowVar: 'var(--success)' },
   'allow-all': {
-    className: 'bg-accent/5 text-accent',
+    className: 'bg-accent/5 text-accent-text',
     shadowVar: 'var(--accent)',
   },
 }
@@ -154,3 +154,4 @@ export function CompactPermissionModeSelector({
     </Drawer>
   )
 }
+

@@ -1035,9 +1035,14 @@ function AppShellContent({
     }
   })
 
-  // Tab navigation between zones
+  // F6 / Shift+F6 cycle zones. Tab is left to the platform so every control in
+  // a zone is reachable in order; see nav.nextZone in actions/definitions.
   useAction('nav.nextZone', () => {
     focusNextZone()
+  }, { enabled: () => !document.querySelector('[role="dialog"]') })
+
+  useAction('nav.previousZone', () => {
+    focusPreviousZone()
   }, { enabled: () => !document.querySelector('[role="dialog"]') })
 
   // Shift+Tab cycles permission mode through enabled modes (the textarea handles its own).
@@ -2216,11 +2221,7 @@ function AppShellContent({
     }
   }, [sidebarFocused, focusedSidebarItemId, unifiedSidebarItems])
 
-  // Which surface owns the screen's single `h1` (see lib/navigator-heading).
-  const navigatorOwnsHeadingOne = React.useMemo(
-    () => navigatorOwnsH1(navState, { isSessionsListVisible, isWorkbenchFullWidth }),
-    [isSessionsListVisible, isWorkbenchFullWidth, navState],
-  )
+  const navigatorOwnsHeadingOne = navigatorOwnsH1(navState, { isSessionsListVisible, isWorkbenchFullWidth })
 
   // Get title based on navigation state
   const listTitle = React.useMemo(() => {

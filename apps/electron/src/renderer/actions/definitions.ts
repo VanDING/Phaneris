@@ -100,9 +100,19 @@ export const actions = {
   'nav.nextZone': {
     id: 'nav.nextZone',
     label: 'Focus Next Zone',
-    defaultHotkey: 'tab',
+    // `f6`, not `tab`. Tab was the platform's "next control" key, and rebinding
+    // it to a three-zone cycle meant the composer, message actions and every
+    // other control inside the content pane could never be reached from the
+    // keyboard — only the zone's first stop was. F6 is the desktop convention
+    // for pane cycling (VS Code, Eclipse) and leaves Tab alone.
+    defaultHotkey: 'f6',
     category: 'Navigation',
-    when: '!inputFocus',  // Tab should work normally in text inputs
+  },
+  'nav.previousZone': {
+    id: 'nav.previousZone',
+    label: 'Focus Previous Zone',
+    defaultHotkey: 'shift+f6',
+    category: 'Navigation',
   },
   'nav.goBack': {
     id: 'nav.goBack',

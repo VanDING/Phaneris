@@ -452,7 +452,7 @@ function AddSubtask({
           e.stopPropagation()
           setComposing(true)
         }}
-        className="craft-control craft-focus mt-1 flex w-full items-center gap-1 text-meta font-medium text-text-secondary transition-colors hover:text-text-secondary"
+        className="craft-control craft-focus mt-1 flex h-control-sm w-full items-center gap-1 text-meta font-medium text-text-secondary transition-colors hover:text-text-secondary"
       >
         <Plus className="h-3 w-3" />
         {t('kanban.addSubtask')}
@@ -548,3 +548,4 @@ function AddSubtask({
     </div>
   )
 }
+

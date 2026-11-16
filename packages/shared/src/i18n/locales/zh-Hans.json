@@ -2252,6 +2252,7 @@
   "shortcuts.action.focusNextSurface": "聚焦下一区域",
   "shortcuts.action.focusNextZone": "聚焦下一区域",
   "shortcuts.action.focusPrevSurface": "聚焦上一区域",
+  "shortcuts.action.focusPreviousZone": "聚焦上一个分区",
   "shortcuts.action.focusSidebar": "聚焦侧栏",
   "shortcuts.action.goBack": "后退",
   "shortcuts.action.goForward": "前进",

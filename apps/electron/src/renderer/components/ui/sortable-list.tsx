@@ -245,13 +245,12 @@ interface SortableItemWrapperProps {
 
 function SortableItemWrapper({ id, isDragActive, hideWhileDragging, children }: SortableItemWrapperProps) {
   const {
-    attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
     isDragging,
-  } = useSortable({ id })
+  } = useSortable({ id, attributes: { role: 'presentation' } })
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
@@ -262,10 +261,29 @@ function SortableItemWrapper({ id, isDragActive, hideWhileDragging, children }: 
   }
 
   return (
+    /**
+     * The row container carries the pointer listeners but is NOT a control.
+     *
+     * dnd-kit's default attributes are `role="button" tabIndex=0`; spread here,
+     * they made the wrapper a button whose children are the row's own controls
+     * (the navigation button, its status chip, its "more actions" button). axe
+     * reports one `nested-interactive` per such row — 309 across the app — and
+     * the real cost is that a screen reader announces a button inside a button
+     * with no way to tell which is the row and which is an action.
+     *
+     * Moving the attributes onto the row button is not an option: dnd-kit's
+     * keyboard sensor starts a drag on Space/Enter, the same keys the row uses to
+     * navigate. So the container keeps only the pointer listeners and drops the
+     * interactive role; rows stay plain navigation controls and reordering via
+     * the keyboard is exposed through the row's context menu instead.
+     *
+     * `role="presentation"` rather than none: a container that owns pointer
+     * listeners but no semantics is exactly what presentation means, and it keeps
+     * dnd-kit from re-adding the default role.
+     */
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
       {...listeners}
     >
       {children}

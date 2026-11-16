@@ -14,18 +14,22 @@ interface StatusBadgeProps {
  * (a `needs-review` badge can sit in the In Progress column).
  *
  * When `live`, the dot gains a ping ring to signal an in-flight turn.
+ *
+ * The label is `--text-secondary`, not the status colour. Muted statuses
+ * (`foreground/50`) painted their *own* colour as text on a 12% tint of it,
+ * measured 3.02:1 — the colour has to mark the row, and the words have to stay
+ * readable. The dot keeps the full colour, so nothing is lost visually.
  */
 export function StatusBadge({ status, live = false, className }: StatusBadgeProps) {
   const color = status.resolvedColor
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-meta font-medium whitespace-nowrap',
+        'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-meta font-medium whitespace-nowrap text-text-secondary',
         className
       )}
       style={{
         backgroundColor: `color-mix(in srgb, ${color} 12%, transparent)`,
-        color,
       }}
     >
       <span className="relative flex h-1.5 w-1.5 shrink-0">

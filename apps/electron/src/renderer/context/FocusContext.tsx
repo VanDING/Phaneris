@@ -3,14 +3,14 @@ import { createContext, useContext, useState, useCallback, useRef, useEffect } f
 import { setCurrentZone } from '@/actions/keybinding-context'
 
 /**
- * Focus zone identifiers - ordered for Tab navigation
+ * Focus zone identifiers - ordered for F6 / Shift+F6 cycling
  */
 export type FocusZoneId = 'sidebar' | 'navigator' | 'chat'
 
 /**
  * Focus intent - describes WHY the focus changed.
  * This allows components to respond appropriately:
- * - 'keyboard': User explicitly navigated via keyboard (Cmd+1/2/3, Tab, Arrow keys)
+ * - 'keyboard': User explicitly navigated via keyboard (Cmd+1/2/3, F6, Arrow keys)
  * - 'click': User clicked within a zone
  * - 'programmatic': Code triggered the focus change (e.g., search activation)
  */
@@ -59,9 +59,9 @@ interface FocusContextValue {
   unregisterZone: (id: FocusZoneId, owner: FocusZone['ref']) => void
   /** Focus a specific zone with optional intent/moveFocus control */
   focusZone: (id: FocusZoneId, options?: FocusZoneOptions) => void
-  /** Focus next zone (Tab) */
+  /** Focus next zone (F6) */
   focusNextZone: () => void
-  /** Focus previous zone (Shift+Tab) */
+  /** Focus previous zone (Shift+F6) */
   focusPreviousZone: () => void
   /** Check if a zone is focused */
   isZoneFocused: (id: FocusZoneId) => boolean
@@ -169,3 +169,4 @@ export function useFocusContext() {
   }
   return context
 }
+

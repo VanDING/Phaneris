@@ -2252,6 +2252,7 @@
   "shortcuts.action.focusNextSurface": "Enfocar siguiente superficie",
   "shortcuts.action.focusNextZone": "Enfocar siguiente zona",
   "shortcuts.action.focusPrevSurface": "Enfocar superficie anterior",
+  "shortcuts.action.focusPreviousZone": "Enfocar zona anterior",
   "shortcuts.action.focusSidebar": "Enfocar barra lateral",
   "shortcuts.action.goBack": "Ir atrás",
   "shortcuts.action.goForward": "Ir adelante",

@@ -86,6 +86,7 @@ const ACTION_LABEL_KEYS: Partial<Record<ActionId, string>> = {
   'nav.focusNavigator': 'shortcuts.action.focusNavigator',
   'nav.focusChat': 'shortcuts.action.focusChat',
   'nav.nextZone': 'shortcuts.action.focusNextZone',
+  'nav.previousZone': 'shortcuts.action.focusPreviousZone',
   'nav.goBack': 'shortcuts.action.goBack',
   'nav.goForward': 'shortcuts.action.goForward',
   'nav.goBackAlt': 'shortcuts.action.goBack',

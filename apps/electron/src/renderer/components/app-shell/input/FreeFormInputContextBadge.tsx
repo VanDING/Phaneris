@@ -95,8 +95,11 @@ export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, Fre
         {/* Label - in expanded state or collapsed with selection */}
         {showLabel && (
           isExpanded ? (
-            // Expanded: simple truncate, placeholder (no selection) gets 60% opacity
-            <span className={cn("composer-badge-label truncate max-w-[120px] min-w-0 shrink", !hasSelection && "opacity-50")}>
+            // Expanded: simple truncate. The "no selection yet" state used
+            // `opacity-50`, which measured 3.07:1 for 13px text — a placeholder
+            // still has to be readable. The secondary token carries the same
+            // "not chosen" meaning at 5.6:1.
+            <span className={cn("composer-badge-label truncate max-w-[120px] min-w-0 shrink", !hasSelection && "text-text-secondary")}>
               {label}
             </span>
           ) : (
