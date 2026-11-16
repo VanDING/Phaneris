@@ -47,6 +47,8 @@ let inFlight = 0, maxInFlight = 0, failNextList = false, failNextWrite = false
 let failedReads = 0
 let failedWrites = 0
 let holdNext = false, held: (() => void) | undefined
+let holdResident = process.env.PHANERIS_NAVIGATION_UI === '1', residentBlocked = 0
+const residentWaiters = new Set<() => void>()
 const originalGet = SessionManager.prototype.getSessions
 SessionManager.prototype.getSessions = function (workspaceId) {
   const start = performance.now(), result = originalGet.call(this, workspaceId)
@@ -76,6 +78,10 @@ const instance = await bootstrapServer({
       const isList = lists.has(channel), start = performance.now(), startedAt = Date.now()
       if (isList) { inFlight++; maxInFlight = Math.max(maxInFlight, inFlight) }
       try {
+        if (holdResident && channel === RPC_CHANNELS.residentAssistant.GET) {
+          residentBlocked++
+          await new Promise<void>(resolveHeld => { residentWaiters.add(resolveHeld) })
+        }
         if (taskUI && channel === RPC_CHANNELS.tasks.GENERATE) {
           const request = args[1] as import('@phaneris/shared/protocol').TaskGenerateRequest
           const draft = await deps.sessionManager.createSession('planning', { name: request.title, taskDraft: true })
@@ -113,7 +119,7 @@ const instance = await bootstrapServer({
 })
 const manager = instance.sessionManager
 if (taskUI) manager.applyTaskLabel = async () => { throw new Error('Fixture reserved-label failure') }
-const metrics = () => ({ ...(taskUI ? { taskPublications, taskCards: manager.getSessions('planning').filter(session => session.taskSlug && !session.taskRunId) } : {}), reads, failedReads, failedWrites, pushes, projections, inFlight, maxInFlight, held: Boolean(held), memory: process.memoryUsage(), fixtureSha256, count })
+const metrics = () => ({ ...(taskUI ? { taskPublications, taskCards: manager.getSessions('planning').filter(session => session.taskSlug && !session.taskRunId) } : {}), reads, failedReads, failedWrites, pushes, projections, inFlight, maxInFlight, held: Boolean(held), residentBlocked, memory: process.memoryUsage(), fixtureSha256, count })
 web = createWebuiHandler({ webuiDir: join(root, 'apps/webui/dist'), secret: token, secureCookies: false, wsProtocol: 'ws', wsPort: instance.port, getHealthCheck: () => ({ status: 'ok' }), logger: instance.platform.logger })
 route = nodeHttpAdapter(async request => {
   if (new URL(request.url).pathname !== '/__planning') return web!.fetch(request)
@@ -123,6 +129,8 @@ route = nodeHttpAdapter(async request => {
     switch (body.command) {
       case 'metrics': return Response.json(metrics())
       case 'reset': reads = []; failedReads = 0; failedWrites = 0; pushes = []; projections = []; maxInFlight = inFlight; return Response.json(metrics())
+      case 'hold-resident': holdResident = true; residentBlocked = 0; return Response.json({ ok: true })
+      case 'release-resident': holdResident = false; for (const resolveHeld of residentWaiters) resolveHeld(); residentWaiters.clear(); return Response.json({ ok: true })
       case 'hold-list': holdNext = true; return Response.json({ ok: true })
       case 'release': held?.(); held = undefined; return Response.json({ ok: true })
       case 'fail-list': failNextList = true; return Response.json({ ok: true })

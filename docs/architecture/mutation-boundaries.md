@@ -143,3 +143,14 @@ Bun and Node interoperability is verified with real local subprocesses.
 
 WS shutdown still invokes disconnect callbacks and rejects pending requests, but late
 close events do not recreate reconnect buffers or their retention timers.
+
+Complete Session snapshot reads queue per RPC client until their read lease closes.
+Rapid navigation and foreground consumers share this boundary rather than duplicating
+server-budget knowledge. Different clients progress independently; decoding, request
+failure and disconnect release the next reader. The server's existing read limits and
+the complete-history legacy fallback remain intact.
+
+Initial navigation restoration waits for both ordinary metadata and resident identity.
+The latest explicit navigation queued during that wait takes precedence over the
+default assistant presentation. Ordinary auto-selection does not close an assistant
+opened earlier in the same commit. Explicit deep links keep their previous behavior.

@@ -196,6 +196,7 @@ export function NavigationProvider({
 
   const primarySurface = useAtomValue(primarySurfaceAtom)
   const foregroundSessionIds = useAtomValue(foregroundSessionIdsAtom)
+  const residentPresentation = useAtomValue(residentNavigationAtom)
 
   // NavigationState is structural: workbench focus never changes it.
   const navigationState: NavigationState = useMemo(() => {
@@ -861,7 +862,9 @@ export function NavigationProvider({
         return
       }
 
-      if (!isReady) {
+      if (!isReady || !isSessionsReady) {
+        // Initial restoration needs ordinary and resident metadata. Keep the
+        // latest explicit intent until that restoration can no longer replace it.
         pendingNavigationRef.current = { route, options }
         return
       }
@@ -913,7 +916,7 @@ export function NavigationProvider({
         store.set(setPrimarySurfaceRouteAtom, finalRoute)
       }
     },
-    [isReady, handleActionNavigation, resolveAutoSelection, store, workspaceId]
+    [isReady, isSessionsReady, handleActionNavigation, resolveAutoSelection, store, workspaceId]
   )
 
   // =========================================================================
@@ -1031,7 +1034,7 @@ export function NavigationProvider({
 
       // Reconcile panels from the new URL
       reconcileFromUrlParamsRef.current(new URLSearchParams(url.search))
-      if (resident.sessionId) void navigate(routes.view.allSessions(resident.sessionId))
+      if (resident.sessionId && !pendingNavigationRef.current) void navigate(routes.view.allSessions(resident.sessionId))
       lastSemanticHistoryKeyRef.current = getSemanticHistoryKey()
     }
 
@@ -1071,7 +1074,7 @@ export function NavigationProvider({
     lastSemanticHistoryKeyRef.current = getSemanticHistoryKey()
 
     // If nothing was in the URL, navigate to default.
-    if ((!params.get('route') || params.get('route') === 'allSessions') && !params.get('panels')) {
+    if (!pendingNavigationRef.current && (!params.get('route') || params.get('route') === 'allSessions') && !params.get('panels')) {
       navigate(routes.view.allSessions(resident.sessionId))
     }
 
@@ -1091,7 +1094,7 @@ export function NavigationProvider({
   // =========================================================================
 
   useEffect(() => {
-    if (isReady && pendingNavigationRef.current) {
+    if (isReady && isSessionsReady && pendingNavigationRef.current) {
       const pending = pendingNavigationRef.current
       pendingNavigationRef.current = null
 
@@ -1099,7 +1102,7 @@ export function NavigationProvider({
       // a route from ParsedRoute would lose aliases, encoding, and options.
       void navigate(pending.route, pending.options)
     }
-  }, [isReady, navigate])
+  }, [isReady, isSessionsReady, navigate])
 
   // =========================================================================
   // DEEP LINK LISTENER
@@ -1232,14 +1235,13 @@ export function NavigationProvider({
   useEffect(() => {
     if (suppressAutoSelectRef.current) return
     if (!isReady || !isSessionsReady || !workspaceId) return
-    // Scoped to sessions with no explicit detail. resolveAutoSelection owns the
-    // selection decision (board skip, last/first fallback) so it lives in one
-    // place; this effect just applies it when the session list loads after
-    // navigation (workspace switch, lazy session load, etc.).
-    // Use the live primary surface route: an earlier effect may have restored a deep link.
-    // an earlier effect in the same commit (initial restore from the URL,
-    // workspace switch) may already have replaced it, and the stale value
-    // auto-selected the first session over a cold-load ?route=…/session/<id>.
+    // Initial restore may have opened the assistant earlier in this commit.
+    // Selecting an ordinary fallback would immediately close that presentation.
+    const liveResident = store.get(residentNavigationAtom)
+    if (liveResident?.open && liveResident.workspaceId === workspaceId) return
+    // Resolve empty Session views through the same selection policy as navigation.
+    // Read the live route: earlier restoration effects may have replaced the
+    // rendered route with a deep link during this same commit.
     const liveRoute = store.get(primarySurfaceAtom).route
     const liveState = liveRoute ? parseRouteToNavigationState(liveRoute) : null
     if (!liveState || !isSessionsNavigation(liveState) || liveState.details) return
@@ -1253,6 +1255,7 @@ export function NavigationProvider({
     isSessionsReady,
     workspaceId,
     navigationState,
+    residentPresentation,
     resolveAutoSelection,
     navigateToSession,
     store,

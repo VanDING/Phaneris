@@ -12,6 +12,7 @@
  * Prints one JSON line: {"dir":"<runDir>/bundle"}
  */
 import { mkdirSync, readdirSync, writeFileSync } from 'node:fs'
+import { randomUUID } from 'node:crypto'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { build } from 'vite'
@@ -26,9 +27,16 @@ const root = resolve(here, '../..')
 const outDir = join(resolve(runDirectory), 'bundle')
 mkdirSync(outDir, { recursive: true })
 const htmlEntry = entryFile.endsWith('.html')
-const page = htmlEntry ? resolve(root, entryFile) : join(resolve(runDirectory), 'index.html')
-if (!htmlEntry) writeFileSync(page,
-  `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/${entryFile.replaceAll('\\', '/')}"></script></body></html>`)
+// Evidence may belong to the original checkout while this build runs in a
+// separate worktree. Vite HTML inputs must still sit inside its project root.
+const inputDirectory = join(root, '.cache', 'verification-fixture-inputs', randomUUID())
+const page = htmlEntry ? resolve(root, entryFile) : join(inputDirectory, 'index.html')
+if (!htmlEntry) {
+  mkdirSync(inputDirectory, { recursive: true })
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/${entryFile.replaceAll('\\', '/')}"></script></body></html>`
+  writeFileSync(page, html)
+  writeFileSync(join(resolve(runDirectory), 'index.html'), html)
+}
 
 await build({
   configFile: resolve(root, 'apps/electron/vite.config.ts'),
