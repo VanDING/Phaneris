@@ -205,24 +205,29 @@ export function PanelHeader({
   // would otherwise get clipped by the panel container query.
   const desktopTitleNode = titleMenu ? (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      {/* Wrapper button for the whole clickable area */}
-      <button
-        onClick={() => setDropdownOpen(true)}
-        className={cn(
-          "craft-focus flex items-center gap-1 px-2 py-1 rounded-md titlebar-no-drag min-w-0",
-          "hover:bg-foreground/[0.04] transition-colors",
-          "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-          dropdownOpen && "bg-foreground/[0.04]"
-        )}
-      >
-        {titleContent}
-        {/* Chevron is the actual trigger anchor point */}
-        <DropdownMenuTrigger asChild>
-          <span className="shrink-0 flex items-center justify-center">
+      {/* The whole clickable area is the trigger.
+          The chevron used to be its own `DropdownMenuTrigger asChild` wrapping a
+          `<span>` inside this button, so Radix stamped `type="button"
+          aria-haspopup aria-expanded` onto a roleless span nested inside a real
+          button — invalid ARIA on an element that could never be activated on its
+          own, and one `aria-allowed-attr` finding per panel header. Making the
+          button the trigger removes the nested control and keeps the same hit area;
+          the chevron stays as a visual affordance. */}
+      <DropdownMenuTrigger asChild>
+        <button
+          className={cn(
+            "craft-row-focus flex items-center gap-1 px-2 py-1 rounded-md titlebar-no-drag min-w-0",
+            "hover:bg-foreground/[0.04] transition-colors",
+            "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+            dropdownOpen && "bg-foreground/[0.04]"
+          )}
+        >
+          {titleContent}
+          <span className="shrink-0 flex items-center justify-center" aria-hidden="true">
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground translate-y-[1px]" />
           </span>
-        </DropdownMenuTrigger>
-      </button>
+        </button>
+      </DropdownMenuTrigger>
       <StyledDropdownMenuContent align="center" sideOffset={8}>
         {titleMenu}
       </StyledDropdownMenuContent>
@@ -353,3 +358,4 @@ export function PanelHeader({
     </motion.div>
   )
 }
+

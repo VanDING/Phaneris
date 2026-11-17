@@ -195,16 +195,26 @@ export function WorkspaceSwitcher({
             <button
               type="button"
               data-workspace-switcher="topbar"
-              className="header-icon-btn titlebar-no-drag ml-1 flex-1 min-w-0 flex items-center justify-start gap-0.5 h-control-md px-3 rounded-shape-lg border border-foreground/6 text-body text-text-secondary hover:bg-foreground/5 hover:text-foreground transition-colors cursor-pointer data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
-              aria-label={t('workspace.selectWorkspace')}
+              className="craft-control header-icon-btn titlebar-no-drag ml-1 flex-1 min-w-0 flex items-center justify-start gap-0.5 h-control-md px-3 rounded-shape-lg border border-foreground/6 text-body text-text-secondary hover:bg-foreground/5 hover:text-foreground transition-colors cursor-pointer data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
+              // The visible text is the workspace name, so a name of just
+              // "选择 Workspace" hid which workspace you were in — the one thing
+              // this control exists to tell you (label-content-name-mismatch, 29x).
+              aria-label={selectedWorkspace?.name
+                ? `${t('workspace.selectWorkspace')}: ${selectedWorkspace.name}`
+                : t('workspace.selectWorkspace')}
             >
-              <WorkspaceAvatar
-                workspaceId={selectedWorkspace?.id}
-                workspaceName={selectedWorkspace?.name}
-                src={selectedWorkspace ? workspaceIconMap.get(selectedWorkspace.id) : undefined}
-                className="h-4 w-4 mr-1.5 rounded-full ring-1 ring-border/50"
-                fallbackClassName="rounded-full"
-              />
+              {/* Decorative: the name is spelled out beside it. The fallback letter
+                  is otherwise text content the accessible name has to contain. */}
+              <span aria-hidden="true" className="inline-flex shrink-0">
+                <WorkspaceAvatar
+                  workspaceId={selectedWorkspace?.id}
+                  workspaceName={selectedWorkspace?.name}
+                  src={selectedWorkspace ? workspaceIconMap.get(selectedWorkspace.id) : undefined}
+                  showInitial={false}
+                  className="h-4 w-4 mr-1.5 rounded-full ring-1 ring-border/50"
+                  fallbackClassName="rounded-full"
+                />
+              </span>
               <span className="truncate min-w-0 flex-1 text-left">{selectedWorkspace?.name || 'Workspace'}</span>
               {selectedWorkspace?.remoteServer && (
                 isRemoteDisconnected(selectedWorkspace.id)
@@ -217,20 +227,30 @@ export function WorkspaceSwitcher({
           ) : (
             <button
               className={cn(
-                "flex items-center gap-1 w-full min-w-0 justify-start px-2 py-1.5 rounded-md",
+                "craft-control flex items-center gap-1 w-full min-w-0 justify-start px-2 py-1.5 rounded-md",
                 "text-foreground hover:bg-foreground/5 data-[state=open]:bg-foreground/5 transition-colors duration-150",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 isCollapsed && "h-9 w-9 shrink-0 justify-center p-0"
               )}
-              aria-label={t('workspace.selectWorkspace')}
+              // The visible text is the workspace name, so a name of just
+              // "选择 Workspace" hid which workspace you were in — the one thing
+              // this control exists to tell you (label-content-name-mismatch, 29x).
+              aria-label={selectedWorkspace?.name
+                ? `${t('workspace.selectWorkspace')}: ${selectedWorkspace.name}`
+                : t('workspace.selectWorkspace')}
             >
-              <WorkspaceAvatar
-                workspaceId={selectedWorkspace?.id}
-                workspaceName={selectedWorkspace?.name}
-                src={selectedWorkspace ? workspaceIconMap.get(selectedWorkspace.id) : undefined}
-                className="h-4 w-4 rounded-full ring-1 ring-border/50"
-                fallbackClassName="rounded-full"
-              />
+              {/* Decorative: the name is spelled out beside it. The fallback letter
+                  is otherwise text content the accessible name has to contain. */}
+              <span aria-hidden="true" className="inline-flex shrink-0">
+                <WorkspaceAvatar
+                  workspaceId={selectedWorkspace?.id}
+                  workspaceName={selectedWorkspace?.name}
+                  src={selectedWorkspace ? workspaceIconMap.get(selectedWorkspace.id) : undefined}
+                  showInitial={isCollapsed}
+                  className="h-4 w-4 rounded-full ring-1 ring-border/50"
+                  fallbackClassName="rounded-full"
+                />
+              </span>
               {!isCollapsed && (
                 <>
                   <FadingText className="ml-1 font-sans min-w-0 text-body" fadeWidth={36}>
@@ -341,3 +361,8 @@ export function WorkspaceSwitcher({
     </>
   )
 }
+
+
+
+
+
