@@ -29,7 +29,9 @@ export function BranchDropdown({ onBranch }: BranchDropdownProps) {
           type="button"
           aria-label={t('chat.branchOptions')}
           className={cn(
-            "craft-icon-button p-1 rounded-shape-sm transition-colors select-none",
+            // min-h/min-w 6 = the 24px WCAG 2.2 floor; the 12px glyph keeps the
+            // footer quiet, only the target grows.
+            "craft-icon-button inline-flex size-control-sm items-center justify-center rounded-shape-sm transition-colors select-none",
             "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
             "data-[state=open]:text-foreground data-[state=open]:bg-foreground/5",
             "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -61,8 +63,10 @@ export function ResponseShareButton({ onClick }: { onClick?: () => void }) {
   return <Tooltip><TooltipTrigger asChild>
     <button type="button" onClick={onClick} aria-label={t('chat.imageShare.share')}
       disabled={!!selection} aria-hidden={selection ? true : undefined} tabIndex={selection ? -1 : undefined}
-      className={cn('craft-icon-button p-1 rounded-shape-sm text-muted-foreground hover:text-foreground', selection && 'invisible')}>
+      className={cn('craft-icon-button inline-flex size-control-sm items-center justify-center rounded-shape-sm text-muted-foreground hover:text-foreground', selection && 'invisible')}>
       <Send className="w-3.5 h-3.5" />
     </button>
   </TooltipTrigger><TooltipContent>{t('chat.imageShare.share')}</TooltipContent></Tooltip>
 }
+
+

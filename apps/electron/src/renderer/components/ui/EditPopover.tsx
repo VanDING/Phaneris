@@ -14,7 +14,7 @@ import i18n from 'i18next'
 import { GripHorizontal } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react' // motion used for backdrop only
 import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
-import { Popover, PopoverTrigger, PopoverContent } from './popover'
+import { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popover'
 import { Button } from './button'
 import { cn } from '@/lib/utils'
 import { usePlatform } from '@phaneris/ui'
@@ -1069,9 +1069,26 @@ export function EditPopover({
       </AnimatePresence>
 
       <Popover open={open} onOpenChange={setOpen} modal={modal}>
-        <PopoverTrigger asChild className={triggerClassName}>
-          {trigger}
-        </PopoverTrigger>
+        {/*
+          A controlled popover is opened programmatically, so its `trigger` is only
+          a position anchor — call sites pass a zero-size `<span>` or a non-control
+          element. Rendering those through `PopoverTrigger` made Radix stamp
+          `type="button" aria-haspopup aria-expanded` onto an element with no role,
+          which is both meaningless and invalid: `aria-expanded` is not allowed on a
+          bare span, and it was the app's entire `aria-allowed-attr` finding (20
+          nodes). `PopoverAnchor` is the primitive for "anchor here without
+          becoming a control", so uncontrolled popovers keep a real trigger and
+          controlled ones get a silent anchor.
+        */}
+        {isControlled ? (
+          <PopoverAnchor asChild className={triggerClassName}>
+            {trigger}
+          </PopoverAnchor>
+        ) : (
+          <PopoverTrigger asChild className={triggerClassName}>
+            {trigger}
+          </PopoverTrigger>
+        )}
         <PopoverContent
             side={side}
             align={align}
@@ -1172,3 +1189,4 @@ export const EditButton = React.forwardRef<
     </Button>
   )
 })
+

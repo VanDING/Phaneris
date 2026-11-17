@@ -540,18 +540,23 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
   // - safe (Explore): foreground at 60% opacity - subtle, read-only feel
   // - ask (Ask to Edit): info color - amber, prompts for edits
   // - allow-all (Auto): accent color - purple, full autonomy
+  //
+  // Text uses the `*-text` role, never the raw fill. `--info` is the fill colour
+  // (borders, icons, the 10% wash behind it) and it is too light to be read at
+  // 11px: `text-info` on `bg-info/10` measured 4.43:1. `--info-text` is the same
+  // hue pre-compensated for text and clears 4.5:1 by construction.
   const modeStyles: Record<PermissionMode, { className: string; shadowVar: string }> = {
     'safe': {
       className: 'bg-foreground/5 text-text-secondary',
       shadowVar: 'var(--foreground)',
     },
     'ask': {
-      className: 'bg-info/10 text-info',
+      className: 'bg-info/10 text-info-text',
       shadowVar: 'var(--info)',
     },
-  guarded: { className: 'bg-success/10 text-success', shadowVar: 'var(--success)' },
+    guarded: { className: 'bg-success/10 text-success-text', shadowVar: 'var(--success)' },
     'allow-all': {
-      className: 'bg-accent/5 text-accent',
+      className: 'bg-accent/5 text-accent-text',
       shadowVar: 'var(--accent)',
     },
   }

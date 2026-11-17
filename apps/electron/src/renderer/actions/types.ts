@@ -1,11 +1,20 @@
 export type ActionScope = 'global' | 'navigator' | 'chat' | 'sidebar'
 
+/**
+ * Shortcut-page section. Closed on purpose: each value has a `shortcuts.category.*`
+ * translation, and the page resolves it through a literal map so
+ * `lint:i18n:coverage` can see the key. While this was `string`, the page built
+ * `shortcuts.category.${category.toLowerCase()}` at runtime and a missing
+ * translation shipped as the raw key text — exactly what happened to `Panels`.
+ */
+export type ActionCategory = 'General' | 'Navigation' | 'Navigator' | 'View' | 'Panels' | 'Chat'
+
 export interface ActionDefinition {
   id: string
   label: string
   description?: string
   defaultHotkey: string | null  // null = no default hotkey
-  category: string
+  category: ActionCategory
   scope?: ActionScope           // Default: 'global'
   /** When-clause expression controlling when the action fires.
    *  Omit = fires everywhere (default). Examples:

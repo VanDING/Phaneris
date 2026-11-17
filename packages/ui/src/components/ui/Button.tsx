@@ -1,0 +1,85 @@
+/**
+ * Button — the shared action control.
+ *
+ * Moved here from the Electron renderer because the web client had no button
+ * primitive at all: its three buttons were hand-written `<button>` tags with
+ * `px-4 py-1.5 rounded-md` inline, so the web app could not inherit the product's
+ * control sizing, focus ring, pressed scale or disabled treatment. A design system
+ * whose atoms exist in only one of two products is not a system.
+ *
+ * Everything here is token-driven — `craft-control`, `h-control-*`, `text-body`,
+ * `rounded-md`, `motion-interactive` — so it compiles against the shared stylesheet
+ * and behaves identically in either host.
+ *
+ * `loading` keeps the label in place (invisible) rather than replacing it with a
+ * spinner, so the button does not change width mid-submit and the accessible name
+ * does not change while the user is reading it.
+ */
+import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '../../lib/utils'
+
+const buttonVariants = cva(
+  'craft-control motion-interactive relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-body font-medium transition-[color,background-color,border-color,box-shadow,opacity,transform] active:scale-[var(--motion-scale-pressed)] disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 select-none',
+  {
+    variants: {
+      variant: {
+        default: 'bg-foreground text-background hover:bg-foreground/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-foreground/15 bg-background hover:bg-foreground/3',
+        secondary: 'bg-foreground/5 text-foreground hover:bg-foreground/10',
+        ghost: 'hover:bg-foreground/3',
+        link: 'text-foreground underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-control-lg px-4 py-2',
+        xs: 'h-control-xs rounded-shape-sm px-2 text-meta',
+        compact: 'h-control-sm rounded-shape-sm px-2.5 text-label',
+        sm: 'h-control-md rounded-md px-3 text-meta',
+        lg: 'h-control-xl rounded-md px-8',
+        icon: 'craft-icon-button size-9',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  },
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+  /** Keeps the label's width and accessible name while preventing duplicate submission. Not supported with asChild. */
+  loading?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props }, ref) => {
+    if (asChild && loading) throw new Error('Button loading requires a native button; compose loading content in the asChild element instead.')
+    const Comp = asChild ? Slot : 'button'
+    return (
+      <Comp
+        data-slot="button"
+        data-control-size={size ?? 'default'}
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+        disabled={disabled || loading}
+        aria-busy={loading || props['aria-busy']}
+      >
+        {asChild || !loading ? children : (
+          <>
+            <span className={cn('craft-button-label', loading && 'opacity-0')}>{children}</span>
+            {loading && <span aria-hidden="true" className="craft-button-spinner" />}
+          </>
+        )}
+      </Comp>
+    )
+  },
+)
+Button.displayName = 'Button'
+
+export { Button, buttonVariants }

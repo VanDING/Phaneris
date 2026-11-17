@@ -115,7 +115,10 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--foreground) 45%, transparent);
+  /* `--text-secondary`, not a 45% foreground mix: that measured 3.55:1 at 11px
+     against the card surface, so the weekday headings were the least legible
+     text on the board's most-scanned row. */
+  color: var(--text-secondary);
   background: var(--card);
   border-bottom: 1px solid var(--pg-rule);
 }
@@ -145,7 +148,9 @@
 }
 
 .phaneris-calendar [role='grid'] [role='gridcell'][data-other-month] [aria-hidden='true'] {
-  color: color-mix(in oklab, var(--foreground) 30%, transparent);
+  /* Receding is a tint, not a legibility exemption: 30% measured 1.85:1, and a
+     day number is still text a user reads to locate the month boundary. */
+  color: var(--text-secondary);
 }
 
 /* Today's number becomes the app's filled accent badge. */
@@ -225,7 +230,8 @@
   justify-content: center;
   font-size: var(--type-micro-size);
   font-weight: 600;
-  color: color-mix(in oklab, var(--foreground) 35%, transparent);
+  /* 10px at 35% measured 2.08:1; the gutter label was unreadable. */
+  color: var(--text-secondary);
   background: color-mix(in oklab, var(--foreground) 3%, transparent);
   border-right: 1px solid var(--pg-rule-faint);
 }
@@ -328,7 +334,7 @@
 .pg-cal-head__date {
   font-size: var(--type-meta-size);
   font-weight: 500;
-  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
@@ -344,7 +350,8 @@
 .pg-cal-head--month .pg-cal-head__weekday {
   font-size: var(--type-meta-size);
   font-weight: 600;
-  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  /* Token, not a mix: 11px at 55% measured 3.55:1 on the card surface. */
+  color: var(--text-secondary);
 }
 
 .pg-cal-head--month.pg-cal-head--today .pg-cal-head__weekday {
@@ -608,3 +615,6 @@
   font-size: var(--type-meta-size);
   pointer-events: none;
 }
+
+
+

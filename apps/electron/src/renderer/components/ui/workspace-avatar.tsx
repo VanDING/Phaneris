@@ -34,6 +34,16 @@ interface WorkspaceAvatarProps {
   className?: string
   /** Override font size for the initial letter (default 10px micro tier). */
   fallbackClassName?: string
+  /**
+   * Render the fallback as a plain coloured disc, without the initial letter.
+   *
+   * For contexts that already spell the workspace name out beside the avatar. Two
+   * reasons: at 16px the 10px initial is not legible anyway, and the letter is a
+   * *text node*, so it becomes visible text inside a labelled control whose
+   * accessible name is the name — `label-content-name-mismatch` flags exactly that,
+   * once per surface, because the topbar switcher is on every surface.
+   */
+  showInitial?: boolean
 }
 
 export function WorkspaceAvatar({
@@ -42,6 +52,7 @@ export function WorkspaceAvatar({
   src,
   className,
   fallbackClassName,
+  showInitial = true,
 }: WorkspaceAvatarProps) {
   const colorOverrides = useAtomValue(workspaceAvatarColorsAtom)
   const initial = (workspaceName?.trim().charAt(0) || 'W').toUpperCase()
@@ -66,11 +77,11 @@ export function WorkspaceAvatar({
             className="flex h-full w-full items-center justify-center font-medium text-white"
             style={bgStyle}
           >
-            {initial}
+            {showInitial ? initial : null}
           </div>
-        ) : (
+        ) : showInitial ? (
           initial
-        )
+        ) : null
       }
     />
   )

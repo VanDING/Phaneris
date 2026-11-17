@@ -10,6 +10,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionSpring, motionTween } from '@phaneris/ui/motion'
@@ -63,6 +64,7 @@ export function SurfaceContainer({
   isCompact = false,
   isResizing,
 }: SurfaceContainerProps) {
+  const { t } = useTranslation()
   const surfaceEntries = useAtomValue(renderedSurfaceEntriesAtom)
   const focusedSurfaceId = useAtomValue(focusedSurfaceEntryIdAtom)
   const primarySurface = useAtomValue(primarySurfaceAtom)
@@ -228,6 +230,8 @@ export function SurfaceContainer({
       >
         <motion.div
           data-panel-role="sidebar"
+          role="navigation"
+          aria-label={t('sidebar.navigation')}
           inert={!hasSidebar}
           aria-hidden={!hasSidebar || undefined}
           initial={false}
@@ -245,6 +249,8 @@ export function SurfaceContainer({
 
         <motion.div
           data-panel-role="navigator"
+          role="navigation"
+          aria-label={t('sidebar.itemList')}
           inert={!hasNavigator}
           aria-hidden={!hasNavigator || undefined}
           initial={false}
@@ -312,3 +318,4 @@ export function SurfaceContainer({
     </div>
   )
 }
+

@@ -2087,7 +2087,7 @@ export function ResponseCard({
             data-search-root="response"
             onMouseDown={handleSelectionPointerDown}
             onMouseUp={handleTextSelection}
-            className="pl-[22px] pr-[16px] py-3 text-body overflow-y-auto scrollbar-hover"
+            className="pl-[22px] pr-[16px] py-3 text-reading overflow-y-auto scrollbar-hover"
             style={{
               maxHeight: MAX_HEIGHT,
               // Subtle fade at top and bottom edges (16px) - only in dark mode for better contrast
@@ -2123,7 +2123,7 @@ export function ResponseCard({
                 <button
                   onClick={handleCopy}
                   className={cn(
-                    "turn-action-btn flex items-center gap-1.5 transition-colors select-none",
+                    "craft-row-focus turn-action-btn inline-flex h-control-sm items-center gap-1.5 px-1 transition-colors select-none",
                     copied ? "text-success" : "text-muted-foreground hover:text-foreground",
                     "focus:outline-none focus-visible:underline"
                   )}
@@ -2144,7 +2144,7 @@ export function ResponseCard({
                   <button
                     onClick={onPopOut}
                     className={cn(
-                      "turn-action-btn flex items-center gap-1.5 transition-colors select-none",
+                      "craft-row-focus turn-action-btn inline-flex h-control-sm items-center gap-1.5 px-1 transition-colors select-none",
                       "text-muted-foreground hover:text-foreground",
                       "focus:outline-none focus-visible:underline"
                     )}
@@ -2239,7 +2239,7 @@ export function ResponseCard({
           data-search-root="response"
           onMouseDown={handleSelectionPointerDown}
           onMouseUp={handleTextSelection}
-          className="pl-[22px] pr-4 py-3 text-body overflow-y-auto scrollbar-hover"
+          className="pl-[22px] pr-4 py-3 text-reading overflow-y-auto scrollbar-hover"
           style={{
             maxHeight: MAX_HEIGHT,
             // Subtle fade at top and bottom edges (16px) - only in dark mode for better contrast
@@ -2988,3 +2988,8 @@ export const TurnCard = React.memo(function TurnCard({
   // leaking across session switches that may reuse turn IDs/components.
   return prev.sessionId === next.sessionId && prev.turnId === next.turnId
 })
+
+
+
+
+

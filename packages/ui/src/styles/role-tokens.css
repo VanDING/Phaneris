@@ -46,12 +46,6 @@
   --glyph-avatar-size: 3rem;
   --ui-scale: 1;
   --reading-scale: 1;
-  --ui-caption-size: .75rem;
-  --ui-label-size: .866667rem;
-  --ui-body-size: .875rem;
-  --ui-title-size: 1rem;
-  --ui-heading-size: 1.2rem;
-  --ui-line-height: 1.5;
   --reading-size: .93334rem;
   --reading-line-height: 1.7;
   --code-size: .866667rem;
@@ -62,7 +56,7 @@
   --row-inset: .75rem;
   --card-padding: 1rem;
   --panel-header-height: max(36px, calc(2rem * var(--ui-scale) + 6px));
-  --sidebar-row-height: max(28px, calc(28px * var(--theme-density-scale)), calc(var(--ui-label-size) * var(--ui-scale) * var(--ui-line-height) + 6px));
+  --sidebar-row-height: max(28px, calc(28px * var(--theme-density-scale)), calc(var(--type-body-size) * var(--ui-scale) * 1.5 + 6px));
   --sidebar-inline-inset: 8px;
   --sidebar-item-inset: 8px;
   --sidebar-icon-size: 16px;

@@ -82,3 +82,62 @@ export function hasNavigator(navState: NavigationState | null): boolean {
 export function shouldRevealNavigator(navState: NavigationState | null): boolean {
   return hasNavigator(navState) && (navState?.navigator !== 'sessions' || !navState.details)
 }
+
+/**
+ * How the three columns share a narrowing window.
+ *
+ * They used to be independent: the sidebar (200) and navigator (300) were taken
+ * first and the content column got the remainder, so an 800px window left the chat
+ * 288px — narrower than a phone, and the reason a 34-character CJK line wrapped
+ * into eight.
+ *
+ * The order of concession is by what each column can afford to lose:
+ *
+ * 1. The sidebar drops to its rail (48). It is a list of global destinations, all
+ *    of which still have an icon there, and the rail is an affordance the app
+ *    already ships.
+ * 2. The navigator shrinks toward its floor. It is a list of names, which stays
+ *    usable as it narrows.
+ * 3. Only then is the navigator dropped, and the caller is at compact-mode
+ *    territory anyway.
+ *
+ * The content column keeps `CONTENT_FLOOR` throughout. It is the only column
+ * whose job is reading, so it is the one column that never yields.
+ */
+export const CONTENT_FLOOR = 480
+export const NAVIGATOR_FLOOR = 220
+/** Panel sashes and the shell inset: width the panels do not get to use. */
+const CHROME_GUTTER = 12
+
+export interface ColumnWidths {
+  /** Use the rail width instead of the full sidebar. */
+  sidebarRail: boolean
+  /** 0 means the caller should hide the navigator entirely. */
+  navigator: number
+}
+
+export function fitColumns(
+  windowWidth: number,
+  sidebarWidth: number,
+  railWidth: number,
+  navigatorWidth: number,
+): ColumnWidths {
+  // First frame: nothing measured yet, so honour the configured layout.
+  if (windowWidth <= 0) return { sidebarRail: false, navigator: navigatorWidth }
+
+  const budget = windowWidth - CONTENT_FLOOR - CHROME_GUTTER
+
+  if (sidebarWidth + navigatorWidth <= budget) {
+    return { sidebarRail: false, navigator: navigatorWidth }
+  }
+  const withRail = budget - railWidth
+  if (withRail >= navigatorWidth) {
+    return { sidebarRail: true, navigator: navigatorWidth }
+  }
+  if (withRail >= NAVIGATOR_FLOOR) {
+    return { sidebarRail: true, navigator: withRail }
+  }
+  // Not enough room for a readable navigator even railed: hide it rather than
+  // render a column of clipped names.
+  return { sidebarRail: true, navigator: 0 }
+}

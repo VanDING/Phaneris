@@ -2,5 +2,5 @@
 export { ActionRegistryProvider, useActionRegistry } from './registry'
 export { useAction } from './useAction'
 export { useHotkeyLabel, useActionLabel } from './useHotkeyLabel'
-export { actions, actionList, actionsByCategory, type ActionId } from './definitions'
-export type { ActionDefinition, ActionHandler, ActionScope } from './types'
+export { actions, actionList, actionsByCategory, ACTION_CATEGORY_LABEL_KEYS, type ActionId } from './definitions'
+export type { ActionCategory, ActionDefinition, ActionHandler, ActionScope } from './types'

@@ -4,6 +4,7 @@ import { Provider as JotaiProvider, getDefaultStore } from 'jotai'
 import { MotionConfig } from 'motion/react'
 import App from './App'
 import { setupI18n } from '@phaneris/shared/i18n'
+import { Button, Center, Stack } from '@phaneris/ui'
 import { initReactI18next } from 'react-i18next'
 import { useTranslation } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
@@ -15,16 +16,15 @@ setupI18n([LanguageDetector, initReactI18next])
 function CrashFallback() {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
-      <p className="text-reading font-medium">{t("auth.somethingWentWrong")}</p>
-      <p className="text-body">{t("errors.pleaseReload")}</p>
-      <button
-        onClick={() => window.location.reload()}
-        className="mt-2 px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
-      >
-        {t("common.reload")}
-      </button>
-    </div>
+    <Center className="h-screen font-sans text-text-secondary">
+      <Stack gap="md" align="center">
+        <p className="text-reading font-medium">{t("auth.somethingWentWrong")}</p>
+        <p className="text-body">{t("errors.pleaseReload")}</p>
+        <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>
+          {t("common.reload")}
+        </Button>
+      </Stack>
+    </Center>
   )
 }
 
@@ -56,3 +56,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </ErrorBoundary>
   </React.StrictMode>,
 )
+

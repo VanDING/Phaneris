@@ -400,8 +400,11 @@ function createComponents(
         return <InlineCode>{children}</InlineCode>
       },
       pre: ({ children }) => <>{children}</>,
-      // Comfortable paragraph spacing
-      p: ({ children }) => <p className="my-2 leading-relaxed">{children}</p>,
+      // Comfortable paragraph spacing. Line height is the tier's, not a literal:
+      // `leading-relaxed` (1.625) used to override it here, so the reading tier
+      // never actually got its declared 1.7 and Chinese prose sat tighter than
+      // the contract promised.
+      p: ({ children }) => <p className="my-2">{children}</p>,
       // Styled lists - ul uses tighter spacing, ol uses standard for number alignment
       ul: ({ children, className }) => (
         <ul
@@ -535,8 +538,8 @@ function createComponents(
       return <InlineCode>{children}</InlineCode>
     },
     pre: ({ children }) => <>{children}</>,
-    // Rich paragraph spacing
-    p: ({ children }) => <p className="my-3 leading-relaxed">{children}</p>,
+    // Rich paragraph spacing. Line height comes from the tier, not a literal.
+    p: ({ children }) => <p className="my-3">{children}</p>,
     // Styled lists - ul uses tighter spacing, ol uses standard for number alignment
     ul: ({ children, className }) => (
       <ul
@@ -552,7 +555,7 @@ function createComponents(
       <ol className={cn('my-3 space-y-1.5 pl-6 list-decimal', className)}>{children}</ol>
     ),
     li: ({ children, className }) => (
-      <li className={cn('leading-relaxed', className?.includes('task-list-item') && 'list-none')}>{children}</li>
+      <li className={cn(className?.includes('task-list-item') && 'list-none')}>{children}</li>
     ),
     // Beautiful tables
     table: ({ children }) => (

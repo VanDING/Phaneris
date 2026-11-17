@@ -65,7 +65,7 @@ function Roles() {
     <StyledDropdownMenuContent><StyledDropdownMenuItem data-testid={`${id}-action`}>查看详情</StyledDropdownMenuItem></StyledDropdownMenuContent></DropdownMenu>
   return <main data-roles-ready data-status={theme.themeLoadStatus} className="h-full overflow-auto bg-background text-foreground">
     <div className="mx-auto max-w-5xl p-4 space-y-4">
-      <h1 className="craft-text-title">主题系统 · 真实控件与内容</h1>
+      <h1 className="text-title">主题系统 · 真实控件与内容</h1>
       <div className="flex flex-wrap items-center gap-3">
         <Button data-testid="button">保存</Button><Button data-testid="icon" size="icon" aria-label="打开详情"><Circle /></Button>
         <Button data-testid="disabled" disabled>不可用</Button><Button data-testid="loading" loading>正在保存</Button>
@@ -93,7 +93,7 @@ function Roles() {
         <Input aria-label="项目名称" defaultValue="主题审计与优化" /></SettingsRow>
         <SettingsToggle label="启用功能" checked={enabled} onCheckedChange={setEnabled} description="状态不只依赖颜色" />
       </SettingsCard>
-      <p data-testid="ui-text" className="craft-text-label">界面标签与控件尺寸独立于阅读尺度。</p>
+      <p data-testid="ui-text" className="text-label">界面标签与控件尺寸独立于阅读尺度。</p>
       <p data-testid="reading-text" className="text-reading">中文阅读内容：陕西煤业、闸门、远程连接和长文件名都应保留笔画与自然行距。</p>
       <div data-testid="transcript" className="h-80"><SessionViewer session={session} mode="readonly" defaultExpanded /></div>
       <div data-testid="transcript-column" className={`${CHAT_LAYOUT.maxWidth} ${CHAT_LAYOUT.containerPaddingX} mx-auto`}><p>转录内容边</p></div>

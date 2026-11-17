@@ -73,6 +73,12 @@ export function ProjectManagementSurface({ state }: ProjectManagementSurfaceProp
 
   return (
     <div className="@container/panel relative h-full min-h-0 overflow-hidden">
+      {/* Board, Calendar and Timeline fill the row with no header of their own
+          (the view switcher carries the names visually), so the screen had no
+          `h1`. Overview renders its own PanelHeader, so it is excluded here. */}
+      {state.view !== 'overview' && (
+        <h1 className="sr-only">{t(`contentPanel.button.${state.view === 'gantt' ? 'gantt' : state.view}`)}</h1>
+      )}
       <div key={state.view} className="motion-view-enter h-full min-h-0">
         <SurfaceErrorBoundary surface={`projects/${state.view}`} resetKey={state.view}>
           {content}

@@ -53,6 +53,8 @@ export interface PluginsListPanelProps {
   /** Name of the bundle whose page is open, so its row shows selected. */
   selectedPluginName?: string | null
   className?: string
+  /** Data still loading: withhold the empty state instead of claiming none exist. */
+  loading?: boolean
 }
 
 function errorMessage(error: unknown): string {
@@ -76,6 +78,7 @@ export function PluginsListPanel({
   onPluginClick,
   selectedPluginName,
   className,
+  loading,
 }: PluginsListPanelProps) {
   const { t } = useTranslation()
   const activeWorkspace = useActiveWorkspace()
@@ -156,7 +159,8 @@ export function PluginsListPanel({
         if (row.kind === 'plugin') onPluginClick?.(row.plugin)
       }}
       className={className}
-      containerProps={{ 'data-list-role': 'plugins' }}
+      loading={loading}
+      containerProps={{ 'data-list-role': 'plugins', 'aria-label': t('sidebar.allPlugins') }}
       emptyState={
         <EntityListEmptyScreen
           icon={<Shapes />}
@@ -165,6 +169,8 @@ export function PluginsListPanel({
           docKey="plugins"
         />
       }
+      filterText={(row) => row.kind === 'error' ? (row.error.pluginName ?? row.error.path ?? '') : row.plugin.name}
+      filterPlaceholder={t('sidebar.filterPlugins')}
       mapItem={(row) => {
         if (row.kind === 'error') {
           return {
@@ -282,3 +288,5 @@ export function PluginsListPanel({
     </>
   )
 }
+
+

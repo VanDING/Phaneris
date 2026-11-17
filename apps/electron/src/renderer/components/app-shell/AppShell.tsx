@@ -47,6 +47,7 @@ import { SquarePenRounded } from "../icons/SquarePenRounded"
 import { McpIcon } from "../icons/McpIcon"
 import { cn } from "@/lib/utils"
 import { readAfterReconnect } from "@/lib/read-after-reconnect"
+import { useWorkspaceResources } from "@/hooks/useWorkspaceResources"
 import { isMac, isWindows, isWebUI } from "@/lib/platform"
 import { Button } from "@/components/ui/button"
 import { HeaderIconButton } from "@/components/ui/HeaderIconButton"
@@ -140,7 +141,9 @@ import * as storage from "@/lib/local-storage"
 import { toast } from "sonner"
 import { navigate, routes } from "@/lib/navigate"
 import { useWorkspaceChatStarters } from '@/hooks/useWorkspaceChatStarters'
-import { buildNavigatorRootRoute, hasNavigator } from "@/lib/nav-helpers"
+import { buildNavigatorRootRoute, hasNavigator, fitColumns } from "@/lib/nav-helpers"
+import { navigatorOwnsHeadingOne as navigatorOwnsH1 } from "@/lib/navigator-heading"
+import { filterSessions } from "@/lib/session-filter-model"
 import {
   useNavigation,
   isSessionsNavigation,
@@ -187,7 +190,7 @@ import {
   RADIUS_INNER,
 } from "./panel-constants"
 import { hasOpenOverlay } from "@/lib/overlay-detection"
-import { clearSourceIconCaches } from "@/lib/icon-cache"
+
 import { dispatchFocusInputEvent } from "./input/focus-input-events"
 
 /**
@@ -306,7 +309,9 @@ function AppShellContent({
   const effectiveSidebarAndNavigatorHidden = isSidebarAndNavigatorHidden || isAutoCompact
   const coarsePointer = useCoarsePointer()
   const sidebarRailWidth = coarsePointer ? SIDEBAR_TOUCH_RAIL_WIDTH : SIDEBAR_RAIL_WIDTH
-  const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible ? sidebarWidth : sidebarRailWidth)
+  // Content never yields; the sidebar falls back to its rail, navigator narrows first.
+  const columns = fitColumns(shellWidth, sidebarWidth, sidebarRailWidth, sessionListWidth)
+  const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible && !columns.sidebarRail ? sidebarWidth : sidebarRailWidth)
   const reduceSidebarMotion = useReducedMotionConfig()
   const sidebarSashTransition = reduceSidebarMotion ? undefined : 'left 280ms cubic-bezier(0.2, 0, 0, 1)'
 
@@ -646,67 +651,6 @@ function AppShellContent({
       return next
     })
   }, [])
-  // Sources state (workspace-scoped)
-  const [sources, setSources] = React.useState<LoadedSource[]>([])
-  // Sync sources to atom for NavigationContext auto-selection
-  const setSourcesAtom = useSetAtom(sourcesAtom)
-  React.useEffect(() => {
-    setSourcesAtom(sources)
-  }, [sources, setSourcesAtom])
-
-  // Skills state (workspace-scoped)
-  const [skills, setSkills] = React.useState<LoadedSkill[]>([])
-  // Sync skills to atom for NavigationContext auto-selection
-  const setSkillsAtom = useSetAtom(skillsAtom)
-  React.useEffect(() => {
-    setSkillsAtom(skills)
-  }, [skills, setSkillsAtom])
-
-  // Plugins state (workspace-scoped) — installed bundles for the `/` roster and
-  // the Plugins section. Load errors are tracked separately: a bundle that will
-  // not load must be visible, not missing.
-  const [plugins, setPlugins] = React.useState<PluginSummary[]>([])
-  const [pluginLoadErrors, setPluginLoadErrors] = React.useState<PluginLoadError[]>([])
-  const setPluginsAtom = useSetAtom(pluginsAtom)
-  const setPluginLoadErrorsAtom = useSetAtom(pluginLoadErrorsAtom)
-  React.useEffect(() => {
-    setPluginsAtom(plugins)
-  }, [plugins, setPluginsAtom])
-  React.useEffect(() => {
-    setPluginLoadErrorsAtom(pluginLoadErrors)
-  }, [pluginLoadErrors, setPluginLoadErrorsAtom])
-
-  const reloadPlugins = React.useCallback(async (workspaceId: string) => {
-    try {
-      const result = await window.electronAPI.getPlugins(workspaceId)
-      setPlugins(result?.plugins ?? [])
-      setPluginLoadErrors(result?.errors ?? [])
-    } catch (err) {
-      console.error('[Plugins] Failed to load plugins:', err)
-      setPlugins([])
-      setPluginLoadErrors([])
-    }
-  }, [])
-
-  React.useEffect(() => {
-    if (!activeWorkspaceId) {
-      setPlugins([])
-      setPluginLoadErrors([])
-      return
-    }
-    void reloadPlugins(activeWorkspaceId)
-  }, [activeWorkspaceId, reloadPlugins])
-
-  // A bundle can change without the plugin list being replaced wholesale: edits
-  // and reinstalls happen on disk. `plugins:changed` also carries the payload.
-  React.useEffect(() => {
-    const cleanup = window.electronAPI.onPluginsChanged((workspaceId: string, payload: PluginsListResult) => {
-      if (workspaceId !== activeWorkspaceId) return
-      setPlugins(payload?.plugins ?? [])
-      setPluginLoadErrors(payload?.errors ?? [])
-    })
-    return cleanup
-  }, [activeWorkspaceId, reloadPlugins])
   // Automations — state, handlers, loading, subscriptions
   const activeWorkspace = workspaces.find(w => w.id === activeWorkspaceId)
 
@@ -823,40 +767,6 @@ function AppShellContent({
     }
 
     previousWorkspaceRef.current = activeWorkspaceId
-  }, [activeWorkspaceId])
-
-  // Load sources from backend on mount
-  React.useEffect(() => {
-    if (!activeWorkspaceId) return
-    let cancelled = false
-    readAfterReconnect(() => window.electronAPI.getSources(activeWorkspaceId)).then((loaded) => {
-      if (cancelled) return
-      setSources(loaded || [])
-    }).catch(err => {
-      if (cancelled) return
-      console.error('[Chat] Failed to load sources:', err)
-    })
-    return () => { cancelled = true }
-  }, [activeWorkspaceId])
-
-  // Subscribe to live source updates (when sources are added/removed dynamically)
-  React.useEffect(() => {
-    const cleanup = window.electronAPI.onSourcesChanged((workspaceId, updatedSources) => {
-      if (workspaceId !== activeWorkspaceId) return
-      // Clear icon cache so updated source icons are re-fetched on render
-      clearSourceIconCaches()
-      setSources(updatedSources || [])
-    })
-    return cleanup
-  }, [activeWorkspaceId])
-
-  // Subscribe to live skill updates (when skills are added/removed dynamically)
-  React.useEffect(() => {
-    const cleanup = window.electronAPI.onSkillsChanged((workspaceId, updatedSkills) => {
-      if (workspaceId !== activeWorkspaceId) return
-      setSkills(updatedSkills || [])
-    })
-    return cleanup
   }, [activeWorkspaceId])
 
   // Handle session source selection changes
@@ -1034,10 +944,9 @@ function AppShellContent({
     }
   })
 
-  // Tab navigation between zones
-  useAction('nav.nextZone', () => {
-    focusNextZone()
-  }, { enabled: () => !document.querySelector('[role="dialog"]') })
+  // F6 / Shift+F6 cycle zones; Tab belongs to the platform (see nav.nextZone).
+  useAction('nav.nextZone', () => focusNextZone(), { enabled: () => !document.querySelector('[role="dialog"]') })
+  useAction('nav.previousZone', () => focusPreviousZone(), { enabled: () => !document.querySelector('[role="dialog"]') })
 
   // Shift+Tab cycles permission mode through enabled modes (the textarea handles its own).
   const effectiveSessionId = primarySessionId ?? session.selected
@@ -1287,18 +1196,15 @@ function AppShellContent({
   const activeSessionWorkingDirectory = session.selected
     ? sessionMetaMap.get(session.selected)?.workingDirectory
     : undefined
-  React.useEffect(() => {
-    if (!activeWorkspaceId) return
-    let cancelled = false
-    readAfterReconnect(() => window.electronAPI.getSkills(activeWorkspaceId, activeSessionWorkingDirectory)).then((loaded) => {
-      if (cancelled) return
-      setSkills(loaded || [])
-    }).catch(err => {
-      if (cancelled) return
-      console.error('[Chat] Failed to load skills:', err)
-    })
-    return () => { cancelled = true }
-  }, [activeWorkspaceId, activeSessionWorkingDirectory])
+
+  // Workspace resources (sources, skills, plugins) — see useWorkspaceResources for
+  // the loaded/empty distinction the list panels depend on.
+  const resources = useWorkspaceResources(activeWorkspaceId, activeSessionWorkingDirectory)
+  const sources = resources.sources.items
+  const skills = resources.skills.items
+  const plugins = resources.plugins.items
+  const pluginLoadErrors = resources.pluginLoadErrors
+  const reloadPlugins = resources.reloadPlugins
 
   // Filter session metadata by active workspace
   // Also exclude hidden sessions (mini-agent sessions) from all counts and lists
@@ -1435,119 +1341,16 @@ function AppShellContent({
   }, [automations])
 
   // Filter session metadata based on sidebar mode and chat filter
-  const filteredSessionMetas = useMemo(() => {
-    // When in sources mode, return empty (no sessions to show)
-    if (!sessionFilter) {
-      return []
-    }
-
-    let result: SessionMeta[]
-
-    switch (sessionFilter.kind) {
-      case 'allSessions':
-        // "All Sessions" - shows active (non-archived) sessions
-        result = activeSessionMetas
-        break
-      case 'flagged':
-        result = activeSessionMetas.filter(s => s.isFlagged)
-        break
-      case 'archived':
-        // Archived view shows only archived sessions
-        result = workspaceSessionMetas.filter(s => s.isArchived)
-        break
-      case 'state':
-        // Filter by specific todo state (excludes archived)
-        result = activeSessionMetas.filter(s => (s.sessionStatus || 'todo') === sessionFilter.stateId)
-        break
-      case 'label': {
-        // Shared predicate (handles '__all__', descendant labels, and the optional
-        // project scope) — the same implementation the session list filters with,
-        // so the two stay aligned by construction.
-        result = activeSessionMetas.filter(s => matchesLabelFilter(s, sessionFilter, labelConfigs))
-        break
-      }
-      case 'view': {
-        // Filter by view: __all__ shows any session matched by any view,
-        // otherwise filter to the specific view (excludes archived)
-        result = activeSessionMetas.filter(s => {
-          const matched = evaluateViews(s)
-          if (sessionFilter.viewId === '__all__') {
-            return matched.length > 0
-          }
-          return matched.some(v => v.id === sessionFilter.viewId)
-        })
-        break
-      }
-      default:
-        result = activeSessionMetas
-    }
-
-    // Apply secondary filters (status + labels, AND-ed together) in ALL views.
-    // These layer on top of the primary sessionFilter to allow further narrowing.
-    // Each filter supports include/exclude modes:
-    //   - Includes: if any exist, only matching items pass
-    //   - Excludes: matching items are removed (applied after includes)
-    if (listFilter.size > 0) {
-      const statusIncludes = new Set<SessionStatusId>()
-      const statusExcludes = new Set<SessionStatusId>()
-      for (const [id, mode] of listFilter) {
-        if (mode === 'include') statusIncludes.add(id)
-        else statusExcludes.add(id)
-      }
-      if (statusIncludes.size > 0) {
-        result = result.filter(s => statusIncludes.has((s.sessionStatus || 'todo') as SessionStatusId))
-      }
-      if (statusExcludes.size > 0) {
-        result = result.filter(s => !statusExcludes.has((s.sessionStatus || 'todo') as SessionStatusId))
-      }
-    }
-    // Filter by labels — supports include/exclude with descendant expansion
-    if (labelFilter.size > 0) {
-      const labelIncludes = new Set<string>()
-      const labelExcludes = new Set<string>()
-      for (const [id, mode] of labelFilter) {
-        // Expand to include descendant label IDs
-        const ids = [id, ...getDescendantIds(labelConfigs, id)]
-        for (const expandedId of ids) {
-          if (mode === 'include') labelIncludes.add(expandedId)
-          else labelExcludes.add(expandedId)
-        }
-      }
-      if (labelIncludes.size > 0) {
-        result = result.filter(s =>
-          s.labels?.some(l => labelIncludes.has(extractLabelId(l)))
-        )
-      }
-      if (labelExcludes.size > 0) {
-        result = result.filter(s =>
-          !s.labels?.some(l => labelExcludes.has(extractLabelId(l)))
-        )
-      }
-    }
-    // Filter by project — supports include/exclude on session.projectId
-    if (projectFilter.size > 0) {
-      const projectIncludes = new Set<string>()
-      const projectExcludes = new Set<string>()
-      for (const [id, mode] of projectFilter) {
-        if (mode === 'include') projectIncludes.add(id)
-        else projectExcludes.add(id)
-      }
-      if (projectIncludes.size > 0) {
-        result = result.filter(s => {
-          const pid = (s as { projectId?: string }).projectId
-          return pid !== undefined && projectIncludes.has(pid)
-        })
-      }
-      if (projectExcludes.size > 0) {
-        result = result.filter(s => {
-          const pid = (s as { projectId?: string }).projectId
-          return pid === undefined || !projectExcludes.has(pid)
-        })
-      }
-    }
-
-    return result
-  }, [workspaceSessionMetas, activeSessionMetas, sessionFilter, listFilter, labelFilter, projectFilter, labelConfigs, evaluateViews])
+  const filteredSessionMetas = useMemo(() => filterSessions({
+    workspaceMetas: workspaceSessionMetas,
+    activeMetas: activeSessionMetas,
+    sessionFilter,
+    listFilter,
+    labelFilter,
+    projectFilter,
+    labelConfigs,
+    evaluateViews,
+  }), [workspaceSessionMetas, activeSessionMetas, sessionFilter, listFilter, labelFilter, projectFilter, labelConfigs, evaluateViews])
 
   // Derive "pinned" (non-removable) filters from the current sessionFilter path.
   // These represent filters that are implicit in the current deeplink/route and
@@ -2215,6 +2018,8 @@ function AppShellContent({
     }
   }, [sidebarFocused, focusedSidebarItemId, unifiedSidebarItems])
 
+
+
   // Get title based on navigation state
   const listTitle = React.useMemo(() => {
     // Sources navigator
@@ -2405,7 +2210,7 @@ function AppShellContent({
                               variant="ghost"
                               onClick={() => handleNewChat()}
                               aria-label={t("session.newSession")}
-                              className="sidebar-new-session craft-text-label w-full justify-start gap-2 font-normal rounded-control shadow-minimal bg-card text-card-foreground hover:bg-card"
+                              className="sidebar-new-session text-body w-full justify-start gap-2 font-normal rounded-control shadow-minimal bg-card text-card-foreground hover:bg-card"
                               data-tutorial="new-chat-button"
                             >
                               <SquarePenRounded className="h-3.5 w-3.5 shrink-0" />
@@ -2719,7 +2524,7 @@ function AppShellContent({
             >
             <PanelHeader
               title={listTitle}
-              headingLevel={2}
+              headingLevel={navigatorOwnsH1(navState, { isSessionsListVisible, isWorkbenchFullWidth }) ? 1 : 2}
               compensateForStoplight={effectiveSidebarWidth === 0}
               badge={automationFilter?.automationType === 'scheduled' ? (
                 <Tooltip>
@@ -2760,6 +2565,7 @@ function AppShellContent({
                       <DropdownMenuTrigger asChild>
                         <HeaderIconButton
                           icon={<ListFilter className="h-4 w-4" />}
+                          tooltip={t("sidebar.filterChats")}
                           className={(listFilter.size > 0 || labelFilter.size > 0 || projectFilter.size > 0) ? "bg-accent/5 text-accent rounded-shape-lg shadow-tinted" : "rounded-shape-lg"}
                           style={(listFilter.size > 0 || labelFilter.size > 0 || projectFilter.size > 0) ? { '--shadow-color': 'var(--accent)' } as React.CSSProperties : undefined}
                         />
@@ -3485,6 +3291,7 @@ function AppShellContent({
               /* Sources List - filtered by type if sourceFilter is active */
               <SourcesListPanel
                 sources={sources}
+                loading={!resources.sources.loaded}
                 sourceFilter={sourceFilter}
                 workspaceRootPath={activeWorkspace?.rootPath}
                 onDeleteSource={handleDeleteSource}
@@ -3497,6 +3304,7 @@ function AppShellContent({
               /* Skills List */
               <SkillsListPanel
                 skills={skills}
+                loading={!resources.skills.loaded}
                 workspaceId={activeWorkspaceId}
                 workspaceRootPath={activeWorkspace?.rootPath}
                 onSkillClick={handleSkillSelect}
@@ -3616,13 +3424,25 @@ function AppShellContent({
             )}
             </div>
           }
-          navigatorWidth={isAutoCompact ? sessionListWidth : (effectiveSidebarAndNavigatorHidden || isFullWidthView || isPagesView || isWorkbenchFullWidth || !isCurrentNavigatorVisible ? 0 : sessionListWidth)}
+          navigatorWidth={isAutoCompact ? sessionListWidth : (effectiveSidebarAndNavigatorHidden || isFullWidthView || isPagesView || isWorkbenchFullWidth || !isCurrentNavigatorVisible ? 0 : columns.navigator)}
           isSidebarAndNavigatorHidden={effectiveSidebarAndNavigatorHidden}
           isCompact={isAutoCompact}
           isResizing={!!isResizing}
         />
 
-        {/* Sidebar Resize Handle (absolute, hidden in focused mode) */}
+        {/* Panel resize handles, wrapped in one named region.
+            They are `role="slider"` controls positioned against the shell, so they
+            had no landmark ancestor and axe reported every one of them as "content
+            not contained by landmarks" — 42 of the remaining 49 `region` findings.
+            The wrapper is `inset-0` with `pointer-events: none`: it covers exactly
+            the shell's padding box, which is the box the handles were already
+            positioned against, so their coordinates are unchanged, and it lets
+            clicks through to everything except the handles themselves. */}
+        <div
+          role="region"
+          aria-label={t('sidebar.panelLayout')}
+          className="pointer-events-none absolute inset-0"
+        >
         {!effectiveSidebarAndNavigatorHidden && isSidebarVisible && (
         <div
           ref={resizeHandleRef}
@@ -3642,7 +3462,7 @@ function AppShellContent({
             }
           }}
           onMouseLeave={() => { if (!isResizing) setSidebarHandleY(null) }}
-          className="craft-row-focus absolute cursor-col-resize z-panel flex justify-center"
+          className="craft-row-focus pointer-events-auto absolute cursor-col-resize z-panel flex justify-center"
           style={{
             width: PANEL_SASH_HIT_WIDTH,
             top: PANEL_STACK_VERTICAL_OVERFLOW,
@@ -3683,7 +3503,7 @@ function AppShellContent({
             }
           }}
           onMouseLeave={() => { if (isResizing !== 'session-list') setSessionListHandleY(null) }}
-          className="craft-row-focus absolute cursor-col-resize z-panel flex justify-center"
+          className="craft-row-focus pointer-events-auto absolute cursor-col-resize z-panel flex justify-center"
           style={{
             width: PANEL_SASH_HIT_WIDTH,
             top: PANEL_STACK_VERTICAL_OVERFLOW,
@@ -3705,7 +3525,7 @@ function AppShellContent({
           />
         </div>
         )}
-
+        </div>
       </div>
 
       {/* ============================================================================
@@ -3930,3 +3750,13 @@ function AppShellContent({
     </AppShellProvider>
   )
 }
+
+
+
+
+
+
+
+
+
+

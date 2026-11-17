@@ -29,9 +29,11 @@ export function SessionStatusIcon({ item }: SessionStatusIconProps) {
         <button
           type="button"
           className={cn(
-            "!h-5 !w-5 flex items-center justify-center rounded-full transition-colors cursor-pointer",
+            // 24×24 hit area (WCAG 2.2 SC 2.5.8); the glyph stays 20px so the row's
+            // visual rhythm is unchanged — only the target grew.
+            "craft-icon-button size-control-sm shrink-0 flex items-center justify-center rounded-full transition-colors cursor-pointer",
             "hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-            "[&>svg]:w-full [&>svg]:h-full [&>img]:w-full [&>img]:h-full [&>span]:text-reading",
+            "[&>svg]:w-5 [&>svg]:h-5 [&>img]:w-5 [&>img]:h-5 [&>span]:text-reading",
           )}
           style={getStateIconStyle(status, ctx.sessionStatuses)}
           aria-haspopup="menu"
@@ -71,3 +73,6 @@ export function SessionStatusIcon({ item }: SessionStatusIconProps) {
     </Popover>
   )
 }
+
+
+

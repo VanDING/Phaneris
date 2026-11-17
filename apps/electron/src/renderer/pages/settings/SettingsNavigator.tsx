@@ -128,9 +128,18 @@ function SettingsItemRow({ item, isSelected, isFirst, onSelect }: SettingsItemRo
           <div className="flex items-center rounded-lg overflow-hidden border border-transparent hover:border-border/50">
             <DropdownMenu modal={true} onOpenChange={setMenuOpen}>
               <DropdownMenuTrigger asChild>
-                <div className="p-1.5 hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer">
+                {/* A real button, not a `<div>`: Radix stamps `type="button"
+                    aria-haspopup aria-expanded` on the trigger, and those are
+                    meaningless on a div with no role — invalid ARIA as well as a
+                    control that cannot be reached by keyboard. This is the same
+                    mistake the composer badge and panel header had. */}
+                <button
+                  type="button"
+                  aria-label={t('common.moreActions')}
+                  className="craft-icon-button craft-focus rounded-md p-1.5 hover:bg-foreground/10 data-[state=open]:bg-foreground/10"
+                >
                   <MoreHorizontal className="h-4 w-4 text-text-secondary" />
-                </div>
+                </button>
               </DropdownMenuTrigger>
               <StyledDropdownMenuContent align="end">
                 <DropdownMenuProvider>

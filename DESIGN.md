@@ -142,7 +142,7 @@ system fallbacks. All faces are bundled; no CDN. The root is 15px
 | label | 12px | 1.5 | `text-label` | Buttons, menu items, tabs |
 | body | 13px | 1.5 | `text-body` | Conversation text, settings |
 | reading | 14px | 1.7 | `text-reading` | Markdown prose, documents |
-| title | 16px | 1.45 | `text-title` | Panel titles, dialogs |
+| title | 16px | 1.45 | `text-title` | Dialogs, in-content headings |
 | display | 20px | 1.3 | `text-display` | Landing and empty-state invitations (one per view) |
 
 Rules:
@@ -311,14 +311,35 @@ Rules:
   active conversation and collapsing it restores the group. Compact layouts use
   full-width replacement layers. Expanded Workbench fills the content row.
 - Chat reading column is `--reading-width: 840px` with `--reading-gutter`.
+- The three columns concede in a fixed order when the window narrows: the
+  sidebar falls back to its **48px** rail, then the navigator shrinks toward its
+  **220px** floor, and only then is the navigator hidden. The content column
+  holds a **480px** floor throughout — it is the only column whose job is
+  reading, so it is the only one that never yields. Before this rule the sidebar
+  and navigator were taken first and the content got the remainder, which left
+  an 800px window with a 288px chat (`fitColumns` in
+  `apps/electron/src/renderer/lib/nav-helpers.ts`).
 - Panel-relative responsiveness uses container queries, not viewport queries:
   `@panel-compact` (448px), `@panel-medium` (640px), `@mobile` (768px).
 - Spacing follows a 4px rhythm (`spacing.1–6`).
+- **Compose layout from the five primitives** in `@phaneris/ui` (`Stack`,
+  `Cluster`, `Center`, `Truncate`, `Switcher`) instead of hand-rolling
+  `flex flex-col items-center justify-center` and friends. They own the gap
+  scale and the `min-w-0` chain that truncation depends on, and `Switcher` keys
+  off the *container* so a narrow panel behaves like a narrow window.
+  `handRolledCenterStack` in `check:design-drift` is frozen at the pre-primitive
+  count and may only shrink.
 - Control heights are contract tiers `18/22/26/30/34/38px`. Heights above the
   control band describe layout space, not hit targets, and are not tiered.
 - One `h1` per screen: the primary surface title. Navigator, workbench and
-  artifact sub-panel headers are `h2` (`PanelHeader headingLevel={2}`), and the
-  panel title is `text-title` (16px), not body size.
+  artifact sub-panel headers are `h2` (`PanelHeader headingLevel={2}`).
+- **Panel titles are `text-body` (13px, semibold), not `text-title`.** The 16px
+  tier was tried and reverted (2026-10-21): at 16px every panel header — sidebar,
+  chat, panes — read as a *section* title rather than the name of the surface it
+  caps, so a screen presented several competing headlines. The title role is
+  carried by weight and position next to the panel edge, not by a size jump.
+  `text-title` therefore belongs to dialogs and in-content headings; this file
+  says so here because the reverse rule sent one audit round chasing 16px.
 
 ### One scaling model
 
@@ -335,9 +356,11 @@ Now every control dimension is `tier × --ui-scale`:
   `-md` / `-xl` by size), Input, Select trigger, Command input, header icon
   buttons (`size-control-sm`). At `--ui-scale: 1` that is 33.75→34px, i.e. the
   sub-pixel change the review allowed.
-- `--ui-scale` is a user preference (`ThemePreferences.uiScale`), surfaced in
-  Appearance as **Interface scale 100 / 110 / 125%**, applied by the theme
-  provider on `:root`.
+- `--ui-scale` is a **fixed token default of 1**, not a user preference. The
+  100 / 110 / 125% control, its i18n keys and the `uiScale` field in shared
+  config were removed (2026-10-21); the variable stays because every tier
+  multiplies by it, which is what makes a future interface-scale feature a
+  one-line change instead of a sweep.
 - Type tiers multiply by the same variable, so text and controls grow together.
   The reading column does **not**: `text-reading` and `--reading-width` follow
   `--reading-scale`, because enlarging the interface must not reflow prose.

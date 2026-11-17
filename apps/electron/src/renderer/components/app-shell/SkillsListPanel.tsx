@@ -21,6 +21,8 @@ export interface SkillsListPanelProps {
   workspaceId?: string
   workspaceRootPath?: string
   className?: string
+  /** Data still loading: withhold the empty state instead of claiming none exist. */
+  loading?: boolean
 }
 
 export function SkillsListPanel({
@@ -31,6 +33,7 @@ export function SkillsListPanel({
   workspaceId,
   workspaceRootPath,
   className,
+  loading,
 }: SkillsListPanelProps) {
   const { t } = useTranslation()
   const activeWorkspace = useActiveWorkspace()
@@ -52,7 +55,8 @@ export function SkillsListPanel({
       selectedId={selectedSkillSlug}
       onItemClick={onSkillClick}
       className={className}
-      containerProps={{ 'data-list-role': 'skills' }}
+      loading={loading}
+      containerProps={{ 'data-list-role': 'skills', 'aria-label': t('sidebar.allSkills') }}
       emptyState={
         <EntityListEmptyScreen
           icon={<Zap />}
@@ -73,6 +77,8 @@ export function SkillsListPanel({
           )}
         </EntityListEmptyScreen>
       }
+      filterText={(skill) => skill.metadata.name + ' ' + (skill.metadata.description ?? '')}
+      filterPlaceholder={t('sidebar.filterSkills')}
       mapItem={(skill) => ({
         icon: <SkillAvatar skill={skill} size="sm" workspaceId={workspaceId} />,
         title: skill.metadata.name,
@@ -132,3 +138,5 @@ export function SkillsListPanel({
     </>
   )
 }
+
+

@@ -1,70 +1,13 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
-
-const buttonVariants = cva(
-  "craft-control motion-interactive relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-body font-medium transition-[color,background-color,border-color,box-shadow,opacity,transform] active:scale-[var(--motion-scale-pressed)] disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 select-none",
-  {
-    variants: {
-      variant: {
-        default:
-          "bg-foreground text-background hover:bg-foreground/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-foreground/15 bg-background hover:bg-foreground/3",
-        secondary:
-          "bg-foreground/5 text-foreground hover:bg-foreground/10",
-        ghost: "hover:bg-foreground/3",
-        link: "text-foreground underline-offset-4 hover:underline",
-      },
-      size: {
-        default: "h-control-lg px-4 py-2",
-        xs: "h-control-xs rounded-shape-sm px-2 text-meta",
-        compact: "h-control-sm rounded-shape-sm px-2.5 text-label",
-        sm: "h-control-md rounded-md px-3 text-meta",
-        lg: "h-control-xl rounded-md px-8",
-        icon: "craft-icon-button size-9",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-)
-
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-  /** Keeps the label's width and accessible name while preventing duplicate submission. Not supported with asChild. */
-  loading?: boolean
-}
-
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props }, ref) => {
-    if (asChild && loading) throw new Error('Button loading requires a native button; compose loading content in the asChild element instead.')
-    const Comp = asChild ? Slot : "button"
-    return (
-      <Comp
-        data-slot="button"
-        data-control-size={size ?? "default"}
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-        disabled={disabled || loading}
-        aria-busy={loading || props['aria-busy']}
-      >
-        {asChild || !loading ? children : <>
-          <span className={cn('craft-button-label', loading && 'opacity-0')}>{children}</span>
-          {loading && <span aria-hidden="true" className="craft-button-spinner" />}
-        </>}
-      </Comp>
-    )
-  }
-)
-Button.displayName = "Button"
-
-export { Button, buttonVariants }
+/**
+ * The renderer's Button is the shared one.
+ *
+ * It used to be a second definition of the same `cva` config, which meant the
+ * product had two buttons that happened to look alike: a change to one (a focus
+ * ring, a disabled treatment, a new size) had to be remembered in the other. The
+ * atom now lives in `@phaneris/ui` and is consumed identically by the Electron
+ * renderer, the web client and the viewer.
+ *
+ * Re-exported rather than imported everywhere so the ~90 existing call sites keep
+ * their `@/components/ui/button` path and this stays a one-line move.
+ */
+export { Button, buttonVariants, type ButtonProps } from '@phaneris/ui'

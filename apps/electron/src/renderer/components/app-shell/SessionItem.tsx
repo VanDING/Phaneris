@@ -169,6 +169,7 @@ export function SessionItem({
           ctx.onKeyDown(e, item)
         },
       }}
+      leadingAction={<SessionStatusIcon item={item} />}
       beforeMenu={subtaskCount > 0 ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -243,7 +244,6 @@ export function SessionItem({
       )}
       icon={
         <>
-          <SessionStatusIcon item={item} />
           <div className={cn(
             "flex items-center justify-center overflow-hidden gap-1",
             "motion-content transition-opacity",

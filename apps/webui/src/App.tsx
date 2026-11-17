@@ -14,6 +14,7 @@ import { useAtomValue } from 'jotai'
 import { createWebApi } from './adapter/web-api'
 import type { WsRpcClient } from '@phaneris/server-core/transport/client'
 import { createClientPlatform, initializeClient } from '@/platform/client'
+import { Button, Center, Cluster, Stack } from '@phaneris/ui'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { windowWorkspaceIdAtom } from '@/atoms/sessions'
 import { Toaster } from '@/components/ui/sonner'
@@ -43,10 +44,14 @@ function LoadingScreen() {
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
-      <div className="animate-spin w-6 h-6 border-2 border-current border-t-transparent rounded-full" />
-      <p className="text-body">{t("webui.connectingToServer")}</p>
-    </div>
+    <main className="h-screen font-sans text-text-secondary">
+      <Center className="h-full">
+        <Stack gap="md" align="center">
+          <div className="animate-spin w-6 h-6 border-2 border-current border-t-transparent rounded-full" />
+          <p className="text-body">{t("webui.connectingToServer")}</p>
+        </Stack>
+      </Center>
+    </main>
   )
 }
 
@@ -54,28 +59,39 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
   const { t } = useTranslation()
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-sans text-text-secondary gap-3">
-      <p className="text-reading font-medium text-destructive">{t("webui.connectionFailed")}</p>
-      <p className="text-body max-w-md text-center">{message}</p>
-      <div className="flex gap-2 mt-2">
-        <button
-          onClick={onRetry}
-          className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
-        >
-          {t("common.retry")}
-        </button>
-        <button
-          onClick={() => {
-            fetch('/api/auth/logout', { method: 'POST' }).then(() => {
-              window.location.href = '/login'
-            })
-          }}
-          className="px-4 py-1.5 rounded-md bg-background shadow-minimal text-body text-text-secondary cursor-pointer"
-        >
-          {t("webui.logOut")}
-        </button>
-      </div>
-    </div>
+    <main className="h-screen font-sans text-text-secondary">
+      <Center className="h-full">
+        <Stack gap="md" align="center">
+          <h1 className="text-reading font-medium text-destructive">{t("webui.connectionFailed")}</h1>
+          {/* The raw failure used to be the only thing on this screen, so a server
+              that answered with HTML produced `Unexpected token '<', "<!DOCTYPE "...`
+              — a parser message the user cannot act on. The actionable sentence is
+              now the copy; the exception is kept, but demoted to a disclosure. */}
+          <p className="text-body max-w-md text-center">{t("webui.connectionFailedBody")}</p>
+          <details className="max-w-md w-full">
+            <summary className="text-meta text-text-secondary cursor-pointer text-center">
+              {t("webui.connectionFailedDetails")}
+            </summary>
+            <p className="mt-2 text-meta text-text-secondary text-center break-words">{message}</p>
+          </details>
+          <Cluster gap="sm" className="mt-2">
+            <Button variant="outline" onClick={onRetry}>
+              {t("common.retry")}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                fetch('/api/auth/logout', { method: 'POST' }).then(() => {
+                  window.location.href = '/login'
+                })
+              }}
+            >
+              {t("webui.logOut")}
+            </Button>
+          </Cluster>
+        </Stack>
+      </Center>
+    </main>
   )
 }
 
@@ -164,3 +180,5 @@ export default function App() {
 
   return <ConnectedApp />
 }
+
+

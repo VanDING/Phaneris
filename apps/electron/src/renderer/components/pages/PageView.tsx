@@ -282,13 +282,15 @@ export function PageView({ pageSlug }: PageViewProps) {
             className="h-7 min-w-0 flex-1 rounded-md border border-border bg-background px-2 text-body font-medium outline-none focus:border-ring"
           />
         ) : (
-          <span
+          // The page's own header carries the screen's h1: in pages navigation
+          // the navigator is collapsed to 0 width.
+          <h1
             className="min-w-0 truncate text-body font-medium"
             title={t('pages.renamePage')}
             onDoubleClick={() => setNameDraft(config.name)}
           >
             {config.name}
-          </span>
+          </h1>
         )}
         <PageKindBadge kind={config.kind} />
         <PageFreshness config={config} className="hidden @[28rem]/panel:inline-flex" />

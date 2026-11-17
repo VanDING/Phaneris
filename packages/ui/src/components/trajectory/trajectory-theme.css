@@ -7,8 +7,8 @@
   --dsw-font-family: var(--font-default, var(--font-sans, system-ui));
   --dsw-font-xxxs-11: calc(.733333rem * var(--ui-scale))/1.5 var(--dsw-font-family);
   --dsw-font-xxs-12: calc(.8rem * var(--ui-scale))/1.5 var(--dsw-font-family);
-  --dsw-font-xs-13: calc(var(--ui-label-size) * var(--ui-scale))/1.5 var(--dsw-font-family);
-  --dsw-font-xs-strong-13: 600 calc(var(--ui-label-size) * var(--ui-scale))/1.5 var(--dsw-font-family);
+  --dsw-font-xs-13: calc(var(--type-body-size) * var(--ui-scale))/1.5 var(--dsw-font-family);
+  --dsw-font-xs-strong-13: 600 calc(var(--type-body-size) * var(--ui-scale))/1.5 var(--dsw-font-family);
   --ds-ease-in-out: var(--motion-ease-enter);
   --ds-font-family-code: var(--font-mono, ui-monospace, monospace);
   --dsh-trajectory-toolbar-height: 36px;

@@ -14,9 +14,15 @@
     <!-- Initial loading state: visible until React mounts and replaces #root contents.
          Prevents blank screen on cold start / post-update launch when code cache is stale. -->
     <style>
-      #_loader { display:flex; align-items:center; justify-content:center; height:100vh; opacity:0; animation:_fade 0.4s 0.3s forwards; }
+      /* Paint on the first frame, not after the bundle.
+         This loader used to start at `opacity: 0` and fade in after a 300ms
+         delay. The renderer bundle is evaluated on the main thread right after
+         the parser finishes, so that timer could not run until evaluation
+         completed — measured FCP was 2.9s while DOMContentLoaded was 326ms, i.e.
+         the screen was blank for 2.5s even though the loader was already in the
+         DOM. A visible-by-default loader is contentful at parse time. */
+      #_loader { display:flex; align-items:center; justify-content:center; height:100vh; }
       #_loader svg { width:24px; height:24px; animation:_spin 1s linear infinite; }
-      @keyframes _fade { to { opacity:1 } }
       @keyframes _spin { to { transform:rotate(360deg) } }
       @media (prefers-color-scheme:dark) { #_loader svg { color:rgba(255,255,255,0.4) } }
       @media (prefers-color-scheme:light) { #_loader svg { color:rgba(0,0,0,0.3) } }
@@ -24,7 +30,6 @@
          before any bundle (and its media queries) has loaded, so the app
          stylesheet cannot reach it. Static mark instead of an endless spin. */
       @media (prefers-reduced-motion: reduce) {
-        #_loader { opacity:1; animation:none }
         #_loader svg { animation:none }
       }
     </style>
