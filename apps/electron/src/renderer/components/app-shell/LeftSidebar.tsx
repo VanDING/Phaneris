@@ -530,15 +530,6 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
           extraClassName,
         )}
       >
-        {/* Selected marker: a shape cue, not a second shade of grey. The 6%
-            background above is 1.05:1 against the sidebar, so it cannot carry
-            the state alone. */}
-        {link.variant === "default" && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-full bg-accent"
-          />
-        )}
         {/* Icon container with hover toggle for expandable items */}
         <span className="navigation-icon relative size-4 shrink-0 flex items-center justify-center [&_svg]:size-4!">
           {link.expandable && !isOverlay ? (

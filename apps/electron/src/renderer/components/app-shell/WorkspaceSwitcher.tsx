@@ -210,7 +210,6 @@ export function WorkspaceSwitcher({
                   workspaceId={selectedWorkspace?.id}
                   workspaceName={selectedWorkspace?.name}
                   src={selectedWorkspace ? workspaceIconMap.get(selectedWorkspace.id) : undefined}
-                  showInitial={false}
                   className="h-4 w-4 mr-1.5 rounded-full ring-1 ring-border/50"
                   fallbackClassName="rounded-full"
                 />
@@ -246,7 +245,6 @@ export function WorkspaceSwitcher({
                   workspaceId={selectedWorkspace?.id}
                   workspaceName={selectedWorkspace?.name}
                   src={selectedWorkspace ? workspaceIconMap.get(selectedWorkspace.id) : undefined}
-                  showInitial={isCollapsed}
                   className="h-4 w-4 rounded-full ring-1 ring-border/50"
                   fallbackClassName="rounded-full"
                 />
@@ -361,6 +359,7 @@ export function WorkspaceSwitcher({
     </>
   )
 }
+
 
 
 
