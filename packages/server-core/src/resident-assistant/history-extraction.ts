@@ -18,6 +18,7 @@ export function initializeHistoryExtraction(db: SqliteDatabase): void {
     start_offset INTEGER NOT NULL,end_offset INTEGER NOT NULL,full_chars INTEGER NOT NULL,created_at INTEGER NOT NULL,acknowledgement TEXT);
     CREATE INDEX IF NOT EXISTS history_extraction_source ON history_extraction(session_id,message_id,content_hash,project_id);
     CREATE TABLE IF NOT EXISTS history_extraction_reads(run_id TEXT PRIMARY KEY,checkpoint_id TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS history_extraction_deferrals(run_id TEXT PRIMARY KEY,checkpoint_id TEXT NOT NULL,reason TEXT NOT NULL,created_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS history_extraction_unavailable(session_id TEXT NOT NULL,message_id TEXT NOT NULL,
       history_version INTEGER NOT NULL,memory_version INTEGER NOT NULL,PRIMARY KEY(session_id,message_id));`)
 }
@@ -66,6 +67,12 @@ export function maintainHistory(db: SqliteDatabase, command: MemoryMaintenanceCo
       const current = db.prepare(`SELECT json_extract(m.body,'$.projectId') AS project_id,json_extract(m.body,'$.contentHash') AS content_hash FROM history_messages m
         JOIN history_sessions s ON s.id=m.session_id WHERE m.session_id=? AND m.message_id=? AND s.state='indexed'`).get(checkpoint.session_id, checkpoint.message_id) as { project_id: string | null; content_hash: string } | undefined
       if (!current || current.project_id !== checkpoint.project_id || current.content_hash !== source.contentHash) throw new Error('Extraction source version or project scope changed; read the current source again')
+      if (command.conclusion === 'deferred') {
+        if (checkpoint.acknowledgement) throw new Error('Extraction checkpoint is already acknowledged')
+        db.prepare('INSERT INTO history_extraction_deferrals VALUES(?,?,?,?) ON CONFLICT(run_id) DO UPDATE SET reason=excluded.reason')
+          .run(runId, checkpoint.id, command.reason, Date.now())
+        return { status: 'deferred', checkpointId: checkpoint.id, reason: command.reason, coverage: historyExtractionCoverage(db) }
+      }
       const acknowledgement = canonicalJson({ conclusion: command.conclusion, reason: command.reason, candidateIds: [...new Set(command.candidateIds ?? [])].sort(),
         ...(command.projectEntries ? { projectEntries: command.projectEntries } : {}) })
       if (checkpoint.acknowledgement && checkpoint.acknowledgement !== acknowledgement) throw new Error('Extraction acknowledgement conflict: conclusion changed')
@@ -98,7 +105,8 @@ export function maintainHistory(db: SqliteDatabase, command: MemoryMaintenanceCo
     const pending = db.prepare(projection + `SELECT * FROM sources WHERE (acknowledged=0 OR through<full_chars)
       AND NOT COALESCE(unavailable,0) AND (? IS NULL OR project_id=?) AND (? IS NULL OR session_id=?)
       AND (? IS NULL OR message_id IN (SELECT value FROM json_each(?)))
-      ORDER BY COALESCE(json_extract(body,'$.timestamp'),0) ASC,session_id ASC,message_id ASC LIMIT 16`)
+      ORDER BY CASE json_extract(body,'$.role') WHEN 'user' THEN 0 WHEN 'assistant' THEN 1 ELSE 2 END,
+        COALESCE(json_extract(body,'$.timestamp'),0) DESC,session_id ASC,message_id ASC LIMIT 16`)
       .all(command.projectId ?? null, command.projectId ?? null, command.sessionId ?? null, command.sessionId ?? null,
         sourceMessageIds ? JSON.stringify(sourceMessageIds) : null, sourceMessageIds ? JSON.stringify(sourceMessageIds) : null) as PendingSource[]
     for (const item of pending) {

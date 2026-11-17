@@ -57,13 +57,15 @@ export class PiRuntimeDriver implements RuntimeDriver {
 
 type RuntimeConfig = Pick<CoreBackendConfig, 'durableToolBoundary' | 'durableModelBoundary' | 'getCanonicalModelContext' | 'beginDurableUtilityRun' | 'completeDurableUtilityRun'>
 export interface ModelContextPolicy {
+  warm?(): Promise<void>
   invalidReason?(): string | undefined
   select(excludeOperationId?: string): import('@phaneris/shared/durable-runtime/types').DurableCanonicalModelContext | undefined
   valid(request?: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest): boolean
   /** Owns both request identity and validity at the prepare boundary when supplied. */
   assert?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
   assertTool?(request: import('@phaneris/shared/durable-runtime/types').DurableToolPrepareRequest): void | Promise<void>
-  entered?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest): void
+  canRecoverTool?(request: import('@phaneris/shared/durable-runtime/types').DurableToolPrepareRequest): boolean
+  entered?(request: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest, operationId?: string): void
   committed?(request: import('@phaneris/shared/durable-runtime/types').DurableModelOutcomeRequest, valid: boolean): void
 }
 /** Protocol binding receives an explicit compatibility read port, never a product session object. */
@@ -79,14 +81,14 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
   return {
     durableToolBoundary: { ...runtime.effects.boundaryFor(workspace), prepare: async request => {
       await options.modelContext?.assertTool?.(request)
-      if (options.modelContext && !options.modelContext.valid()) return Promise.reject(new Error(options.modelContext.invalidReason?.() ?? 'Model context changed; execution is paused until the original requirements are reviewed'))
+      if (options.modelContext && !options.modelContext.canRecoverTool?.(request) && !options.modelContext.valid()) return Promise.reject(new Error(options.modelContext.invalidReason?.() ?? 'Model context changed; execution is paused until the original requirements are reviewed'))
       return runtime.effects.boundaryFor(workspace).prepare({ ...request, recoverySessionIds: scope.recoverySessionIds })
     } },
     durableModelBoundary: { ...runtime.effects.modelBoundaryFor(workspace), prepare: async request => {
       if (options.modelContext?.assert) options.modelContext.assert(request)
       else if (options.modelContext && !options.modelContext.valid()) throw new Error(options.modelContext.invalidReason?.() ?? 'Model context changed; prepare a fresh input before continuing')
       const result = await runtime.effects.modelBoundaryFor(workspace).prepare(request)
-      options.modelContext?.entered?.(request)
+      options.modelContext?.entered?.(request, result.operationId)
       return result
     }, commitOutcome: async request => {
       const valid = request.contextDisposition !== 'stale' && (options.modelContext?.valid(request) ?? true)
@@ -96,7 +98,8 @@ export function bindPiRuntime(runtime: DurableRuntime, scope: RuntimeScope, opti
       if (request.purpose === 'cache_warm') notify()
       return { ...result, ...(!finalValid ? { discard: true as const, reason: options.modelContext?.invalidReason?.() } : {}) }
     } },
-    getCanonicalModelContext: excludeOperationId => {
+    getCanonicalModelContext: async excludeOperationId => {
+      await options.modelContext?.warm?.()
       const materialContext = options.modelContext?.select(excludeOperationId)
       if (materialContext) return assembleContext({ strategy: materialContext.resident ? 'branches' : 'task', canonical: materialContext,
         items: materialContext.items, segmentId: materialContext.resident?.segmentId, contextText: materialContext.resident?.contextText, blocked: materialContext.blocked })

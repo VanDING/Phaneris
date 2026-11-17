@@ -175,10 +175,10 @@ export interface SessionToolContext {
   assistantMemoryUpdate?: (input: import('./memory-contracts').MemoryMutation) => Promise<unknown>;
   assistantMemoryMaintenance?: (input: import('./memory-maintenance-contracts').MemoryMaintenanceCommand) => Promise<import('./memory-maintenance-contracts').MemoryMaintenanceResult>;
   assistantContextHistory?: (input: { query?: string; offset?: number; limit?: number }) => Promise<unknown>;
-  assistantContext?: (input: import('./resident-context-contracts').ResidentContextCommand) => Promise<import('./resident-context-contracts').ResidentContextState>;
+  assistantContext?: (input: import('./resident-context-contracts').ResidentContextCommand, toolExecutionId?: string, signal?: AbortSignal) => Promise<import('./resident-context-contracts').ResidentContextState>;
   assistantDeliveryAck?: (input: import('./task-result-contracts').AssistantDeliveryAck) => Promise<unknown>;
   reportTaskResult?: (input: import('./task-result-contracts').ReportTaskResult) => Promise<import('./task-result-contracts').TaskOutputManifest>;
-  assistantDelegate?: (input: import('./delegation-contracts').AssistantDispatch) => Promise<import('./delegation-contracts').AssistantWork>;
+  assistantDelegate?: (input: import('./delegation-contracts').AssistantDispatch, toolExecutionId?: string) => Promise<import('./delegation-contracts').AssistantWork>;
   assistantWorkerOptions?: (input: import('./delegation-contracts').WorkerOptionsQuery) => Promise<import('./delegation-contracts').WorkerOptionsPage>;
   assistantWork?: (input: import('./delegation-contracts').AssistantWorkQuery) => Promise<import('./delegation-contracts').AssistantWorkPage>;
   assistantCancelWork?: (id: string) => Promise<import('./delegation-contracts').AssistantWork>;
@@ -366,7 +366,7 @@ export interface SessionToolContext {
   /** Get detailed info about a session. Defaults to current session if no ID given. Injected by backend. */
   getSessionInfo?(sessionId?: string): SessionInfo | null;
   readSessionMessages?(sessionId: string | undefined, query: SessionHistoryQuery): Promise<unknown>;
-  assistantWorkerControl?(command: import('./worker-control-contracts').WorkerControl): Promise<import('./worker-control-contracts').WorkerControlResult>;
+  assistantWorkerControl?(command: import('./worker-control-contracts').WorkerControl, toolExecutionId?: string): Promise<import('./worker-control-contracts').WorkerControlResult>;
 
   /** List sessions in the workspace with pagination. Injected by backend. */
   listSessions?(options?: ListSessionsOptions): ListSessionsResult;

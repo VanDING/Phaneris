@@ -1942,7 +1942,7 @@ export class PiAgent extends BaseAgent {
         committedSeq: committed.committedSeq,
         deferred: committed.deferred,
         ...(request.toolName.replace(/^mcp__session__/, '') === 'assistant_context' && !committed.deferred
-          ? { canonicalContext: this.config.getCanonicalModelContext?.(request.runOperationId) } : {}),
+          ? { canonicalContext: await this.config.getCanonicalModelContext?.(request.runOperationId) } : {}),
       });
     } catch (error) {
       this.send({
@@ -2842,7 +2842,7 @@ export class PiAgent extends BaseAgent {
 
       let canonicalContext: import('../durable-runtime/types.ts').DurableCanonicalModelContext | undefined;
       try {
-        canonicalContext = this.config.getCanonicalModelContext?.(options?.durableRunOperationId);
+        canonicalContext = await this.config.getCanonicalModelContext?.(options?.durableRunOperationId);
       } catch (error) {
         if (this.config.systemPromptPreset === 'resident_assistant') throw error;
         this.debug(`Canonical model context unavailable; retaining Pi context: ${error instanceof Error ? error.message : String(error)}`);

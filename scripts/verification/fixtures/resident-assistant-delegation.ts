@@ -36,10 +36,12 @@ const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request
   if (inbox) return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'Internal delivery references reviewed; inspect source Sessions for details.' }) + chunk({}, 'stop') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
   if (JSON.stringify(messages).includes('resident_assistant_role') && !messages.some(message => message.role === 'tool' && JSON.stringify(message).includes('native-model-work'))) {
     const discovering = !messages.some(message => message.role === 'tool')
-    const name = discovering ? 'mcp__session__assistant_worker_options' : 'mcp__session__assistant_delegate'
+    const preparing = !discovering && !messages.some(message => message.role === 'tool' && JSON.stringify(message).includes('native-model-prepare'))
+    const name = discovering ? 'mcp__session__assistant_worker_options' : preparing ? 'mcp__session__assistant_context' : 'mcp__session__assistant_delegate'
     assert(JSON.stringify(body.tools).includes(name), 'Actual resident model catalog must expose delegation')
     assert(JSON.stringify(body.tools).includes('targetSessionId'), 'Actual tool schema must support ordinary Session reuse')
-    return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: discovering ? 'native-options-call' : 'native-delegation-call', type: 'function', function: { name, arguments: JSON.stringify(discovering ? { kind: 'models', connectionSlug: 'fixture' } : nativeRequest) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
+    return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: discovering ? 'native-options-call' : preparing ? 'native-prepare-call' : 'native-delegation-call', type: 'function', function: { name, arguments: JSON.stringify(discovering ? { kind: 'models', connectionSlug: 'fixture' }
+      : preparing ? { command: { action: 'prepare', requestId: 'native-model-prepare', target: { kind: 'create', label: 'Native fixture task' }, requirements: [{ scope: 'input' }] } } : nativeRequest) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
   }
   return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'WORKER_RESULT_EVIDENCE' }) + chunk({}, 'stop') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
 } })
@@ -62,7 +64,7 @@ writeFileSync(join(workspace.rootPath, 'plugins', 'report-plugin', 'PROMPT.md'),
 writeFileSync(join(workspace.rootPath, 'plugins', 'report-plugin', 'phaneris', 'sources.json'), JSON.stringify([{ slug: 'plugin-docs', name: 'Plugin docs', type: 'local', provider: 'local', local: { path: workspace.rootPath } }]))
 const assistantId = 'resident-delegation-assistant'
 await saveSession({ id: assistantId, workspaceRootPath: workspace.rootPath, sessionKind: 'resident_assistant', hidden: true, permissionMode: 'safe', createdAt: 1, lastUsedAt: 1,
-  messages: [{ id: 'human-origin', type: 'user', content: '请完成配置验证并交付报告。', timestamp: 1 }],
+  messages: [{ id: 'human-origin', type: 'user', content: '请完成配置验证并交付报告。', timestamp: 1, inputSource: { kind: 'direct_user', channel: 'host' } }],
   tokenUsage: { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 } })
 const emptyUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 }
 await saveSession({ id: nativeRequest.targetSessionId, workspaceRootPath: workspace.rootPath, createdAt: 1, lastUsedAt: 1,

@@ -58,7 +58,8 @@ export const WorkerOptionsQuerySchema = z.object({
 export type WorkerOptionsQuery = z.infer<typeof WorkerOptionsQuerySchema>
 export interface WorkerOptionsPage { items: Array<Record<string, unknown>>; nextOffset: number | null; catalogRevision: string; permissionCeiling: NonNullable<WorkerConfig['permissionMode']> }
 export type WorkerConfig = SessionExecutionConfig
-export type AssistantDispatch = z.infer<typeof AssistantDispatchSchema>
+/** Host-only correlation, deliberately absent from the model input schema. */
+export type AssistantDispatch = z.infer<typeof AssistantDispatchSchema> & { workAdmissionId?: string; directUserPreparationId?: string }
 export type AssistantWorkQuery = z.infer<typeof AssistantWorkQuerySchema>
 export type EffectiveWorkerConfig = ResolvedSessionExecutionConfig
 /** Delivery facts only. The referenced Session owns instructions, settings and result text. */

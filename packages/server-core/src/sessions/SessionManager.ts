@@ -3341,7 +3341,7 @@ export class SessionManager implements ISessionManager {
     if (!service) {
       if (this.shuttingDown) throw new Error('Resident service is shutting down')
       service = new ResidentAssistantService(workspace, createObservationVerifier(operationId => this.durableRuntime.evidence.completedToolObservation(workspace.rootPath, operationId),
-        sessionId => [getSessionStoragePath(workspace.rootPath, sessionId), join(workspace.rootPath, 'sessions', sessionId)]))
+        sessionId => [getSessionStoragePath(workspace.rootPath, sessionId), join(workspace.rootPath, 'sessions', sessionId)]), this.durableRuntime.evidence)
       this.residentServices.set(workspace.id, service)
     }
     return service
@@ -3508,11 +3508,19 @@ export class SessionManager implements ISessionManager {
     plan: SessionDelegationPlan, bind: (sessionId: string) => void): Promise<{ sessionId: string; inputMessageId: string; branchIds?: string[] }> {
     const context = this.residentService(assistant.workspace).context(assistant.id)
     const reader = getSourceReader(assistant.workspace.rootPath), beforeRead = reader.metrics()
-    const selected = context.get().activeSegment?.branchIds ?? context.get().selectedBranchIds ?? []
-    if (!request.context && selected.length > 1) throw new Error('context_task_scope_required: Select this Worker task material branches explicitly')
-    const branchIds = request.context?.branchIds ?? selected
-    const materialDependencies = context.taskMaterials(branchIds, request.context?.sources,
-      request.goalQuote ? { sessionId: assistant.id, messageId: receipt.originMessageId, quote: request.goalQuote } : undefined)
+    const directInput = assistant.messages.findLast(message => message.role === 'user' && !message.hidden && isDirectUserSource(message.inputSource))
+    if (request.workAdmissionId && (!assistant.lastSentMessageIds?.includes(context.admittedInputId(request.workAdmissionId))
+      || assistant.messages.some(message => message.role === 'user' && message.isQueued && isDirectUserSource(message.inputSource)))) {
+      throw new Error('work_input_pending: A newer user input superseded this Worker preparation')
+    }
+    const direct = request.directUserPreparationId && directInput && !directInput.isQueued ? context.directUserPreparation(request.directUserPreparationId, directInput.id) : undefined
+    if (!request.workAdmissionId && !direct) throw new Error('work_not_prepared: Prepare current requirements before creating Worker input')
+    const selected = request.workAdmissionId ? context.preparedBranches(request.workAdmissionId) : direct!.branchIds
+    if (!request.context?.branchIds.length && selected.length > 1) throw new Error('context_task_scope_required: Select this Worker task material branches explicitly')
+    const branchIds = request.context?.branchIds.length ? request.context.branchIds : selected
+    const materialDependencies = request.workAdmissionId ? context.preparedTaskMaterials(request.workAdmissionId, branchIds, request.context?.sources)
+      : context.taskMaterials(branchIds, [...direct!.requirements.filter(item => item.scope === 'input' && branchIds.includes(item.branchId)).map(item => item.source), ...request.context?.sources ?? []],
+        request.goalQuote ? { sessionId: assistant.id, messageId: receipt.originMessageId, quote: request.goalQuote } : undefined)
     const taskSourceDependencies = [...materialDependencies.sources]
     const memory = this.residentService(assistant.workspace).memory
     const taskMemories = (request.context?.memories ?? []).map(reference => {
@@ -3528,7 +3536,8 @@ export class SessionManager implements ISessionManager {
       return { id: record.id, revision: record.revision, projectId: record.projectId, condition: record.condition, content: record.content,
         range: inspected.contentRange, nextOffset: inspected.nextOffset }
     })
-    const contextBinding = { assistantSessionId: assistant.id, branchRevisions: Object.fromEntries(branchIds.map(id => [id, context.branch(id).revision])) }
+    const contextBinding = { assistantSessionId: assistant.id, branchRevisions: Object.fromEntries(branchIds.map(id => [id, context.branch(id).revision])),
+      preparationId: request.workAdmissionId ? context.admittedPreparationId(request.workAdmissionId) : direct!.id }
     const taskMaterials = taskSourceDependencies.map(source => {
       const original = this.residentService(assistant.workspace).memory.readSource({ ...source, expectedContentHash: source.contentHash })
       const ranges = 'ranges' in source ? source.ranges as Array<{ offset: number; end: number }> : undefined
@@ -3981,7 +3990,25 @@ export class SessionManager implements ISessionManager {
     const assistant = await this.getResidentAssistantMetadata(workspaceId)
     const managed = this.sessions.get(assistant.id)!
     await this.ensureMessagesLoaded(managed)
-    return this.residentService(managed.workspace).dispatch(assistant.id, managed.messages, request)
+    // This RPC is an explicit authenticated user action, not a model tool call.
+    // Prepare its sources without inventing a producer model or model receipt.
+    const service = this.residentService(managed.workspace), context = service.context(assistant.id)
+    const replay = await service.delegation!.existingDispatch(assistant.id, request)
+    if (replay) return replay
+    const origin = managed.messages.findLast(message => message.role === 'user' && !message.hidden && isDirectUserSource(message.inputSource))
+    if (!origin || origin.isQueued) throw new Error('work_input_pending: A direct current user instruction is required')
+    const continuation = request.continuationOf ? await service.continuationContext(assistant.id, request.continuationOf) : undefined
+    const selected = request.context?.branchIds ?? continuation?.branchIds ?? context.get(false).selectedBranchIds ?? []
+    const id = `direct:${request.requestId}`
+    if (!continuation && request.goalQuote && !origin.content.includes(request.goalQuote)) throw new Error('Task goal quote must match the original direct user input exactly')
+    const command = { action: 'prepare' as const, requestId: id, continuationOf: request.continuationOf, target: selected.length
+      ? { kind: 'select' as const, branchIds: selected } : { kind: 'create' as const, label: request.title },
+      requirements: continuation ? [] : [{ scope: 'input' as const, source: { sessionId: assistant.id, messageId: origin.id, quote: request.goalQuote ?? origin.content } }] }
+    await context.warm(managed.messages, origin.id, command)
+    context.command(command, managed.messages, origin.id, managed.projectId, undefined, continuation)
+    context.prepare(this.durableRuntime.queries.getCanonicalModelContext(managed.workspace.rootPath, managed.id), managed.messages, `direct-work:${managed.id}:${request.requestId}`, origin.id)
+    context.directUserPreparation(id, origin.id)
+    return service.dispatch(assistant.id, managed.messages, { ...request, workAdmissionId: undefined, directUserPreparationId: id })
   }
 
   async getAssistantWork(workspaceId: string, query: AssistantWorkQuery): Promise<AssistantWorkPage> {
@@ -4112,7 +4139,9 @@ export class SessionManager implements ISessionManager {
       const grant = bound ?? { sessionId: assistant.id, messageId: receipt.originMessageId, contentHash: source!.contentHash, quote: source!.content }
       const ownerContext = this.residentService(assistant.workspace).context(assistant.id)
       const branchIds = Object.keys(snapshot.contextBinding?.branchRevisions ?? {})
+      const invocation = snapshot.contextBinding?.preparationId ? ownerContext.workPreparation(snapshot.contextBinding.preparationId) : undefined
       const currentMaterials = ownerContext.taskMaterials(branchIds, [], grant)
+      currentMaterials.sources.push(...ownerContext.taskMaterials([], invocation?.requirements.filter(requirement => requirement.scope === 'input').map(requirement => requirement.source) ?? []).sources)
       const revisionSources = currentMaterials.sources.map(reference => {
         const source = memory.readSource({ ...reference, expectedContentHash: reference.contentHash })
         return { ...reference, content: reference.ranges?.length ? reference.ranges.map(range => source.content.slice(range.offset, range.end)).join('\n') : source.content }
@@ -4126,7 +4155,7 @@ export class SessionManager implements ISessionManager {
         inputSource: { kind: 'runtime_continuation', reason: 'worker_control', inputMessageIds: [original.id] },
         delegationInput: { ...snapshot, invalidation: undefined, requestedConfig: { ...snapshot.requestedConfig, ...(command.action === 'configure' ? command.config : {}) },
           materialDependencies: { ...materials, sources: [...materials?.sources ?? [], ...currentMaterials.sources], memories: materials?.memories ?? [] },
-          contextBinding: { assistantSessionId: assistant.id, branchRevisions: Object.fromEntries(branchIds.map(id => [id, ownerContext.branch(id).revision])) },
+          contextBinding: { ...snapshot.contextBinding, assistantSessionId: assistant.id, branchRevisions: Object.fromEntries(branchIds.map(id => [id, ownerContext.branch(id).revision])) },
           effectiveConfig: plan.config, configRevision: plan.configRevision, capabilityRevision: plan.capabilityRevision,
           acceptedConfigRevision: plan.configRevision, acceptedPermissionMode: plan.config.permissionMode, executionPermissionCeiling: ceiling,
           originGrant: grant, submittedAt: undefined, adjustments: plan.adjustments, baseMessageId: target.messages.at(-1)?.id },
@@ -5572,7 +5601,10 @@ export class SessionManager implements ISessionManager {
         // canonical items with the selected view, so this never re-injects turn bodies.
         canonical: () => this.durableRuntime.queries.getCanonicalModelContext(managed.workspace.rootPath, managed.id),
         work: () => this.residentWork(managed.workspace.id),
-        dispatch: request => this.dispatchAssistantWork(managed.workspace.id, request),
+        dispatch: async request => {
+          await this.residentWork(managed.workspace.id)
+          return this.residentService(managed.workspace).dispatch(managed.id, managed.messages, request)
+        },
         memoryChanged: result => this.eventSink?.(RPC_CHANNELS.assistantMemory.CHANGED, { to: 'workspace', workspaceId: managed.workspace.id }, { workspaceId: managed.workspace.id, id: result.record.id, version: result.version }),
       } : undefined
       const projectMemoryContext = (): import('../resident-assistant/project-memory').ProjectMemoryContext => {

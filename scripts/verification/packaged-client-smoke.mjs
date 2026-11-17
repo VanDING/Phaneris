@@ -26,7 +26,7 @@
  * overwrites another's evidence.
  *
  * Usage:
- *   node scripts/verification/packaged-client-smoke.mjs [--grace=25000] [--arch=x64]
+ *   node scripts/verification/packaged-client-smoke.mjs [--grace=25000] [--arch=x64] [--release-dir=PATH] [--output=PATH]
  */
 import { spawn, spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, writeFileSync, openSync, closeSync, readFileSync, statSync, mkdtempSync, rmSync } from 'node:fs'
@@ -41,9 +41,10 @@ const arg = (name, fallback) =>
 
 const arch = arg('arch', 'x64')
 const graceMs = Number(arg('grace', '25000'))
+const releaseDir = resolve(arg('release-dir', join(ROOT, 'apps', 'electron', 'release')))
 const isWindows = process.platform === 'win32'
 const ARTIFACT_SUFFIX = { win32: '-win' }[process.platform] ?? ''
-const outputPath = join(ROOT, 'docs/verification/results', `packaged-client-smoke${ARTIFACT_SUFFIX}.json`)
+const outputPath = resolve(arg('output', join(ROOT, 'docs/verification/results', `packaged-client-smoke${ARTIFACT_SUFFIX}.json`)))
 
 const identity = JSON.parse(readFileSync(join(ROOT, 'phaneris.identity.json'), 'utf8'))
 /**
@@ -74,8 +75,8 @@ const statMtime = (path) => {
 }
 
 const appPath = isWindows
-  ? join(ROOT, 'apps', 'electron', 'release', 'win-unpacked')
-  : join(ROOT, 'apps', 'electron', 'release', `mac${arch === 'arm64' ? '-arm64' : ''}`, `${identity.product.name}.app`)
+  ? join(releaseDir, 'win-unpacked')
+  : join(releaseDir, `mac${arch === 'arm64' ? '-arm64' : ''}`, `${identity.product.name}.app`)
 const binary = isWindows
   ? join(appPath, `${identity.product.name}.exe`)
   : join(appPath, 'Contents', 'MacOS', identity.product.name)

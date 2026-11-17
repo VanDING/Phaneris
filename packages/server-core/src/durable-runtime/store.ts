@@ -461,6 +461,7 @@ export class DurableRuntimeStore {
   getToolRecoveryEvidence(operationId: string): ToolRecoveryEvidence | undefined {
     const row = this.getToolOperationRow(operationId)
     if (!row) return undefined
+    const committedDispatch = this.getEvent(`${operationId}:dispatch`)?.payload as ToolDispatchIntent | undefined
     const dispatch: ToolDispatchIntent = {
       protocol: 't1_after_preflight_v1',
       runOperationId: row.run_operation_id,
@@ -472,6 +473,8 @@ export class DurableRuntimeStore {
       canonicalArgsHash: row.canonical_args_hash,
       recoveryMode: row.recovery_mode,
       idempotencyKey: row.idempotency_key,
+      contextInputId: committedDispatch?.contextInputId,
+      contextCommandHash: committedDispatch?.contextCommandHash,
     }
     return {
       call: {

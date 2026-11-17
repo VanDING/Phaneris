@@ -18,6 +18,10 @@ import { DelegationResources } from './delegation-scheduling'
 export interface SessionDelegationPlan { config: EffectiveWorkerConfig; adjustments: string[]; configRevision?: string; capabilityRevision?: string }
 export type { LegacyDelegation } from './delegation-migration'
 export class SessionDelegationConflict extends Error {}
+function dispatchFingerprint(assistantSessionId: string, request: AssistantDispatch): string {
+  const { workAdmissionId: _admission, directUserPreparationId: _direct, ...userRequest } = request
+  return createHash('sha256').update(canonicalJson({ assistantSessionId, request: userRequest })).digest('hex')
+}
 export class SessionDelegationWait extends Error {
   constructor(readonly waitingFor: NonNullable<AssistantDelegationReceipt['waitingFor']>) { super(waitingFor.detail ?? waitingFor.reason) }
 }
@@ -219,9 +223,14 @@ export class AssistantDelegation {
       (json_extract(body,'$.sessionId')=? OR json_extract(body,'$.targetSessionId')=?)
       AND json_extract(body,'$.state') IN ('preparing','accepted','submitting','submitted','needs_attention','cancel_requested','pause_requested','paused') LIMIT 1`).get(sessionId, sessionId)
   }
-  async dispatch(assistantSessionId: string, originMessageId: string, request: AssistantDispatch): Promise<AssistantWork> {
+  async existingDispatch(assistantSessionId: string, request: AssistantDispatch): Promise<AssistantWork | undefined> {
     await this.ready
-    const fingerprint = createHash('sha256').update(canonicalJson({ assistantSessionId, request })).digest('hex')
+    const prior = this.replay(request.requestId, dispatchFingerprint(assistantSessionId, request))
+    return prior ? this.view(prior) : undefined
+  }
+  async dispatch(assistantSessionId: string, originMessageId: string, request: AssistantDispatch, identityRequest = request): Promise<AssistantWork> {
+    await this.ready
+    const fingerprint = dispatchFingerprint(assistantSessionId, identityRequest)
     const prior = this.replay(request.requestId, fingerprint)
     if (prior) { this.kick(); return this.view(prior) }
     if (request.continuationOf && this.db.prepare("SELECT 1 FROM work WHERE json_extract(body,'$.continuationOf')=?").get(request.continuationOf))

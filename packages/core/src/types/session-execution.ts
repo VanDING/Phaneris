@@ -49,7 +49,7 @@ export interface SessionDelegationInput {
   /** Optimistic ownership of automatic Session status changes, not a task state.
    * A manual status edit withdraws this guard. Review is bound to one result. */
   statusControl?: { expectedStatus: string; withdrawn?: true; review?: { result: { sessionId: string; messageId: string }; outcome: 'accepted' | 'rework' | 'needs_user_review'; reason: string } }
-  contextBinding?: { assistantSessionId: string; branchRevisions: Record<string, number>; reading?: ContextReadMetrics }
+  contextBinding?: { assistantSessionId: string; branchRevisions: Record<string, number>; preparationId?: string; reading?: ContextReadMetrics }
   executionPermissionCeiling?: NonNullable<SessionExecutionConfig['permissionMode']>
   originGrant?: SourceMaterialReference & { quote: string }
   attachmentMaterials?: Array<{ attachmentId: string; originSessionId: string; originMessageId: string; path: string; contentHash: string }>

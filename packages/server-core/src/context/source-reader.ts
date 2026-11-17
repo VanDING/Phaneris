@@ -1,8 +1,10 @@
 import { closeSync, existsSync, openSync, readSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { createHash } from 'node:crypto'
+import { Worker } from 'node:worker_threads'
+import { SOURCE_INDEX_WORKER } from './source-index-worker'
 import type { StoredMessage, SessionHeader } from '@phaneris/shared/sessions'
-import { getSessionFilePath, validateSessionId, expandSessionPath, getSessionSourceIndex, registerSessionSourceIndex, sessionSourceSignature } from '@phaneris/shared/sessions'
+import { getSessionFilePath, validateSessionId, expandSessionPath, getSessionSourceIndex, registerSessionSourceIndex, sessionSourceSignature, sessionSourceIndexMetrics, releaseSessionSourceIndex } from '@phaneris/shared/sessions'
 
 interface Entry { id: string; offset: number; length: number; version: string }
 interface Index { signature: string; header: SessionHeader; entries: Entry[]; byId: Map<string, Entry> }
@@ -12,24 +14,54 @@ const digest = (value: string | Buffer) => createHash('sha256').update(value).di
  * Source reads intentionally exclude diagnostic prompt/tool-schema snapshots;
  * those have stream-local dictionaries and are not conversational evidence. */
 export class SourceReader {
-  private readonly indexes = new Map<string, Index>()
+  private readonly failures = new Map<string, { signature: string; error: string }>()
   private counts = { bytesRead: 0, indexScanBytes: 0, decodedRecords: 0, selectedCharacters: 0, rebuilds: 0 }
   constructor(private readonly root: string) {}
-  metrics() { return { ...this.counts, indexedSessions: this.indexes.size } }
-  release(sessionId: string) { this.indexes.delete(sessionId) }
+  metrics() { return { ...this.counts, ...sessionSourceIndexMetrics() } }
+  release(sessionId: string) { releaseSessionSourceIndex(getSessionFilePath(this.root, sessionId)) }
+  async warm(sessionIds: readonly string[]): Promise<void> {
+    const files: string[] = []
+    for (const id of new Set(sessionIds)) {
+      validateSessionId(id)
+      const file = getSessionFilePath(this.root, id)
+      if (!existsSync(file)) continue
+      const signature = sessionSourceSignature(file)
+      if (getSessionSourceIndex(file, signature) || this.failures.get(file)?.signature === signature) continue
+      files.push(file)
+    }
+    if (!files.length) return
+    interface WarmIndex { file: string; signature: string; header: SessionHeader; entries: Entry[]; bytesRead: number; decodedRecords: number; error?: string }
+    const worker = new Worker(SOURCE_INDEX_WORKER, { eval: true, workerData: files })
+    const results = await new Promise<WarmIndex[]>((resolve, reject) => {
+      worker.once('message', resolve); worker.once('error', reject)
+      worker.once('exit', code => { if (code !== 0) reject(new Error(`source_index_worker_failed: ${code}`)) })
+    })
+    for (const result of results) {
+      if (!existsSync(result.file) || sessionSourceSignature(result.file) !== result.signature) continue
+      this.counts.bytesRead += result.bytesRead; this.counts.indexScanBytes += result.bytesRead
+      this.counts.decodedRecords += result.decodedRecords
+      if (result.error) {
+        this.failures.set(result.file, { signature: result.signature, error: result.error })
+        while (this.failures.size > 128) this.failures.delete(this.failures.keys().next().value!)
+        continue
+      }
+      this.failures.delete(result.file)
+      const header = JSON.parse(expandSessionPath(JSON.stringify(result.header), dirname(result.file))) as SessionHeader
+      validateSessionId(header.id)
+      if (getSessionFilePath(this.root, header.id) !== result.file || new Set(result.entries.map(entry => entry.id)).size !== result.entries.length) throw new Error('source_identity_conflict: Warmed locators do not match original identities')
+      registerSessionSourceIndex(result.file, header, result.entries)
+      this.counts.rebuilds++
+    }
+  }
   private index(sessionId: string): Index {
     validateSessionId(sessionId)
     const file = getSessionFilePath(this.root, sessionId)
     if (!existsSync(file)) throw new Error(`source_unavailable: Original Session ${sessionId} does not exist`)
     const signature = sessionSourceSignature(file)
+    const failure = this.failures.get(file)
+    if (failure?.signature === signature) throw new Error(`source_unavailable: ${failure.error}`)
     const written = getSessionSourceIndex(file, signature)
-    if (written) {
-      this.indexes.delete(sessionId); this.indexes.set(sessionId, written)
-      while (this.indexes.size > 8) this.indexes.delete(this.indexes.keys().next().value!)
-      return written
-    }
-    const cached = this.indexes.get(sessionId)
-    if (cached?.signature === signature) { this.indexes.delete(sessionId); this.indexes.set(sessionId, cached); return cached }
+    if (written) return written
     const fd = openSync(file, 'r'), entries: Entry[] = []
     let pending = Buffer.alloc(0), position = 0, header: SessionHeader | undefined
     const consume = (line: Buffer, offset: number) => {
@@ -58,8 +90,7 @@ export class SourceReader {
     if (sessionSourceSignature(file) !== signature) throw new Error('source_revision_conflict: Source changed during index rebuild')
     const index = registerSessionSourceIndex(file, header, entries)
     if (index.byId.size !== entries.length) throw new Error('source_identity_conflict: Duplicate message identity')
-    this.counts.rebuilds++; this.indexes.delete(sessionId); this.indexes.set(sessionId, index)
-    while (this.indexes.size > 8) this.indexes.delete(this.indexes.keys().next().value!)
+    this.counts.rebuilds++
     return index
   }
   catalog(sessionId: string) {

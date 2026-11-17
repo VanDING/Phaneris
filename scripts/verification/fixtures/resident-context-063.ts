@@ -20,7 +20,7 @@ const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, fetch: async req =>
   const resident = JSON.stringify(body.messages).includes('resident_assistant_role')
   const worker = !resident && JSON.stringify(body.messages).includes('[Delegated work')
   if (worker && holdWorker) { workerStarted.resolve(); await workerRelease.promise }
-  const tool = resident && (route || readOwnHistory) && !routed
+  const tool = resident && !JSON.stringify(body.messages).includes('<resident_inbox>') && (route || readOwnHistory) && !routed
   if (tool) routed = true
   let delta: any = tool ? { tool_calls: [{ index: 0, id: `route-${requests.length}`, type: 'function', function: {
     name: readOwnHistory ? 'mcp__session__get_session_info' : 'mcp__session__assistant_context', arguments: JSON.stringify(readOwnHistory ? { history: { fromEnd: true, limit: 20 } } : { command: route }),
@@ -61,31 +61,43 @@ let host = await boot()
 const context = async (command: any) => manager.assistantContext('alpha', command)
 try {
   const assistant = await manager.getOrCreateResidentAssistant('alpha')
+  const sendForeground = async (text: string) => {
+    const turn = manager.submitInput(assistant.id, { text }, { kind: 'direct_user', channel: 'host' })
+    const accepted = await turn.accepted
+    await turn.finished
+    const deadline = Date.now() + 30000
+    while (true) {
+      const current = (await manager.getSession(assistant.id))!
+      if (!current.isProcessing && !current.messages.find(message => message.id === accepted.messageId)?.isQueued) return
+      assert(Date.now() < deadline, 'Foreground input did not drain after inbox delivery')
+      await Bun.sleep(25)
+    }
+  }
   route = { action: 'create', requestId: 'A', label: 'Report A' }; routed = false
-  await manager.sendMessage(assistant.id, 'A_SECRET_REQUIREMENT use blue ink')
+  await sendForeground('A_SECRET_REQUIREMENT use blue ink')
   let state = await context({ action: 'get' }); views.push(state)
   const a = state.focus.topicId
   assert(a, 'Model tool must create a branch in the same turn')
   route = { action: 'create', requestId: 'B', label: 'Report B' }; routed = false
-  await manager.sendMessage(assistant.id, 'B_SECRET_REQUIREMENT use red ink')
+  await sendForeground('B_SECRET_REQUIREMENT use red ink')
   state = await context({ action: 'get' }); const b = state.focus.topicId; views.push(state)
   assert(a !== b)
   assert(!JSON.stringify(requests.at(-1)).includes('A_SECRET_REQUIREMENT'))
   route = { action: 'select', branchIds: [a] }; routed = false
-  await manager.sendMessage(assistant.id, 'Continue report A')
+  await sendForeground('Continue report A')
   assert(JSON.stringify(requests.at(-1)).includes('A_SECRET_REQUIREMENT'))
   assert(!JSON.stringify(requests.at(-1)).includes('B_SECRET_REQUIREMENT'))
   scenes.push('C03-same-turn-provider-A-B-A-isolation')
   route = undefined
   readOwnHistory = true; routed = false
-  await manager.sendMessage(assistant.id, 'Read this Session history without turning the executing history tool into a source')
+  await sendForeground('Read this Session history without turning the executing history tool into a source')
   assert.equal((await manager.getSession(assistant.id))!.messages.findLast(m => m.role === 'assistant' && !m.isIntermediate)?.content, 'ISOLATED_RESULT')
   const selfHistory = (await manager.getSession(assistant.id))!.messages.findLast(m => m.role === 'tool' && m.toolName?.endsWith('get_session_info'))!
   assert(selfHistory.toolResult?.includes('source_not_committed'))
   readOwnHistory = false
   scenes.push('C06-inflight-history-tool-is-not-its-own-committed-source')
   await context({ action: 'select', branchIds: [a, b] })
-  await manager.sendMessage(assistant.id, 'SHARED_INPUT revise both reports')
+  await sendForeground('SHARED_INPUT revise both reports')
   const shared = (await manager.getSession(assistant.id))!.messages.findLast(m => m.role === 'user')!
   await context({ action: 'associate', branchIds: [a, b], source: { sessionId: assistant.id, messageId: shared.id }, role: 'shared' })
   const page = await context({ action: 'branches', limit: 1 })
@@ -95,22 +107,27 @@ try {
   const cpDb = openSqliteDatabase(join(workspace.rootPath, 'context.db'))
   const checkpointCount = () => (cpDb.prepare('SELECT count(*) AS n FROM checkpoints').get() as { n: number }).n
   const beforeUnread = checkpointCount()
+  await saveSession({ id: 'unread-checkpoint-source', workspaceRootPath: workspace.rootPath, createdAt: 1, lastUsedAt: 1,
+    tokenUsage: { inputTokens: 0, outputTokens: 0, totalTokens: 0, contextTokens: 0, costUsd: 0 },
+    messages: [{ id: 'unread', type: 'user', content: 'EXTERNAL_UNREAD_CHECKPOINT_BODY', timestamp: 1 }] })
+  const unreadSource = { sessionId: 'unread-checkpoint-source', messageId: 'unread' }
+  await context({ action: 'associate', branchIds: [a], source: unreadSource, role: 'shared' })
   route = { action: 'checkpoint', requestId: 'unread-cp', branchId: a, conclusions: 'Unverified', unresolved: [], next: [],
-    sources: [{ sessionId: assistant.id, messageId: shared.id }] }; routed = false
-  await manager.sendMessage(assistant.id, 'Do not claim unread source coverage')
+    sources: [unreadSource] }; routed = false
+  await sendForeground('Do not claim unread source coverage')
   assert.equal(checkpointCount(), beforeUnread)
   assert((await manager.getSession(assistant.id))!.messages.some(m => m.role === 'tool' && m.toolResult?.includes('context_checkpoint_unread')))
   scenes.push('C09-provider-reference-does-not-prove-checkpoint-source-read')
   await context({ action: 'select', branchIds: [a] })
   route = { action: 'checkpoint', requestId: 'cp-a', branchId: a, conclusions: 'Use source requirements', unresolved: ['Review'], next: ['Continue'] }; routed = false
-  await manager.sendMessage(assistant.id, 'Save the selected A recovery point')
+  await sendForeground('Save the selected A recovery point')
   assert(checkpointCount() > beforeUnread); cpDb.close(); route = undefined
   await context({ action: 'hibernate', branchIds: [a] })
   await manager.flushAllSessions()
   const count = requests.length
   await host.stop(); host = await boot()
   await context({ action: 'select', branchIds: [a] })
-  await manager.sendMessage(assistant.id, 'Resume saved report')
+  await sendForeground('Resume saved report')
   assert(JSON.stringify(requests.at(-1)).includes('A_SECRET_REQUIREMENT'))
   assert(!JSON.stringify(requests.at(-1)).includes('B_SECRET_REQUIREMENT'))
   assert.equal(requests.length, count + 1)
@@ -134,7 +151,7 @@ try {
   scenes.push('C01-real-Pi-native-compact-preserves-original-history')
   // Real Session/Runtime/Pi Worker; only provider decisions are controlled here.
   await context({ action: 'select', branchIds: [a] })
-  await manager.sendMessage(assistant.id, 'Authorize read-only Worker A using the saved report A requirements')
+  await sendForeground('Authorize read-only Worker A using the saved report A requirements')
   holdWorker = true
   const work = await manager.dispatchAssistantWork('alpha', { requestId: 'worker-a', title: 'Report A worker',
     instructions: 'Use the task materials to report the report A ink requirement.', context: { branchIds: [a] }, config: { permissionMode: 'safe', workingDirectory: 'none' } })
@@ -145,10 +162,10 @@ try {
   await context({ action: 'select', branchIds: [b] })
   await context({ action: 'hibernate', branchIds: [a] })
   largeResponseChars = 300000
-  await manager.sendMessage(assistant.id, 'Continue report B while A Worker is active')
+  await sendForeground('Continue report B while A Worker is active')
   largeResponseChars = 0
   const summariesBefore = requests.filter(r => JSON.stringify(r.messages[0]).includes('context summarization assistant')).length
-  await manager.sendMessage(assistant.id, '/compact')
+  await sendForeground('/compact')
   assert(requests.filter(r => JSON.stringify(r.messages[0]).includes('context summarization assistant')).length > summariesBefore)
   workerRelease.resolve()
   let latest
@@ -165,7 +182,7 @@ try {
   scenes.push('C07-real-worker-ordinary-session-task-material-isolation', 'C12-late-result-original-branch-preserves-B-focus')
   scenes.push('C03-native-compaction-and-branch-retirement-do-not-repeat-Worker-tool')
   await context({ action: 'select', branchIds: [a] })
-  await manager.sendMessage(assistant.id, 'Authorize another read-only A validation')
+  await sendForeground('Authorize another read-only A validation')
   workerStarted = Promise.withResolvers<void>(); workerRelease = Promise.withResolvers<void>()
   const revoked = await manager.dispatchAssistantWork('alpha', { requestId: 'worker-a-revoked', title: 'A revision fence', instructions: 'Read A materials once.', context: { branchIds: [a] }, config: { permissionMode: 'safe', workingDirectory: 'none' } })
   await Promise.race([workerStarted.promise, Bun.sleep(15000).then(() => { throw new Error('Revision Worker did not reach provider') })])
@@ -181,18 +198,18 @@ try {
   scenes.push('C08-related-requirement-revision-fences-actual-inflight-Worker-before-tool')
   await context({ action: 'focus', label: 'Capacity boundary', anchors: [] })
   const beforeCapacity = requests.length
-  await manager.sendMessage(assistant.id, 'REQUIRED_CAPACITY_MATERIAL '.repeat(30000))
+  await sendForeground('REQUIRED_CAPACITY_MATERIAL '.repeat(30000))
   assert.equal(requests.length, beforeCapacity)
   assert((await manager.getSession(assistant.id))!.messages.some(m => /capacity|scope|budget/i.test(m.content)))
   await context({ action: 'focus', label: 'After capacity failure', anchors: [] })
-  await manager.sendMessage(assistant.id, 'AFTER_CAPACITY_VALID_INPUT')
+  await sendForeground('AFTER_CAPACITY_VALID_INPUT')
   assert(!JSON.stringify(requests.at(-1)).includes('REQUIRED_CAPACITY_MATERIAL'))
   scenes.push('C11-required-overflow-blocks-provider-and-explicit-rescope-recovers')
   await manager.updateSessionModel(assistant.id, 'alpha', 'fixture-small')
-  await manager.sendMessage(assistant.id, 'CHECK_SMALL_MODEL_CAPACITY')
+  await sendForeground('CHECK_SMALL_MODEL_CAPACITY')
   assert(!requests.some(request => request.model === 'fixture-small'), 'An insufficient fixed-rule/tool window cannot enter the provider')
   await manager.updateSessionModel(assistant.id, 'alpha', 'fixture')
-  await manager.sendMessage(assistant.id, 'AFTER_MODEL_WINDOW_RESTORED')
+  await sendForeground('AFTER_MODEL_WINDOW_RESTORED')
   assert.equal((await context({ action: 'get' })).activeSegment?.requests.at(-1)?.snapshot?.capacity?.windowTokens, 64000)
   scenes.push('C11-model-switch-recalculates-effective-window')
   const { createProject } = await import('@phaneris/shared/projects')
@@ -200,14 +217,14 @@ try {
   const projectB = createProject(workspace.rootPath, { name: 'Scoped B', details: 'SCOPED_PROJECT_B_RULE' })
   await manager.setSessionProjectId(assistant.id, projectA.id)
   route = { action: 'create', requestId: 'scoped-a', label: 'Project work A' }; routed = false
-  await manager.sendMessage(assistant.id, 'SCOPED_A_REQUIREMENT authorize a read-only validation')
+  await sendForeground('SCOPED_A_REQUIREMENT authorize a read-only validation')
   const scopedA = (await context({ action: 'get' })).focus.topicId!
   route = undefined; workerStarted = Promise.withResolvers<void>(); workerRelease = Promise.withResolvers<void>()
   const scoped = await manager.dispatchAssistantWork('alpha', { requestId: 'scoped-worker', title: 'Scoped worker', context: { branchIds: [scopedA] }, instructions: 'Validate scoped A only.', config: { permissionMode: 'safe', workingDirectory: 'none' } })
   await Promise.race([workerStarted.promise, Bun.sleep(15000).then(() => { throw new Error('Scoped Worker did not reach provider') })])
   await manager.setSessionProjectId(assistant.id, projectB.id)
   route = { action: 'create', requestId: 'scoped-b', label: 'Project work B' }; routed = false
-  await manager.sendMessage(assistant.id, 'SCOPED_B_REQUIREMENT')
+  await sendForeground('SCOPED_B_REQUIREMENT')
   const scopedB = (await context({ action: 'get' })).focus.topicId!
   route = undefined; workerRelease.resolve()
   let scopedEvent

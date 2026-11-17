@@ -27,6 +27,10 @@ import { selectedInputAttachments } from './assignment-attachments'
 import type { ObservationVerifier } from './source-observation'
 import type { MemoryMaintenanceJob } from './memory-maintenance-queue'
 import { knowledgeSourceVersion, knowledgeFromToolOutcome } from '@phaneris/shared/agent/knowledge-materials'
+import type { DurableRuntime } from '../durable-runtime'
+import { contextReconciliationAdapter } from '../context/runtime-reconciliation'
+import { WorkerControlSchema } from '@phaneris/session-tools-core/worker-control-contracts'
+import { durableToolOperationId } from '@phaneris/shared/durable-runtime/identity'
 
 /** Live Session facts and existing admission ports, without its mutable implementation object. */
 export interface ResidentSessionPort {
@@ -55,10 +59,17 @@ export class ResidentAssistantService {
   private closed = false
   private keyInitialized = false
   private readonly releaseWriter: () => void
-  constructor(readonly workspace: { id: string; rootPath: string }, private readonly verifyObservation?: ObservationVerifier) {
+  constructor(readonly workspace: { id: string; rootPath: string }, private readonly verifyObservation?: ObservationVerifier, private readonly runtimeEvidence?: DurableRuntime['evidence']) {
     const release = acquireAssistantWriter(workspace.rootPath)
     try { migrateAssistantStorage(workspace); initializeAssistantMemoryPolicy(workspace); this.releaseWriter = release }
     catch (error) { release(); throw error }
+    if (runtimeEvidence) {
+      const adapter = contextReconciliationAdapter(operationId => {
+        const snapshot = runtimeEvidence.getRecoveryEvidence(workspace.rootPath, operationId)
+        return snapshot ? this.context(snapshot.sessionId).toolReceipt(operationId) : undefined
+      })
+      for (const name of ['assistant_context', 'mcp__session__assistant_context']) runtimeEvidence.registerReconciliationAdapter(name, adapter, workspace.rootPath)
+    }
   }
 
   private assertOpen(): void { if (this.closed) throw new Error('Resident service is closed') }
@@ -82,6 +93,8 @@ export class ResidentAssistantService {
     } })
   }
   async dispatch(sessionId: string, messages: readonly Message[], request: AssistantDispatch): Promise<AssistantWork> {
+    const identityRequest = request, prior = await this.delegation!.existingDispatch(sessionId, request)
+    if (prior) return prior
     const continuation = request.continuationOf ? await this.delegation!.continuation(request.continuationOf, sessionId) : undefined
     const origin = continuation ? messages.find(message => message.id === continuation.receipt.originMessageId)
       : messages.findLast(message => message.role === 'user' && !message.hidden && hasDirectUserAuthority(message.inputSource)
@@ -106,7 +119,13 @@ export class ResidentAssistantService {
         completionPolicy: input.completionPolicy, acceptanceCriteria: request.acceptanceCriteria ?? input.acceptanceCriteria }
     }
     selectedInputAttachments(origin, request.attachmentIds)
-    return this.delegation!.dispatch(sessionId, origin.id, request)
+    return this.delegation!.dispatch(sessionId, origin.id, request, identityRequest)
+  }
+  async continuationContext(sessionId: string, id: string): Promise<import('../context/work-preparation').WorkContinuation> {
+    const { input } = await this.delegation!.continuation(id, sessionId)
+    const preparation = input.contextBinding?.preparationId ? this.context(sessionId).workPreparation(input.contextBinding.preparationId) : undefined
+    return { id, branchIds: Object.keys(input.contextBinding?.branchRevisions ?? {}),
+      requirements: preparation?.requirements.filter(requirement => requirement.scope === 'input') ?? [] }
   }
   async deliverInbox(messages: readonly Message[], admit: (id: string, text: string, eventIds: string[]) => Promise<void>): Promise<void> {
     const work = this.delegation, pending = work?.pendingEvents(true) ?? []
@@ -131,10 +150,11 @@ export class ResidentAssistantService {
   }
   async completed(input: { sessionId: string; resident: boolean; messages: Message[]; inputIds?: string[]; facts(): RuntimeEvent[];
     dependencies?: ResidentDependencies; completion: SessionCompletionEvent; handoffContinuing: boolean; persist(): Promise<void>; wake(): void }): Promise<void> {
-    const segment = input.resident ? this.context(input.sessionId).get().activeSegment : undefined
+    const facts = input.facts()
+    const owner = facts.findLast(fact => fact.type === 'user_message_committed' && input.inputIds?.includes((fact.payload as { messageId: string }).messageId))
+    const segment = input.resident && owner ? this.context(input.sessionId).segmentForRun(owner.operationId) : undefined
     const maintenanceIndex = input.messages.findIndex(message => input.inputIds?.includes(message.id) && message.inputSource?.kind === 'memory_maintenance')
     if (maintenanceIndex >= 0) for (const message of input.messages.slice(maintenanceIndex + 1)) if (message.role !== 'user') message.hidden = true
-    const facts = input.facts()
     annotateToolSources(facts, input.messages, input.inputIds ?? [])
     const base = segment?.dependencies ?? input.dependencies
     const index = input.messages.findIndex(message => message.id === input.inputIds?.[0])
@@ -156,7 +176,7 @@ export class ResidentAssistantService {
       this.memory.registerDerivedSources(ownSources, { ...dependencies, sources: dependencies.sources.filter(source => source.sessionId !== input.sessionId || !ownIds.has(source.messageId)) })
     }
     await input.persist()
-    if (input.resident && !input.messages.some(m => input.inputIds?.includes(m.id) && m.inputSource?.kind === 'memory_maintenance')) this.context(input.sessionId).recordTurn(input.messages, input.inputIds ?? [])
+    if (input.resident && segment && !input.messages.some(m => input.inputIds?.includes(m.id) && m.inputSource?.kind === 'memory_maintenance')) this.context(input.sessionId).recordTurn(input.messages, input.inputIds ?? [], segment)
     if (input.resident) for (const message of input.messages) if (input.inputIds?.includes(message.id) && message.inputSource?.kind === 'runtime_continuation' && message.inputSource.reason === 'memory_refresh') {
       this.context(input.sessionId).finishRefresh(message.id, input.completion.reason === 'complete')
     }
@@ -184,17 +204,30 @@ export class ResidentAssistantService {
   modelContext(session: ResidentSessionPort): ModelContextPolicy {
     const context = this.context(session.id)
     const job = () => this.maintenanceJob(session)
+    let warmError: string | undefined
     return {
+      warm: async () => {
+        warmError = undefined
+        try { await context.warm(session.messages(), session.input()?.id ?? '') }
+        catch (error) { warmError = error instanceof Error ? error.message : String(error) }
+      },
       select: operationId => {
         const maintenance = job()
-        const selection = maintenance ? context.prepareMaintenance(session.canonical(operationId), operationId!, maintenance)
-          : context.prepare(session.canonical(operationId), session.messages(), operationId!, session.input()?.id ?? '', this.delegation?.pendingEvents() ?? [])
+        let selection
+        if (warmError) selection = context.prepareDiagnostic(session.canonical(operationId), operationId!, session.input()?.id ?? '', warmError,
+          !['resident_event', 'memory_maintenance'].includes(session.input()?.inputSource?.kind ?? ''))
+        else if (maintenance) selection = context.prepareMaintenance(session.canonical(operationId), operationId!, maintenance)
+        else {
+          try { selection = context.prepare(session.canonical(operationId), session.messages(), operationId!, session.input()?.id ?? '', this.delegation?.pendingEvents() ?? []) }
+          catch (error) { selection = context.prepareDiagnostic(session.canonical(operationId), operationId!, session.input()?.id ?? '', error instanceof Error ? error.message : String(error),
+            !['resident_event', 'memory_maintenance'].includes(session.input()?.inputSource?.kind ?? '')) }
+        }
         if (!maintenance) selection.resident!.contextText += `\n<resident_capabilities>\n${JSON.stringify(session.capabilities())}\n</resident_capabilities>\n<resident_tasks>\n${JSON.stringify(this.delegation?.overview() ?? { observedAt: Date.now(), items: [], total: 0, omitted: 0 })}\n</resident_tasks>`
         return selection
       },
       valid: request => {
         if (request) { const valid = context.outcome(request); if (!valid) session.materialsStale(); return valid }
-        const segment = context.get().activeSegment
+        const segment = session.runId() ? context.segmentForRun(session.runId()!) : undefined
         const valid = !!segment && context.valid(segment)
         if (!valid) session.materialsStale()
         return valid
@@ -208,13 +241,30 @@ export class ResidentAssistantService {
         }
         try { context.assertRequest(request) } catch (error) { session.materialsStale(); throw error }
       },
-      assertTool: request => {
+      assertTool: async request => {
         const maintenance = job()
         if (!maintenance) {
+          const tool = request.toolName.replace(/^mcp__session__/, '')
+          if ((tool === 'assistant_delegate' || tool === 'assistant_worker_control' && !['pause', 'plan'].includes(String((request.args.command as { action?: string } | undefined)?.action)))
+            && session.messages().some(message => message.role === 'user' && message.isQueued && hasDirectUserAuthority(message.inputSource))) {
+            throw new Error('work_input_pending: A newer user instruction must be handled before new business effects')
+          }
+          request.contextInputId = session.input()?.id
+          context.assertBusinessTool(request, session.input()?.id)
+          if (tool === 'assistant_worker_control') {
+            const control = WorkerControlSchema.parse(request.args.command)
+            if (['resume', 'retry', 'message', 'configure'].includes(control.action)) {
+              const receipt = (await (await session.work()).query({ id: control.id })).items[0]
+              const branches = context.preparedBranches(durableToolOperationId(request.runOperationId, request.providerToolCallId))
+              if (!receipt || receipt.assistantSessionId !== session.id || !receipt.branchIds?.length || receipt.branchIds.some(id => !branches.includes(id))) {
+                throw new Error('context_task_scope_conflict: Prepare this Worker work before business control')
+              }
+            }
+          }
           const name = request.toolName.replace(/^mcp__session__/, '')
           const slug = ['source_read_resource', 'source_get_prompt'].includes(name) && typeof request.args.sourceSlug === 'string'
             ? request.args.sourceSlug : request.toolName.match(/^mcp__([a-z0-9-]+)__/i)?.[1]
-          if (slug && slug !== 'session') context.track({ knowledge: [{ sourceSlug: slug, version: knowledgeSourceVersion(this.workspace.rootPath, slug) }] })
+          if (slug && slug !== 'session') context.track({ knowledge: [{ sourceSlug: slug, version: knowledgeSourceVersion(this.workspace.rootPath, slug) }] }, session.runId())
           return
         }
         this.memory.assertMaintenance(maintenance)
@@ -222,8 +272,14 @@ export class ResidentAssistantService {
         if (!['assistant_memory_maintenance', 'assistant_memory_update', 'assistant_memory_search', 'assistant_memory_inspect', 'assistant_memory_read', 'project_memory_read', 'project_memory_search', 'project_memory_append'].includes(name)) throw new Error('Background maintenance cannot perform this tool effect')
         this.memory.maintenance.reserve(maintenance, 'tool', request.providerToolCallId)
       },
-      entered: request => {
-        context.entered(request)
+      canRecoverTool: request => {
+        const name = request.toolName.replace(/^mcp__session__/, '').toLowerCase()
+        return ['assistant_context', 'assistant_work', 'assistant_cancel_work', 'get_session_info', 'assistant_memory_read', 'assistant_history_search',
+          'assistant_context_history', 'assistant_worker_options', 'read', 'ls', 'find', 'grep'].includes(name)
+          || name === 'assistant_worker_control' && ['pause', 'inspect'].includes(String((request.args.command as { action?: string } | undefined)?.action))
+      },
+      entered: (request, operationId) => {
+        context.entered(request, operationId)
         const segment = context.segmentForRun(request.runOperationId)
         if (segment) this.delegation?.enterEvents(segment.eventIds, request.runOperationId)
       },
@@ -233,8 +289,22 @@ export class ResidentAssistantService {
   tools(session: ResidentSessionPort): SessionScopedToolCallbacks {
     const context = this.context(session.id)
     return {
-      assistantContextFn: async command => {
-        const state = context.command(command, session.messages(), session.input()?.id, session.projectId())
+      assistantContextFn: async (command, toolExecutionId, signal) => {
+        if (command.action === 'receipt' || command.action === 'reconcile') {
+          const snapshot = this.runtimeEvidence?.getRecoveryEvidence(this.workspace.rootPath, command.operationId)
+          if (!snapshot || snapshot.sessionId !== session.id) throw new Error('context_operation_unavailable: Operation does not belong to this assistant')
+          const reconciled = command.action === 'reconcile' ? await this.runtimeEvidence!.queryAndReconcileTool(this.workspace.rootPath,
+            { sessionId: session.id, toolOperationId: command.operationId, actor: { type: 'system', id: 'resident-context-recovery' } }) : undefined
+          return { ...context.get(false), recovery: { operationId: command.operationId, verdict: reconciled?.snapshot.verdict.kind ?? snapshot.verdict.kind,
+            localReceipt: !!context.toolReceipt(command.operationId), committedSeq: reconciled?.committedSeq } }
+        }
+        const continuation = command.action === 'prepare' && command.continuationOf ? await this.continuationContext(session.id, command.continuationOf) : undefined
+        if (command.action === 'prepare') await context.warm(session.messages(), session.input()?.id ?? '', command)
+        signal?.throwIfAborted()
+        if (command.action === 'prepare' && session.messages().some(message => message.role === 'user' && message.isQueued && hasDirectUserAuthority(message.inputSource))) {
+          throw new Error('work_input_pending: A newer user input superseded this pending preparation')
+        }
+        const state = this.memory.withSourceSnapshot(() => context.command(command, session.messages(), session.input()?.id, session.projectId(), toolExecutionId, continuation))
         return { ...state, activeSegment: state.activeSegment ? { ...state.activeSegment, requests: [] } : undefined }
       },
       assistantScenarioCaptureFn: async command => {
@@ -249,14 +319,14 @@ export class ResidentAssistantService {
         const projectId = input.scope === 'workspace' ? undefined : input.projectId ?? session.projectId()
         const result = this.memory.scenarios({ ...input, projectId, includeWorkspace: input.includeWorkspace ?? !!projectId })
         context.track({ sources: result.items.flatMap(item => item.sources), memories: result.items.flatMap(item => item.atoms.map(atom => ({ id: atom.id, revision: atom.revision, observedState: 'active' as const }))),
-          scenarios: result.items.map(item => ({ id: item.id, revision: item.revision, derivedVersion: item.derivedVersion })) })
+          scenarios: result.items.map(item => ({ id: item.id, revision: item.revision, derivedVersion: item.derivedVersion })) }, session.runId())
         return result
       },
       ...buildResidentMemoryCallbacks({ workspace: this.workspace, memory: this.memory, assertResidentRole: () => {},
         sessionId: session.id, currentProject: () => { const job = this.maintenanceJob(session); return job ? job.projectId : session.projectId() }, maintenanceJob: () => this.maintenanceJob(session),
-        track: dependencies => context.track(this.maintenanceJob(session) ? { sources: dependencies.sources } : dependencies),
+        track: dependencies => context.track(this.maintenanceJob(session) ? { sources: dependencies.sources } : dependencies, session.runId()),
         currentRun: () => {
-          const segment = context.get().activeSegment
+          const segment = session.runId() ? context.segmentForRun(session.runId()!) : undefined
           if (!segment || segment.runOperationId !== session.runId() || !context.valid(segment)) throw new Error('Incremental extraction requires a current valid resident Runtime run')
           return segment.runOperationId
         } }),
@@ -270,12 +340,12 @@ export class ResidentAssistantService {
         if (job) this.memory.assertMaintenanceMutation(job, command)
         const result = this.memory.mutate(command, explicit ? 'user_request' : 'automatic')
         if (!result.record.redacted && (result.record.state === 'active' || result.record.state === 'candidate')) context.track({ sources: result.record.sources,
-          ...(!job ? { memories: [{ id: result.record.id, revision: result.record.revision, observedState: result.record.state }] } : {}) })
+          ...(!job ? { memories: [{ id: result.record.id, revision: result.record.revision, observedState: result.record.state }] } : {}) }, session.runId())
         session.memoryChanged(result)
         return result
       },
       assistantDeliveryAckFn: async ({ eventIds, deliverables = [], reviews = [] }) => {
-        const work = await session.work(), segment = context.get().activeSegment
+        const work = await session.work(), segment = session.runId() ? context.segmentForRun(session.runId()!) : undefined
         if (!segment || !context.valid(segment)) throw new Error('Delivery context is stale')
         const pending = work.pendingEvents()
         for (const id of eventIds) {
@@ -300,17 +370,23 @@ export class ResidentAssistantService {
         return { acknowledged: eventIds, reviewed: reviews.map(review => ({ delegationId: review.delegationId, outcome: review.outcome })) }
       },
       assistantWorkerOptionsFn: async query => readWorkerOptions(this.workspace.rootPath, query, session.executionMode()),
-      assistantDelegateFn: request => {
-        const input = session.input(), segment = context.get().activeSegment
+      assistantDelegateFn: (request, toolExecutionId) => {
+        const input = session.input(), segment = session.runId() ? context.segmentForRun(session.runId()!) : undefined
         const sourceContinuation = input?.inputSource?.kind === 'runtime_continuation' && input.inputSource.reason === 'source_activation'
         const resultContinuation = input?.inputSource?.kind === 'resident_event' && !!request.continuationOf
         if (!input || (!hasDirectUserAuthority(input.inputSource) || input.hidden) && !sourceContinuation && !resultContinuation) throw new Error('Internal events require a verified continuationOf the original user grant')
         if (!segment || !context.valid(segment)) throw new Error('Resident materials changed; review current requirements in a fresh turn before delegation')
-        return session.dispatch(request)
+        if (!toolExecutionId) throw new Error('work_not_prepared: Delegation requires Host producer admission')
+        context.assertContinuation(toolExecutionId, request.continuationOf)
+        context.preparedTaskMaterials(toolExecutionId, request.context?.branchIds, request.context?.sources)
+        return session.dispatch({ ...request, workAdmissionId: toolExecutionId, directUserPreparationId: undefined })
       },
       assistantWorkFn: async query => (await session.work()).query(query),
       assistantCancelWorkFn: async id => (await session.work()).cancel(id),
-      assistantWorkerControlFn: async command => (await session.work()).controls.control(command),
+      assistantWorkerControlFn: async (command, toolExecutionId) => {
+        const evidence = command.action === 'message' && toolExecutionId ? context.preparedTaskMaterials(toolExecutionId) : undefined
+        return (await session.work()).controls.control(command, 'assistant', evidence)
+      },
     }
   }
   resolve(requested: Parameters<typeof resolveWorkerConfig>[1], parent: Parameters<typeof resolveWorkerConfig>[2]) {

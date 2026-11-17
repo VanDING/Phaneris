@@ -8,5 +8,6 @@ export function assembleContext(input: { strategy: 'linear' | 'branches' | 'task
   if (input.strategy !== 'branches') return { ...input.canonical, ...(input.strategy === 'task' ? { fenced: true } : {}) }
   if (!input.segmentId) throw new Error('context_view_missing: Branch selection needs a committed view identity')
   return { cursor: input.canonical.cursor, items: input.items ?? [], fenced: true, blocked: input.blocked,
-    resident: { segmentId: input.segmentId, contextText: input.contextText ?? '' } }
+    resident: { segmentId: input.segmentId, contextText: input.contextText ?? '',
+      preparation: input.canonical.resident?.preparation } }
 }

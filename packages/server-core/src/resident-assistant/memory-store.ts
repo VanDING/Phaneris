@@ -84,7 +84,7 @@ export class AssistantMemoryStore {
     this.db.prepare('INSERT OR IGNORE INTO project_requests VALUES(?,?,?,?)').run(id, receipt.fingerprint, receipt.projectId, receipt.entryId)
   }
   getDiagnostics(): { sourceFileLoads: number; sourceCacheHits: number } { return { sourceFileLoads: this.sourceFileLoads, sourceCacheHits: this.sourceCacheHits } }
-  private withSourceSnapshot<T>(operation: () => T): T {
+  withSourceSnapshot<T>(operation: () => T): T {
     this.snapshotDepth++
     try { return operation() }
     finally { if (--this.snapshotDepth === 0) { this.sourceSnapshot.clear(); this.sourceValidations.clear() } }
@@ -130,6 +130,25 @@ export class AssistantMemoryStore {
     return (this.db.prepare('SELECT version FROM meta WHERE singleton=1').get() as { version: number }).version
   }
   profile(input: { projectId?: string; query?: string }) { return this.withSourceSnapshot(() => this.derived.profile(input)) }
+  async warmSourceIndexes(references: MemorySource[], profile: { projectId?: string; query?: string }): Promise<void> {
+    const queue = [...references, ...this.derived.profileReferences(profile)], visited = new Set<string>(), sessions = new Set<string>()
+    while (queue.length) {
+      const source = queue.pop()!, key = this.sourceKey(source)
+      if (visited.has(key) || this.suppressed(source)) continue
+      visited.add(key); sessions.add(source.sessionId)
+      const row = this.db.prepare('SELECT dependencies FROM derived_sources WHERE source_key=?').get(key) as { dependencies: string } | undefined
+      if (row) {
+        const dependencies = JSON.parse(row.dependencies) as import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies
+        queue.push(...dependencies.sources)
+        for (const reference of dependencies.memories) {
+          const memory = this.db.prepare('SELECT body FROM memories WHERE id=?').get(reference.id) as { body: string } | undefined
+          if (memory) queue.push(...(JSON.parse(memory.body) as StoredRecord).sources)
+        }
+      }
+      if (visited.size % 64 === 0) await new Promise<void>(resolve => setImmediate(resolve))
+    }
+    await getSourceReader(this.workspace.rootPath).warm([...sessions])
+  }
   captureScenario(command: ScenarioCapture, authority: 'automatic' | 'user_request' | 'management' = 'automatic') {
     return this.withSourceSnapshot(() => this.derived.capture(command, authority))
   }
@@ -214,7 +233,7 @@ export class AssistantMemoryStore {
     const start = source.messages.findIndex(message => inputIds.includes(message.id))
     if (start < 0) return
     const eligible = source.messages.slice(start).filter(message => isDirectUserMessage(message) && inputIds.includes(message.id)
-      || source.sessionKind !== 'resident_assistant' && message.type === 'tool' && message.toolStatus === 'completed')
+      || source.sessionKind !== 'resident_assistant' && message.type === 'assistant' && !message.isIntermediate && !!message.content.trim())
     const groups = new Map<string | undefined, import('@phaneris/core/types').SourceMaterialReference[]>()
     for (const message of eligible) {
       if (this.suppressed({ sessionId, messageId: message.id })) continue

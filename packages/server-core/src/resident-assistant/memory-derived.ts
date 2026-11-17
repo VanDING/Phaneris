@@ -22,6 +22,16 @@ export class DerivedMemory {
     db.exec(`CREATE TABLE IF NOT EXISTS memory_scenarios(id TEXT PRIMARY KEY,scope_key TEXT NOT NULL UNIQUE,body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS memory_scenario_requests(request_id TEXT PRIMARY KEY,fingerprint TEXT NOT NULL,receipt TEXT NOT NULL);`)
   }
+  profileReferences(input: { projectId?: string; query?: string }): MemoryRecord['sources'] {
+    if (!this.owner.policy().use) return []
+    const rows = this.db.prepare(`SELECT body FROM memories WHERE (json_extract(body,'$.projectId') IS NULL OR json_extract(body,'$.projectId')=?)
+      AND json_extract(body,'$.state')='active' AND json_extract(body,'$.assessment.domain')='collaboration'
+      ORDER BY json_extract(body,'$.updatedAt') DESC,id LIMIT 128`).all(input.projectId ?? null) as Array<{ body: string }>
+    const ranked = rows.map(row => JSON.parse(row.body) as MemoryRecord).sort((left, right) =>
+      lexicalScore(`${right.condition ?? ''} ${right.content ?? ''}`, input.query ?? '') - lexicalScore(`${left.condition ?? ''} ${left.content ?? ''}`, input.query ?? '')
+      || right.updatedAt - left.updatedAt || left.id.localeCompare(right.id))
+    return ranked.slice(0, 16).flatMap(record => record.sources)
+  }
   profile(input: { projectId?: string; query?: string }): CollaborationProfile {
     const version = this.owner.version(), maxChars = 6000, policy = this.owner.policy()
     const unassessedRecords = (this.db.prepare(`SELECT COUNT(*) AS count FROM memories WHERE
@@ -29,24 +39,26 @@ export class DerivedMemory {
       AND json_extract(body,'$.state')='active' AND json_extract(body,'$.assessment') IS NULL`).get(input.projectId ?? null) as { count: number }).count
     if (!policy.use) return { version, items: [], policy, coverage: { scanned: 0, candidateRecords: 0, omitted: 0, maxChars, unassessedRecords } }
     const scope = "(json_extract(body,'$.projectId') IS NULL OR json_extract(body,'$.projectId')=?) AND json_extract(body,'$.state')='active' AND json_extract(body,'$.assessment.domain')='collaboration'"
-    const rows = this.db.prepare(`SELECT id FROM memories WHERE ${scope} ORDER BY json_extract(body,'$.updatedAt') DESC,id LIMIT 128`).all(input.projectId ?? null) as Array<{ id: string }>
+    const rows = this.db.prepare(`SELECT id,body FROM memories WHERE ${scope} ORDER BY json_extract(body,'$.updatedAt') DESC,id LIMIT 128`).all(input.projectId ?? null) as Array<{ id: string; body: string }>
     const count = (this.db.prepare(`SELECT COUNT(*) AS count FROM memories WHERE ${scope}`).get(input.projectId ?? null) as { count: number }).count
-    const available = rows.flatMap(row => {
-      const record = this.owner.record(row.id)
-      return record?.state === 'active' && !record.redacted && !record.dispute ? [record] : []
-    }).sort((left, right) => {
+    // Metadata ranking grants no recall authority. Only candidates actually
+    // considered for the bounded result cross the full source-validation port.
+    const ranked = rows.map(row => JSON.parse(row.body) as MemoryRecord).sort((left, right) => {
       const score = (record: MemoryRecord) => lexicalScore(`${record.condition ?? ''} ${record.content ?? ''}`, input.query ?? '')
         + (record.projectId === input.projectId ? 1 : 0)
       return score(right) - score(left) || right.updatedAt - left.updatedAt || left.id.localeCompare(right.id)
     })
     const items: CollaborationProfile['items'] = []
-    for (const record of available) {
-      const item = { id: record.id, revision: record.revision, content: record.content, condition: record.condition, projectId: record.projectId, sources: record.sources }
+    let validatedRecords = 0
+    for (const candidate of ranked) {
       if (items.length >= 8) break
+      const record = this.owner.record(candidate.id); validatedRecords++
+      if (!record || record.state !== 'active' || record.redacted || record.dispute) continue
+      const item = { id: record.id, revision: record.revision, content: record.content, condition: record.condition, projectId: record.projectId, sources: record.sources }
       if (JSON.stringify([...items, item]).length > maxChars) continue
       items.push(item)
     }
-    return { version, items, policy, coverage: { scanned: rows.length, candidateRecords: count, omitted: Math.max(0, count - items.length), maxChars, unassessedRecords } }
+    return { version, items, policy, coverage: { scanned: rows.length, validatedRecords, candidateRecords: count, omitted: Math.max(0, count - items.length), maxChars, unassessedRecords } }
   }
   capture(command: ScenarioCapture, authority: 'automatic' | 'user_request' | 'management') {
     const policy = this.owner.policy()

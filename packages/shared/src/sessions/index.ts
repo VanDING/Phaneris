@@ -101,7 +101,7 @@ export {
 
 // Field utilities
 export { pickSessionFields } from './utils.ts';
-export { getSessionSourceIndex, registerSessionSourceIndex, sessionSourceSignature } from './source-index.ts';
+export { getSessionSourceIndex, registerSessionSourceIndex, sessionSourceSignature, sessionSourceIndexMetrics, releaseSessionSourceIndex } from './source-index.ts';
 
 // Slug generator utilities
 export {

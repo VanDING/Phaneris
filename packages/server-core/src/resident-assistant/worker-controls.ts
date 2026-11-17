@@ -45,18 +45,18 @@ export class WorkerControls {
   pendingMessage(id: string): boolean {
     return !!this.db.prepare("SELECT 1 FROM worker_commands WHERE work_id=? AND json_extract(command,'$.action')='message' AND COALESCE(json_extract(command,'$.delivery'),'queued')='queued' AND json_extract(receipt,'$.phase') IN ('accepted','waiting') LIMIT 1").get(id)
   }
-  async control(command: WorkerControl, actor: WorkerControlReceipt['actor'] = 'assistant'): Promise<WorkerControlResult> {
+  async control(command: WorkerControl, actor: WorkerControlReceipt['actor'] = 'assistant', evidence?: WorkerControlReceipt['evidence']): Promise<WorkerControlResult> {
     const fingerprint = createHash('sha256').update(canonicalJson(command)).digest('hex')
     const stored = this.db.prepare('SELECT fingerprint,command,receipt FROM worker_commands WHERE id=?').get(command.commandId) as CommandRow | undefined
     if (stored && stored.fingerprint !== fingerprint) throw new Error('Worker command identity has different content')
     if (stored && ['applied', 'rejected'].includes(this.receipt(stored).phase)) return { command: this.receipt(stored), work: await this.port.view(this.port.read(command.id)) }
     const existing = this.active.get(command.commandId)
     if (existing) return existing
-    const operation = this.apply(command, fingerprint, actor, stored)
+    const operation = this.apply(command, fingerprint, actor, stored, evidence)
     this.active.set(command.commandId, operation)
     try { return await operation } finally { this.active.delete(command.commandId) }
   }
-  private async apply(command: WorkerControl, fingerprint: string, actor: WorkerControlReceipt['actor'], stored?: CommandRow): Promise<WorkerControlResult> {
+  private async apply(command: WorkerControl, fingerprint: string, actor: WorkerControlReceipt['actor'], stored?: CommandRow, evidence?: WorkerControlReceipt['evidence']): Promise<WorkerControlResult> {
     const work = this.port.read(command.id)
     if (!stored && work.seq !== command.expectedSeq) throw new Error('Worker sequence changed; inspect the current receipt before issuing this command')
     if (work.pendingControlId && work.pendingControlId !== command.commandId) throw new Error('Another Worker command is pending; inspect it before replacing the task intent')
@@ -64,7 +64,7 @@ export class WorkerControls {
     if (!stored) {
       const receipt: WorkerControlReceipt = { commandId: command.commandId, delegationId: command.id, action: command.action, expectedSeq: command.expectedSeq,
         phase: 'accepted', at: Date.now(), updatedAt: Date.now(), actor, initialState: work.state,
-        ...(actor === 'assistant' && command.action === 'message' ? { evidence: await this.port.evidence(work) } : {}) }
+        ...(actor === 'assistant' && command.action === 'message' ? { evidence: evidence ?? await this.port.evidence(work) } : {}) }
       if (this.port.read(work.id).seq !== work.seq) throw new Error('Worker sequence changed while preparing supplemental evidence; inspect the current receipt')
       this.db.prepare('INSERT INTO worker_commands VALUES(?,?,?,?,?)').run(command.commandId, command.id, fingerprint, JSON.stringify(command), JSON.stringify(receipt))
     }

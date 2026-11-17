@@ -10,7 +10,7 @@ export async function handleAssistantWorkerOptions(ctx: SessionToolContext, args
 
 export async function handleAssistantDelegate(ctx: SessionToolContext, args: AssistantDispatch) {
   if (!ctx.assistantDelegate) return errorResponse('Delegation is only available to the resident assistant.')
-  try { return successResponse(JSON.stringify(await ctx.assistantDelegate(args))) }
+  try { return successResponse(JSON.stringify(await ctx.assistantDelegate(args, ctx.toolExecutionId))) }
   catch (error) { return errorResponse(error instanceof Error ? error.message : 'Delegation failed') }
 }
 export async function handleAssistantWork(ctx: SessionToolContext, args: AssistantWorkQuery) {

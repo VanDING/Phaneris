@@ -135,6 +135,7 @@ export interface OutboundToolExecReq { type: 'tool_execute_request'; requestId: 
 export interface OutboundToolExecCancel { type: 'tool_execute_cancel'; requestId: string }
 
 export interface OutboundDurableToolPrepareReq {
+  deadlineAt?: number;
   type: 'durable_tool_prepare_request';
   requestId: string;
   sessionId: string;
@@ -164,6 +165,7 @@ export interface OutboundDurableToolOutcomeReq {
 }
 
 export interface OutboundDurableModelPrepareReq {
+  deadlineAt?: number;
   contextSnapshot?: import('@phaneris/core/types').RequestContextSnapshot;
   residentContext?: import('@phaneris/shared/durable-runtime/types').DurableModelPrepareRequest['residentContext'];
   purpose?: 'cache_warm' | 'compaction';

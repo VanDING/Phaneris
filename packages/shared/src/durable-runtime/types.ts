@@ -1,6 +1,7 @@
 export const DURABLE_TOOL_BOUNDARY_PROTOCOL = 't1_after_preflight_v1' as const
 
 export type DurableToolBoundaryProtocol = typeof DURABLE_TOOL_BOUNDARY_PROTOCOL
+export interface WorkPreparationBinding { commandId: string; generation: number; requirementsHash: string; materialsHash: string }
 
 export type ToolRecoveryMode =
   | 'safe_replay'
@@ -42,6 +43,8 @@ export interface RuntimeEvent<TPayload = unknown> {
 }
 
 export interface ToolDispatchIntent {
+  contextInputId?: string
+  contextCommandHash?: string
   protocol: DurableToolBoundaryProtocol
   /** Parent agent-turn/task operation whose program counter advances with this call. */
   runOperationId: string
@@ -176,6 +179,9 @@ export interface ToolReconciliationAdapter {
 }
 
 export interface DurableToolPrepareRequest {
+  /** Host admission expires independently of execution/outcome collection. */
+  deadlineAt?: number
+  contextInputId?: string
   /** Host-owned continuation/fork lineage within the same workspace. */
   recoverySessionIds?: readonly string[]
   sessionId: string
@@ -241,8 +247,9 @@ export interface DurableToolBoundary {
 }
 
 export interface DurableModelPrepareRequest {
+  deadlineAt?: number
   contextSnapshot?: import('@phaneris/core/types').RequestContextSnapshot
-  residentContext?: { segmentId: string; snapshot?: import('@phaneris/core/types').RequestContextSnapshot }
+  residentContext?: { segmentId: string; preparation?: WorkPreparationBinding; snapshot?: import('@phaneris/core/types').RequestContextSnapshot }
   /** Auxiliary requests are independently metered and never model-visible. */
   purpose?: 'cache_warm' | 'decision' | 'image_generation' | 'compaction'
   sessionId: string
@@ -367,7 +374,7 @@ export type DurableCanonicalContextItem =
 export interface DurableCanonicalModelContext {
   cursor: number
   items: DurableCanonicalContextItem[]
-  resident?: { segmentId: string; contextText: string }
+  resident?: { segmentId: string; contextText: string; preparation?: WorkPreparationBinding }
   fenced?: boolean
   blocked?: string
 }

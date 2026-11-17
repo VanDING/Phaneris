@@ -28,7 +28,7 @@ export function materialReferences(refs: Association[]): Association[] {
   }
   return output
 }
-interface Pointer extends Omit<ResidentContextState, 'activeSegment' | 'topics' | 'branches'> { activeSegmentId?: string; selectedForInput?: string; temporary?: { inputId: string; branchIds: string[] }; recentMainline?: ResidentSource[] }
+interface Pointer extends Omit<ResidentContextState, 'activeSegment' | 'topics' | 'branches'> { activeSegmentId?: string; selectedForInput?: string; temporary?: { inputId: string; branchIds: string[] }; recentMainline?: ResidentSource[]; preparationId?: string }
 /** workspace/context.db owns only references, selections and recovery metadata.
  * No message text, task state or execution attempt is stored here. */
 export class ContextMetadataStore {
@@ -37,7 +37,7 @@ export class ContextMetadataStore {
     mkdirSync(workspace.rootPath, { recursive: true })
     this.db = openSqliteDatabase(join(workspace.rootPath, 'context.db'))
     const schema = (this.db.prepare('PRAGMA user_version').get() as { user_version: number }).user_version
-    if (schema > 1) { this.db.close(); throw new Error(`context_schema_unsupported: Context schema ${schema} requires a matching application/backup version`) }
+    if (schema > 2) { this.db.close(); throw new Error(`context_schema_unsupported: Context schema ${schema} requires a matching application/backup version`) }
     this.db.exec(`PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;
       CREATE TABLE IF NOT EXISTS owner(singleton INTEGER PRIMARY KEY CHECK(singleton=1), workspace_id TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS pointers(session_id TEXT PRIMARY KEY, body TEXT NOT NULL);
@@ -46,12 +46,20 @@ export class ContextMetadataStore {
       CREATE TABLE IF NOT EXISTS checkpoints(session_id TEXT NOT NULL,branch_id TEXT NOT NULL,id TEXT NOT NULL,body TEXT NOT NULL,PRIMARY KEY(session_id,id));
       CREATE TABLE IF NOT EXISTS views(id TEXT PRIMARY KEY,run_id TEXT NOT NULL UNIQUE,body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS context_commands(session_id TEXT NOT NULL,id TEXT NOT NULL,fingerprint TEXT NOT NULL,result_id TEXT NOT NULL,PRIMARY KEY(session_id,id));
+      CREATE TABLE IF NOT EXISTS work_admissions(operation_id TEXT PRIMARY KEY,run_id TEXT NOT NULL,provider_request_id TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS context_tool_receipts(operation_id TEXT PRIMARY KEY,session_id TEXT NOT NULL,command_id TEXT,result_json TEXT);
+      CREATE TABLE IF NOT EXISTS context_model_views(session_id TEXT NOT NULL,provider_request_id TEXT NOT NULL,view_id TEXT NOT NULL,PRIMARY KEY(session_id,provider_request_id));
       CREATE TABLE IF NOT EXISTS migrations(id TEXT PRIMARY KEY);
       CREATE TABLE IF NOT EXISTS material_refresh(session_id TEXT NOT NULL,original_input TEXT NOT NULL,state TEXT NOT NULL,input_id TEXT,attempts INTEGER NOT NULL DEFAULT 0,next_at INTEGER NOT NULL,PRIMARY KEY(session_id,original_input));`)
     this.db.prepare('INSERT OR IGNORE INTO owner VALUES(1,?)').run(workspace.id)
     if ((this.db.prepare('SELECT workspace_id FROM owner').get() as { workspace_id: string }).workspace_id !== workspace.id) { this.db.close(); throw new Error('context_workspace_conflict: Context metadata belongs to another workspace') }
     try { this.migrateLegacy() } catch (error) { this.db.close(); throw new Error(`context_migration_failed: Session ${sessionId} metadata could not be converted; original Session/Runtime and legacy context are preserved`, { cause: error }) }
-    this.db.exec('PRAGMA user_version=1')
+    if (!(this.db.prepare('PRAGMA table_info(context_commands)').all() as Array<{ name: string }>).some(column => column.name === 'body')) {
+      this.db.exec('ALTER TABLE context_commands ADD COLUMN body TEXT')
+    }
+    this.db.exec('PRAGMA user_version=2')
+    this.db.exec(`CREATE INDEX IF NOT EXISTS preparation_input ON context_commands(session_id,json_extract(body,'$.inputId'),json_extract(body,'$.generation'));
+      CREATE INDEX IF NOT EXISTS preparation_generation ON context_commands(session_id,json_extract(body,'$.generation'));`)
     this.db.prepare("UPDATE material_refresh SET state='pending' WHERE session_id=? AND state='running'").run(sessionId)
   }
   close() { this.db.close() }
@@ -107,7 +115,7 @@ export class ContextMetadataStore {
   associations(branchId: string): Association[] {
     return (this.db.prepare('SELECT body FROM associations WHERE session_id=? AND branch_id=? ORDER BY rowid').all(this.sessionId, branchId) as Array<{ body: string }>).map(row => JSON.parse(row.body) as Association).filter(r => r.active)
   }
-  private saveAssociation(branchId: string, ref: Association) {
+  protected saveAssociation(branchId: string, ref: Association) {
     this.db.prepare('INSERT INTO associations VALUES(?,?,?,?) ON CONFLICT(session_id,branch_id,source_key) DO UPDATE SET body=excluded.body')
       .run(this.sessionId, branchId, JSON.stringify([ref.sessionId, ref.messageId, ref.range]), JSON.stringify(ref))
   }
@@ -121,7 +129,8 @@ export class ContextMetadataStore {
     const items = (this.db.prepare(`SELECT body FROM branches WHERE ${filter} ORDER BY json_extract(body,'$.updatedAt') DESC,id LIMIT ? OFFSET ?`).all(this.sessionId, query, query, limit, offset) as Array<{ body: string }>).map(row => JSON.parse(row.body) as ContextBranch)
     return { items, total, nextOffset: offset + items.length < total ? offset + items.length : null }
   }
-  command(command: ResidentContextCommand, messages: readonly Message[], currentInputId?: string, currentProjectId?: string): ResidentContextState {
+  protected contextChanged(_command: ResidentContextCommand, _currentInputId?: string): void {}
+  command(command: ResidentContextCommand, messages: readonly Message[], currentInputId?: string, currentProjectId?: string, operationId?: string): ResidentContextState {
     if (command.action === 'get') return this.get()
     if (command.action === 'branches' || command.action === 'topics') {
       if (command.action === 'branches' && command.branchId) {
@@ -134,6 +143,10 @@ export class ContextMetadataStore {
       return { ...this.get(), branches, topics: { items: branches.items.map(b => ({ ...b, anchorCount: this.associations(b.id).length, originalInputCount: this.associations(b.id).filter(r => r.sessionId === this.sessionId).length })), nextOffset: branches.nextOffset } }
     }
     const input = messages.find(m => m.id === currentInputId) ?? messages.findLast(m => m.role === 'user' && !m.hidden && isDirectUserSource(m.inputSource))
+    if (input?.inputSource?.kind === 'resident_event') {
+      if (['create', 'focus', 'resume', 'anchors'].includes(command.action)) throw new Error('context_event_scope_required: An inbox event cannot change foreground work; inspect or temporarily prepare its original work')
+      if (command.action === 'select') command = { ...command, temporary: true }
+    }
     if (command.action === 'select' && command.temporary && input?.inputSource?.kind !== 'resident_event') throw new Error('context_temporary_event_required: Temporary selection is only for Host inbox events. For a direct user resumption select without temporary to update foreground work')
     const projectId = currentInputId && input?.projectScope ? input.projectScope.projectId ?? undefined : currentProjectId
     const state = this.pointer(), fingerprint = JSON.stringify(command)
@@ -144,7 +157,8 @@ export class ContextMetadataStore {
       let ids: string[] = [], resultId = ''
       if (command.action === 'create' || command.action === 'focus') {
         if (command.projectId !== undefined && command.projectId !== projectId) throw new Error('context_project_conflict: Select the project before creating its branch')
-        const branch: ContextBranch = { id: randomUUID(), sessionId: this.sessionId, label: command.label, projectId: command.projectId ?? projectId, revision: 1, state: 'active', createdAt: Date.now(), updatedAt: Date.now() }
+        const branch: ContextBranch = { id: randomUUID(), sessionId: this.sessionId, label: command.label, projectId: command.projectId ?? projectId, revision: 1, state: 'active', createdAt: Date.now(), updatedAt: Date.now(),
+          ...(input && isDirectUserSource(input.inputSource) ? { origin: { sessionId: this.sessionId, messageId: input.id, contentHash: this.memory.readSource({ sessionId: this.sessionId, messageId: input.id }).contentHash } } : {}) }
         this.saveBranch(branch); ids = [branch.id]; resultId = branch.id
         if (command.action === 'create' && input && isDirectUserSource(input.inputSource)) this.link(branch.id, { sessionId: this.sessionId, messageId: input.id }, 'requirement')
         if (command.action === 'focus') for (const source of command.anchors) this.link(branch.id, source, 'evidence', true)
@@ -237,10 +251,14 @@ export class ContextMetadataStore {
         else { state.selectedBranchIds = ids; state.selectedForInput = currentInputId ?? '*' }
         if (!(command.action === 'select' && command.temporary)) { const branch = this.branch(ids[0]!); state.focus = { label: branch.label, topicId: branch.id, projectId: branch.projectId, anchors: [] } }
       }
-      if (requestId) this.db.prepare('INSERT INTO context_commands VALUES(?,?,?,?)').run(this.sessionId, requestId, fingerprint, resultId)
+      if (requestId) this.db.prepare('INSERT INTO context_commands(session_id,id,fingerprint,result_id) VALUES(?,?,?,?)').run(this.sessionId, requestId, fingerprint, resultId)
       if (command.action !== 'checkpoint') state.activeSegmentId = undefined
       this.savePointer({ ...state, revision: state.revision + 1 })
-      return this.get()
+      this.contextChanged(command, currentInputId)
+      const result = this.get()
+      if (operationId) this.db.prepare('INSERT OR IGNORE INTO context_tool_receipts VALUES(?,?,NULL,?)')
+        .run(operationId, this.sessionId, JSON.stringify({ ...result, activeSegment: undefined }))
+      return result
     })()
   }
   private link(branchId: string, ref: ResidentSource, role: Association['role'], pinned = false) {
@@ -250,7 +268,7 @@ export class ContextMetadataStore {
     const range = this.resolveRange(ref, source.content), { quote: _quote, ...reference } = ref
     this.saveAssociation(branchId, { ...reference, range, contentHash: source.contentHash, role, active: true, branchRevision: branch.revision, pinned })
   }
-  private resolveRange(ref: ResidentSource, content: string) {
+  protected resolveRange(ref: ResidentSource, content: string) {
     if (ref.quote) {
       const offset = content.indexOf(ref.quote)
       if (offset < 0 || content.indexOf(ref.quote, offset + 1) >= 0) throw new Error('context_quote_ambiguous: Quote must match exactly once in the original; read it again or provide an exact range')
@@ -267,9 +285,12 @@ export class ContextMetadataStore {
     const row = this.db.prepare('SELECT body FROM views WHERE run_id=?').get(runOperationId) as { body: string } | undefined
     return row ? JSON.parse(row.body) : undefined
   }
+  protected segmentForView(id?: string): ResidentSegment | undefined {
+    const row = id ? this.db.prepare('SELECT body FROM views WHERE id=?').get(id) as { body: string } | undefined : undefined
+    return row ? JSON.parse(row.body) as ResidentSegment : undefined
+  }
   revisionsValid(revisions: Record<string, number> = {}) { return Object.entries(revisions).every(([id, revision]) => this.branch(id).revision === revision) }
-  recordTurn(messages: readonly Message[], inputIds: readonly string[]) {
-    const segment = this.get().activeSegment
+  recordTurn(messages: readonly Message[], inputIds: readonly string[], segment = this.get().activeSegment) {
     if (!segment || !inputIds.includes(segment.inputMessageId)) return
     const ids = segment.branchIds ?? [], start = messages.findIndex(m => m.id === segment.inputMessageId)
     if (start < 0) return

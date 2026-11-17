@@ -239,6 +239,8 @@ function nextLocalEphemeralQueryId(source: string): string {
 // Init config (set on 'init' message)
 let initConfig: Extract<InboundMessage, { type: 'init' }> | null = null;
 let residentContext: DurableCanonicalModelContext['resident'];
+const residentAdmissionFailures = new Map<string, number>();
+const suspendedResidentTools = new Set<string>();
 let contextFenced = false;
 let refreshedWorkingContext: DurableCanonicalModelContext | undefined;
 let workingContextApplied = false;
@@ -964,6 +966,7 @@ async function requestDurableToolPrepare(
   const responsePromise = pendingDurableToolPrepares.wait(requestId, unavailableReceipt, { signal });
   send({
     type: 'durable_tool_prepare_request',
+    deadlineAt: Date.now() + 15_000,
     requestId,
     sessionId: initConfig.sessionId,
     turnId: currentDurableTurnId,
@@ -982,7 +985,23 @@ async function requestDurableToolPrepare(
       toolName, canonicalArgsHash: canonicalToolArgsHash(toolName, input), ...batch,
       result: { execution: { status: 'not_dispatched' }, reason: 'The client stopped before invoking the tool implementation.' }, isError: true,
     } });
-    throw new Error(response.reason || `Durable T1 failed for "${toolName}"`);
+    const reason = response.reason || `Durable T1 failed for "${toolName}"`;
+    if (initConfig.sessionKind === 'resident_assistant' && /^(?:effect_outcome_unknown|work_[a-z_]+|context_[a-z_]+):/.test(reason)) {
+      const command = input.command as Record<string, unknown> | undefined;
+      const effect = toolName.replace(/^mcp__session__/, '') === 'assistant_context' && command
+        ? { ...input, command: { ...command, requestId: undefined } } : input;
+      const key = canonicalToolArgsHash(toolName, { effect, code: reason.split(':', 1)[0], preparation: residentContext?.preparation });
+      const failures = (residentAdmissionFailures.get(key) ?? 0) + 1;
+      residentAdmissionFailures.set(key, failures);
+      if (failures >= 3) {
+        const session = sessionLifecycle.current;
+        const names = session?.getActiveToolNames() ?? [];
+        for (const name of names.filter(name => name.toLowerCase() === toolName.toLowerCase())) suspendedResidentTools.add(name);
+        session?.setActiveToolsByName(names.filter(name => !suspendedResidentTools.has(name)));
+        throw new Error(`${reason} This tool has been suspended for this input after three unchanged admission failures. Explain the blocker and use the remaining inspection or cancellation tools. No implementation was invoked by these rejected calls.`);
+      }
+    }
+    throw new Error(reason);
   }
   if (!response.prepared.created) {
     throw new Error(`Tool operation ${response.prepared.operationId} already crossed T1 and requires recovery`);
@@ -1066,6 +1085,7 @@ async function requestDurableModelPrepare(
   const responsePromise = pendingDurableModelPrepares.wait(requestId, unavailableReceipt);
   send({
     type: 'durable_model_prepare_request',
+    deadlineAt: Date.now() + 15_000,
     purpose,
     requestId,
     sessionId: initConfig.sessionId,
@@ -1076,7 +1096,7 @@ async function requestDurableModelPrepare(
     model,
     canonicalRequestHash,
     contextSnapshot: snapshot,
-    residentContext: residentContext ? { segmentId: residentContext.segmentId, snapshot } : undefined,
+    residentContext: residentContext ? { segmentId: residentContext.segmentId, preparation: residentContext.preparation, snapshot } : undefined,
   });
   const response = await responsePromise;
   if (!response.ok || !response.prepared) throw new Error(response.reason || 'Durable model T1 failed');
@@ -1793,6 +1813,9 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     }
 
     const session = await ensureSession();
+    if (session === previousSession && suspendedResidentTools.size) session.setActiveToolsByName([...new Set([...session.getActiveToolNames(), ...suspendedResidentTools])]);
+    suspendedResidentTools.clear();
+    residentAdmissionFailures.clear();
     residentContext = msg.canonicalContext?.resident;
     contextFenced = !!msg.canonicalContext?.fenced || !!residentContext;
 

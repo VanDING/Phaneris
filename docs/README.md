@@ -20,6 +20,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
+常驻助手工作连续性修复（2026-11-17）：[实施与验证](verification/resident-work-continuity-implementation-2026-11-17.md)、[先行失败矩阵](verification/resident-work-continuity-failure-matrix-2026-11-17.md)。保留前台 HEAD，贯通原话要求、准备视图、实际 producer 与业务准入；部署及生产修复边界见验证记录。
+
 架构重构（2026-11-16）：[实施记录](architecture/refactoring-progress.md)、[提交确认与恢复边界](architecture/mutation-boundaries.md)、[会话与任务 RPC 工作区范围](architecture/rpc-workspace-scope.md)。已批准方案正在独立架构分支实施和全项目复审；本地证据与平台限制见实施记录。
 
 后续版本安排（2026-11-08）：[0.6.3 共用上下文核心与助手分支管理](architecture/resident-assistant-context-0.6.3-plan-2026-11-08.md) — accepted，已实施并通过确定性、UI、检查点与门禁验收：三类 Session 共用原文、读取与请求组装，主助手按工作分支恢复，普通会话保持线性接续，Worker 使用本任务材料；补齐读取顺序、检查点、安全换段与实际请求验收；[0.6.4 助手任务管理](architecture/resident-assistant-tasks-0.6.4-plan-2026-11-08.md) — 已实施并验收，保留 A–F/A2、D/E 的实测调查，完成自主并行、控制、Session 状态与看板可见性；[0.6.5 助手与 Board 并排交互](architecture/resident-assistant-board-0.6.5-plan-2026-11-07.md) — deferred，原核心交互保持，暂不实施。0.6.4 自 2026-11-13 开始实施；0.6.5 继续延期。

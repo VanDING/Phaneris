@@ -18,7 +18,7 @@ export type ScenarioQuery = z.infer<typeof ScenarioQuerySchema>
 export interface CollaborationProfile {
   version: number; items: Array<Pick<MemoryRecord, 'id' | 'revision' | 'content' | 'condition' | 'projectId' | 'sources'>>
   policy?: { learning: 'automatic' | 'explicit' | 'paused'; use: boolean; configured: boolean; valid: boolean; reason: string }
-  coverage: { scanned: number; candidateRecords: number; omitted: number; maxChars: number; unassessedRecords?: number }
+  coverage: { scanned: number; candidateRecords: number; omitted: number; maxChars: number; unassessedRecords?: number; validatedRecords?: number }
 }
 export interface ScenarioResult {
   id: string; revision: number; title: string; goal: string; condition?: string; projectId?: string; derivedVersion: string

@@ -45,6 +45,11 @@ export function defaultToolRecoveryMode(toolName: string): ToolRecoveryMode {
   const normalized = toolName.replace(/^mcp__[^_]+__/, '').toLowerCase()
   return SAFE_REPLAY_TOOLS.has(normalized) ? 'safe_replay' : 'never_auto_retry'
 }
+function assertRunOpenForDispatch(state: DurableOperationState): void {
+  if (state.phase === 'terminal' || state.phase === 'recovery_parked' || (state.data as { stopReason?: string } | undefined)?.stopReason !== undefined) {
+    throw new Error('run_closed: The stopped run cannot authorize another model or tool dispatch; inspect its receipts from a new run')
+  }
+}
 
 export function durableModelOperationId(runOperationId: string, providerRequestId: string): string {
   const digest = createHash('sha256')
@@ -779,14 +784,13 @@ export class DurableRuntimeCoordinator {
     workspaceRootPath: string,
     request: DurableModelPrepareRequest,
   ): Promise<DurableModelPrepareResponse> {
+    if (request.deadlineAt !== undefined && Date.now() >= request.deadlineAt) throw new Error('model_prepare_expired: Admission deadline elapsed; provider was not authorized')
     const store = this.storeFor(workspaceRootPath)
     const runState = store.getOperation(request.runOperationId)
     if (!runState) throw new Error(`Durable run ${request.runOperationId} is not open`)
     if (runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
+    assertRunOpenForDispatch(runState)
     if (request.purpose) {
-      if (runState.phase === 'terminal' || runState.phase === 'recovery_parked') {
-        throw new Error('Auxiliary model requests require an active run')
-      }
       const operationId = durableModelOperationId(request.runOperationId, request.providerRequestId)
       const outcome = store.getEvent(`${operationId}:outcome`)
       const dispatch = store.getEvent(`${operationId}:dispatch`)
@@ -797,6 +801,7 @@ export class DurableRuntimeCoordinator {
       }
       // A refresh can overlap tools and normal model requests. Its dispatch is
       // durable evidence, but must not replace the run's execution checkpoint.
+      if (request.deadlineAt !== undefined && Date.now() >= request.deadlineAt) throw new Error('model_prepare_expired: Validation exceeded the admission deadline')
       const committedSeq = store.appendEvents([{
         eventId: `${operationId}:dispatch`, sessionId: request.sessionId,
         turnId: request.turnId, operationId: request.runOperationId,
@@ -834,6 +839,7 @@ export class DurableRuntimeCoordinator {
       }
     }
     const now = Date.now()
+    if (request.deadlineAt !== undefined && now >= request.deadlineAt) throw new Error('model_prepare_expired: Validation exceeded the admission deadline')
     const pending = nextState(runState, 'model_effect_pending', {
       ...(typeof runState.data === 'object' && runState.data !== null ? runState.data : {}),
       currentModel: {
@@ -987,23 +993,41 @@ export class DurableRuntimeCoordinator {
     workspaceRootPath: string,
     request: DurableToolPrepareRequest,
   ): Promise<DurableToolPrepareResponse> {
+    if (request.deadlineAt !== undefined && Date.now() >= request.deadlineAt) throw new Error('tool_prepare_expired: Admission deadline elapsed; tool was not dispatched')
     const store = this.storeFor(workspaceRootPath)
-    const runState = store.getOperation(request.runOperationId)
+    let runState = store.getOperation(request.runOperationId)
     if (!runState) throw new Error(`Durable run ${request.runOperationId} is not open`)
     if (runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
+    assertRunOpenForDispatch(runState)
 
     const operationId = durableToolOperationId(request.runOperationId, request.providerToolCallId)
-    const recoveryMode = request.recoveryMode ?? defaultToolRecoveryMode(request.toolName)
+    const localContext = ['assistant_context', 'mcp__session__assistant_context'].includes(request.toolName)
+    const action = localContext ? String((request.args.command as { action?: string } | undefined)?.action ?? '') : ''
+    const recoveryMode = localContext ? ['get', 'branches', 'topics', 'preparation', 'receipt'].includes(action) ? 'safe_replay' : 'reconcilable'
+      : request.recoveryMode ?? defaultToolRecoveryMode(request.toolName)
     if (store.databasePath === ':memory:' && recoveryMode !== 'safe_replay') {
       throw new Error('Persistent intent storage is unavailable; this action was not dispatched. Inspection and independent work may continue.')
     }
     const canonicalArgsHash = canonicalToolArgsHash(request.toolName, request.args)
+    const contextEffectHash = (args: Record<string, unknown>) => {
+      const command = args.command as Record<string, unknown> | undefined
+      return canonicalToolArgsHash(request.toolName, command && ['prepare', 'create', 'checkpoint'].includes(String(command.action))
+        ? { ...args, command: { ...command, requestId: undefined } } : args)
+    }
     if (recoveryMode !== 'safe_replay') {
       const unresolved = [...new Set([request.sessionId, ...request.recoverySessionIds ?? []])]
         .flatMap(sessionId => store.listUnsettledToolOperations(undefined, sessionId)).find(item => item.dispatch
         && item.dispatch.operationId !== operationId && item.dispatch.toolName === request.toolName
-        && item.dispatch.canonicalArgsHash === canonicalArgsHash)
-      if (unresolved) throw new Error('An earlier invocation of this exact action has an unconfirmed outcome. Inspect existing outputs or receipts instead of repeating it. Independent work may continue.')
+        && (item.dispatch.canonicalArgsHash === canonicalArgsHash || localContext && item.dispatch.contextCommandHash === contextEffectHash(request.args))
+        && (!localContext || item.dispatch.contextInputId === request.contextInputId))
+      if (unresolved?.dispatch) {
+        if (localContext && action !== 'reconcile') {
+          await this.queryAndReconcileTool(workspaceRootPath, { sessionId: request.sessionId, toolOperationId: unresolved.dispatch.operationId,
+            actor: { type: 'system', id: 'context-command-recovery' } })
+          runState = store.getOperation(request.runOperationId)!
+          assertRunOpenForDispatch(runState)
+        } else throw new Error(`effect_outcome_unknown: An earlier invocation has an unconfirmed outcome (${unresolved.dispatch.operationId}). Inspect its receipt; do not repeat this effect. Independent work may continue.`)
+      }
     }
     const intent: ToolDispatchIntent = {
       protocol: DURABLE_TOOL_BOUNDARY_PROTOCOL,
@@ -1016,8 +1040,10 @@ export class DurableRuntimeCoordinator {
       canonicalArgsHash,
       recoveryMode,
       idempotencyKey: operationId,
+      ...(localContext ? { contextInputId: request.contextInputId, contextCommandHash: contextEffectHash(request.args) } : {}),
     }
     const now = Date.now()
+    if (request.deadlineAt !== undefined && now >= request.deadlineAt) throw new Error('tool_prepare_expired: Validation exceeded the admission deadline')
     const pendingIds = store.listUnsettledToolOperations(request.runOperationId)
       .map(item => item.dispatch?.operationId)
       .filter((item): item is string => Boolean(item))

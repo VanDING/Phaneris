@@ -20,6 +20,7 @@ await verificationWorkflow('resident-assistant-control', async run => {
   const { getCredentialManager } = await import('@phaneris/shared/credentials')
   const requests: Array<{ model: string; messages: Array<{ role: string; content?: unknown }>; tools?: Array<{ function: { name: string } }> }> = []
   let nativeControl: import('@phaneris/session-tools-core/worker-control-contracts').WorkerControl | undefined
+  let nativePreparation: { requestId: string; branchIds: string[] } | undefined
   let catalogMismatch = false
   let holding = true, workerStarted = false
   let release = Promise.withResolvers<void>()
@@ -44,6 +45,7 @@ await verificationWorkflow('resident-assistant-control', async run => {
     const content = main ? 'CONTROL_GOAL_ACKNOWLEDGED' : 'CONTROL_WORKER_COMPLETED'
     const chunk = (delta: object, finish_reason: string | null = null) => `data: ${JSON.stringify({ id: 'control-fixture', object: 'chat.completion.chunk', model: body.model, choices: [{ index: 0, delta, finish_reason }] })}\n\n`
     const all = JSON.stringify(body.messages)
+    if (!main && all.includes('Finish independent read-only task.')) return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'INDEPENDENT_READ_ONLY_COMPLETE' }) + chunk({}, 'stop') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
     for (const name of ['PRIORITY_HIGH', 'PRIORITY_LOW']) if (!main && all.includes(name)) executionOrder.push(name)
     if (!main && all.includes('CONTROL_UNKNOWN_EFFECT') && !body.messages.some(message => message.role === 'tool' && JSON.stringify(message).includes('CONTROL_EFFECT_COMMITTED'))) {
       const name = body.tools?.find(tool => tool.function.name.startsWith('mcp__effect__') && tool.function.name.includes('api_'))?.function.name
@@ -58,6 +60,12 @@ await verificationWorkflow('resident-assistant-control', async run => {
         name, arguments: JSON.stringify({ method: 'POST', path: 'followup', params: { mustNotRunAfterPause: true } }) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
     }
     if (main && nativeControl) {
+      if (nativePreparation) {
+        const preparation = nativePreparation; nativePreparation = undefined
+        return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: 'native-control-prepare', type: 'function', function: {
+          name: 'mcp__session__assistant_context', arguments: JSON.stringify({ command: { action: 'prepare', requestId: preparation.requestId,
+            target: { kind: 'select', branchIds: preparation.branchIds }, requirements: [{ scope: 'input' }] } }) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
+      }
       const command = nativeControl; nativeControl = undefined
       return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: 'native-worker-control', type: 'function', function: {
         name: 'mcp__session__assistant_worker_control', arguments: JSON.stringify({ command }) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
@@ -150,6 +158,7 @@ await verificationWorkflow('resident-assistant-control', async run => {
     assert.equal(supplement.work.state, 'paused')
     scenes.push('W01-paused-supplement-is-not-a-direct-user-turn')
     nativeControl = { commandId: 'native-supplement', id: work.id, expectedSeq: (await latest()).seq, action: 'message', message: 'CONTROL_NATIVE_SUPPLEMENT：保留来源。' }
+    nativePreparation = { requestId: 'prepare-native-supplement', branchIds: (await latest()).branchIds! }
     await sendMain('向当前 CONTROL_TARGET 补充：保留来源。')
     assert((await latest()).controls?.some(command => command.commandId === 'native-supplement' && command.phase === 'applied' && command.actor === 'assistant'))
     scenes.push('C01-native-model-catalog-and-management-call-match-host-capabilities')

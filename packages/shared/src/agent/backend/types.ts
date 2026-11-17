@@ -240,7 +240,7 @@ export interface CoreBackendConfig {
   onProjectMaterialsStale?: () => void;
 
   /** Canonical committed history for provider context; current accepted run is excluded by identity. */
-  getCanonicalModelContext?: (excludeOperationId?: string) => DurableCanonicalModelContext | undefined;
+  getCanonicalModelContext?: (excludeOperationId?: string) => DurableCanonicalModelContext | undefined | Promise<DurableCanonicalModelContext | undefined>;
 
   /** Open/close a non-chat model run so mini/title/compaction/query calls use the same T1/T2 ledger. */
   beginDurableUtilityRun?: (input: { requestId: string; prompt: string; kind: 'mini_completion' | 'llm_query' | 'compaction' }) => { runOperationId: string; turnId: string };
