@@ -9,7 +9,6 @@ import { join } from 'node:path';
 import type { BaseEventPayload } from './event-bus.ts';
 import type { AutomationEvent, AutomationMatcher, PromptReferences, AgentEvent, AgentAutomationInput } from './types.ts';
 import { matchesCron } from './cron-matcher.ts';
-import { sanitizeForShell } from './security.ts';
 import { evaluateConditions } from './conditions.ts';
 import { ENV_PREFIX, LEGACY_IDENTITY } from '../identity.generated.ts';
 
@@ -56,18 +55,26 @@ export function toSnakeCase(str: string): string {
 
 /**
  * Expand environment variables in a string.
- * Supports both $VAR and ${VAR} syntax.
+ * Supports both $VAR and ${VAR} syntax in one pass. Inserted values are literal.
  *
  * @example
  * expandEnvVars('Hello $NAME', { NAME: 'World' }) // 'Hello World'
  * expandEnvVars('${GREETING} World', { GREETING: 'Hi' }) // 'Hi World'
  */
 export function expandEnvVars(str: string, env: Record<string, string>): string {
-  return str
-    // Replace ${VAR} syntax
-    .replace(/\$\{([^}]+)\}/g, (_, varName) => env[varName] ?? '')
-    // Replace $VAR syntax (word boundary)
-    .replace(/\$([A-Z_][A-Z0-9_]*)/gi, (_, varName) => env[varName] ?? '');
+  return str.replace(/\$\{([^}]+)\}|\$([A-Z_][A-Z0-9_]*)/gi,
+    (_, braced: string | undefined, bare: string | undefined) => env[(braced ?? bare)!] ?? '');
+}
+
+/** Expand JSON strings before serialization so quotes/newlines cannot change its structure. */
+export function expandEnvVarsInJson(value: unknown, env: Record<string, string>): unknown {
+  if (typeof value === 'string') return expandEnvVars(value, env);
+  if (Array.isArray(value)) return value.map(item => expandEnvVarsInJson(item, env));
+  if (value !== null && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value)
+      .map(([key, item]) => [expandEnvVars(key, env), expandEnvVarsInJson(item, env)]));
+  }
+  return value;
 }
 
 // ============================================================================
@@ -287,24 +294,11 @@ function buildBaseEventEnv(event: AutomationEvent, payload: BaseEventPayload): R
 }
 
 /**
- * Build environment variables from an event payload for prompt/command actions.
- * Includes full process.env and sanitizes user-controlled values for shell safety.
+ * Prompt actions receive only event context, as raw text. Process variables and
+ * webhook secrets must never reach prompts, labels or Telegram topics.
  */
 export function buildEnvFromPayload(event: AutomationEvent, payload: BaseEventPayload): Record<string, string> {
-  const base = buildBaseEventEnv(event, payload);
-  const env: Record<string, string> = { ...cleanEnv(), ...base };
-
-  // Sanitize session name for shell context
-  if (payload.sessionName) env.PHANERIS_SESSION_NAME = sanitizeForShell(payload.sessionName);
-
-  // Sanitize payload field values for shell context
-  for (const [key, value] of Object.entries(payload)) {
-    if (PAYLOAD_SKIP_KEYS.has(key)) continue;
-    const envKey = `${ENV_PREFIX}${toSnakeCase(key).toUpperCase()}`;
-    env[envKey] = typeof value === 'string' ? sanitizeForShell(value) : String(value);
-  }
-
-  return env;
+  return buildBaseEventEnv(event, payload);
 }
 
 /**

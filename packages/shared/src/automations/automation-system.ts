@@ -24,7 +24,7 @@ import { WorkspaceEventBus, type EventPayloadMap } from './event-bus.ts';
 import { PromptHandler, EventLogHandler, WebhookHandler, ScriptHandler, type AutomationsConfigProvider } from './handlers/index.ts';
 import { type AutomationsConfig, type AutomationEvent, type AutomationMatcher, type PendingPrompt, type WebhookActionResult, type ScriptActionResult, type AppEvent, type AgentEvent, type AgentAutomationInput } from './types.ts';
 import { buildPageRefreshMatchers } from '../pages/refresh.ts';
-import { validateAutomationsConfig } from './validation.ts';
+import { loadAutomationsConfigLenient } from './validation.ts';
 import { matcherMatchesAgentInput } from './utils.ts';
 import { SchedulerService, type SchedulerTickPayload } from '../scheduler/scheduler-service.ts';
 
@@ -105,13 +105,12 @@ export class AutomationSystem implements AutomationsConfigProvider {
   // ============================================================================
 
   /**
-   * Read, parse, and validate automations.json. Shared pipeline for loadConfig/reloadConfig.
+   * Parse the file once and isolate invalid matchers using the runtime loader.
    * Returns the raw parsed JSON alongside validation results (avoids re-reading for backfillIds).
    */
-  private readAndValidateConfig(configPath: string): { raw: unknown; validation: import('./types.ts').AutomationsValidationResult } {
+  private readAndLoadConfig(configPath: string): { raw: unknown; load: ReturnType<typeof loadAutomationsConfigLenient> } {
     const raw = JSON.parse(readFileSync(configPath, 'utf-8'));
-    const validation = validateAutomationsConfig(raw);
-    return { raw, validation };
+    return { raw, load: loadAutomationsConfigLenient(raw) };
   }
 
   /**
@@ -127,15 +126,14 @@ export class AutomationSystem implements AutomationsConfigProvider {
     }
 
     try {
-      const { raw, validation } = this.readAndValidateConfig(configPath);
-
-      if (!validation.valid) {
-        console.warn('[AutomationSystem] Invalid automations config:', validation.errors);
+      const { raw, load } = this.readAndLoadConfig(configPath);
+      if (load.errors.length) console.warn('[AutomationSystem] Some automations will not run:', load.errors);
+      if (!load.config) {
         this.config = { automations: {} };
         return;
       }
 
-      this.config = validation.config;
+      this.config = load.config;
       this.backfillIds(configPath, raw);
       this.rotateHistory();
       const actionCount = this.getActionCount();
@@ -150,6 +148,8 @@ export class AutomationSystem implements AutomationsConfigProvider {
   /**
    * Reload automations configuration.
    * Call this when automations.json changes.
+   * Invalid matchers are reported while the valid subset is applied. `success`
+   * keeps meaning error-free; invalid JSON/envelopes preserve the last config.
    */
   reloadConfig(): { success: boolean; automationCount: number; errors: string[] } {
     const configPath = resolveAutomationsConfigPath(this.options.workspaceRootPath);
@@ -161,18 +161,18 @@ export class AutomationSystem implements AutomationsConfigProvider {
     }
 
     try {
-      const { raw, validation } = this.readAndValidateConfig(configPath);
-
-      if (!validation.valid) {
-        return { success: false, automationCount: 0, errors: validation.errors };
+      const { raw, load } = this.readAndLoadConfig(configPath);
+      if (!load.config) {
+        return { success: false, automationCount: 0, errors: load.errors };
       }
 
-      this.config = validation.config;
+      this.config = load.config;
       this.backfillIds(configPath, raw);
       this.syncScheduler();
       const actionCount = this.getActionCount();
       log.debug(`[AutomationSystem] Reloaded ${actionCount} actions`);
-      return { success: true, automationCount: actionCount, errors: [] };
+      if (load.errors.length) log.warn('[AutomationSystem] Some automations will not run:', load.errors);
+      return { success: load.errors.length === 0, automationCount: actionCount, errors: load.errors };
     } catch (e) {
       const error = e instanceof Error ? e.message : 'Unknown error';
       return { success: false, automationCount: 0, errors: [`Failed to parse JSON: ${error}`] };

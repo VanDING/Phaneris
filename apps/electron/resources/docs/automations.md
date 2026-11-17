@@ -77,6 +77,8 @@ phaneris automation validate
 
 ### Agent Events
 
+Agent events below are retained for matching and diagnostics. They do not run prompt, webhook, or script actions. Use an App Event to execute an automation; use `tool-call-rules.json` for deterministic tool blocking.
+
 | Event | Trigger | Match Value |
 |-------|---------|-------------|
 | `PreToolUse` | Before a tool executes | Tool name |
@@ -239,6 +241,8 @@ The `auth` field is applied before custom `headers`, so you can override the gen
 ## Environment Variables
 
 Both prompt and webhook actions support variable expansion using `$VAR` or `${VAR}` syntax.
+
+Prompt text, labels, and Telegram topics can expand only the event's `PHANERIS_*` context variables. Process environment variables and webhook secrets are unavailable there. Values are inserted once as plain text, so quotes, newlines, backslashes, and dollar signs in a session name stay intact. For a structured JSON webhook body, expand variables in its JSON values before serialization; inserted text is not interpreted as another variable reference.
 
 ### System Variables (PHANERIS_*)
 

@@ -177,7 +177,7 @@ import { stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
 import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSystemPrompt, setPhanerisTaskInstructions } from './phaneris-resource-loader.ts';
 import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { readContextUsage, deferContextUsage } from './context-usage.ts';
-import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS } from './compaction-wait.ts';
+import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS, type CompactionWaitResult } from './compaction-wait.ts';
 import { createLargeResultFilterClient } from './large-result-filter.ts';
 import type { PiCompactResult, PiContextUsagePayload, PiLargeResultFilterRequest, PiLargeResultFilterResponse, PiLargeResultFilterCancel, PiInputReception, PiProxyToolDefinition, PiProxyToolResult } from '@phaneris/shared/agent/backend/pi/protocol';
 import { createProxyMcpResultSchema } from './proxy-mcp-result-schema.ts';
@@ -784,7 +784,10 @@ async function createSession(): Promise<AgentSession> {
         workingContextApplied = true;
         return [...messages.filter(m => m.role === 'system'), ...canonicalContextToPiMessages(refreshedWorkingContext, ownedSession!.agent.state.model), ...suffix];
       },
-      gateToolCall: async (toolName, input, toolCallId) => { await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true); } }),
+      gateToolCall: async (toolName, input, toolCallId) => {
+        if (proxyTools.some(tool => tool.name === toolName)) assertProxyToolAvailable(toolName);
+        await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true);
+      } }),
     settingsManager: mainSettings,
   };
 
@@ -800,7 +803,7 @@ async function createSession(): Promise<AgentSession> {
     const sessionDir = join(initConfig.sessionPath, '.pi-sessions');
     mkdirSync(sessionDir, { recursive: true });
 
-    if (initConfig.branchFromSessionPath) {
+    if (initConfig.branchFromSessionPath && !findMostRecentSessionFile(sessionDir)) {
       // Branching: fork from the parent session's Pi session file.
       // Branches must not silently degrade to fresh sessions.
       const parentPiSessionDir = join(initConfig.branchFromSessionPath, '.pi-sessions');
@@ -809,18 +812,23 @@ async function createSession(): Promise<AgentSession> {
         throw new Error(`Pi branch preflight failed: no parent Pi session file found in ${parentPiSessionDir}`);
       }
 
+      // forkFrom writes immediately. Reject an invalid anchor before creating a
+      // child journal that a restart could mistake for an initialized branch.
+      const anchorId = initConfig.branchFromSdkTurnId;
+      if (anchorId && !PiSessionManager.open(parentPiSessionFile).getEntry(anchorId)) {
+        throw new Error(`Pi branch preflight failed: branch anchor not found: ${anchorId}`);
+      }
+
       debugLog(`Forking Pi session from parent: ${parentPiSessionFile}`);
       const forkedSessionManager = PiSessionManager.forkFrom(parentPiSessionFile, cwd, sessionDir);
 
       // Strict branch cutoff: move leaf to the selected parent entry if provided.
       // This is Pi's equivalent of Claude resumeSessionAt.
-      if (initConfig.branchFromSdkTurnId) {
-        const anchorId = initConfig.branchFromSdkTurnId;
-        const anchorEntry = forkedSessionManager.getEntry(anchorId);
-        if (!anchorEntry) {
-          throw new Error(`Pi branch preflight failed: branch anchor not found: ${anchorId}`);
-        }
+      if (anchorId) {
         forkedSessionManager.branch(anchorId);
+        // branch() only moves the in-memory leaf. A persisted child entry keeps
+        // the cutoff even when reopened before the branch's first message.
+        forkedSessionManager.appendCustomEntry('phaneris-branch-point', { anchorId });
         debugLog(`Applied Pi branch cutoff at entry: ${anchorId}`);
       }
 
@@ -1147,9 +1155,19 @@ function wrapToolsWithHooks(tools: ToolDefinition<any, any>[]): ToolDefinition<a
   return tools.map(tool => wrapSingleTool(tool));
 }
 
+function assertProxyToolAvailable(toolName: string): void {
+  if (!proxyToolDefs.some(def => def.name === toolName)) {
+    throw new Error(`Tool ${toolName} is no longer available; it was removed from the current tool set.`);
+  }
+}
+
 function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any> {
   const originalExecute = tool.execute;
   const parameters = tool.parameters;
+  const proxyTool = proxyToolDefs.some(def => def.name === tool.name);
+  const assertToolAvailable = () => {
+    if (proxyTool) assertProxyToolAvailable(tool.name);
+  };
 
   const wrappedExecute: ToolDefinition<any, any>['execute'] = async (
     toolCallId,
@@ -1164,6 +1182,9 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
       resolvedCwd(),
       tool.name.startsWith('mcp__session__') && proxyToolDefs.some(def => def.name === tool.name && def.readOnly === true));
     const preflight = async () => {
+      // Reject stale SDK definitions before host preflight can auto-activate a
+      // source the user just disabled while this session was still busy.
+      assertToolAvailable();
       // Normalize Pi SDK parameter names: path → file_path
       if ((sdkToolName === 'Write' || sdkToolName === 'Edit' || sdkToolName === 'MultiEdit' || sdkToolName === 'NotebookEdit')
           && typeof inputObj.path === 'string' && !inputObj.file_path) {
@@ -1194,6 +1215,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     };
     return toolExecutionScheduler.run(resources, signal, async () => {
       signal?.throwIfAborted();
+      assertToolAvailable();
       if (toolResultBudgets.get(toolCallId)?.canDispatch === false) throw new Error('Insufficient context for this tool batch; operation not dispatched. Compact or reduce the batch before retrying.');
 
       // T1 must commit after preflight and before the implementation is allowed to run.
@@ -1222,6 +1244,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         };
         const executionContext = attachDurableToolContext(ctx, durableTool) as typeof ctx;
         signal?.throwIfAborted();
+        assertToolAvailable();
         implementationInvoked = true;
         result = await readCapture.run(capturedRead, () => originalExecute(toolCallId, inputObj, signal, onUpdate, executionContext));
       } catch (error) {
@@ -1731,6 +1754,7 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
 }
 
 async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): Promise<void> {
+  const epoch = compactionEpoch;
   refreshedWorkingContext = undefined;
   nativeCompactedSelection = undefined;
   workingInput = msg.message;
@@ -1748,13 +1772,24 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     // If proxy tools changed since last session creation, dispose and recreate.
     // This avoids calling _buildRuntime() for dynamic tool updates — instead
     // we create a fresh session via continueRecent() with all tools known upfront.
-    if (toolsChanged && sessionLifecycle.current) {
-      debugLog('Recreating session due to tool changes');
-      if (unsubscribeEvents) {
-        unsubscribeEvents();
-        unsubscribeEvents = null;
+    let compactionWait: CompactionWaitResult | undefined;
+    const previousSession = sessionLifecycle.current;
+    if (toolsChanged && previousSession) {
+      compactionWait = await waitForCompaction(previousSession, { timeoutMs: PROMPT_COMPACT_WAIT_MS, log: debugLog });
+      if (epoch !== compactionEpoch || sessionLifecycle.current !== previousSession) throw new Error('Prompt cancelled while waiting for session rebuild');
+      if (previousSession.isIdle && !previousSession.isRetrying) {
+        debugLog('Recreating session due to tool changes');
+        if (unsubscribeEvents) {
+          unsubscribeEvents();
+          unsubscribeEvents = null;
+        }
+        await sessionLifecycle.reset();
+        compactionWait = undefined;
+      } else {
+        // Keep pending changes for a later prompt. Wrapped proxy calls still
+        // check the current tool set even while the SDK retains old definitions.
+        debugLog('Tools changed while the session is busy; deferring session recreation');
       }
-      await sessionLifecycle.reset();
     }
 
     const session = await ensureSession();
@@ -1804,7 +1839,8 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     unsubscribeEvents = session.subscribe(handleSessionEvent);
 
     // Wait for any in-flight auto-compaction to avoid race (craft-agents-oss#464)
-    const compactionWait = await waitForCompaction(session, { timeoutMs: PROMPT_COMPACT_WAIT_MS, log: debugLog });
+    compactionWait ??= await waitForCompaction(session, { timeoutMs: PROMPT_COMPACT_WAIT_MS, log: debugLog });
+    if (epoch !== compactionEpoch || sessionLifecycle.current !== session) throw new Error('Prompt cancelled while waiting for compaction');
     if (compactionWait.timedOut) {
       debugLog('Proceeding with prompt while the compaction flag is still set');
     }

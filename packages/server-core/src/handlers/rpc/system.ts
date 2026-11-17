@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { join } from 'path'
 import { homedir } from 'os'
-import { execSync } from 'child_process'
+import { execFile, execSync } from 'child_process'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import { DEEPLINK_PROTOCOL } from '@phaneris/shared'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
@@ -186,19 +186,13 @@ export function registerSystemCoreHandlers(server: RpcServer, deps: HandlerDeps)
     return getLatestReleaseVersion()
   })
 
-  // Get git branch for a directory (returns null if not a git repo or git unavailable)
+  // Async argv invocation: slow git must not block the host; detached HEAD is not a branch.
   server.handle(RPC_CHANNELS.git.GET_BRANCH, async (_ctx, dirPath: string) => {
-    try {
-      const branch = execSync('git rev-parse --abbrev-ref HEAD', {
-        cwd: dirPath,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
-        timeout: 5000,
-      }).trim()
-      return branch || null
-    } catch {
-      return null
-    }
+    return new Promise<string | null>(done => {
+      execFile('git', ['-C', dirPath, 'symbolic-ref', '--quiet', '--short', 'HEAD'], {
+        encoding: 'utf8', timeout: 5000, maxBuffer: 1024 * 1024, windowsHide: true,
+      }, (error, stdout) => done(error ? null : stdout.trim() || null))
+    })
   })
 
   // Git Bash detection and configuration (Windows only)

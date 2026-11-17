@@ -38,6 +38,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 助手「更多」侧栏改版：[工作总览与交付物设计](design/resident-assistant-overview-redesign-2026-11-05.md) — 已完成；当前/交付物/历史、独立详情、分页搜索、明确成果、快照版本及移出/恢复通过后端和桌面验收，范围见实施记录。
 
+侧边栏精修（2026-11-17）：[验收记录](verification/sidebar-refinement-2026-11-17.md)、[实施前失败矩阵](verification/sidebar-refinement-2026-11-17-failure-matrix.md)。
+
 助手权限与记忆最终计划：[2026-11-05 综合实施计划](architecture/resident-assistant-permissions-memory-final-plan-2026-11-05.md) — accepted；用户已批准完整实施，收敛个人内置记忆、主助手基本只读能力、助手专属目录、Project 事实归属与现有知识源接入。新增[委派启动、回执与 Source 现场诊断](verification/resident-assistant-dispatch-receipt-source-investigation-2026-11-05.md)，将调度/恢复/交付和 Source 主动激活提前到目录迁移与记忆改造之前。包含迁移、实施顺序及先行失败矩阵；实际完成情况以实施记录及验证产物为准。
 
 0.6.x 常驻助手：[架构与版本路线](architecture/resident-assistant-0.6-roadmap-2026-11-03.md)、[实施进度与验证边界](process/resident-assistant-implementation-2026-11-03.md)、[先行失败矩阵](verification/resident-assistant-failure-matrix-2026-11-03.md)。2026-11-04 已贯通身份/角色、记忆与有界上下文、普通 Session 委派、事件消费/自动交付及顶部独立品牌入口。2026-11-05 根据 0.6.0 打包客户端实测修订为仅在助手页面打开的非模态悬浮概览，直接呈现任务与交付物；消息连接按需选择平台，已绑定渠道才常驻显示，面板排除记忆与上下文。详见[本轮实施与验证](process/resident-assistant-followup-2026-11-05.md)和[本轮先行失败矩阵](verification/resident-assistant-followup-failure-matrix-2026-11-05.md)。原 Logo 菜单及同一对话页继续保留；长期质量、真实外部消息账号与远端托管的未验证范围以各记录为准。[历史品牌入口与全屏原型](prototypes/resident-assistant-entry-2026-11-03.html)保留为布局沿革。
@@ -85,6 +87,10 @@ Durable Runtime 连续性：[2026-10-26 修复与验证](process/durable-runtime
 复杂度治理实施：[2026-10-28 实施与验证记录](process/complexity-debt-implementation-2026-10-28.md) — 派生写入、死路径、恢复流程、单后端分发与重复门禁已收敛，历史证据保留；组合验收限制与未闭环项独立记录。
 
 本轮维护：[2026-11-07 全量依赖评估](dependencies/dependency-audit-2026-11-07.md)、[实施记录](dependencies/dependency-upgrade-2026-11-07.md)与[实施前失败矩阵](verification/dependency-upgrade-2026-11-07-failure-matrix.md)。状态以实施记录的最终验收为准。
+
+上游修复评估：[2026-11-17 v0.15.4–v0.15.10 修复吸收清单](dependencies/upstream-bugfix-assessment-2026-11-17.md) — 原始评估及取舍；用户已批准实施，当前结果以实施记录为准。
+
+上游修复实施：[实施前失败矩阵](verification/upstream-bugfix-2026-11-17-failure-matrix.md)与[2026-11-17 实施记录](verification/upstream-bugfix-2026-11-17-implementation.md) — F01–F08已实施，新增21项流程覆盖；最终门禁及范围见实施记录。
 
 历史维护：[2026-10-16 全量依赖升级评估](dependencies/dependency-audit-2026-10-16.md)；[CI 修复失败矩阵](verification/ci-repair-failure-matrix-2026-10-16.md)；[CI 修复验证记录](verification/ci-repair-2026-10-16.md)。
 

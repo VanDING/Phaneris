@@ -1,15 +1,14 @@
 import { formatPreferencesForPrompt } from '../config/preferences.ts';
 import { getBrowserToolEnabled } from '../config/appearance.ts';
 import { debug } from '../utils/debug.ts';
-import { existsSync, readFileSync, readdirSync } from 'fs';
-import { dirname, join, relative, resolve } from 'path';
+import { existsSync, readFileSync, readdirSync, type Dirent } from 'fs';
+import { join, relative, resolve } from 'path';
 import { DOC_REFS, APP_ROOT } from '../docs/index.ts';
 import { PERMISSION_MODE_CONFIG } from '../agent/mode-types.ts';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
 import { isDecisionFeatureActive } from '../decisions/resolve.ts';
 import { APP_VERSION } from '../version/index.ts';
 import { formatBytes } from '../utils/binary-detection.ts';
-import { globSync } from 'glob';
 import os from 'os';
 import type { ProjectPromptContext } from '../projects/types.ts';
 import {
@@ -94,19 +93,61 @@ export function findProjectContextFile(directory: string): string | null {
   return null;
 }
 
-// ── Context file cache ──────────────────────────────────────────────────
-// The glob walk is expensive (~7s in large monorepos). The result (a list of
-// file paths like "CLAUDE.md", "apps/electron/CLAUDE.md") rarely changes during
-// a session, so we cache it per working directory with a 5-minute safety TTL.
-// Explicit invalidation happens on working directory changes.
+/** Soft limits: the clock is checked between directory reads, not during a system call. */
+export const CONTEXT_FILE_SCAN_DEPTH = 6;
+export const CONTEXT_FILE_SCAN_MAX_DIRS = 4_000;
+export const CONTEXT_FILE_SCAN_BUDGET_MS = 150;
+const excludedDirectoryNames = new Set(EXCLUDED_DIRECTORIES.map(name => name.toLowerCase()));
 
-const contextFileCache = new Map<string, { files: string[]; ts: number }>();
+/** Breadth-first, bounded discovery. Directory links are never followed. */
+export function scanContextFiles(directory: string, options: {
+  maxDepth?: number; maxDirs?: number; budgetMs?: number; now?: () => number;
+} = {}): { files: string[]; dirsRead: number; truncated: boolean } {
+  const maxDepth = options.maxDepth ?? CONTEXT_FILE_SCAN_DEPTH;
+  const maxDirs = options.maxDirs ?? CONTEXT_FILE_SCAN_MAX_DIRS;
+  const now = options.now ?? Date.now;
+  const deadline = now() + (options.budgetMs ?? CONTEXT_FILE_SCAN_BUDGET_MS);
+  const library = join(os.homedir(), 'Library');
+  const files: string[] = [];
+  let dirsRead = 0;
+  let truncated = false;
+  let level = [{ path: directory, rel: '' }];
+  for (let depth = 0; level.length && !truncated; depth++) {
+    const next: typeof level = [];
+    for (const current of level) {
+      if (dirsRead >= maxDirs || now() >= deadline) { truncated = true; break; }
+      dirsRead++;
+      let entries: Dirent[];
+      try { entries = readdirSync(current.path, { withFileTypes: true }); }
+      catch { continue; }
+      entries.sort((a, b) => a.name.localeCompare(b.name));
+      for (const entry of entries) {
+        const rel = current.rel ? `${current.rel}/${entry.name}` : entry.name;
+        if (CONTEXT_FILE_PATTERNS.includes(entry.name.toLowerCase()) && (entry.isFile() || entry.isSymbolicLink())) {
+          files.push(rel);
+        } else if (depth < maxDepth && entry.isDirectory() && !entry.name.startsWith('.') && !excludedDirectoryNames.has(entry.name.toLowerCase())) {
+          const path = join(current.path, entry.name);
+          if (path !== library) next.push({ path, rel });
+        }
+      }
+    }
+    level = next;
+  }
+  if (truncated) debug(`[scanContextFiles] Budget reached in ${directory} after ${dirsRead} directories`);
+  return { files, dirsRead, truncated };
+}
+
+// Root and selected folder both determine which instructions apply.
+const contextFileCache = new Map<string, { files: string[]; ts: number; folder: string; root: string }>();
 const CONTEXT_FILE_CACHE_TTL = 5 * 60_000; // 5 minutes
 
 /** Invalidate the cached context file list for a directory (or all directories). */
 export function invalidateContextFileCache(directory?: string): void {
   if (directory) {
-    contextFileCache.delete(directory);
+    const folder = resolve(directory);
+    for (const [key, entry] of contextFileCache) {
+      if (entry.folder === folder || entry.root === folder) contextFileCache.delete(key);
+    }
     debug(`[contextFileCache] Invalidated cache for ${directory}`);
   } else {
     contextFileCache.clear();
@@ -115,59 +156,42 @@ export function invalidateContextFileCache(directory?: string): void {
 }
 
 /**
- * Find all project context files (AGENTS.md or CLAUDE.md) recursively in a directory.
- * Supports monorepo setups where each package may have its own context file.
- * Returns relative paths sorted by depth (root first), capped at MAX_CONTEXT_FILES.
+ * Discover ancestors from contextRoot to directory, then only directory's subtree.
+ * Apply the prompt cap after this scope selection, so siblings cannot hide its instructions.
  *
  * Results are cached per directory. Call invalidateContextFileCache() on working
  * directory changes. A 5-minute TTL acts as a safety net for cache staleness.
  */
-export function findAllProjectContextFiles(directory: string): string[] {
-  // Check cache first
+export function findAllProjectContextFiles(directory: string, contextRoot: string = directory): string[] {
+  const folder = resolve(directory);
+  const root = resolve(contextRoot);
+  const key = `${root}\0${folder}`;
   const now = Date.now();
-  const cached = contextFileCache.get(directory);
+  const cached = contextFileCache.get(key);
   if (cached && now - cached.ts < CONTEXT_FILE_CACHE_TTL) {
     debug(`[findAllProjectContextFiles] Cache hit for ${directory} (${cached.files.length} files)`);
     return cached.files;
   }
 
-  try {
-    // Build glob ignore patterns from excluded directories
-    const ignorePatterns = EXCLUDED_DIRECTORIES.map((dir) => `**/${dir}/**`);
-
-    // Search for all context files (case-insensitive via nocase option)
-    const pattern = '**/{agents,claude}.md';
-    const matches = globSync(pattern, {
-      cwd: directory,
-      nocase: true,
-      ignore: ignorePatterns,
-      absolute: false,
-    });
-
-    if (matches.length === 0) {
-      contextFileCache.set(directory, { files: [], ts: now });
-      return [];
+  const selected = normalizePromptPath(relative(root, folder));
+  const segments = selected ? selected.split('/') : [];
+  const ancestorFiles: string[] = [];
+  for (let depth = 0; depth < segments.length; depth++) {
+    const rel = segments.slice(0, depth).join('/');
+    for (const name of CONTEXT_FILE_PATTERNS) {
+      const file = findFileCaseInsensitive(join(root, rel), name);
+      if (file) ancestorFiles.push(rel ? `${rel}/${file}` : file);
     }
-
-    // Sort by depth (fewer slashes = shallower = higher priority), then alphabetically
-    // Root files come first, then nested packages
-    const sorted = matches.sort((a, b) => {
-      const depthA = (a.match(/\//g) || []).length;
-      const depthB = (b.match(/\//g) || []).length;
-      if (depthA !== depthB) return depthA - depthB;
-      return a.localeCompare(b);
-    });
-
-    // Cap at max files to avoid overwhelming the prompt
-    const capped = sorted.slice(0, MAX_CONTEXT_FILES);
-
-    debug(`[findAllProjectContextFiles] Found ${matches.length} files, returning ${capped.length}`);
-    contextFileCache.set(directory, { files: capped, ts: now });
-    return capped;
-  } catch (error) {
-    debug(`[findAllProjectContextFiles] Error searching directory:`, error);
-    return [];
   }
+  const subtreeFiles = scanContextFiles(folder).files.map(file => selected ? `${selected}/${file}` : file);
+  const capped = [...new Set([...ancestorFiles, ...subtreeFiles])].sort((a, b) => {
+    const depthA = (a.match(/\//g) || []).length;
+    const depthB = (b.match(/\//g) || []).length;
+    if (depthA !== depthB) return depthA - depthB;
+    return a.localeCompare(b);
+  }).slice(0, MAX_CONTEXT_FILES);
+  contextFileCache.set(key, { files: capped, ts: now, folder, root });
+  return capped;
 }
 
 /**
@@ -332,27 +356,7 @@ function findRelevantProjectContextFiles(workingDirectory: string): { contextRoo
   }
 
   const contextRoot = resolve(gitRoot);
-  const allFiles = findAllProjectContextFiles(contextRoot);
-  const selectedRel = normalizePromptPath(relative(contextRoot, resolvedWorkingDirectory));
-  if (!selectedRel || selectedRel === '.') {
-    return { contextRoot, contextFiles: allFiles };
-  }
-
-  const relevant = allFiles.filter((file) => {
-    const normalizedFile = normalizePromptPath(file);
-    const dir = normalizePromptPath(dirname(normalizedFile));
-    const normalizedDir = dir === '.' ? '' : dir;
-
-    // Always include root instructions, include ancestors of the selected CWD,
-    // and include context files below the selected subtree. This keeps nested
-    // package sessions useful without dumping every unrelated monorepo package.
-    return normalizedDir === '' ||
-      selectedRel === normalizedDir ||
-      selectedRel.startsWith(`${normalizedDir}/`) ||
-      normalizedDir.startsWith(`${selectedRel}/`);
-  });
-
-  return { contextRoot, contextFiles: relevant.length > 0 ? relevant : allFiles.slice(0, 1) };
+  return { contextRoot, contextFiles: findAllProjectContextFiles(resolvedWorkingDirectory, contextRoot) };
 }
 
 function normalizePromptPath(value: string): string {

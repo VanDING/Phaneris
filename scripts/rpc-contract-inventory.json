@@ -1678,7 +1678,7 @@
         },
         {
           "file": "packages/server-core/src/handlers/rpc/system.ts",
-          "line": 283,
+          "line": 277,
           "args": [
             "...args: unknown[]"
           ],
@@ -2301,7 +2301,7 @@
         },
         {
           "file": "packages/server-core/src/handlers/rpc/system.ts",
-          "line": 256,
+          "line": 250,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -2327,7 +2327,7 @@
         },
         {
           "file": "packages/server-core/src/handlers/rpc/system.ts",
-          "line": 205,
+          "line": 199,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -2355,7 +2355,7 @@
         },
         {
           "file": "packages/server-core/src/handlers/rpc/system.ts",
-          "line": 271,
+          "line": 265,
           "args": [
             "bashPath: string"
           ],
@@ -6953,7 +6953,7 @@
         },
         {
           "file": "packages/server-core/src/handlers/rpc/system.ts",
-          "line": 339,
+          "line": 333,
           "args": [
             "path: string"
           ],
@@ -6983,7 +6983,7 @@
         },
         {
           "file": "packages/server-core/src/handlers/rpc/system.ts",
-          "line": 288,
+          "line": 282,
           "args": [
             "url: string"
           ],
@@ -7013,7 +7013,7 @@
         },
         {
           "file": "packages/server-core/src/handlers/rpc/system.ts",
-          "line": 355,
+          "line": 349,
           "args": [
             "path: string"
           ],

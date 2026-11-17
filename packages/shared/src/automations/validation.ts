@@ -7,9 +7,10 @@
 
 import { readFileSync, existsSync } from 'node:fs';
 import { isAbsolute, join } from 'node:path';
+import { z } from 'zod';
 import { resolveAutomationsConfigPath } from './resolve-config-path.ts';
 import { AUTOMATIONS_CONFIG_FILE } from './constants.ts';
-import { AutomationsConfigSchema, zodErrorToIssues, DEPRECATED_EVENT_ALIASES } from './schemas.ts';
+import { AutomationsConfigSchema, zodErrorToIssues, DEPRECATED_EVENT_ALIASES, VALID_EVENTS } from './schemas.ts';
 import { isValidLabelId } from '../labels/storage.ts';
 import { extractLabelId } from '../labels/values.ts';
 import { getLlmConnection } from '../config/connections.ts';
@@ -17,7 +18,7 @@ import { getDefaultModelsForConnection } from '../config/llm-connections.ts';
 import type { ModelDefinition } from '../config/models.ts';
 import { Cron } from 'croner';
 import type { ValidationResult, ValidationIssue } from '../config/validators.ts';
-import type { AutomationsValidationResult } from './types.ts';
+import type { AutomationsConfig, AutomationsValidationResult, AutomationEvent } from './types.ts';
 import { AGENT_EVENTS } from './types.ts';
 import { UNEMITTED_AGENT_EVENTS } from './emitted-events.ts';
 import { MAX_CONDITION_DEPTH_EXCLUSIVE, CONDITION_DEPTH_WARNING_THRESHOLD } from './conditions-constants.ts';
@@ -46,6 +47,43 @@ export function validateAutomationsConfig(content: unknown): AutomationsValidati
   }
 
   return { valid: true, errors: [], config: schemaConfig };
+}
+
+/** Runtime reads isolate bad matchers; writers continue to use the strict validator above. */
+export function loadAutomationsConfigLenient(content: unknown): { config: AutomationsConfig | null; errors: string[] } {
+  const envelope = z.object({ version: z.number().optional(), automations: z.record(z.string(), z.unknown()).optional() }).safeParse(content);
+  if (!envelope.success) {
+    return { config: null, errors: envelope.error.issues.map(issue => `${issue.path.join('.') || 'root'}: ${issue.message}`) };
+  }
+  const config: AutomationsConfig = { automations: {} };
+  const errors: string[] = [];
+  for (const [rawEvent, matchers] of Object.entries(envelope.data.automations ?? {})) {
+    if (!VALID_EVENTS.includes(rawEvent)) {
+      // Preserve the existing contract: unknown event names are ignored with a
+      // warning, while malformed matchers on supported events report errors.
+      console.warn(`[automations] Unknown event types ignored: ${rawEvent}`);
+      continue;
+    }
+    if (!Array.isArray(matchers)) {
+      errors.push(`automations.${rawEvent}: Expected a list of automations`);
+      continue;
+    }
+    const event = (DEPRECATED_EVENT_ALIASES[rawEvent] ?? rawEvent) as AutomationEvent;
+    if (event !== rawEvent) console.warn(`[automations] Deprecated event name "${rawEvent}" — use "${event}" instead`);
+    for (const [index, matcher] of matchers.entries()) {
+      // The existing validator owns matcher schemas and semantic checks, including
+      // scripts, cron, regex and conditions. Do not maintain a second set of rules.
+      const validation = validateAutomationsConfig({ automations: { [event]: [matcher] } });
+      if (!validation.config) {
+        errors.push(...validation.errors.map(error => error
+          .replace(`automations.${event}[0]`, `automations.${rawEvent}[${index}]`)
+          .replace(`automations.${event}.0`, `automations.${rawEvent}[${index}]`)));
+        continue;
+      }
+      (config.automations[event] ??= []).push(...validation.config.automations[event]!);
+    }
+  }
+  return { config, errors };
 }
 
 /**

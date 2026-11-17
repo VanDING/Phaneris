@@ -1,0 +1,91 @@
+{
+  "kind": "read-only baseline assessment probes",
+  "head": "43ee16f7b476c0403d93825c3dfd15bd35f74aca",
+  "runDir": "E:\\Phaneris\\.cache\\upstream-bugfix-assessment-20261117\\run-VNYnjG",
+  "realCredentials": false,
+  "networkRequests": 0,
+  "productionFilesModified": false,
+  "findings": [
+    {
+      "id": "prompt-process-env",
+      "expected": "non-event environment is inaccessible",
+      "observedBug": true,
+      "sessionNameShellEscaped": true
+    },
+    {
+      "id": "double-expansion",
+      "expected": "inserted value stays literal",
+      "observedBug": true
+    },
+    {
+      "id": "webhook-json",
+      "expected": "quotes/newlines round-trip",
+      "observedBug": true,
+      "errorType": "SyntaxError"
+    },
+    {
+      "id": "automation-config-isolation",
+      "expected": "good matcher remains loadable alongside an invalid one",
+      "goodAloneValid": true,
+      "observedBug": true,
+      "rejectedConfig": true
+    },
+    {
+      "id": "safe-unknown-tool",
+      "expected": "unknown tool rejected",
+      "alreadyCovered": true
+    },
+    {
+      "id": "chat-strict-schema",
+      "expected": "additionalProperties:false preserved",
+      "metadataAdded": true,
+      "observedBug": true,
+      "additionalPropertiesPresent": false
+    },
+    {
+      "id": "responses-strict-schema",
+      "expected": "additionalProperties:false preserved",
+      "metadataAdded": true,
+      "observedBug": true,
+      "additionalPropertiesPresent": false
+    },
+    {
+      "id": "context-cap-before-filter",
+      "expected": "selected folder instructions present despite sibling count",
+      "observedBug": true,
+      "rootPresent": false,
+      "contextPrompt": "\n<project_context_files working_directory=\"E:\\Phaneris\\.cache\\upstream-bugfix-assessment-20261117\\run-VNYnjG\\context-repo\\z-target\" context_root=\"E:\\Phaneris\\.cache\\upstream-bugfix-assessment-20261117\\run-VNYnjG\\context-repo\">\n- a00/AGENTS.md\n</project_context_files>"
+    },
+    {
+      "id": "sdk-branch-cutoff-persistence",
+      "scope": "installed SDK sequence used by production, without durable canonical context or a subprocess",
+      "expected": "reopened branch excludes later parent messages",
+      "immediateCutoffCorrect": true,
+      "observedBug": true
+    }
+  ],
+  "assessedAtDate": "2026-11-17",
+  "timezone": "Asia/Shanghai",
+  "bunVersion": "1.4.3",
+  "piCodingAgentVersion": "1.5.0",
+  "upstreamBaseline": "22c9f0414ab63e0a22814c9a2ada740206e09091",
+  "upstreamTarget": "4932ebb68db87e81e81ad3837ecb68c1563ed9bd",
+  "probeScriptSha256": "80f02579b8e589904d631be1ca45004f4c4e3b5f67f1d8fdd54b56ab0254f380",
+  "sourceHashes": {
+    "packages/shared/src/unified-network-interceptor.ts": "3e295d6f5ba8f1c223263f996b71c880fef6058e7e91d15ddd05993d3ec1c4e4",
+    "packages/shared/src/prompts/system.ts": "129afdaea75b942d25a9ccbad705f451624818f11d602ee61ff52952088a7569",
+    "packages/shared/src/automations/utils.ts": "d3f77386693c27ae7d3413c9995648cfbc2f579c619af565232acbcc0e55efcf",
+    "packages/shared/src/automations/webhook-utils.ts": "d4cffa2be161c51cc6c2265e557694d2ccae5bd1b2734e302f49d142af3e92b1",
+    "packages/shared/src/automations/validation.ts": "375be22120ed5e66e3377145140f7b59ba21db3f5053aab81c11b944fdb4839c",
+    "packages/shared/src/automations/automation-system.ts": "d595a1ce96d2e9f52de46f66cb832897e9adf7efecfd636780ed4824766fe47d",
+    "packages/shared/src/agent/mode-manager.ts": "2593682aa51a9efdd2c99f09e682c38bc50de5ae7355a8cce9f4bb21eb9043a9",
+    "packages/shared/src/agent/pi-agent.ts": "514c398dbe8b23ad65b238ae3b8dee21ebc95ae08e6bc7c71ffbe6b103be9b68",
+    "packages/pi-agent-server/src/index.ts": "5b18b9366f4f91b4abd6222435a2dd7ae5fdc6f8dc61beff2a9993fda3788911",
+    "packages/pi-agent-server/src/session-lifecycle.ts": "13c0c45626121ba3ecf2f7b97b36520876e58a8a61f432d753380a2946737945",
+    "packages/pi-agent-server/src/proxy-tool-sync.ts": "838fc068ce3b07819b0f9c478f34105ea19bb2304fb0787adc6b8953576338c8",
+    "packages/shared/src/sessions/jsonl.ts": "5d80e3440aaef76d534e6e96863d108eb0e865f0641282ac2a9f84d1720c156f",
+    "packages/server-core/src/sessions/SessionManager.ts": "b18b8745d7d7a9e6602bb449230f873c26bfa486d9ee6f02067ed900a97bcd09",
+    "packages/server-core/src/handlers/rpc/system.ts": "7b2fb4c877301d03d837f6642ebf023d0cb600008e3a65e7f36ff8db4e9da9b6",
+    "packages/server-core/src/handlers/rpc/llm-connections.ts": "abf3bbdc751271503650c1e4c9fb91f609b587452b70f1a9758d5c684340b43f"
+  }
+}
