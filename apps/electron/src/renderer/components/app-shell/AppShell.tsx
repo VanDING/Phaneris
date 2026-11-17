@@ -3430,7 +3430,19 @@ function AppShellContent({
           isResizing={!!isResizing}
         />
 
-        {/* Sidebar Resize Handle (absolute, hidden in focused mode) */}
+        {/* Panel resize handles, wrapped in one named region.
+            They are `role="slider"` controls positioned against the shell, so they
+            had no landmark ancestor and axe reported every one of them as "content
+            not contained by landmarks" — 42 of the remaining 49 `region` findings.
+            The wrapper is `inset-0` with `pointer-events: none`: it covers exactly
+            the shell's padding box, which is the box the handles were already
+            positioned against, so their coordinates are unchanged, and it lets
+            clicks through to everything except the handles themselves. */}
+        <div
+          role="region"
+          aria-label={t('sidebar.panelLayout')}
+          className="pointer-events-none absolute inset-0"
+        >
         {!effectiveSidebarAndNavigatorHidden && isSidebarVisible && (
         <div
           ref={resizeHandleRef}
@@ -3450,7 +3462,7 @@ function AppShellContent({
             }
           }}
           onMouseLeave={() => { if (!isResizing) setSidebarHandleY(null) }}
-          className="craft-row-focus absolute cursor-col-resize z-panel flex justify-center"
+          className="craft-row-focus pointer-events-auto absolute cursor-col-resize z-panel flex justify-center"
           style={{
             width: PANEL_SASH_HIT_WIDTH,
             top: PANEL_STACK_VERTICAL_OVERFLOW,
@@ -3491,7 +3503,7 @@ function AppShellContent({
             }
           }}
           onMouseLeave={() => { if (isResizing !== 'session-list') setSessionListHandleY(null) }}
-          className="craft-row-focus absolute cursor-col-resize z-panel flex justify-center"
+          className="craft-row-focus pointer-events-auto absolute cursor-col-resize z-panel flex justify-center"
           style={{
             width: PANEL_SASH_HIT_WIDTH,
             top: PANEL_STACK_VERTICAL_OVERFLOW,
@@ -3513,7 +3525,7 @@ function AppShellContent({
           />
         </div>
         )}
-
+        </div>
       </div>
 
       {/* ============================================================================
