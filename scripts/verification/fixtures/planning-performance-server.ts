@@ -1,3 +1,5 @@
+import { parseTaskYaml } from '@phaneris/shared/tasks'
+import type { HandlerFn } from '../../../packages/server-core/src/transport/types'
 /** Offline C02 host: production bootstrap, handlers, SessionManager and Web UI. */
 import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -13,6 +15,8 @@ import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 
 const config = process.env.PHANERIS_CONFIG_DIR!, token = process.env.PHANERIS_SERVER_TOKEN!
 if (!config || !token) throw new Error('C02 requires an isolated config and fixture token')
+const taskUI = process.env.PHANERIS_PUBLICATION_UI === '1'
+const taskPublications: Array<{ operationId?: string; yaml: string }> = []
 const count = Number(process.env.PHANERIS_C02_SIZE ?? 1000), root = resolve(import.meta.dir, '../../..')
 const workspace = join(config, 'workspace'), other = join(config, 'other')
 for (const path of [workspace, other]) mkdirSync(path, { recursive: true })
@@ -32,7 +36,7 @@ await saveSession({ ...fixtures[0]!, id: 'other-canary', name: 'C02 other worksp
 writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [
   { id: 'planning', name: 'C02 workspace', rootPath: workspace, createdAt: 1 },
   { id: 'other', name: 'C02 other', rootPath: other, createdAt: 1 },
-], activeWorkspaceId: 'planning', activeSessionId: null, setupDeferred: true, llmConnections: [] }))
+], activeWorkspaceId: 'planning', activeSessionId: null, setupDeferred: true, llmConnections: taskUI ? [{ slug: 'publication-fixture', name: 'Publication fixture', providerType: 'pi_compat', authType: 'none', baseUrl: 'http://127.0.0.1:9/v1', piAuthProvider: 'openai', models: ['publication-model'], defaultModel: 'publication-model', createdAt: 1 }] : [], defaultLlmConnection: taskUI ? 'publication-fixture' : undefined }))
 const fixtureSha256 = createHash('sha256').update(JSON.stringify(fixtures)).digest('hex')
 let web: ReturnType<typeof createWebuiHandler> | undefined, route: ReturnType<typeof nodeHttpAdapter> | undefined
 const lists = new Set<string>([RPC_CHANNELS.workItems.LIST, RPC_CHANNELS.calendar.LIST])
@@ -43,6 +47,8 @@ let inFlight = 0, maxInFlight = 0, failNextList = false, failNextWrite = false
 let failedReads = 0
 let failedWrites = 0
 let holdNext = false, held: (() => void) | undefined
+let holdResident = process.env.PHANERIS_NAVIGATION_UI === '1', residentBlocked = 0
+const residentWaiters = new Set<() => void>()
 const originalGet = SessionManager.prototype.getSessions
 SessionManager.prototype.getSessions = function (workspaceId) {
   const start = performance.now(), result = originalGet.call(this, workspaceId)
@@ -68,13 +74,34 @@ const instance = await bootstrapServer({
       if (changes.has(channel)) pushes.push({ channel, workspaceId: String(args[0]), at: Date.now() })
       return push(channel, target, ...args)
     }
-    server.handle = (channel, handler) => register(channel, async (ctx, ...args) => {
+    server.handle = (channel: string, handler: HandlerFn) => register(channel, async (ctx, ...args) => {
       const isList = lists.has(channel), start = performance.now(), startedAt = Date.now()
       if (isList) { inFlight++; maxInFlight = Math.max(maxInFlight, inFlight) }
       try {
+        if (holdResident && channel === RPC_CHANNELS.residentAssistant.GET) {
+          residentBlocked++
+          await new Promise<void>(resolveHeld => { residentWaiters.add(resolveHeld) })
+        }
+        if (taskUI && channel === RPC_CHANNELS.tasks.GENERATE) {
+          const request = args[1] as import('@phaneris/shared/protocol').TaskGenerateRequest
+          const draft = await deps.sessionManager.createSession('planning', { name: request.title, taskDraft: true })
+          const yaml = JSON.stringify({ id: 'publication-run-canary', title: 'Publication run canary', goal: request.goal,
+            defaults: { model: 'publication-model', llmConnection: 'publication-fixture' }, nodes: [{ id: 'main', prompt: 'No model execution in this workflow' }] })
+          const parsed = parseTaskYaml(yaml)
+          setTimeout(() => push(RPC_CHANNELS.tasks.GENERATED, { to: 'workspace', workspaceId: 'planning' }, 'planning', {
+            orchestratorSessionId: draft.id, slug: parsed.spec!.id, spec: parsed.spec, yaml, validation: { valid: true, errors: [], warnings: [] },
+          }), 500)
+          return { orchestratorSessionId: draft.id }
+        }
+        if (taskUI && channel === RPC_CHANNELS.tasks.RUN) throw new Error('Fixture run refused before execution')
+        if (taskUI && channel === RPC_CHANNELS.tasks.CREATE) {
+          const request = args[1] as import('@phaneris/shared/protocol').TaskCreateRequest
+          taskPublications.push({ operationId: request.operationId, yaml: request.yaml })
+        }
         if (isList && failNextList) { failNextList = false; failedReads++; throw new Error('C02 injected list rejection') }
         if ((channel === RPC_CHANNELS.workItems.UPDATE || channel === RPC_CHANNELS.calendar.UPDATE) && failNextWrite) { failNextWrite = false; failedWrites++; throw new Error('C02 injected write rejection') }
         const result = await handler(ctx, ...args), elapsedMs = performance.now() - start
+        if (taskUI && channel === RPC_CHANNELS.tasks.CREATE && taskPublications.length === 1) throw new Error('Fixture response lost after committed publication')
         if (isList) {
           reads.push({ channel, workspaceId: String(args[0]), elapsedMs, bytes: Buffer.byteLength(JSON.stringify(result)), rows: Array.isArray(result) ? result.length : 0, startedAt })
           if (holdNext) { holdNext = false; await new Promise<void>(resolveHeld => { held = resolveHeld }) }
@@ -91,7 +118,8 @@ const instance = await bootstrapServer({
   cleanupClientResources: cleanupSessionFileWatchForClient,
 })
 const manager = instance.sessionManager
-const metrics = () => ({ reads, failedReads, failedWrites, pushes, projections, inFlight, maxInFlight, held: Boolean(held), memory: process.memoryUsage(), fixtureSha256, count })
+if (taskUI) manager.applyTaskLabel = async () => { throw new Error('Fixture reserved-label failure') }
+const metrics = () => ({ ...(taskUI ? { taskPublications, taskCards: manager.getSessions('planning').filter(session => session.taskSlug && !session.taskRunId) } : {}), reads, failedReads, failedWrites, pushes, projections, inFlight, maxInFlight, held: Boolean(held), residentBlocked, memory: process.memoryUsage(), fixtureSha256, count })
 web = createWebuiHandler({ webuiDir: join(root, 'apps/webui/dist'), secret: token, secureCookies: false, wsProtocol: 'ws', wsPort: instance.port, getHealthCheck: () => ({ status: 'ok' }), logger: instance.platform.logger })
 route = nodeHttpAdapter(async request => {
   if (new URL(request.url).pathname !== '/__planning') return web!.fetch(request)
@@ -101,6 +129,8 @@ route = nodeHttpAdapter(async request => {
     switch (body.command) {
       case 'metrics': return Response.json(metrics())
       case 'reset': reads = []; failedReads = 0; failedWrites = 0; pushes = []; projections = []; maxInFlight = inFlight; return Response.json(metrics())
+      case 'hold-resident': holdResident = true; residentBlocked = 0; return Response.json({ ok: true })
+      case 'release-resident': holdResident = false; for (const resolveHeld of residentWaiters) resolveHeld(); residentWaiters.clear(); return Response.json({ ok: true })
       case 'hold-list': holdNext = true; return Response.json({ ok: true })
       case 'release': held?.(); held = undefined; return Response.json({ ok: true })
       case 'fail-list': failNextList = true; return Response.json({ ok: true })

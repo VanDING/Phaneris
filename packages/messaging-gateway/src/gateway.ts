@@ -638,7 +638,7 @@ export class MessagingGateway {
 
     try {
       await this.sessionManager.setPendingPlanExecution(entry.sessionId, entry.planPath)
-      await this.sessionManager.sendMessage(entry.sessionId, '/compact')
+      await this.sessionManager.submitInput(entry.sessionId, { text: '/compact' }, { kind: 'direct_user', channel: 'messaging' }).accepted
       await adapter.sendText(
         press.channelId,
         '♻️ Compacting conversation, then executing the plan…',

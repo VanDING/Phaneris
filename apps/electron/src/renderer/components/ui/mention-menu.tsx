@@ -41,8 +41,6 @@ export interface InlineMentionMenuProps {
   workspaceId?: string
   maxWidth?: number
   className?: string
-  /** Whether file search is in progress */
-  isSearching?: boolean
 }
 
 // ============================================================================
@@ -417,7 +415,6 @@ export interface UseInlineMentionReturn {
   position: { x: number; y: number }
   sections: MentionSection[]
   /** Whether file search is in progress */
-  isSearching: boolean
   handleInputChange: (value: string, cursorPosition: number) => void
   close: () => void
   handleSelect: (item: MentionItem) => { value: string; cursorPosition: number }
@@ -699,7 +696,6 @@ export function useInlineMention({
     filter: committedFilter,
     position,
     sections,
-    isSearching: false,
     handleInputChange,
     close,
     handleSelect,

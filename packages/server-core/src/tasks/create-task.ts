@@ -41,7 +41,7 @@ export function resolveCreateTaskProjectId(
  * fail task creation; problems surface as warnings instead.
  */
 export async function finishTaskOrchestrator(
-  sessionManager: ISessionManager,
+  sessionManager: Pick<ISessionManager, 'applyTaskLabel' | 'setSessionSources'>,
   orchestratorSessionId: string,
   spec: TaskSpec,
 ): Promise<TaskOrchestratorSetupResult> {
@@ -76,7 +76,14 @@ export async function createTaskFromSpec(
 ): Promise<CreateTaskFromSpecResult> {
   if (opts?.save !== false) saveTaskSpec(workspaceRoot, spec)
 
-  const orchestrator = await sessionManager.createSession(workspaceId, {
+  const orchestrator = await sessionManager.createSession(workspaceId, taskSessionOptions(spec))
+  const setup = await finishTaskOrchestrator(sessionManager, orchestrator.id, spec)
+  return { slug: spec.id, orchestratorSessionId: orchestrator.id, ...setup }
+}
+
+/** One mapping for fresh, adopted and attached orchestrators. */
+export function taskSessionOptions(spec: TaskSpec) {
+  return {
     name: spec.title,
     projectId: spec.project,
     sessionStatus: 'backlog',
@@ -89,7 +96,5 @@ export async function createTaskFromSpec(
     ...(spec.defaults?.llmConnection ? { llmConnection: spec.defaults.llmConnection } : {}),
     // Persisted task autonomy also seeds the orchestrator session (children read it via the runner).
     ...(spec.defaults?.permissionMode ? { permissionMode: spec.defaults.permissionMode } : {}),
-  })
-  const setup = await finishTaskOrchestrator(sessionManager, orchestrator.id, spec)
-  return { slug: spec.id, orchestratorSessionId: orchestrator.id, ...setup }
+  } satisfies import('@phaneris/shared/protocol').CreateSessionOptions
 }

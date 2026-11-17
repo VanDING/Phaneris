@@ -1,10 +1,6 @@
 /**
- * Canonical project-management task.
- *
- * A WorkItem describes work independently from the agent conversations that
- * execute it. `sessionIds` is therefore allowed to be empty or contain many
- * sessions; `primarySessionId` only identifies the preferred conversation to
- * open from task-oriented UI.
+ * Planning projection of an ordinary Session. Sessions own identity, metadata,
+ * status and history; there is no separate WorkItem storage or lifecycle.
  */
 export interface WorkItem {
   id: string;
@@ -28,6 +24,9 @@ export interface WorkItem {
   /** Work-item ids that must finish before this item. */
   dependencyIds: string[];
   parentId?: string;
+  /** Resident assistant source when its direct work is projected as a root card.
+   * The ordinary Session retains its real parentSessionId. */
+  managedBySessionId?: string;
   /** Agent conversations and executions associated with this task. */
   sessionIds: string[];
   /** Preferred session when task UI needs to open a conversation. */

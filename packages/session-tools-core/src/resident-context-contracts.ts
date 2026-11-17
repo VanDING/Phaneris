@@ -49,7 +49,7 @@ export interface ResidentSegment {
   branchRevisions?: Record<string, number>
   materials?: Array<ResidentSource & { contentHash: string; characters: number }>
   reading?: { bytesRead: number; indexScanBytes: number; decodedRecords: number; selectedCharacters: number; rebuilds: number }
-  requests: Array<{ providerRequestId: string; requestHash: string; dependencies: ResidentDependencies; branchRevisions?: Record<string, number>; snapshot?: RequestContextSnapshot; disposition: 'entered' | 'committed' | 'stale' }>
+  requests: Array<{ providerRequestId: string; requestHash: string; dependencies: ResidentDependencies; branchRevisions?: Record<string, number>; configRevision?: string; invalidation?: import('@phaneris/core/types').SessionDelegationInput['invalidation']; snapshot?: RequestContextSnapshot; disposition: 'entered' | 'committed' | 'stale' }>
 }
 export interface ResidentContextState {
   workspaceId: string

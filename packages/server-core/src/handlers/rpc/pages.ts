@@ -1,6 +1,6 @@
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
-import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
+import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import type { PageActionRequest } from '@phaneris/shared/pages'
 import type { PageActionBroker, PageActionExecutors } from '@phaneris/shared/pages'
@@ -46,11 +46,6 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   // (same lifetime as the brokers above).
   const mcpPools = new Map<string, import('@phaneris/shared/mcp').McpClientPool>()
 
-  async function broadcastChanged(workspaceId: string, workspaceRootPath: string): Promise<void> {
-    const { loadWorkspacePages } = await import('@phaneris/shared/pages')
-    const pages = loadWorkspacePages(workspaceRootPath)
-    pushTyped(server, RPC_CHANNELS.pages.CHANGED, { to: 'workspace', workspaceId }, workspaceId, pages)
-  }
 
   /**
    * API executor for the action bridge. Resolves the source + credential
@@ -65,11 +60,8 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
       const {
         loadSource,
         getSourceCredentialManager,
-        getSourceServerBuilder,
-        isApiOAuthProvider,
-        hasRenewEndpoint,
+        createApiSourceAccess,
         TokenRefreshManager,
-        createTokenGetter,
         executeApiRequest,
       } = await import('@phaneris/shared/sources')
 
@@ -82,20 +74,10 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
       assertPageSourceUsable(source)
 
       const credManager = getSourceCredentialManager()
-      const apiConfig = getSourceServerBuilder().buildApiConfig(source)
-
-      // Credential resolution mirrors SessionManager.buildServersFromSources:
-      // refreshable sources get a TokenRefreshManager-backed getter, plain
-      // API sources read the vault per request, 'none' uses no credential.
-      let credentialSource: import('@phaneris/shared/sources').ApiCredentialSource
-      if (isApiOAuthProvider(source.config.provider) || source.config.api?.authType === 'oauth' || hasRenewEndpoint(source)) {
-        refreshManager ??= new TokenRefreshManager(credManager, { log: (msg: string) => log.info(msg) })
-        credentialSource = createTokenGetter(refreshManager, source)
-      } else if (source.config.api?.authType === 'none' || !source.config.api?.authType) {
-        credentialSource = ''
-      } else {
-        credentialSource = async () => credManager.getApiCredential(source)
-      }
+      refreshManager ??= new TokenRefreshManager(credManager, { log: (msg: string) => log.info(msg) })
+      const { config: apiConfig, credential: credentialSource } = createApiSourceAccess({
+        credentials: credManager, refresh: refreshManager,
+      }).forApi(source, { usage: 'pages' })
 
       let outcome: Awaited<ReturnType<typeof executeApiRequest>>
       try {
@@ -199,8 +181,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   server.handle(RPC_CHANNELS.pages.CREATE, async (_ctx, workspaceId: string, input: import('@phaneris/shared/pages').CreatePageInput) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const { createPage } = await import('@phaneris/shared/pages')
-    const page = createPage(workspace.rootPath, {
+    const page = await deps.sessionManager.getWorkspacePages(workspace.id).create({
       name: input.name?.trim() || 'New Page',
       description: input.description,
       kind: input.kind,
@@ -208,12 +189,6 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
       content: input.content,
       refresh: input.refresh,
     })
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${page.slug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
-    // A page created with inline content gets a poster; empty pages wait for content.
-    if (input.content !== undefined) {
-      deps.sessionManager.enqueuePageThumbnail(workspaceId, workspace.rootPath, page.slug)
-    }
     log.info(`Created page: ${page.slug}`)
     return page
   })
@@ -227,10 +202,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   ) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const { updatePage } = await import('@phaneris/shared/pages')
-    const updated = updatePage(workspace.rootPath, pageSlug, patch)
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
+    const updated = await deps.sessionManager.getWorkspacePages(workspace.id).update(pageSlug, patch)
     return updated
   })
 
@@ -241,12 +213,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   server.handle(RPC_CHANNELS.pages.DELETE, async (_ctx, workspaceId: string, pageSlug: string) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const { deletePageWithUnpublish } = await import('@phaneris/shared/pages')
-    const { publicCopyMayRemain } = await deletePageWithUnpublish(workspace.rootPath, workspace.id, pageSlug, {
-      log: (message: string) => log.warn(message),
-    })
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
+    const { publicCopyMayRemain } = await deps.sessionManager.getWorkspacePages(workspace.id).remove(pageSlug)
     log.info(`Deleted page ${pageSlug}`)
     return { publicCopyMayRemain }
   })
@@ -266,11 +233,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   server.handle(RPC_CHANNELS.pages.SET_CONTENT, async (_ctx, workspaceId: string, pageSlug: string, content: string) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const { savePageContent } = await import('@phaneris/shared/pages')
-    const updated = savePageContent(workspace.rootPath, pageSlug, content)
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
-    deps.sessionManager.enqueuePageThumbnail(workspaceId, workspace.rootPath, pageSlug)
+    const updated = await deps.sessionManager.getWorkspacePages(workspace.id).writeContent(pageSlug, content)
     return updated
   })
 
@@ -299,10 +262,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   ) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const { addPageGrant } = await import('@phaneris/shared/pages')
-    const grant = addPageGrant(workspace.rootPath, pageSlug, input)
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
+    const grant = await deps.sessionManager.getWorkspacePages(workspace.id).issueGrant(pageSlug, input)
     const target = grant.action.kind === 'script' ? grant.action.script : grant.action.sourceSlug
     log.info(`Issued page grant ${grant.id} on ${pageSlug} (${grant.action.kind}:${target})`)
     return grant
@@ -312,11 +272,8 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   server.handle(RPC_CHANNELS.pages.REVOKE_GRANT, async (_ctx, workspaceId: string, pageSlug: string, grantId: string) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const { revokePageGrant } = await import('@phaneris/shared/pages')
-    const removed = revokePageGrant(workspace.rootPath, pageSlug, grantId)
+    const removed = await deps.sessionManager.getWorkspacePages(workspace.id).revokeGrant(pageSlug, grantId)
     if (removed) {
-      deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-      await broadcastChanged(workspaceId, workspace.rootPath)
       log.info(`Revoked page grant ${grantId} on ${pageSlug}`)
     }
     return removed
@@ -374,14 +331,6 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   // cannot strand a published page.
   // ------------------------------------------------------------------
 
-  async function buildPublisher() {
-    const { PagePublisher, createCredentialPagePublishTokenStore } = await import('@phaneris/shared/pages')
-    return new PagePublisher({
-      tokenStore: createCredentialPagePublishTokenStore(),
-      log: (msg: string) => log.info(msg),
-    })
-  }
-
   // Whether the renderer may offer publish/update UI (unpublish is always allowed)
   server.handle(RPC_CHANNELS.pages.GET_SHARE_CAPABILITIES, async () => {
     const { isPagesSharingEnabled } = await import('@phaneris/shared/feature-flags')
@@ -406,14 +355,11 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   ) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const publisher = await buildPublisher()
-    const updated = await publisher.publish(workspace.rootPath, workspace.id, pageSlug, {
+    const updated = await deps.sessionManager.getWorkspacePages(workspace.id).publish(pageSlug, {
       includeData: options.includeData === true,
       password: options.password,
       viewOnlyAcknowledged: options.viewOnlyAcknowledged,
     })
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
     return updated
   })
 
@@ -426,10 +372,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   ) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const publisher = await buildPublisher()
-    const updated = await publisher.setPassword(workspace.rootPath, workspace.id, pageSlug, password)
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
+    const updated = await deps.sessionManager.getWorkspacePages(workspace.id).setPassword(pageSlug, password)
     return updated
   })
 
@@ -437,10 +380,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
   server.handle(RPC_CHANNELS.pages.UNPUBLISH, async (_ctx, workspaceId: string, pageSlug: string) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-    const publisher = await buildPublisher()
-    const result = await publisher.unpublish(workspace.rootPath, workspace.id, pageSlug)
-    deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `pages/${pageSlug}/page.json`)
-    await broadcastChanged(workspaceId, workspace.rootPath)
+    const result = await deps.sessionManager.getWorkspacePages(workspace.id).unpublish(pageSlug)
     return { config: result.config, warning: result.warning }
   })
 

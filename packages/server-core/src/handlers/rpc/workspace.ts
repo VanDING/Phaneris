@@ -7,6 +7,7 @@ import { perf } from '@phaneris/shared/utils'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { isValidWorkspaceRootPath } from '../../utils/path-validation'
+import { readWorkspaceImage, writeWorkspaceImage } from '../../services/workspace-images'
 
 export const CORE_HANDLED_CHANNELS = [
   RPC_CHANNELS.workspaces.GET,
@@ -154,151 +155,16 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
   // Workspace Image Read/Write
   // ============================================================
 
-  // Generic workspace image loading (for source icons, status icons, etc.)
-  server.handle(RPC_CHANNELS.workspace.READ_IMAGE, async (_ctx, workspaceId: string, relativePath: string) => {
+  server.handle(RPC_CHANNELS.workspace.READ_IMAGE, (_ctx, workspaceId: string, relativePath: string) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error('Workspace not found')
-
-    const { readFileSync, existsSync } = await import('fs')
-    const { join, normalize } = await import('path')
-
-    // Security: validate path
-    // - Must not contain .. (path traversal)
-    // - Must be a valid image extension
-    const ALLOWED_EXTENSIONS = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.ico', '.gif']
-
-    if (relativePath.includes('..')) {
-      throw new Error('Invalid path: directory traversal not allowed')
-    }
-
-    const ext = relativePath.toLowerCase().slice(relativePath.lastIndexOf('.'))
-    if (!ALLOWED_EXTENSIONS.includes(ext)) {
-      throw new Error(`Invalid file type: ${ext}. Allowed: ${ALLOWED_EXTENSIONS.join(', ')}`)
-    }
-
-    // Resolve path relative to workspace root
-    const absolutePath = normalize(join(workspace.rootPath, relativePath))
-
-    // Double-check the resolved path is still within workspace
-    if (!absolutePath.startsWith(workspace.rootPath)) {
-      throw new Error('Invalid path: outside workspace directory')
-    }
-
-    if (!existsSync(absolutePath)) {
-      return null  // Missing optional files - silent fallback to default icons
-    }
-
-    // Read file as buffer
-    const buffer = readFileSync(absolutePath)
-
-    // If SVG, return as UTF-8 text. The renderer consumes this as a
-    // data:image/svg+xml URL in a script-disabled <img> context (or through its own
-    // sanitizer) — never as executable inline HTML. WRITE_IMAGE rejects
-    // script-capable SVGs server-side; raw text is kept so the renderer's theming
-    // pipeline (color injection) can operate on the source markup.
-    if (ext === '.svg') {
-      return buffer.toString('utf-8')
-    }
-
-    // For binary images, return as data URL
-    const mimeTypes: Record<string, string> = {
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.webp': 'image/webp',
-      '.ico': 'image/x-icon',
-      '.gif': 'image/gif',
-    }
-    const mimeType = mimeTypes[ext] || 'image/png'
-    return `data:${mimeType};base64,${buffer.toString('base64')}`
+    return readWorkspaceImage(workspace.rootPath, relativePath)
   })
 
-  // Generic workspace image writing (for workspace icon, etc.)
-  // Resizes images to max 256x256 to keep file sizes small
   server.handle(RPC_CHANNELS.workspace.WRITE_IMAGE, async (_ctx, workspaceId: string, relativePath: string, base64: string, mimeType: string) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error('Workspace not found')
-
-    const { writeFileSync, existsSync, unlinkSync, readdirSync } = await import('fs')
-    const { join, normalize, basename } = await import('path')
-
-    // Security: validate path
-    const ALLOWED_EXTENSIONS = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif']
-
-    if (relativePath.includes('..')) {
-      throw new Error('Invalid path: directory traversal not allowed')
-    }
-
-    const ext = relativePath.toLowerCase().slice(relativePath.lastIndexOf('.'))
-    if (!ALLOWED_EXTENSIONS.includes(ext)) {
-      throw new Error(`Invalid file type: ${ext}. Allowed: ${ALLOWED_EXTENSIONS.join(', ')}`)
-    }
-
-    // Resolve path relative to workspace root
-    const absolutePath = normalize(join(workspace.rootPath, relativePath))
-
-    // Double-check the resolved path is still within workspace
-    if (!absolutePath.startsWith(workspace.rootPath)) {
-      throw new Error('Invalid path: outside workspace directory')
-    }
-
-    // If this is an icon file (icon.*), delete any existing icon files with different extensions
-    const fileName = basename(relativePath)
-    if (fileName.startsWith('icon.')) {
-      const files = readdirSync(workspace.rootPath)
-      for (const file of files) {
-        if (file.startsWith('icon.') && file !== fileName) {
-          const oldPath = join(workspace.rootPath, file)
-          try {
-            unlinkSync(oldPath)
-          } catch {
-            // Ignore errors deleting old icon
-          }
-        }
-      }
-    }
-
-    // Decode base64 to buffer
-    const buffer = Buffer.from(base64, 'base64')
-
-    // For SVGs, write directly (no resizing needed) — but reject script-capable
-    // content first. SECURITY (H-9): stored SVG icons can end up rendered as
-    // markup, so a malicious workspace/icon SVG must not be able to carry script
-    // tags, event-handler attributes, javascript: URLs, or foreignObject payloads.
-    // Minimal regex gate = defense-in-depth; the renderer also renders icons via
-    // <img src> (script-disabled) on the client side.
-    const isSvg = ext === '.svg' || (mimeType ?? '').toLowerCase() === 'image/svg+xml'
-    if (isSvg) {
-      const svgText = buffer.toString('utf-8')
-      const svgDangerousPatterns: RegExp[] = [
-        /<\s*script/i,
-        /\son[a-z]+\s*=/i,
-        /javascript\s*:/i,
-        /foreignobject/i,
-      ]
-      if (svgDangerousPatterns.some(pattern => pattern.test(svgText))) {
-        throw new Error('Invalid SVG: workspace icons may not contain script tags, event handler attributes, javascript: URLs, or foreignObject')
-      }
-      writeFileSync(absolutePath, buffer)
-      return
-    }
-
-    // For raster images, resize to max 256x256
-    const metadata = await deps.platform.imageProcessor.getMetadata(buffer)
-    const width = metadata?.width ?? 0
-    const height = metadata?.height ?? 0
-
-    // Only resize if larger than 256px
-    if (width > 256 || height > 256) {
-      const resized = await deps.platform.imageProcessor.process(buffer, {
-        resize: { width: 256, height: 256 },
-        format: 'png',
-      })
-      writeFileSync(absolutePath, resized)
-    } else {
-      // Small enough, write as-is
-      writeFileSync(absolutePath, buffer)
-    }
+    await writeWorkspaceImage(workspace.rootPath, relativePath, base64, mimeType, deps.platform.imageProcessor, deps.platform.logger)
   })
 
   // ============================================================

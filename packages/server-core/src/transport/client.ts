@@ -24,27 +24,7 @@ import {
 import type { RpcClient, RpcCallback, CapabilityHandler } from './types'
 import { serializeEnvelope, deserializeEnvelope } from './codec'
 
-function createMessageId(): string {
-  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID()
-
-  // Preload can run in about:blank before navigation, where randomUUID is unavailable.
-  const bytes = crypto.getRandomValues(new Uint8Array(16))
-  bytes[6] = (bytes[6]! & 0x0f) | 0x40
-  bytes[8] = (bytes[8]! & 0x3f) | 0x80
-  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('')
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
-}
-
-// ---------------------------------------------------------------------------
-// Pending request state
-// ---------------------------------------------------------------------------
-
-interface PendingRequest {
-  channel: string
-  resolve: (value: unknown) => void
-  reject: (error: Error) => void
-  timeout: ReturnType<typeof setTimeout>
-}
+import { RpcRequestExchange, createRpcMessageId } from './request-exchange'
 
 // ---------------------------------------------------------------------------
 // Connection state model
@@ -124,7 +104,7 @@ export interface WsRpcClientOptions {
 
 export class WsRpcClient implements RpcClient {
   private ws: WebSocket | null = null
-  private pending = new Map<string, PendingRequest>()
+  private exchange = new RpcRequestExchange()
   private listeners = new Map<string, Set<RpcCallback>>()
   private capabilityHandlers = new Map<string, CapabilityHandler>()
   private connectionStateListeners = new Set<(state: TransportConnectionState) => void>()
@@ -193,62 +173,16 @@ export class WsRpcClient implements RpcClient {
   async invoke<Channel extends string>(channel: Channel, ...args: unknown[]): Promise<RpcResult<Channel>> {
     await this.ensureConnected(channel)
 
-    return await new Promise<unknown>((resolve, reject) => {
-      if (!this.connected || !this.ws) {
-        reject(new Error(`Not connected (channel: ${channel})`))
-        return
-      }
-
-      const id = createMessageId()
-      // Setup can spend 15s discovering models and 45s probing the real backend.
-      // Let the server's 60s handler deadline respond before this call expires.
-      // Ordinary RPC and capability calls retain their configured deadline.
-      const requestTimeout = channel === RPC_CHANNELS.settings.TEST_LLM_CONNECTION_SETUP
-        ? Math.max(this.requestTimeout, 75_000)
-        : this.requestTimeout
-      const timeout = setTimeout(() => {
-        this.pending.delete(id)
-        reject(new Error(`Request timeout: ${channel} (${requestTimeout}ms)`))
-      }, requestTimeout)
-
-      this.pending.set(id, { channel, resolve, reject, timeout })
-
-      const envelope: MessageEnvelope = {
-        id,
-        type: 'request',
-        channel,
-        args,
-      }
-
-      // Serialize once and pre-flight the size: the server closes the
-      // connection with 1009 for oversized messages (see M-9), which would
-      // surface as a confusing "Not connected" on the NEXT call. Fail here
-      // with a clear error instead.
-      let wire: string
-      try {
-        wire = serializeEnvelope(envelope)
-      } catch (err) {
-        this.pending.delete(id)
-        clearTimeout(timeout)
-        reject(err instanceof Error ? err : new Error('Failed to serialize request'))
-        return
-      }
+    if (!this.connected || !this.ws) throw new Error(`Not connected (channel: ${channel})`)
+    // Setup needs time for discovery/probing; ordinary requests retain their deadline.
+    const timeoutMs = channel === RPC_CHANNELS.settings.TEST_LLM_CONNECTION_SETUP
+      ? Math.max(this.requestTimeout, 75_000) : this.requestTimeout
+    return this.exchange.request(channel, args, { timeoutMs, write: (wire, envelope) => {
       const wireBytes = new TextEncoder().encode(wire).length
-      if (wireBytes > MAX_MESSAGE_PAYLOAD_BYTES) {
-        this.pending.delete(id)
-        clearTimeout(timeout)
-        reject(new Error(
-          `Request payload too large (${wireBytes} bytes; transport limit is ${MAX_MESSAGE_PAYLOAD_BYTES} bytes, channel: ${channel})`,
-        ))
-        return
-      }
-
-      if (!this.trySendEnvelope(this.ws, envelope, wire)) {
-        this.pending.delete(id)
-        clearTimeout(timeout)
-        reject(new Error(`Not connected (channel: ${channel})`))
-      }
-    }) as RpcResult<Channel>
+      if (wireBytes > MAX_MESSAGE_PAYLOAD_BYTES) throw new Error(
+        `Request payload too large (${wireBytes} bytes; transport limit is ${MAX_MESSAGE_PAYLOAD_BYTES} bytes, channel: ${channel})`)
+      if (!this.ws || !this.trySendEnvelope(this.ws, envelope, wire)) throw new Error(`Not connected (channel: ${channel})`)
+    } })
   }
 
   on(channel: string, callback: RpcCallback): () => void {
@@ -457,7 +391,7 @@ export class WsRpcClient implements RpcClient {
 
       // Send handshake (includes reconnection info if available)
       const handshake: MessageEnvelope = {
-        id: createMessageId(),
+        id: createRpcMessageId(),
         type: 'handshake',
         protocolVersion: PROTOCOL_VERSION,
         workspaceId: this.workspaceId,
@@ -527,12 +461,7 @@ export class WsRpcClient implements RpcClient {
     this.pendingReconnect = null
     this.failReady(new Error('Client destroyed'))
 
-    // Reject all pending requests
-    for (const [id, req] of this.pending) {
-      clearTimeout(req.timeout)
-      req.reject(new Error('Client destroyed'))
-    }
-    this.pending.clear()
+    this.exchange.disconnect(new Error('Client destroyed'))
     this.anyEventListeners.clear()
 
     this.ws?.close()
@@ -623,19 +552,7 @@ export class WsRpcClient implements RpcClient {
       }
 
       case 'response': {
-        const req = this.pending.get(envelope.id)
-        if (req) {
-          this.pending.delete(envelope.id)
-          clearTimeout(req.timeout)
-          if (envelope.error) {
-            const err = new Error(envelope.error.message)
-            ;(err as Error & { code?: string; data?: unknown; kind?: unknown }).code = envelope.error.code
-            ;(err as Error & { code?: string; data?: unknown; kind?: unknown }).data = envelope.error.data
-            req.reject(err)
-          } else {
-            req.resolve(envelope.result)
-          }
-        }
+        this.exchange.accept(envelope)
         break
       }
 
@@ -801,13 +718,11 @@ export class WsRpcClient implements RpcClient {
 
     // Reject all pending requests
     if (wasConnected) {
-      for (const [id, req] of this.pending) {
-        clearTimeout(req.timeout)
+      this.exchange.disconnect(channel => {
         const error = new Error('Connection lost')
-        error.stack += `\nRPC channel: ${req.channel}`
-        req.reject(error)
-      }
-      this.pending.clear()
+        error.stack += `\nRPC channel: ${channel}`
+        return error
+      })
 
       this.setConnectionState({
         status: 'disconnected',
@@ -888,7 +803,7 @@ export class WsRpcClient implements RpcClient {
     this.ackTimer = setInterval(() => {
       if (this.connected && this.lastSeenSeq > 0) {
         const ack: MessageEnvelope = {
-          id: createMessageId(),
+          id: createRpcMessageId(),
           type: 'sequence_ack',
           lastSeq: this.lastSeenSeq,
         }

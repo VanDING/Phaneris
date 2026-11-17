@@ -1111,7 +1111,7 @@ ${formattedMessages}
   /**
    * Respond to a pending permission request.
    */
-  abstract respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void;
+  abstract respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): boolean | void;
 
   /**
    * Resolve a pending ask_user question with the human's answer.

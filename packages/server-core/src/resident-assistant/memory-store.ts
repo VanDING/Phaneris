@@ -96,26 +96,33 @@ export class AssistantMemoryStore {
   }
   isSourceSuppressed(source: MemorySource): boolean { return this.suppressed(source) }
   dependenciesValid(dependencies: import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies): boolean {
-    if (dependencies.memories.length && !readAssistantMemoryPolicy(this.workspace).use) return false
+    return this.dependencyIssue(dependencies) === undefined
+  }
+  dependencyIssue(dependencies: import('@phaneris/session-tools-core/resident-context-contracts').ResidentDependencies): string | undefined {
+    if (dependencies.memories.length && !readAssistantMemoryPolicy(this.workspace).use) return 'Memory recall was disabled for this workspace'
     return this.withSourceSnapshot(() => {
-      if (dependencies.scenarios?.some(reference => !this.derived.valid(reference))) return false
+      for (const reference of dependencies.scenarios ?? []) if (!this.derived.valid(reference)) return `Scenario ${reference.id} changed or became unavailable`
       for (const reference of dependencies.memories) {
         const row = this.db.prepare('SELECT body FROM memories WHERE id=?').get(reference.id) as { body: string } | undefined
-        if (!row) return false
+        if (!row) return `Memory ${reference.id} is missing`
         const record = this.view(JSON.parse(row.body) as StoredRecord)
-        if (record.revision !== reference.revision || record.state !== (reference.observedState ?? 'active') || !!record.dispute !== (reference.observedDispute ?? false) || record.redacted) return false
+        if (record.revision !== reference.revision) return `Memory ${reference.id} revision changed from ${reference.revision} to ${record.revision}`
+        if (record.state !== (reference.observedState ?? 'active') || !!record.dispute !== (reference.observedDispute ?? false) || record.redacted) return `Memory ${reference.id} availability, lifecycle or dispute changed`
       }
       // Source availability is an I/O boundary: a missing/corrupt source invalidates
       // dependent model material, rather than falling back to a cached excerpt.
-      try {
-        for (const source of dependencies.knowledge ?? []) if (knowledgeSourceVersion(this.workspace.rootPath, source.sourceSlug) !== source.version) return false
-        for (const source of dependencies.sources) {
+      for (const source of dependencies.knowledge ?? []) {
+        try { if (knowledgeSourceVersion(this.workspace.rootPath, source.sourceSlug) !== source.version) return `Knowledge source ${source.sourceSlug} version changed` }
+        catch { return `Knowledge source ${source.sourceSlug} is unavailable` }
+      }
+      for (const source of dependencies.sources) {
+        try {
         const current = this.readSource({ ...source, expectedContentHash: source.contentHash, readPurpose: source.readPurpose }, true)
-        if (source.projectId !== undefined && source.projectId !== (current.projectId ?? null)) return false
-        if (source.observation && (current.observation?.operationId !== source.observation.operationId || current.observation.runOperationId !== source.observation.runOperationId)) return false
-      } }
-      catch { return false }
-      return true
+        if (source.projectId !== undefined && source.projectId !== (current.projectId ?? null)) return `Source ${source.sessionId}/${source.messageId} project changed`
+        if (source.observation && (current.observation?.operationId !== source.observation.operationId || current.observation.runOperationId !== source.observation.runOperationId)) return `Source ${source.sessionId}/${source.messageId} observation changed`
+        } catch (error) { return `Source ${source.sessionId}/${source.messageId}: ${error instanceof Error ? error.message : 'unavailable'}` }
+      }
+      return undefined
     })
   }
 

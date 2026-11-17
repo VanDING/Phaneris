@@ -383,17 +383,15 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
   unbindSession(workspaceId: string, sessionId: string, platform?: string): void {
     const state = this.workspaces.get(workspaceId)
     if (!state) return
-    const removed = state.gateway
+    state.gateway
       .getBindingStore()
       .unbindSession(sessionId, platform as PlatformType | undefined)
-    if (removed > 0) this.emitBindingChanged(workspaceId)
   }
 
   unbindBinding(workspaceId: string, bindingId: string): boolean {
     const state = this.workspaces.get(workspaceId)
     if (!state) return false
     const removed = state.gateway.getBindingStore().unbindById(bindingId)
-    if (removed) this.emitBindingChanged(workspaceId)
     return removed
   }
 
@@ -615,7 +613,6 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
         undefined,
         entry.threadId,
       )
-      this.emitBindingChanged(args.workspaceId)
 
       return {
         ok: true,
@@ -1173,6 +1170,7 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
       },
     }
     this.workspaces.set(workspaceId, state)
+    configStore.onChange(() => this.emitBindingChanged(workspaceId))
     return state
   }
 
@@ -1561,7 +1559,6 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
     this.patchAccessControlledPlatformConfig(workspaceId, platform, {
       owners: dedupeOwners(owners),
     })
-    this.emitBindingChanged(workspaceId)
     return this.getPlatformOwners(workspaceId, platform)
   }
 
@@ -1579,8 +1576,7 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
     if (platform !== 'telegram' && platform !== 'wecom') {
       throw new Error('Access mode is only supported on Telegram and WeCom in this build.')
     }
-    this.patchAccessControlledPlatformConfig(workspaceId, platform, { accessMode: mode })
-
+    this.workspaces.get(workspaceId) ?? this.bootstrapWorkspace(workspaceId)
     // Lock-down semantics: switching the workspace to `owner-only` must
     // also close any binding that's still in `open` mode, otherwise the
     // operator clicks "Lock down", the banner disappears, but legacy
@@ -1589,8 +1585,14 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
     if (mode === 'owner-only') {
       this.migrateOpenBindingsToInherit(workspaceId, platform)
     }
-
-    this.emitBindingChanged(workspaceId)
+    try { this.patchAccessControlledPlatformConfig(workspaceId, platform, { accessMode: mode }) }
+    catch (cause) {
+      if (mode !== 'owner-only') throw cause
+      const effective = this.getPlatformAccessMode(workspaceId, platform)
+      throw Object.assign(new Error(`Bindings committed to inherit; platform remains ${effective}. Retry the same lockdown to finish.`, { cause }), {
+        code: 'MESSAGING_POLICY_PARTIAL_COMMIT', data: { workspaceId, platform, effectiveAccessMode: effective, bindingsCommitted: true },
+      })
+    }
   }
 
   /**
@@ -1605,11 +1607,9 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
     const state = this.workspaces.get(workspaceId)
     if (!state) return
     const store = state.gateway.getBindingStore()
-    for (const b of store.getAll()) {
-      if (b.platform !== platform) continue
-      if (b.config.accessMode !== 'open') continue
-      store.updateBindingConfig(b.id, { accessMode: 'inherit', allowedSenderIds: [] })
-    }
+    const updates = store.getAll().filter(binding => binding.platform === platform && binding.config.accessMode === 'open')
+      .map(binding => ({ id: binding.id, patch: { accessMode: 'inherit' as const, allowedSenderIds: [] } }))
+    store.updateBindingConfigs(updates)
   }
 
   /** Pending senders surface in Settings → Messaging as "Pending requests". */
@@ -1700,7 +1700,6 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
         reason: 'not-on-binding-allowlist',
         bindingId,
       })
-      this.emitBindingChanged(workspaceId)
       const owners = this.getPlatformOwners(workspaceId, platform)
       return { owners, bindingId }
     }
@@ -1733,7 +1732,6 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
     // so any binding-allow-list rejects pending against them have been
     // superseded by the inherit path.
     state.gateway.getPendingStore().dismiss(platform, userId)
-    this.emitBindingChanged(workspaceId)
     return { owners: nextOwners }
   }
 
@@ -1757,7 +1755,6 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
         access.mode === 'allow-list' ? [...(access.allowedSenderIds ?? [])] : [],
     })
     if (!next) throw new Error('Binding not found')
-    this.emitBindingChanged(workspaceId)
   }
 
   async startWeChatConnect(workspaceId: string): Promise<void> {

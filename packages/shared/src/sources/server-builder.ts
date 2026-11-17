@@ -14,7 +14,7 @@
 import type { LoadedSource, ApiConfig } from './types.ts';
 import { isMultiHeaderCredential, type ApiCredential } from './credential-manager.ts';
 import { isSourceUsable } from './storage.ts';
-import { createApiServer, type SummarizeCallback } from './api-tools.ts';
+import { createApiServer, type SummarizeCallback, type ApiCredentialSource } from './api-tools.ts';
 import { createInProcessMcpServer } from '../mcp/sdk-mcp-server-factory.ts';
 import { debug } from '../utils/debug.ts';
 import { join } from 'node:path';
@@ -75,6 +75,12 @@ export interface SourceWithCredential {
   /** Token for MCP sources, or ApiCredential for API sources */
   token?: string | null;
   credential?: ApiCredential | null;
+}
+
+export interface ResolvedApiAccess {
+  config: ApiConfig;
+  credential: ApiCredentialSource;
+  available: boolean;
 }
 
 /**
@@ -240,6 +246,13 @@ export class SourceServerBuilder {
     const authType = apiConfig.authType;
     const provider = source.config.provider;
 
+    // Public APIs (no auth) can be used immediately
+    if (authType === 'none') {
+      debug(`[SourceServerBuilder] Building public API server for ${source.config.slug}`);
+      const config = this.buildApiConfig(source);
+      return createApiServer(config, '', sessionPath, summarize);
+    }
+
     // Google APIs - use token getter with auto-refresh
     // Note: Direct isAuthenticated check is safe - Google OAuth always requires auth
     if (provider === 'google') {
@@ -278,13 +291,6 @@ export class SourceServerBuilder {
       debug(`[SourceServerBuilder] Building generic OAuth API server for ${source.config.slug}`);
       const config = this.buildApiConfig(source);
       return createApiServer(config, getToken, sessionPath, summarize);
-    }
-
-    // Public APIs (no auth) can be used immediately
-    if (authType === 'none') {
-      debug(`[SourceServerBuilder] Building public API server for ${source.config.slug}`);
-      const config = this.buildApiConfig(source);
-      return createApiServer(config, '', sessionPath, summarize);
     }
 
     // Renew-endpoint sources use a token getter for auto-refresh instead of a static credential
@@ -380,7 +386,8 @@ export class SourceServerBuilder {
     getTokenForSource?: (source: LoadedSource) => (() => Promise<string>) | undefined,
     sessionPath?: string,
     summarize?: SummarizeCallback,
-    getCredentialForSource?: (source: LoadedSource) => (() => Promise<ApiCredential | null>) | undefined
+    getCredentialForSource?: (source: LoadedSource) => (() => Promise<ApiCredential | null>) | undefined,
+    resolveApi?: (source: LoadedSource) => ResolvedApiAccess
   ): Promise<BuiltServers> {
     const mcpServers: Record<string, McpServerConfig> = {};
     const apiServers: Record<string, ReturnType<typeof createInProcessMcpServer>> = {};
@@ -405,6 +412,11 @@ export class SourceServerBuilder {
             });
           }
         } else if (source.config.type === 'api') {
+          if (resolveApi) {
+            const resolved = resolveApi(source);
+            if (resolved.available) apiServers[source.config.slug] = createApiServer(resolved.config, resolved.credential, sessionPath, summarize);
+            continue;
+          }
           const getToken = getTokenForSource?.(source);
           const getCredential = getCredentialForSource?.(source);
           const server = await this.buildApiServer(
@@ -427,6 +439,16 @@ export class SourceServerBuilder {
     }
 
     return { mcpServers, apiServers, errors };
+  }
+
+  /** Production intent; legacy buildAll factories remain for published callers. */
+  buildWithAccess(
+    sources: SourceWithCredential[],
+    access: { forApi(source: LoadedSource, policy: { usage: 'session' }): ResolvedApiAccess },
+    options: { sessionPath?: string; summarize?: SummarizeCallback } = {},
+  ): Promise<BuiltServers> {
+    return this.buildAll(sources, undefined, options.sessionPath, options.summarize, undefined,
+      source => access.forApi(source, { usage: 'session' }));
   }
 }
 

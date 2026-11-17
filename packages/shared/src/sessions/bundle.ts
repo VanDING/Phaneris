@@ -39,7 +39,7 @@ const SKIP_DIRS = new Set(['tmp'])
  * Files to skip when collecting session files for export.
  * session.jsonl is in the bundle as structured data.
  */
-const SKIP_SESSION_FILES = new Set(['session.jsonl', 'session.jsonl.tmp'])
+const SKIP_SESSION_FILES = new Set(['session.jsonl', 'session.jsonl.tmp', '.phaneris-import.json'])
 
 /**
  * Dispatch mode determines how the imported session relates to the original.
@@ -179,7 +179,7 @@ export function sessionFromBundle(bundle: SessionBundle, workspaceRootPath: stri
   delete session.delegationIds
   // These IDs address source-workspace objects, not portable product content.
   for (const field of ['projectId', 'parentSessionId', 'dependencySessionIds', 'triggeredBy',
-    'taskSlug', 'taskRunId', 'taskNodeId', 'taskNodeDispatchId', 'taskNodeCount',
+    'taskSlug', 'taskPublicationId', 'taskRunId', 'taskNodeId', 'taskNodeDispatchId', 'taskNodeCount',
     'contextPolicy', 'handoffRootSessionId', 'handoffFromSessionId', 'handoffSequence', 'contextHandoff',
     'pendingPlanExecution', 'branchFromSessionId', 'branchFromMessageId', 'branchFromSdkSessionId',
     'branchFromSessionPath', 'branchFromSdkCwd', 'branchFromSdkTurnId', 'sharedUrl', 'sharedId'] as const) delete session[field]
@@ -194,10 +194,16 @@ export function restoreSessionBundle(session: StoredSession, files: BundleFile[]
     const error = validateBundleFile(file)
     if (error) throw new Error(`Invalid bundle file: ${error}`)
     const key = file.relativePath.toLowerCase()
-    if (SKIP_SESSION_FILES.has(key) || paths.has(key)) throw new Error(`Reserved or duplicate bundle path: ${file.relativePath}`)
+    if (SKIP_SESSION_FILES.has(key.split('/')[0]!) || paths.has(key)) throw new Error(`Reserved or duplicate bundle path: ${file.relativePath}`)
     paths.add(key)
     total += file.size
     if (total > MAX_BUNDLE_SIZE_BYTES) throw new Error('Session bundle exceeds maximum size')
+  }
+  for (const path of paths) {
+    const parts = path.split('/')
+    for (let length = 1; length < parts.length; length++) {
+      if (paths.has(parts.slice(0, length).join('/'))) throw new Error(`Conflicting file/directory bundle path: ${path}`)
+    }
   }
   const target = getSessionPath(session.workspaceRootPath, session.id)
   if (existsSync(target)) throw new Error(`Session ${session.id} already exists in target workspace`)
@@ -234,12 +240,20 @@ export function validateBundle(bundle: unknown): bundle is SessionBundle {
   const session = b.session as Record<string, unknown>
   if (!session.header || typeof session.header !== 'object') return false
   if (!Array.isArray(session.messages)) return false
+  const roles = new Set(['user', 'assistant', 'tool', 'error', 'status', 'info', 'warning', 'plan', 'auth-request'])
+  for (const value of session.messages) {
+    if (!value || typeof value !== 'object') return false
+    const message = value as Record<string, unknown>
+    if (typeof message.id !== 'string' || !message.id || typeof message.content !== 'string'
+      || typeof message.type !== 'string' || !roles.has(message.type)) return false
+    if (message.timestamp !== undefined && (typeof message.timestamp !== 'number' || !Number.isFinite(message.timestamp))) return false
+  }
 
   const header = session.header as Record<string, unknown>
   if (typeof header.id !== 'string') return false
   try { validateSessionId(header.id) } catch { return false }
   if (header.workspaceRootPath !== undefined && typeof header.workspaceRootPath !== 'string') return false
-  if (typeof header.createdAt !== 'number') return false
+  if (typeof header.createdAt !== 'number' || !Number.isFinite(header.createdAt)) return false
 
   if (!Array.isArray(b.files)) return false
 

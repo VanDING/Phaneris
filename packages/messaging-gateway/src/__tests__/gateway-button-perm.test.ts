@@ -123,7 +123,7 @@ function makeStubSessionManager(opts: StubSessionManagerOpts = {}): ISessionMana
   const respondReturn = opts.respondToPermissionReturn ?? true
   return {
     getSession: async (id: string) => ({ id, name: id } as never),
-    sendMessage: async () => {},
+    submitInput: () => ({ accepted: Promise.resolve({ accepted: true, messageId: 'fixture' }), finished: Promise.resolve() }),
     cancelProcessing: async () => {},
     respondToPermission: mock(() => respondReturn),
     acceptPlan: mock(async () => {}),

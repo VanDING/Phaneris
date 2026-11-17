@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'bun:test'
-import { validateEnvelopeShape, deserializeEnvelope, serializeEnvelope } from '../codec'
+import { validateEnvelopeShape, deserializeEnvelope, serializeEnvelope } from '@phaneris/server-core/transport/codec'
 
 describe('validateEnvelopeShape', () => {
   it('rejects non-object', () => {

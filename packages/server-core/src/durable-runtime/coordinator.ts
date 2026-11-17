@@ -658,14 +658,16 @@ export class DurableRuntimeCoordinator {
   /** Acknowledged host inputs retain separate identities even when model delivery is merged. */
   recordUserInputAdmission(input: {
     workspaceRootPath: string; sessionId: string; messageId: string; content: string;
-    createdAt: number; attachments?: unknown; options?: unknown;
+    // Actor policy belongs to Host; the kernel retains its opaque product metadata.
+    createdAt: number; attachments?: unknown; options?: unknown; inputSource?: unknown;
   }): number {
     return this.storeFor(input.workspaceRootPath).appendEvents([{
       eventId: `input:${input.messageId}:admitted`, operationId: `input:${input.messageId}`,
       sessionId: input.sessionId, turnId: input.messageId, type: 'user_input_admitted',
       schemaVersion: 1, modelVisible: false, partial: false,
       payload: { messageId: input.messageId, content: input.content,
-        attachments: input.attachments ?? [], options: input.options ?? {}, deliveryTrackingVersion: 1 }, createdAt: input.createdAt,
+        attachments: input.attachments ?? [], options: input.options ?? {}, deliveryTrackingVersion: 1,
+        ...(input.inputSource ? { inputSource: input.inputSource } : {}) }, createdAt: input.createdAt,
     }])[0]!
   }
 

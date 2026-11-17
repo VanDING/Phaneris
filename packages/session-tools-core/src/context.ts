@@ -392,7 +392,7 @@ export interface SessionToolContext {
    * backend (SessionManager); undefined in backends that don't run alongside
    * it (e.g. the Codex MCP subprocess) — the handler degrades gracefully.
    */
-  createTask?(input: CreateTaskInput): Promise<CreateTaskResult>;
+  createTask?(input: CreateTaskInput, context?: { operationId?: string }): Promise<CreateTaskResult>;
   appendProjectMemory?(input: ProjectMemoryAppendInput): Promise<ProjectMemoryAppendResult>;
   readProjectMemory?(input: ProjectMemoryRead): Promise<ProjectMemoryReadResult>;
   searchProjectMemory?(input: ProjectMemorySearch): Promise<ProjectMemorySearchResult>;

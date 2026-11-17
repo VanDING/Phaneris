@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test'
-import { mkdtempSync, mkdirSync, rmSync, existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { mkdtempSync, mkdirSync, rmSync, existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import { tmpdir } from 'node:os'
 import type { SessionHeader, StoredSession } from '../types'
 import { getSessionFilePath } from '../storage'
@@ -253,12 +253,15 @@ describe('SessionPersistenceQueue write failures', () => {
       await queue.flush('s1')
       const signature = queue.getLastWrittenSignature('s1')
       const file = getSessionFilePath(root, 's1')
-      mkdirSync(file + '.tmp') // Force a real write failure without changing the last good snapshot.
+      const temporary = join(dirname(file), 'tmp'), retained = temporary + '-fixture-retained'
+      if (existsSync(temporary)) renameSync(temporary, retained)
+      writeFileSync(temporary, 'Obstruct the temporary directory')
       queue.enqueue({ ...session, name: 'Failed update' })
       await expect(queue.flush('s1')).rejects.toThrow()
       expect(queue.getLastWrittenSignature('s1')).toBe(signature)
       expect(JSON.parse(readFileSync(file, 'utf8').split('\n')[0]!).name).toBe('Original')
-      rmSync(file + '.tmp', { recursive: true })
+      rmSync(temporary)
+      if (existsSync(retained)) renameSync(retained, temporary)
       queue.enqueue({ ...session, name: 'Latest update' })
       await queue.flush('s1')
       expect(JSON.parse(readFileSync(file, 'utf8').split('\n')[0]!).name).toBe('Latest update')

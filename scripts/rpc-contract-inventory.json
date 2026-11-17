@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "channels": 445,
-  "centrallyValidatedMethods": 68,
-  "typedResultPorts": 59,
+  "centrallyValidatedMethods": 69,
+  "typedResultPorts": 83,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -1364,7 +1364,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 70,
+          "line": 23,
           "args": [
             "workspaceId: string",
             "input: CalendarEntryInput"
@@ -1386,12 +1386,12 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 103,
+          "line": 28,
           "args": [
             "workspaceId: string",
             "entryId: string"
           ],
-          "result": "inferred by TypeScript; see handler return",
+          "result": "Promise<void>",
           "owner": "authenticated host or handler-specific policy"
         }
       ]
@@ -1408,7 +1408,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 60,
+          "line": 21,
           "args": [
             "workspaceId: string"
           ],
@@ -1429,7 +1429,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 86,
+          "line": 25,
           "args": [
             "workspaceId: string",
             "entryId: string",
@@ -2790,7 +2790,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 453,
+          "line": 319,
           "args": [
             "serviceUrl: string",
             "provider?: string"
@@ -4379,12 +4379,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "boolean",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 364,
+          "line": 321,
           "args": [
             "workspaceId: string",
             "requestId: string"
@@ -4412,12 +4412,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 199,
+          "line": 181,
           "args": [
             "workspaceId: string",
             "input: import('@phaneris/shared/pages').CreatePageInput"
@@ -4434,12 +4434,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ lease: PageRenderLease; content: string }",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 328,
+          "line": 285,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4456,12 +4456,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ publicCopyMayRemain: boolean }",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 241,
+          "line": 213,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4478,12 +4478,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageActionResult",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 351,
+          "line": 308,
           "args": [
             "workspaceId: string",
             "request: PageActionRequest"
@@ -4500,12 +4500,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "LoadedPage[]",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 179,
+          "line": 161,
           "args": [
             "workspaceId: string"
           ],
@@ -4521,12 +4521,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ content: string | null; contentDigest?: string }",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 255,
+          "line": 222,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4543,12 +4543,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageDataSnapshot | null",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 278,
+          "line": 241,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4565,12 +4565,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "LoadedPage | null",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 190,
+          "line": 172,
           "args": [
             "workspaceId: string",
             "pageIdOrSlug: string"
@@ -4587,12 +4587,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ sharingEnabled: boolean }",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 386,
+          "line": 335,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -4606,12 +4606,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageShareDataScan",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 393,
+          "line": 342,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4628,12 +4628,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "{ dataUrl: string; digest: string } | null",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 455,
+          "line": 395,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4650,12 +4650,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageActionGrant",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 294,
+          "line": 257,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4673,12 +4673,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageActionGrant[]",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 286,
+          "line": 249,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4695,12 +4695,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 401,
+          "line": 350,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4718,12 +4718,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "boolean",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 473,
+          "line": 413,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4740,12 +4740,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "void",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 342,
+          "line": 299,
           "args": [
             "workspaceId: string",
             "leaseId: string"
@@ -4762,12 +4762,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "boolean",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 312,
+          "line": 272,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4785,12 +4785,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 266,
+          "line": 233,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4808,12 +4808,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 421,
+          "line": 367,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4831,12 +4831,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "UnpublishResult",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 437,
+          "line": 380,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4853,12 +4853,12 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "PageConfig",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 222,
+          "line": 197,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -5243,7 +5243,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "resultContract": "void",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -5270,7 +5270,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/projects.ts",
-          "line": 124,
+          "line": 111,
           "args": [
             "workspaceId: string",
             "projectSlug: string",
@@ -5336,7 +5336,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/projects.ts",
-          "line": 100,
+          "line": 87,
           "args": [
             "workspaceId: string",
             "projectSlug: string"
@@ -5381,7 +5381,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/projects.ts",
-          "line": 108,
+          "line": 95,
           "args": [
             "workspaceId: string",
             "projectSlug: string",
@@ -5898,7 +5898,7 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "Workspace[]",
+      "resultContract": "WorkspaceInfo[]",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
@@ -6026,7 +6026,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 396,
+          "line": 354,
           "args": [
             "sessionId: string",
             "silent?: boolean"
@@ -6048,7 +6048,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 263,
+          "line": 261,
           "args": [
             "sessionId: string",
             "readId: string"
@@ -6070,7 +6070,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 444,
+          "line": 402,
           "args": [
             "sessionId: string",
             "command: import('@phaneris/shared/protocol').SessionCommand"
@@ -6092,7 +6092,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 320,
+          "line": 318,
           "args": [
             "workspaceId: string",
             "options?: import('@phaneris/shared/protocol').CreateSessionOptions"
@@ -6114,7 +6114,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 330,
+          "line": 328,
           "args": [
             "sessionId: string"
           ],
@@ -6135,7 +6135,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 742,
+          "line": 701,
           "args": [
             "sessionId: string"
           ],
@@ -6156,7 +6156,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 768,
+          "line": 727,
           "args": [
             "sessionId: string"
           ],
@@ -6188,7 +6188,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 207,
+          "line": 205,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6207,7 +6207,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 628,
+          "line": 587,
           "args": [
             "sessionId: string",
             "scope: SessionFileScope = 'session'"
@@ -6229,7 +6229,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 249,
+          "line": 247,
           "args": [
             "sessionId: string"
           ],
@@ -6250,7 +6250,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 705,
+          "line": 664,
           "args": [
             "sessionId: string"
           ],
@@ -6271,7 +6271,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 546,
+          "line": 504,
           "args": [
             "sessionId: string"
           ],
@@ -6292,7 +6292,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 555,
+          "line": 513,
           "args": [
             "sessionId: string"
           ],
@@ -6313,7 +6313,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 269,
+          "line": 267,
           "args": [
             "sessionId: string",
             "toolOperationId: string"
@@ -6335,7 +6335,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 235,
+          "line": 233,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6354,7 +6354,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 763,
+          "line": 722,
           "args": [
             "named handler; see source"
           ],
@@ -6375,7 +6375,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 780,
+          "line": 739,
           "args": [
             "targetWorkspaceId: string",
             "payload: import('@phaneris/shared/protocol').RemoteSessionTransferPayload"
@@ -6397,7 +6397,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 402,
+          "line": 360,
           "args": [
             "sessionId: string",
             "shellId: string"
@@ -6419,7 +6419,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 244,
+          "line": 242,
           "args": [
             "workspaceId: string"
           ],
@@ -6440,7 +6440,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 292,
+          "line": 290,
           "args": [
             "sessionId: string",
             "toolOperationId: string"
@@ -6462,7 +6462,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 257,
+          "line": 255,
           "args": [
             "sessionId: string",
             "cursor?: SessionReadCursor"
@@ -6484,7 +6484,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 306,
+          "line": 304,
           "args": [
             "sessionId: string",
             "request: Omit<import('@phaneris/shared/durable-runtime').ModelReconciliationRequest, 'sessionId' | 'actor'>"
@@ -6506,7 +6506,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 278,
+          "line": 276,
           "args": [
             "sessionId: string",
             "request: Omit<import('@phaneris/shared/durable-runtime').ToolReconciliationRequest, 'sessionId' | 'actor'>"
@@ -6528,7 +6528,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 434,
+          "line": 392,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6551,7 +6551,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 427,
+          "line": 385,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6574,12 +6574,13 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 420,
+          "line": 378,
           "args": [
             "sessionId: string",
             "requestId: string",
             "allowed: boolean",
-            "alwaysAllow: boolean"
+            "alwaysAllow: boolean",
+            "options?: import('@phaneris/shared/protocol').PermissionResponseOptions"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "session workspace guard"
@@ -6598,7 +6599,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 568,
+          "line": 526,
           "args": [
             "workspaceId: string",
             "query: string",
@@ -6621,7 +6622,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 348,
+          "line": 346,
           "args": [
             "sessionId: string",
             "message: string",
@@ -6646,7 +6647,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 721,
+          "line": 680,
           "args": [
             "sessionId: string",
             "content: string"
@@ -6679,7 +6680,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 697,
+          "line": 656,
           "args": [
             "scope: SessionFileScope = 'session'"
           ],
@@ -6700,7 +6701,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 647,
+          "line": 606,
           "args": [
             "sessionId: string",
             "scope: SessionFileScope = 'session'"
@@ -6779,7 +6780,7 @@
       "sites": [
         {
           "file": "apps/electron/src/main/index.ts",
-          "line": 1356,
+          "line": 1337,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6798,7 +6799,7 @@
       "sites": [
         {
           "file": "apps/electron/src/main/index.ts",
-          "line": 1378,
+          "line": 1359,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -6880,7 +6881,7 @@
       "sites": [
         {
           "file": "apps/electron/src/main/index.ts",
-          "line": 1361,
+          "line": 1342,
           "args": [
             "config: unknown"
           ],
@@ -7442,13 +7443,13 @@
       "domain": "tasks",
       "routing": "remote-eligible",
       "kind": "method",
-      "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "unknown transport extension; narrowed by existing typed client facade or handler consumer",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('./dto').TaskCreateResult",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 222,
+          "line": 182,
           "args": [
             "workspaceId: string",
             "req: TaskCreateRequest"
@@ -7470,7 +7471,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 300,
+          "line": 205,
           "args": [
             "workspaceId: string",
             "req: TaskGenerateRequest"
@@ -7503,7 +7504,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 419,
+          "line": 324,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7526,7 +7527,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 408,
+          "line": 366,
           "args": [
             "taskId: string"
           ],
@@ -7547,7 +7548,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 441,
+          "line": 346,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7570,7 +7571,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 434,
+          "line": 339,
           "args": [
             "workspaceId: string"
           ],
@@ -7591,7 +7592,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 406,
+          "line": 311,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7614,7 +7615,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 410,
+          "line": 315,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7637,7 +7638,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 398,
+          "line": 303,
           "args": [
             "workspaceId: string",
             "req: TaskRunRequest"
@@ -7659,7 +7660,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 414,
+          "line": 319,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7682,7 +7683,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 180,
+          "line": 177,
           "args": [
             "_workspaceId: string",
             "yaml: string"
@@ -7866,7 +7867,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 351,
+          "line": 217,
           "args": [
             "preferences: import('@phaneris/shared/config').ThemePreferences"
           ],
@@ -7887,7 +7888,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 392,
+          "line": 258,
           "args": [
             "workspaceId: string",
             "themeId: string | null"
@@ -7909,7 +7910,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 380,
+          "line": 246,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -7928,7 +7929,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 308,
+          "line": 174,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -7947,7 +7948,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 337,
+          "line": 203,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -7966,7 +7967,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 324,
+          "line": 190,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -7985,7 +7986,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 314,
+          "line": 180,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -8030,7 +8031,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 359,
+          "line": 225,
           "args": [
             "workspaceId: string"
           ],
@@ -8051,7 +8052,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 319,
+          "line": 185,
           "args": [
             "themeId: string"
           ],
@@ -8083,7 +8084,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 342,
+          "line": 208,
           "args": [
             "themeId: string"
           ],
@@ -8104,7 +8105,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 329,
+          "line": 195,
           "args": [
             "preferences: import('@phaneris/shared/config').ThemePreferences"
           ],
@@ -8125,7 +8126,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 368,
+          "line": 234,
           "args": [
             "workspaceId: string",
             "themeId: string | null"
@@ -8180,7 +8181,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 427,
+          "line": 293,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -8239,7 +8240,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/transfer.ts",
-          "line": 290,
+          "line": 319,
           "args": [
             "opts: { transferId: string }"
           ],
@@ -8260,7 +8261,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/transfer.ts",
-          "line": 171,
+          "line": 181,
           "args": [
             "opts: {\n    transferId: string\n    index: number\n    data: string\n  }"
           ],
@@ -8281,7 +8282,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/transfer.ts",
-          "line": 215,
+          "line": 242,
           "args": [
             "opts: {\n    transferId: string\n  }"
           ],
@@ -8302,7 +8303,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/transfer.ts",
-          "line": 111,
+          "line": 120,
           "args": [
             "opts: {\n    totalBytes: number\n    chunkCount: number\n    channel: string\n    args: unknown[]\n    largeArgIndex: number\n    checksum?: string\n  }"
           ],
@@ -8442,7 +8443,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 402,
+          "line": 268,
           "args": [
             "workspaceId: string"
           ],
@@ -8463,7 +8464,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 411,
+          "line": 277,
           "args": [
             "workspaceId: string",
             "views: import('@phaneris/shared/views').ViewConfig[]"
@@ -8583,7 +8584,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 96,
+          "line": 97,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -8602,7 +8603,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 82,
+          "line": 83,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "explicit destination workspace"
@@ -8706,7 +8707,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 101,
+          "line": 102,
           "args": [
             "workspaceId: string"
           ],
@@ -8738,7 +8739,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 107,
+          "line": 26,
           "args": [
             "workspaceId: string",
             "input: CreateWorkItemInput"
@@ -8755,17 +8756,17 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "boolean",
+      "resultContract": "void",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 131,
+          "line": 30,
           "args": [
             "workspaceId: string",
             "itemId: string"
           ],
-          "result": "inferred by TypeScript; see handler return",
+          "result": "Promise<void>",
           "owner": "authenticated host or handler-specific policy"
         }
       ]
@@ -8782,7 +8783,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 102,
+          "line": 24,
           "args": [
             "workspaceId: string"
           ],
@@ -8803,7 +8804,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 126,
+          "line": 28,
           "args": [
             "workspaceId: string",
             "itemId: string",
@@ -8869,7 +8870,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 218,
+          "line": 164,
           "args": [
             "workspaceId: string",
             "relativePath: string",
@@ -8893,7 +8894,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 67,
+          "line": 68,
           "args": [
             "slug: string"
           ],
@@ -8914,7 +8915,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 49,
+          "line": 50,
           "args": [
             "folderPath: string",
             "name: string",
@@ -8937,7 +8938,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 44,
+          "line": 45,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -8956,7 +8957,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/workspace.ts",
-          "line": 75,
+          "line": 76,
           "args": [
             "workspaceId: string",
             "remoteServer: { url: string; token?: string; remoteWorkspaceId: string; allowInsecureTls?: boolean }"

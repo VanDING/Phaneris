@@ -49,6 +49,8 @@ export type BuiltInStatusId = 'backlog' | 'todo' | 'in-progress' | 'needs-review
  * Electron-specific Session type (includes runtime state).
  * Extends core Session with messages array and processing state.
  */
+export type ResidentAssistantMetadata = Omit<Session, 'messages'>
+
 export interface Session extends SessionPlanningFields {
   id: string
   workerPermissionMode?: PermissionMode
@@ -253,6 +255,8 @@ export interface TaskPlanningInput {
 }
 
 export interface TaskCreateRequest {
+  /** Stable per publication attempt; retries keep it, changed intent uses a new id. */
+  operationId?: string
   /** task.yaml source text (authoritative). */
   yaml: string
   /**
@@ -274,6 +278,8 @@ export interface TaskCreateRequest {
 }
 
 export interface TaskCreateResult {
+  /** Non-fatal label/source setup failures; creation has still completed. */
+  warnings?: string[]
   /** Empty string when validation failed — inspect `validation`. */
   slug: string
   /** The persistent parent/orchestrator session (author + final verifier). */

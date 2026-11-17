@@ -1,6 +1,6 @@
 {
   "name": "@phaneris/shared",
-  "version": "0.6.3",
+  "version": "0.6.5",
   "license": "Apache-2.0",
   "description": "Shared business logic for Phaneris - agent, auth, config, credentials, MCP integration",
   "type": "module",
@@ -24,6 +24,7 @@
     "./agent/mode-types": "./src/agent/mode-types.ts",
     "./agent/modes": "./src/agent/mode-types.ts",
     "./agent/permissions-config": "./src/agent/permissions-config.ts",
+    "./agent/privileged-command": "./src/agent/privileged-command.ts",
     "./agent/thinking-levels": "./src/agent/thinking-levels.ts",
     "./agent/resident-role": "./src/agent/resident-role.ts",
     "./agent/resident-source-tools": "./src/agent/resident-source-tools.ts",

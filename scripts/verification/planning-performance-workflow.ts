@@ -53,10 +53,12 @@ await verificationWorkflow('planning-performance', async run => {
     await context.addInitScript(() => localStorage.setItem('i18nextLng', 'en'))
     assert((await context.request.post(base + '/api/auth', { data: { password: testSecret } })).ok())
     await context.tracing.start({ screenshots: true, snapshots: true }); tracing = true
-    await gotoWithRetry(page, base)
+    await gotoWithRetry(page, base + "/?route=projects")
     await waitForBrowserCondition(page, async () => Boolean(window.electronAPI) && (await window.electronAPI.getTransportConnectionState()).status === 'connected')
     await page.getByTestId('app-splash').waitFor({ state: 'hidden', timeout: 60_000 })
-    // The transport connects before NavigationProvider mounts during startup.
+    // Start from a real project deep link. Bare startup also owns a resident
+    // foreground presentation; its independent restoration race is tracked
+    // separately from collection performance and must not mask this workflow.
     await page.getByText('Projects', { exact: true }).first().click()
     await page.getByText('Select a project to view its details', { exact: true }).waitFor({ timeout: 10_000 })
     await page.evaluate(() => localStorage.setItem('i18nextLng', 'en'))
@@ -92,7 +94,7 @@ await verificationWorkflow('planning-performance', async run => {
     await secondaryContext.tracing.start({ screenshots: true, snapshots: true })
     const second = await secondaryContext.newPage(); second.on('pageerror', error => errors.push(error.message))
     await second.clock.setSystemTime(new Date('2026-10-14T04:00:00Z'))
-    await second.goto(base); await waitForBrowserCondition(second, async () => Boolean(window.electronAPI) && (await window.electronAPI.getTransportConnectionState()).status === 'connected')
+    await second.goto(base + "/?route=projects"); await waitForBrowserCondition(second, async () => Boolean(window.electronAPI) && (await window.electronAPI.getTransportConnectionState()).status === 'connected')
     await second.getByTestId('app-splash').waitFor({ state: 'hidden', timeout: 60_000 })
     await second.getByText('Projects', { exact: true }).first().click({ timeout: 60_000 })
     await second.getByText('Select a project to view its details', { exact: true }).waitFor({ timeout: 10_000 })

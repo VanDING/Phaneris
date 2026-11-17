@@ -8,8 +8,8 @@ export const HANDLED_CHANNELS = [RPC_CHANNELS.residentAssistant.GET, RPC_CHANNEL
   RPC_CHANNELS.residentAssistant.WORK, RPC_CHANNELS.residentAssistant.CONTROL, RPC_CHANNELS.residentAssistant.ORIGINALS, RPC_CHANNELS.residentAssistant.EXECUTION_MODE, RPC_CHANNELS.residentAssistant.CANCEL_WORK, RPC_CHANNELS.residentAssistant.OUTPUT_VISIBILITY] as const
 
 /** Identity/settings replies share the bounded Session metadata projection. */
-function residentMetadata(session: Session): Session {
-  return { ...session, messages: [], messageCount: session.messages.length }
+function residentMetadata(session: import('@phaneris/shared/protocol').ResidentAssistantMetadata): Session {
+  return { ...session, messages: [] }
 }
 
 export function registerResidentAssistantHandlers(server: RpcServer, deps: HandlerDeps): void {
@@ -19,7 +19,7 @@ export function registerResidentAssistantHandlers(server: RpcServer, deps: Handl
   })
   server.handle(RPC_CHANNELS.residentAssistant.EXECUTION_MODE, async (ctx, workspaceId: string, mode: import('@phaneris/shared/agent/mode-types').PermissionMode) => {
     assertWorkspace(ctx, workspaceId)
-    return residentMetadata(await deps.sessionManager.setAssistantExecutionMode(workspaceId, mode))
+    return residentMetadata(await deps.sessionManager.changeResidentExecutionMode(workspaceId, mode))
   })
   server.handle(RPC_CHANNELS.residentAssistant.CONTROL, (ctx, workspaceId: string, command: import('@phaneris/session-tools-core/worker-control-contracts').WorkerControl) => {
     assertWorkspace(ctx, workspaceId)
@@ -35,7 +35,7 @@ export function registerResidentAssistantHandlers(server: RpcServer, deps: Handl
   }
   server.handle(RPC_CHANNELS.residentAssistant.GET, async (ctx, workspaceId: string) => {
     assertWorkspace(ctx, workspaceId)
-    const session = await deps.sessionManager.getOrCreateResidentAssistant(workspaceId)
+    const session = await deps.sessionManager.getResidentAssistantMetadata(workspaceId)
     // The identity operation is bounded; the shared Session read protocol owns
     // timelines, including the potentially much larger diagnostic snapshots.
     return residentMetadata(session)

@@ -28,7 +28,8 @@ describe('background task completion surfacing (idle keep-alive)', () => {
     sm = new SessionManager()
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    await sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 
@@ -57,10 +58,9 @@ describe('background task completion surfacing (idle keep-alive)', () => {
 
   function spyOnSendMessage() {
     const calls: Array<{ msg: string; hidden?: boolean }> = []
-    ;(sm as unknown as {
-      sendMessage: (id: string, msg: string, a?: unknown, s?: unknown, opts?: { hidden?: boolean }) => Promise<void>
-    }).sendMessage = async (_id, msg, _a, _s, opts) => {
-      calls.push({ msg, hidden: opts?.hidden })
+    sm.submitInput = (_id, input) => {
+      calls.push({ msg: input.text, hidden: input.options?.hidden })
+      return { accepted: Promise.resolve({ accepted: true as const, messageId: 'background-fixture' }), finished: Promise.resolve() }
     }
     return calls
   }

@@ -88,9 +88,11 @@ export class TaskResultStore {
     if (!manifest || manifest.inputMessageId !== receipt.inputMessageId) return
     this.db.prepare('UPDATE task_results SET body=? WHERE delegation_id=?').run(JSON.stringify({ ...manifest, result }), receipt.id)
   }
-  /** Called inside the same transaction as processing acknowledgement. */
-  review(selection: TaskDeliverableSelection, eventId: string): void {
+  validateSelection(selection: TaskDeliverableSelection): TaskOutputManifest | undefined {
     const manifest = this.get(selection.delegationId)
+    // An explicit empty selection publishes no files, including legacy or
+    // text-only results whose Worker never declared a manifest.
+    if (!manifest && !selection.keys.length) return
     if (!manifest?.result || manifest.revision !== selection.expectedRevision) throw new Error('Read the completed task result and current output manifest before selecting deliverables')
     if (new Set(selection.keys).size !== selection.keys.length) throw new Error('Duplicate deliverable selection')
     for (const key of selection.keys) {
@@ -100,6 +102,11 @@ export class TaskResultStore {
       const { artifact } = getArtifact({ workspaceRootPath: this.workspace.rootPath }, output.artifactId)
       if ((artifact.draftRevision ?? artifact.currentRevision) !== output.revision || ['draft', 'discarded', 'conflict'].includes(artifact.status)) throw new Error('Output revision changed after declaration')
     }
+    return manifest
+  }
+  /** Called inside the same transaction as processing acknowledgement. */
+  review(selection: TaskDeliverableSelection, eventId: string): void {
+    if (!this.validateSelection(selection)) return
     this.db.prepare('UPDATE task_results SET review_event_id=?,selected=?,reviewed_at=? WHERE delegation_id=?')
       .run(eventId, JSON.stringify(selection.keys), Date.now(), selection.delegationId)
   }

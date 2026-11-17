@@ -30,11 +30,19 @@ const credential: z.ZodType<CredentialResponse> = z.object({
 }).passthrough()
 const scope = z.enum(['session', 'working']).optional()
 // Extra positional fields remain readable by older/newer minor clients. Each known field is checked.
-const tuple = (...items: z.ZodType[]) => {
+const tuple = <Items extends [z.ZodType, ...z.ZodType[]] | []>(...items: Items): z.ZodTuple<Items, z.ZodUnknown> => {
   const checked = items.map(item => item.isOptional() ? item.nullable() : item)
-  return (checked.length ? z.tuple(checked as [z.ZodType, ...z.ZodType[]]) : z.tuple([])).rest(z.unknown())
+  // The typed port describes normal calls; the legacy wire also permits null
+  // in optional positions. Validation deliberately keeps that original frame.
+  return (checked.length ? z.tuple(checked as [z.ZodType, ...z.ZodType[]]) : z.tuple([])).rest(z.unknown()) as z.ZodTuple<Items, z.ZodUnknown>
 }
-export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>> = {
+export const RPC_INPUT_CONTRACTS = {
+  [c.tasks.CREATE]: tuple(id, z.object({
+    yaml: text, operationId: text.min(1).max(256).nullish(), orchestratorSessionId: text.nullish(), attachToExistingSession: text.nullish(),
+    planning: z.object({ startAt: text.nullish(), dueAt: text.nullish(), statusId: text.nullish(),
+      progress: z.number().nullish(), isMilestone: z.boolean().nullish(), parentId: text.nullish(), dependencyIds: strings.nullish(),
+    }).passthrough().nullish(),
+  }).passthrough()),
   [c.residentAssistant.GET]: tuple(id),
   [c.residentAssistant.CONTEXT]: tuple(id, ResidentContextSchema),
   [c.residentAssistant.EVENTS]: tuple(id, ResidentEventsQuerySchema),
@@ -56,7 +64,9 @@ export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>>
   [c.sessions.DELETE]: tuple(id),
   [c.sessions.CANCEL]: tuple(id, z.boolean().optional()),
   [c.sessions.KILL_SHELL]: tuple(id, id),
-  [c.sessions.RESPOND_TO_PERMISSION]: tuple(id, id, z.boolean(), z.boolean()),
+  [c.sessions.RESPOND_TO_PERMISSION]: tuple(id, id, z.boolean(), z.boolean(), z.object({
+    rememberForMinutes: z.number().finite().int().min(1).max(60).optional(),
+  }).passthrough().optional()),
   [c.sessions.RESPOND_TO_CREDENTIAL]: tuple(id, id, credential),
   [c.sessions.RESPOND_TO_ASK_USER]: tuple(id, id, object),
   [c.sessions.COMMAND]: tuple(id, object),
@@ -64,7 +74,7 @@ export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>>
   [c.sessions.READ_MESSAGES]: tuple(id, object.optional()),
   [c.sessions.CLOSE_MESSAGES_READ]: tuple(id, id),
   [c.sessions.GET_RECOVERY_EVIDENCE]: tuple(id, id.optional()),
-  [c.sessions.RECONCILE_TOOL]: tuple(id, id, object),
+  [c.sessions.RECONCILE_TOOL]: tuple(id, object),
   [c.sessions.QUERY_RECONCILE_TOOL]: tuple(id, id),
   [c.sessions.RECONCILE_MODEL]: tuple(id, object),
   [c.sessions.GET_FILES]: tuple(id, scope),
@@ -104,11 +114,13 @@ export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>>
   [c.llmConnections.GET_API_KEY]: tuple(id),
   [c.llmConnections.DELETE]: tuple(id),
   [c.llmConnections.SET_DEFAULT]: tuple(id),
-}
+} as const satisfies Readonly<Record<string, z.ZodType<unknown[]>>>
+
+export type RpcSchemaArguments<Channel extends keyof typeof RPC_INPUT_CONTRACTS> = z.output<(typeof RPC_INPUT_CONTRACTS)[Channel]>
 
 export function validateRpcArguments(channel: string, args: unknown): unknown[] {
   if (!Array.isArray(args)) throw new Error(`Invalid RPC arguments for ${channel}: expected array`)
-  const contract = RPC_INPUT_CONTRACTS[channel]
+  const contract = (RPC_INPUT_CONTRACTS as Readonly<Record<string, z.ZodType<unknown[]>>>)[channel]
   if (contract) {
     const result = contract.safeParse(args)
     if (!result.success) throw new Error(`Invalid RPC arguments for ${channel}: ${result.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`).join('; ')}`)

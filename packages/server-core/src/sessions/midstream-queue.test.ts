@@ -244,8 +244,8 @@ describe('mid-stream queue runtime invariants', () => {
     sm.setEventSink((_channel, _target, event) => events.push(event))
     ;(sm as unknown as { lastTimestamp: number }).lastTimestamp = priorFinalTimestamp
     ;(sm as unknown as { persistSession: () => void }).persistSession = () => {}
-    const sendMessage = mock(async () => {})
-    ;(sm as unknown as { sendMessage: typeof sendMessage }).sendMessage = sendMessage
+    const submitInput = mock(() => ({ accepted: Promise.resolve({ accepted: true as const, messageId: 'queued-user' }), finished: Promise.resolve() }))
+    sm.submitInput = submitInput
 
     ;(sm as unknown as { processNextQueuedMessage: (id: string) => void })
       .processNextQueuedMessage(sessionId)
@@ -259,6 +259,6 @@ describe('mid-stream queue runtime invariants', () => {
     expect(processingEvent?.status).toBe('processing')
     expect(processingEvent?.message.timestamp).toBe(replayed?.timestamp)
     expect(processingEvent?.optimisticMessageId).toBe('optimistic-user')
-    expect(sendMessage).toHaveBeenCalledTimes(1)
+    expect(submitInput).toHaveBeenCalledTimes(1)
   })
 })

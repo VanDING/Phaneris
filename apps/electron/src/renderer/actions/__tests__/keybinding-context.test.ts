@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'bun:test'
-import { setDismissibleLayerBridge } from '../../lib/dismissible-layer-bridge'
+import { setDismissibleLayerBridge } from '@phaneris/ui/dismissible-layer-bridge'
 import { getKeybindingContext } from '../keybinding-context'
 
 const originalDocument = globalThis.document

@@ -13,17 +13,12 @@ import {
 import {
   serializeEnvelope,
   deserializeEnvelope,
+  RpcRequestExchange,
 } from '@phaneris/server-core/transport'
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
-interface PendingRequest {
-  resolve: (value: unknown) => void
-  reject: (error: Error) => void
-  timeout: ReturnType<typeof setTimeout>
-}
 
 export interface CliClientOptions {
   token?: string
@@ -38,7 +33,7 @@ export interface CliClientOptions {
 
 export class CliRpcClient {
   private ws: WebSocket | null = null
-  private pending = new Map<string, PendingRequest>()
+  private exchange = new RpcRequestExchange()
   private listeners = new Map<string, Set<(...args: unknown[]) => void>>()
   private _clientId: string | null = null
   private _connected = false
@@ -120,11 +115,7 @@ export class CliRpcClient {
           reject(new Error('WebSocket closed before handshake'))
         }
         this._connected = false
-        for (const [, req] of this.pending) {
-          clearTimeout(req.timeout)
-          req.reject(new Error('Disconnected'))
-        }
-        this.pending.clear()
+        this.exchange.disconnect(() => new Error('Disconnected'))
       }
     })
   }
@@ -135,23 +126,8 @@ export class CliRpcClient {
       throw new Error(`Not connected (channel: ${channel})`)
     }
 
-    return new Promise<RpcResult<Channel>>((resolve, reject) => {
-      const id = crypto.randomUUID()
-      const timeout = setTimeout(() => {
-        this.pending.delete(id)
-        reject(new Error(`Request timeout: ${channel} (${this.requestTimeout}ms)`))
-      }, this.requestTimeout)
-
-      this.pending.set(id, { resolve: value => resolve(value as RpcResult<Channel>), reject, timeout })
-
-      const envelope: MessageEnvelope = {
-        id,
-        type: 'request',
-        channel,
-        args,
-      }
-      this.ws!.send(serializeEnvelope(envelope))
-    })
+    return this.exchange.request(channel, args, { timeoutMs: this.requestTimeout,
+      write: wire => { this.ws!.send(wire) } })
   }
 
   /** Subscribe to push events on a channel. Returns an unsubscribe function. */
@@ -172,11 +148,7 @@ export class CliRpcClient {
   /** Close the connection and reject all pending requests. */
   destroy(): void {
     this._destroyed = true
-    for (const [, req] of this.pending) {
-      clearTimeout(req.timeout)
-      req.reject(new Error('Client destroyed'))
-    }
-    this.pending.clear()
+    this.exchange.disconnect(() => new Error('Client destroyed'))
     this.ws?.close()
     this.ws = null
     this._connected = false
@@ -204,19 +176,7 @@ export class CliRpcClient {
 
     switch (envelope.type) {
       case 'response': {
-        const req = this.pending.get(envelope.id)
-        if (req) {
-          this.pending.delete(envelope.id)
-          clearTimeout(req.timeout)
-          if (envelope.error) {
-            const err = new Error(envelope.error.message)
-            ;(err as Error & { code?: string; data?: unknown }).code = envelope.error.code
-            ;(err as Error & { code?: string; data?: unknown }).data = envelope.error.data
-            req.reject(err)
-          } else {
-            req.resolve(envelope.result)
-          }
-        }
+        this.exchange.accept(envelope)
         break
       }
 

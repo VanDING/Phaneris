@@ -44,6 +44,9 @@ class MockHost implements ConductorSessionHost {
     this.created.push({ id, options });
     return { id };
   }
+  submitInput(sessionId: string, input: import('../sessions/input-contracts').SessionInputIntent) {
+    return { accepted: Promise.resolve({ accepted: true as const, messageId: 'fixture' }), finished: this.sendMessage(sessionId, input.text) };
+  }
   async sendMessage(sessionId: string, message: string): Promise<void> {
     this.sent.push({ sessionId, message });
   }

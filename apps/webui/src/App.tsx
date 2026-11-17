@@ -12,7 +12,7 @@ import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 
 import { useTranslation } from 'react-i18next'
 import { useAtomValue } from 'jotai'
 import { createWebApi } from './adapter/web-api'
-import type { WsRpcClient } from '../../electron/src/transport/client'
+import type { WsRpcClient } from '@phaneris/server-core/transport/client'
 import { createClientPlatform, initializeClient } from '@/platform/client'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { windowWorkspaceIdAtom } from '@/atoms/sessions'

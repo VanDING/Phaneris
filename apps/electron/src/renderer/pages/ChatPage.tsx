@@ -123,6 +123,10 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
   const sessionMeta = sessionMetaMap.get(sessionId)
   const resident = (session?.sessionKind ?? sessionMeta?.sessionKind) === 'resident_assistant'
   const displayedPermissionMode = resident ? session?.workerPermissionMode ?? sessionMeta?.workerPermissionMode ?? sessionOpts.permissionMode : sessionOpts.permissionMode
+  const changeExecutionMode = React.useCallback((mode: typeof displayedPermissionMode) => {
+    if (resident && activeWorkspaceId) void window.electronAPI.changeResidentExecutionMode(activeWorkspaceId, mode).catch(error => toast.error(String(error)))
+    else setPermissionMode(mode)
+  }, [resident, activeWorkspaceId, setPermissionMode])
   const { focusZone } = useFocusContext()
   React.useEffect(() => {
     if (!resident || !messagesLoaded || !residentAssistantPresentation || isFocusedPanel === false) return
@@ -320,16 +324,6 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
       window.electronAPI.setSessionModel(sessionId, activeWorkspaceId, model, connection)
     }
   }, [sessionId, activeWorkspaceId])
-
-  // Session connection change handler - available whenever the session is idle
-  const handleConnectionChange = React.useCallback(async (connectionSlug: string) => {
-    try {
-      await window.electronAPI.sessionCommand(sessionId, { type: 'setConnection', connectionSlug })
-    } catch (error) {
-      // Connection change may fail if session already started or connection is invalid
-      console.error('Failed to change connection:', error)
-    }
-  }, [sessionId])
 
   // Check if session's locked connection has been removed
   const connectionUnavailable = React.useMemo(() =>
@@ -805,7 +799,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
                 onOpenUrl={handleOpenUrl}
                 currentModel={effectiveModel}
                 onModelChange={handleModelChange}
-                onConnectionChange={handleConnectionChange}
+
                 pendingPermission={undefined}
                 onRespondToPermission={onRespondToPermission}
                 pendingCredential={undefined}
@@ -816,7 +810,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
                 onThinkingLevelChange={(level) => setOption('thinkingLevel', level)}
                 permissionMode={displayedPermissionMode}
                 previousPermissionMode={sessionOpts.previousPermissionMode}
-                onPermissionModeChange={setPermissionMode}
+                onPermissionModeChange={changeExecutionMode}
                 enabledModes={enabledModes}
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
@@ -890,7 +884,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
             onOpenUrl={handleOpenUrl}
             currentModel={effectiveModel}
             onModelChange={handleModelChange}
-            onConnectionChange={handleConnectionChange}
+
             pendingPermission={pendingPermission}
             onRespondToPermission={onRespondToPermission}
             pendingCredential={pendingCredential}
@@ -901,7 +895,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
             onThinkingLevelChange={(level) => setOption('thinkingLevel', level)}
             permissionMode={displayedPermissionMode}
             previousPermissionMode={sessionOpts.previousPermissionMode}
-            onPermissionModeChange={setPermissionMode}
+            onPermissionModeChange={changeExecutionMode}
             enabledModes={enabledModes}
             inputValue={inputValue}
             onInputChange={handleInputChange}

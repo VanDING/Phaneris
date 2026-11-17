@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { appendFile, mkdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { LOGS_DIR } from '@phaneris/shared/config/paths'
+import { parsePrivilegedCommand } from '@phaneris/shared/agent/privileged-command'
 import type { Logger } from '../runtime/platform'
 
 export interface PrivilegedExecutionRequest {
@@ -74,13 +75,13 @@ export class PrivilegedExecutionBroker {
       expiresAt: request.expiresAt,
     })
 
-    return request
+    return { ...request }
   }
 
   resolveApproval(
     requestId: string,
     approved: boolean,
-    options?: { expectedCommandHash?: string },
+    options?: { expectedCommandHash?: string; expectedSessionId?: string },
   ): {
     ok: boolean
     reason?: string
@@ -91,7 +92,9 @@ export class PrivilegedExecutionBroker {
       return { ok: false, reason: 'No pending privileged request found' }
     }
 
-    this.pending.delete(requestId)
+    if (options?.expectedSessionId && options.expectedSessionId !== request.sessionId) {
+      return { ok: false, reason: 'Session mismatch for privileged approval request' }
+    }
 
     if (options?.expectedCommandHash && options.expectedCommandHash !== request.commandHash) {
       void this.appendAudit({
@@ -104,7 +107,9 @@ export class PrivilegedExecutionBroker {
       return { ok: false, reason: 'Command hash mismatch for privileged approval request' }
     }
 
-    if (!request.policyAllowed) {
+    this.pending.delete(requestId)
+
+    if (!request.policyAllowed || !parsePrivilegedCommand(request.command)) {
       void this.appendAudit({
         event: 'privileged_request_blocked_by_policy',
         requestId: request.requestId,
@@ -155,13 +160,7 @@ export class PrivilegedExecutionBroker {
   }
 
   private validatePolicy(command: string): { allowed: boolean; reason?: string } {
-    const normalized = command.trim().toLowerCase()
-    const allowlisted =
-      /^brew\s+install\s+--cask\s+/.test(normalized) ||
-      /^brew\s+upgrade\s+--cask\s+/.test(normalized) ||
-      /^installer\s+-pkg\s+.+\s+-target\s+\//.test(normalized)
-
-    if (!allowlisted) {
+    if (!parsePrivilegedCommand(command)) {
       return {
         allowed: false,
         reason: 'Privileged execution policy only allows brew cask install/upgrade and installer -pkg -target / commands',

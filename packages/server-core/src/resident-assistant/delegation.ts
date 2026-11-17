@@ -1,28 +1,37 @@
 import { randomUUID, createHash } from 'node:crypto'
 import { mkdirSync } from 'node:fs'
-import { isAbsolute, join, relative, sep } from 'node:path'
+import { join } from 'node:path'
 import { canonicalJson } from '@phaneris/shared/durable-runtime/identity'
-import { resolveCanonicalPath } from '@phaneris/shared/utils'
 import type { SessionDelegationInput } from '@phaneris/core/types'
-import type { AssistantDispatch, AssistantWork, AssistantWorkPage, AssistantWorkQuery, AssistantDelegationReceipt, EffectiveWorkerConfig } from '@phaneris/session-tools-core/delegation-contracts'
+import type { AssistantDispatch, AssistantWork, AssistantWorkPage, AssistantWorkQuery, AssistantDelegationReceipt, AssistantTaskOverview, EffectiveWorkerConfig } from '@phaneris/session-tools-core/delegation-contracts'
 import type { SessionCompletionEvent } from '../domain/session-completion'
 import { openSqliteDatabase, type SqliteDatabase } from '../runtime/sqlite'
 import type { ResidentInboxEvent, ResidentEventsPage } from '@phaneris/session-tools-core/resident-context-contracts'
 
 import type { LegacyDelegation } from './delegation-migration'
 import { TaskResultStore } from './task-results'
-import type { TaskDeliverableSelection } from '@phaneris/session-tools-core/task-result-contracts'
+import type { TaskDeliverableSelection, TaskReview } from '@phaneris/session-tools-core/task-result-contracts'
 import { WorkerControls } from './worker-controls'
 import type { WorkerControl, WorkerControlApplication, WorkerControlReceipt } from '@phaneris/session-tools-core/worker-control-contracts'
+import { DelegationResources } from './delegation-scheduling'
 
 export interface SessionDelegationPlan { config: EffectiveWorkerConfig; adjustments: string[]; configRevision?: string; capabilityRevision?: string }
 export type { LegacyDelegation } from './delegation-migration'
 export class SessionDelegationConflict extends Error {}
+export class SessionDelegationWait extends Error {
+  constructor(readonly waitingFor: NonNullable<AssistantDelegationReceipt['waitingFor']>) { super(waitingFor.detail ?? waitingFor.reason) }
+}
 export interface DelegationHost {
+  currentSessionIds?(): readonly string[]
+  live?(receipt: AssistantDelegationReceipt): Pick<AssistantWork, 'sessionStatus' | 'runtime'> & { goal?: string }
+  capacity?(): number
+  waitingFor?(receipt: AssistantDelegationReceipt): AssistantDelegationReceipt['waitingFor']
   plan(request: AssistantDispatch): Promise<SessionDelegationPlan>
   prepare(receipt: AssistantDelegationReceipt, request: AssistantDispatch, plan: SessionDelegationPlan,
     bind: (sessionId: string) => void): Promise<{ sessionId: string; inputMessageId: string; branchIds?: string[] }>
   snapshot(receipt: AssistantDelegationReceipt): Promise<SessionDelegationInput | undefined>
+  pendingInput?(receipt: AssistantDelegationReceipt): boolean
+  controlStatus?(receipt: WorkerControlReceipt): Pick<WorkerControlReceipt, 'processedAt'>
   execution?(receipt: AssistantDelegationReceipt, options: { before?: number; limit: number }): Promise<AssistantWork['execution']>
   recover(receipt: AssistantDelegationReceipt): Promise<{ sessionId?: string; inputMessageId?: string; resume?: 'original' | 'materials'; completedResult?: { sessionId: string; messageId: string } }>
   importLegacy(legacy: LegacyDelegation): Promise<{ sessionId: string; inputMessageId: string }>
@@ -33,11 +42,13 @@ export interface DelegationHost {
   /** Only cancel execution owned by this input, never an unrelated human turn. */
   cancel(receipt: AssistantDelegationReceipt): Promise<boolean>
   control?(receipt: AssistantDelegationReceipt, command: WorkerControl, supplements: string[], context: Pick<WorkerControlReceipt, 'actor' | 'initialState' | 'evidence'>, mayApply: () => boolean): Promise<WorkerControlApplication>
-  controlEvidence?(): NonNullable<WorkerControlReceipt['evidence']>
+  controlEvidence?(receipt: AssistantDelegationReceipt): Promise<NonNullable<WorkerControlReceipt['evidence']>>
   controlEvidenceValid?(evidence: NonNullable<WorkerControlReceipt['evidence']>): boolean
   reportError(error: unknown): void
   eventsAvailable?(): void
   restoreDeliverables?(receipt: AssistantDelegationReceipt): Promise<void>
+  settled?(receipt: AssistantDelegationReceipt): Promise<void>
+  review?(receipt: AssistantDelegationReceipt, command: TaskReview, mayApply: () => boolean): Promise<unknown>
 }
 
 /** Delivery receipts and references only; ordinary Sessions own the actual work. */
@@ -52,7 +63,9 @@ export class AssistantDelegation {
   private initialized = false
   private indexTimer?: ReturnType<typeof setTimeout>
   private indexing?: Promise<void>
+  private readonly resources: DelegationResources
   constructor(private readonly workspace: { id: string; rootPath: string }, private readonly host: DelegationHost) {
+    this.resources = new DelegationResources(workspace.rootPath, () => this.kick())
     const root = join(workspace.rootPath, 'assistant')
     mkdirSync(root, { recursive: true })
     this.db = openSqliteDatabase(join(root, 'delegations.db'))
@@ -63,6 +76,8 @@ export class AssistantDelegation {
       CREATE INDEX IF NOT EXISTS work_state ON work(json_extract(body, '$.state'), seq);
       CREATE INDEX IF NOT EXISTS work_session ON work(json_extract(body, '$.sessionId'));
       CREATE INDEX IF NOT EXISTS work_created ON work(json_extract(body, '$.createdAt'),id);
+      CREATE INDEX IF NOT EXISTS work_session_created ON work(json_extract(body, '$.sessionId'),json_extract(body, '$.createdAt'));
+      CREATE UNIQUE INDEX IF NOT EXISTS work_continuation ON work(json_extract(body,'$.continuationOf')) WHERE json_extract(body,'$.continuationOf') IS NOT NULL;
       CREATE TABLE IF NOT EXISTS work_index(id TEXT PRIMARY KEY,title TEXT NOT NULL,project_id TEXT);
       CREATE TABLE IF NOT EXISTS clock (singleton INTEGER PRIMARY KEY CHECK(singleton=1), value INTEGER NOT NULL);
       INSERT OR IGNORE INTO clock VALUES (1,0);
@@ -77,12 +92,18 @@ export class AssistantDelegation {
     this.results = new TaskResultStore(this.db, this.workspace)
     this.controls = new WorkerControls(this.db, {
       read: id => this.get(id), save: receipt => this.save(receipt), view: receipt => this.view(receipt, { id: receipt.id }),
-      evidence: () => this.host.controlEvidence?.() ?? { sources: [], memories: [] },
+      evidence: async receipt => this.host.controlEvidence?.(receipt) ?? { sources: [], memories: [] },
+      status: receipt => this.host.controlStatus?.(receipt) ?? {},
       evidenceValid: evidence => this.host.controlEvidenceValid?.(evidence) ?? false,
       apply: (receipt, command, supplements, context) => {
         if (!this.host.control) throw new Error('Worker management is unavailable in this Host')
         return this.host.control(receipt, command, supplements, context, () => this.get(receipt.id).pendingControlId === command.commandId && !['cancel_requested', 'cancelled'].includes(this.get(receipt.id).state))
       }, wake: () => this.kick(),
+      rejected: async receipt => {
+        if (receipt.state !== 'submitted' || this.host.pendingInput?.(receipt) || this.host.heldSessionIds?.().includes(receipt.sessionId!)) return
+        const recovered = await this.host.recover(receipt)
+        if (recovered.completedResult) await this.syncSessionStatus(this.save({ ...this.get(receipt.id), state: 'result_ready', result: recovered.completedResult }))
+      },
     })
     this.ready = this.initialize()
   }
@@ -97,14 +118,25 @@ export class AssistantDelegation {
       try {
         const { completedResult, resume, ...binding } = await this.host.recover(receipt)
         Object.assign(receipt, binding)
+        if (receipt.state === 'cancel_requested') {
+          const waiting = this.host.heldSessionIds?.().includes(receipt.sessionId!)
+          const saved = this.save({ ...receipt, state: waiting ? 'cancel_requested' : 'cancelled' })
+          if (!waiting) {
+            await this.host.rejectStaged(saved, 'Original assignment was cancelled before Host restart')
+            this.controls.settled(receipt.id)
+          }
+          await this.syncSessionStatus(saved)
+          continue
+        }
         if (receipt.state === 'pause_requested') {
           this.save({ ...receipt, state: this.host.heldSessionIds?.().includes(receipt.sessionId!) ? 'pause_requested' : 'paused' })
           this.controls.settled(receipt.id); continue
         }
-        if (completedResult && receipt.state !== 'cancel_requested') {
-          this.save({ ...receipt, state: 'result_ready', result: completedResult, error: undefined }); continue
+        if (completedResult) {
+          const saved = this.save({ ...receipt, state: 'result_ready', result: completedResult, error: undefined })
+          await this.syncSessionStatus(saved); continue
         }
-        if (resume && receipt.state !== 'cancel_requested') {
+        if (resume) {
           this.save({ ...receipt, state: resume === 'original' ? 'accepted' : 'submitted', error: undefined }); continue
         }
       }
@@ -112,7 +144,11 @@ export class AssistantDelegation {
       this.save({ ...receipt, state: 'needs_attention', error: receipt.error ?? 'Host restarted before delivery settled; inspect the original Session before continuing.' })
     }
     const completed = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state') IN ('result_ready','cancelled') ORDER BY seq DESC LIMIT 20").all() as Array<{ body: string }>
-    for (const row of completed) await this.host.restoreDeliverables?.(JSON.parse(row.body) as AssistantDelegationReceipt).catch(error => this.host.reportError(error))
+    for (const row of completed) {
+      const receipt = JSON.parse(row.body) as AssistantDelegationReceipt
+      await this.host.restoreDeliverables?.(receipt).catch(error => this.host.reportError(error))
+      await this.syncSessionStatus(receipt)
+    }
     this.initialized = true
     await this.controls.recover()
     void this.indexBatch()
@@ -168,7 +204,7 @@ export class AssistantDelegation {
       : receipt.pendingControlId ? 'Another management command is pending' : ['result_ready', 'cancelled', 'cancel_requested'].includes(receipt.state) ? 'The original assignment has settled' : undefined
     const actions: NonNullable<AssistantWork['controlAvailability']>['actions'] = reason ? [] : ['plan', 'message', 'configure',
       ...(receipt.state === 'paused' ? ['resume' as const] : ['failed', 'needs_attention'].includes(receipt.state) ? ['pause' as const, 'retry' as const] : ['pause' as const])]
-    return { ...receipt, ...(query.id ? { outputManifest: this.results.get(receipt.id), controls: this.controls.list(receipt.id), controlAvailability: { actions, reason } } : {}), title: input?.title ?? cached?.title, ...(input ? { effectiveConfig: input.effectiveConfig, adjustments: input.adjustments, artifactBaselines: input.artifactBaselines,
+    return { ...receipt, ...this.host.live?.(receipt), ...(query.id ? { outputManifest: this.results.get(receipt.id), controls: this.controls.list(receipt.id), controlAvailability: { actions, reason } } : {}), title: input?.title ?? cached?.title, ...(input ? { effectiveConfig: input.effectiveConfig, adjustments: input.adjustments, artifactBaselines: input.artifactBaselines, invalidation: input.invalidation, review: input.statusControl?.review,
       configRevision: input.configRevision, capabilityRevision: input.capabilityRevision,
       acceptedConfigRevision: input.acceptedConfigRevision, acceptedPermissionMode: input.acceptedPermissionMode } : {}), ...(execution ? { execution } : {}) }
   }
@@ -188,35 +224,40 @@ export class AssistantDelegation {
     const fingerprint = createHash('sha256').update(canonicalJson({ assistantSessionId, request })).digest('hex')
     const prior = this.replay(request.requestId, fingerprint)
     if (prior) { this.kick(); return this.view(prior) }
+    if (request.continuationOf && this.db.prepare("SELECT 1 FROM work WHERE json_extract(body,'$.continuationOf')=?").get(request.continuationOf))
+      throw new Error('This exact result already has an authorized continuation; inspect it instead of dispatching again')
     const plan = await this.host.plan(request)
     const concurrent = this.replay(request.requestId, fingerprint)
     if (concurrent) return this.view(concurrent)
     if (request.targetSessionId && this.reserved(request.targetSessionId)) throw new Error('Target Session has a pending delegation')
     const receipt = this.save({ formatVersion: 2, id: randomUUID(), workspaceId: this.workspace.id,
-      assistantSessionId, originMessageId, projectId: plan.config.projectId, requestId: request.requestId, fingerprint, targetSessionId: request.targetSessionId,
+      assistantSessionId, originMessageId, continuationOf: request.continuationOf, projectId: plan.config.projectId, requestId: request.requestId, fingerprint, targetSessionId: request.targetSessionId,
       state: 'preparing', seq: 0, createdAt: Date.now(), updatedAt: Date.now() }, { requestId: request.requestId, fingerprint, title: request.title, projectId: plan.config.projectId })
     try {
       const binding = await this.host.prepare(receipt, request, plan, sessionId => {
         this.save({ ...this.get(receipt.id), sessionId })
       })
       const current = this.get(receipt.id)
-      const saved = this.save({ ...current, ...binding, state: current.state === 'cancel_requested' ? 'cancelled' : 'accepted' })
+      const saved = this.save({ ...current, ...binding, state: ['cancel_requested', 'cancelled'].includes(current.state) ? 'cancelled' : request.startPaused ? 'paused' : 'accepted' })
       if (saved.state === 'cancelled') await this.host.rejectStaged(saved, 'Delegation cancelled before submission')
+      await this.syncSessionStatus(saved)
       this.kick()
       return this.view(saved)
     } catch (error) {
       const current = this.get(receipt.id)
-      const failed = this.save({ ...current, state: current.state === 'cancel_requested' ? 'cancelled' : 'failed',
+      const failed = this.save({ ...current, state: ['cancel_requested', 'cancelled'].includes(current.state) ? 'cancelled' : 'failed',
         error: error instanceof Error ? error.message : 'Session input preparation failed' })
       await this.host.rejectStaged(failed, failed.error!)
+      await this.syncSessionStatus(failed)
       this.kick()
       throw error
     }
   }
   async query(query: AssistantWorkQuery): Promise<AssistantWorkPage> {
     await this.ready
+    const facts = { observedAt: Date.now(), scheduling: this.scheduling() }
     const limit = query.limit ?? 20
-    if (query.view === 'deliverables') return { ...this.results.list(query), items: [], nextAfter: null,
+    if (query.view === 'deliverables') return { ...facts, ...this.results.list(query), items: [], nextAfter: null,
       lastSeq: (this.db.prepare('SELECT value FROM clock').get() as { value: number }).value }
     if (query.view) {
       await this.indexBatch()
@@ -224,8 +265,9 @@ export class AssistantDelegation {
       const delivered = `EXISTS(SELECT 1 FROM inbox_events e JOIN inbox_consumption c ON c.event_id=e.event_id
         WHERE json_extract(e.body,'$.delegationId')=w.id AND json_extract(e.body,'$.kind')=${state} AND c.phase='delivered')`
       const terminal = `${state}='cancelled' OR (${state} IN ('failed','result_ready') AND ${delivered})`
-      const where = [`(${query.view === 'history' ? terminal : `NOT (${terminal})`})`]
-      const args: unknown[] = []
+      const current = this.currentWorkPredicate()
+      const where = [query.view === 'history' ? `(${terminal})` : current.sql]
+      const args: unknown[] = query.view === 'history' ? [] : [current.ids]
         if (query.state) { where.push(`${state}=?`); args.push(query.state) }
       if (query.search) { where.push("COALESCE(i.title,w.request_id) LIKE ? ESCAPE '\\'"); args.push(`%${query.search.replace(/[\\%_]/g, '\\$&')}%`) }
       const from = 'FROM work w LEFT JOIN work_index i ON i.id=w.id'
@@ -237,13 +279,13 @@ export class AssistantDelegation {
       const rows = this.db.prepare(`SELECT w.body ${from} WHERE ${where.join(' AND ')} ORDER BY json_extract(w.body,'$.createdAt') DESC,w.id DESC LIMIT ?`).all(...args, limit + 1) as Array<{ body: string }>
       const items = await Promise.all(rows.slice(0, limit).map(row => this.view(JSON.parse(row.body) as AssistantDelegationReceipt, query)))
       const coverage = this.db.prepare('SELECT (SELECT count(*) FROM work_index) AS indexed,(SELECT count(*) FROM work) AS total').get() as { indexed: number; total: number }
-      return { items, total, nextAfter: null, nextCursor: rows.length > limit ? { createdAt: items.at(-1)!.createdAt, id: items.at(-1)!.id } : null,
+      return { ...facts, items, total, nextAfter: null, nextCursor: rows.length > limit ? { createdAt: items.at(-1)!.createdAt, id: items.at(-1)!.id } : null,
         searchCoverage: coverage, lastSeq: (this.db.prepare('SELECT value FROM clock').get() as { value: number }).value }
     }
     const rows = (query.id ? this.db.prepare('SELECT body FROM work WHERE id=?').all(query.id)
       : this.db.prepare('SELECT body FROM work WHERE seq>? ORDER BY seq LIMIT ?').all(query.after ?? 0, limit + 1)) as Array<{ body: string }>
     const items = await Promise.all(rows.slice(0, limit).map(row => this.view(JSON.parse(row.body) as AssistantDelegationReceipt, query)))
-    return { items, nextAfter: rows.length > limit ? items.at(-1)!.seq : null,
+    return { ...facts, items, nextAfter: rows.length > limit ? items.at(-1)!.seq : null,
       lastSeq: (this.db.prepare('SELECT value FROM clock').get() as { value: number }).value }
   }
   events(query: { after?: number; limit?: number } = {}): ResidentEventsPage {
@@ -292,9 +334,35 @@ export class AssistantDelegation {
       for (const id of eventIds) this.db.prepare("UPDATE inbox_consumption SET phase='handled' WHERE event_id=? AND run_id=? AND phase='entered'").run(id, runId)
     })()
   }
+  async review(command: TaskReview): Promise<unknown> {
+    await this.ready
+    const receipt = this.get(command.delegationId)
+    const matches = (current: AssistantDelegationReceipt) => current.state === 'result_ready' && current.seq === command.expectedSeq
+      && current.result?.sessionId === command.result.sessionId && current.result.messageId === command.result.messageId
+    if (!matches(receipt)) throw new Error('Task result or sequence changed; read the current result before reviewing')
+    if (!this.host.review) throw new Error('Task review is unavailable in this Host')
+    const result = await this.host.review(receipt, command, () => matches(this.get(receipt.id)))
+    this.kick()
+    return result
+  }
   receiptForInput(sessionId: string, inputMessageId: string): AssistantDelegationReceipt | undefined {
     const row = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.sessionId')=? AND json_extract(body,'$.inputMessageId')=?").get(sessionId, inputMessageId) as { body: string } | undefined
     return row ? JSON.parse(row.body) : undefined
+  }
+  receiptForSession(sessionId: string): AssistantDelegationReceipt | undefined {
+    const row = this.db.prepare(`SELECT body FROM work WHERE json_extract(body,'$.sessionId')=?
+      AND json_extract(body,'$.state') IN ('accepted','submitting','submitted','needs_attention','failed','pause_requested','paused') ORDER BY seq DESC LIMIT 1`).get(sessionId) as { body: string } | undefined
+    return row ? JSON.parse(row.body) : undefined
+  }
+  async continuation(id: string, assistantSessionId: string): Promise<{ receipt: AssistantDelegationReceipt; input: SessionDelegationInput }> {
+    await this.ready
+    const receipt = this.get(id), input = await this.host.snapshot(receipt)
+    if (receipt.assistantSessionId !== assistantSessionId || receipt.state !== 'result_ready' || !receipt.result || !input?.originGrant)
+      throw new Error('Continuation requires a completed result with its original user grant')
+    const review = input.statusControl?.review
+    if (!review || review.outcome === 'needs_user_review' || review.result.sessionId !== receipt.result.sessionId || review.result.messageId !== receipt.result.messageId || input.statusControl?.withdrawn)
+      throw new Error('Read and review the exact original result before continuing its authorized scope')
+    return { receipt, input }
   }
   finishEvents(runId: string, delivery?: { sessionId: string; messageId: string }): void {
     this.db.transaction(() => {
@@ -328,6 +396,7 @@ export class AssistantDelegation {
     const current = this.get(id)
     const cancelled = awaitingSettlement || current.state === 'cancelled' ? current : this.save({ ...current, state: 'cancelled' })
     if (cancelled.state === 'cancelled') await this.host.rejectStaged(cancelled, 'Delegation cancelled before submission')
+    await this.syncSessionStatus(cancelled)
     this.kick()
     return this.view(cancelled)
   }
@@ -341,21 +410,28 @@ export class AssistantDelegation {
       } : {}) })
     }
   }
-  complete(event: SessionCompletionEvent): void {
+  async complete(event: SessionCompletionEvent): Promise<void> {
     if (!this.initialized || this.closed || event.workspaceId !== this.workspace.id) return
     const rows = this.db.prepare(`SELECT body FROM work WHERE json_extract(body,'$.sessionId')=?
-      AND json_extract(body,'$.state') IN ('submitting','submitted','needs_attention','cancel_requested','pause_requested')`).all(event.sessionId) as Array<{ body: string }>
+      AND json_extract(body,'$.state') IN ('submitting','submitted','needs_attention','cancel_requested','cancelled','pause_requested')`).all(event.sessionId) as Array<{ body: string }>
     const receipt = rows.map(row => JSON.parse(row.body) as AssistantDelegationReceipt)
       .find(item => item.inputMessageId && event.inputMessageIds?.includes(item.inputMessageId))
     if (!receipt) { this.kick(); return }
+    if (receipt.state === 'cancelled') { await this.syncSessionStatus(receipt); this.kick(); return }
     if (receipt.state === 'pause_requested') {
       this.save({ ...receipt, state: this.host.heldSessionIds?.().includes(receipt.sessionId!) ? 'pause_requested' : 'paused' })
       this.controls.settled(receipt.id)
     }
     else if (receipt.state === 'cancel_requested') this.save({ ...receipt, state: 'cancelled' })
+    else if (this.host.pendingInput?.(receipt)) {
+      // An accepted revision still belongs to this assignment. Its preceding
+      // answer is intermediate; only the last authorized FIFO turn may seal it.
+      this.save({ ...receipt, state: 'submitted', error: undefined })
+    }
     else if (event.reason === 'complete' && event.finalMessageId) this.save({ ...receipt, state: 'result_ready', error: undefined,
       result: { sessionId: event.resultSessionId ?? event.sessionId, messageId: event.finalMessageId } })
     else this.save({ ...receipt, state: ['error','timeout'].includes(event.reason) ? 'failed' : 'needs_attention', error: `Session ${event.reason}; inspect its original execution.` })
+    await this.syncSessionStatus(this.get(receipt.id))
     this.kick()
   }
   private kick(): void {
@@ -368,8 +444,46 @@ export class AssistantDelegation {
     })
   }
   resumeQueue(): void { this.kick() }
+  private currentWorkPredicate(alias = 'w'): { sql: string; ids: string } {
+    const state = `json_extract(${alias}.body,'$.state')`, session = `json_extract(${alias}.body,'$.sessionId')`
+    const ids = JSON.stringify(this.host.currentSessionIds?.() ?? [])
+    const delivered = `EXISTS(SELECT 1 FROM inbox_events e JOIN inbox_consumption c ON c.event_id=e.event_id
+      WHERE json_extract(e.body,'$.delegationId')=${alias}.id AND json_extract(e.body,'$.kind')=${state} AND c.phase='delivered')`
+    return { ids, sql: `(${state} NOT IN ('cancelled','result_ready','failed') OR (${state} IN ('result_ready','failed') AND (NOT ${delivered} OR ${session} IN (SELECT value FROM json_each(?)))))
+      AND NOT EXISTS(SELECT 1 FROM work newer WHERE json_extract(newer.body,'$.sessionId')=${session} AND json_extract(newer.body,'$.createdAt')>json_extract(${alias}.body,'$.createdAt'))` }
+  }
+  overview(limit = 20): AssistantTaskOverview {
+    const observedAt = Date.now(), predicate = this.currentWorkPredicate()
+    const total = (this.db.prepare(`SELECT count(*) AS count FROM work w WHERE ${predicate.sql}`).get(predicate.ids) as { count: number }).count
+    const rows = this.db.prepare(`SELECT w.body,i.title FROM work w LEFT JOIN work_index i ON i.id=w.id WHERE ${predicate.sql}
+      ORDER BY json_extract(w.body,'$.state') IN ('failed','needs_attention','result_ready') DESC,COALESCE(json_extract(w.body,'$.priority'),0) DESC,w.seq DESC LIMIT ?`).all(predicate.ids, limit) as Array<{ body: string; title?: string }>
+    return { observedAt, scheduling: this.scheduling(), total, omitted: Math.max(0, total - rows.length),
+      lastSeq: (this.db.prepare('SELECT value FROM clock').get() as { value: number }).value,
+      items: rows.map(row => {
+        const work = JSON.parse(row.body) as AssistantDelegationReceipt, live = this.host.live?.(work)
+        return { id: work.id, seq: work.seq, sessionId: work.sessionId, inputMessageId: work.inputMessageId, originMessageId: work.originMessageId,
+          branchIds: work.branchIds, title: row.title?.slice(0, 160), goal: live?.goal?.slice(0, 300), state: work.state, waitingFor: work.waitingFor,
+          result: work.result, error: work.error?.slice(0, 400), sessionStatus: live?.sessionStatus, runtime: live?.runtime,
+          ageMs: Math.max(0, observedAt - work.createdAt), ...(work.state === 'accepted' ? { waitingMs: Math.max(0, observedAt - work.createdAt) } : {}) }
+      }) }
+  }
+  scheduling(): NonNullable<AssistantWorkPage['scheduling']> {
+    const counts = this.db.prepare(`SELECT
+      sum(json_extract(body,'$.state') IN ('submitting','submitted','cancel_requested','pause_requested')) AS occupied,
+      sum(json_extract(body,'$.state')='accepted') AS queued,
+      sum(json_extract(body,'$.state')='paused') AS paused FROM work`).get() as { occupied: number | null; queued: number | null; paused: number | null }
+    const held = this.host.heldSessionIds?.() ?? []
+    const reserved = held.length ? (this.db.prepare(`SELECT count(*) AS count FROM work WHERE json_extract(body,'$.sessionId') IN (SELECT value FROM json_each(?))
+      AND json_extract(body,'$.state') IN ('failed','result_ready','cancelled','needs_attention','paused')`).get(JSON.stringify(held)) as { count: number }).count : 0
+    return { capacity: this.host.capacity?.() ?? 4, occupied: (counts.occupied ?? 0) + reserved, queued: counts.queued ?? 0, paused: counts.paused ?? 0 }
+  }
   reportDeliveryError(error: unknown): void { this.host.reportError(error) }
-  private async sharesWaitingResources(receipt: AssistantDelegationReceipt, waiting: AssistantDelegationReceipt[]): Promise<AssistantDelegationReceipt['waitingFor']> {
+  private async syncSessionStatus(receipt: AssistantDelegationReceipt): Promise<void> {
+    // Session projection/storage failure must not erase Runtime settlement or
+    // freeze unrelated queued work. Recovery retries from the durable receipt.
+    await this.host.settled?.(receipt).catch(error => this.host.reportError(error))
+  }
+  private async sharesWaitingResources(receipt: AssistantDelegationReceipt, waiting: AssistantDelegationReceipt[], active = false): Promise<AssistantDelegationReceipt['waitingFor']> {
     if (!waiting.length) return
     const input = await this.host.snapshot(receipt)
     if (!input) return { delegationId: waiting[0]!.id, reason: 'configuration' }
@@ -377,52 +491,80 @@ export class AssistantDelegation {
       if (held.sessionId === receipt.sessionId) return { delegationId: held.id, reason: 'session' }
       const previous = await this.host.snapshot(held)
       if (!previous) return { delegationId: held.id, reason: 'configuration' }
+      if ((!active || held.state === 'cancel_requested') && this.resources.conflictsWithUncertain(input, receipt.sessionId!, previous, held.sessionId!))
+        return { delegationId: held.id, reason: 'file_scope', detail: 'An interrupted assignment retains this file scope until its original effects are inspected' }
       const left = input.effectiveConfig, right = previous.effectiveConfig
-      if (left.enabledSourceSlugs.some(slug => right.enabledSourceSlugs.includes(slug))) return { delegationId: held.id, reason: 'source' }
-      if (left.workingDirectory === 'none' || right.workingDirectory === 'none') continue
-      const a = resolveCanonicalPath(left.workingDirectory), b = resolveCanonicalPath(right.workingDirectory)
-      const overlap = [relative(a, b), relative(b, a)].some(path => !path || path !== '..' && !path.startsWith(`..${sep}`) && !isAbsolute(path))
-      if (overlap) return { delegationId: held.id, reason: 'directory' }
+      if ((!active || left.permissionMode !== 'safe' || right.permissionMode !== 'safe')
+        && left.enabledSourceSlugs.some(slug => right.enabledSourceSlugs.includes(slug))) return { delegationId: held.id, reason: 'source', detail: 'An exclusive source is held by another assignment' }
     }
   }
   private async pump(): Promise<void> {
     while (!this.closed) {
-      if (this.db.prepare("SELECT 1 FROM work WHERE json_extract(body,'$.state') IN ('preparing','submitting','submitted','cancel_requested') LIMIT 1").get()) return
+      const active = (this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state') IN ('submitting','submitted','cancel_requested')").all() as Array<{ body: string }>)
+        .map(row => JSON.parse(row.body) as AssistantDelegationReceipt)
       const waiting = (this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state') IN ('needs_attention','pause_requested')").all() as Array<{ body: string }>)
         .map(row => JSON.parse(row.body) as AssistantDelegationReceipt)
       const holders = this.host.heldSessionIds?.() ?? []
+      let settledCancellation = false
+      for (const pending of active) {
+        if (pending.state !== 'cancel_requested' || pending.sessionId && holders.includes(pending.sessionId)) continue
+        const current = this.get(pending.id)
+        if (current.state !== 'cancel_requested') continue
+        const cancelled = this.save({ ...current, state: 'cancelled' })
+        await this.host.rejectStaged(cancelled, 'Original assignment cancelled before continuation')
+        await this.syncSessionStatus(cancelled)
+        settledCancellation = true
+      }
+      if (settledCancellation) continue
       if (holders.length) {
         const held = this.db.prepare(`SELECT body FROM work WHERE json_extract(body,'$.sessionId') IN (SELECT value FROM json_each(?))
           AND json_extract(body,'$.state') IN ('cancelled','failed','result_ready')`).all(JSON.stringify(holders)) as Array<{ body: string }>
         waiting.push(...held.map(row => JSON.parse(row.body) as AssistantDelegationReceipt))
+      }
+      this.resources.refresh([...active, ...waiting], holders)
+      for (const held of [...active, ...waiting]) {
+        const input = await this.host.snapshot(held)
+        if (input && held.sessionId) this.resources.acquire(held, input)
       }
       const rows = this.db.prepare("SELECT body FROM work WHERE json_extract(body,'$.state')='accepted' ORDER BY COALESCE(json_extract(body,'$.priority'),0) DESC,json_extract(body,'$.createdAt'),seq").all() as Array<{ body: string }>
       let eligible: AssistantDelegationReceipt | undefined
       for (const row of rows) {
         const candidate = JSON.parse(row.body) as AssistantDelegationReceipt
         if (candidate.pendingControlId) continue
-        const blocker = await this.sharesWaitingResources(candidate, waiting)
+        let blocker = this.host.waitingFor?.(candidate)
+          ?? await this.sharesWaitingResources(candidate, waiting)
+          ?? await this.sharesWaitingResources(candidate, active, true)
+        if (!blocker && this.scheduling().occupied >= (this.host.capacity?.() ?? 4)) blocker = { reason: 'capacity', detail: 'All configured Worker admission slots are occupied' }
+        if (!blocker) {
+          const input = await this.host.snapshot(candidate)
+          if (!input) blocker = { reason: 'configuration', detail: 'The original assignment is unavailable' }
+          else if (!this.resources.acquire(candidate, input)) blocker = { reason: 'file_scope', detail: 'Declared file reads/writes overlap an occupied Tasks or Worker scope' }
+        }
         if (!blocker) { eligible = candidate; break }
         const current = this.get(candidate.id)
-        if (current.state === 'accepted' && (current.waitingFor?.delegationId !== blocker.delegationId || current.waitingFor.reason !== blocker.reason)) this.save({ ...current, waitingFor: blocker })
+        if (current.state === 'accepted' && canonicalJson(current.waitingFor ?? null) !== canonicalJson(blocker)) this.save({ ...current, waitingFor: blocker })
       }
       if (!eligible || this.closed) return
       // Resource reads yield; cancellation or another admission may have won.
-      if (this.get(eligible.id).state !== 'accepted') continue
-      const receipt = this.save({ ...eligible, state: 'submitting' })
+      const fresh = this.get(eligible.id)
+      if (fresh.state !== 'accepted' || fresh.pendingControlId || fresh.seq !== eligible.seq) continue
+      const receipt = this.save({ ...fresh, state: 'submitting' })
       try {
-        await this.host.start(receipt, () => this.get(receipt.id).state === 'submitting')
+        await this.host.start(receipt, () => this.get(receipt.id).state === 'submitting' && !this.get(receipt.id).pendingControlId && this.resources.valid(receipt.id))
         const current = this.get(receipt.id)
         if (current.state === 'submitting') this.save({ ...current, state: 'submitted' })
       }
       catch (error) {
         const current = this.get(receipt.id)
+        if (error instanceof SessionDelegationWait && current.state === 'submitting') {
+          this.save({ ...current, state: 'accepted', waitingFor: error.waitingFor }); continue
+        }
         if (current.pendingControlId) continue
         if (!['cancelled','cancel_requested','result_ready'].includes(current.state)) {
           const failed: AssistantDelegationReceipt = { ...current, state: error instanceof SessionDelegationConflict ? 'failed' : 'needs_attention',
             error: error instanceof Error ? error.message : 'Session input submission failed' }
           if (failed.state === 'failed') await this.host.rejectStaged(failed, failed.error!)
-          if (!['cancelled','cancel_requested','result_ready'].includes(this.get(receipt.id).state)) this.save(failed)
+          if (!['cancelled','cancel_requested','result_ready'].includes(this.get(receipt.id).state)) await this.syncSessionStatus(this.save(failed))
         }
       }
     }
@@ -431,6 +573,7 @@ export class AssistantDelegation {
     this.closed = true
     if (this.indexTimer) clearTimeout(this.indexTimer)
     await this.ready; await this.pumping; await this.indexing
+    this.resources.close()
     this.db.close()
   }
 }

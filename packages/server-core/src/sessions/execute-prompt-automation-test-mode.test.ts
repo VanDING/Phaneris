@@ -16,9 +16,9 @@ import { SessionManager } from './SessionManager.ts'
 // the prompt is dispatched (fire-and-forget, error-logged). Real automation
 // execution omits the flag and keeps awaiting completion.
 //
-// These tests stub the heavy collaborators (createSession / sendEvent /
-// sendMessage) and lock the branch: waitForCompletion:false resolves even when
-// sendMessage never settles; the default still awaits (and propagates errors).
+// These tests stub createSession / sendEvent / submitInput and retain the
+// original waiting contract: false resolves during a long turn; default waits
+// for finished and propagates its error.
 
 describe('executePromptAutomation waitForCompletion', () => {
   let tmpRoot: string
@@ -40,9 +40,9 @@ describe('executePromptAutomation waitForCompletion', () => {
   it('waitForCompletion:false returns as soon as the session is created (does not await the turn)', async () => {
     let sendCalled = false
     // Never-resolving send simulates a long tool-using turn.
-    ;(sm as unknown as { sendMessage: unknown }).sendMessage = () => {
+    sm.submitInput = () => {
       sendCalled = true
-      return new Promise<never>(() => {})
+      return { accepted: Promise.resolve({ accepted: true as const, messageId: 'automation-fixture' }), finished: new Promise<never>(() => {}) }
     }
 
     const result = await sm.executePromptAutomation({
@@ -57,8 +57,7 @@ describe('executePromptAutomation waitForCompletion', () => {
   })
 
   it('default (waitForCompletion unset) awaits sendMessage and propagates its error', async () => {
-    ;(sm as unknown as { sendMessage: unknown }).sendMessage = () =>
-      Promise.reject(new Error('send failed'))
+    sm.submitInput = () => ({ accepted: Promise.resolve({ accepted: true as const, messageId: 'automation-fixture' }), finished: Promise.reject(new Error('send failed')) })
 
     await expect(
       sm.executePromptAutomation({

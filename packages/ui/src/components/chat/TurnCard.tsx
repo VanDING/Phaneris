@@ -56,7 +56,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '../tooltip'
 import { parseDiffFromFile, type FileContents } from '@pierre/diffs'
 import { getDiffStats, getUnifiedDiffStats } from '../code-viewer'
 import { TurnCardActionsMenu } from './TurnCardActionsMenu'
-import { computeLastChildSet, groupActivitiesByParent, isActivityGroup, formatDuration, formatTokens, deriveTurnPhase, isVisibleActivity, shouldShowThinkingIndicator, type ActivityGroup, type AssistantTurn } from './turn-utils'
+import { groupActivitiesByParent, isActivityGroup, formatDuration, formatTokens, deriveTurnPhase, isVisibleActivity, shouldShowThinkingIndicator, type ActivityGroup, type AssistantTurn } from './turn-utils'
 import { extractAnnotationSelectedText } from './follow-up-helpers'
 import { canBranchFromTurn } from './recovery-policy'
 import {
@@ -482,8 +482,6 @@ interface ActivityRowProps {
   activity: ActivityItem
   /** Callback to open activity details in Monaco */
   onOpenDetails?: () => void
-  /** Whether this is the last child at its depth level (for └ corner in tree view) */
-  isLastChild?: boolean
   /** Session folder path for stripping from file paths in tool display */
   sessionFolderPath?: string
   /** Display mode: 'detailed' shows all info, 'informative' hides MCP/API names and params */
@@ -491,11 +489,9 @@ interface ActivityRowProps {
 }
 
 /**
- * TreeViewConnector is no longer used - the vertical line from the expanded section
- * already provides visual hierarchy. Keeping this as a no-op for now in case
- * we need depth indentation in the future.
+ * Indent each activity by its nesting depth; the section supplies the tree line.
  */
-function TreeViewConnector({ depth }: { depth: number; isLastChild?: boolean }) {
+function TreeViewConnector({ depth }: { depth: number }) {
   if (depth === 0) return null
 
   // Just add indentation based on depth, no connectors
@@ -509,7 +505,7 @@ function TreeViewConnector({ depth }: { depth: number; isLastChild?: boolean }) 
 }
 
 /** Single activity row in expanded view */
-function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, displayMode = 'detailed' }: ActivityRowProps) {
+function ActivityRow({ activity, onOpenDetails, sessionFolderPath, displayMode = 'detailed' }: ActivityRowProps) {
   const depth = activity.depth || 0
   if (activity.type === 'thinking') return <ThinkingActivityRow activity={activity} onOpenDetails={onOpenDetails} />
 
@@ -521,7 +517,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
     const isComplete = activity.status === 'completed'
     return (
       <div className="flex items-stretch">
-        <TreeViewConnector depth={depth} isLastChild={isLastChild} />
+        <TreeViewConnector depth={depth} />
         <div
           role={onOpenDetails && isComplete ? 'button' : undefined}
           tabIndex={onOpenDetails && isComplete ? 0 : undefined}
@@ -569,7 +565,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
     const isRunning = activity.status === 'running'
     return (
       <div className="flex items-stretch">
-        <TreeViewConnector depth={depth} isLastChild={isLastChild} />
+        <TreeViewConnector depth={depth} />
         <div
           className={cn(
             "flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-muted-foreground flex-1 min-w-0",
@@ -633,7 +629,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
 
   return (
     <div className="flex items-stretch">
-      <TreeViewConnector depth={depth} isLastChild={isLastChild} />
+      <TreeViewConnector depth={depth} />
       <div
         role={onOpenDetails && isComplete ? 'button' : undefined}
         tabIndex={onOpenDetails && isComplete ? 0 : undefined}
@@ -999,7 +995,7 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
                   <ActivityRow
                     activity={child}
                     onOpenDetails={onOpenActivityDetails ? () => onOpenActivityDetails(child) : undefined}
-                    isLastChild={idx === group.children.length - 1}
+
                     sessionFolderPath={sessionFolderPath}
                     displayMode={displayMode}
                   />
@@ -2601,13 +2597,6 @@ export const TurnCard = React.memo(function TurnCard({
     [isExpanded, sortedActivities, hasTaskSubagents]
   )
 
-  // Pre-compute which activities are last children - O(n) instead of O(n²) per-render check
-  // Only used for flat view (non-grouped)
-  const lastChildSet = useMemo(
-    () => isExpanded && !hasTaskSubagents ? computeLastChildSet(sortedActivities) : new Set<string>(),
-    [isExpanded, sortedActivities, hasTaskSubagents]
-  )
-
   // Don't render if nothing to show and turn is complete
   if (activities.length === 0 && !response && isComplete) {
     return null
@@ -2806,7 +2795,7 @@ export const TurnCard = React.memo(function TurnCard({
                         <ActivityRow
                           activity={activity}
                           onOpenDetails={onOpenActivityDetails ? () => onOpenActivityDetails(activity) : undefined}
-                          isLastChild={lastChildSet.has(activity.id)}
+
                           sessionFolderPath={sessionFolderPath}
                           displayMode={displayMode}
                         />

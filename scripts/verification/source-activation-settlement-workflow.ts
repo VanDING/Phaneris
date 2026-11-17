@@ -300,7 +300,10 @@ await verificationWorkflow('source-activation-settlement', async evidence => {
       f.runtime.execution.accept(h, { operationId: 'unknown-run', userMessageId: 'original', userMessage: 'Original task' })
       await f.runtime.effects.prepareModel(f.managed.workspace.rootPath, { sessionId: id, runOperationId: 'unknown-run', providerRequestId: 'unknown', provider: 'fixture', model: 'fixture', canonicalRequestHash: 'fixture' })
       await f.runtime.execution.finish(h, 'interrupted')
-      f.manager.sendMessage = async () => { throw new Error('fixture retry admission unavailable') }
+      f.manager.submitInput = () => {
+        const failure = Promise.reject(new Error('fixture retry admission unavailable'))
+        return { accepted: failure, finished: failure }
+      }
       await f.internal.processEvent(f.managed, { type: 'source_activated', sourceSlug: 'alpha', originalMessage: 'Original task' })
       await pause(250)
       assert(f.ui.some(e => e.type === 'error'), 'Failed auto-resend must reach the UI')

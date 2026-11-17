@@ -88,13 +88,8 @@ export class Router {
           bindingId: binding.id,
           attachmentCount: fileAttachments?.length ?? 0,
         })
-        await this.sessionManager.sendMessage(
-          binding.sessionId,
-          msg.text,
-          fileAttachments,
-          undefined, // storedAttachments (handled by session layer)
-          undefined, // SendMessageOptions
-        )
+        await this.sessionManager.submitInput(binding.sessionId, { text: msg.text, attachments: fileAttachments },
+          { kind: 'direct_user', channel: 'messaging' }).accepted
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Unknown error'
         this.log.error('failed to route inbound chat message', {

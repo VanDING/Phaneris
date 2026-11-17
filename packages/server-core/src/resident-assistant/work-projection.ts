@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../sessions/input-contracts'
 import type { Message, SessionInputExecutionsPage } from '@phaneris/core/types'
 import type { AssistantDelegationReceipt, AssistantWorkExecution } from '@phaneris/session-tools-core/delegation-contracts'
 
@@ -8,7 +9,7 @@ export function projectWorkExecution(receipt: AssistantDelegationReceipt, sessio
   const index = session.messages.findIndex(message => message.id === receipt.inputMessageId)
   const input = session.messages[index]
   const after = index < 0 ? [] : session.messages.slice(index + 1)
-  const later = after.findIndex(message => message.role === 'user' && !message.inputSource && !message.hidden)
+  const later = after.findIndex(message => message.role === 'user' && isDirectUserSource(message.inputSource) && !message.hidden)
   const original = later < 0 ? after : after.slice(0, later)
   const failure = original.findLast(message => message.role === 'error')
   const tool = original.findLast(message => message.role === 'tool' && ['executing', 'pending'].includes(message.toolStatus ?? ''))
@@ -19,7 +20,7 @@ export function projectWorkExecution(receipt: AssistantDelegationReceipt, sessio
     : receipt.state === 'result_ready' ? 'completed' : ['needs_attention', 'cancel_requested', 'pause_requested', 'paused'].includes(receipt.state) ? 'waiting'
       : session.processing && later < 0 ? tool ? 'tool' : session.thinking ? 'thinking' : session.streaming ? 'responding' : 'requesting'
         : page.items[0]?.phase === 'model_effect_pending' ? 'requesting' : notStarted ? 'queued' : 'unknown'
-  const followUp = later < 0 ? undefined : after.slice(later).findLast(message => message.role === 'user' && !message.inputSource && !message.hidden)
+  const followUp = later < 0 ? undefined : after.slice(later).findLast(message => message.role === 'user' && isDirectUserSource(message.inputSource) && !message.hidden)
   const result = followUp ? after.slice(after.indexOf(followUp) + 1).findLast(message => message.role === 'assistant' && !message.isIntermediate && message.content.trim()) : undefined
   return { source: 'runtime', inputMessageId: receipt.inputMessageId!, sourceAvailable: !!input,
     coverage: page.total ? continuationSessionId || original.some(message => message.inputSource?.kind === 'runtime_continuation') ? 'original_input_with_continuation' : 'original_input' : notStarted ? 'not_started' : 'unknown',

@@ -1,10 +1,11 @@
 #!/usr/bin/env bun
 /** Product commands, real persistence queue and filesystem watcher in an isolated workspace. */
 import assert from 'node:assert/strict'
-import { mkdirSync, readFileSync, writeFileSync, rmdirSync } from 'node:fs'
-import { join } from 'node:path'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import type { Message } from '@phaneris/core/types'
 import { verificationWorkflow } from './verification-artifacts'
+import { obstructDirectory } from './fixtures/directory-obstruction'
 
 await verificationWorkflow('session-metadata', async run => {
   process.env.PHANERIS_CONFIG_DIR = join(run.directory, 'config')
@@ -100,21 +101,19 @@ await verificationWorkflow('session-metadata', async run => {
     await scene('failed-metadata-write-can-retry-without-dropping-product-failure', async () => {
       const retry = await manager.createSession(workspace.id, { name: 'Metadata retry fixture' })
       await manager.flushSession(retry.id)
-      const temporaryPath = getSessionFilePath(workspace.rootPath, retry.id) + '.tmp'
-      mkdirSync(temporaryPath)
-      await assert.rejects(updateSessionMetadata(workspace.rootPath, retry.id, { name: 'Blocked metadata write' }))
-      assert.equal(loadSession(workspace.rootPath, retry.id)!.name, 'Metadata retry fixture')
-      rmdirSync(temporaryPath) // Only the empty blocking directory created by this fixture.
+      const restoreMetadata = obstructDirectory(join(dirname(getSessionFilePath(workspace.rootPath, retry.id)), 'tmp'))
+      try {
+        await assert.rejects(updateSessionMetadata(workspace.rootPath, retry.id, { name: 'Blocked metadata write' }))
+        assert.equal(loadSession(workspace.rootPath, retry.id)!.name, 'Metadata retry fixture')
+      } finally { restoreMetadata() }
       await updateSessionMetadata(workspace.rootPath, retry.id, { name: 'Retried metadata write' })
       assert.equal(loadSession(workspace.rootPath, retry.id)!.name, 'Retried metadata write')
       const failedProduct = await manager.createSession(workspace.id, { name: 'Product failure fixture' })
       const product = port.sessions.get(failedProduct.id)!
       product.messages.push({ id: 'retained-failed-product', role: 'info', content: 'Do not overwrite a failed product snapshot', timestamp: 5 })
-      const blockedProductPath = getSessionFilePath(workspace.rootPath, failedProduct.id) + '.tmp'
-      mkdirSync(blockedProductPath)
-      port.persistSession(product)
-      await assert.rejects(manager.flushSession(failedProduct.id))
-      rmdirSync(blockedProductPath)
+      const restoreProduct = obstructDirectory(join(dirname(getSessionFilePath(workspace.rootPath, failedProduct.id)), 'tmp'))
+      try { port.persistSession(product); await assert.rejects(manager.flushSession(failedProduct.id)) }
+      finally { restoreProduct() }
       await assert.rejects(updateSessionMetadata(workspace.rootPath, failedProduct.id, { name: 'Must not bypass product failure' }))
       port.persistSession(product)
       await manager.flushSession(failedProduct.id)

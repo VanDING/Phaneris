@@ -1,3 +1,4 @@
+import { isDirectUserSource } from '../../packages/server-core/src/sessions/input-contracts'
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -91,7 +92,7 @@ await verificationWorkflow('resident-assistant-control', async run => {
     const assistant = await client.invoke(RPC_CHANNELS.residentAssistant.GET, 'alpha')
     const sendMain = async (message: string) => {
       await manager.sendMessage(assistant.id, message)
-      await until(async () => { const current = (await manager.getSession(assistant.id))!; return !current.isProcessing && !current.messages.some(input => input.role === 'user' && !input.inputSource && input.isQueued) })
+      await until(async () => { const current = (await manager.getSession(assistant.id))!; return !current.isProcessing && !current.messages.some(input => input.role === 'user' && isDirectUserSource(input.inputSource) && input.isQueued) })
     }
     const goal = 'CONTROL_TARGET：完成授权报告，可以按原目标调整执行方式。'
     await sendMain(goal)
@@ -247,6 +248,9 @@ await verificationWorkflow('resident-assistant-control', async run => {
     assert.equal((await humanWork()).state as string, 'paused')
     scenes.push('W08-old-assignment-controls-do-not-cancel-new-human-work')
     const priorityGoal = 'CONTROL_PRIORITY：分别执行 HOLD、LOW、HIGH 三项，允许调整排队顺序。'
+    const { loadWorkspaceConfig, saveWorkspaceConfig } = await import('@phaneris/shared/workspaces')
+    const priorityConfig = loadWorkspaceConfig(root)!
+    saveWorkspaceConfig(root, { ...priorityConfig, assistantTasks: { concurrency: 1 } })
     await sendMain(priorityGoal)
     holding = true; workerStarted = false; release = Promise.withResolvers<void>()
     const queue = (requestId: string, marker: string) => client.invoke(RPC_CHANNELS.residentAssistant.DISPATCH, 'alpha', { requestId, title: marker, goalQuote: priorityGoal,
@@ -265,6 +269,7 @@ await verificationWorkflow('resident-assistant-control', async run => {
     await until(async () => (await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: low.id })).items[0]!.state === 'result_ready')
     assert.equal(executionOrder[0], 'PRIORITY_HIGH')
     scenes.push('W06-priority-uses-existing-queue-and-planning-owner')
+    saveWorkspaceConfig(root, priorityConfig)
     const supportSession = await manager.createSession('alpha', { name: 'Material support', permissionMode: 'safe', workingDirectory: 'none' })
     await manager.sendMessage(supportSession.id, 'CONTROL_WITHDRAWN_SUPPORT_ONLY')
     const supportInput = (await manager.getSession(supportSession.id))!.messages.find(message => message.role === 'user')!

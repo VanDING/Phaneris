@@ -1,4 +1,4 @@
-import { getDismissibleLayerBridge } from './dismissible-layer-bridge'
+import { getDismissibleLayerBridge } from '@phaneris/ui/dismissible-layer-bridge'
 
 /**
  * Overlay Detection Utilities

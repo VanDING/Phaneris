@@ -17,7 +17,8 @@ const reserved = JSON.parse(readFileSync(resolve(root, 'scripts/rpc-reserved-sur
 }
 const reservedByChannel = new Map(reserved.surfaces.map(row => [row.channel, row]))
 const resultPorts = readFileSync(resolve(root, 'packages/shared/src/protocol/method-contracts.ts'), 'utf8')
-const typedResults = new Map([...resultPorts.matchAll(/\[c\.([\w.]+)\]:\s*([^\n]+)/g)].map(match => [channelByKey.get(match[1]!)!, match[2]!]))
+const resultInterface = resultPorts.slice(resultPorts.indexOf('export interface RpcMethodResults'))
+const typedResults = new Map([...resultInterface.matchAll(/\[c\.([\w.]+)\]:\s*([^\n]+)/g)].map(match => [channelByKey.get(match[1]!)!, match[2]!.trim()]))
 const sites = new Map<string, { file: string; line: number; args: string[]; result: string; owner: string }[]>()
 const events = new Set<string>()
 function expressionPath(node: Node | undefined): string | undefined {
@@ -55,7 +56,7 @@ const rows = channels.map(row => ({ ...row,
   routing: LOCAL_ONLY_CHANNELS.has(row.channel) ? 'local-only' : REMOTE_ELIGIBLE_CHANNELS.has(row.channel) ? 'remote-eligible' : 'UNCLASSIFIED',
   kind: events.has(row.channel) && !sites.has(row.channel) ? 'event' : sites.has(row.channel) ? 'method' : reservedByChannel.get(row.channel)?.kind ?? 'UNCLASSIFIED',
   ...(reservedByChannel.has(row.channel) ? { surfaceDecision: reservedByChannel.get(row.channel) } : {}),
-  runtimeValidation: RPC_INPUT_CONTRACTS[row.channel] ? 'protocol input contract + existing domain checks' : 'existing handler/capability checks; no centralized schema',
+  runtimeValidation: Object.hasOwn(RPC_INPUT_CONTRACTS, row.channel) ? 'protocol input contract + existing domain checks' : 'existing handler/capability checks; no centralized schema',
   resultContract: typedResults.get(row.channel) ?? (events.has(row.channel) ? 'authoritative BroadcastEventMap / existing capability event payload' : 'unknown transport extension; narrowed by existing typed client facade or handler consumer'),
   compatibility: 'stable wire string; unknown fields preserved; timeout abandons response without effect retry',
   sites: (sites.get(row.channel) ?? []).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line),

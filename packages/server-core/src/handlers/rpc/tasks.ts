@@ -26,12 +26,10 @@ import type {
   TaskGetResult,
   TaskResultsDto,
   TaskResultNodeDto,
-  TaskPlanningInput,
 } from '@phaneris/shared/protocol'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import {
   parseTaskYaml,
-  saveTaskSpec,
   loadTaskSpec,
   listTaskSlugs,
   buildGeneratorPrompt,
@@ -44,11 +42,10 @@ import {
   DEFAULT_REPAIR_ATTEMPTS,
   MAX_REPAIR_ATTEMPTS_CAP,
 } from '@phaneris/shared/tasks'
-import { isValidPlanValue } from '@phaneris/shared/work-items'
 import { createLogger } from '@phaneris/shared/utils'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
-import { TaskRunner, createTaskFromSpec, finishTaskOrchestrator } from '../../tasks'
+import { TaskRunner } from '../../tasks'
 import { buildTaskVerdictDecider } from '../../decisions/task-verdict'
 import { buildRepairScopePicker } from '../../decisions/task-repairs'
 import { buildNodeOutcomeClassifier } from '../../decisions/turn-outcome'
@@ -181,111 +178,19 @@ export function registerTasksHandlers(server: RpcServer, deps: HandlerDeps): voi
     return toValidationDto(parseTaskYaml(yaml))
   })
 
-/**
- * Reject a planning value the read path could not interpret.
- *
- * The session store's plan values are the calendar's and the timeline's only input,
- * so a malformed one is not a cosmetic problem: `2026-9-2` passed every check once
- * and then produced `NaN-NaN-NaN` on drag and corrupted range comparison. Failing
- * at the boundary keeps the store interpretable and gives the editor a message.
- */
-function assertPlanValue(value: string | null | undefined, field: string): void {
-  if (value === null || value === undefined) return
-  if (!isValidPlanValue(value)) {
-    throw new Error(`Invalid ${field}: expected YYYY-MM-DD or YYYY-MM-DDTHH:mm, received "${value}"`)
-  }
-}
-
-  // tasks:create — write task.yaml + create the orchestrator parent session.
-  /**
-   * Put the work on the calendar.
-   *
-   * Runs after the orchestrator session exists, on ALL THREE create paths (fresh,
-   * adopt-a-draft, bind-an-existing-tile) — a plan the user filled in must not be
-   * silently dropped because they happened to arrive through a different one.
-   */
-  const applyPlanning = async (sessionId: string, planning: TaskPlanningInput | undefined): Promise<void> => {
-    if (!planning) return
-    assertPlanValue(planning.startAt, 'startAt')
-    assertPlanValue(planning.dueAt, 'dueAt')
-    if (planning.statusId) await deps.sessionManager.setSessionStatus(sessionId, planning.statusId)
-    await deps.sessionManager.updateSessionPlanning(sessionId, {
-      ...(planning.startAt !== undefined ? { startAt: planning.startAt } : {}),
-      ...(planning.dueAt !== undefined ? { dueAt: planning.dueAt } : {}),
-      ...(planning.progress !== undefined ? { progress: planning.progress } : {}),
-      ...(planning.isMilestone !== undefined ? { isMilestone: planning.isMilestone } : {}),
-      ...(planning.parentId !== undefined ? { parentSessionId: planning.parentId } : {}),
-      ...(planning.dependencyIds !== undefined ? { dependencySessionIds: planning.dependencyIds } : {}),
-    })
-  }
-
+  // Parsing stays at the wire boundary; the workspace owns the whole publication.
   server.handle(RPC_CHANNELS.tasks.CREATE, async (_ctx, workspaceId: string, req: TaskCreateRequest): Promise<TaskCreateResult> => {
-    const ws = workspaceOrThrow(workspaceId)
-    const parsed = parseTaskYaml(req.yaml)
-    const validation = toValidationDto(parsed)
-    if (!parsed.valid || !parsed.spec) {
-      return { slug: '', orchestratorSessionId: '', validation }
-    }
-    const spec = parsed.spec
-    saveTaskSpec(ws.rootPath, spec)
-
-    // Single choke point for ALL orchestrator paths (attach / adopt / fresh): apply the reserved
-    // "Task" label (surfacing its resolved id so the renderer can navigate to the label filter)
-    // and enable the spec's sources on the orchestrator session. Fail-soft — neither a label nor
-    // a sources problem may fail task creation. The body lives in finishTaskOrchestrator
-    // (../../tasks/create-task) so the create_task session tool shares it verbatim.
-    const finish = async (orchestratorSessionId: string): Promise<TaskCreateResult> => {
-      const setup = await finishTaskOrchestrator(deps.sessionManager, orchestratorSessionId, spec)
-      await applyPlanning(orchestratorSessionId, req.planning)
-      return { slug: spec.id, orchestratorSessionId, validation, taskLabelId: setup.taskLabelId }
-    }
-
-    // Edit-mode bind: the user saved this spec onto an existing, visible tile (e.g. a quick-add
-    // session). Bind that session to the slug. Unlike adoption this HARD-ERRORS on failure — it
-    // must never fall through to createSession, which would leave a duplicate orchestrator tile.
-    if (req.attachToExistingSession) {
-      const bound = await deps.sessionManager.bindExistingSessionToTask(req.attachToExistingSession, spec.id, {
-        name: spec.title,
-        projectId: spec.project,
-        ...(spec.cwd ? { workingDirectory: spec.cwd } : {}),
-        ...(spec.defaults?.model ? { model: spec.defaults.model } : {}),
-        ...(spec.defaults?.llmConnection ? { llmConnection: spec.defaults.llmConnection } : {}),
-        ...(spec.defaults?.permissionMode ? { permissionMode: spec.defaults.permissionMode } : {}),
-      })
-      if (!bound) {
-        throw new Error(
-          `Cannot attach task "${spec.id}" to session ${req.attachToExistingSession}: ` +
-            `session is missing or already bound to a different task.`,
-        )
-      }
-      return finish(req.attachToExistingSession)
-    }
-
-    // Adoption path: when the YAML was authored by a generate orchestrator, promote that hidden
-    // draft in place instead of creating a second top-level session (#bug1). Falls back to a fresh
-    // session if the draft is gone / already adopted / bound to another slug.
-    if (req.orchestratorSessionId) {
-      const adopted = await deps.sessionManager.adoptGeneratedTaskOrchestrator(req.orchestratorSessionId, spec.id, {
-        name: spec.title,
-        projectId: spec.project,
-        ...(spec.cwd ? { workingDirectory: spec.cwd } : {}),
-        ...(spec.defaults?.model ? { model: spec.defaults.model } : {}),
-        // Reconcile the connection + permission mode from the saved spec (bind already does this) so an
-        // orch model/mode changed after generation actually takes effect on the promoted orchestrator.
-        ...(spec.defaults?.llmConnection ? { llmConnection: spec.defaults.llmConnection } : {}),
-        ...(spec.defaults?.permissionMode ? { permissionMode: spec.defaults.permissionMode } : {}),
-      })
-      if (adopted) {
-        return finish(req.orchestratorSessionId)
-      }
-    }
-
-    // Fresh create — shared core with the create_task session tool. The spec was already saved
-    // above (all three paths persist first), so skip the core's save. createSession announces the
-    // orchestrator to the renderer by default, so its tile appears on the board immediately.
-    const created = await createTaskFromSpec(deps.sessionManager, workspaceId, ws.rootPath, spec, { save: false })
-    await applyPlanning(created.orchestratorSessionId, req.planning)
-    return { slug: created.slug, orchestratorSessionId: created.orchestratorSessionId, validation, taskLabelId: created.taskLabelId }
+    workspaceOrThrow(workspaceId)
+    const parsed = parseTaskYaml(req.yaml), validation = toValidationDto(parsed)
+    if (!parsed.valid || !parsed.spec) return { slug: '', orchestratorSessionId: '', validation }
+    const created = await deps.sessionManager.getWorkspaceTaskPublisher(workspaceId).publish({
+      spec: parsed.spec,
+      target: req.attachToExistingSession ? { kind: 'attach', sessionId: req.attachToExistingSession }
+        : req.orchestratorSessionId ? { kind: 'draft', sessionId: req.orchestratorSessionId } : { kind: 'fresh' },
+      planning: req.planning, operationId: req.operationId,
+    })
+    return { slug: created.slug, orchestratorSessionId: created.orchestratorSessionId, validation,
+      taskLabelId: created.taskLabelId, warnings: created.warnings }
   })
 
   // tasks:generate — the persistent orchestrator session AUTHORS the task.yaml from a goal (#2).
@@ -334,7 +239,7 @@ function assertPlanValue(value: string | null | undefined, field: string): void 
 
     const askOrchestrator = (prompt: string) =>
       waitForTurnReply(deps.sessionManager, sessionId, () =>
-        deps.sessionManager.sendMessage(sessionId, prompt, undefined, undefined, { thinkingLevel: GENERATE_THINKING_LEVEL }))
+        deps.sessionManager.submitInput(sessionId, { text: prompt, options: { thinkingLevel: GENERATE_THINKING_LEVEL } }, { kind: 'task' }).finished)
 
     // Run the generate→repair loop in the background and push the result when done. Awaiting
     // here would re-introduce the synchronous-RPC-over-WS timeout this async path exists to avoid.

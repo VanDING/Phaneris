@@ -1173,7 +1173,7 @@ app.whenReady().then(async () => {
         const count = sessionCount ?? 1
         const { getWorkspaceByNameOrId } = await import('@phaneris/shared/config')
         const { connectToRemote } = await import('./handlers/workspace')
-        const { CHUNKED_TRANSFER_THRESHOLD, getChunkCount, invokeChunked, prepareChunkedPayload } = await import('./chunked-rpc')
+        const { importSessionRemotely } = await import('./chunked-rpc')
 
         // The pull side (sessions:export) returns the whole bundle as a single
         // unchunked response frame — up to MAX_BUNDLE_SIZE_BYTES over WAN — so
@@ -1262,28 +1262,9 @@ app.whenReady().then(async () => {
         console.log('[Transfer] Connected to target remote server')
 
         try {
-          const preparedBundle = prepareChunkedPayload(bundle)
-          const payloadSize = preparedBundle.bytes.length
-          const payloadMB = (payloadSize / (1024 * 1024)).toFixed(1)
-
-          if (payloadSize < CHUNKED_TRANSFER_THRESHOLD) {
-            console.log(`[Transfer] Bundle size: ${payloadMB}MB (< 5MB threshold) → using direct RPC`)
-            emitProgress(0, 1)
-            const result = await client.invoke('sessions:import', remoteWorkspaceId, bundle, 'fork')
-            emitProgress(1, 1)
-            return result
-          }
-
-          const chunkCount = getChunkCount(payloadSize)
-          console.log(`[Transfer] Bundle size: ${payloadMB}MB (>= 5MB threshold) → using chunked transfer (${chunkCount} chunks)`)
-          return await invokeChunked(
-            client,
-            'sessions:import',
-            [remoteWorkspaceId, bundle, 'fork'],
-            1,
-            emitProgress,
-            preparedBundle,
-          )
+          return await importSessionRemotely(client, {
+            workspaceId: remoteWorkspaceId, bundle, mode: 'fork', onProgress: emitProgress,
+          })
         } finally {
           client.destroy()
         }

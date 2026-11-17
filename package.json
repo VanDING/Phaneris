@@ -1,6 +1,6 @@
 {
   "name": "phaneris",
-  "version": "0.6.3",
+  "version": "0.6.5",
   "license": "Apache-2.0",
   "description": "Open-source desktop and server agent workspace powered by the Pi SDK",
   "type": "module",
@@ -120,6 +120,7 @@
     "verify:assistant-identity": "bun run scripts/verification/resident-assistant-identity-workflow.ts",
     "verify:assistant-native": "bun run scripts/verification/resident-assistant-native-workflow.ts",
     "verify:assistant-delegation": "bun run scripts/verification/resident-assistant-delegation-workflow.ts",
+    "verify:assistant-tasks": "bun run scripts/verification/resident-assistant-tasks-workflow.ts",
     "check:fonts": "bun run scripts/check-font-stacks.ts",
     "lint:i18n:coverage": "bun run scripts/check-i18n-coverage.ts",
     "lint:transition-all": "bun run scripts/check-transition-all.ts",
@@ -209,7 +210,12 @@
     "test:planning-collection": "bun run scripts/verification/planning-collection-workflow.ts",
     "test:planning-performance": "bun run scripts/verification/planning-performance-workflow.ts",
     "test:upstream-015": "bun run scripts/verification/upstream-015-core-workflow.ts && bun run scripts/verification/upstream-015-orchestration-workflow.ts && bun run scripts/verification/upstream-015-browser-workflow.ts && bun run scripts/verification/upstream-015-renderer-workflow.ts",
-    "verify:durable-continuation": "bun run server:build:subprocess && bun run scripts/verification/durable-continuation-workflow.ts && bun run scripts/verification/durable-continuation-pi-workflow.ts && bun run scripts/verification/durable-task-continuation-workflow.ts && bun run scripts/verification/durable-runtime-boundary-workflow.ts && bun run scripts/verification/durable-runtime-crash-workflow.ts && bun run scripts/verification/durable-runtime-pi-workflow.ts"
+    "verify:durable-continuation": "bun run server:build:subprocess && bun run scripts/verification/durable-continuation-workflow.ts && bun run scripts/verification/durable-continuation-pi-workflow.ts && bun run scripts/verification/durable-task-continuation-workflow.ts && bun run scripts/verification/durable-runtime-boundary-workflow.ts && bun run scripts/verification/durable-runtime-crash-workflow.ts && bun run scripts/verification/durable-runtime-pi-workflow.ts",
+    "verify:assistant-tasks:scheduling": "bun run scripts/verification/resident-assistant-scheduling-workflow.ts",
+    "verify:assistant-tasks:configuration": "bun run scripts/verification/resident-assistant-configuration-workflow.ts",
+    "verify:assistant-tasks:management": "bun run scripts/verification/resident-assistant-management-workflow.ts",
+    "verify:assistant-tasks:live": "bun run scripts/verification/resident-assistant-tasks-live-workflow.ts",
+    "verify:assistant-tasks:all": "bun run server:build:subprocess && bun run verify:assistant-tasks && bun run verify:assistant-tasks:scheduling && bun run verify:assistant-tasks:configuration && bun run verify:assistant-tasks:management && bun run verify:assistant-control && bun run verify:assistant-delegation && bun run scripts/verification/resident-assistant-deliverables-workflow.ts"
   },
   "devDependencies": {
     "@babel/core": "^8.1.0",

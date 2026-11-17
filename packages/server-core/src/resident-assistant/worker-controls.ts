@@ -19,9 +19,11 @@ export class WorkerControls {
     save(work: AssistantDelegationReceipt): AssistantDelegationReceipt
     view(work: AssistantDelegationReceipt): Promise<AssistantWork>
     apply(work: AssistantDelegationReceipt, command: WorkerControl, supplements: string[], context: Pick<WorkerControlReceipt, 'actor' | 'initialState' | 'evidence'>): Promise<WorkerControlApplication>
-    evidence(): NonNullable<WorkerControlReceipt['evidence']>
+    evidence(work: AssistantDelegationReceipt): Promise<NonNullable<WorkerControlReceipt['evidence']>>
+    status?(receipt: WorkerControlReceipt): Pick<WorkerControlReceipt, 'processedAt'>
     evidenceValid(evidence: NonNullable<WorkerControlReceipt['evidence']>): boolean
     wake(): void
+    rejected?(work: AssistantDelegationReceipt): Promise<void>
   }) { db.exec('CREATE TABLE IF NOT EXISTS worker_commands(id TEXT PRIMARY KEY,work_id TEXT NOT NULL,fingerprint TEXT NOT NULL,command TEXT NOT NULL,receipt TEXT NOT NULL); CREATE INDEX IF NOT EXISTS worker_commands_work ON worker_commands(work_id);') }
 
   private receipt(row: CommandRow): WorkerControlReceipt { return JSON.parse(row.receipt) as WorkerControlReceipt }
@@ -35,7 +37,13 @@ export class WorkerControls {
     for (const row of rows) { const receipt = this.receipt(row); if (['accepted', 'waiting'].includes(receipt.phase)) this.update({ ...receipt, phase: 'rejected', error: 'The original task or command was superseded' }) }
   }
   list(id: string): WorkerControlReceipt[] {
-    return (this.db.prepare('SELECT receipt FROM worker_commands WHERE work_id=? ORDER BY json_extract(receipt,\'$.at\') DESC LIMIT 20').all(id) as Array<{ receipt: string }>).map(row => JSON.parse(row.receipt) as WorkerControlReceipt)
+    return (this.db.prepare('SELECT receipt FROM worker_commands WHERE work_id=? ORDER BY json_extract(receipt,\'$.at\') DESC LIMIT 20').all(id) as Array<{ receipt: string }>).map(row => {
+      const receipt = JSON.parse(row.receipt) as WorkerControlReceipt
+      return { ...receipt, ...this.port.status?.(receipt) }
+    })
+  }
+  pendingMessage(id: string): boolean {
+    return !!this.db.prepare("SELECT 1 FROM worker_commands WHERE work_id=? AND json_extract(command,'$.action')='message' AND COALESCE(json_extract(command,'$.delivery'),'queued')='queued' AND json_extract(receipt,'$.phase') IN ('accepted','waiting') LIMIT 1").get(id)
   }
   async control(command: WorkerControl, actor: WorkerControlReceipt['actor'] = 'assistant'): Promise<WorkerControlResult> {
     const fingerprint = createHash('sha256').update(canonicalJson(command)).digest('hex')
@@ -56,12 +64,13 @@ export class WorkerControls {
     if (!stored) {
       const receipt: WorkerControlReceipt = { commandId: command.commandId, delegationId: command.id, action: command.action, expectedSeq: command.expectedSeq,
         phase: 'accepted', at: Date.now(), updatedAt: Date.now(), actor, initialState: work.state,
-        ...(actor === 'assistant' && command.action === 'message' ? { evidence: this.port.evidence() } : {}) }
+        ...(actor === 'assistant' && command.action === 'message' ? { evidence: await this.port.evidence(work) } : {}) }
+      if (this.port.read(work.id).seq !== work.seq) throw new Error('Worker sequence changed while preparing supplemental evidence; inspect the current receipt')
       this.db.prepare('INSERT INTO worker_commands VALUES(?,?,?,?,?)').run(command.commandId, command.id, fingerprint, JSON.stringify(command), JSON.stringify(receipt))
     }
     const row = this.db.prepare('SELECT fingerprint,command,receipt FROM worker_commands WHERE id=?').get(command.commandId) as CommandRow
     const staged = this.port.save({ ...work, pendingControlId: command.commandId,
-      ...(command.action === 'pause' || command.action !== 'plan' && ['submitting', 'submitted', 'needs_attention'].includes(work.state) ? { state: 'pause_requested' as const } : {}) })
+      ...(command.action === 'pause' || command.action !== 'plan' && !(command.action === 'message' && command.delivery !== 'interrupt') && ['submitting', 'submitted', 'needs_attention'].includes(work.state) ? { state: 'pause_requested' as const } : {}) })
     const messages = this.db.prepare("SELECT command,receipt FROM worker_commands WHERE work_id=? AND json_extract(command,'$.action')='message' AND json_extract(receipt,'$.phase')='applied' ORDER BY json_extract(receipt,'$.at') DESC LIMIT 16").all(work.id) as Array<{ command: string; receipt: string }>
     const supplements = messages.reverse().filter(row => {
       const receipt = JSON.parse(row.receipt) as WorkerControlReceipt
@@ -75,9 +84,9 @@ export class WorkerControls {
         return { command: receipt, work: await this.port.view(current) }
       }
       const phase = application.phase ?? 'applied'
-      const saved = this.port.save({ ...current, state: command.action === 'plan' ? current.state : application.state, error: application.error, pendingControlId: phase === 'waiting' ? command.commandId : undefined,
+      const saved = this.port.save({ ...current, state: command.action === 'plan' || application.delivery === 'queued' ? current.state : application.state, error: application.error, pendingControlId: phase === 'waiting' ? command.commandId : undefined,
         ...(command.action === 'plan' && command.priority !== undefined ? { priority: command.priority } : {}) })
-      const receipt = this.update({ ...this.receipt(row), phase, error: application.error })
+      const receipt = this.update({ ...this.receipt(row), phase, error: application.error, delivery: application.delivery, input: application.input })
       if (saved.state === 'accepted') this.port.wake()
       return { command: receipt, work: await this.port.view(saved) }
     } catch (error) {
@@ -88,6 +97,7 @@ export class WorkerControls {
         if (restored.state === 'accepted') this.port.wake()
       }
       this.update({ ...this.receipt(row), phase: 'rejected', error: error instanceof Error ? error.message : 'Worker management failed' })
+      await this.port.rejected?.(this.port.read(work.id))
       throw error
     }
   }

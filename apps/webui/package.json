@@ -1,6 +1,6 @@
 {
   "name": "@phaneris/webui",
-  "version": "0.6.3",
+  "version": "0.6.5",
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
@@ -11,6 +11,7 @@
     "preview": "bun run vite preview"
   },
   "dependencies": {
+    "@phaneris/server-core": "workspace:*",
     "@phaneris/shared": "workspace:*",
     "@phaneris/ui": "workspace:*",
     "i18next": "~26.7.2",

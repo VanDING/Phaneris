@@ -47,7 +47,7 @@ writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [workspa
   defaultLlmConnection: 'fixture', llmConnections: [{ slug: 'fixture', name: 'Loopback', providerType: 'pi_compat', piAuthProvider: 'openai', authType: 'api_key', createdAt: 1,
     baseUrl: provider.url.href, customEndpoint: { api: 'openai-completions' }, defaultModel: 'fixture',
     models: [{ id: 'pi/fixture', name: 'Fixture', shortName: 'Fixture', description: 'Test only', provider: 'pi', contextWindow: 64000, maxTokens: 4096, supportsThinking: false }, { id: 'messages-only', name: 'Messages only', shortName: 'Messages', description: 'Protocol fixture', provider: 'pi', contextWindow: 64000, maxTokens: 4096, supportsThinking: false, supportedEndpoints: ['/provider/v1/messages'] }] }] }))
-writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, defaults: { permissionMode: 'safe', defaultLlmConnection: 'fixture', model: 'fixture' } }))
+writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...workspace, assistantTasks: { concurrency: 1 }, defaults: { permissionMode: 'safe', defaultLlmConnection: 'fixture', model: 'fixture' } }))
 for (const slug of ['direct-docs', 'skill-docs', 'plugin-docs', 'drift-docs']) {
   const path = join(workspace.rootPath, 'sources', slug)
   mkdirSync(path, { recursive: true })
@@ -397,7 +397,7 @@ try {
   scenes.push('RV03-same-slug-skill-plugin-source-drift-blocks-admission', 'RV04-new-request-binds-new-capability-same-config')
   manager.setSessionPermissionMode(assistantId, 'safe')
   assert.equal(loadSession(workspace.rootPath, (await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: queued.id })).items[0]!.sessionId!)?.messages[0]?.inputReception?.disposition, 'rejected')
-  scenes.push('RW07-serial-and-cancel-queue', 'RW06-cancel-is-terminal')
+  scenes.push('RW07-configured-single-slot-and-cancel-queue', 'RW06-cancel-is-terminal')
   const cancelledSource = (await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: queued.id })).items[0]!
   await manager.sendMessage(cancelledSource.sessionId!, 'MANUAL_CONTINUATION_AFTER_CANCEL')
   const continuedSource = (await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: queued.id })).items[0]!
@@ -511,6 +511,10 @@ try {
   assert.equal(recovered.state, 'needs_attention')
   assert.equal(recovered.sessionId, originalBinding.sessionId)
   assert.equal(recovered.inputMessageId, originalBinding.inputMessageId)
+  // The preceding queue/restart scenes deliberately use one slot. Unknown
+  // effects occupy real capacity now; test scope isolation with spare capacity.
+  const recoveryConfig = JSON.parse(readFileSync(join(workspace.rootPath, 'config.json'), 'utf8'))
+  writeFileSync(join(workspace.rootPath, 'config.json'), JSON.stringify({ ...recoveryConfig, assistantTasks: { concurrency: 4 } }))
   const resourceConflict = await client.invoke(RPC_CHANNELS.residentAssistant.DISPATCH, 'alpha', {
     ...command, requestId: 'shared-directory-after-attention', config: { ...command.config, workingDirectory: workspace.rootPath },
   })
@@ -521,7 +525,9 @@ try {
   assert.equal((await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: uncertain.id })).items[0]!.state, 'needs_attention')
   assert.equal((await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: resourceConflict.id })).items[0]!.state, 'accepted')
   const blockedWork = (await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { id: resourceConflict.id })).items[0]!
-  assert.deepEqual(blockedWork.waitingFor, { delegationId: uncertain.id, reason: 'directory' })
+  assert.equal(blockedWork.waitingFor?.delegationId, uncertain.id)
+  assert.equal(blockedWork.waitingFor?.reason, 'file_scope')
+  assert.match(blockedWork.waitingFor?.detail ?? '', /interrupted.*file scope/i)
   scenes.push('W11-queued-work-exposes-its-real-resource-blocker-without-loading-attempts-in-lists')
   scenes.push('W01-attention-does-not-freeze-unrelated-work', 'W02-accepted-input-starts-without-human-prompt', 'W04-missing-held-directory-keeps-conflict-scope-without-freezing-other-work')
   const currentView = await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { view: 'current', limit: 1 })

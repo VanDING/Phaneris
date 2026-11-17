@@ -252,7 +252,7 @@ export class TokenRefreshManager {
  * This wraps the refresh manager for use with the server builder.
  */
 export function createTokenGetter(
-  refreshManager: TokenRefreshManager,
+  refreshManager: Pick<TokenRefreshManager, 'ensureFreshToken'>,
   source: LoadedSource
 ): () => Promise<string> {
   return async () => {

@@ -14,7 +14,7 @@ import { cn } from '../../lib/utils'
 export interface CopyButtonProps {
   /** Content to copy to clipboard */
   content: string
-  /** Optional label (default: "Copy") */
+  /** @deprecated Retained for source compatibility; use title for the tooltip. */
   label?: string
   /** Optional tooltip for the button */
   title?: string

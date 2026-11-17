@@ -1,3 +1,4 @@
+import type { HandlerFn } from '../../packages/server-core/src/transport/types'
 /** Offline fixture host: real bootstrap, RPC, SessionManager, persistence and Web UI. */
 import { readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
@@ -46,7 +47,7 @@ const instance = await bootstrapServer({
   createHandlerDeps: deps => deps,
   registerAllRpcHandlers(server, deps) {
     const register = server.handle.bind(server)
-    server.handle = (channel, handler) => register(channel, async (ctx, ...args) => {
+    server.handle = (channel: string, handler: HandlerFn) => register(channel, async (ctx, ...args) => {
       const started = performance.now()
       try { return await handler(ctx, ...args) }
       finally { if (handlerTimings.length < 2000) handlerTimings.push({ channel, elapsedMs: performance.now() - started }) }

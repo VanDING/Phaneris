@@ -4,7 +4,7 @@ import { useAtomValue, useStore } from 'jotai'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
-import { addSessionAtom, sessionMetaMapAtom } from '@/atoms/sessions'
+import { upsertSessionMetadataAtom } from '@/atoms/sessions'
 import { useTheme } from '@/context/ThemeContext'
 import { navigate, routes } from '@/lib/navigate'
 import { ResidentPixelField } from './ResidentPixelField'
@@ -99,9 +99,9 @@ export function ResidentAssistantIsland() {
     dismiss()
     const workspaceId = snapshot.workspaceId
     try {
-      const session = await window.electronAPI.getResidentAssistant(workspaceId)
+      const session = await window.electronAPI.getResidentAssistantMetadata(workspaceId)
       if (latestWorkspace.current !== workspaceId) return
-      if (!store.get(sessionMetaMapAtom).has(session.id)) store.set(addSessionAtom, session)
+      store.set(upsertSessionMetadataAtom, session)
       navigate(routes.view.allSessions(session.id))
     } catch (error) { toast.error(t('residentAssistant.openError'), { description: String(error) }) }
     finally { opening.current = false; setBusy(false) }

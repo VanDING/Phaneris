@@ -19,7 +19,7 @@
 import '@sentry/electron/preload'
 import { contextBridge, ipcRenderer, shell, webUtils } from 'electron'
 import type { IpcRendererEvent } from 'electron'
-import { WsRpcClient, type TransportConnectionState } from '../transport/client'
+import { WsRpcClient, type TransportConnectionState } from '@phaneris/server-core/transport/client'
 import { RoutedClient } from '../transport/routed-client'
 import { buildClientApi } from '../transport/build-api'
 import { CHANNEL_MAP } from '../transport/channel-map'

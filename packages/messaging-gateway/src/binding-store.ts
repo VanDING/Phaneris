@@ -11,14 +11,13 @@
 
 import {
   readFileSync,
-  writeFileSync,
   mkdirSync,
   existsSync,
   copyFileSync,
-  renameSync,
 } from 'node:fs'
 import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
+import { atomicWriteFileSync } from '@phaneris/shared/utils/files'
 import type { ChannelBinding, MessagingLogger, PlatformType } from './types'
 import { normalizeBindingConfig } from './types'
 
@@ -67,21 +66,22 @@ export class BindingStore {
    * only match calls passing `threadId === undefined`.
    */
   findByChannel(platform: PlatformType, channelId: string, threadId?: number): ChannelBinding | undefined {
-    return this.bindings.find(
+    const binding = this.bindings.find(
       (b) =>
         b.platform === platform &&
         b.channelId === channelId &&
         (b.threadId ?? undefined) === threadId &&
         b.enabled,
     )
+    return binding ? structuredClone(binding) : undefined
   }
 
   findBySession(sessionId: string): ChannelBinding[] {
-    return this.bindings.filter((b) => b.sessionId === sessionId && b.enabled)
+    return structuredClone(this.bindings.filter((b) => b.sessionId === sessionId && b.enabled))
   }
 
   getAll(): ChannelBinding[] {
-    return [...this.bindings]
+    return structuredClone(this.bindings)
   }
 
   // -------------------------------------------------------------------------
@@ -100,7 +100,7 @@ export class BindingStore {
     // One channel → one session: evict any existing binding for the
     // (platform, channelId, threadId) tuple. Different topics in the same
     // supergroup are independently bindable.
-    this.bindings = this.bindings.filter(
+    const retained = this.bindings.filter(
       (b) => !(b.platform === platform && b.channelId === channelId && (b.threadId ?? undefined) === threadId),
     )
 
@@ -117,8 +117,7 @@ export class BindingStore {
       config: normalizeBindingConfig(platform, config),
     }
 
-    this.bindings.push(binding)
-    this.save()
+    this.save([...retained, binding])
     this.log.info('binding created', {
       event: 'binding_created',
       workspaceId,
@@ -129,11 +128,11 @@ export class BindingStore {
       bindingId: binding.id,
       channelName,
     })
-    return binding
+    return structuredClone(binding)
   }
 
   /**
-   * Update a binding's `BindingConfig` in place — preserves `id`,
+   * Update a binding's `BindingConfig` preserving `id`,
    * `createdAt`, `channelId`, etc. Returns the updated binding (or null
    * if the id wasn't found).
    *
@@ -146,27 +145,38 @@ export class BindingStore {
   updateBindingConfig(bindingId: string, patch: Partial<ChannelBinding['config']>): ChannelBinding | null {
     const binding = this.bindings.find((b) => b.id === bindingId)
     if (!binding) return null
-    binding.config = normalizeBindingConfig(binding.platform, {
-      ...binding.config,
-      ...patch,
-    })
-    this.save()
+    const [updated] = this.updateBindingConfigs([{ id: bindingId, patch }])
     this.log.info('binding config updated', {
       event: 'binding_config_updated',
       bindingId,
       platform: binding.platform,
       patchedKeys: Object.keys(patch),
     })
-    return binding
+    return updated!
+  }
+
+  /** One durable commit for a policy change spanning multiple bindings. */
+  updateBindingConfigs(updates: readonly { id: string; patch: Partial<ChannelBinding['config']> }[]): ChannelBinding[] {
+    if (!updates.length) return []
+    const patches = new Map(updates.map(update => [update.id, update.patch]))
+    for (const id of patches.keys()) {
+      if (!this.bindings.some(binding => binding.id === id)) throw new Error(`Binding not found: ${id}`)
+    }
+    const next = this.bindings.map(binding => {
+      const patch = patches.get(binding.id)
+      return patch ? { ...binding, config: normalizeBindingConfig(binding.platform, { ...binding.config, ...patch }) } : binding
+    })
+    this.save(next)
+    return structuredClone(next.filter(binding => patches.has(binding.id)))
   }
 
   unbind(platform: PlatformType, channelId: string, threadId?: number): boolean {
     const before = this.bindings.length
-    this.bindings = this.bindings.filter(
+    const next = this.bindings.filter(
       (b) => !(b.platform === platform && b.channelId === channelId && (b.threadId ?? undefined) === threadId),
     )
-    if (this.bindings.length !== before) {
-      this.save()
+    if (next.length !== before) {
+      this.save(next)
       this.log.info('binding removed by channel', {
         event: 'binding_removed',
         platform,
@@ -181,8 +191,7 @@ export class BindingStore {
   unbindById(bindingId: string): boolean {
     const binding = this.bindings.find((b) => b.id === bindingId)
     if (!binding) return false
-    this.bindings = this.bindings.filter((b) => b.id !== bindingId)
-    this.save()
+    this.save(this.bindings.filter((b) => b.id !== bindingId))
     this.log.info('binding removed by id', {
       event: 'binding_removed',
       bindingId,
@@ -202,8 +211,7 @@ export class BindingStore {
     })
     if (removedBindings.length === 0) return 0
 
-    this.bindings = this.bindings.filter((b) => !removedBindings.includes(b))
-    this.save()
+    this.save(this.bindings.filter((b) => !removedBindings.includes(b)))
     this.log.info('bindings removed by session', {
       event: 'binding_removed',
       sessionId,
@@ -270,28 +278,13 @@ export class BindingStore {
     }
   }
 
-  private save(): void {
-    try {
-      if (!existsSync(this.dirPath)) {
-        mkdirSync(this.dirPath, { recursive: true })
-      }
-      // Atomic write: serialize to a temp file in the same directory, then
-      // rename over the target. POSIX rename is atomic, so a crash mid-write
-      // can never leave a truncated/corrupt bindings.json behind.
-      const tmpPath = `${this.filePath}.tmp.${process.pid}`
-      writeFileSync(tmpPath, JSON.stringify(this.bindings, null, 2), 'utf-8')
-      renameSync(tmpPath, this.filePath)
-      // Fire the listener only after the write succeeds — otherwise the UI
-      // shows a "binding added" event for state that will disappear on
-      // restart.
-      this.changeListener?.()
-    } catch (err) {
-      this.log.error('failed to save bindings store', {
-        event: 'bindings_save_failed',
-        filePath: this.filePath,
-        error: err,
-      })
-    }
+  private save(next: ChannelBinding[]): void {
+    mkdirSync(this.dirPath, { recursive: true })
+    atomicWriteFileSync(this.filePath, JSON.stringify(next, null, 2))
+    this.bindings = next
+    // Observers cannot turn a committed mutation into a false write failure.
+    try { this.changeListener?.() }
+    catch (error) { this.log.warn('binding committed; change notification failed', { error }) }
   }
 }
 

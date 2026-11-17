@@ -2,7 +2,7 @@
  * Transport-layer interfaces for the WS-based RPC.
  */
 
-import type { PushTarget, RpcResult } from '@phaneris/shared/protocol'
+import type { PushTarget, RpcResult, RpcArguments, RpcMethodArguments, RPC_INPUT_CONTRACTS } from '@phaneris/shared/protocol'
 
 export interface RequestContext {
   clientId: string
@@ -15,8 +15,13 @@ export type HandlerFn<Result = unknown> = { handle(ctx: RequestContext, ...args:
 export type RpcCallback = { receive(...args: unknown[]): void }['receive']
 export type CapabilityHandler = { handle(...args: unknown[]): Promise<unknown> | unknown }['handle']
 
+/** Known ports retain argument/result types until the transport erasure boundary. */
+export type RegisteredHandler<Channel extends string> = Channel extends keyof typeof RPC_INPUT_CONTRACTS | keyof RpcMethodArguments
+  ? (ctx: RequestContext, ...args: RpcArguments<Channel>) => Promise<RpcResult<Channel>> | RpcResult<Channel>
+  : HandlerFn<RpcResult<Channel>>
+
 export interface RpcServer {
-  handle(channel: string, handler: HandlerFn): void
+  handle<Channel extends string>(channel: Channel, handler: RegisteredHandler<NoInfer<Channel>>): void
   push(channel: string, target: PushTarget, ...args: unknown[]): void
   invokeClient(clientId: string, channel: string, ...args: unknown[]): Promise<unknown>
   updateClientWorkspace?(clientId: string, workspaceId: string): void

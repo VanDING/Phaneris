@@ -1,3 +1,4 @@
+import type { TaskCreateRequest } from '@phaneris/shared/protocol'
 import * as React from 'react'
 import { ChevronLeft, ChevronDown, Sparkles, Plus, Trash2, Check, X, ExternalLink, RefreshCw, CheckCircle2, XCircle, CircleSlash, DatabaseZap, Zap, Folder } from 'lucide-react'
 import { toast } from 'sonner'
@@ -733,6 +734,8 @@ export function TaskEditor({
   // in place — editing the authored spec is fine, since the draft is just the conductor orchestrator
   // and spec edits run on it. Discarded on regenerate/close; cleared once adopted so the unmount
   // cleanup never deletes a live orchestrator (#bug1).
+  const publicationAttemptRef = React.useRef<{ fingerprint: string; id: string } | null>(null)
+  const completedPublicationRef = React.useRef<{ scope: string; payload: string; request: TaskCreateRequest; sessionId: string; slug: string } | null>(null)
   const generatedDraftRef = React.useRef<string | null>(null)
 
   const discardDraft = React.useCallback((sessionId: string) => {
@@ -888,6 +891,8 @@ export function TaskEditor({
     }
     // Edit mode pins the existing slug so the title can change without forking a new task folder
     // and orphaning the bound orchestrator session.
+    const scope = JSON.stringify({ workspaceId, editSessionId })
+    const completed = completedPublicationRef.current?.scope === scope ? completedPublicationRef.current : null
     const spec = buildSpec(
       {
         title,
@@ -903,7 +908,7 @@ export function TaskEditor({
         cwd,
         sourceSlugs,
         skillSlugs,
-        fixedId: editSlug,
+        fixedId: editSlug ?? completed?.slug,
       },
       modelToConnection,
     )
@@ -915,20 +920,29 @@ export function TaskEditor({
     try {
       // Edit mode binds the authored spec onto the tile's existing session; create mode reuses
       // a generate draft if present, else mints a fresh orchestrator.
-      const created = await window.electronAPI.createTask(workspaceId, {
-        yaml,
-        // The plan travels with the spec on every path, so a create from the calendar
-        // lands on the day the user drew rather than nowhere.
-        planning: taskPlanningInput(plan),
-        ...(isEdit && editSessionId
-          ? { attachToExistingSession: editSessionId }
-          : { orchestratorSessionId: draftId ?? undefined }),
-      })
+      const planning = taskPlanningInput(plan)
+      const payload = JSON.stringify({ yaml, planning })
+      let request: TaskCreateRequest
+      if (completed?.payload === payload) {
+        // Publication already succeeded even if starting its run failed. Its
+        // original target and id remain the same after the draft is released.
+        request = completed.request
+      } else {
+        const existingId = isEdit ? editSessionId : completed?.sessionId
+        const input = { yaml, planning, ...(existingId
+          ? { attachToExistingSession: existingId }
+          : { orchestratorSessionId: draftId ?? undefined }) }
+        const fingerprint = JSON.stringify({ workspaceId, ...input })
+        if (publicationAttemptRef.current?.fingerprint !== fingerprint) publicationAttemptRef.current = { fingerprint, id: crypto.randomUUID() }
+        request = { ...input, operationId: publicationAttemptRef.current.id }
+      }
+      const created = await window.electronAPI.createTask(workspaceId, request)
       if (!created.validation.valid) {
         const first = created.validation.errors[0]
         toast.error(t('tasks.toastInvalid'), { description: first ? `${first.path}: ${first.message}` : undefined })
         return
       }
+      completedPublicationRef.current = { scope, payload, request, sessionId: created.orchestratorSessionId, slug: created.slug }
       // Resolve the draft: if the server reused it, it's now a live orchestrator — stop tracking it.
       // If it minted a fresh session instead (draft gone server-side), discard the orphan.
       if (draftId) {
@@ -946,11 +960,13 @@ export function TaskEditor({
         })
       }
       if (!run) {
-        toast.success(t('tasks.toastCreated'), { description: t('tasks.toastCreatedDesc', { slug: created.slug }) })
+        const warning = created.warnings?.join('\n')
+        toast[warning ? 'warning' : 'success'](t('tasks.toastCreated'), { description: warning || t('tasks.toastCreatedDesc', { slug: created.slug }) })
         onClose()
         notifyCreated()
         return
       }
+      if (created.warnings?.length) toast.warning(t('tasks.toastCreated'), { description: created.warnings.join('\n') })
       const runResult = await window.electronAPI.runTask(workspaceId, {
         slug: created.slug,
         orchestratorSessionId: created.orchestratorSessionId,

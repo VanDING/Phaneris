@@ -41,7 +41,7 @@ function createTestHarness() {
       appVersion: '0.0.0-test',
       isDebugMode: true,
       logger: { info: () => {}, warn: () => {}, error: () => {}, debug: () => {} },
-      imageProcessor: { getMetadata: async () => null, process: async () => Buffer.from('') },
+      imageProcessor: { getMetadata: async () => ({ width: 1, height: 1 }), process: async () => Buffer.from('') },
     },
   }
   registerWorkspaceCoreHandlers(server, deps)

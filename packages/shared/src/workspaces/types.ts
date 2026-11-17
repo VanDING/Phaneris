@@ -38,6 +38,8 @@ export interface AssistantMemoryPolicy {
 }
 
 export interface WorkspaceConfig {
+  /** Host scheduling capacity; defaults to four independent ordinary Sessions. */
+  assistantTasks?: { concurrency: number };
   assistantMemory?: AssistantMemoryPolicy | false;
   id: string;
   name: string;

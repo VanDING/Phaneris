@@ -80,20 +80,7 @@ export function registerProjectsHandlers(server: RpcServer, deps: HandlerDeps): 
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
 
-    const { loadProject, deleteProject } = await import('@phaneris/shared/projects')
-    const project = loadProject(workspace.rootPath, projectSlug)
-    if (!project) {
-      log.warn(`PROJECTS_DELETE: project ${projectSlug} not found`)
-      return
-    }
-
-    const { unbindProjectFromSessions } = await import('@phaneris/shared/sessions')
-    const touched = await unbindProjectFromSessions(workspace.rootPath, project.config.id)
-    const { unbindProjectFromPages } = await import('@phaneris/shared/pages')
-    const touchedPages = unbindProjectFromPages(workspace.rootPath, project.config.id)
-    deleteProject(workspace.rootPath, projectSlug)
-    await broadcastChanged(workspaceId, workspace.rootPath)
-    log.info(`Deleted project ${projectSlug} (unbound ${touched} sessions, ${touchedPages} pages)`)
+    await deps.sessionManager.getWorkspaceProjects(workspace.id).remove(projectSlug)
   })
 
   // List assets in a project

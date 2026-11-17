@@ -9,9 +9,9 @@ import { describe, test, expect, afterEach } from 'bun:test'
 import { randomUUID } from 'node:crypto'
 import { WebSocket } from 'ws'
 import { EVENT_BUFFER_MAX_SIZE, MAX_MESSAGE_PAYLOAD_BYTES, type MessageEnvelope } from '@phaneris/shared/protocol'
-import { WsRpcServer } from '../transport/server'
-import { WsRpcClient } from '../transport/client'
-import { serializeEnvelope } from '../transport/codec'
+import { WsRpcServer } from '@phaneris/server-core/transport'
+import { WsRpcClient } from '@phaneris/server-core/transport/client'
+import { serializeEnvelope } from '@phaneris/server-core/transport/codec'
 
 // Helpers to manage cleanup
 let servers: WsRpcServer[] = []
@@ -63,8 +63,8 @@ async function waitUntil(predicate: () => boolean, timeoutMs = 2000): Promise<vo
 
 /** Create a server + connected client pair. */
 async function createPair(
-  serverOpts?: Partial<import('../transport/server').WsRpcServerOptions>,
-  clientOpts?: Partial<import('../transport/client').WsRpcClientOptions>,
+  serverOpts?: Partial<import('@phaneris/server-core/transport').WsRpcServerOptions>,
+  clientOpts?: Partial<import('@phaneris/server-core/transport/client').WsRpcClientOptions>,
 ) {
   let connectedClientId: string | null = null
   const server = trackServer(new WsRpcServer({

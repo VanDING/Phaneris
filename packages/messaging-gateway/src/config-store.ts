@@ -7,13 +7,12 @@
 
 import {
   readFileSync,
-  writeFileSync,
   mkdirSync,
   existsSync,
   copyFileSync,
-  renameSync,
 } from 'node:fs'
 import { join } from 'node:path'
+import { atomicWriteFileSync } from '@phaneris/shared/utils/files'
 import { DEFAULT_MESSAGING_CONFIG, type MessagingConfig, type MessagingLogger } from './types'
 
 const NOOP_LOGGER: MessagingLogger = {
@@ -28,6 +27,7 @@ export class ConfigStore {
   private readonly filePath: string
   private readonly log: MessagingLogger
   private config: MessagingConfig
+  private changeListener?: () => void
 
   constructor(storageDir: string, legacyDir?: string, logger: MessagingLogger = NOOP_LOGGER) {
     this.dirPath = storageDir
@@ -38,8 +38,10 @@ export class ConfigStore {
   }
 
   get(): MessagingConfig {
-    return { ...this.config, platforms: { ...this.config.platforms } }
+    return structuredClone(this.config)
   }
+
+  onChange(fn: () => void): void { this.changeListener = fn }
 
   update(partial: Partial<MessagingConfig>): MessagingConfig {
     const next: MessagingConfig = {
@@ -49,8 +51,7 @@ export class ConfigStore {
         ...(partial.platforms ?? {}),
       },
     }
-    this.config = next
-    this.save()
+    this.save(structuredClone(next))
     return this.get()
   }
 
@@ -97,21 +98,11 @@ export class ConfigStore {
     return { ...DEFAULT_MESSAGING_CONFIG, platforms: {} }
   }
 
-  private save(): void {
-    try {
-      if (!existsSync(this.dirPath)) mkdirSync(this.dirPath, { recursive: true })
-      // Atomic write: serialize to a temp file in the same directory, then
-      // rename over the target. POSIX rename is atomic, so a crash mid-write
-      // can never leave a truncated/corrupt config.json behind.
-      const tmpPath = `${this.filePath}.tmp.${process.pid}`
-      writeFileSync(tmpPath, JSON.stringify(this.config, null, 2), 'utf-8')
-      renameSync(tmpPath, this.filePath)
-    } catch (err) {
-      this.log.error('failed to save messaging config', {
-        event: 'config_save_failed',
-        filePath: this.filePath,
-        error: err,
-      })
-    }
+  private save(next: MessagingConfig): void {
+    mkdirSync(this.dirPath, { recursive: true })
+    atomicWriteFileSync(this.filePath, JSON.stringify(next, null, 2))
+    this.config = next
+    try { this.changeListener?.() }
+    catch (error) { this.log.warn('config committed; change notification failed', { error }) }
   }
 }

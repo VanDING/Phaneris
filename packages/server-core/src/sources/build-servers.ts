@@ -13,11 +13,10 @@ import { createScopedLogger, CONSOLE_LOGGER, type Logger } from '@phaneris/serve
 import {
   getSourceCredentialManager,
   getSourceServerBuilder,
-  isApiOAuthProvider,
   hasRenewEndpoint,
   SERVER_BUILD_ERRORS,
   TokenRefreshManager,
-  createTokenGetter,
+  createApiSourceAccess,
   type LoadedSource,
   type SourceWithCredential,
   type SummarizeCallback,
@@ -41,61 +40,15 @@ export async function buildServersFromSources(
   const sourcesWithCreds: SourceWithCredential[] = await Promise.all(
     sources.map(async (source) => ({
       source,
-      token: await credManager.getToken(source),
-      credential: await credManager.getApiCredential(source),
+      token: source.config.type === 'mcp' ? await credManager.getToken(source) : undefined,
+      credential: source.config.type === 'mcp' ? await credManager.getApiCredential(source) : undefined,
     }))
   )
   span.mark('credentials.loaded')
 
-  // Build token getter for refreshable sources (OAuth + renew-endpoint)
-  // Uses TokenRefreshManager for unified refresh logic (DRY principle)
-  const getTokenForSource = (source: LoadedSource) => {
-    const provider = source.config.provider
-    // Provider-specific OAuth (Google, Slack, Microsoft) or generic OAuth (authType: 'oauth')
-    if (isApiOAuthProvider(provider) || source.config.api?.authType === 'oauth') {
-      const manager = tokenRefreshManager ?? new TokenRefreshManager(credManager, {
-        log: (msg) => log.debug(msg),
-      })
-      return createTokenGetter(manager, source)
-    }
-    // API renew endpoint — non-OAuth token refresh
-    if (hasRenewEndpoint(source)) {
-      const manager = tokenRefreshManager ?? new TokenRefreshManager(credManager, {
-        log: (msg) => log.debug(msg),
-      })
-      return createTokenGetter(manager, source)
-    }
-    return undefined
-  }
-
-  // Per-request credential getter for non-OAuth / non-renew API sources
-  // (bearer / header / query / basic auth).
-  //
-  // Without this, the in-process API tool captures the credential as a static
-  // string at build time and keeps using it forever — meaning a fresh JWT
-  // entered via source_credential_prompt is ignored until session restart.
-  //
-  // With this getter, every API call reads the latest credential from the
-  // vault, so credential updates take effect on the next call. OAuth and
-  // renew-endpoint sources have their own refresh logic via TokenRefreshManager
-  // and are skipped here.
-  const getCredentialForSource = (source: LoadedSource) => {
-    if (source.config.type !== 'api') return undefined
-    if (source.config.api?.authType === 'none') return undefined
-    if (isApiOAuthProvider(source.config.provider)) return undefined
-    if (source.config.api?.authType === 'oauth') return undefined
-    if (hasRenewEndpoint(source)) return undefined
-    return async () => credManager.getApiCredential(source)
-  }
-
-  // Pass sessionPath to enable saving large API responses to session folder
-  const result = await serverBuilder.buildAll(
-    sourcesWithCreds,
-    getTokenForSource,
-    sessionPath,
-    summarize,
-    getCredentialForSource,
-  )
+  const access = createApiSourceAccess({ credentials: credManager,
+    refresh: tokenRefreshManager ?? new TokenRefreshManager(credManager, { log: msg => log.debug(msg) }) })
+  const result = await serverBuilder.buildWithAccess(sourcesWithCreds, access, { sessionPath, summarize })
   span.mark('servers.built')
   span.setMetadata('mcpCount', Object.keys(result.mcpServers).length)
   span.setMetadata('apiCount', Object.keys(result.apiServers).length)

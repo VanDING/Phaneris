@@ -80,6 +80,7 @@ export function WorkerManagement({ workspaceId, work, connected, onChange }: {
     {!!work.controls?.length && <details className="resident-work-disclosure text-label"><summary className="craft-control resident-panel-summary">{t('residentAssistant.control.receipts')}</summary>
       {work.controls.map(receipt => <div key={receipt.commandId} className="py-2 border-b border-border last:border-0">
         <p>{t(`residentAssistant.control.${receipt.action}`)} · {t(`residentAssistant.control.phase.${receipt.phase}`)}</p>
+        {receipt.delivery && <p className="text-meta text-text-secondary">{t(`residentAssistant.control.delivery.${receipt.processedAt ? 'processed' : receipt.delivery}`)}</p>}
         {receipt.error && <p className="text-meta text-destructive-text break-words">{receipt.error}</p>}
       </div>)}
     </details>}

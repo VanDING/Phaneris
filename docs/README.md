@@ -20,9 +20,13 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
-后续版本安排（2026-11-08）：[0.6.3 共用上下文核心与助手分支管理](architecture/resident-assistant-context-0.6.3-plan-2026-11-08.md) — accepted，已实施并通过确定性、UI、检查点与门禁验收：三类 Session 共用原文、读取与请求组装，主助手按工作分支恢复，普通会话保持线性接续，Worker 使用本任务材料；补齐读取顺序、检查点、安全换段与实际请求验收；[0.6.4 助手任务管理](architecture/resident-assistant-tasks-0.6.4-plan-2026-11-08.md) — proposed，保留 A–F/A2、D/E 的实测调查，完善自主并行、控制、Session 状态与看板可见性；[0.6.5 助手与 Board 并排交互](architecture/resident-assistant-board-0.6.5-plan-2026-11-07.md) — deferred，原核心交互保持，暂不实施。当前仅修订计划，未开始产品实现。
+架构重构（2026-11-16）：[实施记录](architecture/refactoring-progress.md)、[提交确认与恢复边界](architecture/mutation-boundaries.md)、[会话与任务 RPC 工作区范围](architecture/rpc-workspace-scope.md)。已批准方案正在独立架构分支实施和全项目复审；本地证据与平台限制见实施记录。
+
+后续版本安排（2026-11-08）：[0.6.3 共用上下文核心与助手分支管理](architecture/resident-assistant-context-0.6.3-plan-2026-11-08.md) — accepted，已实施并通过确定性、UI、检查点与门禁验收：三类 Session 共用原文、读取与请求组装，主助手按工作分支恢复，普通会话保持线性接续，Worker 使用本任务材料；补齐读取顺序、检查点、安全换段与实际请求验收；[0.6.4 助手任务管理](architecture/resident-assistant-tasks-0.6.4-plan-2026-11-08.md) — 已实施并验收，保留 A–F/A2、D/E 的实测调查，完成自主并行、控制、Session 状态与看板可见性；[0.6.5 助手与 Board 并排交互](architecture/resident-assistant-board-0.6.5-plan-2026-11-07.md) — deferred，原核心交互保持，暂不实施。0.6.4 自 2026-11-13 开始实施；0.6.5 继续延期。
 
 0.6.3 实施与验收：[实施记录](process/resident-context-0.6.3-implementation-2026-11-08.md)、[失败矩阵](verification/resident-context-0.6.3-failure-matrix-2026-11-08.md)、[最终验收报告](verification/resident-context-0.6.3-final-report-2026-11-09.md)。
+
+0.6.4 已于 2026-11-13 按用户要求开始实施：[实施记录](process/resident-assistant-tasks-0.6.4-implementation-2026-11-13.md)、[失败矩阵](verification/resident-assistant-tasks-0.6.4-failure-matrix-2026-11-13.md)。源码现已覆盖 P0–P4：有界并行、资源与依赖、任务现场、排队修订、原授权续办及复核收口。本地 170 个场景与 9 项工程门禁通过；官方 DeepSeek HTTP 402 后，按用户选择改用 Command Goat，3 个真实主助手/Worker 样本的 7 项检查通过。证据、实际范围与未覆盖项见实施记录。
 
 0.6.2 版本计划：[助手权限、能力认知与 Worker 管理](architecture/resident-assistant-0.6.2-plan-2026-11-06.md) — implemented / validated，2026-11-07 完成源码与隔离 Windows 候选验收；23 工作流 / 392 场景、实际打包客户端 33 场景及真实主助手 3 个样本通过。读取、L0、执行上限与管理闭环的范围及未覆盖项见[实施与验收记录](process/resident-assistant-0.6.2-implementation-2026-11-06.md)，安装版与真实 Work 数据未替换。
 

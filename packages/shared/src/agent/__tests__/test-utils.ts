@@ -145,8 +145,9 @@ export class TestAgent extends BaseAgent {
     return this._isProcessing;
   }
 
-  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void {
+  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): boolean {
     this.respondToPermissionCalls.push({ requestId, allowed, alwaysAllow });
+    return true;
   }
 
   respondToAskUser(requestId: string, response: AskUserResponse): boolean {

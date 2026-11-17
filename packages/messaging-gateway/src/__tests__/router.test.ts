@@ -2,7 +2,7 @@
  * Router tests — focused on attachment forwarding.
  *
  * Covers:
- *   - text-only messages forward to sessionManager.sendMessage unchanged
+ *   - text-only messages forward to sessionManager.submitInput unchanged
  *     (regression guard for the Phase-3 rewrite).
  *   - attachments with `localPath` are materialized to FileAttachment[]
  *     and forwarded.
@@ -88,8 +88,8 @@ function makeFakeAdapter(): PlatformAdapter {
   } as unknown as PlatformAdapter
 }
 
-function makeFakeSessionManager(): { sendMessage: ReturnType<typeof mock> } {
-  return { sendMessage: mock(async () => {}) }
+function makeFakeSessionManager(): { submitInput: ReturnType<typeof mock> } {
+  return { submitInput: mock(() => ({ accepted: Promise.resolve({ accepted: true, messageId: 'fixture' }), finished: Promise.resolve() })) }
 }
 
 function makeFakeCommands(): { handle: ReturnType<typeof mock> } {
@@ -110,14 +110,14 @@ function makeRouter() {
 // ---------------------------------------------------------------------------
 
 describe('Router', () => {
-  it('forwards a text-only bound message to sendMessage', async () => {
+  it('forwards a text-only bound message to submitInput', async () => {
     const { router, sessionManager } = makeRouter()
     await router.route(makeFakeAdapter(), baseMsg({ text: 'hi there' }))
-    expect(sessionManager.sendMessage).toHaveBeenCalledTimes(1)
-    const args = sessionManager.sendMessage.mock.calls[0]!
+    expect(sessionManager.submitInput).toHaveBeenCalledTimes(1)
+    const args = sessionManager.submitInput.mock.calls[0]!
     expect(args[0]).toBe('sess-A') // sessionId
-    expect(args[1]).toBe('hi there') // message
-    expect(args[2]).toBeUndefined() // fileAttachments
+    expect((args[1] as { text: string }).text).toBe('hi there') // message
+    expect((args[1] as { attachments?: unknown }).attachments).toBeUndefined() // fileAttachments
   })
 
   it('materializes a localPath attachment into FileAttachment[]', async () => {
@@ -138,9 +138,9 @@ describe('Router', () => {
         ],
       }),
     )
-    expect(sessionManager.sendMessage).toHaveBeenCalledTimes(1)
-    const args = sessionManager.sendMessage.mock.calls[0]!
-    const fileAttachments = args[2] as Array<{
+    expect(sessionManager.submitInput).toHaveBeenCalledTimes(1)
+    const args = sessionManager.submitInput.mock.calls[0]!
+    const fileAttachments = (args[1] as { attachments: unknown }).attachments as Array<{
       type: string
       name: string
       base64?: string
@@ -161,9 +161,9 @@ describe('Router', () => {
         attachments: [{ type: 'photo', fileId: 'abc' }],
       }),
     )
-    expect(sessionManager.sendMessage).toHaveBeenCalledTimes(1)
-    const args = sessionManager.sendMessage.mock.calls[0]!
-    expect(args[2]).toBeUndefined()
+    expect(sessionManager.submitInput).toHaveBeenCalledTimes(1)
+    const args = sessionManager.submitInput.mock.calls[0]!
+    expect((args[1] as { attachments?: unknown }).attachments).toBeUndefined()
   })
 
   it('forwards caption-less attachments with empty text', async () => {
@@ -178,10 +178,10 @@ describe('Router', () => {
         ],
       }),
     )
-    expect(sessionManager.sendMessage).toHaveBeenCalledTimes(1)
-    const args = sessionManager.sendMessage.mock.calls[0]!
-    expect(args[1]).toBe('')
-    const fa = args[2] as unknown[]
+    expect(sessionManager.submitInput).toHaveBeenCalledTimes(1)
+    const args = sessionManager.submitInput.mock.calls[0]!
+    expect((args[1] as { text: string }).text).toBe('')
+    const fa = (args[1] as { attachments: unknown[] }).attachments
     expect(fa).toHaveLength(1)
   })
 
@@ -191,7 +191,7 @@ describe('Router', () => {
       makeFakeAdapter(),
       baseMsg({ channelId: 'unbound-channel', text: '/help' }),
     )
-    expect(sessionManager.sendMessage).not.toHaveBeenCalled()
+    expect(sessionManager.submitInput).not.toHaveBeenCalled()
     expect(commands.handle).toHaveBeenCalledTimes(1)
   })
 
@@ -213,9 +213,9 @@ describe('Router', () => {
     await router.route(adapter, baseMsg({ channelId: '-1001', threadId: 5, text: 'hi from t5' }))
     await router.route(adapter, baseMsg({ channelId: '-1001', threadId: 7, text: 'hi from t7' }))
 
-    expect(sessionManager.sendMessage).toHaveBeenCalledTimes(2)
-    expect(sessionManager.sendMessage.mock.calls[0]?.[0]).toBe('sess-Topic5')
-    expect(sessionManager.sendMessage.mock.calls[1]?.[0]).toBe('sess-Topic7')
+    expect(sessionManager.submitInput).toHaveBeenCalledTimes(2)
+    expect(sessionManager.submitInput.mock.calls[0]?.[0]).toBe('sess-Topic5')
+    expect(sessionManager.submitInput.mock.calls[1]?.[0]).toBe('sess-Topic7')
   })
 
   it('falls through to Commands when message lands in an unbound topic', async () => {
@@ -227,7 +227,7 @@ describe('Router', () => {
     const router = new Router(sessionManager as any, store, commands as unknown as Commands)
 
     await router.route(makeFakeAdapter(), baseMsg({ channelId: '-1001', threadId: 7, text: '/help' }))
-    expect(sessionManager.sendMessage).not.toHaveBeenCalled()
+    expect(sessionManager.submitInput).not.toHaveBeenCalled()
     expect(commands.handle).toHaveBeenCalledTimes(1)
   })
 })

@@ -3,6 +3,11 @@ import { SnapshotDecoder } from '@phaneris/core/utils'
 import { CodedError, RPC_CHANNELS, SESSION_READ_CHUNK_BYTES, SESSION_READ_MAX_BYTES, type Session, type SessionReadChunk } from '@phaneris/shared/protocol'
 import type { RpcClient } from './types'
 
+// One complete snapshot per connection owns its read lease until close is
+// acknowledged. Rapid navigation queues at this boundary instead of making
+// each renderer caller know the server's concurrent-read budget.
+const snapshotTurns = new WeakMap<object, Promise<void>>()
+
 /** Pull bounded chunks, then publish one complete session to existing Chat/Run consumers. */
 export async function readSessionSnapshot(client: Pick<RpcClient, 'invoke'>, sessionId: string, available?: (channel: string) => boolean): Promise<Session | null> {
   if (available && !available(RPC_CHANNELS.sessions.READ_MESSAGES)) return client.invoke(RPC_CHANNELS.sessions.GET_MESSAGES, sessionId)
@@ -39,6 +44,10 @@ export async function readSessionSnapshot(client: Pick<RpcClient, 'invoke'>, ses
     }
     if (start < text.length) fragments.push(text.slice(start))
   }
+  const previous = snapshotTurns.get(client)
+  const finished = Promise.withResolvers<void>()
+  snapshotTurns.set(client, finished.promise)
+  await previous
   try {
     while (true) {
       let chunk: SessionReadChunk | null
@@ -67,6 +76,11 @@ export async function readSessionSnapshot(client: Pick<RpcClient, 'invoke'>, ses
     if (fragments.length || !session || messages.length !== expectedCount) throw invalid()
     return { ...session, messages } as Session
   } finally {
-    if (readId) await client.invoke(RPC_CHANNELS.sessions.CLOSE_MESSAGES_READ, sessionId, readId).catch(() => {})
+    try {
+      if (readId) await client.invoke(RPC_CHANNELS.sessions.CLOSE_MESSAGES_READ, sessionId, readId).catch(() => {})
+    } finally {
+      finished.resolve()
+      if (snapshotTurns.get(client) === finished.promise) snapshotTurns.delete(client)
+    }
   }
 }

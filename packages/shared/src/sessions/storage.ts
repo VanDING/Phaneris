@@ -125,6 +125,7 @@ export async function createSession(
 
     branchFromSessionId?: string;
     taskSlug?: string;
+    taskPublicationId?: string;
     taskRunId?: string;
     taskNodeId?: string;
     taskNodeDispatchId?: string;
@@ -178,6 +179,7 @@ export async function createSession(
     handoffSequence: options?.handoffSequence,
     branchFromSessionId: options?.branchFromSessionId,
     taskSlug: options?.taskSlug,
+    taskPublicationId: options?.taskPublicationId,
     taskRunId: options?.taskRunId,
     taskNodeId: options?.taskNodeId,
     taskNodeDispatchId: options?.taskNodeDispatchId,

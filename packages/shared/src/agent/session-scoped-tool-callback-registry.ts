@@ -108,7 +108,8 @@ export interface SessionScopedToolCallbacks {
   unbindMessagingChannelFn?: (sessionId: string, platform?: string) => number;
   /** Create a Phaneris Task (board card + task.yaml + orchestrator session) without running it. */
   createTaskFn?: (
-    input: import('@phaneris/session-tools-core').CreateTaskInput
+    input: import('@phaneris/session-tools-core').CreateTaskInput,
+    context?: { operationId?: string },
   ) => Promise<import('@phaneris/session-tools-core').CreateTaskResult>;
   artifactStatusFn?: (artifactId?: string) => Promise<import('@phaneris/session-tools-core').ArtifactToolResult>;
   artifactCreateFn?: (input: import('@phaneris/session-tools-core').ArtifactCreateInput) => Promise<import('@phaneris/session-tools-core').ArtifactToolResult>;

@@ -10,6 +10,7 @@ export const RESIDENT_TOOL_NAMES = [
 ] as const
 
 export interface AssistantCapabilityView {
+  workerScheduling?: { capacity: number; occupied: number; queued: number; paused: number }
   role: 'resident_assistant'
   workspaceId: string
   revision: string

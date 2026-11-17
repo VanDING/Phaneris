@@ -1137,7 +1137,7 @@ async function requestDurableModelOutcome(input: {
   } satisfies OutboundDurableModelOutcomeReq;
   send(request);
   const response = await responsePromise;
-  if (response.discard) throw new Error('Resident context changed while the provider was running; its stale response was withheld. Start a fresh turn.');
+  if (response.discard) throw new Error(response.reason ?? 'Model context changed while the provider was running; inspect the original Session and prepare current materials.');
   if (!response.ok) { retainPendingOutcome({ kind: 'model', request }); return undefined; }
   if (response.committedSeq === undefined && !response.deferred) throw new Error('Durable model T2 returned no receipt');
   return response.committedSeq;

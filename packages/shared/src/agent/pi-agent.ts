@@ -1984,7 +1984,8 @@ export class PiAgent extends BaseAgent {
     try {
       const current = this.checkProjectMaterials();
       const committed = await boundary.commitOutcome(current ? request : { ...request, contextDisposition: 'stale' });
-      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq, deferred: committed.deferred, discard: !current || committed.discard });
+      this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: true, committedSeq: committed.committedSeq, deferred: committed.deferred, discard: !current || committed.discard,
+        reason: !current ? 'Project materials changed while this request was running; prepare current materials before continuing.' : committed.reason });
     } catch (error) {
       this.send({ type: 'durable_model_outcome_response', requestId: request.requestId, ok: false, reason: error instanceof Error ? error.message : String(error) });
     }
@@ -2954,13 +2955,15 @@ export class PiAgent extends BaseAgent {
    * Respond to a pending permission request.
    * Permission checking now happens in the main process, so this resolves locally.
    */
-  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void {
+  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): boolean {
     const pending = this.pendingPermissions.get(requestId);
     if (pending) {
       this.pendingPermissions.delete(requestId);
       if (allowed && alwaysAllow && pending.remember) this.permissionManager.remember(pending.remember);
       pending.resolve(allowed);
+      return true;
     }
+    return false;
   }
 
   /**

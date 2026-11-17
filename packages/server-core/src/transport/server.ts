@@ -25,7 +25,7 @@ import {
   type PushTarget,
   type ErrorCode,
 } from '@phaneris/shared/protocol'
-import type { RpcServer, HandlerFn, RequestContext } from './types'
+import type { RpcServer, HandlerFn, RequestContext, RegisteredHandler } from './types'
 import { serializeEnvelope, deserializeEnvelope } from './codec'
 import { createLogger } from '@phaneris/shared/utils'
 
@@ -185,6 +185,7 @@ export class WsRpcServer implements RpcServer {
   // RpcServer interface
   // -------------------------------------------------------------------------
 
+  handle<Channel extends string>(channel: Channel, handler: RegisteredHandler<NoInfer<Channel>>): void
   handle(channel: string, handler: HandlerFn): void {
     if (this.handlers.has(channel)) {
       throw new Error(`Handler already registered for channel: ${channel}`)
@@ -780,19 +781,22 @@ export class WsRpcServer implements RpcServer {
       transportLog.info('Client disconnected', { clientId: client.id })
       this.clients.delete(client.id)
 
-      // Retain buffer for potential reconnect
-      const timer = setTimeout(() => {
-        this.disconnectedClients.delete(client.id)
-      }, DISCONNECTED_CLIENT_TTL_MS)
-      this.disconnectedClients.set(client.id, { client, timer })
+      // close() can drain retained clients before this asynchronous event.
+      // A stopped server must not recreate reconnect buffers or TTL timers.
+      if (!this.closing) {
+        const timer = setTimeout(() => {
+          this.disconnectedClients.delete(client.id)
+        }, DISCONNECTED_CLIENT_TTL_MS)
+        this.disconnectedClients.set(client.id, { client, timer })
 
-      // Cap disconnectedClients to prevent unbounded growth
-      if (this.disconnectedClients.size > 50) {
-        const oldestKey = this.disconnectedClients.keys().next().value
-        if (oldestKey) {
-          const oldest = this.disconnectedClients.get(oldestKey)
-          if (oldest) clearTimeout(oldest.timer)
-          this.disconnectedClients.delete(oldestKey)
+        // Cap disconnectedClients to prevent unbounded growth
+        if (this.disconnectedClients.size > 50) {
+          const oldestKey = this.disconnectedClients.keys().next().value
+          if (oldestKey) {
+            const oldest = this.disconnectedClients.get(oldestKey)
+            if (oldest) clearTimeout(oldest.timer)
+            this.disconnectedClients.delete(oldestKey)
+          }
         }
       }
 

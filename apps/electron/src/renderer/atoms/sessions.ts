@@ -134,7 +134,7 @@ function findLastFinalMessageId(messages: Message[]): string | undefined {
 /**
  * Extract metadata from a full session object
  */
-export function extractSessionMeta(session: Session): SessionMeta {
+export function extractSessionMeta(session: Omit<Session, 'messages'> & { messages?: Message[] }): SessionMeta {
   const messages = session.messages || []
 
   // Destructure fields that don't exist on SessionMeta or need overrides
@@ -153,7 +153,7 @@ export function extractSessionMeta(session: Session): SessionMeta {
     // session's `messageCount` field, so a defined-but-stale count (stamped at
     // load/creation) must never shadow the live length. Meta-only sessions
     // (empty `messages`) keep the server/header count.
-    messageCount: Math.max(messageCount ?? 0, messages.length),
+    messageCount: messageCount === undefined && session.messages === undefined ? undefined : Math.max(messageCount ?? 0, messages.length),
     isAsyncOperationOngoing: isAsyncOperationOngoing ?? isRegeneratingTitle,
     isRegeneratingTitle,
   } as SessionMeta
@@ -459,6 +459,19 @@ export const refreshSessionsMetadataAtom = atom(
     return nextMetaMap
   }
 )
+
+/** Metadata updates preserve independently loaded/streaming timelines. */
+export const upsertSessionMetadataAtom = atom(null, (get, set, metadata: import('@phaneris/shared/protocol').ResidentAssistantMetadata) => {
+  const current = get(sessionAtomFamily(metadata.id))
+  const merged = { ...current, ...metadata, messages: current?.messages ?? [] }
+  set(sessionAtomFamily(metadata.id), merged)
+  const map = new Map(get(sessionMetaMapAtom))
+  const hasTimeline = get(loadedSessionsAtom).has(metadata.id) || !!current?.messages.length
+  map.set(metadata.id, extractSessionMeta(hasTimeline ? merged : metadata))
+  set(sessionMetaMapAtom, map)
+  const ids = get(sessionIdsAtom)
+  if (!ids.includes(metadata.id)) set(sessionIdsAtom, [metadata.id, ...ids])
+})
 
 /**
  * Action atom: add a new session

@@ -11,6 +11,7 @@ import * as React from 'react'
 import { useState, useCallback, useRef, useEffect } from 'react'
 import type { StoredSession } from '@phaneris/core'
 import { Upload, FileJson, AlertCircle } from 'lucide-react'
+import { decodePublicSession, looksLikePublicSession } from '../decode-session'
 
 interface SessionUploadProps {
   onSessionLoad: (session: StoredSession) => void
@@ -31,15 +32,13 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
 
     try {
       const text = await file.text()
-      const data = JSON.parse(text)
-
-      // Validate basic session structure
-      if (!data.id || !data.messages || !Array.isArray(data.messages)) {
-        setError('Invalid session format: missing id or messages array')
+      const data = decodePublicSession(JSON.parse(text))
+      if (!data) {
+        setError('Invalid session format')
         return
       }
 
-      onSessionLoad(data as StoredSession)
+      onSessionLoad(data)
     } catch {
       setError('Failed to parse JSON file')
     }
@@ -73,6 +72,7 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
     if (file) {
       parseSessionFile(file)
     }
+    e.currentTarget.value = ''
   }, [parseSessionFile])
 
   const handleClick = useCallback(() => {
@@ -86,12 +86,14 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
       if (!text) return
 
       try {
-        const data = JSON.parse(text)
-        if (data.id && data.messages && Array.isArray(data.messages)) {
-          onSessionLoad(data as StoredSession)
-        }
+        const value: unknown = JSON.parse(text)
+        if (!looksLikePublicSession(value)) return
+        const data = decodePublicSession(value)
+        if (!data) { setError('Invalid session format'); return }
+        setError(null)
+        onSessionLoad(data)
       } catch {
-        // Not valid JSON, ignore
+        if (text.trimStart().startsWith('{') && /"messages"\s*:/.test(text)) setError('Failed to parse JSON file')
       }
     }
 

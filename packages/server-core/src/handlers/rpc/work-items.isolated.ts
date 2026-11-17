@@ -1,3 +1,5 @@
+import { createWorkspacePlanning, type PlanningCreate, type PlanningUpdate } from '../../planning/workspace-planning'
+import type { Session } from '@phaneris/shared/protocol'
 import type { RpcResult, RpcMethodResults } from '@phaneris/shared/protocol';
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
 import { mkdtempSync, readdirSync, rmSync } from 'node:fs'
@@ -60,37 +62,27 @@ function createHarness(options?: {
     hasClientCapability() { return false },
     findClientsWithCapability() { return [] },
   }
-  const sessionManager = {
+  const planningHost = {
     async waitForInit() {},
-    getSessions: () => sessions,
-    async createSession(_workspaceId: string, input: { name?: string }) {
-      const created = options?.createdSession ?? { id: 'created-session', name: input.name }
+    getSessions: () => sessions as unknown as Session[],
+    async createPlanningItem(_workspaceId: string, input: PlanningCreate) {
+      const created = options?.createdSession ?? { id: 'created-session', name: input.title }
       sessions.push(created)
-      calls.push(`create:${input.name ?? ''}`)
-      return created
+      calls.push(`create:${input.title}`)
+      return created as unknown as Session
     },
-    async renameSession(sessionId: string, title: string) {
-      calls.push(`title:${sessionId}:${title}`)
+    async updatePlanningItem(_workspaceId: string, sessionId: string, patch: PlanningUpdate) {
+      if (!sessions.some(session => session.id === sessionId)) throw new Error(`Session not found: ${sessionId}`)
+      calls.push(`update:${sessionId}:${Object.keys(patch).sort().join(',')}`)
       if (options?.failRename) throw new Error('session mirror failed')
-    },
-    async setSessionProjectId(sessionId: string, projectId: string | null) {
-      calls.push(`project:${sessionId}:${projectId ?? ''}`)
-    },
-    async setSessionStatus(sessionId: string, statusId: string) {
-      calls.push(`status:${sessionId}:${statusId}`)
-    },
-    async setKanbanColumn(sessionId: string, columnId: string | null) {
-      calls.push(`column:${sessionId}:${columnId ?? ''}`)
-    },
-    async updateSessionPlanning(sessionId: string, patch: Record<string, unknown>) {
-      calls.push(`planning:${sessionId}:${Object.keys(patch).sort().join(',')}`)
     },
     async deleteSession(sessionId: string) {
       calls.push(`delete:${sessionId}`)
       const index = sessions.findIndex(({ id }) => id === sessionId)
       if (index >= 0) sessions.splice(index, 1)
     },
-  } as unknown as HandlerDeps['sessionManager']
+  }
+  const sessionManager = { getWorkspacePlanning: (workspaceId: string) => createWorkspacePlanning(workspaceId, planningHost) } as unknown as HandlerDeps['sessionManager']
   const deps: HandlerDeps = {
     sessionManager,
     oauthFlowStore: {} as HandlerDeps['oauthFlowStore'],
@@ -187,7 +179,7 @@ describe('work item RPC handlers', () => {
     expect(item).toMatchObject({ title: 'New task', primarySessionId: 'created-session' })
   })
 
-  it('mirrors only explicitly updated fields in deterministic order', async () => {
+  it('passes the complete explicitly supplied edit to the planning owner', async () => {
     const harness = createHarness({ sessions: [{ id: 'session-1', name: 'Old' }] })
     const update = harness.handler(RPC_CHANNELS.workItems.UPDATE)
 
@@ -200,13 +192,7 @@ describe('work item RPC handlers', () => {
       dueAt: '2026-08-20',
     })
 
-    expect(harness.calls).toEqual([
-      'title:session-1:Linked task',
-      'project:session-1:project-b',
-      'status:session-1:done',
-      'column:session-1:complete',
-      'planning:session-1:dueAt,startAt',
-    ])
+    expect(harness.calls).toEqual(['update:session-1:columnId,dueAt,projectId,startAt,statusId,title'])
   })
 
   it('rejects an update for a Session that does not exist', async () => {

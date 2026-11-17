@@ -9,8 +9,8 @@
  * Storage flows are the SAME primitives the pages RPC handlers use
  * (@phaneris/shared/pages) — including deletePageWithUnpublish, shared
  * verbatim with the pages:delete RPC so the two delete paths cannot drift.
- * Every mutation calls deps.onPagesMutated so the host can poke the config
- * watcher and broadcast `pages:changed`, exactly like the RPC handlers do.
+ * Mutations are completed by the same workspace command owner as UI RPC.
+ * The injected Agent surface cannot grant actions or publish pages.
  */
 
 import { existsSync, statSync } from 'node:fs'
@@ -24,25 +24,15 @@ import type {
   UpdatePageToolPatch,
   PageDataToolPatch,
 } from '@phaneris/session-tools-core'
-import type { LoadedPage, PageConfig, PageDataSnapshot, PageKind, PageRefreshSpec, UpdatePagePatch } from '@phaneris/shared/pages'
+import type { LoadedPage, PageDataSnapshot, PageKind, PageRefreshSpec, UpdatePagePatch } from '@phaneris/shared/pages'
+import type { AgentPageMutations } from './workspace-pages'
 import { isPageGrantUsable } from '@phaneris/shared/pages/types'
 
 export interface PagesToolCallbacksDeps {
   workspaceId: string
   workspaceRootPath: string
   log?: (message: string) => void
-  /**
-   * Called after every successful mutation (create/update/write/delete) with
-   * the page slug. The host notifies the config watcher and broadcasts
-   * `pages:changed` here.
-   */
-  onPagesMutated?: (pageSlug: string) => void | Promise<void>
-  /**
-   * Called specifically when a page's HTML content changed (create-with-content
-   * or update-with-content) so the host can enqueue a thumbnail (re)capture.
-   * Not fired for data-only writes (those don't change the content digest).
-   */
-  onContentChanged?: (pageSlug: string) => void
+  pages: AgentPageMutations
 }
 
 const PAGE_KINDS: readonly string[] = ['static', 'interactive', 'live']
@@ -146,13 +136,6 @@ export function buildPagesToolCallbacks(deps: PagesToolCallbacksDeps): PagesTool
     })
   }
 
-  async function mutated(pageSlug: string): Promise<void> {
-    try {
-      await deps.onPagesMutated?.(pageSlug)
-    } catch (error) {
-      deps.log?.(`pages tool: post-mutation notify failed for ${pageSlug}: ${error instanceof Error ? error.message : String(error)}`)
-    }
-  }
 
   return {
     async listPages(): Promise<PageToolSummary[]> {
@@ -165,9 +148,8 @@ export function buildPagesToolCallbacks(deps: PagesToolCallbacksDeps): PagesTool
     },
 
     async createPage(input: CreatePageToolInput): Promise<PageToolDetails> {
-      const { createPage } = await import('@phaneris/shared/pages')
       const content = await resolvePageContentInput(workspaceRootPath, input)
-      const config = createPage(workspaceRootPath, {
+      const config = await deps.pages.create({
         name: input.name.trim(),
         description: input.description,
         kind: assertKind(input.kind),
@@ -175,8 +157,6 @@ export function buildPagesToolCallbacks(deps: PagesToolCallbacksDeps): PagesTool
         content,
         refresh: input.refresh as PageRefreshSpec | undefined,
       })
-      await mutated(config.slug)
-      if (content !== undefined) deps.onContentChanged?.(config.slug)
       deps.log?.(`pages tool: created page ${config.slug} in workspace ${workspaceId}`)
       const details = await loadDetails(config.slug)
       if (!details) throw new Error(`Created page ${config.slug} but failed to reload it`)
@@ -184,7 +164,7 @@ export function buildPagesToolCallbacks(deps: PagesToolCallbacksDeps): PagesTool
     },
 
     async updatePage(slug: string, patch: UpdatePageToolPatch): Promise<PageToolDetails> {
-      const { updatePage, savePageContent, loadPage } = await import('@phaneris/shared/pages')
+      const { loadPage } = await import('@phaneris/shared/pages')
       const existing = loadPage(workspaceRootPath, slug)
       if (!existing) throw new Error(`Page not found: ${slug}`)
 
@@ -201,24 +181,14 @@ export function buildPagesToolCallbacks(deps: PagesToolCallbacksDeps): PagesTool
       if (patch.projectId !== undefined) configPatch.projectId = patch.projectId
       if (patch.refresh !== undefined) configPatch.refresh = patch.refresh as PageRefreshSpec | null
 
-      if (Object.keys(configPatch).length > 0) {
-        updatePage(workspaceRootPath, existing.config.slug, configPatch)
-      }
-      if (content !== undefined) {
-        savePageContent(workspaceRootPath, existing.config.slug, content)
-      }
-
-      await mutated(existing.config.slug)
-      if (content !== undefined) deps.onContentChanged?.(existing.config.slug)
+      await deps.pages.update(existing.config.slug, configPatch, content)
       const details = await loadDetails(existing.config.slug)
       if (!details) throw new Error(`Updated page ${slug} but failed to reload it`)
       return details
     },
 
     async writePageData(slug: string, patch: PageDataToolPatch) {
-      const { writePageData } = await import('@phaneris/shared/pages')
-      const { result } = await writePageData(workspaceRootPath, slug, patch)
-      await mutated(slug)
+      const { result } = await deps.pages.writeData(slug, patch)
       return {
         slug: result.pageSlug,
         kvCount: result.kvCount,
@@ -230,11 +200,10 @@ export function buildPagesToolCallbacks(deps: PagesToolCallbacksDeps): PagesTool
     },
 
     async deletePage(slug: string) {
-      const { deletePageWithUnpublish, loadPage } = await import('@phaneris/shared/pages')
+      const { loadPage } = await import('@phaneris/shared/pages')
       const existing = loadPage(workspaceRootPath, slug)
       if (!existing) throw new Error(`Page not found: ${slug}`)
-      const outcome = await deletePageWithUnpublish(workspaceRootPath, workspaceId, existing.config.slug, { log: deps.log })
-      await mutated(existing.config.slug)
+      const outcome = await deps.pages.remove(existing.config.slug)
       deps.log?.(`pages tool: deleted page ${existing.config.slug}`)
       return { deleted: true as const, publicCopyMayRemain: outcome.publicCopyMayRemain }
     },

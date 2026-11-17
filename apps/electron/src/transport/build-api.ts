@@ -40,8 +40,8 @@ export function buildClientApi(
         if (typeof cb !== 'function') throw new TypeError(`Listener ${key} requires a callback`)
         return client.on(entry.channel, cb as import('@phaneris/server-core/transport').RpcCallback)
       }
-    } else if (entry.channel === RPC_CHANNELS.residentAssistant.GET || entry.channel === RPC_CHANNELS.residentAssistant.EXECUTION_MODE) {
-      const channel = entry.channel
+    } else if (key === 'getResidentAssistant' || key === 'setAssistantExecutionMode') {
+      const channel = entry.channel as typeof RPC_CHANNELS.residentAssistant.GET | typeof RPC_CHANNELS.residentAssistant.EXECUTION_MODE
       fn = async (...args: unknown[]) => {
         const metadata = await client.invoke(channel, ...args)
         const session = await readSessionSnapshot(client, metadata.id, isChannelAvailable)

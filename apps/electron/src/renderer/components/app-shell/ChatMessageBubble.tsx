@@ -56,7 +56,6 @@ export function MessageBubble({
         content={message.content}
         attachments={message.attachments}
         badges={message.badges}
-        isPending={message.isPending}
         isQueued={message.isQueued}
         inputReception={message.inputReception}
         onUrlClick={onOpenUrl}
