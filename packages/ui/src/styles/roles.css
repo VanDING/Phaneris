@@ -124,9 +124,11 @@
   :root {
     --panel-header-height: max(52px, calc(2rem * var(--ui-scale) + 6px));
     --sidebar-row-height: max(var(--touch-target), calc(var(--type-body-size) * var(--ui-scale) * 1.5 + 10px));
-    --sidebar-item-inset: 14px;
+    --sidebar-subitem-row-height: max(var(--touch-target), calc(var(--type-body-size) * var(--ui-scale) * 1.5 + 10px));
+    --sidebar-inline-inset: 8px;
+    --sidebar-item-inset: 12px;
     --sidebar-rail-control-size: var(--touch-target);
-    --sidebar-rail-item-inset: 14px;
+    --sidebar-rail-item-inset: 12px;
     --sidebar-rail-inline-offset: 0px;
   }
 }

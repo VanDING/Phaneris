@@ -1431,13 +1431,25 @@ html:not([data-theme]) [data-shell-platform="macos"] {
   height: var(--panel-header-height);
   padding-inline: var(--sidebar-inline-inset);
 }
-.sidebar-first-row > div { display: flex; align-items: flex-start; width: 100%; height: var(--sidebar-row-height); }
+.sidebar-first-row > div { display: flex; align-items: center; width: 100%; height: var(--sidebar-row-height); }
 .sidebar-footer,
 .sidebar-nav-inset { padding-inline: var(--sidebar-inline-inset); }
-/* Reserve the 8px scrollbar on both sides. These gutters are the navigation
-   inset, including when the short window scrolls; do not add a second inset. */
+/* Match both scrollbar gutters to the navigation inset, keeping the icon axis
+   identical to the first row and footer even when the short window scrolls. */
 .sidebar-scroll { scrollbar-gutter: stable both-edges; }
+.sidebar-scroll::-webkit-scrollbar { width: var(--sidebar-inline-inset); }
 .sidebar-scroll .sidebar-nav-inset { padding-inline: 0; }
+.sidebar-subitems {
+  --sidebar-icon-size: var(--sidebar-subitem-icon-size);
+  --sidebar-row-height: var(--sidebar-subitem-row-height);
+}
+.sidebar-nav-separator {
+  display: flex;
+  align-items: center;
+  height: var(--sidebar-separator-height);
+  padding-inline: var(--sidebar-item-inset);
+}
+.sidebar-nav-separator > div { height: 1px; width: 100%; background: var(--border); }
 .sidebar-navigation nav[aria-label="Main navigation"] { row-gap: var(--sidebar-rail-gap); }
 .sidebar-navigation nav[aria-label="Main navigation"] > .sidebar-section {
   padding-block: 0;
@@ -1477,19 +1489,18 @@ html:not([data-theme]) [data-shell-platform="macos"] {
   padding-block: 0;
 }
 /* Larger type/density keeps its row centers while the hidden-text control
-   stays square. The default 28px row needs no extra slot padding. */
+   stays square. The default 34px row needs no extra slot padding. */
 .sidebar-navigation[data-collapsed] nav[aria-label="Main navigation"] > .sidebar-section {
   padding-block: max(0px, calc((var(--sidebar-row-height) - var(--sidebar-rail-control-size)) / 2));
 }
-.sidebar-navigation .sidebar-new-session:hover { box-shadow: var(--shadow-middle, var(--shadow-minimal)); }
-.sidebar-navigation .sidebar-nav-button > span:first-child,
+.sidebar-nav-button > .navigation-icon,
 .sidebar-navigation .sidebar-new-session > svg { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); flex-shrink: 0; }
-.sidebar-navigation .sidebar-nav-button > span:first-child svg,
-.sidebar-navigation .sidebar-nav-button > span:first-child > span { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); }
+.sidebar-nav-button > .navigation-icon svg,
+.sidebar-nav-button > .navigation-icon > span { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); }
 /* Normalize 24dp outlines; branded artwork keeps its native coordinate-scaled stroke. */
 .navigation-icon svg[viewBox="0 0 24 24"],
 .menu-icon svg[viewBox="0 0 24 24"] { stroke-width: var(--icon-stroke-width); stroke-linecap: var(--icon-stroke-linecap); }
-.menu-icon { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); }
+.menu-icon { width: var(--menu-icon-size); height: var(--menu-icon-size); }
 .menu-icon svg,
 .menu-icon > span { width: 100%; height: 100%; flex-shrink: 0; }
 .sidebar-navigation .sidebar-label { min-width: 0; white-space: nowrap; transition: opacity var(--motion-duration-fast) var(--motion-ease-enter); }
@@ -1510,7 +1521,7 @@ html:not([data-theme]) [data-shell-platform="macos"] {
   right: auto;
   width: calc(100% - var(--sidebar-row-height) - 4px);
   height: var(--sidebar-row-height);
-  padding: 0 var(--sidebar-item-inset);
+  padding: 0 calc(var(--sidebar-item-inset) - (var(--sidebar-avatar-size) - var(--sidebar-icon-size)) / 2);
   overflow: hidden;
   transition:
     left var(--motion-duration-spatial) var(--motion-ease-move),
@@ -1520,7 +1531,7 @@ html:not([data-theme]) [data-shell-platform="macos"] {
     gap var(--motion-duration-spatial) var(--motion-ease-move);
 }
 .sidebar-profile[data-collapsed] .sidebar-profile-trigger { left: var(--sidebar-rail-inline-offset); width: var(--sidebar-rail-control-size); height: var(--sidebar-rail-control-size); gap: 0; }
-.sidebar-profile-avatar { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); font-size: var(--type-micro-size); }
+.sidebar-profile-avatar { width: var(--sidebar-avatar-size); height: var(--sidebar-avatar-size); font-size: var(--type-micro-size); }
 .sidebar-settings-trigger {
   position: absolute;
   right: 0;

@@ -298,6 +298,15 @@ Rules:
 
 ## Layout
 
+- Sidebar main navigation uses **20px icons, 34px rows and 2px gaps** in both
+  expanded and collapsed states. Opening the sidebar reveals labels without
+  resizing or displacing the main icons. Nested items use 14px icons and compact
+  28px rows; menu icons keep their independent 16px role. The 48px rail centers
+  its 34px controls on a 24px axis. A 1px neutral separator below Labels stays in
+  a compact 5px slot. Main glyphs use readable neutral ink, deepen on selection,
+  and keep explicit semantic colors. New session shares the ghost controls;
+  the top-bar brand mark keeps its existing shape, color and size. Touch keeps
+  44px targets; larger type and density grow shared row slots in both states.
 - Shell topology is content-driven: the sidebar and navigator are resizable;
   the remaining content row is shared by foreground conversations and Workbench.
   Beside an open workbench the transcript defaults to **600px**, with a **380px**

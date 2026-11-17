@@ -67,7 +67,7 @@ export interface LinkItem {
   /**
    * A Lucide icon, any other SVG component (e.g. the MCP brand mark), or an
    * already-built element. Components are preferred: the row sizes them through
-   * one 16px slot, so a hand-rolled `h-3.5 w-3.5` element cannot introduce a
+   * one role-sized slot, so a hand-rolled `h-3.5 w-3.5` element cannot introduce a
    * second icon size.
    */
   icon: LucideIcon | React.ComponentType<{ className?: string; style?: React.CSSProperties }> | React.ReactNode
@@ -165,8 +165,8 @@ const itemVariants: Variants = {
  * sidebar keyboard navigation. This component just renders the items.
  *
  * Styling matches agent items in the sidebar for consistency:
- * - 7px vertical padding, 13px body tier, control radius
- * - Icon: 16px with the same foreground contrast as session menus
+ * - Both states share a 34px row and 20px main icon; nested items stay compact
+ * - Neutral icon ink deepens on selection; semantic colors remain explicit
  *
  * Link variants:
  * - "default": Highlighted style (used for active/selected items)
@@ -193,7 +193,7 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
   } : {}
 
   return (
-    <div className={cn("flex flex-col select-none", !isNested && "py-1")}>
+    <div className={cn("flex flex-col select-none", isNested ? "sidebar-subitems" : "py-1")}>
       <NavWrapper
         className={cn(
           "grid grid-cols-1 gap-0.5",
@@ -214,8 +214,8 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
           // Handle separator items
           if (isSeparatorItem(item)) {
             return (
-              <div key={item.id} className="py-1 px-2" aria-hidden="true">
-                <div className="h-px bg-foreground/5" />
+              <div key={item.id} className="sidebar-nav-separator" aria-hidden="true">
+                <div />
               </div>
             )
           }
@@ -388,7 +388,7 @@ function SortableStatusList({ items, onReorder, getItemProps, focusedItemId, tra
   }, [onReorder])
 
   return (
-    <div className="flex flex-col select-none">
+    <div className="sidebar-subitems flex flex-col select-none">
       <div className="pl-5 pr-0 relative">
         {/* Vertical line for nested items */}
         <div
@@ -443,6 +443,7 @@ function SortableStatusList({ items, onReorder, getItemProps, focusedItemId, tra
             <SidebarButton
               link={item}
               isOverlay={true}
+              className="sidebar-subitems"
             />
           )}
         />
@@ -531,7 +532,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         )}
       >
         {/* Icon container with hover toggle for expandable items */}
-        <span className="navigation-icon relative size-4 shrink-0 flex items-center justify-center [&_svg]:size-4!">
+        <span className="navigation-icon relative size-4 shrink-0 flex items-center justify-center">
           {link.expandable && !isOverlay ? (
             <>
               {/* Main icon - hidden on hover */}
@@ -605,9 +606,9 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
 function renderIcon(link: LinkItem) {
   const isComponent = typeof link.icon === 'function' ||
     (typeof link.icon === 'object' && link.icon !== null && 'render' in link.icon)
-  // Navigation is a primary control, like the session menu. Fading its small
-  // strokes independently made complex glyphs appear softer than their peers.
-  const defaultColor = 'var(--foreground)'
+  // Use the shared readable neutral ink; selected destinations deepen without
+  // dimming status colors or introducing a second stroke vocabulary.
+  const defaultColor = link.variant === 'default' ? 'var(--foreground)' : 'var(--text-secondary)'
 
   // Lucide components are always colorable; ReactNode icons check iconColorable
   // Default to true for backwards compatibility (most icons are colorable)

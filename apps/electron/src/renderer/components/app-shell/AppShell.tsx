@@ -21,11 +21,12 @@ import {
   Search,
   Plus,
   Trash2,
-  DatabaseZap,
+  Database,
   Zap,
   Inbox,
   Globe,
   FolderOpen,
+  Folder,
   Calendar,
   Layers,
   ListTodo,
@@ -2199,7 +2200,6 @@ function AppShellContent({
             <div className="flex h-full flex-col select-none">
               {/* Sidebar Top Section */}
               <div className="sidebar-top flex-1 flex flex-col min-h-0">
-                {/* New Session Button - Gmail-style, with context menu for "Open in New Window" */}
                 <div className="sidebar-first-row shrink-0">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -2210,7 +2210,7 @@ function AppShellContent({
                               variant="ghost"
                               onClick={() => handleNewChat()}
                               aria-label={t("session.newSession")}
-                              className="sidebar-new-session text-body w-full justify-start gap-2 font-normal rounded-control shadow-minimal bg-card text-card-foreground hover:bg-card"
+                              className="sidebar-new-session text-body w-full justify-start gap-2 font-normal rounded-control text-text-secondary hover:bg-sidebar-hover"
                               data-tutorial="new-chat-button"
                             >
                               <SquarePenRounded className="h-3.5 w-3.5 shrink-0" />
@@ -2333,7 +2333,7 @@ function AppShellContent({
                       id: "nav:sources",
                       title: t("sidebar.sources"),
                       label: String(sources.length),
-                      icon: DatabaseZap,
+                      icon: Database,
                       variant: (isSourcesNavigation(navState) && !sourceFilter) ? "default" : "ghost",
                       onClick: handleSourcesClick,
                       dataTutorial: "sources-nav",
@@ -2412,7 +2412,7 @@ function AppShellContent({
                       id: "nav:projects",
                       title: t("sidebar.projects"),
                       label: String(projects.length),
-                      icon: FolderKanban,
+                      icon: Folder,
                       // Highlight only when on Projects view itself, not when a child is "active" (jumped-to filter)
                       variant: isProjectsNavigation(navState) ? "default" : "ghost",
                       onClick: handleProjectsClick,

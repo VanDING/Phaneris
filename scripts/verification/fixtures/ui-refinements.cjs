@@ -120,7 +120,7 @@ async function inspectFileIconPaint(page, run) {
           color: getComputedStyle(node).color
         })));
         assert.equal(sidebarIcons.length, 8);
-        assert(sidebarIcons.every((icon) => icon.width === 16 && icon.height === 16 && icon.stroke === sidebarIcons[0].stroke));
+        assert(sidebarIcons.every((icon) => icon.width === 20 && icon.height === 20 && icon.stroke === sidebarIcons[0].stroke));
         await page.getByRole("button", { name: "Session options" }).click();
         await page.locator('[role="menu"]').evaluate(async node => {
           await Promise.all(node.getAnimations().map(animation => animation.finished));
@@ -142,7 +142,7 @@ async function inspectFileIconPaint(page, run) {
         await page.getByRole("menuitem", { name: "Rename", exact: true }).click();
         await page.locator("output").filter({ hasText: "Rename selected" }).waitFor();
         await page.getByRole("button", { name: "Toggle sidebar" }).click();
-        assert.equal(await page.locator(".sidebar-nav-button .navigation-icon svg").first().evaluate((node) => node.getBoundingClientRect().width), 16);
+        assert.equal(await page.locator(".sidebar-nav-button .navigation-icon svg").first().evaluate((node) => node.getBoundingClientRect().width), 20);
         const block = page.locator('[data-thinking-size="16"] rect').first();
         const transforms = new Set();
         for (let sample = 0; sample < 6; sample++) {
