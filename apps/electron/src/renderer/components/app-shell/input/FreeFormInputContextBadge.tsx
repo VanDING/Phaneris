@@ -29,6 +29,16 @@ export interface FreeFormInputContextBadgeProps {
   buttonRef?: React.RefObject<HTMLButtonElement | null>
   /** Data attribute for tutorials */
   'data-tutorial'?: string
+  /**
+   * Render the button bare, without the tooltip wrapper.
+   *
+   * Needed when the badge *is* a Radix trigger (`PopoverTrigger asChild`): the
+   * slot's props have to land on a DOM element, and the tooltip wrapper used to
+   * sit in between, so call sites wrapped the badge in a `<span>` to catch them —
+   * which put `aria-expanded` on a roleless element. With the wrapper suppressed,
+   * the button receives the trigger props directly.
+   */
+  asTrigger?: boolean
 }
 
 /**
@@ -40,7 +50,7 @@ export interface FreeFormInputContextBadgeProps {
  * - Collapsed (has selection): Icon + Label (fading), bg-background + shadow-minimal
  * - Open: bg-foreground/5 (like hover)
  */
-export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, FreeFormInputContextBadgeProps>(
+export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, FreeFormInputContextBadgeProps & React.ButtonHTMLAttributes<HTMLButtonElement>>(
   function FreeFormInputContextBadge(
     {
       icon,
@@ -55,6 +65,8 @@ export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, Fre
       className,
       buttonRef,
       'data-tutorial': dataTutorial,
+      asTrigger = false,
+      ...rest
     },
     ref
   ) {
@@ -71,10 +83,11 @@ export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, Fre
         aria-label={label}
         onClick={onClick}
         disabled={disabled}
+        {...rest}
         data-tutorial={dataTutorial}
         className={cn(
           // Base styles - shrink + min-w-0 allows badge to compress in tight layouts
-          "input-toolbar-btn inline-flex items-center gap-1.5 h-7 rounded-shape-md text-body text-foreground transition-colors select-none shrink min-w-0",
+          "craft-control input-toolbar-btn inline-flex items-center gap-1.5 h-7 rounded-shape-md text-body text-foreground transition-colors select-none shrink min-w-0",
           "disabled:opacity-50 disabled:pointer-events-none",
           // Padding: more padding when showing label
           showLabel ? "px-2" : "px-1.5",
@@ -118,7 +131,7 @@ export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, Fre
     )
 
     // Wrap with tooltip if provided (skip when dropdown is open to avoid showing tooltip)
-    if (tooltip && !isOpen) {
+    if (tooltip && !isOpen && !asTrigger) {
       return (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -134,3 +147,4 @@ export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, Fre
     return button
   }
 )
+

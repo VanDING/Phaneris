@@ -61,26 +61,32 @@ export function WorkingDirectoryBadge({
       sessionFolderPath={sessionFolderPath}
       workspaceId={workspaceId}
       renderTrigger={({ open, hasFolder, folderName, workingDirectory: wd, homeDir, gitBranch }) => (
-        <span className="shrink min-w-0 overflow-hidden">
-          <FreeFormInputContextBadge
-            icon={<Icon_Home className="h-4 w-4" />}
-            label={folderName ?? t('chat.workInFolder')}
-            isExpanded={isEmptySession}
-            hasSelection={hasFolder}
-            showChevron={true}
-            isOpen={open}
-            tooltip={
-              hasFolder ? (
-                <span className="flex flex-col gap-0.5">
-                  <span className="font-medium">{t("chat.workingDirectory")}</span>
-                  <span className="text-meta opacity-70">{formatPathForDisplay(wd, homeDir)}</span>
-                  {gitBranch && <span className="text-meta opacity-70">{t("chat.onBranch", { branch: gitBranch })}</span>}
-                </span>
-              ) : t("chat.chooseWorkingDirectory")
-            }
-          />
-        </span>
+        /* The badge itself is the trigger. `renderTrigger` must return the element
+           that receives Radix's popover props — `WorkingDirectorySelector` wraps it
+           in `PopoverTrigger asChild`, and an extra `<span>` in between swallowed
+           those props onto a roleless element, which is what made `aria-expanded`
+           invalid here. The layout classes the span carried move onto the button. */
+        <FreeFormInputContextBadge
+          asTrigger
+          className="shrink min-w-0 overflow-hidden"
+          icon={<Icon_Home className="h-4 w-4" />}
+          label={folderName ?? t('chat.workInFolder')}
+          isExpanded={isEmptySession}
+          hasSelection={hasFolder}
+          showChevron={true}
+          isOpen={open}
+          tooltip={
+            hasFolder ? (
+              <span className="flex flex-col gap-0.5">
+                <span className="font-medium">{t("chat.workingDirectory")}</span>
+                <span className="text-meta opacity-70">{formatPathForDisplay(wd, homeDir)}</span>
+                {gitBranch && <span className="text-meta opacity-70">{t("chat.onBranch", { branch: gitBranch })}</span>}
+              </span>
+            ) : t("chat.chooseWorkingDirectory")
+          }
+        />
       )}
     />
   )
 }
+

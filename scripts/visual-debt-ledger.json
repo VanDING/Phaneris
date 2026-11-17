@@ -3394,16 +3394,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/components/app-shell/input/FreeFormInputContextBadge.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "04de65bb4ce502688a2435b340bdd7a006b016dfae8454ea061ad9a30fc64be0",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/components/app-shell/input/WorkingDirectorySelector.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
