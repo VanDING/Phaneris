@@ -81,17 +81,50 @@ const { firstBusinessWindow } = require('./electron-windows.cjs')
     await page.getByTestId('resident-details-trigger').click()
     const panel = page.getByTestId('resident-work-panel')
     await panel.waitFor({ state: 'visible', timeout: 60_000 })
-    await panel.getByRole('tab', { name: '任务', exact: true }).click()
     const board = panel.getByTestId('focus-board')
     await board.waitFor({ timeout: 30_000 })
+
+    // The board is a sheet from the top of the view, not a floating card
+    // anchored to the corner control: its top edge sits at the view's top and
+    // it is horizontally centred, which is what "from the top" means here.
+    const geometry = await page.evaluate(() => {
+      const sheet = document.querySelector('[data-testid="resident-work-panel"]')
+      const surface = document.querySelector('#resident-assistant-surface')
+      if (!sheet || !surface) return null
+      const box = sheet.getBoundingClientRect(), host = surface.getBoundingClientRect()
+      return { top: Math.round(box.top - host.top), centre: Math.round(box.left + box.width / 2),
+        hostCentre: Math.round(host.left + host.width / 2), width: Math.round(box.width), hostWidth: Math.round(host.width),
+        sheetTop: Math.round(box.top), hostTop: Math.round(host.top), parent: sheet.parentElement?.className ?? 'none',
+        position: getComputedStyle(sheet).position, zIndex: getComputedStyle(sheet).zIndex }
+    })
+    writeFileSync(join(fixture.output, 'board-geometry.json'), JSON.stringify(geometry, null, 2))
+    assert(geometry, 'the panel and its host surface must both exist')
+    assert(geometry.top <= 24, `the board must open from the top of the view (top=${geometry.top})`)
+    assert(Math.abs(geometry.centre - geometry.hostCentre) <= 2, 'the board must be centred on the view')
+
     const panelSegments = await board.getByTestId('focus-segment').count()
     assert(panelSegments >= 5, `the panel must show the same segments, saw ${panelSegments}`)
     assert.equal(await board.getByTestId('focus-capacity').count(), 1, 'the panel states capacity once')
-    // No title heading above the strip: the strip is the first element.
-    const firstChildClass = await board.evaluate(node => node.firstElementChild?.className ?? '')
-    assert(firstChildClass.includes('focus-strip'), `the strip must be the board's first element, saw "${firstChildClass}"`)
+    // No title above the strip: the strip is the first element of the left column.
+    const stripFirst = await board.evaluate(node => node.querySelector('.focus-left')?.firstElementChild?.className ?? '')
+    assert(stripFirst.includes('focus-strip'), `the strip must lead the column, saw "${stripFirst}"`)
+
+    // The rail exists, lists work in flight, and pins deliverables to its bottom.
+    const rail = await page.evaluate(() => {
+      const railNode = document.querySelector('[data-testid="focus-board"] .focus-rail')
+      const delivered = document.querySelector('[data-testid="focus-delivered"]')
+      if (!railNode || !delivered) return null
+      const railBox = railNode.getBoundingClientRect(), deliveredBox = delivered.getBoundingClientRect()
+      return { rows: railNode.querySelectorAll('[data-testid="focus-rail-row"]').length,
+        files: document.querySelectorAll('[data-testid="focus-delivered-file"]').length,
+        deliveredAtBottom: Math.abs(deliveredBox.bottom - railBox.bottom) <= 2 }
+    })
+    assert(rail, 'the board must have a rail with a delivered block')
+    assert.equal(rail.deliveredAtBottom, true, 'deliverables must sit at the rail\'s bottom edge')
+    writeFileSync(join(fixture.output, 'board-rail.json'), JSON.stringify(rail, null, 2))
     await page.screenshot({ path: join(fixture.output, 'board-panel.png') })
-    scenes.push('FB03-assistant-view-shows-the-same-board-with-no-title-above-the-strip')
+    scenes.push('FB03-assistant-view-opens-the-board-from-the-top')
+    scenes.push('FB04-rail-lists-work-in-flight-and-pins-deliverables-to-its-bottom')
 
     // The action group follows the stage: an accepted or terminated task
     // offers nothing, a candidate result offers the acceptance decision.

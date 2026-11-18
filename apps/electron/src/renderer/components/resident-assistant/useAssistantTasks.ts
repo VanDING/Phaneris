@@ -1,6 +1,7 @@
 import * as React from 'react'
 import type { TaskPageView } from '@phaneris/session-tools-core/task-delegation-contracts'
 import type { AssistantWorkPage } from '@phaneris/session-tools-core/delegation-contracts'
+import type { TaskDeliverable } from '@phaneris/session-tools-core/task-result-contracts'
 import { useTransportConnectionState } from '@/hooks/useTransportConnectionState'
 
 const emptyPage = (): TaskPageView => ({ observedAt: Date.now(), items: [], counts: {}, total: 0 })
@@ -12,13 +13,14 @@ const emptyPage = (): TaskPageView => ({ observedAt: Date.now(), items: [], coun
  * execution stage and acceptance are Host facts, and a background refresh must
  * not discard a page the user is reading.
  *
- * Capacity is read from the Host's own scheduling record rather than recounted
- * here, so the board and the scheduler answer "how many can run" with one
- * number.
+ * Capacity and the delivered files come from the Host's own work page, so the
+ * board and the scheduler answer "how many can run" with one number, and the
+ * rail lists what the Host actually published rather than re-deriving it.
  */
 export function useAssistantTasks(workspaceId: string, limit = 50) {
   const [page, setPage] = React.useState(emptyPage)
   const [scheduling, setScheduling] = React.useState<AssistantWorkPage['scheduling']>()
+  const [deliverables, setDeliverables] = React.useState<TaskDeliverable[]>([])
   const [error, setError] = React.useState<string>()
   const [loading, setLoading] = React.useState(true)
   const [updatedAt, setUpdatedAt] = React.useState<number>()
@@ -36,12 +38,14 @@ export function useAssistantTasks(workspaceId: string, limit = 50) {
     const result = await Promise.allSettled([
       window.electronAPI.getAssistantTasks(workspaceId, { limit }),
       window.electronAPI.getAssistantWork(workspaceId, { view: 'current', limit: 1 }),
+      window.electronAPI.getAssistantWork(workspaceId, { view: 'deliverables', limit: 20 }),
     ])
     if (token !== generation.current) return
     if (result[0].status === 'fulfilled') { pageRef.current = result[0].value; setPage(result[0].value); setError(undefined); setUpdatedAt(Date.now()) }
     else setError(String(result[0].reason))
-    // The board still works without it; capacity is the only thing it adds.
+    // The board still works without them; they add capacity and the delivered list.
     if (result[1].status === 'fulfilled') setScheduling(result[1].value.scheduling)
+    if (result[2].status === 'fulfilled') setDeliverables(result[2].value.deliverables ?? [])
     setLoading(false)
   }, [workspaceId, connected, limit])
   React.useEffect(() => {
@@ -56,5 +60,5 @@ export function useAssistantTasks(workspaceId: string, limit = 50) {
     const changed = window.electronAPI.onAssistantTasksChanged(id => { if (id === workspaceId) void refresh() })
     return () => { invalidate(); clearInterval(timer); document.removeEventListener('visibilitychange', visible); changed() }
   }, [workspaceId, refresh, invalidate])
-  return { page, scheduling, error, loading, updatedAt, connected, refresh }
+  return { page, scheduling, deliverables, error, loading, updatedAt, connected, refresh }
 }

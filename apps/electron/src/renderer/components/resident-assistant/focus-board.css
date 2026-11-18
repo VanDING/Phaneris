@@ -6,8 +6,22 @@
    tokens (packages/ui/src/styles/theme-tokens.css) and adds no palette
    of its own. Separation is a 1px rule or one tone step, never a shadow;
    the accent appears on the selected segment and a moving task's dot only.
+
+   Two columns: the record on the left at 1.62fr, the rail at 1fr. The
+   rail holds work in flight and, pinned to its bottom, what was delivered.
    ───────────────────────────────────────────────────────────────────── */
-.focus-board { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.focus-board {
+  display: grid; min-height: 0; flex: 1;
+  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+  gap: 16px;
+  /* The board fills its host; both children scroll inside their own track. */
+  height: 100%;
+}
+.focus-left { display: flex; flex-direction: column; min-height: 0; gap: 8px; }
+
+@media (max-width: 900px) {
+  .focus-board { grid-template-columns: 1fr; height: auto; }
+}
 
 /* ── capacity strip: spans the column and switches the task ──────────── */
 .focus-strip {
@@ -26,10 +40,13 @@
   color: var(--muted-foreground);
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
-.focus-segments { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; overflow: hidden; }
+/* Segments keep their own width and scroll sideways instead of being squeezed:
+   a truncated `PANEL...` label tells the user nothing about which task it is. */
+.focus-segments { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.focus-segments::-webkit-scrollbar { display: none; }
 /* A segment is a label on a rule, not a pill: the rule marks the selection. */
 .focus-segment {
-  display: flex; align-items: center; gap: 5px; min-width: 0;
+  display: flex; align-items: center; gap: 5px; flex: none; max-width: 200px;
   padding: 3px 7px; border-radius: var(--shape-sm);
   border-bottom: 2px solid transparent;
   font-size: calc(var(--type-micro) * var(--ui-scale));
@@ -207,4 +224,73 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .focus-segment { transition: none; }
+}
+
+/* ── the rail: in-flight work, then deliverables pinned to the bottom ───
+   Two rows: the list takes the space, the delivered block sits at the end
+   so the eye lands on output after reading work in progress. */
+.focus-rail {
+  display: grid; min-height: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.focus-rail-block { display: flex; flex-direction: column; min-height: 0; padding-bottom: 8px; }
+.focus-rail-block + .focus-rail-block {
+  border-top: 1px solid var(--border); padding-top: 8px; padding-bottom: 0;
+}
+.focus-rail-grow { min-height: 0; }
+.focus-rail-head {
+  flex: none; display: flex; align-items: baseline; gap: 7px;
+  margin: 0 0 5px; padding: 0 2px;
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  font-weight: 600; color: var(--muted-foreground);
+}
+.focus-rail-count {
+  font-variant-numeric: tabular-nums; font-weight: 400;
+}
+.focus-rail-list { min-height: 0; overflow: auto; }
+
+/* a rail row: state dot, title, stage — one line, rules between */
+.focus-rail-row {
+  display: grid; grid-template-columns: 6px minmax(0, 1fr) auto;
+  gap: 8px; align-items: baseline; width: 100%; text-align: left;
+  padding: 6px 2px; border-radius: var(--shape-sm);
+}
+.focus-rail-row + .focus-rail-row { border-top: 1px solid var(--border); }
+.focus-rail-row:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); }
+.focus-rail-row[aria-selected="true"] .focus-rail-title { color: var(--accent-text); font-weight: 600; }
+.focus-rail-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex: none; margin-top: 4px;
+  background: color-mix(in srgb, var(--foreground) 26%, transparent);
+}
+.focus-rail-dot[data-stage="running"],
+.focus-rail-dot[data-stage="stopping"] { background: var(--accent); }
+.focus-rail-dot[data-stage="candidate_result"],
+.focus-rail-dot[data-stage="needs_user"],
+.focus-rail-dot[data-stage="rework"] { background: var(--info); }
+.focus-rail-dot[data-stage="failed"] { background: var(--destructive); }
+.focus-rail-title {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--foreground);
+}
+.focus-rail-state {
+  flex: none; font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground); white-space: nowrap;
+}
+
+/* delivered files: mono names, one row each */
+.focus-rail-file {
+  display: flex; align-items: baseline; gap: 10px;
+  width: 100%; text-align: left; padding: 5px 2px;
+  border-radius: var(--shape-sm);
+}
+.focus-rail-file + .focus-rail-file { border-top: 1px solid var(--border); }
+.focus-rail-file:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); }
+.focus-rail-file:hover .focus-rail-file-name { color: var(--accent-text); }
+.focus-rail-file-name {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--foreground);
 }

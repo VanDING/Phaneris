@@ -40,7 +40,7 @@ export interface FocusBoardProps {
  */
 export function FocusBoard({ workspaceId, deliverables = [], onPreview, onOpenTask }: FocusBoardProps) {
   const { t } = useTranslation()
-  const { page, scheduling, loading, error, refresh } = useAssistantTasks(workspaceId)
+  const { page, scheduling, deliverables: delivered, loading, error, refresh } = useAssistantTasks(workspaceId)
   const [selected, setSelected] = React.useState<string>()
   const [busy, setBusy] = React.useState(false)
   const items = page.items
@@ -86,121 +86,142 @@ export function FocusBoard({ workspaceId, deliverables = [], onPreview, onOpenTa
   }
 
   return <div className="focus-board" data-testid="focus-board">
-    {/* The capacity strip spans the column and is the task switcher. No title. */}
-    <div className="focus-strip" role="tablist" aria-label={t('residentAssistant.board.switchTask')}>
-      <span className="focus-readout">
-        <span className="focus-seats" aria-hidden="true">
-          {Array.from({ length: Math.max(capacity, occupied, 1) }, (_, index) =>
-            <span key={index} className="focus-seat" data-on={index < occupied} />)}
+    <div className="focus-left">
+      {/* The capacity strip spans this column and is the task switcher. No title. */}
+      <div className="focus-strip" role="tablist" aria-label={t('residentAssistant.board.switchTask')}>
+        <span className="focus-readout">
+          <span className="focus-seats" aria-hidden="true">
+            {Array.from({ length: Math.max(capacity, occupied, 1) }, (_, index) =>
+              <span key={index} className="focus-seat" data-on={index < occupied} />)}
+          </span>
+          <span className="focus-count" data-testid="focus-capacity">
+            {t('residentAssistant.board.capacity', { occupied, capacity: Math.max(capacity, occupied, 1) })}
+          </span>
         </span>
-        <span className="focus-count" data-testid="focus-capacity">
-          {t('residentAssistant.board.capacity', { occupied, capacity: Math.max(capacity, occupied, 1) })}
-        </span>
-      </span>
-      <div className="focus-segments">
-        {segments.map(segment => <button key={segment.taskId} type="button" role="tab" className="craft-control focus-segment"
-          data-testid="focus-segment" data-task={segment.taskId} data-stage={segment.stage}
-          aria-selected={segment.taskId === selected}
-          onClick={() => setSelected(segment.taskId)}>
-          <span className="focus-segment-dot" aria-hidden="true" />
-          <span className="focus-segment-title">{segment.title}</span>
-        </button>)}
+        <div className="focus-segments">
+          {segments.map(segment => <button key={segment.taskId} type="button" role="tab" className="craft-control focus-segment"
+            data-testid="focus-segment" data-task={segment.taskId} data-stage={segment.stage}
+            aria-selected={segment.taskId === selected}
+            onClick={() => setSelected(segment.taskId)}>
+            <span className="focus-segment-dot" aria-hidden="true" />
+            <span className="focus-segment-title">{segment.title}</span>
+          </button>)}
+        </div>
+        <button type="button" className="craft-icon-button focus-refresh" aria-label={t('residentAssistant.refresh')}
+          disabled={loading} onClick={() => void refresh()}>↻</button>
       </div>
-      <button type="button" className="craft-icon-button focus-refresh" aria-label={t('residentAssistant.refresh')}
-        disabled={loading} onClick={() => void refresh()}>↻</button>
-    </div>
 
-    {error && <p role="alert" className="focus-error text-label">{error}</p>}
-    {!error && !projection && <p className="focus-empty text-label">
-      {t(loading ? 'residentAssistant.loading' : 'residentAssistant.tasks.empty')}</p>}
+      {error && <p role="alert" className="focus-error text-label">{error}</p>}
+      {!error && !projection && <p className="focus-empty text-label">
+        {t(loading ? 'residentAssistant.loading' : 'residentAssistant.tasks.empty')}</p>}
 
-    {projection && <div className="focus-surface">
-      <div className="focus-record">
-        <div className="focus-heading">
-          <h2 className="focus-title">{projection.task.title}</h2>
-          <span className="focus-stage" data-stage={projection.stage}>{t(STAGE_KEY[projection.stage])}</span>
+      {projection && <div className="focus-surface">
+        <div className="focus-record">
+          <div className="focus-heading">
+            <h2 className="focus-title">{projection.task.title}</h2>
+            <span className="focus-stage" data-stage={projection.stage}>{t(STAGE_KEY[projection.stage])}</span>
+          </div>
+
+          {/* The Host's own definition: goal, scope, deliverable, criteria. */}
+          <h3 className="focus-label">{t('residentAssistant.board.definition')}</h3>
+          <dl className="focus-facts">
+            <dt>{t('residentAssistant.tasks.goal')}</dt><dd>{projection.goal.title}</dd>
+            <dt>{t('residentAssistant.tasks.scope')}</dt>
+            <dd>{[...projection.task.scopeIn, ...projection.task.scopeOut.map(item => `−${item}`)].join('；') || '—'}</dd>
+            {projection.task.deliverable && <><dt>{t('residentAssistant.board.deliverable')}</dt><dd>{projection.task.deliverable}</dd></>}
+          </dl>
+
+          {/* Requirement versions: a correction appends, and the old one stays readable. */}
+          <h3 className="focus-label">{t('residentAssistant.tasks.requirements')}</h3>
+          {projection.requirements.length
+            ? <div className="focus-versions">
+              {projection.requirements.map(requirement => <div key={requirement.id} className="focus-version"
+                data-state={requirement.state}>
+                <span className="focus-version-tag">v{requirement.version}</span>
+                <span className="focus-version-text">{requirement.statement}</span>
+                <span className="focus-version-state">{t(`residentAssistant.board.requirement.${requirement.state}`)}</span>
+              </div>)}
+            </div>
+            : <p className="focus-none text-label">{t('residentAssistant.tasks.noRequirements')}</p>}
+
+          {/* Assignments: which Session ran which version, and how it ended. */}
+          <h3 className="focus-label">{t('residentAssistant.tasks.assignments')}</h3>
+          {projection.assignments.length
+            ? <div className="focus-assignments">
+              {projection.assignments.map(assignment => <div key={assignment.id} className="focus-assignment">
+                <span className="focus-version-tag">v{assignment.definitionVersion}</span>
+                <span className="focus-assignment-session">{assignment.sessionId ?? '—'}</span>
+                <span className="focus-version-state">{t(`residentAssistant.board.assignment.${assignment.state}`)}</span>
+              </div>)}
+            </div>
+            : <p className="focus-none text-label">{t('residentAssistant.tasks.noAssignments')}</p>}
+
+          {/* Criteria with their recorded outcome, when a decision was recorded. */}
+          {projection.task.acceptance.length > 0 && <>
+            <h3 className="focus-label">{t('residentAssistant.tasks.acceptance')}</h3>
+            <ol className="focus-criteria">
+              {projection.task.acceptance.map(criterion => {
+                const result = projection.verification?.results.find(item => item.criterionId === criterion.id)
+                return <li key={criterion.id} className="focus-criterion" data-outcome={result?.outcome ?? 'pending'}>
+                  <span className="focus-criterion-text">{criterion.statement}</span>
+                  <span className="focus-version-state">{t(`residentAssistant.board.outcome.${result?.outcome ?? 'pending'}`)}</span>
+                </li>
+              })}
+            </ol>
+          </>}
         </div>
 
-        {/* The Host's own definition: goal, scope, deliverable, criteria. */}
-        <h3 className="focus-label">{t('residentAssistant.board.definition')}</h3>
-        <dl className="focus-facts">
-          <dt>{t('residentAssistant.tasks.goal')}</dt><dd>{projection.goal.title}</dd>
-          <dt>{t('residentAssistant.tasks.scope')}</dt>
-          <dd>{[...projection.task.scopeIn, ...projection.task.scopeOut.map(item => `−${item}`)].join('；') || '—'}</dd>
-          {projection.task.deliverable && <><dt>{t('residentAssistant.board.deliverable')}</dt><dd>{projection.task.deliverable}</dd></>}
-        </dl>
+        {/* Action group follows the stage: an action the Host would refuse is not shown. */}
+        <div className="focus-actions">
+          {actions.includes('accept') && <button type="button" className="craft-control focus-primary"
+            data-testid="focus-accept" disabled={busy} onClick={() => control('accept')}>
+            {t('residentAssistant.board.accept')}</button>}
+          {actions.includes('rework') && <button type="button" className="craft-control focus-secondary"
+            data-testid="focus-rework" disabled={busy} onClick={() => control('rework')}>
+            {t('residentAssistant.board.rework')}</button>}
+          {actions.includes('pause') && <button type="button" className="craft-control focus-secondary"
+            data-testid="focus-pause" disabled={busy} onClick={() => control('pause')}>
+            {t('residentAssistant.tasks.pause')}</button>}
+          {actions.includes('resume') && <button type="button" className="craft-control focus-secondary"
+            data-testid="focus-resume" disabled={busy} onClick={() => control('resume')}>
+            {t('residentAssistant.tasks.resume')}</button>}
+          {actions.includes('terminate') && <button type="button" className="craft-control focus-secondary focus-danger"
+            data-testid="focus-terminate" disabled={busy} onClick={() => control('terminate')}>
+            {t('residentAssistant.tasks.terminate')}</button>}
+          {!actions.length && <span className="focus-none text-label">{t(`residentAssistant.tasks.stage.${projection.stage}`)}</span>}
+          {onOpenTask && <button type="button" className="craft-control focus-text-action"
+            onClick={() => onOpenTask(projection.task.id)}>{t('residentAssistant.board.openTask')}</button>}
+        </div>
+      </div>}
+    </div>
 
-        {/* Requirement versions: a correction appends, and the old one stays readable. */}
-        <h3 className="focus-label">{t('residentAssistant.tasks.requirements')}</h3>
-        {projection.requirements.length
-          ? <div className="focus-versions">
-            {projection.requirements.map(requirement => <div key={requirement.id} className="focus-version"
-              data-state={requirement.state}>
-              <span className="focus-version-tag">v{requirement.version}</span>
-              <span className="focus-version-text">{requirement.statement}</span>
-              <span className="focus-version-state">{requirement.state}</span>
-            </div>)}
-          </div>
-          : <p className="focus-none text-label">{t('residentAssistant.tasks.noRequirements')}</p>}
+    {/* The rail: work in flight, and what was delivered, at the bottom. */}
+    <aside className="focus-rail" aria-label={t('residentAssistant.board.rail')}>
+      <section className="focus-rail-block focus-rail-grow">
+        <h3 className="focus-rail-head">{t('residentAssistant.board.inFlight')}<span className="focus-rail-count num">{segments.length}</span></h3>
+        <div className="focus-rail-list">
+          {segments.length
+            ? segments.map(segment => <button key={segment.taskId} type="button"
+              className="craft-control focus-rail-row" data-testid="focus-rail-row" data-stage={segment.stage}
+              aria-current={segment.taskId === selected ? "true" : undefined} onClick={() => setSelected(segment.taskId)}>
+              <span className="focus-rail-dot" data-stage={segment.stage} aria-hidden="true" />
+              <span className="focus-rail-title">{segment.title}</span>
+              <span className="focus-rail-state">{t(STAGE_KEY[segment.stage])}</span>
+            </button>)
+            : <p className="focus-none text-label">{t('residentAssistant.tasks.empty')}</p>}
+        </div>
+      </section>
 
-        {/* Assignments: which Session ran which version, and how it ended. */}
-        <h3 className="focus-label">{t('residentAssistant.tasks.assignments')}</h3>
-        {projection.assignments.length
-          ? <div className="focus-assignments">
-            {projection.assignments.map(assignment => <div key={assignment.id} className="focus-assignment">
-              <span className="focus-version-tag">v{assignment.definitionVersion}</span>
-              <span className="focus-assignment-session">{assignment.sessionId ?? '—'}</span>
-              <span className="focus-version-state">{assignment.state}</span>
-            </div>)}
-          </div>
-          : <p className="focus-none text-label">{t('residentAssistant.tasks.noAssignments')}</p>}
-
-        {/* Criteria with their recorded outcome, when a decision was recorded. */}
-        {projection.task.acceptance.length > 0 && <>
-          <h3 className="focus-label">{t('residentAssistant.tasks.acceptance')}</h3>
-          <ol className="focus-criteria">
-            {projection.task.acceptance.map(criterion => {
-              const result = projection.verification?.results.find(item => item.criterionId === criterion.id)
-              return <li key={criterion.id} className="focus-criterion" data-outcome={result?.outcome ?? 'pending'}>
-                <span className="focus-criterion-text">{criterion.statement}</span>
-                <span className="focus-version-state">{result?.outcome ?? '—'}</span>
-              </li>
-            })}
-          </ol>
-        </>}
-
-        {deliverables.length > 0 && <>
-          <h3 className="focus-label">{t('residentAssistant.board.deliverables')}</h3>
-          <div className="focus-files">
-            {deliverables.map(output => <button key={output.id} type="button" className="craft-control focus-file"
-              onClick={() => openArtifact(output.artifactId, output.revision)}>
-              <span className="focus-file-name">{output.title}</span>
-            </button>)}
-          </div>
-        </>}
-      </div>
-
-      {/* Action group follows the stage: an action the Host would refuse is not shown. */}
-      <div className="focus-actions">
-        {actions.includes('accept') && <button type="button" className="craft-control focus-primary"
-          data-testid="focus-accept" disabled={busy} onClick={() => control('accept')}>
-          {t('residentAssistant.board.accept')}</button>}
-        {actions.includes('rework') && <button type="button" className="craft-control focus-secondary"
-          data-testid="focus-rework" disabled={busy} onClick={() => control('rework')}>
-          {t('residentAssistant.board.rework')}</button>}
-        {actions.includes('pause') && <button type="button" className="craft-control focus-secondary"
-          data-testid="focus-pause" disabled={busy} onClick={() => control('pause')}>
-          {t('residentAssistant.tasks.pause')}</button>}
-        {actions.includes('resume') && <button type="button" className="craft-control focus-secondary"
-          data-testid="focus-resume" disabled={busy} onClick={() => control('resume')}>
-          {t('residentAssistant.tasks.resume')}</button>}
-        {actions.includes('terminate') && <button type="button" className="craft-control focus-secondary focus-danger"
-          data-testid="focus-terminate" disabled={busy} onClick={() => control('terminate')}>
-          {t('residentAssistant.tasks.terminate')}</button>}
-        {!actions.length && <span className="focus-none text-label">{t(`residentAssistant.tasks.stage.${projection.stage}`)}</span>}
-        {onOpenTask && <button type="button" className="craft-control focus-text-action"
-          onClick={() => onOpenTask(projection.task.id)}>{t('residentAssistant.board.openTask')}</button>}
-      </div>
-    </div>}
+      <section className="focus-rail-block focus-rail-delivered" data-testid="focus-delivered">
+        <h3 className="focus-rail-head">{t('residentAssistant.board.deliverables')}<span className="focus-rail-count num">{delivered.length}</span></h3>
+        {delivered.length
+          ? delivered.slice(0, 5).map(output => <button key={output.id} type="button"
+            className="craft-control focus-rail-file" data-testid="focus-delivered-file"
+            onClick={() => openArtifact(output.artifactId, output.revision)}>
+            <span className="focus-rail-file-name">{output.title}</span>
+          </button>)
+          : <p className="focus-none text-label">{t('residentAssistant.panel.noArtifacts')}</p>}
+      </section>
+    </aside>
   </div>
 }
