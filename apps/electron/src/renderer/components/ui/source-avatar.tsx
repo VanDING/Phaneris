@@ -13,9 +13,14 @@ import * as React from 'react'
 import { Globe, HardDrive, Mail, Plug } from 'lucide-react'
 import { EntityIcon, type IconComponent } from '@/components/ui/entity-icon'
 import { useEntityIcon, logoUrlCache } from '@/lib/icon-cache'
+import { useResourceIcon } from '@/lib/resource-icons'
+import { ResourceIconArtwork } from './resource-icon-artwork'
+import { cn } from '@/lib/utils'
 import { McpIcon } from '@/components/icons/McpIcon'
 import type { LoadedSource } from '@phaneris/shared/sources/types'
 import type { IconSize, ResolvedEntityIcon } from '@phaneris/shared/icons'
+import { ICON_SIZE_CLASSES } from '@phaneris/shared/icons'
+import type { ResourceIcon } from '@phaneris/shared/resources/icons'
 import { SourceStatusIndicator, deriveConnectionStatus } from './source-status-indicator'
 
 // ============================================================================
@@ -35,6 +40,8 @@ interface SourceAvatarProps {
   showStatus?: boolean
   /** Additional className overrides */
   className?: string
+  workspaceId?: string
+  iconOverride?: ResourceIcon | null
 }
 
 // ============================================================================
@@ -142,9 +149,10 @@ function useFaviconFallback(
 // Component
 // ============================================================================
 
-export function SourceAvatar({ source, size = 'md', fluid, showStatus, className }: SourceAvatarProps) {
+export function SourceAvatar({ source, size = 'md', fluid, showStatus, className, workspaceId, iconOverride }: SourceAvatarProps) {
+  const saved = useResourceIcon(workspaceId ?? '', `source:${source.config.slug}`).icon
   const icon = useEntityIcon({
-    workspaceId: source.workspaceId,
+    workspaceId: workspaceId ?? source.workspaceId,
     entityType: 'source',
     identifier: source.config.slug,
     iconDir: `sources/${source.config.slug}`,
@@ -161,13 +169,15 @@ export function SourceAvatar({ source, size = 'md', fluid, showStatus, className
 
   const FallbackIcon = SOURCE_FALLBACKS[source.config.type] ?? Plug
 
-  const entityIcon = (
+  const override = iconOverride === undefined ? saved : iconOverride
+  const entityIcon = override ? <ResourceIconArtwork icon={override} className={cn(fluid ? 'size-full' : ICON_SIZE_CLASSES[size], className)} /> : (
     <EntityIcon
       icon={finalIcon}
       size={size}
       fallbackIcon={FallbackIcon}
       alt={source.config.name}
       className={className}
+      chromeless={fluid}
       containerClassName={fluid ? 'h-full w-full' : undefined}
     />
   )

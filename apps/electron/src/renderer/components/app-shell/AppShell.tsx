@@ -2210,7 +2210,7 @@ function AppShellContent({
                               variant="ghost"
                               onClick={() => handleNewChat()}
                               aria-label={t("session.newSession")}
-                              className="sidebar-new-session text-body w-full justify-start gap-2 font-normal rounded-control text-text-secondary hover:bg-sidebar-hover"
+                              className="sidebar-new-session text-body w-full justify-start gap-2 font-normal rounded-control"
                               data-tutorial="new-chat-button"
                             >
                               <SquarePenRounded className="h-3.5 w-3.5 shrink-0" />

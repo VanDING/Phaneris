@@ -557,6 +557,9 @@ export const REMOTE_ELIGIBLE_CHANNELS = new Set<string>([
   // resources — workspace resource export/import
   RPC_CHANNELS.resources.EXPORT,
   RPC_CHANNELS.resources.IMPORT,
+  RPC_CHANNELS.resources.GET_ICONS,
+  RPC_CHANNELS.resources.SET_ICON,
+  RPC_CHANNELS.resources.ICON_CHANGED,
 
   // messaging — gateway channels run on workspace server
   RPC_CHANNELS.messaging.WA_REGISTER,

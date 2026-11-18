@@ -8,6 +8,7 @@ import type { LoadedSource } from '../sources/types'
 import type { LoadedSkill } from '../skills/types'
 import type { LoadedProject } from '../projects/types'
 import type { LoadedPage } from '../pages/types'
+import type { ResourceIcon } from '../resources/icons'
 import { RPC_CHANNELS } from './channels'
 import type {
   SessionEvent,
@@ -40,6 +41,7 @@ export interface BroadcastEventMap {
   [RPC_CHANNELS.statuses.CHANGED]: [workspaceId: string]
   [RPC_CHANNELS.automations.CHANGED]: [workspaceId: string]
   [RPC_CHANNELS.skills.CHANGED]: [workspaceId: string, skills: LoadedSkill[]]
+  [RPC_CHANNELS.resources.ICON_CHANGED]: [workspaceId: string, key: string, icon: ResourceIcon | null]
   [RPC_CHANNELS.projects.CHANGED]: [workspaceId: string, projects: LoadedProject[]]
   [RPC_CHANNELS.pages.CHANGED]: [workspaceId: string, pages: LoadedPage[]]
   [RPC_CHANNELS.tasks.GENERATED]: [workspaceId: string, result: TaskGenerateResult]

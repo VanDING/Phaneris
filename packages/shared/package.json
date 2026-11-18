@@ -91,6 +91,7 @@
     "./protocol": "./src/protocol/index.ts",
     "./release-notes": "./src/release-notes/index.ts",
     "./resources": "./src/resources/index.ts",
+    "./resources/icons": "./src/resources/icons.ts",
     "./search": "./src/search/index.ts",
     "./sessions": "./src/sessions/index.ts",
     "./skills": "./src/skills/index.ts",

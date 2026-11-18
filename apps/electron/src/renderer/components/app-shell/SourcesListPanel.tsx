@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { DatabaseZap } from 'lucide-react'
 import { SourceAvatar } from '@/components/ui/source-avatar'
+import { ResourceIconEditor } from '@/components/ui/resource-icon-editor'
 import { deriveConnectionStatus } from '@/components/ui/source-status-indicator'
 import { EntityPanel } from '@/components/ui/entity-panel'
 import { EntityListBadge } from '@/components/ui/entity-list-badge'
@@ -122,7 +123,11 @@ export function SourcesListPanel({
         const statusConfig = SOURCE_STATUS_CONFIG[connectionStatus]
         const subtitle = source.config.tagline || source.config.provider || ''
         return {
-          icon: <SourceAvatar source={source} size="sm" />,
+          icon: <SourceAvatar source={source} workspaceId={activeWorkspaceId ?? undefined} fluid />,
+          resourceIcon: true,
+          beforeMenu: activeWorkspaceId && <ResourceIconEditor workspaceId={activeWorkspaceId} iconKey={`source:${source.config.slug}`}
+            compact selected={selectedSourceSlug === source.config.slug}
+            renderIcon={icon => <SourceAvatar source={source} workspaceId={activeWorkspaceId} fluid iconOverride={icon} />} />,
           title: source.config.name,
           badges: (
             <>

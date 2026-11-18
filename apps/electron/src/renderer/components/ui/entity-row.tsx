@@ -48,6 +48,8 @@ export interface EntityRowProps {
   /** Left icon area — rendered in-flow as a flex child before the content column.
    *  Consumers can pass multiple icons (e.g. via a fragment) for a horizontal icon group. */
   icon?: React.ReactNode
+  /** Navigator resource icons fill this fixed slot. Other rows keep their own sizing. */
+  resourceIcon?: boolean
   /** Title content (ReactNode for search highlighting support) */
   title: React.ReactNode
   /** Additional className on the title wrapper (e.g. shimmer animation) */
@@ -128,6 +130,7 @@ export interface EntityRowProps {
 
 export function EntityRow({
   icon,
+  resourceIcon,
   title,
   titleClassName,
   titleTrailing,
@@ -156,6 +159,9 @@ export function EntityRow({
   separatorClassName = 'pl-12 pr-4',
 }: EntityRowProps) {
   const { t } = useTranslation()
+  const iconSlotClass = cn('shrink-0 flex items-center gap-[10px]', resourceIcon
+    ? 'resource-icon-list'
+    : '[&>svg]:w-3 [&>svg]:h-3 [&>span]:w-3 [&>span]:h-3 [&>img]:w-3 [&>img]:h-3')
   const [menuOpen, setMenuOpen] = useState(false)
   const [contextMenuOpen, setContextMenuOpen] = useState(false)
   const [compactMenuOpen, setCompactMenuOpen] = useState(false)
@@ -308,7 +314,7 @@ export function EntityRow({
           "craft-focus craft-row-focus entity-row-btn flex w-full items-start gap-2 pl-2 pr-4 py-[var(--theme-row-padding-y)] text-left text-body rounded-lg",
           "motion-interactive transition-[background-color]",
           leadingAction && "pl-11",
-          beforeMenu && "pr-[96px]",
+          beforeMenu && (resourceIcon ? 'resource-icon-row-with-action' : "pr-[96px]"),
           (isSelected || isInMultiSelect)
             ? "bg-foreground/3"
             : "hover:bg-foreground/2",
@@ -338,7 +344,7 @@ export function EntityRow({
           {titleTrailing ? (
             <div className="flex items-center gap-[10px] w-full min-w-0">
               {icon && (
-                <div className="shrink-0 flex items-center gap-[10px] [&>svg]:w-3 [&>svg]:h-3 [&>span]:w-3 [&>span]:h-3 [&>img]:w-3 [&>img]:h-3">
+                <div className={iconSlotClass}>
                   {icon}
                 </div>
               )}
@@ -361,7 +367,7 @@ export function EntityRow({
           ) : (
             <div className="flex items-center gap-[10px] w-full pr-6 min-w-0">
               {icon && (
-                <div className="shrink-0 flex items-center gap-[10px] [&>svg]:w-3 [&>svg]:h-3 [&>span]:w-3 [&>span]:h-3 [&>img]:w-3 [&>img]:h-3">
+                <div className={iconSlotClass}>
                   {icon}
                 </div>
               )}
@@ -376,8 +382,8 @@ export function EntityRow({
           {subtitle && (
             <div className="flex items-start gap-[10px] w-full text-label text-text-secondary min-w-0 -mt-1">
               {icon && (
-                <div className="shrink-0 flex items-center gap-[10px] [&>svg]:w-3 [&>svg]:h-3 [&>span]:w-3 [&>span]:h-3 [&>img]:w-3 [&>img]:h-3 invisible" aria-hidden="true">
-                  {icon}
+                <div className={cn(iconSlotClass, 'invisible')} aria-hidden="true">
+                  {!resourceIcon && icon}
                 </div>
               )}
               <div className="min-w-0 flex-1 line-clamp-2 leading-[1.35]">
@@ -391,8 +397,8 @@ export function EntityRow({
             <div className="flex items-center gap-[10px] text-meta text-text-secondary w-full -mb-[2px] min-w-0">
               {/* Invisible spacer matching icon container width */}
               {icon && (
-                <div className="shrink-0 flex items-center gap-[10px] [&>svg]:w-3 [&>svg]:h-3 [&>span]:w-3 [&>span]:h-3 [&>img]:w-3 [&>img]:h-3 invisible" aria-hidden="true">
-                  {icon}
+                <div className={cn(iconSlotClass, 'invisible')} aria-hidden="true">
+                  {!resourceIcon && icon}
                 </div>
               )}
               {badges && (
@@ -426,7 +432,7 @@ export function EntityRow({
         {beforeMenu && (
           /* Presentation wrapper: it only shields the row's click from the
              control inside. */
-          <div role="presentation" className="w-14 shrink-0" onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
+          <div role="presentation" className={cn('shrink-0', !resourceIcon && 'w-14')} onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
             {beforeMenu}
           </div>
         )}

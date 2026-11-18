@@ -89,6 +89,7 @@ function EntityIconComponent({
     }
     return (
       <div
+        data-entity-emoji
         className={cn(
           // Chromeless mode: keep size, but no background, ring, or rounded
           sizeClass,
@@ -133,7 +134,7 @@ function EntityIconComponent({
     // Non-colorable files (raster images, SVGs with hardcoded colors):
     // render via CrossfadeAvatar with smooth loading transition
     const fallbackNode = fallback ?? (
-      <FallbackIcon className="w-full h-full text-muted-foreground p-0.5" />
+      <FallbackIcon className={cn("w-full h-full text-muted-foreground", !chromeless && "p-0.5")} />
     )
 
     return (
@@ -142,6 +143,7 @@ function EntityIconComponent({
         alt={alt}
         className={cn(sizeClass, !chromeless && containerBase, className)}
         fallbackClassName={!chromeless ? "bg-muted rounded-shape-sm" : undefined}
+        imageClassName={chromeless ? "object-contain" : undefined}
         fallback={fallbackNode}
       />
     )
@@ -173,7 +175,7 @@ function EntityIconComponent({
       alt={alt}
       className={cn(sizeClass, !chromeless && containerBase, className)}
       fallbackClassName={!chromeless ? "bg-muted rounded-shape-sm" : undefined}
-      fallback={<FallbackIcon className="w-full h-full text-muted-foreground p-0.5" />}
+      fallback={<FallbackIcon className={cn("w-full h-full text-muted-foreground", !chromeless && "p-0.5")} />}
     />
   )
 }

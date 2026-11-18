@@ -533,6 +533,9 @@ export const CHANNEL_MAP = {
   // Resources (cross-workspace export/import)
   exportResources: invoke(RPC_CHANNELS.resources.EXPORT),
   importResources: invoke(RPC_CHANNELS.resources.IMPORT),
+  getResourceIcons: invoke(RPC_CHANNELS.resources.GET_ICONS),
+  setResourceIcon: invoke(RPC_CHANNELS.resources.SET_ICON),
+  onResourceIconChanged: listener(RPC_CHANNELS.resources.ICON_CHANGED),
 
   // Messaging gateway
   getMessagingConfig: invoke(RPC_CHANNELS.messaging.GET_CONFIG),

@@ -132,14 +132,20 @@ export class RoutedClient implements RpcClient {
     }
 
     // REMOTE_ELIGIBLE — subscribe on workspaceClient and track for re-subscription
-    const unsub = this.workspaceClient.on(channel, callback)
+    const listener: RpcCallback = channel === RPC_CHANNELS.resources.ICON_CHANGED
+      ? (workspaceId, ...args) => {
+          const mapping = this.workspaceIdMapping
+          callback(mapping && workspaceId === mapping.remoteId ? mapping.localId : workspaceId, ...args)
+        }
+      : callback
+    const unsub = this.workspaceClient.on(channel, listener)
 
     let set = this.remoteListeners.get(channel)
     if (!set) {
       set = new Set()
       this.remoteListeners.set(channel, set)
     }
-    const entry: ListenerEntry = { callback, unsub }
+    const entry: ListenerEntry = { callback: listener, unsub }
     set.add(entry)
 
     return () => {

@@ -1,7 +1,8 @@
 const assert = require("node:assert/strict");
 const { writeFileSync } = require("node:fs");
-const { join, relative } = require("node:path");
+const { join } = require("node:path");
 const { chromium } = require("playwright");
+const { serveRendererFixture } = require("./serve-renderer-fixture.cjs");
 async function gotoWithRetry(page, url) {
   let failure;
   for (let attempt = 0; attempt < 2; attempt++) {
@@ -16,29 +17,16 @@ async function gotoWithRetry(page, url) {
 }
 ;
 (async () => {
-  const { createServer } = await import("vite");
   const { root, output } = JSON.parse(process.argv[2]);
   const run = { directory: output, json: (name, value) => writeFileSync(join(output, name), JSON.stringify(value, null, 2)), complete: (checks, untested) => writeFileSync(join(output, "browser-result.json"), JSON.stringify({ checks, untested }, null, 2)) };
   run.json("stage.json", { stage: "browser-launch" });
   const fixture = join(root, "scripts/verification/fixtures/sidebar-refinement.tsx");
-  const prefix = "/" + relative(root, run.directory).replaceAll("\\", "/");
-  writeFileSync(join(run.directory, "index.html"), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/sidebar-refinement.tsx"><\/script></body></html>');
-  writeFileSync(join(run.directory, "host.css"), `@import "${relative(run.directory, join(root, "apps/electron/src/renderer/index.css")).replaceAll("\\", "/")}";
-@source "${fixture.replaceAll("\\", "/")}";
-`);
+  run.json("stage.json", { stage: "vite-build" });
+  const server = await serveRendererFixture(root, output, fixture);
   const browser = await chromium.launch({ headless: true, channel: process.env.PHANERIS_TEST_BROWSER_CHANNEL, timeout: 3e4 });
   const launched = { browser, close: () => browser.close() };
-  run.json("stage.json", { stage: "vite-start" });
-  const server = await createServer({
-    configFile: join(root, "apps/electron/vite.config.ts"),
-    root,
-    cacheDir: join(root, "node_modules/.vite-sidebar-refinement"),
-    optimizeDeps: { entries: [fixture], include: ["react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime"] },
-    server: { host: "127.0.0.1", port: 0, open: false, watch: { ignored: ["**/runtimes/**", "**/.cache/**", "**/dist/**", "**/docs/verification/results/**"] } }
-  });
-  await server.listen();
   run.json("stage.json", { stage: "page-navigation" });
-  const url = `http://127.0.0.1:${server.httpServer.address().port}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/host.css`)}`;
+  const { url } = server;
   const page = await launched.browser.newPage({ viewport: { width: 1120, height: 820 } });
   const errors = [], scenes = [];
   page.on("pageerror", (error) => errors.push(error.message));
@@ -60,7 +48,11 @@ async function gotoWithRetry(page, url) {
       separator: sidebar.querySelector(".sidebar-nav-separator")?.getBoundingClientRect().height ?? null,
       avatar: sidebar.querySelector(".sidebar-profile-avatar").getBoundingClientRect().width,
       settings: sidebar.querySelector(".sidebar-settings-trigger svg").getBoundingClientRect().width,
-      newSession: { background: getComputedStyle(sidebar.querySelector(".sidebar-new-session")).backgroundColor, shadow: getComputedStyle(sidebar.querySelector(".sidebar-new-session")).boxShadow }
+      newSession: (() => {
+        const button = sidebar.querySelector(".sidebar-new-session");
+        const style = getComputedStyle(button);
+        return { background: style.backgroundColor, border: style.borderTop, iconX: rounded(button.querySelector("svg").getBoundingClientRect().left - side.left + 10) };
+      })()
     };
   });
   const settle = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -96,8 +88,10 @@ async function gotoWithRetry(page, url) {
     assert.equal(expanded.menu, 16);
     assert.equal(expanded.avatar, 22);
     assert.equal(expanded.settings, 20);
-    assert.equal(expanded.newSession.background, "rgba(0, 0, 0, 0)");
-    scenes.push("shared-main-icon-scale-and-rhythm", "compact-light-separator", "menu-scale-isolated", "new-session-ghost-surface");
+    assert.notEqual(expanded.newSession.background, "rgba(0, 0, 0, 0)");
+    assert.match(expanded.newSession.border, /^1px solid /);
+    assert.equal(expanded.newSession.iconX, 24);
+    scenes.push("shared-main-icon-scale-and-rhythm", "compact-light-separator", "menu-scale-isolated", "new-session-card-and-border");
     const sources = page.getByRole("button", { name: "Sources", exact: true });
     await sources.focus();
     await sources.evaluate((button) => button.setAttribute("data-continuity", "retained"));
@@ -109,6 +103,7 @@ async function gotoWithRetry(page, url) {
     assert.equal(collapsed.menu, 16);
     assert.equal(collapsed.avatar, 22);
     assert.equal(collapsed.settings, 20);
+    assert.deepEqual(collapsed.newSession, expanded.newSession);
     assert.equal(await sources.getAttribute("data-continuity"), "retained");
     assert.equal(await sources.evaluate((button) => document.activeElement === button), true);
     assert(collapsed.icons.every((icon) => Math.abs(icon.x - 24) < 0.1));

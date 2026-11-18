@@ -1476,7 +1476,35 @@ html:not([data-theme]) [data-shell-platform="macos"] {
     box-shadow var(--motion-duration-fast) var(--motion-ease-enter),
     transform var(--motion-duration-fast) var(--motion-ease-enter);
 }
-.sidebar-navigation .sidebar-new-session { padding-block: 0; }
+.sidebar-navigation .sidebar-new-session {
+  border: 1px solid var(--border);
+  padding-inline: calc(var(--sidebar-item-inset) - 1px);
+  background: var(--card);
+  color: var(--card-foreground);
+}
+.sidebar-navigation .sidebar-new-session:hover {
+  background: color-mix(in srgb, var(--card) 96%, var(--card-foreground));
+}
+
+.resource-icon-list {
+  --resource-icon-size: 16px;
+  width: var(--resource-icon-size);
+  height: var(--resource-icon-size);
+}
+.resource-icon-detail {
+  --resource-icon-size: 48px;
+  width: var(--resource-icon-size);
+  height: var(--resource-icon-size);
+}
+:is(.resource-icon-list, .resource-icon-detail) [data-entity-emoji] {
+  font-size: var(--resource-icon-size);
+}
+.resource-icon-row-with-action { padding-right: 40px; }
+@media (pointer: coarse) {
+  .resource-icon-row-trigger { opacity: 1; }
+  .resource-icon-row-with-action { padding-right: 60px; }
+  .resource-icon-palette { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 .sidebar-navigation[data-collapsed] {
   --sidebar-item-inset: var(--sidebar-rail-item-inset);
 }

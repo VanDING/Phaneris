@@ -11,11 +11,6 @@ import { PhanerisSymbol } from '@/components/icons/PhanerisSymbol'
 import { SquarePenRounded } from '@/components/icons/SquarePenRounded'
 import en from '../../../packages/shared/src/i18n/locales/en.json'
 
-const stylesheet = new URLSearchParams(location.search).get('css')!
-const link = document.createElement('link')
-link.rel = 'stylesheet'
-link.href = stylesheet
-document.head.append(link)
 window.electronAPI = { readPreferences: async () => ({ content: JSON.stringify({ name: 'Sidebar review' }) }) } as typeof window.electronAPI
 const i18n = createInstance()
 await i18n.init({ lng: 'en', keySeparator: false, resources: { en: { translation: en } } })
@@ -37,7 +32,7 @@ function Fixture() {
         style={{ width: collapsed ? rail : 200, height: 640, transition: 'width var(--motion-duration-spatial) var(--motion-ease-move)' }}>
         <div className="flex h-full flex-col">
           <div className="sidebar-top flex-1 flex flex-col min-h-0">
-            <div className="sidebar-first-row shrink-0"><div><Button variant="ghost" className="sidebar-new-session text-body w-full justify-start gap-2 font-normal rounded-control text-text-secondary hover:bg-sidebar-hover"
+            <div className="sidebar-first-row shrink-0"><div><Button variant="ghost" className="sidebar-new-session text-body w-full justify-start gap-2 font-normal rounded-control"
               onClick={() => setSelected('New session')} aria-label="New session"><SquarePenRounded /><span className="sidebar-label">New session</span></Button></div></div>
             <div className="sidebar-scroll flex-1 overflow-y-auto min-h-0">
               <LeftSidebar isCollapsed={collapsed} links={[
