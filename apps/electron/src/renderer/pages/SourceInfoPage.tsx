@@ -11,7 +11,6 @@ import { useEffect, useState, useMemo, useCallback } from 'react'
 import { AlertCircle } from 'lucide-react'
 import { EditPopover, EditButton, getEditConfig } from '@/components/ui/EditPopover'
 import { SourceAvatar } from '@/components/ui/source-avatar'
-import { ResourceIconEditor } from '@/components/ui/resource-icon-editor'
 import { SourceMenu } from '@/components/app-shell/SourceMenu'
 import { cn } from '@/lib/utils'
 import { routes, navigate } from '@/lib/navigate'
@@ -382,8 +381,7 @@ export default function SourceInfoPage({ sourceSlug, workspaceId, onDelete }: So
           {/* Hero: Avatar, title, and tagline */}
           <Info_Page.Hero
             avatar={<SourceAvatar source={source} workspaceId={workspaceId} fluid />}
-            resourceIconAction={<ResourceIconEditor workspaceId={workspaceId} iconKey={`source:${source.config.slug}`}
-              renderIcon={icon => <SourceAvatar source={source} workspaceId={workspaceId} fluid iconOverride={icon} />} />}
+            resourceIcon
             title={source.config.name}
             tagline={source.config.tagline}
           />

@@ -6,6 +6,8 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- **Resource icons** — Skills, Sources and Plugins use their resource files for icons. Ask the assistant to update an icon through the existing configuration flow. Navigator icons use 16px slots and detail headers use 48px slots.
+
 ## Bug Fixes
 
 ## Breaking Changes

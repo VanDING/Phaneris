@@ -85,6 +85,8 @@ alphanumeric, and must not contain `--` or `..`.
 Optional: `version`, `description`, `icon` (emoji or URL), `author` (`{name,email,url}` only), `homepage`, `repository`,
 `license`, `keywords`, `extensions`. Unknown top-level fields are reported and ignored, not fatal.
 
+For original artwork, place an `icon.svg` or `icon.png` beside `plugin.json` in the installed bundle and omit the manifest's `icon` field.
+
 ### 2. `skills/<slug>/SKILL.md` — a skill
 
 Standard Agent Skills format:

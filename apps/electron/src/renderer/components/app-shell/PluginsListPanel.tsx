@@ -19,7 +19,6 @@ import { useActiveWorkspace, useAppShellContext } from '@/context/AppShellContex
 import { getFileManagerName } from '@/lib/platform'
 import { PluginMenu } from './PluginMenu'
 import { PluginAvatar } from '@/components/ui/plugin-avatar'
-import { ResourceIconEditor } from '@/components/ui/resource-icon-editor'
 import type { PluginLoadError, PluginSummary, PluginUninstallPlan, PluginsListResult } from '../../../shared/types'
 
 /**
@@ -190,9 +189,6 @@ export function PluginsListPanel({
         return {
           icon: <PluginAvatar plugin={plugin} workspaceId={workspaceId ?? ''} fluid />,
           resourceIcon: true,
-          beforeMenu: workspaceId && <ResourceIconEditor workspaceId={workspaceId} iconKey={`plugin:${plugin.name}`}
-            compact selected={selectedPluginName === plugin.name}
-            renderIcon={icon => <PluginAvatar plugin={plugin} workspaceId={workspaceId} fluid iconOverride={icon} />} />,
           title: plugin.name,
           subtitle: (plugin.skills.length > 0 || plugin.sources.length > 0) ? (
             <span className="flex flex-col">

@@ -18,7 +18,6 @@ import type { createEntitySelection } from '@/hooks/useEntitySelection'
 export interface EntityPanelItem {
   icon?: React.ReactNode
   resourceIcon?: boolean
-  beforeMenu?: React.ReactNode
   title: React.ReactNode
   /** Optional second line between the title and the badges row */
   subtitle?: React.ReactNode
@@ -170,7 +169,6 @@ export function EntityPanel<T>({
           <EntityRow
             icon={mapped.icon}
             resourceIcon={mapped.resourceIcon}
-            beforeMenu={mapped.beforeMenu}
             title={mapped.title}
             subtitle={mapped.subtitle}
             badges={mapped.badges}

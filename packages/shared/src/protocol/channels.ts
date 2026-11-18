@@ -486,9 +486,6 @@ export const RPC_CHANNELS = {
   resources: {
     EXPORT: 'resources:export',
     IMPORT: 'resources:import',
-    GET_ICONS: 'resources:getIcons',
-    SET_ICON: 'resources:setIcon',
-    ICON_CHANGED: 'resources:iconChanged',
   },
   projects: {
     GET: 'projects:get',

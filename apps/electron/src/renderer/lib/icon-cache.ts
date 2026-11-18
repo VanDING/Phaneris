@@ -19,9 +19,9 @@
  * It handles cache lookup, IPC file loading, SVG theming, and emoji detection.
  */
 
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, useSyncExternalStore } from 'react'
 import { readAfterReconnect } from '@/lib/read-after-reconnect'
-import { isEmoji } from '@phaneris/shared/utils/icon-constants'
+import { ICON_EXTENSIONS, isEmoji } from '@phaneris/shared/utils/icon-constants'
 import type { ResolvedEntityIcon } from '@phaneris/shared/icons'
 
 // ============================================================================
@@ -67,6 +67,26 @@ export const iconCache = new Map<string, string>()
  * and uses a different key format: `{serviceUrl}:{provider}`
  */
 export const logoUrlCache = new Map<string, string | null>()
+const iconRevisions = new Map<string, number>()
+const iconRevisionListeners = new Set<() => void>()
+
+function subscribeToIconRevisions(listener: () => void) {
+  iconRevisionListeners.add(listener)
+  return () => { iconRevisionListeners.delete(listener) }
+}
+
+/** Refresh mounted avatars, including when an existing icon file is overwritten. */
+export function invalidateResourceIcons(type: 'source' | 'skill' | 'plugin') {
+  clearIconRequests(`${type}s/`)
+  for (const cache of [iconCache, colorableCache, rawSvgCache]) {
+    for (const key of cache.keys()) {
+      if (key.startsWith(`${type}:`)) cache.delete(key)
+    }
+  }
+  if (type === 'source') logoUrlCache.clear()
+  iconRevisions.set(type, (iconRevisions.get(type) ?? 0) + 1)
+  for (const listener of iconRevisionListeners) listener()
+}
 
 type LoadedIcon = { dataUrl: string; colorable: boolean; rawSvg?: string }
 // Components mounted together share a read/discovery, without caching failures
@@ -356,7 +376,7 @@ export async function loadSkillIcon(
 
   // Priority 3: Known icon path - load file
   if (skill.iconPath) {
-    const skillsMatch = skill.iconPath.match(/skills\/([^/]+)\/(.+)$/)
+    const skillsMatch = skill.iconPath.replaceAll('\\', '/').match(/(?:^|\/)skills\/([^/]+)\/([^/]+)$/)
     if (skillsMatch) {
       const relativePath = `skills/${skillsMatch[1]}/${skillsMatch[2]}`
       const loaded = await loadWorkspaceIcon(workspaceId, relativePath)
@@ -491,14 +511,13 @@ function deriveServiceUrl(config: SourceConfig): string | null {
 // ============================================================================
 
 /** Supported icon file extensions for auto-discovery */
-const ICON_FILE_EXTENSIONS = ['.svg', '.png', '.jpg', '.jpeg']
 
 /**
  * Pre-compiled regex for extracting workspace-relative icon paths from absolute paths.
  * Matches any known entity directory prefix (skills/, sources/, statuses/)
  * followed by the rest of the path.
  */
-const ICON_PATH_PATTERN = /(?:skills|sources|statuses)\/.+$/
+const ICON_PATH_PATTERN = /(?:^|\/)((?:skills|sources|statuses)\/[^/]+\/[^/]+)$/
 
 /**
  * Options for the useEntityIcon hook.
@@ -558,6 +577,7 @@ export interface UseEntityIconOptions {
  */
 export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
   const { workspaceId, entityType, identifier, iconPath, iconDir, iconValue, iconFileName } = opts
+  const iconRevision = useSyncExternalStore(subscribeToIconRevisions, () => iconRevisions.get(entityType) ?? 0, () => 0)
   const failed = useRef(false)
   const [connectionRevision, setConnectionRevision] = useState(0)
   useEffect(() => {
@@ -646,8 +666,8 @@ export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
       if (iconPath) {
         // Known path - extract relative portion and load directly
         // iconPath may be absolute; extract the workspace-relative part
-        const relativeMatch = iconPath.match(ICON_PATH_PATTERN)
-        const relativePath = relativeMatch ? relativeMatch[0] : iconPath
+        const normalizedPath = iconPath.replaceAll('\\', '/')
+        const relativePath = normalizedPath.match(ICON_PATH_PATTERN)?.[1] ?? normalizedPath
 
         result = await loadIconFile(workspaceId, relativePath)
       } else if (iconDir && !iconValue) {
@@ -657,7 +677,7 @@ export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
         result = await discoverIconFile(workspaceId, iconDir, iconFileName)
       }
 
-      if (cancelled) return
+      if (cancelled || (iconRevisions.get(entityType) ?? 0) !== iconRevision) return
 
       if (result) {
         // Cache the loaded icon and its colorability/rawSvg
@@ -686,7 +706,7 @@ export function useEntityIcon(opts: UseEntityIconOptions): ResolvedEntityIcon {
     })
 
     return () => { cancelled = true }
-  }, [workspaceId, entityType, identifier, iconPath, iconDir, iconFileName, immediateValue, cacheKey, iconValue, connectionRevision])
+  }, [workspaceId, entityType, identifier, iconPath, iconDir, iconFileName, immediateValue, cacheKey, iconValue, connectionRevision, iconRevision])
 
   return resolved
 }
@@ -771,7 +791,7 @@ function sanitizeSvgForInline(svg: string): string {
 
 /**
  * Auto-discover an icon file in a workspace directory.
- * Probes all extensions (.svg, .png, .jpg, .jpeg) in parallel via IPC,
+ * Probes the supported image extensions in parallel via IPC,
  * then returns the first successful result by priority order.
  * Default fileName is 'icon' (e.g. icon.svg). Override for entities
  * that use identifier-based naming (e.g. statuses use '{statusId}.svg').
@@ -787,7 +807,7 @@ async function discoverIconFile(
   if (existing) return existing
   const discovery = (async () => {
     // Preserve extension priority while sharing the whole pending discovery.
-    const results = await Promise.allSettled(ICON_FILE_EXTENSIONS.map(ext =>
+    const results = await Promise.allSettled(ICON_EXTENSIONS.map(ext =>
       loadIconFile(workspaceId, `${iconDir}/${name}${ext}`)))
     for (const result of results) {
       if (result.status === 'fulfilled' && result.value) return result.value

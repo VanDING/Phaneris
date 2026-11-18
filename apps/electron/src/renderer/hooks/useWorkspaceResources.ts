@@ -23,7 +23,7 @@ import { sourcesAtom } from '@/atoms/sources'
 import { skillsAtom } from '@/atoms/skills'
 import { pluginsAtom, pluginLoadErrorsAtom } from '@/atoms/plugins'
 import { readAfterReconnect } from '@/lib/read-after-reconnect'
-import { clearSourceIconCaches } from '@/lib/icon-cache'
+import { invalidateResourceIcons } from '@/lib/icon-cache'
 import type { LoadedSkill, LoadedSource, PluginLoadError, PluginSummary, PluginsListResult } from '../../shared/types'
 
 export interface LoadedResource<T> {
@@ -100,7 +100,7 @@ export function useWorkspaceResources(
     const cleanup = window.electronAPI.onSourcesChanged((workspaceId, updatedSources) => {
       if (workspaceId !== activeWorkspaceId) return
       // Icons are cached by source id and would keep the stale glyph otherwise.
-      clearSourceIconCaches()
+      invalidateResourceIcons('source')
       setSources(updatedSources || [])
     })
     return cleanup
@@ -109,6 +109,7 @@ export function useWorkspaceResources(
   React.useEffect(() => {
     const cleanup = window.electronAPI.onSkillsChanged((workspaceId, updatedSkills) => {
       if (workspaceId !== activeWorkspaceId) return
+      invalidateResourceIcons('skill')
       setSkills(updatedSkills || [])
     })
     return cleanup
@@ -140,6 +141,7 @@ export function useWorkspaceResources(
   React.useEffect(() => {
     const cleanup = window.electronAPI.onPluginsChanged((workspaceId: string, payload: PluginsListResult) => {
       if (workspaceId !== activeWorkspaceId) return
+      invalidateResourceIcons('plugin')
       setPlugins(payload?.plugins ?? [])
       setPluginLoadErrors(payload?.errors ?? [])
     })

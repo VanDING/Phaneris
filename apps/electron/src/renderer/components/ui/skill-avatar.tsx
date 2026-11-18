@@ -8,12 +8,7 @@
 import { Zap } from 'lucide-react'
 import { EntityIcon } from '@/components/ui/entity-icon'
 import { useEntityIcon } from '@/lib/icon-cache'
-import { skillIconKey, useResourceIcon } from '@/lib/resource-icons'
-import { ResourceIconArtwork } from './resource-icon-artwork'
 import type { IconSize } from '@phaneris/shared/icons'
-import { ICON_SIZE_CLASSES } from '@phaneris/shared/icons'
-import type { ResourceIcon } from '@phaneris/shared/resources/icons'
-import { cn } from '@/lib/utils'
 import type { LoadedSkill } from '../../../shared/types'
 
 interface SkillAvatarProps {
@@ -27,11 +22,9 @@ interface SkillAvatarProps {
   className?: string
   /** Workspace ID for loading local icons */
   workspaceId?: string
-  iconOverride?: ResourceIcon | null
 }
 
-export function SkillAvatar({ skill, size = 'md', fluid, className, workspaceId, iconOverride }: SkillAvatarProps) {
-  const saved = useResourceIcon(workspaceId ?? '', skillIconKey(skill)).icon
+export function SkillAvatar({ skill, size = 'md', fluid, className, workspaceId }: SkillAvatarProps) {
   const icon = useEntityIcon({
     workspaceId: workspaceId ?? '',
     entityType: 'skill',
@@ -39,8 +32,6 @@ export function SkillAvatar({ skill, size = 'md', fluid, className, workspaceId,
     iconPath: skill.iconPath,
     iconValue: skill.metadata.icon,
   })
-  const override = iconOverride === undefined ? saved : iconOverride
-  if (override) return <ResourceIconArtwork icon={override} className={cn(fluid ? 'size-full' : ICON_SIZE_CLASSES[size], className)} />
 
   return (
     <EntityIcon

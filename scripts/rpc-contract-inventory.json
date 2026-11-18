@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "channels": 448,
-  "centrallyValidatedMethods": 71,
-  "typedResultPorts": 85,
+  "channels": 445,
+  "centrallyValidatedMethods": 69,
+  "typedResultPorts": 83,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -5700,7 +5700,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resources.ts",
-          "line": 65,
+          "line": 25,
           "args": [
             "workspaceId: string",
             "options: ExportResourcesOptions"
@@ -5709,38 +5709,6 @@
           "owner": "explicit destination workspace"
         }
       ]
-    },
-    {
-      "key": "resources.GET_ICONS",
-      "channel": "resources:getIcons",
-      "domain": "resources",
-      "routing": "remote-eligible",
-      "kind": "method",
-      "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "ResourceIcons",
-      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
-      "sites": [
-        {
-          "file": "packages/server-core/src/handlers/rpc/resources.ts",
-          "line": 34,
-          "args": [
-            "workspaceId: string"
-          ],
-          "result": "inferred by TypeScript; see handler return",
-          "owner": "explicit destination workspace"
-        }
-      ]
-    },
-    {
-      "key": "resources.ICON_CHANGED",
-      "channel": "resources:iconChanged",
-      "domain": "resources",
-      "routing": "remote-eligible",
-      "kind": "event",
-      "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "authoritative BroadcastEventMap / existing capability event payload",
-      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
-      "sites": []
     },
     {
       "key": "resources.IMPORT",
@@ -5754,34 +5722,11 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/resources.ts",
-          "line": 87,
+          "line": 47,
           "args": [
             "workspaceId: string",
             "bundle: ResourceBundle",
             "mode: ResourceImportMode"
-          ],
-          "result": "inferred by TypeScript; see handler return",
-          "owner": "explicit destination workspace"
-        }
-      ]
-    },
-    {
-      "key": "resources.SET_ICON",
-      "channel": "resources:setIcon",
-      "domain": "resources",
-      "routing": "remote-eligible",
-      "kind": "method",
-      "runtimeValidation": "protocol input contract + existing domain checks",
-      "resultContract": "void",
-      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
-      "sites": [
-        {
-          "file": "packages/server-core/src/handlers/rpc/resources.ts",
-          "line": 41,
-          "args": [
-            "workspaceId",
-            "iconKey",
-            "icon"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "explicit destination workspace"

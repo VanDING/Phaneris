@@ -17,7 +17,6 @@ import type { DecisionLayerSettings } from '../decisions/settings'
 import type { LoadedSource, FolderSourceConfig } from '../sources/types'
 import type { LabelConfig } from '../labels/types'
 import type { LoadedSkill } from '../skills/types'
-import type { ResourceIcons } from '../resources/icons'
 
 /** Ports whose domain already owns runtime validation do not gain a second schema. */
 export interface RpcMethodArguments {
@@ -68,8 +67,6 @@ export type RpcArguments<Channel extends string> = Channel extends keyof RpcMeth
   ? RpcMethodArguments[Channel] : Channel extends keyof typeof RPC_INPUT_CONTRACTS ? RpcSchemaArguments<Channel> : unknown[]
 
 export interface RpcMethodResults {
-  [c.resources.GET_ICONS]: ResourceIcons
-  [c.resources.SET_ICON]: void
   [c.projects.DELETE]: void
   [c.tasks.CREATE]: import('./dto').TaskCreateResult
   [c.pages.GET]: LoadedPage[]

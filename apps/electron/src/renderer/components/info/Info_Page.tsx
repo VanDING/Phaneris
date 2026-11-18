@@ -36,8 +36,8 @@ export interface Info_PageHeroProps {
   title?: string
   /** Tagline/description text below title */
   tagline?: string | null
-  /** Resource details keep a larger avatar and offer an action below the tagline. */
-  resourceIconAction?: React.ReactNode
+  /** Use the full-size icon slot in resource detail headers. */
+  resourceIcon?: boolean
   className?: string
 }
 
@@ -117,10 +117,10 @@ function Info_PageHeader({ className, ...props }: Info_PageHeaderProps) {
   return <PanelHeader className={className} {...props} />
 }
 
-function Info_PageHero({ avatar, title, tagline, className, resourceIconAction }: Info_PageHeroProps) {
+function Info_PageHero({ avatar, title, tagline, className, resourceIcon }: Info_PageHeroProps) {
   return (
     <div className={cn('flex items-start gap-3', className)}>
-      <div className={cn('shrink-0 mt-[2px] overflow-hidden', resourceIconAction
+      <div className={cn('shrink-0 mt-[2px] overflow-hidden', resourceIcon
         ? 'resource-icon-detail text-foreground'
         : 'h-[32px] w-[32px] rounded-shape-sm ring-1 ring-border/30')}>
         {avatar}
@@ -136,7 +136,6 @@ function Info_PageHero({ avatar, title, tagline, className, resourceIconAction }
             {tagline}
           </p>
         )}
-        {resourceIconAction && <div className="mt-3">{resourceIconAction}</div>}
       </div>
     </div>
   )

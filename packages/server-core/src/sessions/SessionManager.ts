@@ -1807,6 +1807,9 @@ export class SessionManager implements ISessionManager {
         const sources = loadWorkspaceSources(workspaceRootPath)
         this.broadcastSourcesChanged(workspaceId, sources)
       },
+      onSourceIconChange: () => {
+        this.broadcastSourcesChanged(workspaceId, loadWorkspaceSources(workspaceRootPath))
+      },
       onStatusConfigChange: () => {
         sessionLog.info(`Status config changed in ${workspaceId}`)
         this.broadcastStatusesChanged(workspaceId)

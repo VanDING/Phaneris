@@ -314,7 +314,7 @@ export function EntityRow({
           "craft-focus craft-row-focus entity-row-btn flex w-full items-start gap-2 pl-2 pr-4 py-[var(--theme-row-padding-y)] text-left text-body rounded-lg",
           "motion-interactive transition-[background-color]",
           leadingAction && "pl-11",
-          beforeMenu && (resourceIcon ? 'resource-icon-row-with-action' : "pr-[96px]"),
+          beforeMenu && "pr-[96px]",
           (isSelected || isInMultiSelect)
             ? "bg-foreground/3"
             : "hover:bg-foreground/2",
@@ -432,7 +432,7 @@ export function EntityRow({
         {beforeMenu && (
           /* Presentation wrapper: it only shields the row's click from the
              control inside. */
-          <div role="presentation" className={cn('shrink-0', !resourceIcon && 'w-14')} onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
+          <div role="presentation" className="w-14 shrink-0" onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
             {beforeMenu}
           </div>
         )}

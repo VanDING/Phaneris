@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Zap } from 'lucide-react'
 import { toast } from 'sonner'
 import { SkillAvatar } from '@/components/ui/skill-avatar'
-import { ResourceIconEditor } from '@/components/ui/resource-icon-editor'
-import { skillIconKey } from '@/lib/resource-icons'
 import { EntityPanel } from '@/components/ui/entity-panel'
 import { EntityListEmptyScreen } from '@/components/ui/entity-list-empty'
 import { skillSelection } from '@/hooks/useEntitySelection'
@@ -84,9 +82,6 @@ export function SkillsListPanel({
       mapItem={(skill) => ({
         icon: <SkillAvatar skill={skill} fluid workspaceId={workspaceId} />,
         resourceIcon: true,
-        beforeMenu: workspaceId && <ResourceIconEditor workspaceId={workspaceId} iconKey={skillIconKey(skill)}
-          compact selected={selectedSkillSlug === skill.slug}
-          renderIcon={icon => <SkillAvatar skill={skill} fluid workspaceId={workspaceId} iconOverride={icon} />} />,
         title: skill.metadata.name,
         badges: (
           <span className="flex items-center gap-1.5 min-w-0">

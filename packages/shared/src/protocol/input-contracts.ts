@@ -10,7 +10,6 @@ import { ResidentContextSchema, ResidentEventsQuerySchema } from '@phaneris/sess
 import { TaskOutputVisibilitySchema } from '@phaneris/session-tools-core/task-result-contracts'
 import { WorkerControlSchema } from '@phaneris/session-tools-core/worker-control-contracts'
 import { SessionHistoryQuerySchema } from '@phaneris/session-tools-core/session-history-contracts'
-import { resourceIconKeySchema, resourceIconSchema } from '../resources/icons'
 
 const text = z.string()
 const id = text.min(1)
@@ -102,8 +101,6 @@ export const RPC_INPUT_CONTRACTS = {
   [c.plugins.INSTALL]: tuple(id, text),
   [c.plugins.ANALYZE_UNINSTALL]: tuple(id, id),
   [c.plugins.UNINSTALL]: tuple(id, id),
-  [c.resources.GET_ICONS]: tuple(id),
-  [c.resources.SET_ICON]: tuple(id, resourceIconKeySchema, resourceIconSchema.nullable()),
   [c.credentials.HEALTH_CHECK]: tuple(),
   [c.transfer.START]: tuple(z.object({ totalBytes: z.number().int().nonnegative(), chunkCount: z.number().int().positive(),
     channel: id, args: z.array(z.unknown()), largeArgIndex: z.number().int().nonnegative(), checksum: text.optional() }).passthrough()),

@@ -31,7 +31,6 @@ import { getFileManagerName } from '@/lib/platform'
 import type { PluginUninstallPlan, PluginSummary } from '../../shared/types'
 import { EditPopover, EditButton, getEditConfig } from '@/components/ui/EditPopover'
 import { PluginAvatar } from '@/components/ui/plugin-avatar'
-import { ResourceIconEditor } from '@/components/ui/resource-icon-editor'
 
 interface PluginInfoPageProps {
   pluginName: string
@@ -120,8 +119,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
           <Info_Page.Content>
             <Info_Page.Hero
               avatar={<PluginAvatar plugin={plugin} workspaceId={workspaceId} fluid />}
-              resourceIconAction={<ResourceIconEditor workspaceId={workspaceId} iconKey={`plugin:${plugin.name}`}
-                renderIcon={icon => <PluginAvatar plugin={plugin} workspaceId={workspaceId} fluid iconOverride={icon} />} />}
+              resourceIcon
               title={plugin.name}
               tagline={plugin.description}
             />

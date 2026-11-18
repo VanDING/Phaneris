@@ -1499,12 +1499,6 @@ html:not([data-theme]) [data-shell-platform="macos"] {
 :is(.resource-icon-list, .resource-icon-detail) [data-entity-emoji] {
   font-size: var(--resource-icon-size);
 }
-.resource-icon-row-with-action { padding-right: 40px; }
-@media (pointer: coarse) {
-  .resource-icon-row-trigger { opacity: 1; }
-  .resource-icon-row-with-action { padding-right: 60px; }
-  .resource-icon-palette { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
 .sidebar-navigation[data-collapsed] {
   --sidebar-item-inset: var(--sidebar-rail-item-inset);
 }

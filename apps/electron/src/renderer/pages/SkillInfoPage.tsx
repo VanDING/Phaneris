@@ -14,8 +14,6 @@ import { EditPopover, EditButton, getEditConfig } from '@/components/ui/EditPopo
 import { toast } from 'sonner'
 import { SkillMenu } from '@/components/app-shell/SkillMenu'
 import { SkillAvatar } from '@/components/ui/skill-avatar'
-import { ResourceIconEditor } from '@/components/ui/resource-icon-editor'
-import { skillIconKey } from '@/lib/resource-icons'
 import { routes, navigate } from '@/lib/navigate'
 import { SendResourceToWorkspaceDialog } from '@/components/app-shell/SendResourceToWorkspaceDialog'
 import { useActiveWorkspace, useAppShellContext } from '@/context/AppShellContext'
@@ -176,8 +174,7 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
           {/* Hero: Avatar, title, and description */}
           <Info_Page.Hero
             avatar={<SkillAvatar skill={skill} fluid workspaceId={workspaceId} />}
-            resourceIconAction={<ResourceIconEditor workspaceId={workspaceId} iconKey={skillIconKey(skill)}
-              renderIcon={icon => <SkillAvatar skill={skill} fluid workspaceId={workspaceId} iconOverride={icon} />} />}
+            resourceIcon
             title={skill.metadata.name}
             tagline={skill.metadata.description}
           />

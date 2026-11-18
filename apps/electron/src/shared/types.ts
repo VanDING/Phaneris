@@ -965,9 +965,6 @@ export interface ElectronAPI {
   // Resources (cross-workspace export/import)
   exportResources(workspaceId: string, options: ExportResourcesOptions): Promise<ExportResult>
   importResources(workspaceId: string, bundle: ResourceBundle, mode: ResourceImportMode): Promise<ResourceImportResult>
-  getResourceIcons(workspaceId: string): Promise<import('@phaneris/shared/resources/icons').ResourceIcons>
-  setResourceIcon(workspaceId: string, key: string, icon: import('@phaneris/shared/resources/icons').ResourceIcon | null): Promise<void>
-  onResourceIconChanged(callback: (workspaceId: string, key: string, icon: import('@phaneris/shared/resources/icons').ResourceIcon | null) => void): () => void
 
   // Messaging gateway — workspaceId is taken from the client handshake (ctx.workspaceId)
   getMessagingConfig(): Promise<{

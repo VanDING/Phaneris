@@ -193,6 +193,7 @@ const EDIT_CONFIGS: Record<EditContextKey, (location: string) => EditConfig> = {
       context:
         'The user is editing skill metadata in the YAML frontmatter of SKILL.md. ' +
         'Frontmatter fields: name (required), description (required), globs (optional array), alwaysAllow (optional array), requiredSources (optional array of source slugs), icon (optional string — emoji or URL). ' +
+        'For a workspace skill with original artwork, save icon.svg next to SKILL.md and omit the icon field so the file is discovered. ' +
         'Keep the content after the frontmatter unchanged unless specifically requested. ' +
         'After editing, call skill_validate with the skill slug to verify the changes. ' +
         'Confirm clearly when done.',
@@ -230,7 +231,8 @@ const EDIT_CONFIGS: Record<EditContextKey, (location: string) => EditConfig> = {
       filePath: `${location}/config.json`,
       context:
         'The user is editing source configuration (config.json). ' +
-        'Be careful with JSON syntax. Fields include: type, slug, name, tagline, iconUrl, and transport-specific settings (mcp, api, local). ' +
+        'Be careful with JSON syntax. Fields include: type, slug, name, tagline, icon (emoji or URL), and transport-specific settings (mcp, api, local). ' +
+        'To use original artwork, save icon.svg next to config.json and omit the icon field. ' +
         'Do NOT modify the slug unless explicitly requested. ' +
         'After editing, call source_test with the source slug to verify the configuration. ' +
         'Confirm clearly when done.',
@@ -432,6 +434,7 @@ const EDIT_CONFIGS: Record<EditContextKey, (location: string) => EditConfig> = {
       context:
         'The user is editing a plugin bundle manifest (plugin.json). Preserve the required $schema and name fields, and keep the name equal to the plugin directory name. ' +
         'The manifest may include version, description, icon (emoji or URL), author, homepage, repository, license, keywords, and extensions. ' +
+        'To use original artwork, save icon.svg next to plugin.json and omit the icon field. ' +
         'Do not change the plugin name unless explicitly requested because it is the bundle identity. After editing, validate with config_validate({ target: "plugins" }) and confirm clearly when done.',
     },
     example: 'Update the plugin description and icon',

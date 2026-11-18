@@ -8,7 +8,7 @@
  * - ~/.phaneris/config.json - Main app configuration
  * - ~/.phaneris/preferences.json - User preferences
  * - ~/.phaneris/workspaces/{slug}/ - Workspace directory (recursive)
- *   - sources/{slug}/config.json, guide.md, permissions.json
+ *   - sources/{slug}/config.json, guide.md, permissions.json, icon.*
  *   - skills/{slug}/SKILL.md, icon.*
  *   - sessions/{id}/session.jsonl (header metadata only)
  *   - permissions.json
@@ -22,6 +22,7 @@ import { CONFIG_DIR } from './paths.ts';
 import { debug } from '../utils/debug.ts';
 import { expandPath } from '../utils/paths.ts';
 import { readJsonFileSync } from '../utils/files.ts';
+import { ICON_EXTENSIONS } from '../utils/icon-constants.ts';
 import { perf } from '../utils/perf.ts';
 import { loadStoredConfig } from './repository.ts';
 import { type StoredConfig } from './persisted-types.ts';
@@ -82,6 +83,7 @@ const activeWatchers = new Map<string, string>(); // workspaceDir → creator wo
 
 const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
 const PREFERENCES_FILE = join(CONFIG_DIR, 'preferences.json');
+const ICON_FILENAMES = new Set(ICON_EXTENSIONS.map(ext => `icon${ext}`));
 
 // Debounce delay in milliseconds
 const DEBOUNCE_MS = 100;
@@ -127,6 +129,8 @@ export interface ConfigWatcherCallbacks {
   onSourceChange?: (slug: string, source: LoadedSource | null) => void;
   /** Called when a source's guide.md changes */
   onSourceGuideChange?: (slug: string, guide: SourceGuide) => void;
+  /** Called when a source icon file is added, replaced, or removed. */
+  onSourceIconChange?: () => void;
   /** Called when the sources list changes (add/remove folders) */
   onSourcesListChange?: (sources: LoadedSource[]) => void;
 
@@ -454,6 +458,8 @@ export class ConfigWatcher {
         this.debounce(`source-guide:${slug}`, () => this.handleSourceGuideChange(slug));
       } else if (file === 'permissions.json') {
         this.debounce(`source-permissions:${slug}`, () => this.handleSourcePermissionsChange(slug));
+      } else if (parts.length === 3 && file && ICON_FILENAMES.has(file)) {
+        this.debounce('source-icons', () => this.callbacks.onSourceIconChange?.());
       }
       return;
     }
@@ -473,7 +479,7 @@ export class ConfigWatcher {
       // File-level changes
       if (file === 'SKILL.md') {
         this.debounce(`skill:${slug}`, () => this.handleSkillChange(slug));
-      } else if (file && /^icon\.(svg|png|jpg|jpeg)$/i.test(file)) {
+      } else if (parts.length === 3 && file && ICON_FILENAMES.has(file)) {
         // Icon file changes also trigger a skill change (to update iconPath)
         this.debounce(`skill-icon:${slug}`, () => this.handleSkillChange(slug));
       }
