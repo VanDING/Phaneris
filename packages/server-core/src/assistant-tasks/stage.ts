@@ -21,11 +21,12 @@ export function deriveStage(input: {
   if (verification?.verdict === 'needs_user') return 'needs_user'
 
   const active = assignments.filter(assignment => !['completed', 'failed', 'cancelled', 'stopped'].includes(assignment.state))
+  // A pause freezes new admission, so it must be visible even while a run is in
+  // flight: reporting 'running' alone would hide that the Host stopped admitting.
+  // The in-flight assignment keeps its own state in the assignment list.
+  if (control?.action === 'pause') return active.some(assignment => assignment.state === 'stopping') ? 'stopping' : 'paused'
   if (active.some(assignment => assignment.state === 'stopping')) return 'stopping'
   if (active.some(assignment => assignment.state === 'running')) return 'running'
-  // A pause freezes new admission even with nothing running yet; reporting it as
-  // "ready" would claim the Host would admit work it has been told to hold.
-  if (control?.action === 'pause') return 'paused'
   if (active.length) return 'queued'
 
   const finished = assignments.filter(assignment => assignment.state === 'completed' || assignment.state === 'failed')
