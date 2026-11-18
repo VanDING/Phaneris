@@ -1,18 +1,18 @@
 import assert from 'node:assert/strict'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { verificationWorkflow } from './verification-artifacts'
 
 /**
- * Stage 2 acceptance (partial): a ready definition becomes a real ordinary
- * Session run through the Host's single scheduling owner, the runtime's own
- * receipt drives the assignment state, rework keeps the Task identity in a new
- * Session, and the whole record survives a restart.
+ * Stage 2 acceptance: a ready definition becomes a real ordinary Session run
+ * through the Host's single scheduling owner, the runtime's own receipt drives
+ * the assignment state, the Worker's real `write` tool call is recovered into an
+ * Artifact revision, rework keeps the Task identity in a new Session, and the
+ * whole record survives a restart.
  *
- * Artifact recovery from a loopback Worker and the Electron panel are recorded as
- * untested here rather than asserted: the loopback Worker does not emit the real
- * tool-result shape `registerDelegatedDeliverables` reads, so asserting on it
- * would test the fixture, not the product. See
+ * The Worker is an ordinary Session whose real `write` tool runs: the recovered
+ * Artifact therefore comes from the product's own completion path
+ * (`registerDelegatedDeliverables`), not from a fixture that mimics it. See
  * docs/verification/assistant-refactor-2026-11-18-failure-matrix.md (M10/M15).
  */
 await verificationWorkflow('assistant-task-delivery', async run => {
@@ -23,7 +23,11 @@ await verificationWorkflow('assistant-task-delivery', async run => {
   process.env.NODE_ENV = 'test'
   const workspace = { id: 'alpha', name: 'Delivery', rootPath: root, createdAt: 1 }
 
-  const outputPath = join(root, 'pelican.html')
+  // The Worker's real `write` tool resolves a relative path against its own
+  // working directory, which for this workspace is the Session folder (the
+  // workspace default is `none`). Writing a relative name is what a real Worker
+  // does, and keeps the file inside the roots the completion path may recover.
+  const outputName = 'pelican.html'
   const html = '<!doctype html><html><body><h1>Pelican on a bicycle</h1><svg role="img" aria-label="pelican riding a bicycle"></svg></body></html>'
   // The Worker is an ordinary Session: the loopback drives its real tools so the
   // produced file is a genuine write-tool result, not a fixture assertion.
@@ -35,8 +39,11 @@ await verificationWorkflow('assistant-task-delivery', async run => {
     const writeTool = toolNames.find(name => /(^|__)write$/i.test(name))
     if (!workerWrote && writeTool) {
       workerWrote = true
+      // `path` is the real write-tool parameter. Sending `file_path` here made the
+      // tool reject its own arguments, so no file ever existed and Artifact
+      // recovery had nothing to find — a fixture that proved nothing.
       return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: 'call-write-pelican', type: 'function',
-        function: { name: writeTool, arguments: JSON.stringify({ file_path: outputPath, content: html }) } }] }, 'tool_calls') + 'data: [DONE]\n\n',
+        function: { name: writeTool, arguments: JSON.stringify({ path: outputName, content: html }) } }] }, 'tool_calls') + 'data: [DONE]\n\n',
         { headers: { 'Content-Type': 'text/event-stream' } })
     }
     return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'DELIVERY_WORKER_TEXT' }) + chunk({}, 'stop') + 'data: [DONE]\n\n',
@@ -94,6 +101,12 @@ await verificationWorkflow('assistant-task-delivery', async run => {
     scenes.push('B01-definition-exists-before-any-session')
 
     // M10 · Dispatch through the Host's single scheduling owner.
+    //
+    // Producing a file is a write, so the Workspace's execution ceiling must allow
+    // one. This is the real authority path (`setAssistantExecutionMode`), not a
+    // fixture flag: with the default `safe` ceiling the Worker's own write tool is
+    // refused as "Explore mode" and no deliverable can exist at all.
+    await manager.setAssistantExecutionMode('alpha', 'allow-all')
     const readyCheck = await client.invoke(RPC_CHANNELS.residentAssistant.TASKS, 'alpha', { taskId, checkReady: true })
     assert(readyCheck.items[0]!.ready!.ready, `Expected ready: ${readyCheck.items[0]!.ready!.missing.join(', ')}`)
     const dispatched = await client.invoke(RPC_CHANNELS.residentAssistant.TASKS_DISPATCH, 'alpha', taskId, { requestId: 'dispatch-1', config: {} })
@@ -115,6 +128,30 @@ await verificationWorkflow('assistant-task-delivery', async run => {
     assert.equal(settled.stage, 'candidate_result', 'A finished run is a candidate result, not an accepted one')
     evidence.push({ settledStage: settled.stage, assignment: settled.assignments.at(-1) })
     scenes.push('B03-runtime-receipt-settles-the-assignment')
+
+    // M10/M15 · The file the Worker actually wrote is recovered into an Artifact
+    // revision by the product's own completion path, and that revision is what a
+    // user opening the deliverable reads. Nothing here re-registers the file.
+    const { listArtifacts, getArtifact } = await import('@phaneris/shared/artifacts')
+    const { getSessionPath } = await import('@phaneris/shared/sessions')
+    const workerSessionId = dispatched.receipt.sessionId!
+    const expectedPath = join(getSessionPath(root, workerSessionId), outputName)
+    assert(existsSync(expectedPath), `The Worker's write tool must have produced ${expectedPath}`)
+    assert.equal(readFileSync(expectedPath, 'utf8'), html, 'The recovered file must be the Worker write result')
+    const artifacts = listArtifacts({ workspaceRootPath: root }, { sessionId: workerSessionId })
+    const recovered = artifacts.find(({ artifact }) => resolve(artifact.sourcePath) === resolve(expectedPath))
+    assert(recovered, `Completion must recover the Worker's file as an Artifact; found ${JSON.stringify(artifacts.map(a => a.artifact.sourcePath))}`)
+    const revision = recovered.artifact.currentRevision
+    assert(revision, 'A recovered Artifact must carry a version')
+    const version = recovered.artifact.revisions.find(item => item.id === revision)!
+    assert.equal(version.size, Buffer.byteLength(html), 'The Artifact version must describe the file actually written')
+    // M15: opening the exact version yields the real file, not a copy or a path
+    // that no longer exists.
+    const opened = getArtifact({ workspaceRootPath: root }, recovered.artifact.id, revision)
+    assert.equal(readFileSync(opened.activePath!, 'utf8'), html, 'The versioned Artifact must open the real file content')
+    evidence.push({ artifactId: recovered.artifact.id, revision, sourcePath: recovered.artifact.sourcePath,
+      size: version.size, openedPath: opened.activePath })
+    scenes.push('B08-worker-write-is-recovered-as-a-versioned-artifact', 'B09-opening-the-artifact-revision-reads-the-real-file')
 
     // M16 · Acceptance binds the reviewed version and cites real evidence.
     const tasksApi = (manager as unknown as { residentService(w: typeof workspace): { tasks(h: unknown): {
@@ -173,8 +210,8 @@ await verificationWorkflow('assistant-task-delivery', async run => {
     provider.stop(true)
   }
   run.complete(scenes, [
-    'Artifact-version recovery from a loopback Worker (the loopback adapter does not produce the real tool-result shape)',
-    'Electron panel rendering of the delivery (separate UI workflow)',
+    'Electron panel rendering of the delivery (separate Electron workflow)',
+    'A real model choosing the file content and path',
     'Real paid model file quality',
   ])
   console.log(JSON.stringify({ passed: scenes.length, output: run.directory }))

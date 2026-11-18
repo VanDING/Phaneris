@@ -245,6 +245,7 @@ export const REMOTE_ELIGIBLE_CHANNELS = new Set<string>([
   RPC_CHANNELS.residentAssistant.TASKS_CHANGED,
   RPC_CHANNELS.residentAssistant.TASKS_CONTROL,
   RPC_CHANNELS.residentAssistant.TASKS_DISPATCH,
+  RPC_CHANNELS.residentAssistant.TASKS_VERIFY,
   RPC_CHANNELS.assistantMemory.QUERY,
   RPC_CHANNELS.assistantMemory.SUPPRESSION_EXPORT,
   RPC_CHANNELS.assistantMemory.SUPPRESSION_MERGE,

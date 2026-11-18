@@ -4058,6 +4058,18 @@ export class SessionManager implements ISessionManager {
   }
 
   /**
+   * The user's own acceptance decision from the board.
+   *
+   * The board binds the version it displayed: the service records the decision
+   * against the task's current definition version, so a stale board cannot
+   * accept a version it never showed.
+   */
+  async verifyAssistantTask(workspaceId: string, command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskVerify) {
+    const managed = await this.ensureResidentAssistant(workspaceId)
+    return this.residentService(managed.workspace).tasks(this.taskServiceHost(managed)).verify(command)
+  }
+
+  /**
    * Send one ready delegation definition to a real ordinary Session.
    *
    * Readiness is the Host's own record for the *current* definition version. The

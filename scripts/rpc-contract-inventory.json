@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "channels": 449,
-  "centrallyValidatedMethods": 72,
-  "typedResultPorts": 86,
+  "channels": 450,
+  "centrallyValidatedMethods": 73,
+  "typedResultPorts": 87,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -5738,6 +5738,28 @@
             "workspaceId: string",
             "taskId: string",
             "request: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskDispatch"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.TASKS_VERIFY",
+      "channel": "residentAssistant:tasksVerify",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/task-delegation-contracts').TaskProjectionView",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 78,
+          "args": [
+            "workspaceId: string",
+            "command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskVerify"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"

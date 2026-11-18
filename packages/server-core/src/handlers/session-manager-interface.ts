@@ -63,6 +63,7 @@ export interface ISessionManager {
   setAssistantOutputVisibility(workspaceId: string, command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility): Promise<import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest>
   getAssistantTasks(workspaceId: string, query: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskQuery): Promise<import('@phaneris/session-tools-core/task-delegation-contracts').TaskPageView>
   controlAssistantTasks(workspaceId: string, command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskControl): Promise<import('@phaneris/session-tools-core/task-delegation-contracts').TaskControlResult>
+  verifyAssistantTask(workspaceId: string, command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskVerify): Promise<import('@phaneris/session-tools-core/task-delegation-contracts').TaskProjectionView>
   dispatchAssistantTask(workspaceId: string, taskId: string, request: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskDispatch): Promise<{ assignment: import('@phaneris/session-tools-core/task-delegation-contracts').AssignmentView; receipt: import('@phaneris/session-tools-core/delegation-contracts').AssistantDelegationReceipt }>
   getSessionDecisions(sessionId: string, query?: import('@phaneris/shared/decisions/session').SessionDecisionQuery): Promise<import('@phaneris/shared/decisions/session').SessionDecisionReport>
   getRecoveryEvidence(

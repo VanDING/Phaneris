@@ -15,7 +15,7 @@ import { navigate, routes } from '@/lib/navigate'
 import { residentNavigationAtom } from './resident-navigation'
 import { ResidentMessaging } from './ResidentMessaging'
 import { ResidentTaskDetail, workActivity } from './ResidentTaskDetail'
-import { ResidentTasksPanel } from './ResidentTasksPanel'
+import { FocusBoard } from './FocusBoard'
 import { useResidentPanel, type ResidentWorkView } from './useResidentPanel'
 
 export function ResidentWorkPanel({ workspaceId, sessionId, onClose, onPreview }: {
@@ -88,7 +88,9 @@ export function ResidentWorkPanel({ workspaceId, sessionId, onClose, onPreview }
         </section>}
         {data.error && <p role="alert" className="resident-panel-notice text-label text-destructive-text">{data.error}</p>}
         {data.hasUpdates && <Button size="sm" variant="ghost" onClick={() => void data.refresh()}>{t('residentAssistant.panel.newUpdates')}</Button>}
-        {view === 'tasks' && !detailId && <ResidentTasksPanel workspaceId={workspaceId} />}
+        {/* The board is the same component the titlebar peek renders, so the
+            two surfaces cannot drift. */}
+        {view === 'tasks' && !detailId && <FocusBoard workspaceId={workspaceId} onPreview={onPreview} />}
         {view !== 'tasks' && <section data-testid={view === 'deliverables' ? 'resident-section-artifacts' : 'resident-section-work'} aria-busy={data.loading}>
           <div className="resident-section-heading"><span className="text-meta text-text-secondary" role="status">{t('residentAssistant.panel.loadedCount', { count: loaded, total: data.page.total ?? loaded })}</span></div>
           {view !== 'deliverables' && data.page.items.map(work => {

@@ -5,7 +5,7 @@
  */
 export const RPC_CHANNELS = {
   residentAssistant: { GET: 'residentAssistant:get', DISPATCH: 'residentAssistant:dispatch', WORK: 'residentAssistant:work', CONTROL: 'residentAssistant:control', ORIGINALS: 'residentAssistant:originals', EXECUTION_MODE: 'residentAssistant:executionMode', CANCEL_WORK: 'residentAssistant:cancelWork', OUTPUT_VISIBILITY: 'residentAssistant:outputVisibility', CONTEXT: 'residentAssistant:context', EVENTS: 'residentAssistant:events',
-    TASKS: 'residentAssistant:tasks', TASKS_CHANGED: 'residentAssistant:tasksChanged', TASKS_CONTROL: 'residentAssistant:tasksControl', TASKS_DISPATCH: 'residentAssistant:tasksDispatch' },
+    TASKS: 'residentAssistant:tasks', TASKS_CHANGED: 'residentAssistant:tasksChanged', TASKS_CONTROL: 'residentAssistant:tasksControl', TASKS_DISPATCH: 'residentAssistant:tasksDispatch', TASKS_VERIFY: 'residentAssistant:tasksVerify' },
   assistantMemory: {
     SUPPRESSION_EXPORT: 'assistantMemory:suppressionExport',
     SUPPRESSION_MERGE: 'assistantMemory:suppressionMerge',

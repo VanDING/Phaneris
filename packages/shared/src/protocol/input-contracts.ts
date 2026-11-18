@@ -8,7 +8,7 @@ import { MemoryMutationSchema, MemoryQuerySchema, MemorySourceReadSchema, Histor
 import { AssistantDispatchSchema, AssistantWorkQuerySchema } from '@phaneris/session-tools-core/delegation-contracts'
 import { ResidentContextSchema, ResidentEventsQuerySchema } from '@phaneris/session-tools-core/resident-context-contracts'
 import { TaskOutputVisibilitySchema } from '@phaneris/session-tools-core/task-result-contracts'
-import { DelegationTaskControlSchema, DelegationTaskDispatchSchema, DelegationTaskQuerySchema } from '@phaneris/session-tools-core/task-delegation-contracts'
+import { DelegationTaskControlSchema, DelegationTaskDispatchSchema, DelegationTaskQuerySchema, DelegationTaskVerifySchema } from '@phaneris/session-tools-core/task-delegation-contracts'
 import { WorkerControlSchema } from '@phaneris/session-tools-core/worker-control-contracts'
 import { SessionHistoryQuerySchema } from '@phaneris/session-tools-core/session-history-contracts'
 
@@ -57,6 +57,7 @@ export const RPC_INPUT_CONTRACTS = {
   [c.residentAssistant.TASKS]: tuple(id, DelegationTaskQuerySchema),
   [c.residentAssistant.TASKS_CONTROL]: tuple(id, DelegationTaskControlSchema),
   [c.residentAssistant.TASKS_DISPATCH]: tuple(id, id, DelegationTaskDispatchSchema),
+  [c.residentAssistant.TASKS_VERIFY]: tuple(id, DelegationTaskVerifySchema),
   [c.assistantMemory.QUERY]: tuple(id, MemoryQuerySchema),
   [c.assistantMemory.SUPPRESSION_EXPORT]: tuple(id, MemorySuppressionQuerySchema),
   [c.assistantMemory.SUPPRESSION_MERGE]: tuple(id, MemorySuppressionMergeSchema),

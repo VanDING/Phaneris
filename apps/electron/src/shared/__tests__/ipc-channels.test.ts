@@ -294,6 +294,7 @@ const EXPECTED_CHANNELS: string[] = [
   "residentAssistant:tasksChanged",
   "residentAssistant:tasksControl",
   "residentAssistant:tasksDispatch",
+  "residentAssistant:tasksVerify",
   "residentAssistant:work",
   "resources:export",
   "resources:import",

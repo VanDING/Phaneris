@@ -1,0 +1,210 @@
+/* ─────────────────────────────────────────────────────────────────────
+   The assistant's work board.
+
+   Shared by both surfaces that show it (the titlebar peek and the panel
+   inside the assistant view), so it is written against the app's own
+   tokens (packages/ui/src/styles/theme-tokens.css) and adds no palette
+   of its own. Separation is a 1px rule or one tone step, never a shadow;
+   the accent appears on the selected segment and a moving task's dot only.
+   ───────────────────────────────────────────────────────────────────── */
+.focus-board { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+
+/* ── capacity strip: spans the column and switches the task ──────────── */
+.focus-strip {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 0 7px; border-bottom: 1px solid var(--border); flex: none;
+}
+.focus-readout { display: flex; align-items: center; gap: 7px; flex: none; }
+.focus-seats { display: flex; gap: 3px; flex: none; }
+.focus-seat {
+  width: 14px; height: 5px; border-radius: var(--shape-sm);
+  background: color-mix(in srgb, var(--foreground) 13%, transparent);
+}
+.focus-seat[data-on="true"] { background: var(--accent); }
+.focus-count {
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.focus-segments { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; overflow: hidden; }
+/* A segment is a label on a rule, not a pill: the rule marks the selection. */
+.focus-segment {
+  display: flex; align-items: center; gap: 5px; min-width: 0;
+  padding: 3px 7px; border-radius: var(--shape-sm);
+  border-bottom: 2px solid transparent;
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground); white-space: nowrap;
+}
+.focus-segment:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); color: var(--foreground); }
+.focus-segment[aria-selected="true"] {
+  color: var(--foreground); font-weight: 600; border-bottom-color: var(--accent);
+}
+.focus-segment-dot {
+  width: 5px; height: 5px; border-radius: 50%; flex: none;
+  background: color-mix(in srgb, var(--foreground) 26%, transparent);
+}
+.focus-segment[data-stage="running"] .focus-segment-dot,
+.focus-segment[data-stage="stopping"] .focus-segment-dot { background: var(--accent); }
+.focus-segment[data-stage="candidate_result"] .focus-segment-dot,
+.focus-segment[data-stage="needs_user"] .focus-segment-dot,
+.focus-segment[data-stage="rework"] .focus-segment-dot { background: var(--info); }
+.focus-segment[data-stage="failed"] .focus-segment-dot { background: var(--destructive); }
+.focus-segment-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.focus-refresh { flex: none; }
+
+/* ── the record ─────────────────────────────────────────────────────── */
+.focus-surface {
+  display: flex; flex-direction: column; min-height: 0; flex: 1;
+  margin-top: 8px; border-radius: var(--shape-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.focus-record { flex: 1; min-height: 0; overflow: auto; padding: 11px 13px 4px; }
+
+.focus-heading { display: flex; align-items: baseline; gap: 9px; }
+.focus-title {
+  margin: 0; min-width: 0;
+  font-size: calc(var(--type-title) * var(--ui-scale));
+  font-weight: 600; line-height: 1.35;
+}
+.focus-stage {
+  flex: none; font-size: calc(var(--type-micro) * var(--ui-scale));
+  font-weight: 500; color: var(--info-text);
+}
+.focus-stage[data-stage="running"],
+.focus-stage[data-stage="stopping"] { color: var(--accent-text); }
+.focus-stage[data-stage="accepted"] { color: var(--success-text); }
+.focus-stage[data-stage="cancelled"],
+.focus-stage[data-stage="failed"] { color: var(--destructive-text); }
+
+.focus-label {
+  margin: 11px 0 4px;
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  font-weight: 600; color: var(--muted-foreground);
+}
+.focus-none {
+  margin: 0; font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground);
+}
+.focus-error {
+  margin: 8px 0 0; color: var(--destructive-text);
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+}
+.focus-empty {
+  margin: 10px 0; color: var(--muted-foreground);
+  font-size: calc(var(--type-label) * var(--ui-scale));
+}
+
+.focus-facts {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 13px; margin: 0;
+}
+.focus-facts dt {
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground);
+}
+.focus-facts dd {
+  margin: 0; font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--foreground); overflow-wrap: anywhere;
+}
+
+/* version and assignment rows: the version figure is tabular and fixed width */
+.focus-versions, .focus-assignments, .focus-criteria, .focus-files { margin: 0; }
+.focus-version, .focus-assignment {
+  display: grid; grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: 9px; align-items: baseline; padding: 4px 0;
+}
+.focus-version + .focus-version,
+.focus-assignment + .focus-assignment { border-top: 1px solid var(--border); }
+.focus-version-tag {
+  font-family: var(--font-mono);
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground); font-variant-numeric: tabular-nums;
+}
+.focus-version-text {
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--foreground); overflow-wrap: anywhere;
+}
+/* A superseded requirement stays readable and says it was replaced. */
+.focus-version[data-state="superseded"] .focus-version-text,
+.focus-version[data-state="withdrawn"] .focus-version-text {
+  color: var(--muted-foreground); text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--foreground) 32%, transparent);
+}
+.focus-version-state {
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground); white-space: nowrap;
+}
+.focus-assignment-session {
+  font-family: var(--font-mono);
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--foreground);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* criteria: the recorded outcome beside its own statement */
+.focus-criteria { list-style: none; padding: 0; }
+.focus-criterion {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px; align-items: baseline; padding: 3px 0;
+}
+.focus-criterion-text {
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--foreground);
+}
+.focus-criterion[data-outcome="met"] .focus-version-state { color: var(--success-text); }
+.focus-criterion[data-outcome="gap"] .focus-version-state { color: var(--info-text); }
+
+/* produced files: mono name, the row is the affordance */
+.focus-file {
+  display: flex; align-items: baseline; gap: 10px;
+  width: 100%; text-align: left; padding: 5px 0;
+}
+.focus-file + .focus-file { border-top: 1px solid var(--border); }
+.focus-file:hover .focus-file-name { color: var(--accent-text); }
+.focus-file-name {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--foreground);
+}
+
+/* ── actions: one filled primary, the rest outlined ─────────────────── */
+.focus-actions {
+  display: flex; align-items: center; gap: 7px; flex: none;
+  padding: 9px 13px; border-top: 1px solid var(--border);
+}
+.focus-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: calc(var(--control-height-md) * var(--ui-scale)); padding: 0 12px;
+  border-radius: var(--shape-sm);
+  background: var(--foreground); color: var(--background);
+  font-size: calc(var(--type-label) * var(--ui-scale)); font-weight: 600;
+}
+.focus-primary:hover { opacity: .9; }
+.focus-primary:disabled, .focus-secondary:disabled { opacity: .55; cursor: default; }
+.focus-secondary {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: calc(var(--control-height-md) * var(--ui-scale)); padding: 0 11px;
+  border-radius: var(--shape-sm);
+  background: var(--card); color: var(--foreground);
+  border: 1px solid var(--border);
+  font-size: calc(var(--type-label) * var(--ui-scale));
+}
+.focus-secondary:hover:not(:disabled) { background: var(--secondary); }
+.focus-danger { color: var(--destructive-text); }
+.focus-text-action {
+  margin-left: auto; padding: 2px 0;
+  font-size: calc(var(--type-micro) * var(--ui-scale));
+  color: var(--muted-foreground);
+}
+.focus-text-action:hover { color: var(--foreground); }
+
+@media (pointer: coarse) {
+  .focus-segment, .focus-file { min-height: 44px; }
+  .focus-primary, .focus-secondary { height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-segment { transition: none; }
+}

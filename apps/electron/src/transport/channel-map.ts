@@ -50,6 +50,7 @@ export const CHANNEL_MAP = {
   setAssistantOutputVisibility: invoke(RPC_CHANNELS.residentAssistant.OUTPUT_VISIBILITY),
   getAssistantTasks: invoke(RPC_CHANNELS.residentAssistant.TASKS),
   controlAssistantTasks: invoke(RPC_CHANNELS.residentAssistant.TASKS_CONTROL),
+  verifyAssistantTask: invoke(RPC_CHANNELS.residentAssistant.TASKS_VERIFY),
   dispatchAssistantTask: invoke(RPC_CHANNELS.residentAssistant.TASKS_DISPATCH),
   queryAssistantMemory: invoke(RPC_CHANNELS.assistantMemory.QUERY),
   exportAssistantMemorySuppression: invoke(RPC_CHANNELS.assistantMemory.SUPPRESSION_EXPORT),

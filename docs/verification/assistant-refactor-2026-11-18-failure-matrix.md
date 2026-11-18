@@ -159,13 +159,13 @@
 
 已覆盖的失败判据：M01 问候不建任务、M02 一次请求成为一条版本化委托、M03/M06 重放幂等、M04 更正追加版本且旧版可读、M05 keep 显式记录、M07 未知任务拒绝、M08 就绪绑定版本与授权、M09 终止后不能再改要求或恢复。
 
-### 阶段 2 · 真实单任务交付 —— 部分通过（产物登记未闭环）
+### 阶段 2 · 真实单任务交付 —— 已通过
 
 | 证据 | 结果 | 复跑命令 |
 |---|---|---|
-| 就绪定义经 Host 单一调度所有者派给真实普通 Session；Runtime 回执驱动 Assignment；验收绑定版本与证据；换 Session 返工保留 Task 身份；重启保留身份/版本/派工/要求历史；终止后拒绝再派工 | 7/7 场景 | `bun run scripts/verification/assistant-task-delivery-workflow.ts` |
+| 就绪定义经 Host 单一调度所有者派给真实普通 Session；Runtime 回执驱动 Assignment；**Worker 真实 `write` 工具产出的文件经产品完成路径登记为 Artifact 版本，并按该版本打开到真实内容**；验收绑定版本与证据；换 Session 返工保留 Task 身份；重启保留身份/版本/派工/要求历史；终止后拒绝再派工 | 9/9 场景 | `bun run scripts/verification/assistant-task-delivery-workflow.ts` |
 
-**未闭环项（如实记录为 untested）**：从 loopback Worker 回收产物并登记 Artifact 版本。现有 `registerDelegatedDeliverables` 依赖真实工具结果的消息形状，loopback 适配器不产生该形状，因此断言它只会测到夹具本身。该缺口对应 M10（产物可打开）与 M15（打开实际文件核验），需由真实模型 E2E 或 Electron 面板工作流完成。
+M10/M15 的产物闭环已覆盖：场景 `B08`/`B09` 断言文件真实存在、内容等于 Worker 写入内容、Artifact 版本的大小与文件一致，且 `getArtifact(artifactId, revision)` 打开的是真实文件内容。此前的缺口根因是 loopback 用 `file_path` 调用 `write`（工具要求 `path`），工具自身校验失败故从未产生文件；同时 Worker 默认 `safe` 上限下写操作被 Explore 模式拒绝。两者都是夹具与权限事实的错配，不是产品缺陷。
 
 ### 阶段 3 · 多任务 Goal 与控制 —— 已通过（确定性回放）
 
@@ -200,9 +200,26 @@
 ### 仍待完成
 
 1. **真实模型桌面 E2E**：本机已配置 DeepSeek 连接，但自然语言语义质量（问候是否触发旧故障、复合输入是否拆成两次追问）需真实模型回放，尚未执行。
-2. **Electron 面板像素验收**：Tasks 视图已实现并接入抽屉，但未用 Playwright 驱动真实 Electron 断言渲染。
-3. **Artifact 版本回收**：阶段 2 已覆盖派工与回执，未覆盖从真实 Worker 回收文件并登记版本。
-4. **旧契约退役**：`assistant_context.prepare/select`、`assistant_delegate.goalQuote`、`runtime_continuation` 原话重放仍是当前调用点；删除需先完成替代路径验收与用户确认。
+2. **旧契约退役**：`assistant_context.prepare/select`、`assistant_delegate.goalQuote`、`runtime_continuation` 原话重放仍是当前调用点；删除需先完成替代路径验收与用户确认。
+
+### 工作面板（本轮实施，2026-11-18）
+
+助手工作面板改为一个组件 `FocusBoard` 在两处渲染，因此两个入口不可能漂移：顶栏助手位置悬浮（`resident-peek`）与助手界面内（工作面板的「任务」视图）。
+
+| 证据 | 结果 | 复跑命令 |
+|---|---|---|
+| 面板规则：聚焦项选择、动作随阶段收敛、分段只含在办工作、原因只来自已记录事实 | 6/6 场景 | `bun run verify:assistant-delegation-board` |
+| 真实 Electron：悬浮入口渲染面板并按段切换记录；助手界面内渲染同一面板且分段在上方、无标题；动作随阶段变化；控件均有可访问名称 | 4/4 场景 | `bun run verify:assistant-delegation-panel` |
+
+实施要点：
+
+- 左上是**容量条兼任务切换器**，与左侧区域等宽，点段切换左侧记录；不再有标题行。
+- 动作按 Host 记录的阶段收敛：待验收只给验收/返工；执行中给暂停/终止；已暂停只给恢复；已终止与已验收不给动作。已跑完的结果不再展示暂停/终止——那时没有可停的执行。
+- 容量取自 Host 的 `scheduling` 记录（`occupied` / `capacity`），不在渲染层重算。
+- 新增 RPC 通道 `residentAssistant:tasksVerify`（4 处登记 + 两个 inventory 计数 449→450），使面板的验收决定与模型 `task_verify` 走同一个服务方法。
+- 未改动顶栏助手岛的既有样式，仅让 peek 在承载面板时加宽。
+
+**未闭环项**：面板上「验收通过」按当前实现记录 `undecided` 的逐条结论，等真实模型 E2E 后再决定是否要求逐条结论必填。
 
 ## 7. 性能基线（本轮实测，定稿 §8 口径）
 

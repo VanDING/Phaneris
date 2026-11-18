@@ -72,4 +72,11 @@ export function registerResidentAssistantHandlers(server: RpcServer, deps: Handl
     assertWorkspace(ctx, workspaceId)
     return deps.sessionManager.controlAssistantTasks(workspaceId, command)
   })
+  // A user's own acceptance decision from the board. The model records one
+  // through task_verify; the panel must reach the same service rather than a
+  // second path that could bind a different version.
+  server.handle(RPC_CHANNELS.residentAssistant.TASKS_VERIFY, (ctx, workspaceId: string, command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskVerify) => {
+    assertWorkspace(ctx, workspaceId)
+    return deps.sessionManager.verifyAssistantTask(workspaceId, command)
+  })
 }

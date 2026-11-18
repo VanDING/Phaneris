@@ -8,6 +8,7 @@ import { upsertSessionMetadataAtom } from '@/atoms/sessions'
 import { useTheme } from '@/context/ThemeContext'
 import { navigate, routes } from '@/lib/navigate'
 import { ResidentPixelField } from './ResidentPixelField'
+import { FocusBoard } from './FocusBoard'
 import { residentNavigationAtom, residentOriginAtom, residentReturnFocusAtom } from './resident-navigation'
 import { useResidentSnapshot } from './useResidentSnapshot'
 import './resident-assistant.css'
@@ -161,10 +162,16 @@ export function ResidentAssistantIsland() {
         <div><h2 id={titleId} className="text-reading font-semibold">{t('residentAssistant.title')}</h2><p className="text-meta text-text-secondary">{status}</p></div>
         <span className="text-meta tabular-nums text-info-text">{pending}</span>
       </div>
-      <dl className="resident-peek-rows text-label">
-        <div><dt>{t('residentAssistant.currentWork')}</dt><dd data-testid="resident-current-work">{snapshot.loading ? t('residentAssistant.loading') : snapshot.error ? t('residentAssistant.status.unavailable') : snapshot.current ?? t('residentAssistant.noCurrentWork')}</dd></div>
-        <div><dt>{t('residentAssistant.recentDelivery')}</dt><dd data-testid="resident-recent-delivery">{snapshot.loading ? t('residentAssistant.loading') : snapshot.error ? t('residentAssistant.status.unavailable') : snapshot.recent ?? t('residentAssistant.noWork')}</dd></div>
-      </dl>
+      {/* The same board the assistant view shows: the peek is the second
+          surface of one component, so the two can never drift apart. */}
+      <div className="resident-peek-board" data-testid="resident-peek-board">
+        {snapshot.workspaceId
+          ? <FocusBoard workspaceId={snapshot.workspaceId} onOpenTask={() => void open()} />
+          : <dl className="resident-peek-rows text-label">
+            <div><dt>{t('residentAssistant.currentWork')}</dt><dd data-testid="resident-current-work">{snapshot.loading ? t('residentAssistant.loading') : snapshot.error ? t('residentAssistant.status.unavailable') : snapshot.current ?? t('residentAssistant.noCurrentWork')}</dd></div>
+            <div><dt>{t('residentAssistant.recentDelivery')}</dt><dd data-testid="resident-recent-delivery">{snapshot.loading ? t('residentAssistant.loading') : snapshot.error ? t('residentAssistant.status.unavailable') : snapshot.recent ?? t('residentAssistant.noWork')}</dd></div>
+          </dl>}
+      </div>
       <button type="button" className="craft-control resident-peek-open text-label" onClick={() => void open()} disabled={!snapshot.workspaceId || !snapshot.connected || busy}>
         {t('residentAssistant.openConversation')}<ArrowRight className="size-3.5" aria-hidden="true" />
       </button>
