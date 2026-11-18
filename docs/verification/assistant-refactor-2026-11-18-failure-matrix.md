@@ -199,8 +199,27 @@ M10/M15 的产物闭环已覆盖：场景 `B08`/`B09` 断言文件真实存在�
 
 ### 仍待完成
 
-1. **真实模型桌面 E2E**：本机已配置 DeepSeek 连接，但自然语言语义质量（问候是否触发旧故障、复合输入是否拆成两次追问）需真实模型回放，尚未执行。
-2. **旧契约退役**：`assistant_context.prepare/select`、`assistant_delegate.goalQuote`、`runtime_continuation` 原话重放仍是当前调用点；删除需先完成替代路径验收与用户确认。
+1. **真实模型桌面 E2E**：工作流已建成（`bun run scripts/verification/assistant-task-live-model-workflow.ts`），本轮因环境条件受阻未取得结果，原因见下节。
+2. **旧契约退役**：调用点、替代路径与前置条件已登记于 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md)。删除需用户确认，当前未删任何代码。
+
+#### 真实模型 E2E 的环境阻塞（如实记录）
+
+两类环境事实决定它能否运行，两者都不是产品缺陷：
+
+| 事实 | 依据 | 后果 |
+|---|---|---|
+| 凭证库由 Electron 主进程用 OS 密钥（safeStorage）封装 | `apps/electron/src/main/credential-key-provider.ts`；无头进程回退到 machine-id 派生 | 无头进程**无法解密**已安装的 key（实测 `getLlmApiKey` 对两个已配置连接均返回 null），因此真实模型只能在 Electron 内回放 |
+| 应用持有单实例锁 | `bootstrap/headless-start.ts`；实测第二次启动输出「Second instance handed off to the running instance」 | 用户已打开 Phaneris 时，验证实例无法独占窗口 |
+
+本轮实测时用户的 Phaneris 正在运行（8 个进程，最早 09:16 启动），故工作流按设计进入 blocked 分支：写入 `blocked.json` 记录原因、待验证项与复跑方法，并以非零退出，**不产生通过记录**。这是刻意的：零场景的 run 不能被误读为通过。
+
+复跑条件：退出 Phaneris 桌面应用后执行
+
+```bash
+bun run scripts/verification/assistant-task-live-model-workflow.ts
+```
+
+工作流会给真实配置目录临时加入一个一次性工作区，运行结束后恢复 `config.json` 并删除该工作区；不打开用户既有工作区。
 
 ### 工作面板（本轮实施，2026-11-18）
 
