@@ -8,6 +8,7 @@ import type {
   DelegationTaskVerify, VerificationView,
 } from '@phaneris/session-tools-core/task-delegation-contracts'
 import { countStages, projectTask } from './stage'
+import type { ApprovalInput, ApprovalRecord, MandateInput, MandateRecord } from './authority'
 import { openSqliteDatabase, type SqliteDatabase } from '../runtime/sqlite'
 
 const SCHEMA_VERSION = 1
@@ -48,6 +49,10 @@ export class AssistantTaskStore {
       CREATE TABLE IF NOT EXISTS controls (task_id TEXT PRIMARY KEY, body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS verifications (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS requests (request_id TEXT PRIMARY KEY, kind TEXT NOT NULL, result TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS mandates (id TEXT PRIMARY KEY, action TEXT NOT NULL, target TEXT NOT NULL, body TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS approvals (id TEXT PRIMARY KEY, action TEXT NOT NULL, target TEXT NOT NULL, body TEXT NOT NULL);
+      CREATE INDEX IF NOT EXISTS mandates_action_target ON mandates (action, target);
+      CREATE INDEX IF NOT EXISTS approvals_action_target ON approvals (action, target);
       CREATE INDEX IF NOT EXISTS requirements_task ON requirements (task_id, version);
       CREATE INDEX IF NOT EXISTS changes_task ON changes (task_id);
       CREATE INDEX IF NOT EXISTS assignments_task ON assignments (task_id);
@@ -263,5 +268,62 @@ export class AssistantTaskStore {
     if (!projection) throw new Error(`Unknown task ${taskId}`)
     return canonicalJson({ version: projection.task.definitionVersion,
       requirements: projection.activeRequirements.map(item => [item.id, item.version]) })
+  }
+
+  /** Records a mandate granted by a trusted input; standing mandates keep applying. */
+  grantMandate(input: MandateInput, inputMessageId?: string): MandateRecord {
+    return this.replay(input.requestId, 'mandate', () => this.transaction(() => {
+      if (input.scope === 'standing' && !input.quote)
+        throw new Error('A standing mandate needs the user statement that granted it')
+      const record: MandateRecord = { id: `man-${randomUUID()}`, action: input.action, target: input.target, scope: input.scope,
+        quote: input.quote, expiresAt: input.expiresAt, inputMessageId, createdAt: Date.now() }
+      this.db.prepare('INSERT INTO mandates (id, action, target, body) VALUES (?, ?, ?, ?)')
+        .run(record.id, record.action, record.target, JSON.stringify(record))
+      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'mandate', JSON.stringify(record))
+      return record
+    }))
+  }
+
+  mandates(): MandateRecord[] {
+    return (this.db.prepare('SELECT body FROM mandates ORDER BY rowid').all() as Array<{ body: string }>)
+      .map(row => JSON.parse(row.body) as MandateRecord)
+  }
+
+  revokeMandate(id: string, reason: string): MandateRecord {
+    const row = this.db.prepare('SELECT body FROM mandates WHERE id=?').get(id) as { body: string } | undefined
+    if (!row) throw new Error(`Unknown mandate ${id}`)
+    const revoked: MandateRecord = { ...JSON.parse(row.body) as MandateRecord, revokedAt: Date.now() }
+    this.db.prepare('UPDATE mandates SET body=? WHERE id=?').run(JSON.stringify(revoked), id)
+    this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(`revoke:${id}:${revoked.revokedAt}`, 'mandate', JSON.stringify(revoked))
+    return revoked
+  }
+
+  /**
+   * Records an approval bound to the exact effect shown. A later change to the
+   * effect invalidates it, so an old card can never authorize new content.
+   */
+  recordApproval(input: ApprovalInput): ApprovalRecord {
+    return this.replay(input.requestId, 'approval', () => this.transaction(() => {
+      const record: ApprovalRecord = { id: `apr-${randomUUID()}`, mandateId: input.mandateId, action: input.action,
+        effect: input.effect, decision: input.decision, reason: input.reason, createdAt: Date.now() }
+      this.db.prepare('INSERT INTO approvals (id, action, target, body) VALUES (?, ?, ?, ?)')
+        .run(record.id, record.action, record.effect.target, JSON.stringify(record))
+      // Any earlier approval for the same action+target that covered a different
+      // effect is now stale: the user was shown something else.
+      for (const prior of this.approvals()) {
+        if (prior.id === record.id || prior.invalidatedAt || prior.decision !== 'approved') continue
+        if (prior.action !== record.action || prior.effect.target !== record.effect.target) continue
+        if (prior.effect.digest === record.effect.digest) continue
+        const invalidated: ApprovalRecord = { ...prior, invalidatedAt: Date.now(), invalidatedReason: 'A newer effect was decided for this target' }
+        this.db.prepare('UPDATE approvals SET body=? WHERE id=?').run(JSON.stringify(invalidated), prior.id)
+      }
+      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'approval', JSON.stringify(record))
+      return record
+    }))
+  }
+
+  approvals(): ApprovalRecord[] {
+    return (this.db.prepare('SELECT body FROM approvals ORDER BY rowid').all() as Array<{ body: string }>)
+      .map(row => JSON.parse(row.body) as ApprovalRecord)
   }
 }

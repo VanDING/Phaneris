@@ -44,9 +44,9 @@ await verificationWorkflow('assistant-task-performance', async run => {
   }
 
   /** Time one operation N times against a freshly opened store (cold) or one store (warm). */
-  const measure = (label: string, samples: number, coldEach: boolean, operation: (store: AssistantTaskStore, index: number) => void) => {
+  const measure = (label: string, samples: number, coldEach: boolean, operation: (store: InstanceType<typeof AssistantTaskStore>, index: number) => void) => {
     const times: number[] = []
-    let store = coldEach ? undefined : new AssistantTaskStore(workspace)
+    let store: InstanceType<typeof AssistantTaskStore> | undefined = coldEach ? undefined : new AssistantTaskStore(workspace)
     try {
       for (let index = 0; index < samples; index++) {
         if (coldEach) store = new AssistantTaskStore(workspace)

@@ -23,9 +23,22 @@ await verificationWorkflow('assistant-task-delivery', async run => {
   process.env.NODE_ENV = 'test'
   const workspace = { id: 'alpha', name: 'Delivery', rootPath: root, createdAt: 1 }
 
+  const outputPath = join(root, 'pelican.html')
+  const html = '<!doctype html><html><body><h1>Pelican on a bicycle</h1><svg role="img" aria-label="pelican riding a bicycle"></svg></body></html>'
+  // The Worker is an ordinary Session: the loopback drives its real tools so the
+  // produced file is a genuine write-tool result, not a fixture assertion.
+  let workerWrote = false
   const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
-    const body = await request.json() as { model: string }
+    const body = await request.json() as { model: string; messages: Array<{ role: string; content: unknown }>; tools?: Array<{ function: { name: string } }> }
     const chunk = (delta: object, finish: string | null = null) => `data: ${JSON.stringify({ id: 'delivery-fixture', object: 'chat.completion.chunk', model: body.model, choices: [{ index: 0, delta, finish_reason: finish }] })}\n\n`
+    const toolNames = body.tools?.map(tool => tool.function.name) ?? []
+    const writeTool = toolNames.find(name => /(^|__)write$/i.test(name))
+    if (!workerWrote && writeTool) {
+      workerWrote = true
+      return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: 'call-write-pelican', type: 'function',
+        function: { name: writeTool, arguments: JSON.stringify({ file_path: outputPath, content: html }) } }] }, 'tool_calls') + 'data: [DONE]\n\n',
+        { headers: { 'Content-Type': 'text/event-stream' } })
+    }
     return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'DELIVERY_WORKER_TEXT' }) + chunk({}, 'stop') + 'data: [DONE]\n\n',
       { headers: { 'Content-Type': 'text/event-stream' } })
   } })
