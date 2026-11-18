@@ -103,6 +103,9 @@ export interface RpcMethodResults {
   [c.residentAssistant.EXECUTION_MODE]: Session
   [c.residentAssistant.CANCEL_WORK]: import('@phaneris/session-tools-core/delegation-contracts').AssistantWork
   [c.residentAssistant.OUTPUT_VISIBILITY]: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest
+  [c.residentAssistant.TASKS]: import('@phaneris/session-tools-core/task-delegation-contracts').TaskPageView
+  [c.residentAssistant.TASKS_CONTROL]: import('@phaneris/session-tools-core/task-delegation-contracts').TaskControlResult
+  [c.residentAssistant.TASKS_DISPATCH]: { assignment: import('@phaneris/session-tools-core/task-delegation-contracts').AssignmentView; receipt: import('@phaneris/session-tools-core/delegation-contracts').AssistantDelegationReceipt }
   [c.assistantMemory.QUERY]: import('./assistant-memory').MemoryQueryResult
   [c.assistantMemory.SUPPRESSION_EXPORT]: import('./assistant-memory').MemorySuppressionPage
   [c.assistantMemory.SUPPRESSION_MERGE]: import('./assistant-memory').MemorySuppressionMergeResult

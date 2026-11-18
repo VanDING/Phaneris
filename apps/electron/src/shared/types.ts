@@ -347,6 +347,10 @@ export interface ElectronAPI {
   setAssistantExecutionMode(workspaceId: string, mode: PermissionMode): Promise<Session>
   readAssistantOriginals(workspaceId: string, sessionId: string, query: import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryQuery): Promise<import('@phaneris/session-tools-core/session-history-contracts').SessionHistoryPage>
   setAssistantOutputVisibility(workspaceId: string, command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility): Promise<import('@phaneris/session-tools-core/task-result-contracts').TaskOutputManifest>
+  getAssistantTasks(workspaceId: string, query: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskQuery): Promise<import('@phaneris/session-tools-core/task-delegation-contracts').TaskPageView>
+  controlAssistantTasks(workspaceId: string, command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskControl): Promise<import('@phaneris/session-tools-core/task-delegation-contracts').TaskControlResult>
+  dispatchAssistantTask(workspaceId: string, taskId: string, request: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskDispatch): Promise<{ assignment: import('@phaneris/session-tools-core/task-delegation-contracts').AssignmentView; receipt: import('@phaneris/session-tools-core/delegation-contracts').AssistantDelegationReceipt }>
+  onAssistantTasksChanged(callback: (workspaceId: string, taskId?: string) => void): () => void
   queryAssistantMemory(workspaceId: string, query: import('@phaneris/shared/protocol').MemoryQuery): Promise<import('@phaneris/shared/protocol').MemoryQueryResult>
   exportAssistantMemorySuppression(workspaceId: string, query: import('@phaneris/shared/protocol').MemorySuppressionQuery): Promise<import('@phaneris/shared/protocol').MemorySuppressionPage>
   mergeAssistantMemorySuppression(workspaceId: string, command: import('@phaneris/shared/protocol').MemorySuppressionMerge): Promise<import('@phaneris/shared/protocol').MemorySuppressionMergeResult>

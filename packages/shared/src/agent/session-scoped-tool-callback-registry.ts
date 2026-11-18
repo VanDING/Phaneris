@@ -35,6 +35,11 @@ export interface SessionScopedToolCallbacks {
   assistantWorkerOptionsFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWorkerOptions'];
   assistantWorkFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWork'];
   assistantCancelWorkFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantCancelWork'];
+  delegationCreateFn?: import('@phaneris/session-tools-core').SessionToolContext['delegationCreate'];
+  delegationAmendFn?: import('@phaneris/session-tools-core').SessionToolContext['delegationAmend'];
+  delegationQueryFn?: import('@phaneris/session-tools-core').SessionToolContext['delegationQuery'];
+  delegationControlFn?: import('@phaneris/session-tools-core').SessionToolContext['delegationControl'];
+  delegationVerifyFn?: import('@phaneris/session-tools-core').SessionToolContext['delegationVerify'];
   assistantWorkerControlFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantWorkerControl'];
   assistantMemoryReadFn?: import('@phaneris/session-tools-core').SessionToolContext['assistantMemoryRead'];
   /**

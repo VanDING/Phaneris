@@ -5,6 +5,7 @@ export const RESIDENT_TOOL_NAMES = [
   'assistant_scenario_capture', 'assistant_scenario_search',
   'project_memory_read', 'project_memory_search', 'project_memory_append',
   'assistant_delegate', 'assistant_work', 'assistant_cancel_work', 'assistant_worker_options', 'assistant_worker_control', 'assistant_delivery_ack',
+  'task_create', 'task_amend', 'task_query', 'task_control', 'task_verify',
   'tool_search', 'report_progress', 'read', 'grep', 'find', 'ls',
   'source_list_resources', 'source_read_resource', 'source_list_prompts', 'source_get_prompt', 'source_activate',
 ] as const

@@ -182,6 +182,12 @@ export interface SessionToolContext {
   assistantWorkerOptions?: (input: import('./delegation-contracts').WorkerOptionsQuery) => Promise<import('./delegation-contracts').WorkerOptionsPage>;
   assistantWork?: (input: import('./delegation-contracts').AssistantWorkQuery) => Promise<import('./delegation-contracts').AssistantWorkPage>;
   assistantCancelWork?: (id: string) => Promise<import('./delegation-contracts').AssistantWork>;
+  /** Delegation definition: the Host owns identity, versions, authority and receipts. */
+  delegationCreate?: (input: import('./task-delegation-contracts').DelegationTaskCreate, toolExecutionId?: string) => Promise<import('./task-delegation-contracts').TaskProjectionView>;
+  delegationAmend?: (input: import('./task-delegation-contracts').DelegationTaskAmend, toolExecutionId?: string) => Promise<import('./task-delegation-contracts').TaskProjectionView>;
+  delegationQuery?: (input: import('./task-delegation-contracts').DelegationTaskQuery) => Promise<import('./task-delegation-contracts').TaskPageView>;
+  delegationControl?: (input: import('./task-delegation-contracts').DelegationTaskControl) => Promise<import('./task-delegation-contracts').TaskControlResult>;
+  delegationVerify?: (input: import('./task-delegation-contracts').DelegationTaskVerify) => Promise<import('./task-delegation-contracts').TaskProjectionView>;
   assistantMemoryRead?: (input: { sessionId: string; messageId: string; expectedContentHash?: string; offset?: number; maxChars?: number }) => Promise<unknown>;
   /** Scoped to one tool call; never shared between concurrent executions. */
   signal?: AbortSignal;
@@ -668,7 +674,7 @@ export interface ImageGenerateInput {
 // ============================================================
 // Plain JSON shapes mirroring @phaneris/core page types — duplicated here
 // on purpose so this package stays dependency-free (same rule as
-// CreateTaskInput). The backend maps real PageConfig/LoadedPage onto these.
+// DelegationTaskCreate). The backend maps real PageConfig/LoadedPage onto these.
 
 /** Scheduled refresh spec for a page (5-field cron → workspace-relative script). */
 export interface PageToolRefreshSpec {

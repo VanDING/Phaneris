@@ -10,6 +10,7 @@
     ".": "./src/index.ts",
     "./api-auth": "./src/api-auth.ts",
     "./delegation-contracts": "./src/delegation-contracts.ts",
+    "./task-delegation-contracts": "./src/task-delegation-contracts.ts",
     "./task-result-contracts": "./src/task-result-contracts.ts",
     "./history-contracts": "./src/history-contracts.ts",
     "./session-history-contracts": "./src/session-history-contracts.ts",

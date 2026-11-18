@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "channels": 445,
-  "centrallyValidatedMethods": 69,
-  "typedResultPorts": 83,
+  "channels": 449,
+  "centrallyValidatedMethods": 72,
+  "typedResultPorts": 86,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -5660,6 +5660,84 @@
           "args": [
             "workspaceId: string",
             "command: import('@phaneris/session-tools-core/task-result-contracts').TaskOutputVisibility"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.TASKS",
+      "channel": "residentAssistant:tasks",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/task-delegation-contracts').TaskPageView",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 63,
+          "args": [
+            "workspaceId: string",
+            "query: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskQuery"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.TASKS_CHANGED",
+      "channel": "residentAssistant:tasksChanged",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "event",
+      "runtimeValidation": "existing handler/capability checks; no centralized schema",
+      "resultContract": "authoritative BroadcastEventMap / existing capability event payload",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": []
+    },
+    {
+      "key": "residentAssistant.TASKS_CONTROL",
+      "channel": "residentAssistant:tasksControl",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('@phaneris/session-tools-core/task-delegation-contracts').TaskControlResult",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 71,
+          "args": [
+            "workspaceId: string",
+            "command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskControl"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
+        }
+      ]
+    },
+    {
+      "key": "residentAssistant.TASKS_DISPATCH",
+      "channel": "residentAssistant:tasksDispatch",
+      "domain": "residentAssistant",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "{ assignment: import('@phaneris/session-tools-core/task-delegation-contracts').AssignmentView; receipt: import('@phaneris/session-tools-core/delegation-contracts').AssistantDelegationReceipt }",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/resident-assistant.ts",
+          "line": 67,
+          "args": [
+            "workspaceId: string",
+            "taskId: string",
+            "request: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskDispatch"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"

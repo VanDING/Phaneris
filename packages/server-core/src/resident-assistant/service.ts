@@ -13,6 +13,7 @@ import type { ModelContextPolicy } from '../runtime-adapters/pi-driver'
 import { AssistantContextStore } from './context-store'
 import { AssistantMemoryStore } from './memory-store'
 import { AssistantDelegation, type DelegationHost } from './delegation'
+import { AssistantTaskService, type TaskServiceHost } from '../assistant-tasks/service'
 import { resolveWorkerConfig } from './worker-config'
 import { buildResidentMemoryCallbacks } from './memory-callbacks'
 import { readWorkerOptions } from './worker-options'
@@ -51,6 +52,7 @@ export interface ResidentSessionPort {
 /** One owner for a workspace's assistant resources; execution stays in Session/Runtime. */
 export class ResidentAssistantService {
   private memoryStore?: AssistantMemoryStore
+  private taskStore?: AssistantTaskService
   private readonly contexts = new Map<string, AssistantContextStore>()
   delegation?: AssistantDelegation
   private wakeup?: ReturnType<typeof setTimeout>
@@ -74,6 +76,14 @@ export class ResidentAssistantService {
 
   private assertOpen(): void { if (this.closed) throw new Error('Resident service is closed') }
   get memory(): AssistantMemoryStore { this.assertOpen(); return this.memoryStore ??= new AssistantMemoryStore(this.workspace, this.verifyObservation) }
+  /**
+   * Workspace delegation store. The Host owns readiness facts and panel
+   * notification; definitions, versions and receipts live here.
+   */
+  tasks(host: TaskServiceHost): AssistantTaskService {
+    this.assertOpen()
+    return this.taskStore ??= new AssistantTaskService(this.workspace, host)
+  }
   context(sessionId: string): AssistantContextStore {
     this.assertOpen()
     let context = this.contexts.get(sessionId)
@@ -387,6 +397,48 @@ export class ResidentAssistantService {
         const evidence = command.action === 'message' && toolExecutionId ? context.preparedTaskMaterials(toolExecutionId) : undefined
         return (await session.work()).controls.control(command, 'assistant', evidence)
       },
+      // Delegation definition. The Host binds the trusted input id and decides
+      // authority; the model only states what the user wants or what changed.
+      delegationCreateFn: async (input, toolExecutionId) => {
+        const origin = this.definitionInput(session, toolExecutionId)
+        return this.tasks(this.taskHost(session)).create(input, origin?.id, { directUser: true })
+      },
+      delegationAmendFn: async (input, toolExecutionId) => {
+        const origin = this.definitionInput(session, toolExecutionId)
+        return this.tasks(this.taskHost(session)).amend(input, origin?.id, { directUser: true })
+      },
+      delegationQueryFn: async input => this.tasks(this.taskHost(session)).query(input),
+      delegationControlFn: async input => this.tasks(this.taskHost(session)).control(input),
+      delegationVerifyFn: async input => this.tasks(this.taskHost(session)).verify(input),
+    }
+  }
+
+  /**
+   * A definition change is only ever read from the direct user turn it arrived
+   * in. An internal event, a worker report or a historical statement can move
+   * execution facts, never the task definition.
+   */
+  private definitionInput(session: ResidentSessionPort, toolExecutionId?: string): Message | undefined {
+    const input = session.input()
+    if (!input || input.role !== 'user' || input.hidden) throw new Error('task_authority: a definition change needs a direct user input')
+    if (!hasDirectUserAuthority(input.inputSource)) throw new Error('task_authority: internal events cannot define or change work')
+    if (!toolExecutionId) throw new Error('task_authority: definition changes require Host producer admission')
+    return input
+  }
+
+  private taskHost(session: ResidentSessionPort): TaskServiceHost {
+    return {
+      readyFacts: async projection => {
+        // Authority comes from the live Session, never from a cached preference.
+        const mode = session.executionMode(), store = this.tasks(this.taskHost(session)).store
+        const unsatisfied: string[] = []
+        for (const dependency of projection.task.dependsOn) {
+          const target = store.projection(dependency)
+          if (!target || target.stage !== 'accepted') unsatisfied.push(dependency)
+        }
+        return { permissionMode: mode, workingDirectory: this.workspace.rootPath, unsatisfiedDependencies: unsatisfied }
+      },
+      changed: () => {},
     }
   }
   resolve(requested: Parameters<typeof resolveWorkerConfig>[1], parent: Parameters<typeof resolveWorkerConfig>[2]) {
@@ -445,6 +497,8 @@ export class ResidentAssistantService {
     this.closed = true
     for (const context of this.contexts.values()) context.close()
     this.contexts.clear()
+    this.taskStore?.close()
+    this.taskStore = undefined
     this.memoryStore?.close()
     this.memoryStore = undefined
     this.releaseWriter()

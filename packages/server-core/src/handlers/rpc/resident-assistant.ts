@@ -5,7 +5,7 @@ import type { RequestContext } from '../../transport/types'
 import type { AssistantDispatch, AssistantWorkQuery } from '@phaneris/session-tools-core/delegation-contracts'
 
 export const HANDLED_CHANNELS = [RPC_CHANNELS.residentAssistant.GET, RPC_CHANNELS.residentAssistant.CONTEXT, RPC_CHANNELS.residentAssistant.EVENTS, RPC_CHANNELS.residentAssistant.DISPATCH,
-  RPC_CHANNELS.residentAssistant.WORK, RPC_CHANNELS.residentAssistant.CONTROL, RPC_CHANNELS.residentAssistant.ORIGINALS, RPC_CHANNELS.residentAssistant.EXECUTION_MODE, RPC_CHANNELS.residentAssistant.CANCEL_WORK, RPC_CHANNELS.residentAssistant.OUTPUT_VISIBILITY] as const
+  RPC_CHANNELS.residentAssistant.WORK, RPC_CHANNELS.residentAssistant.CONTROL, RPC_CHANNELS.residentAssistant.ORIGINALS, RPC_CHANNELS.residentAssistant.EXECUTION_MODE, RPC_CHANNELS.residentAssistant.CANCEL_WORK, RPC_CHANNELS.residentAssistant.OUTPUT_VISIBILITY, RPC_CHANNELS.residentAssistant.TASKS, RPC_CHANNELS.residentAssistant.TASKS_CONTROL, RPC_CHANNELS.residentAssistant.TASKS_DISPATCH] as const
 
 /** Identity/settings replies share the bounded Session metadata projection. */
 function residentMetadata(session: import('@phaneris/shared/protocol').ResidentAssistantMetadata): Session {
@@ -59,5 +59,17 @@ export function registerResidentAssistantHandlers(server: RpcServer, deps: Handl
   server.handle(RPC_CHANNELS.residentAssistant.CANCEL_WORK, (ctx, workspaceId: string, id: string) => {
     assertWorkspace(ctx, workspaceId)
     return deps.sessionManager.cancelAssistantWork(workspaceId, id)
+  })
+  server.handle(RPC_CHANNELS.residentAssistant.TASKS, (ctx, workspaceId: string, query: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskQuery) => {
+    assertWorkspace(ctx, workspaceId)
+    return deps.sessionManager.getAssistantTasks(workspaceId, query)
+  })
+  server.handle(RPC_CHANNELS.residentAssistant.TASKS_DISPATCH, (ctx, workspaceId: string, taskId: string, request: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskDispatch) => {
+    assertWorkspace(ctx, workspaceId)
+    return deps.sessionManager.dispatchAssistantTask(workspaceId, taskId, request)
+  })
+  server.handle(RPC_CHANNELS.residentAssistant.TASKS_CONTROL, (ctx, workspaceId: string, command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskControl) => {
+    assertWorkspace(ctx, workspaceId)
+    return deps.sessionManager.controlAssistantTasks(workspaceId, command)
   })
 }

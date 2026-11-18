@@ -20,7 +20,11 @@ export async function verifyTaskBoard(directory: string, data: { sessions: Sessi
     await page.getByText('board-blocker', { exact: true }).waitFor()
     assert.equal(await page.getByText('Legacy assistant work', { exact: true }).count(), 1)
     assert.equal(await page.getByText('Legacy handoff continuation', { exact: true }).count(), 0)
-    const parent = page.getByText('Board parent', { exact: true }).locator('xpath=ancestor::*[@role="button"][1]')
+    // The tile keeps only layout: its activation surface is a real <button> with
+    // no explicit role="button" (adding one produced axe nested-interactive
+    // failures), and the status/subtask controls are siblings of that button. So
+    // anchor on the tile root, not on any single role.
+    const parent = page.getByText('Board parent', { exact: true }).locator('xpath=ancestor::*[@data-testid="kanban-tile"][1]')
     await parent.getByRole('button', { name: 'Subtasks', exact: true }).click()
     const queued = parent.getByRole('button', { name: /Saved queued child/ })
     await queued.waitFor()

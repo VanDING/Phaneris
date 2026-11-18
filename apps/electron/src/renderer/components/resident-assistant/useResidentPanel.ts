@@ -2,11 +2,20 @@ import * as React from 'react'
 import type { AssistantWork, AssistantWorkPage, AssistantWorkQuery } from '@phaneris/session-tools-core/delegation-contracts'
 import { useTransportConnectionState } from '@/hooks/useTransportConnectionState'
 
-export type ResidentWorkView = NonNullable<AssistantWorkQuery['view']>
+/**
+ * Panels the work drawer can show. `tasks` is a delegation view served by
+ * `useAssistantTasks`; it reuses this drawer's chrome but not its work query.
+ */
+export type ResidentWorkView = NonNullable<AssistantWorkQuery['view']> | 'tasks'
+export type ResidentWorkQueryView = NonNullable<AssistantWorkQuery['view']>
 const emptyPage = (): AssistantWorkPage => ({ items: [], deliverables: [], nextAfter: null, lastSeq: 0 })
 
 /** One bounded view. Background refresh never discards pages being read. */
 export function useResidentPanel(workspaceId: string, view: ResidentWorkView, search: string) {
+  // The tasks view is a different query with its own hook; it must not issue a
+  // work query that the Host would reject as an unknown view.
+  const enabled = view !== 'tasks'
+  const workView: ResidentWorkQueryView = view === 'tasks' ? 'current' : view
   const [page, setPage] = React.useState(emptyPage)
   const [recent, setRecent] = React.useState<AssistantWork[]>([])
   const pageRef = React.useRef(page)
@@ -23,13 +32,13 @@ export function useResidentPanel(workspaceId: string, view: ResidentWorkView, se
   const connection = useTransportConnectionState()
   const connected = !connection || connection.status === 'connected'
   const refresh = React.useCallback(async (mode: 'background' | 'reset' | 'more' = 'reset') => {
-    if (!connected || inFlight.current === generation.current) return
+    if (!enabled || !connected || inFlight.current === generation.current) return
     const token = generation.current, previous = pageRef.current
     if (mode === 'more' && !previous.nextCursor) return
     inFlight.current = token; setLoading(true)
     const result = await Promise.allSettled([window.electronAPI.getAssistantWork(workspaceId, {
-      view, search: search || undefined, limit: 20, cursor: mode === 'more' ? previous.nextCursor! : undefined,
-    }), ...(view === 'current' ? [window.electronAPI.getAssistantWork(workspaceId, { view: 'history', state: 'result_ready', limit: 3 })] : [])])
+      view: workView, search: search || undefined, limit: 20, cursor: mode === 'more' ? previous.nextCursor! : undefined,
+    }), ...(workView === 'current' ? [window.electronAPI.getAssistantWork(workspaceId, { view: 'history', state: 'result_ready', limit: 3 })] : [])])
     if (token !== generation.current) return
     if (result[1]?.status === 'fulfilled') setRecent(result[1].value.items.filter(item => item.state === 'result_ready'))
     if (result[0].status === 'fulfilled') {
@@ -46,7 +55,7 @@ export function useResidentPanel(workspaceId: string, view: ResidentWorkView, se
       setError(undefined); setUpdatedAt(Date.now())
     } else setError(String(result[0].reason))
     inFlight.current = undefined; setLoading(false)
-  }, [workspaceId, connected, view, search])
+  }, [workspaceId, connected, enabled, workView, search])
   React.useEffect(() => {
     generation.current++; inFlight.current = undefined
     pageRef.current = emptyPage(); setPage(pageRef.current); setHasUpdates(false)

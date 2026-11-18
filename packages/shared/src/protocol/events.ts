@@ -37,6 +37,7 @@ export interface BroadcastEventMap {
   [RPC_CHANNELS.calendar.CHANGED]: [workspaceId: string]
   [RPC_CHANNELS.workItems.CHANGED]: [workspaceId: string]
   [RPC_CHANNELS.artifacts.CHANGED]: [workspaceId: string]
+  [RPC_CHANNELS.residentAssistant.TASKS_CHANGED]: [workspaceId: string, taskId?: string]
   [RPC_CHANNELS.statuses.CHANGED]: [workspaceId: string]
   [RPC_CHANNELS.automations.CHANGED]: [workspaceId: string]
   [RPC_CHANNELS.skills.CHANGED]: [workspaceId: string, skills: LoadedSkill[]]

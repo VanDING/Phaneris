@@ -139,6 +139,7 @@ export function TaskTile({
      * below as a sibling of those controls, and the tile keeps only layout.
      */
     <div
+      data-testid="kanban-tile"
       className={cn(
         'group relative overflow-hidden rounded-lg border border-border/60 bg-surface-raised shadow-minimal',
         isLive && 'shadow-tinted',

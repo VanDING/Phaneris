@@ -40,6 +40,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 助手「更多」侧栏改版：[工作总览与交付物设计](design/resident-assistant-overview-redesign-2026-11-05.md) — 已完成；当前/交付物/历史、独立详情、分页搜索、明确成果、快照版本及移出/恢复通过后端和桌面验收，范围见实施记录。
 
+Assistant 统一委托重构（2026-11-18，设计中）：[最终方案（实施依据）](architecture/assistant-refactor-final-2026-11-18.md)、[先行失败矩阵与分阶段验收清单](verification/assistant-refactor-2026-11-18-failure-matrix.md)。前序材料：[重构总纲审阅稿](architecture/assistant-redesign-2026-11-18.md)、[统一任务协调设计](architecture/personal-agent-task-coordinator-2026-11-18.md)、[工作区助手设计](architecture/workspace-assistant-redesign-2026-11-18.md)。首期把明确要求可靠地变成可执行的 Task；实际完成度以实施记录和验证产物为准。
+
 侧边栏精修（2026-11-17）：[验收记录](verification/sidebar-refinement-2026-11-17.md)、[实施前失败矩阵](verification/sidebar-refinement-2026-11-17-failure-matrix.md)。
 
 助手权限与记忆最终计划：[2026-11-05 综合实施计划](architecture/resident-assistant-permissions-memory-final-plan-2026-11-05.md) — accepted；用户已批准完整实施，收敛个人内置记忆、主助手基本只读能力、助手专属目录、Project 事实归属与现有知识源接入。新增[委派启动、回执与 Source 现场诊断](verification/resident-assistant-dispatch-receipt-source-investigation-2026-11-05.md)，将调度/恢复/交付和 Source 主动激活提前到目录迁移与记忆改造之前。包含迁移、实施顺序及先行失败矩阵；实际完成情况以实施记录及验证产物为准。

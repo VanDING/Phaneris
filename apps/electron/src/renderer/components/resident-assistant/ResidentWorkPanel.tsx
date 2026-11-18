@@ -15,6 +15,7 @@ import { navigate, routes } from '@/lib/navigate'
 import { residentNavigationAtom } from './resident-navigation'
 import { ResidentMessaging } from './ResidentMessaging'
 import { ResidentTaskDetail, workActivity } from './ResidentTaskDetail'
+import { ResidentTasksPanel } from './ResidentTasksPanel'
 import { useResidentPanel, type ResidentWorkView } from './useResidentPanel'
 
 export function ResidentWorkPanel({ workspaceId, sessionId, onClose, onPreview }: {
@@ -70,7 +71,7 @@ export function ResidentWorkPanel({ workspaceId, sessionId, onClose, onPreview }
       actions={<PreviewHeaderIconButton tooltip={t('residentAssistant.refresh')} aria-label={t('residentAssistant.refresh')} disabled={data.loading || !data.connected} onClick={() => void data.refresh()}><RefreshCw className="size-4" /></PreviewHeaderIconButton>}
       trailingAction={<PreviewHeaderIconButton ref={closeFocus} tooltip={t('common.close')} aria-label={t('common.close')} onClick={onClose}><X className="size-4" /></PreviewHeaderIconButton>} />
     <SegmentedTabs className="resident-panel-tabs" ariaLabel={t('residentAssistant.panel.views')} value={view} onChange={switchView}
-      items={(['current', 'deliverables', 'history'] as const).map(id => ({ id, label: t(`residentAssistant.panel.view.${id}`) }))} />
+      items={(['current', 'tasks', 'deliverables', 'history'] as const).map(id => ({ id, label: t(`residentAssistant.panel.view.${id}`) }))} />
     {!detailId && view !== 'current' && <label className="resident-panel-search"><Search className="size-3.5 text-text-secondary" aria-hidden="true" />
       <input className="craft-field" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder={t('residentAssistant.panel.search')} aria-label={t('residentAssistant.panel.search')} /></label>}
     <div ref={scroll} className="resident-panel-scroll text-body">
@@ -87,7 +88,8 @@ export function ResidentWorkPanel({ workspaceId, sessionId, onClose, onPreview }
         </section>}
         {data.error && <p role="alert" className="resident-panel-notice text-label text-destructive-text">{data.error}</p>}
         {data.hasUpdates && <Button size="sm" variant="ghost" onClick={() => void data.refresh()}>{t('residentAssistant.panel.newUpdates')}</Button>}
-        <section data-testid={view === 'deliverables' ? 'resident-section-artifacts' : 'resident-section-work'} aria-busy={data.loading}>
+        {view === 'tasks' && !detailId && <ResidentTasksPanel workspaceId={workspaceId} />}
+        {view !== 'tasks' && <section data-testid={view === 'deliverables' ? 'resident-section-artifacts' : 'resident-section-work'} aria-busy={data.loading}>
           <div className="resident-section-heading"><span className="text-meta text-text-secondary" role="status">{t('residentAssistant.panel.loadedCount', { count: loaded, total: data.page.total ?? loaded })}</span></div>
           {view !== 'deliverables' && data.page.items.map(work => {
             const phase = workActivity(work)
@@ -117,7 +119,7 @@ export function ResidentWorkPanel({ workspaceId, sessionId, onClose, onPreview }
           {!loaded && <div className="resident-panel-empty text-label text-text-secondary"><ListChecks className="size-4 shrink-0" aria-hidden="true" /><span>{t(data.loading ? 'residentAssistant.loading' : view === 'deliverables' ? 'residentAssistant.panel.noArtifacts' : view === 'history' ? 'residentAssistant.panel.noHistory' : 'residentAssistant.panel.noWork')}</span></div>}
           {data.page.searchCoverage && data.page.searchCoverage.indexed < data.page.searchCoverage.total && <p role="status" className="text-meta text-text-secondary">{t('residentAssistant.panel.indexing')}</p>}
           {data.page.nextCursor && <Button size="sm" variant="ghost" className="resident-load-more" disabled={data.loading || !data.connected} onClick={() => void data.refresh('more')}>{t('residentAssistant.panel.loadMore')}</Button>}
-        </section>
+        </section>}
         {view === 'current' && !!data.recent.length && <section className="resident-panel-section resident-recent-results">
           <h3 className="text-label font-medium mt-3 mb-1">{t('residentAssistant.panel.recent')}</h3>
           {data.recent.map(work => <button key={work.id} data-testid="resident-recent" className="craft-control resident-panel-row text-left" onClick={() => showDetail(work.id)}>

@@ -3,6 +3,17 @@
   "description": "Strict identity exceptions: immutable generated/legal/scan machinery or exact reviewed compatibility, provider, provenance and historical lines. No directory-wide maintainer-doc allowance. New occurrences in approved files still fail.",
   "rules": [
     {
+      "glob": "docs/architecture/assistant-redesign-2026-11-18.md",
+      "tokens": [
+        "kebab-slug"
+      ],
+      "category": "historical",
+      "reason": "Quotes the observed permission-audit evidence verbatim, recording how many legacy `craft-agent` patterns the pre-refactor permissions file contained. Rewriting the measured count would falsify the baseline this refactor was justified against.",
+      "lines": [
+        "| 11-05 | 配置审计（`permissions\\default.json` 有 10 条 `craft-agent` 模式、0 条 `phaneris`） | **交付**，是全语料最好的产出：4 行证据链直接指向根因 |"
+      ]
+    },
+    {
       "glob": "docs/dependencies/dependency-audit-2026-11-07/npm-metadata.json",
       "tokens": [
         "upstream-owner"

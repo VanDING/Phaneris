@@ -145,6 +145,7 @@ import { assistantTaskCapacity } from '../resident-assistant/delegation-scheduli
 import { assertSessionDependencies } from './planning-dependencies'
 import { canonicalJson } from '@phaneris/shared/durable-runtime/identity'
 import { ResidentAssistantService, type ResidentSessionPort } from '../resident-assistant/service'
+import { assignmentStateOf } from '../assistant-tasks/dispatch'
 import type { AssistantDispatch, AssistantWork, AssistantWorkPage, AssistantWorkQuery, AssistantDelegationReceipt, EffectiveWorkerConfig, WorkerConfig } from '@phaneris/session-tools-core/delegation-contracts'
 import { WorkerConfigSchema } from '@phaneris/session-tools-core/delegation-contracts'
 import { buildServersFromSources as buildServersFromSourcesShared } from '../sources/build-servers'
@@ -2042,6 +2043,12 @@ export class SessionManager implements ISessionManager {
   private broadcastWorkItemsChanged(workspaceId: string): void {
     if (!this.eventSink) return
     this.eventSink(RPC_CHANNELS.workItems.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
+  }
+
+  /** Task definition/control/acceptance moved; the panel re-reads bounded state. */
+  private broadcastAssistantTasksChanged(workspaceId: string, taskId?: string): void {
+    if (!this.eventSink) return
+    this.eventSink(RPC_CHANNELS.residentAssistant.TASKS_CHANGED, { to: 'workspace', workspaceId }, workspaceId, taskId)
   }
 
   private broadcastArtifactsChanged(workspaceId: string): void {
@@ -4020,6 +4027,92 @@ export class SessionManager implements ISessionManager {
 
   async cancelAssistantWork(workspaceId: string, id: string): Promise<AssistantWork> {
     return (await this.residentWork(workspaceId)).cancel(id)
+  }
+
+  /**
+   * Workspace delegation definitions. Reads and control use the same projection
+   * the model tools see, so the panel can never show a state the Host would
+   * refuse to act on.
+   */
+  async getAssistantTasks(workspaceId: string, query: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskQuery) {
+    const managed = await this.ensureResidentAssistant(workspaceId)
+    const tasks = this.residentService(managed.workspace).tasks(this.taskServiceHost(managed))
+    // The runtime owns execution facts. Refresh assignment states from its own
+    // receipts before projecting, so the panel never reports a stale stage.
+    const delegation = this.residentServices.get(managed.workspace.id)?.delegation
+    if (delegation) for (const item of tasks.store.list({ limit: 50 }).items)
+      for (const assignment of item.assignments)
+        if (assignment.delegationId) {
+          const live = await delegation.query({ id: assignment.delegationId }).then(page => page.items[0]).catch(() => undefined)
+          if (live) tasks.store.recordAssignment({ ...assignment, state: assignmentStateOf(live as AssistantDelegationReceipt),
+            sessionId: live.sessionId ?? assignment.sessionId, inputMessageId: live.inputMessageId ?? assignment.inputMessageId,
+            error: live.error, updatedAt: Date.now() })
+        }
+    return tasks.query(query)
+  }
+
+  /** Direct user control from the task card; independent of any model turn. */
+  async controlAssistantTasks(workspaceId: string, command: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskControl) {
+    const managed = await this.ensureResidentAssistant(workspaceId)
+    return this.residentService(managed.workspace).tasks(this.taskServiceHost(managed)).control(command)
+  }
+
+  /**
+   * Send one ready delegation definition to a real ordinary Session.
+   *
+   * Readiness is the Host's own record for the *current* definition version. The
+   * execution itself goes through the existing host-bound delegation path, so
+   * there is still exactly one scheduling owner per execution node; this method
+   * only binds the resulting receipt to an assignment.
+   */
+  async dispatchAssistantTask(workspaceId: string, taskId: string, request: import('@phaneris/session-tools-core/task-delegation-contracts').DelegationTaskDispatch) {
+    const managed = await this.ensureResidentAssistant(workspaceId)
+    const service = this.residentService(managed.workspace), tasks = service.tasks(this.taskServiceHost(managed))
+    const projection = tasks.store.projection(taskId)
+    if (!projection) throw new Error(`Unknown task ${taskId}`)
+    // Termination and pause are Host records that outrank any readiness verdict
+    // recorded earlier; a stale `ready` must never authorize new execution.
+    if (projection.control?.action === 'terminate') throw new Error(`Task ${taskId} is terminated and cannot be dispatched`)
+    if (projection.control?.action === 'pause') throw new Error(`Task ${taskId} is paused; resume it before dispatching`)
+    if (projection.verification?.verdict === 'accepted') throw new Error(`Task ${taskId} is already accepted`)
+    const ready = projection.ready
+    if (!ready || ready.definitionVersion !== projection.task.definitionVersion || !ready.ready)
+      throw new Error(`Task ${taskId} has no readiness record for version ${projection.task.definitionVersion}; check its preconditions first`)
+    const existing = tasks.store.projection(taskId)!.assignments.length
+    const assignment = { id: `asg-${taskId}-${existing + 1}`, taskId, definitionVersion: projection.task.definitionVersion,
+      requirementIds: projection.activeRequirements.map(item => item.id), state: 'admitted' as const, createdAt: Date.now(), updatedAt: Date.now() }
+    tasks.store.recordAssignment(assignment)
+    const requirements = projection.activeRequirements.map(item => `${item.scope}: ${item.statement}`).join('\n')
+    const instructions = [`Task: ${projection.task.title}`, projection.task.scopeIn.length ? `Include: ${projection.task.scopeIn.join('; ')}` : '',
+      projection.task.scopeOut.length ? `Exclude: ${projection.task.scopeOut.join('; ')}` : '',
+      `Requirements (v${projection.task.definitionVersion}):`, requirements,
+      projection.task.deliverable ? `Deliverable: ${projection.task.deliverable}` : ''].filter(Boolean).join('\n')
+    const receipt: AssistantDelegationReceipt = await this.dispatchAssistantWork(workspaceId, { requestId: request.requestId, title: projection.task.title, instructions,
+      acceptanceCriteria: projection.task.acceptance.map(item => item.statement), config: request.config,
+      ...(request.targetSessionId ? { targetSessionId: request.targetSessionId } : {}),
+      ...(request.continuationOf ? { continuationOf: request.continuationOf } : {}) })
+    const bound = tasks.store.recordAssignment({ ...assignment,
+      state: receipt.state === 'preparing' ? 'admitted' : receipt.state === 'accepted' ? 'queued' : receipt.state === 'failed' ? 'failed' : 'running',
+      delegationId: receipt.id, sessionId: receipt.sessionId, inputMessageId: receipt.inputMessageId, error: receipt.error, updatedAt: Date.now() })
+    this.broadcastAssistantTasksChanged(managed.workspace.id, taskId)
+    return { assignment: bound, receipt }
+  }
+
+  /**
+   * Execution facts for readiness. Authority comes from the live resident
+   * Session, never from a cached preference or a model claim.
+   */
+  private taskServiceHost(managed: ManagedSession): import('../assistant-tasks/service').TaskServiceHost {
+    return {
+      readyFacts: async projection => {
+        const unsatisfied = projection.task.dependsOn.filter(dependency => {
+          const target = this.residentService(managed.workspace).tasks(this.taskServiceHost(managed)).store.projection(dependency)
+          return !target || target.stage !== 'accepted'
+        })
+        return { permissionMode: this.residentExecutionMode(managed), workingDirectory: managed.workspace.rootPath, unsatisfiedDependencies: unsatisfied }
+      },
+      changed: taskId => this.broadcastAssistantTasksChanged(managed.workspace.id, taskId),
+    }
   }
   async controlAssistantWork(workspaceId: string, command: WorkerControl) {
     const work = await this.residentWork(workspaceId)

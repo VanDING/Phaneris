@@ -50,6 +50,8 @@ import { MemoryMutationSchema } from './memory-contracts.ts';
 import { MemoryMaintenanceCommandSchema } from './memory-maintenance-contracts.ts';
 import { HistoryQuerySchema } from './history-contracts.ts';
 import { handleAssistantDelegate, handleAssistantWork, handleAssistantCancelWork, handleAssistantWorkerOptions } from './handlers/assistant-work.ts';
+import { handleTaskCreate, handleTaskAmend, handleTaskQuery, handleTaskControl, handleTaskVerify } from './handlers/assistant-tasks.ts';
+import { DelegationTaskAmendSchema, DelegationTaskCreateSchema, DelegationTaskControlSchema, DelegationTaskQuerySchema, DelegationTaskVerifySchema } from './task-delegation-contracts.ts';
 import { AssistantDispatchSchema, AssistantWorkQuerySchema, WorkerOptionsQuerySchema } from './delegation-contracts.ts';
 import { AssistantDeliveryAckSchema, ReportTaskResultSchema } from './task-result-contracts.ts';
 import { handleListSessions } from './handlers/list-sessions.ts';
@@ -942,6 +944,24 @@ export const SourceGetPromptSchema = z.object({
 });
 
 export const SESSION_TOOL_DEFS: SessionToolDef[] = [
+  // Delegation definition. The Assistant states meaning; the Host owns identity,
+  // versions, authority, admission and receipts. These five calls replace the
+  // bookkeeping the older context/prepare tools pushed onto the model.
+  { name: 'task_create', family: 'session-management', exposure: 'direct', executionMode: 'registry', safeMode: 'allow',
+    description: 'Record the delegation this trusted input established: what the user wants, the independently acceptable result, included/excluded scope, requirements with their own scope, acceptance conditions and required deliverable form. The Host assigns the Goal and Task identity, the first requirement versions and the Change, and returns the projection. Use for real delegation only — greetings, questions and read-only checks do not create a Task. Reuse requestId unchanged on retry; a new user message is a new intent.',
+    inputSchema: DelegationTaskCreateSchema, handler: handleTaskCreate },
+  { name: 'task_amend', family: 'session-management', exposure: 'direct', executionMode: 'registry', safeMode: 'allow',
+    description: 'Record what this trusted input changes about an existing Task: add requirements, correct a statement through supersedes, withdraw requirements, or explicitly keep them. The Host writes the new definition version, keeps every prior requirement readable, and reports which assignments are affected. Requirements that stay in force are listed explicitly rather than re-derived. Reuse requestId unchanged on retry.',
+    inputSchema: DelegationTaskAmendSchema, handler: handleTaskAmend },
+  { name: 'task_query', family: 'session-management', exposure: 'direct', executionMode: 'registry', safeMode: 'allow', readOnly: true,
+    description: 'Read bounded task projections: derived stage, definition version, whether a newer definition has not yet reached execution, requirement history, assignments, readiness and acceptance. checkReady additionally checks execution preconditions for one named task and never dispatches. Task state is the Host record — do not restate it from conversation memory.',
+    inputSchema: DelegationTaskQuerySchema, handler: handleTaskQuery },
+  { name: 'task_control', family: 'session-management', exposure: 'direct', executionMode: 'registry', safeMode: 'allow',
+    description: 'Pause, resume or terminate Tasks the user addressed. Pause freezes new admission and stays resumable; terminate closes admission and automatic retries permanently. The Host returns one receipt per task. Execution details, Session identity and cancellation of running work belong to the Host, not to this call.',
+    inputSchema: DelegationTaskControlSchema, handler: handleTaskControl },
+  { name: 'task_verify', family: 'session-management', exposure: 'direct', executionMode: 'registry', safeMode: 'allow',
+    description: 'Record an acceptance decision bound to the current definition version and the exact produced result: per-criterion met/gap/undecided with evidence, plus accepted, rework or needs_user. needs_user preserves the decision for the user instead of closing it. Recording a review never rewrites the execution facts it judges.',
+    inputSchema: DelegationTaskVerifySchema, handler: handleTaskVerify },
   { name: 'assistant_context', family: 'session-management', exposure: 'direct', executionMode: 'registry', safeMode: 'allow',
     description: 'Manage work continuity. Persistent focus is a navigation hint, not execution permission. prepare(requestId,target:{kind:keep|select|create}) combines work selection and sourced requirements; requirements use scope=input for this invocation or work for continuing requirements, exact source quotes/ranges and partial supersedes. Temporary events preserve foreground. The next inference receives ready materials or a blocker; select/create/associate alone never make business execution ready. Ordinary chat needs no branch; do not create branches per date. preparation(requestId) reads progress; recover(requestId,expectedGeneration) resumes incomplete preparation; receipt(operationId) and reconcile(operationId) inspect/settle unknown Runtime outcomes from committed evidence. Never repeat effects on restoration. branches searches/pages older work; checkpoint preserves sourced recovery notes, not task success; hibernate releases material without cancelling work.',
     inputSchema: z.object({ command: AssistantContextSchema }).strict(), handler: async (ctx, args) => {
