@@ -1238,7 +1238,6 @@
   "residentAssistant.board.requirement.superseded": "Zastąpione",
   "residentAssistant.board.requirement.withdrawn": "Wycofane",
   "residentAssistant.board.rework": "Poproś o poprawki",
-  "residentAssistant.board.running": "{{occupied}} w toku",
   "residentAssistant.board.switchTask": "Przełącz zadanie",
   "residentAssistant.control.apply": "Zastosuj ustawienia",
   "residentAssistant.control.boundary": "Zmiany są stosowane w bezpiecznym punkcie. Wstrzymane zadania pozostają wstrzymane, w granicach pierwotnej autoryzacji.",

@@ -1238,7 +1238,6 @@
   "residentAssistant.board.requirement.superseded": "Ersetzt",
   "residentAssistant.board.requirement.withdrawn": "Zurückgezogen",
   "residentAssistant.board.rework": "Überarbeitung anfordern",
-  "residentAssistant.board.running": "{{occupied}} laufen",
   "residentAssistant.board.switchTask": "Aufgabe wechseln",
   "residentAssistant.control.apply": "Einstellungen anwenden",
   "residentAssistant.control.boundary": "Laufende Aufgaben übernehmen Änderungen an einer sicheren Grenze. Pausierte Aufgaben bleiben pausiert. Die ursprüngliche Berechtigung gilt weiter.",

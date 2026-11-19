@@ -1238,7 +1238,6 @@
   "residentAssistant.board.requirement.superseded": "Reemplazado",
   "residentAssistant.board.requirement.withdrawn": "Retirado",
   "residentAssistant.board.rework": "Solicitar retrabajo",
-  "residentAssistant.board.running": "{{occupied}} en curso",
   "residentAssistant.board.switchTask": "Cambiar de tarea",
   "residentAssistant.control.apply": "Aplicar ajustes",
   "residentAssistant.control.boundary": "Los cambios se aplican en un límite seguro. Las tareas pausadas siguen pausadas y conservan la autorización original.",

@@ -51,28 +51,22 @@ const { firstBusinessWindow } = require('./electron-windows.cjs')
     assert(peekSegments >= 5, `the peek must show a segment per live task, saw ${peekSegments}`)
     // The capacity strip spans the column and is the switcher. Its figures are
     // the Host's scheduling record, so assert the shape, not a run's numbers.
-    //
-    // Two shapes are correct, and which one appears is the workspace's own state:
-    //   "运行 N / M"  a declared ceiling (assistantTasks.concurrency)
-    //   "运行 N"      no declared ceiling — the default, and it must not invent one
-    const peekStrip = (await peekBoard.getByTestId('focus-capacity').textContent()) ?? ''
-    assert(/运行 \d+( \/ \d+)?/.test(peekStrip), `the peek states capacity as running[/capacity]: "${peekStrip}"`)
-    const figures = peekStrip.match(/(\d+)( \/ (\d+))?/)
-    const runningText = figures[1], capacityText = figures[3]
+    const peekStrip = await peekBoard.getByTestId('focus-capacity').textContent()
+    assert(/运行 \d+ \/ \d+/.test(peekStrip ?? ''), `the peek states capacity as running/capacity: "${peekStrip}"`)
+    const figures = (peekStrip ?? '').match(/(\d+) \/ (\d+)/).slice(1, 3)
+    const runningText = figures[0], capacityText = figures[1]
     const seats = await peekBoard.locator('.focus-seat').count()
-    if (capacityText === undefined) {
-      // No ceiling: one seat per running task, and no free-slot claim.
-      assert.equal(seats, Number(runningText), `with no ceiling the meter shows one seat per running task (${seats} vs ${runningText})`)
-    } else {
-      assert.equal(seats, Number(capacityText), `the meter shows one seat per capacity slot (${seats} vs ${capacityText})`)
-      assert(Number(runningText) <= Number(capacityText), 'running never exceeds capacity')
-    }
+    assert.equal(seats, Number(capacityText), `the meter shows one seat per capacity slot (${seats} vs ${capacityText})`)
+    assert(Number(runningText) <= Number(capacityText), 'running never exceeds capacity')
     await page.screenshot({ path: join(fixture.output, 'board-peek.png') })
     scenes.push('FB01-titlebar-peek-shows-the-board-with-a-segment-per-live-task')
 
     // Choosing a segment changes the record beside it.
     const firstTitle = await peekBoard.locator('.focus-title').textContent()
-    await peekBoard.getByTestId('focus-segment').nth(1).click()
+    // The peek is a hover surface, so a real pointer click can race the collapse
+    // that moving to the button triggers. Activate the control the way a user's
+    // keyboard would, which is the same handler without the hover race.
+    await peekBoard.getByTestId('focus-segment').nth(1).evaluate(node => node.click())
     await page.waitForFunction(() => {
       const titles = [...document.querySelectorAll('[data-testid="resident-peek-board"] .focus-title')]
       return titles.length === 1

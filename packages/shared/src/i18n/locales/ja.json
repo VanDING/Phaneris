@@ -1238,7 +1238,6 @@
   "residentAssistant.board.requirement.superseded": "置換済み",
   "residentAssistant.board.requirement.withdrawn": "撤回済み",
   "residentAssistant.board.rework": "やり直しを依頼",
-  "residentAssistant.board.running": "{{occupied}} 実行中",
   "residentAssistant.board.switchTask": "タスクを切り替え",
   "residentAssistant.control.apply": "設定を適用",
   "residentAssistant.control.boundary": "実行中の変更は安全な区切りで適用されます。一時停止中のタスクは停止を維持し、元の承認範囲内で実行します。",

@@ -1238,7 +1238,6 @@
   "residentAssistant.board.requirement.superseded": "已被取代",
   "residentAssistant.board.requirement.withdrawn": "已撤回",
   "residentAssistant.board.rework": "要求返工",
-  "residentAssistant.board.running": "运行 {{occupied}}",
   "residentAssistant.board.switchTask": "切换任务",
   "residentAssistant.control.apply": "应用配置",
   "residentAssistant.control.boundary": "运行中的任务将在安全边界应用变更；已暂停的任务保持暂停。执行权限受原任务授权限制。",

@@ -1,26 +1,27 @@
 import { join } from 'node:path'
 import { AssistantTasksSchema } from '@phaneris/shared/config/schemas'
+import { DEFAULT_ASSISTANT_TASK_CONCURRENCY } from '@phaneris/session-tools-core/delegation-contracts'
 import { loadWorkspaceConfig } from '@phaneris/shared/workspaces'
 import type { SessionDelegationInput } from '@phaneris/core/types'
 import type { AssistantDelegationReceipt } from '@phaneris/session-tools-core/delegation-contracts'
 import { acquireFileScopes, releaseFileScopes, snapshotFileScope, onFileScopesReleased, fileScopesConflict } from '../tasks/file-scopes'
 
 /**
- * Concurrent Worker sessions this workspace admits, or `null` for no cap.
+ * Concurrent Worker sessions this workspace admits.
  *
- * No cap is the default: the assistant should not refuse work the user asked for
- * because of an arbitrary slot count. What still limits admission is real —
- * overlapping file scopes, Session availability, configuration — and those stay
- * enforced. A workspace that wants a ceiling sets `assistantTasks.concurrency`.
+ * The default is 18, not 4: four slots made the assistant refuse work the user
+ * had already asked for. A workspace can still set `assistantTasks.concurrency`
+ * to any higher or lower number and it is honoured exactly as written.
  *
  * Configuration is parsed once at its owning read boundary, never clamped
  * silently into a different advertised capacity.
  */
-export function assistantTaskCapacity(root: string): number | null {
+export function assistantTaskCapacity(root: string): number {
   const settings = loadWorkspaceConfig(root)?.assistantTasks
-  if (settings === undefined) return null
-  return AssistantTasksSchema.parse(settings).concurrency ?? null
+  if (settings === undefined) return DEFAULT_ASSISTANT_TASK_CONCURRENCY
+  return AssistantTasksSchema.parse(settings).concurrency ?? DEFAULT_ASSISTANT_TASK_CONCURRENCY
 }
+
 
 /** Uses the existing process-wide Tasks leases, including their wakeups. No
  * separate work store, Runtime slot or general-purpose lock service. */

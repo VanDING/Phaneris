@@ -15,6 +15,19 @@ export const WorkerConfigSchema = z.object({
   projectId: id.optional(), workingDirectory: z.string().min(1).max(4096).optional(),
   contextPolicy: z.enum(['compact', 'handoff', 'manual']).optional(), labels: slugs.optional(),
 }).strict()
+/**
+ * Concurrent Worker sessions a workspace admits when it declares nothing.
+ *
+ * Four was the old default and it made the assistant refuse work the user had
+ * already asked for; 18 is the Host's own ceiling in practice. A workspace can
+ * still set `assistantTasks.concurrency` to any number and it is honoured.
+ *
+ * Lives in the contract because the panel and the scheduler must quote the same
+ * figure — a board that invents its own default would state a capacity the Host
+ * does not enforce.
+ */
+export const DEFAULT_ASSISTANT_TASK_CONCURRENCY = 18
+
 export const AssistantDispatchSchema = z.object({
   continuationOf: id.optional().describe('Continue an already reviewed result within its unchanged original user grant. Required for inbox-driven follow-up. The Host verifies the original source, review and task scope; internal events grant no new authority.'),
   startPaused: z.boolean().optional().describe('Create and plan this ordinary Session without starting it. Resume it explicitly when ready.'),
@@ -108,8 +121,7 @@ export interface AssistantWorkExecution {
 }
 export interface AssistantWorkPage {
   observedAt?: number
-  /** `capacity: null` means the workspace sets no ceiling on concurrent work. */
-  scheduling?: { capacity: number | null; occupied: number; queued: number; paused: number }
+  scheduling?: { capacity: number; occupied: number; queued: number; paused: number }
   items: AssistantWork[]; nextAfter: number | null; lastSeq: number
   nextCursor?: { createdAt: number; id: string } | null
   total?: number

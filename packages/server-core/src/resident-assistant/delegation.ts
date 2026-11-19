@@ -14,6 +14,7 @@ import type { TaskDeliverableSelection, TaskReview } from '@phaneris/session-too
 import { WorkerControls } from './worker-controls'
 import type { WorkerControl, WorkerControlApplication, WorkerControlReceipt } from '@phaneris/session-tools-core/worker-control-contracts'
 import { DelegationResources } from './delegation-scheduling'
+import { DEFAULT_ASSISTANT_TASK_CONCURRENCY } from '@phaneris/session-tools-core/delegation-contracts'
 
 export interface SessionDelegationPlan { config: EffectiveWorkerConfig; adjustments: string[]; configRevision?: string; capabilityRevision?: string }
 export type { LegacyDelegation } from './delegation-migration'
@@ -28,7 +29,7 @@ export class SessionDelegationWait extends Error {
 export interface DelegationHost {
   currentSessionIds?(): readonly string[]
   live?(receipt: AssistantDelegationReceipt): Pick<AssistantWork, 'sessionStatus' | 'runtime'> & { goal?: string }
-  capacity?(): number | null
+  capacity?(): number
   waitingFor?(receipt: AssistantDelegationReceipt): AssistantDelegationReceipt['waitingFor']
   plan(request: AssistantDispatch): Promise<SessionDelegationPlan>
   prepare(receipt: AssistantDelegationReceipt, request: AssistantDispatch, plan: SessionDelegationPlan,
@@ -484,9 +485,7 @@ export class AssistantDelegation {
     const held = this.host.heldSessionIds?.() ?? []
     const reserved = held.length ? (this.db.prepare(`SELECT count(*) AS count FROM work WHERE json_extract(body,'$.sessionId') IN (SELECT value FROM json_each(?))
       AND json_extract(body,'$.state') IN ('failed','result_ready','cancelled','needs_attention','paused')`).get(JSON.stringify(held)) as { count: number }).count : 0
-    // `capacity: null` is published as the workspace's honest state: no ceiling,
-    // so the board must not render a ceiling it does not have.
-    return { capacity: this.host.capacity?.() ?? null, occupied: (counts.occupied ?? 0) + reserved, queued: counts.queued ?? 0, paused: counts.paused ?? 0 }
+    return { capacity: this.host.capacity?.() ?? DEFAULT_ASSISTANT_TASK_CONCURRENCY, occupied: (counts.occupied ?? 0) + reserved, queued: counts.queued ?? 0, paused: counts.paused ?? 0 }
   }
   reportDeliveryError(error: unknown): void { this.host.reportError(error) }
   private async syncSessionStatus(receipt: AssistantDelegationReceipt): Promise<void> {
@@ -545,11 +544,8 @@ export class AssistantDelegation {
         let blocker = this.host.waitingFor?.(candidate)
           ?? await this.sharesWaitingResources(candidate, waiting)
           ?? await this.sharesWaitingResources(candidate, active, true)
-        // No ceiling means no capacity blocker: only real constraints stop
-        // admission (overlapping file scopes, Session availability). An absent
-        // host callback is also no ceiling — nothing declared one.
-        const ceiling = this.host.capacity?.() ?? null
-        if (!blocker && ceiling !== null && this.scheduling().occupied >= ceiling) blocker = { reason: 'capacity', detail: 'All configured Worker admission slots are occupied' }
+        const ceiling = this.host.capacity?.() ?? DEFAULT_ASSISTANT_TASK_CONCURRENCY
+        if (!blocker && this.scheduling().occupied >= ceiling) blocker = { reason: 'capacity', detail: 'All configured Worker admission slots are occupied' }
         if (!blocker) {
           const input = await this.host.snapshot(candidate)
           if (!input) blocker = { reason: 'configuration', detail: 'The original assignment is unavailable' }

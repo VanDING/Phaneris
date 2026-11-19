@@ -11,8 +11,7 @@ export const RESIDENT_TOOL_NAMES = [
 ] as const
 
 export interface AssistantCapabilityView {
-  /** `capacity: null` means the workspace sets no ceiling on concurrent work. */
-  workerScheduling?: { capacity: number | null; occupied: number; queued: number; paused: number }
+  workerScheduling?: { capacity: number; occupied: number; queued: number; paused: number }
   role: 'resident_assistant'
   workspaceId: string
   revision: string

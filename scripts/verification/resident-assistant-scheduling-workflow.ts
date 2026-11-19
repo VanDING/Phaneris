@@ -19,30 +19,35 @@ await verificationWorkflow('resident-assistant-scheduling', async run => {
     })])
     if (interval) interval.end = Date.now()
     return taskModelResponse(body, main ? 'SCHEDULING_ACK' : `RESULT_${tag ?? 'WORK'}`)
-  }, { concurrency: 4 })
+  })
   const { until } = fixture, scenes: string[] = [], snapshots: unknown[] = []
   const started = (tag: string) => intervals.some(item => item.tag === tag)
   const settled = async (id: string) => until(async () => (await fixture.work(id)).state === 'result_ready')
   const control = async (id: string, action: string, extra = {}) => fixture.control({ commandId: crypto.randomUUID(), id, expectedSeq: (await fixture.work(id)).seq, action, ...extra })
   try {
+    // TM11 · Every admitted slot fills, and the request past the ceiling waits
+    // for capacity instead of starting. The count comes from the Host's own
+    // published capacity, so raising the default never silently stops testing it.
+    const ceiling = (await fixture.page()).scheduling?.capacity
+    assert.equal(typeof ceiling, 'number', 'the Host publishes its scheduling capacity')
     const batch = []
-    for (let n = 0; n < 6; n++) { hold(`RUN_CAP${n}`); batch.push(await fixture.dispatch(`RUN_CAP${n}`)) }
-    await until(() => intervals.filter(item => item.tag.startsWith('RUN_CAP')).length === 4, 6000)
-    assert.equal(intervals.filter(item => item.tag.startsWith('RUN_CAP') && !item.end).length, 4)
-    const queued = await fixture.work(batch[4]!.id)
+    for (let n = 0; n <= ceiling!; n++) { hold(`RUN_CAP${n}`); batch.push(await fixture.dispatch(`RUN_CAP${n}`)) }
+    await until(() => intervals.filter(item => item.tag.startsWith('RUN_CAP')).length === ceiling!, 30_000)
+    assert.equal(intervals.filter(item => item.tag.startsWith('RUN_CAP') && !item.end).length, ceiling)
+    const queued = await fixture.work(batch[ceiling!]!.id)
     assert.equal(queued.state, 'accepted'); assert.equal(queued.waitingFor?.reason, 'capacity')
     assert.equal(queued.execution?.coverage, 'not_started')
     const page = await fixture.page()
-    assert.equal(page.scheduling?.capacity, 4); assert.equal(page.scheduling?.occupied, 4)
+    assert.equal(page.scheduling?.capacity, ceiling); assert.equal(page.scheduling?.occupied, ceiling)
     snapshots.push(page)
     gates.get('RUN_CAP0')!.resolve()
-    await until(() => started('RUN_CAP4'))
-    assert(!started('RUN_CAP5'))
+    await until(() => started(`RUN_CAP${ceiling}`))
+    assert(!started(`RUN_CAP${ceiling! + 1}`))
     for (const gate of gates.values()) gate.resolve()
     await Promise.all(batch.map(item => settled(item.id)))
     const first = intervals.find(item => item.tag === 'RUN_CAP0')!
-    assert(intervals.filter(item => item.tag.startsWith('RUN_CAP') && item.start < first.end! && item.end! > first.start).length >= 4)
-    scenes.push('TM11-four-real-runtime-requests-overlap-fifth-waits-for-capacity')
+    assert(intervals.filter(item => item.tag.startsWith('RUN_CAP') && item.start < first.end! && item.end! > first.start).length >= ceiling!)
+    scenes.push('TM11-every-admitted-slot-fills-and-the-next-request-waits-for-capacity')
 
     const paused = await fixture.dispatch('RUN_PAUSED', { startPaused: true })
     assert.equal(paused.state, 'paused'); assert(!started('RUN_PAUSED'))
@@ -109,7 +114,7 @@ await verificationWorkflow('resident-assistant-scheduling', async run => {
     gates.get('RUN_LOW')!.resolve(); await settled(low.id)
     scenes.push('TM16-explicit-priority-arranges-pending-work-without-restarting-running-work')
     const summary = await fixture.page()
-    assert(summary.observedAt && summary.scheduling?.capacity === 4)
+    assert(summary.observedAt && summary.scheduling?.capacity === 18)
     snapshots.push(summary)
     scenes.push('TM14-host-clock-and-capacity-projection-are-published')
     run.complete(scenes, ['Paid model management quality (separate live workflow)', 'Operating-system sandboxing; file scopes are scheduling contracts'])

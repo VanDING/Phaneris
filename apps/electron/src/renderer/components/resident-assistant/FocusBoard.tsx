@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TaskProjectionView, TaskStage } from '@phaneris/session-tools-core/task-delegation-contracts'
+import { DEFAULT_ASSISTANT_TASK_CONCURRENCY } from '@phaneris/session-tools-core/delegation-contracts'
 import type { ResolvedArtifact } from '@phaneris/shared/artifacts'
 import { useAssistantTasks } from './useAssistantTasks'
 import { actionsFor, initialFocus, segmentsFor, type FocusAction } from './focus-board'
@@ -55,11 +56,10 @@ export function FocusBoard({ workspaceId, deliverables = [], onPreview, onOpenTa
   const projection = items.find(item => item.task.id === selected)
   const segments = segmentsFor(items)
   const actions = projection ? actionsFor(projection) : []
-  // Capacity is the Host's own scheduling record, not a count recomputed here.
-  // `null` means the workspace sets no ceiling, so the strip must not draw a
-  // ceiling of its own: it reports how many are running and says so plainly.
+  // Capacity is the Host's own scheduling record, not a count recomputed here:
+  // the board and the scheduler must answer "how many can run" with one number.
   const occupied = scheduling?.occupied ?? items.filter(item => ['running', 'stopping'].includes(item.stage)).length
-  const capacity = scheduling?.capacity ?? null
+  const capacity = scheduling?.capacity ?? DEFAULT_ASSISTANT_TASK_CONCURRENCY
 
   const control = (action: FocusAction) => {
     if (!projection || busy) return
@@ -91,16 +91,12 @@ export function FocusBoard({ workspaceId, deliverables = [], onPreview, onOpenTa
       <div className="focus-strip" role="tablist" aria-label={t('residentAssistant.board.switchTask')}>
         <span className="focus-readout">
           <span className="focus-seats" aria-hidden="true">
-            {/* One seat per running task. A declared ceiling also shows its free
-                slots; with no ceiling there are no free slots to draw. Nothing
-                is drawn when nothing runs, so the meter never implies occupancy. */}
-            {Array.from({ length: capacity === null ? occupied : Math.max(capacity, occupied) }, (_, index) =>
+            {/* One seat per capacity slot; a slot is filled while it runs. */}
+            {Array.from({ length: Math.max(capacity, occupied) }, (_, index) =>
               <span key={index} className="focus-seat" data-on={index < occupied} />)}
           </span>
           <span className="focus-count" data-testid="focus-capacity">
-            {capacity === null
-              ? t('residentAssistant.board.running', { occupied })
-              : t('residentAssistant.board.capacity', { occupied, capacity: Math.max(capacity, occupied, 1) })}
+            {t('residentAssistant.board.capacity', { occupied, capacity: Math.max(capacity, occupied) })}
           </span>
         </span>
         <div className="focus-segments">
