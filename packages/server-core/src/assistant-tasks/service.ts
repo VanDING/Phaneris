@@ -14,6 +14,25 @@ export interface TaskServiceHost {
 }
 
 /**
+ * Every requirement quote must be an excerpt of the input that defines the work.
+ *
+ * The Host knows which input it bound to the call, so it can check this; the
+ * model cannot, and an invented quote would otherwise be stored as evidence of
+ * something the user never asked for. Whitespace is collapsed before comparing:
+ * a quote is a verbatim excerpt, not a paraphrase. When the Host supplies no
+ * text (an internal caller that already validated), there is nothing to compare.
+ */
+function assertQuotesFromInput(requirements: readonly { quote?: string }[] | undefined, inputContent: string | undefined): void {
+  if (inputContent === undefined) return
+  const source = inputContent.replace(/\s+/g, ' ').trim()
+  for (const requirement of requirements ?? []) {
+    if (!requirement.quote) continue
+    if (source.includes(requirement.quote.replace(/\s+/g, ' ').trim())) continue
+    throw new Error('task_authority: A requirement quote must be an excerpt of the user input that defines this work')
+  }
+}
+
+/**
  * Delegation orchestration above the store.
  *
  * The Assistant states meaning; this service binds the trusted input, asks the
@@ -35,15 +54,27 @@ export class AssistantTaskService {
     return this.dispatcher ??= new AssistantTaskDispatcher(this.store, host)
   }
 
-  create(input: DelegationTaskCreate, inputMessageId: string | undefined, authority: { directUser: boolean }): TaskProjectionView {
+  /**
+   * A definition change, with the authority the Host vouches for.
+   *
+   * `inputContent` is the trusted text of the input being defined around. When
+   * the Host supplies it, every requirement quote must be an excerpt of it: a
+   * quote the user never wrote would otherwise be stored as evidence of
+   * something they did not ask for. `assistant_context.prepare` enforced this
+   * for its own requirements, so the delegation path has to hold the same line
+   * before the old contract can be retired.
+   */
+  create(input: DelegationTaskCreate, inputMessageId: string | undefined, authority: { directUser: boolean; inputContent?: string }): TaskProjectionView {
     if (!authority.directUser) throw new Error('task_authority: only a direct user instruction can define new work')
+    assertQuotesFromInput(input.requirements, authority.inputContent)
     const projection = this.store.create(input, inputMessageId)
     this.host.changed(projection.task.id)
     return projection
   }
 
-  amend(input: DelegationTaskAmend, inputMessageId: string | undefined, authority: { directUser: boolean }): TaskProjectionView {
+  amend(input: DelegationTaskAmend, inputMessageId: string | undefined, authority: { directUser: boolean; inputContent?: string }): TaskProjectionView {
     if (!authority.directUser) throw new Error('task_authority: only a direct user instruction can change requirements')
+    assertQuotesFromInput(input.requirements, authority.inputContent)
     const projection = this.store.amend(input, inputMessageId)
     this.host.changed(projection.task.id)
     return projection

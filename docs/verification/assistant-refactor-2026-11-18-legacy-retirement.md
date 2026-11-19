@@ -53,7 +53,20 @@
 ## 3. 删除前的必要条件（当前均未满足）
 
 1. **替代路径逐场景验收**：`task_*` 五个工具需覆盖 `prepare`/`select` 现有的全部准备场景。**已逐项核对，结论见 §3.1：覆盖了来源与要求，未覆盖分支选择与临时保前台。**
-2. **授权边界等价性证明**：去掉 `goalQuote` 后，`task_create` 的 `inputMessageId` 绑定必须能阻止「用旧授权派新范围」。这是一条安全性质，需要专门的对抗性场景，当前没有。可复用的基础：本轮已把幂等键绑定到 `(inputMessageId, 语义动作)`，说明"输入 ↔ 记录"的链接是可靠的，但"输入 ↔ 授权范围"仍需单独证明。
+2. **授权边界等价性证明**：去掉 `goalQuote` 后，`task_create` 的 `inputMessageId` 绑定必须能阻止「用旧授权派新范围」。这是一条安全性质，需要专门的对抗性场景。
+
+   **实测状态（2026-11-19，`bun run verify:assistant-delegation-authority`，5/5）**：
+
+   | 性质 | 现状 | 结论 |
+   |---|---|---|
+   | 只有直连用户输入能定义工作 | ✅ `task_authority: only a direct user instruction can define new work` | 成立 |
+   | 要求记录来源输入 | ✅ `RequirementView.inputMessageId` | 成立 |
+   | 一个输入只定义一次工作 | ✅ 幂等键 | 成立 |
+   | **引文必须真的出自该输入** | ✅ 已补：`task_authority: A requirement quote must be an excerpt of the user input` | 成立 |
+
+   **缺口与关闭过程**：场景 `AU03` 起初测到用户从未写过的引文 `"words the user never wrote"` 被原样存入（`storedQuote` 存下、`quoteVerified: false`）——`writeRequirements` 只做 `quote: input.quote` 的透传，从不比对 `inputMessageId` 指向的原文。拦住这条的当时只有 `assistant_context.prepare`。
+
+   **退役前已补上**：`task_create`/`task_amend` 现在比对引文与绑定输入，不匹配即拒绝；比较时只归一化空白，所以逐字摘录才算数。已用反向验证确认断言有效——关掉校验即报 `Missing expected exception: an invented quote must be refused`。这也意味着退役 `prepare` 不再削弱授权边界。
 3. **长任务语义不退化**：移除原话重放后，跨天/跨压缩的任务续接仍需保留原始要求。需要一条真实的长任务回放。
 4. **用户明确确认**：本清单本身不构成授权。
 

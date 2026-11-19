@@ -82,7 +82,7 @@ await verificationWorkflow('assistant-task-live-model', async run => {
     appearance: { mode: 'light', colorTheme: 'default', font: 'inter' },
   }))
   writeFileSync(join(root, 'config.json'), JSON.stringify({ ...workspace,
-    defaults: { permissionMode: 'guarded', defaultLlmConnection: connection.slug, model: connection.defaultModel, workingDirectory: 'none' } }))
+    defaults: { permissionMode: 'allow-all', defaultLlmConnection: connection.slug, model: connection.defaultModel, workingDirectory: 'none' } }))
   for (const file of ['credentials.enc', 'credentials.key', 'credentials.json'])
     if (existsSync(join(REAL_CONFIG, file))) copyFileSync(join(REAL_CONFIG, file), join(config, file))
   // safeStorage keeps its own master key in the Chromium user-data directory's

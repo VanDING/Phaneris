@@ -399,13 +399,15 @@ export class ResidentAssistantService {
       },
       // Delegation definition. The Host binds the trusted input id and decides
       // authority; the model only states what the user wants or what changed.
+      // The trusted input text goes with it, so the task service can check that
+      // every quote is the user's own words.
       delegationCreateFn: async (input, toolExecutionId) => {
         const origin = this.definitionInput(session, toolExecutionId)
-        return this.tasks(this.taskHost(session)).create(input, origin?.id, { directUser: true })
+        return this.tasks(this.taskHost(session)).create(input, origin?.id, { directUser: true, inputContent: origin?.content })
       },
       delegationAmendFn: async (input, toolExecutionId) => {
         const origin = this.definitionInput(session, toolExecutionId)
-        return this.tasks(this.taskHost(session)).amend(input, origin?.id, { directUser: true })
+        return this.tasks(this.taskHost(session)).amend(input, origin?.id, { directUser: true, inputContent: origin?.content })
       },
       delegationQueryFn: async input => this.tasks(this.taskHost(session)).query(input),
       delegationControlFn: async input => this.tasks(this.taskHost(session)).control(input),

@@ -128,6 +128,7 @@
     "verify:assistant-delegation-panel": "bun run server:build:subprocess && bun run scripts/verification/assistant-task-panel-workflow.ts",
     "verify:assistant-delegation-board": "bun run scripts/verification/assistant-task-board-workflow.ts",
     "verify:assistant-delegation-live": "bun run scripts/verification/assistant-task-live-model-workflow.ts",
+    "verify:assistant-delegation-authority": "bun run scripts/verification/assistant-task-authority-workflow.ts",
     "verify:assistant-delegation-goal": "bun run scripts/verification/assistant-task-goal-control-workflow.ts",
     "verify:assistant-delegation-collaboration": "bun run scripts/verification/assistant-task-collaboration-workflow.ts",
     "verify:assistant-delegation-switchover": "bun run scripts/verification/assistant-task-switchover-workflow.ts",

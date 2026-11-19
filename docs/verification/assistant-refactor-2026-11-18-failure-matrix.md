@@ -215,32 +215,32 @@ M10/M15 的产物闭环已覆盖：场景 `B08`/`B09` 断言文件真实存在�
 
 因此**退役旧契约是让真实模型 E2E 稳定通过的前置条件**，而不是它的后续清理。这也解释了为什么第 3 项与第 4 项不能分开收尾。
 
-#### 真实模型 E2E —— 通过 1 次，随后同一判据下失败 1 次
+#### 真实模型 E2E —— LM01/LM02 稳定通过，LM03 被旧契约阻断
 
 ```bash
 bun run verify:assistant-delegation-live
 ```
 
-前置条件：退出 Phaneris 桌面应用（单实例锁；打包版 `Phaneris.exe`、开发版 `electron.exe` 都占锁，工作流两者都检测）。工作流把安装的 `credentials.enc` / `credentials.key` 与 Chromium 的 `Local State`（safeStorage 主密钥所在）复制到隔离配置根，不修改用户配置。连接用安装配置的默认项（本轮为 Command Goat 的 `deepseek/deepseek-v4.1-flash`）。
+前置条件：退出 Phaneris 桌面应用（单实例锁；打包版 `Phaneris.exe`、开发版 `electron.exe` 都占锁，工作流两者都检测）。工作流把安装的 `credentials.enc` / `credentials.key` 与 Chromium 的 `Local State`（safeStorage 主密钥所在）复制到隔离配置根，不修改用户配置。连接用安装配置的默认项（本轮为 Command Goat 的 `deepseek/deepseek-v4.1-flash`），工作区权限 `allow-all`。
 
-**第 1 次运行：3/3 通过**
+| 场景 | 稳定性 | 真实模型行为 |
+|---|---|---|
+| LM01 问候 | **稳定通过** | 普通寒暄，未调用任何 `task_*` 工具，任务数不变 |
+| LM02 一次委托 | **稳定通过** | `task_create` 记录 Goal/要求/交付形式，`assistant_delegate` 派工；引文经核实全部出自输入原文（`自包含 HTML 页面`、`文件名 pelican.html`、`要能直接用浏览器打开`、`鹈鹕骑自行车`） |
+| LM03 复合输入 | **4 次全部失败** | 见下 |
 
-| 场景 | 真实模型行为 |
-|---|---|
-| LM01 问候 | 普通寒暄，未调用任何 `task_*` 工具，任务数不变 |
-| LM02 一次委托 | `task_create` 记录 Goal/要求/交付形式，`assistant_delegate` 派工 |
-| LM03 复合输入 | "改深色"记为新 Task（理由：需等页面生成后才能改），并回答"当前 1 项工作" |
+**LM03 的失败原因是 D4，不是测试缺陷。** 四次运行的末尾工具回执（同类）：
 
-**第 2 次运行：LM03 失败，失败原因本身就是缺陷**
+```
+FAIL mcp__session__assistant_worker_control: work_input_pending: A newer user instruction must be handled before new business effects
+FAIL mcp__session__assistant_context: Session tool error: work_input_pending: A newer user input superseded this pending preparation
+```
 
-同一判据、同一输入，模型这次反复尝试但被**旧契约连续挡住**，回执原文：
+模型确实想记录变更，但被旧契约的输入优先级规则反复拒绝。各次尝试的路径不同（追加给运行中的 Worker、另开 Task、回头追问指代对象），结果取决于旧契约是否放行——因此**在旧契约仍存在时，LM03 无法稳定通过**。
 
-- `Continuation requires a completed result with its original user grant`
-- `work_input_pending: A newer user input superseded this pending preparation`
+这也修正了一个判据偏差：LM03 要检查的是"变更不被静默丢弃"，而不是"必须走某一条具体路径"。断言已放宽为接受 追加 / 新版本 / 追问指代 三种正确处置，仍失败则说明变更真的被丢了。放宽后四次依然失败，所以结论不变。
 
-模型想把变更落到工作上，两次都被 `assistant_context` 的准备/续接规则拒绝，最终没有任何 Host 记录。这是 **D4 的运行时复现**：旧契约不只是"存在"，它会**主动阻断**新流程。
-
-结论：LM03 **不是稳定通过**。它在旧契约放行时通过、被挡住时失败，取决于模型选择哪条路径。这使 D4 从"应当退役"变成"必须退役"——否则同一条用户输入的行为不可预测。
+**已核实不相关的一次干扰**：中途出现过 `Error Durable Runtime admission is closed`，是测试在模型仍在处理时关闭了应用（超时），不是产品行为；已把该场景等待时间延长，并分离了这种情况。
 
 **D1 已修复并验证**（方案 A：幂等键 = 可信输入 + 语义动作）。真实模型对照：
 
@@ -250,19 +250,17 @@ bun run verify:assistant-delegation-live
 | Tasks | 2 | **1**（同一输入） |
 | changes | 2 条，同一 `inputMessageId` | 1 条 |
 
-修复前两条记录的 `inputMessageId` 完全相同（`msg-1795049457234-71aac4c137d6`）、只有 `requestId` 不同：Host 只按 `requestId` 去重，模型重试换 id 就能重复建任务。现在同一输入 + 同一动作返回既有记录（store schema v2，`requests.input_message_id` 列 + 索引）。
-
-**一个需要区分的正常情况**：通过的那次运行共 2 个 Task，来自两条**不同**用户输入（`msg-1795056500271` 与 `msg-1795056779716`），不是 D1 的重复提交。
-
 **仍存在的缺陷**（真实模型回执证据）：
 
 | # | 缺陷 | 证据 | 对应判据 |
 |---|---|---|---|
 | D2 | `assistant_context` 参数被误用 | `command.requirements.0.statement: unknown field` | M05、M33 |
 | D3 | `assistant_delegate` 参数被误用 | `config.fileScope: unknown field`（`fileScope` 在契约顶层） | 同上 |
-| D4 | 旧契约主动阻断新流程 | `Select alone is not preparation` / `Continuation requires a completed result` / `work_input_pending` | M33 |
+| D4 | 旧契约主动阻断新流程 | `Select alone is not preparation` / `Continuation requires a completed result` / `work_input_pending`（已 4 次复现） | M33 |
 
-D2–D4 是同一个问题的三种表现。退役路径与能力对照见 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md) §3.1。
+**本轮还补上了一条安全性质**（原为缺口，见退役清单 §3 条件 2）：`task_create`/`task_amend` 现在校验每条要求引文必须是绑定输入的原文摘录，`assistant_context.prepare` 不再是唯一做这件事的地方。已用反向验证确认断言有效（关掉校验即报 `Missing expected exception: an invented quote must be refused`）。
+
+退役路径与能力对照见 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md) §3.1。
 
 ### 工作面板（本轮实施，2026-11-18）
 
