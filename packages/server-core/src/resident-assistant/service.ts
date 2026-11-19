@@ -265,8 +265,10 @@ export class ResidentAssistantService {
             const control = WorkerControlSchema.parse(request.args.command)
             if (['resume', 'retry', 'message', 'configure'].includes(control.action)) {
               const receipt = (await (await session.work()).query({ id: control.id })).items[0]
-              const branches = context.preparedBranches(durableToolOperationId(request.runOperationId, request.providerToolCallId))
-              if (!receipt || receipt.assistantSessionId !== session.id || !receipt.branchIds?.length || receipt.branchIds.some(id => !branches.includes(id))) {
+              const scope = context.admittedScope(durableToolOperationId(request.runOperationId, request.providerToolCallId))
+              // Without a preparation the receipt's own branch scope is the bound.
+              if (!receipt || receipt.assistantSessionId !== session.id || !receipt.branchIds?.length
+                || scope.preparationId && receipt.branchIds.some(id => !scope.branchIds.includes(id))) {
                 throw new Error('context_task_scope_conflict: Prepare this Worker work before business control')
               }
             }
@@ -300,21 +302,8 @@ export class ResidentAssistantService {
     const context = this.context(session.id)
     return {
       assistantContextFn: async (command, toolExecutionId, signal) => {
-        if (command.action === 'receipt' || command.action === 'reconcile') {
-          const snapshot = this.runtimeEvidence?.getRecoveryEvidence(this.workspace.rootPath, command.operationId)
-          if (!snapshot || snapshot.sessionId !== session.id) throw new Error('context_operation_unavailable: Operation does not belong to this assistant')
-          const reconciled = command.action === 'reconcile' ? await this.runtimeEvidence!.queryAndReconcileTool(this.workspace.rootPath,
-            { sessionId: session.id, toolOperationId: command.operationId, actor: { type: 'system', id: 'resident-context-recovery' } }) : undefined
-          return { ...context.get(false), recovery: { operationId: command.operationId, verdict: reconciled?.snapshot.verdict.kind ?? snapshot.verdict.kind,
-            localReceipt: !!context.toolReceipt(command.operationId), committedSeq: reconciled?.committedSeq } }
-        }
-        const continuation = command.action === 'prepare' && command.continuationOf ? await this.continuationContext(session.id, command.continuationOf) : undefined
-        if (command.action === 'prepare') await context.warm(session.messages(), session.input()?.id ?? '', command)
         signal?.throwIfAborted()
-        if (command.action === 'prepare' && session.messages().some(message => message.role === 'user' && message.isQueued && hasDirectUserAuthority(message.inputSource))) {
-          throw new Error('work_input_pending: A newer user input superseded this pending preparation')
-        }
-        const state = this.memory.withSourceSnapshot(() => context.command(command, session.messages(), session.input()?.id, session.projectId(), toolExecutionId, continuation))
+        const state = this.memory.withSourceSnapshot(() => context.command(command, session.messages(), session.input()?.id, session.projectId(), toolExecutionId))
         return { ...state, activeSegment: state.activeSegment ? { ...state.activeSegment, requests: [] } : undefined }
       },
       assistantScenarioCaptureFn: async command => {

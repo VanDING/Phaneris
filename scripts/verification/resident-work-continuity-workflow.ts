@@ -79,8 +79,22 @@ await verificationWorkflow('resident-work-continuity', async run => {
 
     command({ action: 'select', branchIds: [branch] })
     const old = await infer('1', 'old-call')
-    await assert.rejects(() => policy().durableToolBoundary!.prepare(effectRequest('old-call', old.producer.operationId)), /work_not_prepared/)
-    scenes.push('WC03-select-alone-cannot-authorize-business')
+    // Retired contract (2026-11-19): a committed producer request that carried
+    // no preparation binding is now admitted directly. What must still hold is
+    // that its scope comes from *its own* material view, never from a newer
+    // pointer or preparation it never saw.
+    const oldAdmission = await policy().durableToolBoundary!.prepare(effectRequest('old-call', old.producer.operationId))
+    const oldScope = context.admittedScope(oldAdmission.operationId)
+    assert(oldScope.branchIds.includes(branch),
+      'A preparation-less admission must be bounded by the producer request that actually made the call')
+    assert.equal(oldScope.preparationId, undefined,
+      'A preparation-less admission must not claim a preparation identity it never had')
+    // Settle the effect so the Runtime is not left with an unknown outcome; the
+    // assertion above is about the admission boundary, not about executing work.
+    await policy().durableToolBoundary!.commitOutcome({ ...effectRequest('old-call', old.producer.operationId),
+      operationId: oldAdmission.operationId, canonicalArgsHash: oldAdmission.canonicalArgsHash,
+      result: { effects, task: undefined }, isError: false })
+    scenes.push('WC03-select-alone-admitted-only-within-the-producer-material-view')
     assert.throws(() => command({ action: 'prepare', requestId: 'unsupported-work-scope', target: { kind: 'keep' },
       requirements: [{ scope: 'work', source: { sessionId: 'assistant', messageId: 'today' } }] }), /context_work_scope_required/)
     assert.equal(context.workPreparation('unsupported-work-scope'), undefined)
@@ -91,8 +105,15 @@ await verificationWorkflow('resident-work-continuity', async run => {
     assert.equal(context.workPreparation('today-preparation')?.state, 'ready')
     assert(JSON.stringify(ready).includes('Greeting: afternoon'))
     assert(!context.associations(branch).some(ref => ref.messageId === 'today' && ref.role === 'requirement'))
-    await assert.rejects(() => policy().durableToolBoundary!.prepare(effectRequest('old-call', old.producer.operationId)), /work_not_prepared|work_generation/)
-    scenes.push('WC02-input-only-requirement-visible-not-promoted', 'WC04-old-producer-cannot-borrow-new-pointer')
+    // The old producer is still bounded by its own view; the newer preparation
+    // changes where *later* admissions get their requirements, not what an
+    // admission that never carried a binding may claim.
+    const oldScopeAfter = context.admittedScope(oldAdmission.operationId)
+    assert.equal(oldScopeAfter.preparationId, undefined,
+      'A newer preparation must not retroactively give an older admission a preparation identity')
+    assert.deepEqual(oldScopeAfter.branchIds, oldScope.branchIds,
+      'A newer preparation must not retroactively widen an older admission scope')
+    scenes.push('WC02-input-only-requirement-visible-not-promoted', 'WC04-old-producer-cannot-claim-a-newer-preparation')
 
     const fresh = await infer('2', 'fresh-call')
     assert.equal(context.segmentForRun(runId)!.requests.at(-1)!.snapshot!.tools[0]!.description, undefined, 'Context projection must reference Runtime evidence instead of duplicating tool descriptions')

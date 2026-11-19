@@ -36,12 +36,15 @@ const provider = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request
   if (inbox) return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'Internal delivery references reviewed; inspect source Sessions for details.' }) + chunk({}, 'stop') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
   if (JSON.stringify(messages).includes('resident_assistant_role') && !messages.some(message => message.role === 'tool' && JSON.stringify(message).includes('native-model-work'))) {
     const discovering = !messages.some(message => message.role === 'tool')
-    const preparing = !discovering && !messages.some(message => message.role === 'tool' && JSON.stringify(message).includes('native-model-prepare'))
-    const name = discovering ? 'mcp__session__assistant_worker_options' : preparing ? 'mcp__session__assistant_context' : 'mcp__session__assistant_delegate'
+    // A retired preparation action must be refused by the real tool boundary,
+    // not silently accepted because the schema stopped advertising it. The
+    // refusal is an error result, so it will not echo this request id back.
+    const probingRetired = !discovering && !messages.some(message => JSON.stringify(message).includes('native-retired-probe'))
+    const name = discovering ? 'mcp__session__assistant_worker_options' : probingRetired ? 'mcp__session__assistant_context' : 'mcp__session__assistant_delegate'
     assert(JSON.stringify(body.tools).includes(name), 'Actual resident model catalog must expose delegation')
     assert(JSON.stringify(body.tools).includes('targetSessionId'), 'Actual tool schema must support ordinary Session reuse')
-    return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: discovering ? 'native-options-call' : preparing ? 'native-prepare-call' : 'native-delegation-call', type: 'function', function: { name, arguments: JSON.stringify(discovering ? { kind: 'models', connectionSlug: 'fixture' }
-      : preparing ? { command: { action: 'prepare', requestId: 'native-model-prepare', target: { kind: 'create', label: 'Native fixture task' }, requirements: [{ scope: 'input' }] } } : nativeRequest) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
+    return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: discovering ? 'native-options-call' : probingRetired ? 'native-retired-probe' : 'native-delegation-call', type: 'function', function: { name, arguments: JSON.stringify(discovering ? { kind: 'models', connectionSlug: 'fixture' }
+      : probingRetired ? { command: { action: 'prepare', requestId: 'native-retired-prepare', target: { kind: 'create', label: 'Retired action probe' }, requirements: [{ scope: 'input' }] } } : nativeRequest) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
   }
   return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'WORKER_RESULT_EVIDENCE' }) + chunk({}, 'stop') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
 } })
@@ -233,6 +236,12 @@ try {
   assert.equal(native.sessionId, nativeRequest.targetSessionId)
   assert(loadSession(workspace.rootPath, nativeRequest.targetSessionId)?.messages.some(message => message.content === 'NATIVE_EXISTING_HISTORY'))
   scenes.push('RW06-native-assistant-tool-to-worker')
+  // The retired action is refused at the real tool boundary, not just dropped
+  // from the advertised catalog: the probe above ran through the actual Host.
+  const probeRefusal = (await manager.getSession(assistantId))!.messages.findLast(message => message.role === 'tool'
+    && message.isError === true && (message.toolName ?? '').includes('assistant_context'))
+  assert(probeRefusal, 'The retired assistant_context preparation action must be refused at the tool boundary')
+  scenes.push('RW13-retired-preparation-action-refused-at-the-tool-boundary')
   const optionResult = requests.find(body => JSON.stringify(body).includes('native-options-call') && JSON.stringify(body).includes('supportedThinkingLevels'))
   assert(optionResult, 'The model must receive structured capabilities before choosing configuration')
   assert(!JSON.stringify(optionResult).includes('loopback-only-key'))

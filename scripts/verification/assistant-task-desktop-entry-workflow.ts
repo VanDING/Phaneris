@@ -145,6 +145,32 @@ await verificationWorkflow('assistant-task-desktop-entry', async run => {
     evidence.push({ ghostError: ghost?.content?.slice(0, 200) })
     scenes.push('D07-unknown-task-is-refused')
 
+    // M33 · A business dispatch must not require a separate preparation pass.
+    //
+    // The model records the delegation and then dispatches in the very next
+    // inference. No `assistant_context prepare` runs in between: the trusted
+    // input on this turn plus the Task it established are the authority, so the
+    // old "Select alone is not preparation" gate must not appear at all.
+    script.push({ name: 'task_create', arguments: { requestId: 'entry-direct', goalTitle: 'Direct dispatch goal',
+      title: 'Direct dispatch without preparation', scopeIn: ['one isolated text result'],
+      requirements: [{ statement: 'Return a short text result', scope: 'task' }],
+      acceptance: ['A text result is returned'] } },
+    { name: 'assistant_delegate', arguments: { requestId: 'entry-direct-dispatch', title: 'Direct dispatch without preparation',
+      instructions: 'Return DIRECT_DISPATCH_TEXT as the result.', config: { permissionMode: 'safe' } } })
+    await send('直接派工，不需要先准备。')
+    const directTask = (await tasks()).items.find(item => item.task.id !== task.task.id)
+    assert(directTask, 'The direct dispatch must have recorded its own Task')
+    const directWork = await client.invoke(RPC_CHANNELS.residentAssistant.WORK, 'alpha', { view: 'current', limit: 20 })
+    const dispatched = directWork.items.find(item => item.title === 'Direct dispatch without preparation')
+    assert(dispatched, 'The delegation must be accepted without a preparation pass')
+    assert.notEqual(dispatched.state, 'failed', `Direct dispatch failed: ${dispatched.error ?? 'unknown'}`)
+    const directErrors = (await manager.getSession(assistant.id))!.messages
+      .filter(message => message.role === 'tool' && message.isError).map(message => message.content)
+    assert(!directErrors.some(text => /work_not_prepared|Select alone is not preparation/.test(text ?? '')),
+      `A direct dispatch must not be gated on preparation: ${directErrors.join(' | ').slice(0, 500)}`)
+    evidence.push({ directTask: directTask.task.id, directDelegation: dispatched.id, directState: dispatched.state })
+    scenes.push('D09-business-dispatch-requires-no-preparation-pass')
+
     // The board projection keeps definition, execution and acceptance as separate facts.
     const final = await tasks({ taskId: task.task.id })
     assert.equal(final.items[0]!.definitionVersion, 2)

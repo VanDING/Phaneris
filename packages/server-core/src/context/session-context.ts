@@ -294,36 +294,67 @@ export class SessionContext extends WorkPreparationStore {
       throw new Error('work_not_prepared: Business calls require their committed producer request; prepare current work and continue inference')
     }
     const binding = producer.preparation, preparation = this.preparationForInput(segment.inputMessageId)
-    if (!binding || !preparation || preparation.state !== 'ready') throw new Error('work_not_prepared: Select alone is not preparation; use assistant_context prepare')
+    // A request built without a work preparation is a direct dispatch. Its
+    // authority is the trusted input bound to this segment plus the Task record
+    // that input established, not a re-derived preparation generation. Nothing
+    // was promised about requirements or materials, so nothing is compared here
+    // and no invocation-time record is created.
+    if (!binding) {
+      this.db.prepare('INSERT OR IGNORE INTO work_admissions VALUES(?,?,?)').run(durableToolOperationId(request.runOperationId, request.providerToolCallId), request.runOperationId, producer.providerRequestId)
+      return
+    }
+    if (!preparation || preparation.state !== 'ready') throw new Error('work_not_prepared: Select alone is not preparation; use assistant_context prepare')
     if (binding.commandId !== preparation.id || binding.generation !== preparation.generation || binding.requirementsHash !== preparation.requirementsHash
       || binding.materialsHash !== preparation.materialsHash || !this.revisionsValid(producer.branchRevisions) || !this.memory.dependenciesValid(producer.dependencies)) {
       throw new Error('work_generation_conflict: Producer used different requirements or materials; prepare and infer again')
     }
     this.db.prepare('INSERT OR IGNORE INTO work_admissions VALUES(?,?,?)').run(durableToolOperationId(request.runOperationId, request.providerToolCallId), request.runOperationId, producer.providerRequestId)
   }
+  /**
+   * Resolve the admission one business call was granted. A call that no
+   * preparation produced is a direct dispatch: the trusted input and the Task
+   * record it established carry the authority, so the producer request itself
+   * bounds the work instead of a preparation generation.
+   */
   private admittedPreparation(operationId: string) {
     const admission = this.db.prepare('SELECT run_id,provider_request_id FROM work_admissions WHERE operation_id=?').get(operationId) as { run_id: string; provider_request_id: string } | undefined
     const segment = admission && this.segmentForRun(admission.run_id), producer = segment && segment.requests.find(item => item.providerRequestId === admission!.provider_request_id)
-    const work = producer?.preparation && this.workPreparation(producer.preparation.commandId)
-    const latest = work && this.preparationForInput(work.inputId)
-    if (!work || !producer || work.state !== 'ready' || work.generation !== producer.preparation?.generation
+    if (!admission || !segment || !producer) throw new Error('work_not_prepared: No current Host admission for this business operation')
+    if (!this.revisionsValid(producer.branchRevisions) || !this.memory.dependenciesValid(producer.dependencies)) {
+      throw new Error('work_generation_conflict: Producer used different requirements or materials; read current sources and infer again')
+    }
+    if (!producer.preparation) return { producer, inputId: segment.inputMessageId, branchIds: Object.keys(producer.branchRevisions ?? {}), work: undefined }
+    const work = this.workPreparation(producer.preparation.commandId), latest = work && this.preparationForInput(work.inputId)
+    if (!work || work.state !== 'ready' || work.generation !== producer.preparation.generation
       || latest?.id !== work.id || latest.generation !== work.generation
-      || work.materialsHash !== producer.preparation.materialsHash || !this.revisionsValid(work.branchRevisions)
-      || !this.memory.dependenciesValid(producer.dependencies)) throw new Error('work_not_prepared: No current Host admission for this business operation')
-    return { work, producer }
+      || work.materialsHash !== producer.preparation.materialsHash || !this.revisionsValid(work.branchRevisions)) {
+      throw new Error('work_not_prepared: No current Host admission for this business operation')
+    }
+    return { producer, inputId: work.inputId, branchIds: work.branchIds, work }
   }
-  preparedBranches(operationId: string): string[] { return this.admittedPreparation(operationId).work.branchIds }
-  admittedPreparationId(operationId: string): string { return this.admittedPreparation(operationId).work.id }
-  admittedInputId(operationId: string): string { return this.admittedPreparation(operationId).work.inputId }
+  /**
+   * Branch and input scope one business call was admitted under.
+   *
+   * `preparationId` is absent when the call carried no preparation: that is a
+   * direct dispatch, bounded by the producer request the model actually saw
+   * rather than by an invocation-time generation record.
+   */
+  admittedScope(operationId: string): { branchIds: string[]; inputId: string; preparationId?: string } {
+    const { branchIds, inputId, work } = this.admittedPreparation(operationId)
+    return { branchIds, inputId, ...(work ? { preparationId: work.id } : {}) }
+  }
   assertContinuation(operationId: string, continuationOf?: string): void {
-    if (this.admittedPreparation(operationId).work.continuationOf !== continuationOf) throw new Error('work_continuation_conflict: Producer must receive the original execution requirements before continuing it')
+    const { work } = this.admittedPreparation(operationId)
+    // Without recorded requirements there is nothing to compare; the delegation
+    // layer still re-reads the original receipt, grant and review outcome.
+    if (work && work.continuationOf !== continuationOf) throw new Error('work_continuation_conflict: Producer must receive the original execution requirements before continuing it')
   }
   preparedTaskMaterials(operationId: string, branchIds?: string[], sources: import('@phaneris/session-tools-core/resident-context-contracts').ResidentSource[] = []): ResidentDependencies {
-    const { work, producer } = this.admittedPreparation(operationId)
-    const selected = branchIds ?? work.branchIds
-    if (selected.some(id => !work.branchIds.includes(id))) throw new Error('context_task_scope_conflict: Assignment exceeds prepared work')
+    const { work, producer, branchIds: admitted } = this.admittedPreparation(operationId)
+    const selected = branchIds ?? admitted
+    if (selected.some(id => !admitted.includes(id))) throw new Error('context_task_scope_conflict: Assignment exceeds prepared work')
     for (const source of sources) if (!producer.dependencies.sources.some(known => known.sessionId === source.sessionId && known.messageId === source.messageId)) throw new Error('context_task_scope_conflict: Read task evidence in the producer request before delegation')
-    return this.taskMaterials(selected, [...work.requirements.filter(item => item.scope === 'input' && selected.includes(item.branchId)).map(item => item.source), ...sources])
+    return this.taskMaterials(selected, [...work?.requirements.filter(item => item.scope === 'input' && selected.includes(item.branchId)).map(item => item.source) ?? [], ...sources])
   }
   requestRefresh(originalInputId: string): void {
     this.db.prepare(`INSERT INTO material_refresh VALUES(?,?,'pending',NULL,0,?) ON CONFLICT(session_id,original_input) DO UPDATE SET state='pending',next_at=excluded.next_at

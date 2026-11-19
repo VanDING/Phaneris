@@ -1,5 +1,6 @@
 import { isDirectUserSource } from '../../packages/server-core/src/sessions/input-contracts'
 import assert from 'node:assert/strict'
+import { DEFAULT_ASSISTANT_TASK_CONCURRENCY } from '@phaneris/session-tools-core/delegation-contracts'
 import { verificationWorkflow } from './verification-artifacts'
 import { createResidentTaskHost, taskModelResponse } from './fixtures/resident-task-host'
 
@@ -28,15 +29,18 @@ await verificationWorkflow('resident-assistant-management', async run => {
   })
   const scenes: string[] = [], evidence: unknown[] = [], { until } = fixture
   const sourceRead = (result: { sessionId: string; messageId: string }) => ({ name: 'mcp__session__assistant_memory_read', args: result })
-  const prepare = (requestId: string, branchIds: string[], continuationOf?: string) => ({ name: 'mcp__session__assistant_context',
-    args: { command: { action: 'prepare', requestId, target: { kind: 'select', branchIds }, continuationOf, requirements: continuationOf ? [] : [{ scope: 'input' }] } } })
+  // The model-side preparation generation is retired. Selecting material is the
+  // remaining way to name which work a management call refers to; continuation
+  // scope itself is validated by the delegation layer from the original receipt.
+  const prepare = (branchIds: string[]) => ({ name: 'mcp__session__assistant_context',
+    args: { command: { action: 'select', branchIds } } })
   try {
     const a = await fixture.dispatch('manage-a', { context: { branchIds: [] }, instructions: 'PACKET_A_ONLY: original limit 5. Produce a text report.' })
     const b = await fixture.dispatch('manage-b', { context: { branchIds: [] }, instructions: 'PACKET_B_ONLY: independent limit 6. Produce a text report.' })
     await until(() => aStarted && bStarted)
     const before = (await fixture.work(a.id)).execution!.attempts[0]!.operationId
     const revision = { commandId: 'queued-revision-a', id: a.id, expectedSeq: (await fixture.work(a.id)).seq, action: 'message', message: 'REVISION_A_LIMIT11: widen only A to 11; finish its original report.' }
-    calls.push(prepare('prepare-revision-a', (await fixture.work(a.id)).branchIds!), { name: 'mcp__session__assistant_worker_control', args: { command: revision } })
+    calls.push(prepare((await fixture.work(a.id)).branchIds!), { name: 'mcp__session__assistant_worker_control', args: { command: revision } })
     await fixture.sendMain('将 A 的上限放宽到 11，B 保持原要求。请传达修订并继续推进。')
     const queued = await fixture.work(a.id)
     assert.equal(queued.state, 'submitted')
@@ -61,7 +65,7 @@ await verificationWorkflow('resident-assistant-management', async run => {
     const currentA = await fixture.work(a.id)
     calls.push(sourceRead(currentA.result!), { name: 'mcp__session__assistant_delivery_ack', args: { eventIds: [], reviews: [{
       delegationId: a.id, expectedSeq: currentA.seq, result: { messageId: currentA.result!.messageId, sessionId: currentA.result!.sessionId }, outcome: 'rework', reason: 'Original report requires an authorized follow-up correction.' }] } },
-    prepare('prepare-follow-a', currentA.branchIds!, a.id),
+    prepare(currentA.branchIds!),
     { name: 'mcp__session__assistant_delegate', args: { requestId: 'follow-original-a', title: 'Follow original A', instructions: 'Complete the unfinished correction within the original goal.',
       goalQuote: fixture.goal, continuationOf: a.id, targetSessionId: a.sessionId!, config: {} } })
     await fixture.sendMain('按 A 原授权继续修订，不重新派发已完成的工作。')
@@ -82,7 +86,7 @@ await verificationWorkflow('resident-assistant-management', async run => {
     const followB = Promise.withResolvers<void>(); held.set('B_AUTHORIZED_FOLLOWUP_HOLD', followB)
     calls.push(sourceRead(resultB.result!), { name: 'mcp__session__assistant_delivery_ack', args: { eventIds: [], reviews: [{
       delegationId: b.id, expectedSeq: resultB.seq, result: resultB.result!, outcome: 'accepted', reason: 'Verified against original text-report requirements.' }] } },
-    prepare('prepare-follow-b', resultB.branchIds!, b.id),
+    prepare(resultB.branchIds!),
     { name: 'mcp__session__assistant_delegate', args: { requestId: 'inbox-follow-b', title: 'Authorized B follow-up', instructions: 'B_AUTHORIZED_FOLLOWUP_HOLD: continue unfinished work within the original report goal.',
       goalQuote: fixture.goal, continuationOf: b.id, targetSessionId: b.sessionId!, config: {} } })
     await until(async () => {
@@ -105,7 +109,9 @@ await verificationWorkflow('resident-assistant-management', async run => {
       return messages.flatMap(message => typeof message.content === 'string' ? [message.content] : (message.content ?? []).map(part => part.text ?? ''))
         .flatMap(text => { const match = text.match(/<resident_tasks>\n([^]*?)\n<\/resident_tasks>/); return match ? [JSON.parse(match[1]!)] : [] })
     })
-    assert(overviews().some(item => item.scheduling?.capacity === 4))
+    // The default ceiling is the shipped contract, not four: asserting the
+    // literal 4 made this fail as soon as the Host raised its own default.
+    assert(overviews().some(item => item.scheduling?.capacity === DEFAULT_ASSISTANT_TASK_CONCURRENCY))
     scenes.push('TM14-real-main-requests-receive-bounded-runtime-task-overviews')
     const clauseA = 'SCOPED_A: complete this isolated report.', privateB = 'ISOLATED_B_PRIVATE_DRAFT: unrelated confidential synthetic discussion.'
     await fixture.sendMain(`${clauseA}\n${privateB}`)

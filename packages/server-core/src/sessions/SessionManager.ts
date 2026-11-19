@@ -3519,13 +3519,17 @@ export class SessionManager implements ISessionManager {
     const context = this.residentService(assistant.workspace).context(assistant.id)
     const reader = getSourceReader(assistant.workspace.rootPath), beforeRead = reader.metrics()
     const directInput = assistant.messages.findLast(message => message.role === 'user' && !message.hidden && isDirectUserSource(message.inputSource))
-    if (request.workAdmissionId && (!assistant.lastSentMessageIds?.includes(context.admittedInputId(request.workAdmissionId))
+    const scope = request.workAdmissionId ? context.admittedScope(request.workAdmissionId) : undefined
+    if (scope && (!assistant.lastSentMessageIds?.includes(scope.inputId)
       || assistant.messages.some(message => message.role === 'user' && message.isQueued && isDirectUserSource(message.inputSource)))) {
       throw new Error('work_input_pending: A newer user input superseded this Worker preparation')
     }
     const direct = request.directUserPreparationId && directInput && !directInput.isQueued ? context.directUserPreparation(request.directUserPreparationId, directInput.id) : undefined
     if (!request.workAdmissionId && !direct) throw new Error('work_not_prepared: Prepare current requirements before creating Worker input')
-    const selected = request.workAdmissionId ? context.preparedBranches(request.workAdmissionId) : direct!.branchIds
+    // A direct dispatch carries no preparation: the assignment is bounded by the
+    // exact branches and sources this call named, or by the assistant's recorded
+    // selection. Nothing is inherited from an invocation-time generation record.
+    const selected = scope ? scope.branchIds : direct!.branchIds
     if (!request.context?.branchIds.length && selected.length > 1) throw new Error('context_task_scope_required: Select this Worker task material branches explicitly')
     const branchIds = request.context?.branchIds.length ? request.context.branchIds : selected
     const materialDependencies = request.workAdmissionId ? context.preparedTaskMaterials(request.workAdmissionId, branchIds, request.context?.sources)
@@ -3546,8 +3550,9 @@ export class SessionManager implements ISessionManager {
       return { id: record.id, revision: record.revision, projectId: record.projectId, condition: record.condition, content: record.content,
         range: inspected.contentRange, nextOffset: inspected.nextOffset }
     })
+    const preparationId = scope ? scope.preparationId : direct!.id
     const contextBinding = { assistantSessionId: assistant.id, branchRevisions: Object.fromEntries(branchIds.map(id => [id, context.branch(id).revision])),
-      preparationId: request.workAdmissionId ? context.admittedPreparationId(request.workAdmissionId) : direct!.id }
+      ...(preparationId ? { preparationId } : {}) }
     const taskMaterials = taskSourceDependencies.map(source => {
       const original = this.residentService(assistant.workspace).memory.readSource({ ...source, expectedContentHash: source.contentHash })
       const ranges = 'ranges' in source ? source.ranges as Array<{ offset: number; end: number }> : undefined

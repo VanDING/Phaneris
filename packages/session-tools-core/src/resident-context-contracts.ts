@@ -39,12 +39,17 @@ export const ResidentContextSchema = z.discriminatedUnion('action', [
     anchors: z.array(ResidentSourceSchema).max(32) }).strict(),
 ])
 export type ResidentContextCommand = z.infer<typeof ResidentContextSchema>
-/** Legacy focus/topic commands remain UI/RPC adapters, never model policy. */
-const modelPreparation = ResidentContextSchema.options[7].extend({ requirements: ResidentContextSchema.options[7].shape.requirements.unwrap()
-  .describe('Explicit scoped requirements; use [] only when no new requirements need recording. For create omit each branchId and preserve every quoted clause and its scope.') })
+/** Legacy focus/topic commands remain UI/RPC adapters, never model policy.
+ *
+ * The model surface is material selection only. A separate preparation pass is
+ * no longer a model responsibility: the Task record owns requirements, the Host
+ * owns readiness, and the former `prepare` / `preparation` / `recover` /
+ * `receipt` / `reconcile` generations are retired. The Host still builds its own
+ * preparation internally for a user-initiated dispatch, which is not this
+ * contract.
+ */
 export const AssistantContextSchema = z.discriminatedUnion('action', [ResidentContextSchema.options[0], ResidentContextSchema.options[1],
-  ResidentContextSchema.options[2], ResidentContextSchema.options[3], ResidentContextSchema.options[4], ResidentContextSchema.options[5], ResidentContextSchema.options[6],
-  modelPreparation, ResidentContextSchema.options[8], ResidentContextSchema.options[9], ResidentContextSchema.options[10], ResidentContextSchema.options[11]])
+  ResidentContextSchema.options[2], ResidentContextSchema.options[3], ResidentContextSchema.options[4], ResidentContextSchema.options[5], ResidentContextSchema.options[6]])
 export type ResidentSource = z.infer<typeof ResidentSourceSchema>
 export interface ResidentDependencies {
   sources: Array<import('@phaneris/core/types').SourceMaterialReference & { ranges?: Array<{ offset: number; end: number }> }>

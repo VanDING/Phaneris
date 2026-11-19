@@ -60,11 +60,12 @@ await verificationWorkflow('resident-assistant-control', async run => {
         name, arguments: JSON.stringify({ method: 'POST', path: 'followup', params: { mustNotRunAfterPause: true } }) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
     }
     if (main && nativeControl) {
+      // The retired preparation generation is gone; material selection is the
+      // retained way to name the work a management call refers to.
       if (nativePreparation) {
         const preparation = nativePreparation; nativePreparation = undefined
         return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: 'native-control-prepare', type: 'function', function: {
-          name: 'mcp__session__assistant_context', arguments: JSON.stringify({ command: { action: 'prepare', requestId: preparation.requestId,
-            target: { kind: 'select', branchIds: preparation.branchIds }, requirements: [{ scope: 'input' }] } }) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
+          name: 'mcp__session__assistant_context', arguments: JSON.stringify({ command: { action: 'select', branchIds: preparation.branchIds } }) } }] }, 'tool_calls') + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
       }
       const command = nativeControl; nativeControl = undefined
       return new Response(chunk({ role: 'assistant' }) + chunk({ tool_calls: [{ index: 0, id: 'native-worker-control', type: 'function', function: {
