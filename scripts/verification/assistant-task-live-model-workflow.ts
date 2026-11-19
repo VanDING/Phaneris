@@ -28,8 +28,16 @@ const REAL_CONFIG = join(homedir(), '.phaneris')
 /** Whether another instance of the shipped app currently holds the lock. */
 function runningInstances(): string[] {
   try {
-    const output = execFileSync('tasklist', ['/FI', 'IMAGENAME eq Phaneris.exe', '/FO', 'CSV', '/NH'], { encoding: 'utf8' })
-    return output.split('\n').map(line => line.trim()).filter(line => line.startsWith('"Phaneris.exe"'))
+    // The packaged app runs as Phaneris.exe; a development launch runs as
+    // electron.exe. Both take the same lock, so both must be counted or the
+    // check passes and the launch then dies with "Second instance handed off".
+    const names = ['Phaneris.exe', 'electron.exe']
+    return names.flatMap(name => {
+      try {
+        const output = execFileSync('tasklist', ['/FI', `IMAGENAME eq ${name}`, '/FO', 'CSV', '/NH'], { encoding: 'utf8' })
+        return output.split('\n').map(line => line.trim()).filter(line => line.startsWith(`"${name}"`))
+      } catch { return [] }
+    })
   } catch { return [] }
 }
 

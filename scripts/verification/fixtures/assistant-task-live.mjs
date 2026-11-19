@@ -118,30 +118,51 @@ try {
   scenes.push('LM02-real-model-records-one-versioned-task')
 
   // ── M05 · a mixed request: a change and a question in one message ───────
-  // This turn may dispatch a worker, so the session can stay busy after the
-  // model has already recorded the change. The observation is the record, not
-  // the turn's duration: wait until the change appears, then report it.
-  const changeDeadline = Date.now() + 180_000
+  // The design allows two correct answers here: record a new requirement
+  // version, or append the change to the run already in flight (a supplement).
+  // Both leave a Host record. What must not happen is the change being only
+  // discussed in prose, so both paths are observed.
+  const controlDeadline = Date.now() + 180_000
+  const controlCalls = []
+  const beforeTools = await page.evaluate(async id => {
+    const session = await window.electronAPI.getSessionMessages(id)
+    return session?.messages.filter(message => message.type === 'tool').length ?? 0
+  }, sessionId)
   await page.evaluate(({ id, text }) => window.electronAPI.sendMessage(id, text),
     { id: sessionId, text: '把刚才那个改成深色背景，另外现在一共有几项工作在跑？' })
   let afterMixed
   for (;;) {
     afterMixed = await tasks()
     const same = afterMixed.items.find(item => item.task.id === created.task.id)
-    const changed = !!same && (same.changes.length > created.changes.length || same.requirements.length > created.requirements.length)
-    if (changed || afterMixed.total > page1.total) break
-    if (Date.now() > changeDeadline) break
+    const amended = !!same && (same.changes.length > created.changes.length || same.requirements.length > created.requirements.length)
+    if (amended || afterMixed.total > page1.total) break
+    // A supplement is a worker-control call with a recorded result; read the
+    // new tool receipts rather than inventing a field on the projection.
+    const supplement = await page.evaluate(async ({ id, beforeTools }) => {
+      const session = await window.electronAPI.getSessionMessages(id)
+      const tools = session?.messages.filter(message => message.type === 'tool') ?? []
+      return tools.slice(beforeTools).some(message => (message.toolName ?? '').includes('assistant_worker_control')
+        && !message.isError && /applied|queued/.test(message.toolResult ?? ''))
+    }, { id: sessionId, beforeTools })
+    if (supplement) { controlCalls.push('supplement'); break }
+    if (Date.now() > controlDeadline) break
     await new Promise(done => setTimeout(done, 1000))
   }
   const sameTask = afterMixed.items.find(item => item.task.id === created.task.id)
   const amended = !!sameTask && (sameTask.changes.length > created.changes.length || sameTask.requirements.length > created.requirements.length)
+  const supplemented = controlCalls.includes('supplement')
   const addedNew = afterMixed.total > page1.total
-  if (!amended && !addedNew) throw new Error('the requested change was not recorded')
-  writeFileSync(join(fixture.output, 'live-mixed.json'), JSON.stringify({ amended, addedNew, total: afterMixed.total,
-    changes: sameTask?.changes.length, requirements: sameTask?.requirements.length }, null, 2))
-  writeFileSync(join(fixture.output, 'live-mixed.txt'), await transcript())
+  const transcriptAfter = await transcript()
+  writeFileSync(join(fixture.output, 'live-mixed.json'), JSON.stringify({ amended, supplemented, addedNew,
+    total: afterMixed.total, changes: sameTask?.changes.length, requirements: sameTask?.requirements.length }, null, 2))
+  writeFileSync(join(fixture.output, 'live-mixed.txt'), transcriptAfter)
   await page.screenshot({ path: join(fixture.output, 'live-after-mixed.png') })
-  scenes.push('LM03-real-model-records-a-mixed-request')
+  if (!amended && !supplemented && !addedNew) {
+    throw new Error(`the requested change was not recorded (amended=${amended} supplemented=${supplemented} addedNew=${addedNew})`)
+  }
+  // The question half must be answered with a figure from the Host record.
+  if (!/[0-9]/.test(transcriptAfter)) throw new Error('a question about current work must be answered with a figure')
+  scenes.push(`LM03-real-model-records-a-mixed-request-${supplemented && !amended ? 'as-a-supplement' : 'as-a-new-version'}`)
 
   if (errors.length) throw new Error(`Page errors: ${JSON.stringify(errors)}`)
   writeFileSync(join(fixture.output, 'live-evidence.json'), JSON.stringify({ scenes, errors, sessionId }, null, 2))

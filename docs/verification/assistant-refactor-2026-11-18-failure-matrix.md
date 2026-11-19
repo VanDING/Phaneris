@@ -202,37 +202,54 @@ M10/M15 的产物闭环已覆盖：场景 `B08`/`B09` 断言文件真实存在�
 1. **真实模型桌面 E2E**：工作流已建成（`bun run scripts/verification/assistant-task-live-model-workflow.ts`），本轮因环境条件受阻未取得结果，原因见下节。
 2. **旧契约退役**：调用点、替代路径与前置条件已登记于 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md)。删除需用户确认，当前未删任何代码。
 
-#### 真实模型 E2E 的实际发现（已执行）
-
-工作流已跑通到真实 DeepSeek 回放。复跑命令：
+#### 真实模型 E2E —— 通过 1 次，随后同一判据下失败 1 次
 
 ```bash
-bun run scripts/verification/assistant-task-live-model-workflow.ts
+bun run verify:assistant-delegation-live
 ```
 
-前置条件：退出 Phaneris 桌面应用（单实例锁）。工作流把安装的 `credentials.enc` / `credentials.key` 与 Chromium 的 `Local State`（safeStorage 主密钥所在）复制到隔离配置根，不修改用户配置。
+前置条件：退出 Phaneris 桌面应用（单实例锁；打包版 `Phaneris.exe`、开发版 `electron.exe` 都占锁，工作流两者都检测）。工作流把安装的 `credentials.enc` / `credentials.key` 与 Chromium 的 `Local State`（safeStorage 主密钥所在）复制到隔离配置根，不修改用户配置。连接用安装配置的默认项（本轮为 Command Goat 的 `deepseek/deepseek-v4.1-flash`）。
+
+**第 1 次运行：3/3 通过**
+
+| 场景 | 真实模型行为 |
+|---|---|
+| LM01 问候 | 普通寒暄，未调用任何 `task_*` 工具，任务数不变 |
+| LM02 一次委托 | `task_create` 记录 Goal/要求/交付形式，`assistant_delegate` 派工 |
+| LM03 复合输入 | "改深色"记为新 Task（理由：需等页面生成后才能改），并回答"当前 1 项工作" |
+
+**第 2 次运行：LM03 失败，失败原因本身就是缺陷**
+
+同一判据、同一输入，模型这次反复尝试但被**旧契约连续挡住**，回执原文：
+
+- `Continuation requires a completed result with its original user grant`
+- `work_input_pending: A newer user input superseded this pending preparation`
+
+模型想把变更落到工作上，两次都被 `assistant_context` 的准备/续接规则拒绝，最终没有任何 Host 记录。这是 **D4 的运行时复现**：旧契约不只是"存在"，它会**主动阻断**新流程。
+
+结论：LM03 **不是稳定通过**。它在旧契约放行时通过、被挡住时失败，取决于模型选择哪条路径。这使 D4 从"应当退役"变成"必须退役"——否则同一条用户输入的行为不可预测。
 
 **D1 已修复并验证**（方案 A：幂等键 = 可信输入 + 语义动作）。真实模型对照：
 
 | | 修复前 | 修复后 |
 |---|---|---|
-| Goals | 2 | **1** |
-| Tasks | 2 | **1** |
+| Goals | 2 | **1**（同一输入） |
+| Tasks | 2 | **1**（同一输入） |
 | changes | 2 条，同一 `inputMessageId` | 1 条 |
 
 修复前两条记录的 `inputMessageId` 完全相同（`msg-1795049457234-71aac4c137d6`）、只有 `requestId` 不同：Host 只按 `requestId` 去重，模型重试换 id 就能重复建任务。现在同一输入 + 同一动作返回既有记录（store schema v2，`requests.input_message_id` 列 + 索引）。
+
+**一个需要区分的正常情况**：通过的那次运行共 2 个 Task，来自两条**不同**用户输入（`msg-1795056500271` 与 `msg-1795056779716`），不是 D1 的重复提交。
 
 **仍存在的缺陷**（真实模型回执证据）：
 
 | # | 缺陷 | 证据 | 对应判据 |
 |---|---|---|---|
-| D2 | `assistant_context` 参数被误用 | `command.requirements.0.statement: unknown field` — 模型把 `task_create` 的 `statement` 用在旧契约上 | M05、M33 |
-| D3 | `assistant_delegate` 参数被误用 | `config.fileScope: unknown field` — `fileScope` 在契约顶层，模型放进了 `config` | 同上 |
-| D4 | 旧契约与新流程互斥 | `assistant_worker_control` 回执：`work_not_prepared: Select alone is not preparation; use assistant_context prepare` | M33 |
+| D2 | `assistant_context` 参数被误用 | `command.requirements.0.statement: unknown field` | M05、M33 |
+| D3 | `assistant_delegate` 参数被误用 | `config.fileScope: unknown field`（`fileScope` 在契约顶层） | 同上 |
+| D4 | 旧契约主动阻断新流程 | `Select alone is not preparation` / `Continuation requires a completed result` / `work_input_pending` | M33 |
 
-D2–D4 是同一个问题的三种表现：两套契约描述同一件事、结构不同，模型会混用。**D4 说明旧契约退役不是清理项，而是当前派工路径的阻塞项。**
-
-**本轮受阻**：第三个场景（复合输入的变更记录）未完成，原因是 Worker 侧返回 `Payment Required: Your account has a billing issue`——DeepSeek 账户余额不足，属外部环境，非产品缺陷。该场景的确定性覆盖可由 `assistant-task-goal-control` 的 M18 变更为依据，但真实模型下的复合输入回放仍需余额恢复后补跑。
+D2–D4 是同一个问题的三种表现。退役路径与能力对照见 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md) §3.1。
 
 ### 工作面板（本轮实施，2026-11-18）
 
