@@ -1,18 +1,21 @@
 /**
- * The real-model entry replay, using the installed configuration in place.
+ * The real-model entry replay, in the shipped application.
  *
- * The vault is encrypted with an OS-provided key, so it can only be opened by a
- * process that holds that key: the application's own main process, reading the
- * configuration the user actually installed. Copying the vault to a temp root
- * does not work — the copy is not what the credential was sealed against — so
- * this launches the shipped app with the real config root and a throwaway
- * *workspace*, and removes that workspace afterwards.
+ * Two facts shape how this runs:
  *
- * Nothing in the user's own workspace is read or written.
+ *  - The credential vault is sealed with an OS key (safeStorage/DPAPI) bound to
+ *    the current user, not to a directory. A plain Node/Bun process cannot open
+ *    it, so the replay runs inside the application; copying the vault to a
+ *    throwaway config root works because DPAPI decrypts for this user.
+ *  - The shipped app takes a single-instance lock, so it can only run while the
+ *    user's own copy is closed. The workflow reports that as blocked rather
+ *    than failing the suite.
+ *
+ * The workspace is new and throwaway: the user's own configuration is copied,
+ * never edited, and the run leaves nothing behind.
  */
 import { _electron } from 'playwright'
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { homedir } from 'node:os'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 
@@ -20,74 +23,76 @@ const require = createRequire(import.meta.url)
 const { firstBusinessWindow } = require('./electron-windows.cjs')
 
 const fixture = JSON.parse(readFileSync(process.argv[2], 'utf8'))
-const realRoot = join(homedir(), '.phaneris')
-const workspaceId = 'live-model-probe'
-const workspaceRoot = join(realRoot, 'workspaces', workspaceId)
-const CONFIG_BACKUP = join(fixture.output, 'config.json.backup')
-const CONFIG_FILE = join(realRoot, 'config.json')
-
-// The workspace is created beside the user's own, then removed in the finally
-// block. The config is backed up first so an interrupted run can be restored.
-mkdirSync(workspaceRoot, { recursive: true })
-writeFileSync(join(workspaceRoot, 'config.json'), JSON.stringify({ id: workspaceId, name: 'Live model probe',
-  rootPath: workspaceRoot, createdAt: Date.now() / 1000, defaults: { permissionMode: 'guarded' } }))
-const installed = JSON.parse(readFileSync(CONFIG_FILE, 'utf8'))
-cpSync(CONFIG_FILE, CONFIG_BACKUP)
-
-const env = { ...process.env, PHANERIS_RPC_PORT: '0', PHANERIS_DISABLE_MESSAGING: '0',
-  PHANERIS_TELEMETRY_ENABLED: '0', NODE_ENV: 'production' }
-delete env.PHANERIS_CONFIG_DIR
+const env = { ...process.env, PHANERIS_CONFIG_DIR: fixture.config, PHANERIS_RPC_PORT: '0',
+  PHANERIS_DISABLE_MESSAGING: '0', PHANERIS_TELEMETRY_ENABLED: '0', NODE_ENV: 'production' }
 delete env.ELECTRON_RUN_AS_NODE
 delete env.VITE_DEV_SERVER_URL
 
 const scenes = [], errors = []
-let app
+// No --user-data-dir here: with PHANERIS_CONFIG_DIR set the app pins userData to
+// `<config>/user-data`, and overriding it would put safeStorage's `Local State`
+// somewhere else than the vault expects.
+const app = await _electron.launch({ ...(fixture.executable ? { executablePath: fixture.executable } : {}),
+  args: [...(fixture.executable ? [] : [join(fixture.root, 'apps/electron')])],
+  cwd: fixture.root, env, timeout: 120_000 })
 try {
-  // Register the throwaway workspace before launch so the app boots into it.
-  writeFileSync(CONFIG_FILE, JSON.stringify({
-    ...installed,
-    workspaces: [...installed.workspaces.filter(item => item.id !== workspaceId),
-      { id: workspaceId, name: 'Live model probe', rootPath: workspaceRoot, createdAt: Math.floor(Date.now() / 1000) }],
-    activeWorkspaceId: workspaceId,
-  }))
-  app = await _electron.launch({ args: [join(fixture.root, 'apps/electron'), `--user-data-dir=${join(realRoot, 'electron-live-probe')}`],
-    cwd: fixture.root, env, timeout: 120_000 })
   const page = await firstBusinessWindow(app, { timeout: 120_000 })
   page.on('pageerror', error => errors.push(error.message))
   await page.waitForFunction(() => document.documentElement.dataset.themeStatus === 'ready')
 
-  const sessionId = await page.evaluate(async id => (await window.electronAPI.getResidentAssistantMetadata(id)).id, workspaceId)
+  // The renderer's own transport is the shipped path; the test borrows it
+  // rather than opening a second socket the product does not know about.
+  const sessionId = await page.evaluate(async workspaceId => {
+    const assistant = await window.electronAPI.getResidentAssistantMetadata(workspaceId)
+    return assistant.id
+  }, fixture.workspaceId)
+
+  /**
+   * Send one user message and wait for the Host to finish the turn.
+   *
+   * The turn ends when the session stops processing and has produced output
+   * after the message. A turn that dispatched work may keep the *worker* busy,
+   * which is not this session processing, so the two are not conflated.
+   */
   const send = async text => {
     const before = await page.evaluate(async id => (await window.electronAPI.getSessionMessages(id))?.messages.length ?? 0, sessionId)
     await page.evaluate(({ id, text }) => window.electronAPI.sendMessage(id, text), { id: sessionId, text })
-    const deadline = Date.now() + 240_000
+    const deadline = Date.now() + 300_000
     for (;;) {
       const state = await page.evaluate(async ({ id, before }) => {
         const session = await window.electronAPI.getSessionMessages(id)
-        if (!session) return { processing: true, grew: false }
-        return { processing: session.isProcessing, grew: session.messages.length > before }
+        if (!session) return { processing: true, grew: false, error: false }
+        return {
+          processing: session.isProcessing,
+          grew: session.messages.length > before,
+          error: session.messages.slice(-3).some(message => message.role === 'error'),
+        }
       }, { id: sessionId, before })
+      // A provider rejection is a result, not a hang: report it immediately.
+      if (state.error) return
       if (!state.processing && state.grew) return
       if (Date.now() > deadline) throw new Error(`The model turn did not settle: ${text.slice(0, 40)}`)
       await new Promise(done => setTimeout(done, 500))
     }
   }
-  const tasks = () => page.evaluate(id => window.electronAPI.getAssistantTasks(id, { limit: 50 }), workspaceId)
+  const tasks = () => page.evaluate(id => window.electronAPI.getAssistantTasks(id, { limit: 50 }), fixture.workspaceId)
   const lastError = () => page.evaluate(async id => {
     const session = await window.electronAPI.getSessionMessages(id)
     return session?.messages.filter(message => message.role === 'error').map(message => message.content).slice(-2) ?? []
   }, sessionId)
   const transcript = () => page.evaluate(async id => {
     const session = await window.electronAPI.getSessionMessages(id)
-    return session?.messages.filter(message => message.role === 'assistant' && message.content?.trim())
-      .map(message => message.content).join('\n---\n').slice(-4000) ?? ''
+    if (!session) return ''
+    return session.messages.filter(message => message.role === 'assistant' && message.content?.trim())
+      .map(message => message.content).join('\n---\n').slice(-4000)
   }, sessionId)
 
+  // ── M01 · a greeting must not create work ───────────────────────────────
   const before = (await tasks()).total
   await send('你好')
-  const afterGreeting = (await tasks()).total
   const greetingErrors = await lastError()
   if (greetingErrors.length) throw new Error(`The provider rejected the turn: ${greetingErrors.join(' | ').slice(0, 300)}`)
+  const afterGreeting = (await tasks()).total
   if (afterGreeting !== before) throw new Error(`a greeting must not create a Task (${before} -> ${afterGreeting})`)
   const greetingText = await transcript()
   if (!greetingText.trim()) throw new Error('the greeting received no reply')
@@ -95,10 +100,11 @@ try {
   await page.screenshot({ path: join(fixture.output, 'live-after-greeting.png') })
   scenes.push('LM01-real-model-greeting-creates-no-task')
 
+  // ── M02 · one clear delegation becomes one versioned Task ───────────────
   await send('帮我做一个鹈鹕骑自行车的自包含 HTML 页面，文件名 pelican.html，要能直接用浏览器打开。')
-  const page1 = await tasks()
   const delegationErrors = await lastError()
   if (delegationErrors.length) throw new Error(`The provider rejected the turn: ${delegationErrors.join(' | ').slice(0, 300)}`)
+  const page1 = await tasks()
   if (page1.total <= afterGreeting) throw new Error(`a clear delegation must create a Task (stayed at ${page1.total})`)
   const created = page1.items.at(-1)
   if (!created.goal.title) throw new Error('the Goal was not recorded')
@@ -111,8 +117,22 @@ try {
   await page.screenshot({ path: join(fixture.output, 'live-after-delegation.png') })
   scenes.push('LM02-real-model-records-one-versioned-task')
 
-  await send('把刚才那个改成深色背景，另外现在一共有几项工作在跑？')
-  const afterMixed = await tasks()
+  // ── M05 · a mixed request: a change and a question in one message ───────
+  // This turn may dispatch a worker, so the session can stay busy after the
+  // model has already recorded the change. The observation is the record, not
+  // the turn's duration: wait until the change appears, then report it.
+  const changeDeadline = Date.now() + 180_000
+  await page.evaluate(({ id, text }) => window.electronAPI.sendMessage(id, text),
+    { id: sessionId, text: '把刚才那个改成深色背景，另外现在一共有几项工作在跑？' })
+  let afterMixed
+  for (;;) {
+    afterMixed = await tasks()
+    const same = afterMixed.items.find(item => item.task.id === created.task.id)
+    const changed = !!same && (same.changes.length > created.changes.length || same.requirements.length > created.requirements.length)
+    if (changed || afterMixed.total > page1.total) break
+    if (Date.now() > changeDeadline) break
+    await new Promise(done => setTimeout(done, 1000))
+  }
   const sameTask = afterMixed.items.find(item => item.task.id === created.task.id)
   const amended = !!sameTask && (sameTask.changes.length > created.changes.length || sameTask.requirements.length > created.requirements.length)
   const addedNew = afterMixed.total > page1.total
@@ -125,10 +145,8 @@ try {
 
   if (errors.length) throw new Error(`Page errors: ${JSON.stringify(errors)}`)
   writeFileSync(join(fixture.output, 'live-evidence.json'), JSON.stringify({ scenes, errors, sessionId }, null, 2))
-} finally {
-  if (app) await app.close().catch(() => {})
-  // Restore the user's configuration exactly as it was found.
-  if (existsSync(CONFIG_BACKUP)) cpSync(CONFIG_BACKUP, CONFIG_FILE)
-  rmSync(workspaceRoot, { recursive: true, force: true })
-  rmSync(join(realRoot, 'electron-live-probe'), { recursive: true, force: true })
-}
+} catch (error) {
+  writeFileSync(join(fixture.output, 'live-debug.json'), JSON.stringify({ message: String(error) }, null, 2))
+  await app.evaluate(({ app }) => app.getVersion()).catch(() => {})
+  throw error
+} finally { await app.close().catch(() => {}) }

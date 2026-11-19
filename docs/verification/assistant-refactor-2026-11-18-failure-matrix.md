@@ -202,24 +202,37 @@ M10/M15 的产物闭环已覆盖：场景 `B08`/`B09` 断言文件真实存在�
 1. **真实模型桌面 E2E**：工作流已建成（`bun run scripts/verification/assistant-task-live-model-workflow.ts`），本轮因环境条件受阻未取得结果，原因见下节。
 2. **旧契约退役**：调用点、替代路径与前置条件已登记于 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md)。删除需用户确认，当前未删任何代码。
 
-#### 真实模型 E2E 的环境阻塞（如实记录）
+#### 真实模型 E2E 的实际发现（已执行，未通过）
 
-两类环境事实决定它能否运行，两者都不是产品缺陷：
-
-| 事实 | 依据 | 后果 |
-|---|---|---|
-| 凭证库由 Electron 主进程用 OS 密钥（safeStorage）封装 | `apps/electron/src/main/credential-key-provider.ts`；无头进程回退到 machine-id 派生 | 无头进程**无法解密**已安装的 key（实测 `getLlmApiKey` 对两个已配置连接均返回 null），因此真实模型只能在 Electron 内回放 |
-| 应用持有单实例锁 | `bootstrap/headless-start.ts`；实测第二次启动输出「Second instance handed off to the running instance」 | 用户已打开 Phaneris 时，验证实例无法独占窗口 |
-
-本轮实测时用户的 Phaneris 正在运行（8 个进程，最早 09:16 启动），故工作流按设计进入 blocked 分支：写入 `blocked.json` 记录原因、待验证项与复跑方法，并以非零退出，**不产生通过记录**。这是刻意的：零场景的 run 不能被误读为通过。
-
-复跑条件：退出 Phaneris 桌面应用后执行
+工作流已跑通到真实 DeepSeek 回放，**结论是当前实现有真实缺陷**，不是环境问题。复跑命令：
 
 ```bash
 bun run scripts/verification/assistant-task-live-model-workflow.ts
 ```
 
-工作流会给真实配置目录临时加入一个一次性工作区，运行结束后恢复 `config.json` 并删除该工作区；不打开用户既有工作区。
+前置条件：退出 Phaneris 桌面应用（单实例锁）。工作流把安装的 `credentials.enc` / `credentials.key` 与 Chromium 的 `Local State`（safeStorage 主密钥所在）复制到隔离配置根，不修改用户配置。
+
+**通过的部分**（真实模型，非替身）：
+
+| 场景 | 结果 |
+|---|---|
+| M01 问候不建任务 | 通过。回复为普通寒暄，未调用任何 `task_*` 工具，任务数不变 |
+| M02 一次委托 | 部分通过：`task_create` 被调用，Goal/要求/交付形式都正确记录，随后 `assistant_delegate` 派工成功 |
+
+**发现的真实缺陷**（每条都有存储证据）：
+
+| # | 缺陷 | 证据 | 对应判据 |
+|---|---|---|---|
+| D1 | **同一输入产生两个 Task 与两个 Goal** | `changes` 表两条记录的 `inputMessageId` 完全相同（`msg-1795049457234-71aac4c137d6`），但 `requestId` 不同；`goals` 表两条 | M02（一次提交 → 1 Goal + 1 Task）、M06（幂等） |
+| D2 | `assistant_context` 参数被模型误用 | 工具回执：`command.requirements.0.statement: unknown field` — 模型把 `task_create` 的 `statement` 用在旧契约上 | M05、M33（旧契约与新契约语义重叠） |
+| D3 | `assistant_delegate` 参数被误用 | 工具回执：`config.fileScope: unknown field` — `fileScope` 在契约顶层，模型放进了 `config` | 同上 |
+| D4 | 旧契约与新流程互斥 | `assistant_worker_control` 回执：`work_not_prepared: Select alone is not preparation; use assistant_context prepare` | M33（旧 prepare/select 仍是强制路径） |
+
+**D1 的根因**：Host 只按 `requestId` 去重，而模型在重试时换了 `requestId`。同一 `inputMessageId` 的重复创建没有任何拦截。修复方向是把幂等键扩到 `(inputMessageId, 语义动作)`，或要求同一输入只能有一个 open 的 `task_create`。这是协议语义变更，需要确认后再改。
+
+**D4 说明旧契约退役不是可选的清理，而是当前派工路径的阻塞项**：只要 `assistant_context.prepare` 仍是强制前置，模型就必须穿过它，而它和新工具的参数语义不一致，直接导致 D2/D3 的误用。
+
+**未覆盖**：第三个场景（复合输入“改深色 + 问几项在跑”）未完成，因为前序缺陷使其无法建立可信基线。
 
 ### 工作面板（本轮实施，2026-11-18）
 
