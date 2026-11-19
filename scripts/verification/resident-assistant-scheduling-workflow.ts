@@ -19,7 +19,7 @@ await verificationWorkflow('resident-assistant-scheduling', async run => {
     })])
     if (interval) interval.end = Date.now()
     return taskModelResponse(body, main ? 'SCHEDULING_ACK' : `RESULT_${tag ?? 'WORK'}`)
-  })
+  }, { concurrency: 4 })
   const { until } = fixture, scenes: string[] = [], snapshots: unknown[] = []
   const started = (tag: string) => intervals.some(item => item.tag === tag)
   const settled = async (id: string) => until(async () => (await fixture.work(id)).state === 'result_ready')

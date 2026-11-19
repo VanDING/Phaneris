@@ -1238,6 +1238,7 @@
   "residentAssistant.board.requirement.superseded": "Felülírt",
   "residentAssistant.board.requirement.withdrawn": "Visszavont",
   "residentAssistant.board.rework": "Átdolgozás kérése",
+  "residentAssistant.board.running": "{{occupied}} fut",
   "residentAssistant.board.switchTask": "Feladat váltása",
   "residentAssistant.control.apply": "Beállítások alkalmazása",
   "residentAssistant.control.boundary": "A futó feladatok biztonságos határon alkalmazzák a módosításokat. A szüneteltetett feladatok szünetelnek, az eredeti engedélyek érvényesek.",

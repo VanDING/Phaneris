@@ -55,11 +55,11 @@ export function FocusBoard({ workspaceId, deliverables = [], onPreview, onOpenTa
   const projection = items.find(item => item.task.id === selected)
   const segments = segmentsFor(items)
   const actions = projection ? actionsFor(projection) : []
-  // Capacity is the Host's own scheduling record, not a count recomputed here:
-  // the board and the scheduler must answer "how many can run" with one number.
-  // Without it the strip still states what it can see, and says so by count only.
+  // Capacity is the Host's own scheduling record, not a count recomputed here.
+  // `null` means the workspace sets no ceiling, so the strip must not draw a
+  // ceiling of its own: it reports how many are running and says so plainly.
   const occupied = scheduling?.occupied ?? items.filter(item => ['running', 'stopping'].includes(item.stage)).length
-  const capacity = scheduling?.capacity ?? Math.max(occupied, 1)
+  const capacity = scheduling?.capacity ?? null
 
   const control = (action: FocusAction) => {
     if (!projection || busy) return
@@ -91,11 +91,16 @@ export function FocusBoard({ workspaceId, deliverables = [], onPreview, onOpenTa
       <div className="focus-strip" role="tablist" aria-label={t('residentAssistant.board.switchTask')}>
         <span className="focus-readout">
           <span className="focus-seats" aria-hidden="true">
-            {Array.from({ length: Math.max(capacity, occupied, 1) }, (_, index) =>
+            {/* One seat per running task. A declared ceiling also shows its free
+                slots; with no ceiling there are no free slots to draw. Nothing
+                is drawn when nothing runs, so the meter never implies occupancy. */}
+            {Array.from({ length: capacity === null ? occupied : Math.max(capacity, occupied) }, (_, index) =>
               <span key={index} className="focus-seat" data-on={index < occupied} />)}
           </span>
           <span className="focus-count" data-testid="focus-capacity">
-            {t('residentAssistant.board.capacity', { occupied, capacity: Math.max(capacity, occupied, 1) })}
+            {capacity === null
+              ? t('residentAssistant.board.running', { occupied })
+              : t('residentAssistant.board.capacity', { occupied, capacity: Math.max(capacity, occupied, 1) })}
           </span>
         </span>
         <div className="focus-segments">

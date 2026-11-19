@@ -1238,6 +1238,7 @@
   "residentAssistant.board.requirement.superseded": "Superseded",
   "residentAssistant.board.requirement.withdrawn": "Withdrawn",
   "residentAssistant.board.rework": "Request rework",
+  "residentAssistant.board.running": "Running {{occupied}}",
   "residentAssistant.board.switchTask": "Switch task",
   "residentAssistant.control.apply": "Apply settings",
   "residentAssistant.control.boundary": "Running tasks apply changes at a safe boundary. Paused tasks stay paused. Execution remains within the original task authorization.",

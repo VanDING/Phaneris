@@ -38,8 +38,11 @@ export interface AssistantMemoryPolicy {
 }
 
 export interface WorkspaceConfig {
-  /** Host scheduling capacity; defaults to four independent ordinary Sessions. */
-  assistantTasks?: { concurrency: number };
+  /**
+   * Host scheduling capacity. Omitted means no ceiling: every dispatch the real
+   * constraints allow is admitted. `concurrency` sets an explicit ceiling.
+   */
+  assistantTasks?: { concurrency?: number };
   assistantMemory?: AssistantMemoryPolicy | false;
   id: string;
   name: string;

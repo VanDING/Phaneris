@@ -5,11 +5,21 @@ import type { SessionDelegationInput } from '@phaneris/core/types'
 import type { AssistantDelegationReceipt } from '@phaneris/session-tools-core/delegation-contracts'
 import { acquireFileScopes, releaseFileScopes, snapshotFileScope, onFileScopesReleased, fileScopesConflict } from '../tasks/file-scopes'
 
-/** Configuration is parsed once at its owning read boundary, never clamped
- * silently into a different advertised capacity. */
-export function assistantTaskCapacity(root: string): number {
+/**
+ * Concurrent Worker sessions this workspace admits, or `null` for no cap.
+ *
+ * No cap is the default: the assistant should not refuse work the user asked for
+ * because of an arbitrary slot count. What still limits admission is real —
+ * overlapping file scopes, Session availability, configuration — and those stay
+ * enforced. A workspace that wants a ceiling sets `assistantTasks.concurrency`.
+ *
+ * Configuration is parsed once at its owning read boundary, never clamped
+ * silently into a different advertised capacity.
+ */
+export function assistantTaskCapacity(root: string): number | null {
   const settings = loadWorkspaceConfig(root)?.assistantTasks
-  return settings === undefined ? 4 : AssistantTasksSchema.parse(settings).concurrency
+  if (settings === undefined) return null
+  return AssistantTasksSchema.parse(settings).concurrency ?? null
 }
 
 /** Uses the existing process-wide Tasks leases, including their wakeups. No

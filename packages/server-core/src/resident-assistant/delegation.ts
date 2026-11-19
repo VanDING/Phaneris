@@ -28,7 +28,7 @@ export class SessionDelegationWait extends Error {
 export interface DelegationHost {
   currentSessionIds?(): readonly string[]
   live?(receipt: AssistantDelegationReceipt): Pick<AssistantWork, 'sessionStatus' | 'runtime'> & { goal?: string }
-  capacity?(): number
+  capacity?(): number | null
   waitingFor?(receipt: AssistantDelegationReceipt): AssistantDelegationReceipt['waitingFor']
   plan(request: AssistantDispatch): Promise<SessionDelegationPlan>
   prepare(receipt: AssistantDelegationReceipt, request: AssistantDispatch, plan: SessionDelegationPlan,
@@ -484,7 +484,9 @@ export class AssistantDelegation {
     const held = this.host.heldSessionIds?.() ?? []
     const reserved = held.length ? (this.db.prepare(`SELECT count(*) AS count FROM work WHERE json_extract(body,'$.sessionId') IN (SELECT value FROM json_each(?))
       AND json_extract(body,'$.state') IN ('failed','result_ready','cancelled','needs_attention','paused')`).get(JSON.stringify(held)) as { count: number }).count : 0
-    return { capacity: this.host.capacity?.() ?? 4, occupied: (counts.occupied ?? 0) + reserved, queued: counts.queued ?? 0, paused: counts.paused ?? 0 }
+    // `capacity: null` is published as the workspace's honest state: no ceiling,
+    // so the board must not render a ceiling it does not have.
+    return { capacity: this.host.capacity?.() ?? null, occupied: (counts.occupied ?? 0) + reserved, queued: counts.queued ?? 0, paused: counts.paused ?? 0 }
   }
   reportDeliveryError(error: unknown): void { this.host.reportError(error) }
   private async syncSessionStatus(receipt: AssistantDelegationReceipt): Promise<void> {
@@ -543,7 +545,11 @@ export class AssistantDelegation {
         let blocker = this.host.waitingFor?.(candidate)
           ?? await this.sharesWaitingResources(candidate, waiting)
           ?? await this.sharesWaitingResources(candidate, active, true)
-        if (!blocker && this.scheduling().occupied >= (this.host.capacity?.() ?? 4)) blocker = { reason: 'capacity', detail: 'All configured Worker admission slots are occupied' }
+        // No ceiling means no capacity blocker: only real constraints stop
+        // admission (overlapping file scopes, Session availability). An absent
+        // host callback is also no ceiling — nothing declared one.
+        const ceiling = this.host.capacity?.() ?? null
+        if (!blocker && ceiling !== null && this.scheduling().occupied >= ceiling) blocker = { reason: 'capacity', detail: 'All configured Worker admission slots are occupied' }
         if (!blocker) {
           const input = await this.host.snapshot(candidate)
           if (!input) blocker = { reason: 'configuration', detail: 'The original assignment is unavailable' }

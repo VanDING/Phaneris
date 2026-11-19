@@ -29,7 +29,15 @@ export interface ValidationResult {
 
 // --- config.json ---
 
-export const AssistantTasksSchema = z.object({ concurrency: z.number().int().min(1).max(16) }).strict();
+/**
+ * `concurrency` is the number of Worker sessions that may run at once.
+ *
+ * Omitted means no cap: the Host admits every dispatch the file scopes and
+ * Session limits allow. An explicit number is honoured as written, and 0 is
+ * rejected because "zero slots" would make the assistant unable to work at all
+ * while looking like a valid setting.
+ */
+export const AssistantTasksSchema = z.object({ concurrency: z.number().int().min(1).max(Number.MAX_SAFE_INTEGER).optional() }).strict();
 
 export const WorkspaceSchema = z.object({
   id: z.string().min(1),

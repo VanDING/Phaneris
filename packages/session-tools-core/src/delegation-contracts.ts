@@ -108,7 +108,8 @@ export interface AssistantWorkExecution {
 }
 export interface AssistantWorkPage {
   observedAt?: number
-  scheduling?: { capacity: number; occupied: number; queued: number; paused: number }
+  /** `capacity: null` means the workspace sets no ceiling on concurrent work. */
+  scheduling?: { capacity: number | null; occupied: number; queued: number; paused: number }
   items: AssistantWork[]; nextAfter: number | null; lastSeq: number
   nextCursor?: { createdAt: number; id: string } | null
   total?: number
