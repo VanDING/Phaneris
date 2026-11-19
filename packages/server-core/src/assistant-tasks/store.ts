@@ -11,7 +11,7 @@ import { countStages, projectTask } from './stage'
 import type { ApprovalInput, ApprovalRecord, MandateInput, MandateRecord } from './authority'
 import { openSqliteDatabase, type SqliteDatabase } from '../runtime/sqlite'
 
-const SCHEMA_VERSION = 1
+const SCHEMA_VERSION = 2
 
 /**
  * The single writer of delegation definitions in a workspace.
@@ -38,7 +38,7 @@ export class AssistantTaskStore {
     const current = (this.db.prepare('PRAGMA user_version').get() as { user_version: number }).user_version
     if (current > SCHEMA_VERSION) throw new Error(`Assistant task schema ${current} is newer than supported ${SCHEMA_VERSION}`)
     if (current >= SCHEMA_VERSION) return
-    this.db.exec(`BEGIN IMMEDIATE;
+    if (current === 0) this.db.exec(`BEGIN IMMEDIATE;
       CREATE TABLE IF NOT EXISTS owner (singleton INTEGER PRIMARY KEY, workspace_id TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS goals (id TEXT PRIMARY KEY, body TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS tasks (id TEXT PRIMARY KEY, goal_id TEXT NOT NULL, definition_version INTEGER NOT NULL, body TEXT NOT NULL);
@@ -57,18 +57,39 @@ export class AssistantTaskStore {
       CREATE INDEX IF NOT EXISTS changes_task ON changes (task_id);
       CREATE INDEX IF NOT EXISTS assignments_task ON assignments (task_id);
       CREATE INDEX IF NOT EXISTS verifications_task ON verifications (task_id);
-      PRAGMA user_version = ${SCHEMA_VERSION};
       COMMIT;`)
+    // v2 · record which trusted input produced a request, so one input cannot
+    // define the same kind of work twice under a fresh request id.
+    if (current < 2) this.db.exec(`BEGIN IMMEDIATE;
+      ALTER TABLE requests ADD COLUMN input_message_id TEXT;
+      CREATE INDEX IF NOT EXISTS requests_input_kind ON requests (input_message_id, kind);
+      COMMIT;`)
+    this.db.exec(`PRAGMA user_version = ${SCHEMA_VERSION}`)
   }
 
   close(): void { this.db.close() }
 
-  /** The same trusted request id returns its original result; a new input never does. */
-  private replay<T>(requestId: string, kind: string, produce: () => T): T {
+  /**
+   * The same trusted request id returns its original result.
+   *
+   * A request id alone is not enough: a model that retries with a fresh id
+   * would create a second Task from one user input, which the user never asked
+   * for. The idempotency key is therefore the trusted input plus the semantic
+   * action it performs, and a replay under a new request id returns the
+   * original result rather than producing another one.
+   */
+  private replay<T>(requestId: string, kind: string, inputMessageId: string | undefined, produce: () => T): T {
     const prior = this.db.prepare('SELECT kind, result FROM requests WHERE request_id=?').get(requestId) as { kind: string; result: string } | undefined
     if (prior) {
       if (prior.kind !== kind) throw new Error(`Request id ${requestId} was already used for a ${prior.kind} change`)
       return JSON.parse(prior.result) as T
+    }
+    if (inputMessageId) {
+      const sameInput = this.db.prepare('SELECT kind, result FROM requests WHERE input_message_id=? AND kind=?').get(inputMessageId, kind) as { kind: string; result: string } | undefined
+      // One trusted input may define or change a task once. A second attempt is
+      // a replay of that intent, not a new piece of work: return the record it
+      // already produced so the caller sees the Task that exists.
+      if (sameInput) return JSON.parse(sameInput.result) as T
     }
     return produce()
   }
@@ -133,7 +154,7 @@ export class AssistantTaskStore {
    * this is called; nothing here invents a task out of a greeting.
    */
   create(input: DelegationTaskCreate, inputMessageId?: string): TaskProjectionView {
-    return this.replay(input.requestId, 'create', () => this.transaction(() => {
+    return this.replay(input.requestId, 'create', inputMessageId, () => this.transaction(() => {
       const now = Date.now(), goalId = `goal-${randomUUID()}`, taskId = `task-${randomUUID()}`
       for (const dependency of input.dependsOn ?? []) if (!this.body<TaskRecordView>('tasks', dependency)) throw new Error(`Unknown dependency task ${dependency}`)
       const goal: GoalView = { id: goalId, title: input.goalTitle, successCriteria: [], createdAt: now, updatedAt: now }
@@ -148,14 +169,14 @@ export class AssistantTaskStore {
         .run(`chg-${randomUUID()}`, taskId, input.requestId, JSON.stringify({ id: `chg-${randomUUID()}`, taskId, requestId: input.requestId,
           inputMessageId, items, producedVersion: 1, createdAt: now } satisfies ChangeView))
       const projection = this.assertProjection(taskId)
-      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'create', JSON.stringify(projection))
+      this.db.prepare('INSERT INTO requests (request_id, kind, result, input_message_id) VALUES (?, ?, ?, ?)').run(input.requestId, 'create', JSON.stringify(projection), inputMessageId ?? null)
       return projection
     }))
   }
 
   /** Adds, replaces, withdraws or explicitly keeps requirements and bumps the definition version. */
   amend(input: DelegationTaskAmend, inputMessageId?: string): TaskProjectionView {
-    return this.replay(input.requestId, 'amend', () => this.transaction(() => {
+    return this.replay(input.requestId, 'amend', inputMessageId, () => this.transaction(() => {
       const task = this.body<TaskRecordView>('tasks', input.taskId)
       if (!task) throw new Error(`Unknown task ${input.taskId}`)
       if (this.body<{ action: TaskControlAction }>('controls', input.taskId, 'task_id')?.action === 'terminate')
@@ -182,7 +203,7 @@ export class AssistantTaskStore {
         reason: input.reason, items, producedVersion: version, createdAt: now }
       this.db.prepare('INSERT INTO changes (id, task_id, request_id, body) VALUES (?, ?, ?, ?)').run(change.id, change.taskId, change.requestId, JSON.stringify(change))
       const projection = this.assertProjection(task.id)
-      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'amend', JSON.stringify(projection))
+      this.db.prepare('INSERT INTO requests (request_id, kind, result, input_message_id) VALUES (?, ?, ?, ?)').run(input.requestId, 'amend', JSON.stringify(projection), inputMessageId ?? null)
       return projection
     }))
   }
@@ -222,7 +243,7 @@ export class AssistantTaskStore {
 
   /** One durable control receipt per task; latest wins, idempotent by request id. */
   control(input: DelegationTaskControl): TaskControlResult {
-    return this.replay(input.requestId, 'control', () => this.transaction(() => {
+    return this.replay(input.requestId, 'control', undefined, () => this.transaction(() => {
       const receipts: TaskControlResult['receipts'] = []
       for (const taskId of input.taskIds) {
         if (!this.body<TaskRecordView>('tasks', taskId)) throw new Error(`Unknown task ${taskId}`)
@@ -233,7 +254,7 @@ export class AssistantTaskStore {
         receipts.push({ taskId, action: input.action, previousAction: previous })
       }
       const result = { receipts }
-      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'control', JSON.stringify(result))
+      this.db.prepare('INSERT INTO requests (request_id, kind, result, input_message_id) VALUES (?, ?, ?, NULL)').run(input.requestId, 'control', JSON.stringify(result))
       return result
     }))
   }
@@ -251,13 +272,13 @@ export class AssistantTaskStore {
   }
 
   recordVerification(input: DelegationTaskVerify, definitionVersion: number, assignmentId?: string): TaskProjectionView {
-    return this.replay(input.requestId, 'verify', () => this.transaction(() => {
+    return this.replay(input.requestId, 'verify', undefined, () => this.transaction(() => {
       if (!this.body<TaskRecordView>('tasks', input.taskId)) throw new Error(`Unknown task ${input.taskId}`)
       const record: VerificationView = { id: `ver-${randomUUID()}`, taskId: input.taskId, definitionVersion, assignmentId,
         verdict: input.verdict, results: input.results ?? [], reason: input.reason, createdAt: Date.now() }
       this.db.prepare('INSERT INTO verifications (id, task_id, body) VALUES (?, ?, ?)').run(record.id, record.taskId, JSON.stringify(record))
       const projection = this.assertProjection(input.taskId)
-      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'verify', JSON.stringify(projection))
+      this.db.prepare('INSERT INTO requests (request_id, kind, result, input_message_id) VALUES (?, ?, ?, NULL)').run(input.requestId, 'verify', JSON.stringify(projection))
       return projection
     }))
   }
@@ -272,14 +293,14 @@ export class AssistantTaskStore {
 
   /** Records a mandate granted by a trusted input; standing mandates keep applying. */
   grantMandate(input: MandateInput, inputMessageId?: string): MandateRecord {
-    return this.replay(input.requestId, 'mandate', () => this.transaction(() => {
+    return this.replay(input.requestId, 'mandate', undefined, () => this.transaction(() => {
       if (input.scope === 'standing' && !input.quote)
         throw new Error('A standing mandate needs the user statement that granted it')
       const record: MandateRecord = { id: `man-${randomUUID()}`, action: input.action, target: input.target, scope: input.scope,
         quote: input.quote, expiresAt: input.expiresAt, inputMessageId, createdAt: Date.now() }
       this.db.prepare('INSERT INTO mandates (id, action, target, body) VALUES (?, ?, ?, ?)')
         .run(record.id, record.action, record.target, JSON.stringify(record))
-      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'mandate', JSON.stringify(record))
+      this.db.prepare('INSERT INTO requests (request_id, kind, result, input_message_id) VALUES (?, ?, ?, NULL)').run(input.requestId, 'mandate', JSON.stringify(record))
       return record
     }))
   }
@@ -294,7 +315,7 @@ export class AssistantTaskStore {
     if (!row) throw new Error(`Unknown mandate ${id}`)
     const revoked: MandateRecord = { ...JSON.parse(row.body) as MandateRecord, revokedAt: Date.now() }
     this.db.prepare('UPDATE mandates SET body=? WHERE id=?').run(JSON.stringify(revoked), id)
-    this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(`revoke:${id}:${revoked.revokedAt}`, 'mandate', JSON.stringify(revoked))
+    this.db.prepare('INSERT INTO requests (request_id, kind, result, input_message_id) VALUES (?, ?, ?, NULL)').run(`revoke:${id}:${revoked.revokedAt}`, 'mandate', JSON.stringify(revoked))
     return revoked
   }
 
@@ -303,7 +324,7 @@ export class AssistantTaskStore {
    * effect invalidates it, so an old card can never authorize new content.
    */
   recordApproval(input: ApprovalInput): ApprovalRecord {
-    return this.replay(input.requestId, 'approval', () => this.transaction(() => {
+    return this.replay(input.requestId, 'approval', undefined, () => this.transaction(() => {
       const record: ApprovalRecord = { id: `apr-${randomUUID()}`, mandateId: input.mandateId, action: input.action,
         effect: input.effect, decision: input.decision, reason: input.reason, createdAt: Date.now() }
       this.db.prepare('INSERT INTO approvals (id, action, target, body) VALUES (?, ?, ?, ?)')
@@ -317,7 +338,7 @@ export class AssistantTaskStore {
         const invalidated: ApprovalRecord = { ...prior, invalidatedAt: Date.now(), invalidatedReason: 'A newer effect was decided for this target' }
         this.db.prepare('UPDATE approvals SET body=? WHERE id=?').run(JSON.stringify(invalidated), prior.id)
       }
-      this.db.prepare('INSERT INTO requests (request_id, kind, result) VALUES (?, ?, ?)').run(input.requestId, 'approval', JSON.stringify(record))
+      this.db.prepare('INSERT INTO requests (request_id, kind, result, input_message_id) VALUES (?, ?, ?, NULL)').run(input.requestId, 'approval', JSON.stringify(record))
       return record
     }))
   }

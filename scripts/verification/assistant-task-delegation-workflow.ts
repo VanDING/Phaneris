@@ -53,6 +53,16 @@ await verificationWorkflow('assistant-task-delegation', async run => {
     assert.equal((await service.query({})).total, 1)
     scenes.push('A02-replayed-request-creates-nothing-new')
 
+    // M02/M06 · One trusted input defines work once, even when the model retries
+    // under a fresh request id. A live model did exactly that and produced two
+    // Tasks from one message before this was fixed; a new id is not new intent.
+    const retried = service.create({ requestId: 'req-pelican-retry-2', goalTitle: 'A different goal', title: 'A different task',
+      requirements: [{ statement: 'A different requirement', scope: 'task' }], acceptance: [] }, 'msg-1', { directUser: true })
+    assert.equal(retried.task.id, created.task.id, 'a retry under a new request id must return the Task the input already created')
+    assert.equal((await service.query({})).total, 1, 'one input must never leave two Tasks behind')
+    assert.equal(retried.goal.title, created.goal.title, 'the second attempt must not replace the recorded Goal')
+    scenes.push('A02b-retry-with-a-fresh-request-id-does-not-duplicate-work')
+
     // M04 · A correction appends a requirement version and keeps the old one readable.
     const amended = service.amend({ requestId: 'req-dark', taskId: created.task.id,
       requirements: [{ supersedes: created.activeRequirements[0]!.id, statement: 'A dark-background pelican rides a bicycle', scope: 'task' }] }, 'msg-2', { directUser: true })

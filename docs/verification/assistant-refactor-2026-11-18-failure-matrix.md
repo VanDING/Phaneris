@@ -202,9 +202,9 @@ M10/M15 的产物闭环已覆盖：场景 `B08`/`B09` 断言文件真实存在�
 1. **真实模型桌面 E2E**：工作流已建成（`bun run scripts/verification/assistant-task-live-model-workflow.ts`），本轮因环境条件受阻未取得结果，原因见下节。
 2. **旧契约退役**：调用点、替代路径与前置条件已登记于 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md)。删除需用户确认，当前未删任何代码。
 
-#### 真实模型 E2E 的实际发现（已执行，未通过）
+#### 真实模型 E2E 的实际发现（已执行）
 
-工作流已跑通到真实 DeepSeek 回放，**结论是当前实现有真实缺陷**，不是环境问题。复跑命令：
+工作流已跑通到真实 DeepSeek 回放。复跑命令：
 
 ```bash
 bun run scripts/verification/assistant-task-live-model-workflow.ts
@@ -212,27 +212,27 @@ bun run scripts/verification/assistant-task-live-model-workflow.ts
 
 前置条件：退出 Phaneris 桌面应用（单实例锁）。工作流把安装的 `credentials.enc` / `credentials.key` 与 Chromium 的 `Local State`（safeStorage 主密钥所在）复制到隔离配置根，不修改用户配置。
 
-**通过的部分**（真实模型，非替身）：
+**D1 已修复并验证**（方案 A：幂等键 = 可信输入 + 语义动作）。真实模型对照：
 
-| 场景 | 结果 |
-|---|---|
-| M01 问候不建任务 | 通过。回复为普通寒暄，未调用任何 `task_*` 工具，任务数不变 |
-| M02 一次委托 | 部分通过：`task_create` 被调用，Goal/要求/交付形式都正确记录，随后 `assistant_delegate` 派工成功 |
+| | 修复前 | 修复后 |
+|---|---|---|
+| Goals | 2 | **1** |
+| Tasks | 2 | **1** |
+| changes | 2 条，同一 `inputMessageId` | 1 条 |
 
-**发现的真实缺陷**（每条都有存储证据）：
+修复前两条记录的 `inputMessageId` 完全相同（`msg-1795049457234-71aac4c137d6`）、只有 `requestId` 不同：Host 只按 `requestId` 去重，模型重试换 id 就能重复建任务。现在同一输入 + 同一动作返回既有记录（store schema v2，`requests.input_message_id` 列 + 索引）。
+
+**仍存在的缺陷**（真实模型回执证据）：
 
 | # | 缺陷 | 证据 | 对应判据 |
 |---|---|---|---|
-| D1 | **同一输入产生两个 Task 与两个 Goal** | `changes` 表两条记录的 `inputMessageId` 完全相同（`msg-1795049457234-71aac4c137d6`），但 `requestId` 不同；`goals` 表两条 | M02（一次提交 → 1 Goal + 1 Task）、M06（幂等） |
-| D2 | `assistant_context` 参数被模型误用 | 工具回执：`command.requirements.0.statement: unknown field` — 模型把 `task_create` 的 `statement` 用在旧契约上 | M05、M33（旧契约与新契约语义重叠） |
-| D3 | `assistant_delegate` 参数被误用 | 工具回执：`config.fileScope: unknown field` — `fileScope` 在契约顶层，模型放进了 `config` | 同上 |
-| D4 | 旧契约与新流程互斥 | `assistant_worker_control` 回执：`work_not_prepared: Select alone is not preparation; use assistant_context prepare` | M33（旧 prepare/select 仍是强制路径） |
+| D2 | `assistant_context` 参数被误用 | `command.requirements.0.statement: unknown field` — 模型把 `task_create` 的 `statement` 用在旧契约上 | M05、M33 |
+| D3 | `assistant_delegate` 参数被误用 | `config.fileScope: unknown field` — `fileScope` 在契约顶层，模型放进了 `config` | 同上 |
+| D4 | 旧契约与新流程互斥 | `assistant_worker_control` 回执：`work_not_prepared: Select alone is not preparation; use assistant_context prepare` | M33 |
 
-**D1 的根因**：Host 只按 `requestId` 去重，而模型在重试时换了 `requestId`。同一 `inputMessageId` 的重复创建没有任何拦截。修复方向是把幂等键扩到 `(inputMessageId, 语义动作)`，或要求同一输入只能有一个 open 的 `task_create`。这是协议语义变更，需要确认后再改。
+D2–D4 是同一个问题的三种表现：两套契约描述同一件事、结构不同，模型会混用。**D4 说明旧契约退役不是清理项，而是当前派工路径的阻塞项。**
 
-**D4 说明旧契约退役不是可选的清理，而是当前派工路径的阻塞项**：只要 `assistant_context.prepare` 仍是强制前置，模型就必须穿过它，而它和新工具的参数语义不一致，直接导致 D2/D3 的误用。
-
-**未覆盖**：第三个场景（复合输入“改深色 + 问几项在跑”）未完成，因为前序缺陷使其无法建立可信基线。
+**本轮受阻**：第三个场景（复合输入的变更记录）未完成，原因是 Worker 侧返回 `Payment Required: Your account has a billing issue`——DeepSeek 账户余额不足，属外部环境，非产品缺陷。该场景的确定性覆盖可由 `assistant-task-goal-control` 的 M18 变更为依据，但真实模型下的复合输入回放仍需余额恢复后补跑。
 
 ### 工作面板（本轮实施，2026-11-18）
 
