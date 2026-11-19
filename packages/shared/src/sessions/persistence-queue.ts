@@ -27,6 +27,29 @@ async function syncParentDirectory(filePath: string): Promise<void> {
   } finally { await handle?.close() }
 }
 
+/**
+ * Replace one file with another, tolerating Windows' transient sharing errors.
+ *
+ * On POSIX `rename` over an existing file is atomic and cannot fail because the
+ * target is open. Windows is different: a reader or an antivirus/indexer holding
+ * the destination for a few milliseconds makes `rename` fail with `EPERM` or
+ * `EBUSY`. Failing the whole snapshot there loses a completed write for a
+ * condition that clears by itself, so retry a bounded number of times with a
+ * short backoff before treating it as a real error.
+ */
+async function replaceFile(temporary: string, filePath: string): Promise<void> {
+  const transient = new Set(['EPERM', 'EBUSY', 'EACCES'])
+  const attempts = process.platform === 'win32' ? 10 : 1
+  for (let attempt = 1; ; attempt++) {
+    try { return await rename(temporary, filePath) }
+    catch (error) {
+      const code = (error as NodeJS.ErrnoException).code
+      if (attempt >= attempts || !transient.has(code ?? '')) throw error
+      await new Promise(resolve => setTimeout(resolve, 10 * attempt))
+    }
+  }
+}
+
 interface PendingWrite {
   data: StoredSession | (() => StoredSession)
   timer: ReturnType<typeof setTimeout>
@@ -169,7 +192,7 @@ class SessionPersistenceQueue {
         }
         const previous = this.lastWrittenHeaderSignature.get(sessionId)
         this.lastWrittenHeaderSignature.set(sessionId, getHeaderMetadataSignature(header))
-        try { await rename(temporary, filePath) }
+        try { await replaceFile(temporary, filePath) }
         catch (error) {
           if (previous === undefined) this.lastWrittenHeaderSignature.delete(sessionId)
           else this.lastWrittenHeaderSignature.set(sessionId, previous)
@@ -289,7 +312,7 @@ class SessionPersistenceQueue {
       // self-writes. A failed replacement must not become the next merge baseline.
       if (writeOrigin === 'product') this.lastWrittenHeaderSignature.set(sessionId, getHeaderMetadataSignature(header))
       try {
-        await rename(tmpFile, filePath)
+        await replaceFile(tmpFile, filePath)
       } catch (error) {
         if (writeOrigin === 'product') {
           if (previousSig === undefined) this.lastWrittenHeaderSignature.delete(sessionId)

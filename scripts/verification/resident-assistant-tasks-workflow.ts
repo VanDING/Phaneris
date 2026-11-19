@@ -26,20 +26,60 @@ await verificationWorkflow('resident-assistant-tasks', async run => {
       ...(handoff ? { handoffFromSessionId: 'legacy-work', handoffRootSessionId: 'legacy-work', handoffSequence: 1 } : {}) })
   type Call = { name: string; arguments: Record<string, unknown> }
   const calls: Call[] = [], requests: Array<{ main: boolean; at: number }> = []
+  /** Which scripted call each main turn took, so an ordering fault names itself. */
+  const consumed: Array<{ main: boolean; call: string | null; internal: boolean }> = []
   let workerStatusIssued = false
   let hold: ReturnType<typeof Promise.withResolvers<void>> | undefined
+  /**
+   * A Host wakeup is not a scripted model turn.
+   *
+   * The resident Session is also woken by the Host itself: material refresh,
+   * memory maintenance and inbox delivery all reach the same provider carrying
+   * `resident_assistant_role`. Treating those as scripted turns shifted `calls`
+   * for a turn the test never asked for, so later assertions waited 30 s for
+   * tools that had been spent early — the source of this workflow's flake.
+   *
+   * The trustworthy discriminator is the committed input identity. A scripted
+   * turn always carries the `msg-…` user message the test just sent, while the
+   * Host's own wakeups carry `resident-refresh:…` / `resident-event:…` /
+   * `memory-maintenance:…`.
+   *
+   * Memory maintenance is the case that must not be missed: its context text is
+   * a fixed sentence with no `currentInputId` at all, so matching only on that
+   * field silently classified maintenance as a scripted turn and consumed a
+   * scripted call for it. Treating "no `msg-` input" as internal covers all three
+   * shapes, including the field-less one.
+   *
+   * Do not match on `<resident_inbox>` / `<resident_memory_maintenance>` either:
+   * a genuine user turn's context carries pending inbox events too, so that
+   * check would misclassify scripted turns.
+   */
+  const isInternalWakeup = (messages: Array<{ role: string; content: unknown }>): boolean => {
+    // Read the raw message content, never `JSON.stringify(messages)`: inside the
+    // stringified array every quote of the embedded context is escaped, so a
+    // regex for `"currentInputId":"…"` cannot match there.
+    const context = messages.map(message => typeof message.content === 'string' ? message.content : '').join('\n')
+    const inputId = context.match(/"currentInputId":"((?:[^"\\]|\\.)*)"/)?.[1] ?? ''
+    return !/^msg-/.test(inputId)
+  }
   const api = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
     const body = await request.json() as { model: string; messages: Array<{ role: string; content: unknown }>; tools?: Array<{ function: { name: string } }> }
-    const main = JSON.stringify(body.messages).includes('resident_assistant_role')
+    const text = JSON.stringify(body.messages)
+    const resident = text.includes('resident_assistant_role'), internal = resident && isInternalWakeup(body.messages)
+    const main = resident && !internal
     requests.push({ main, at: Date.now() })
     assert(requests.length < 100, 'Bounded inference budget')
-    if (!main && JSON.stringify(body.messages).includes('TM_FAILURE'))
+    const chunk = (delta: object, finish_reason: string | null = null) => `data: ${JSON.stringify({ id: 'tasks-fixture', object: 'chat.completion.chunk', model: body.model, choices: [{ index: 0, delta, finish_reason }] })}\n\n`
+    // An internal Host wakeup answers as plain prose: it must neither consume a
+    // scripted call nor issue worker tools. Its own turn is not under test here.
+    if (internal) return new Response(chunk({ role: 'assistant' }) + chunk({ content: 'INTERNAL_WAKEUP_ACK' }) + chunk({}, 'stop') + 'data: [DONE]\n\n',      { headers: { 'Content-Type': 'text/event-stream' } })
+    if (!main && text.includes('TM_FAILURE'))
       return Response.json({ error: { message: 'TM_FAILURE: controlled provider rejection', type: 'invalid_request_error' } }, { status: 400 })
     if (!main && hold) await hold.promise
-    const chunk = (delta: object, finish_reason: string | null = null) => `data: ${JSON.stringify({ id: 'tasks-fixture', object: 'chat.completion.chunk', model: body.model, choices: [{ index: 0, delta, finish_reason }] })}\n\n`
     const call = main ? calls.shift() : undefined
+    consumed.push({ main, call: call?.name ?? null, internal })
     let workerStatus: Call | undefined
-    if (!main && JSON.stringify(body.messages).includes('TM_OPEN_STATUS') && !workerStatusIssued) {
+    if (!main && text.includes('TM_OPEN_STATUS') && !workerStatusIssued) {
       const available = body.tools?.some(tool => tool.function.name === 'mcp__session__set_session_status')
       workerStatus = available ? { name: 'set_session_status', arguments: { status: 'needs-review' } }
         : { name: 'tool_search', arguments: { query: 'set_session_status' } }
@@ -76,13 +116,32 @@ await verificationWorkflow('resident-assistant-tasks', async run => {
   const scenes: string[] = [], evidence: unknown[] = []
   try {
     const assistant = await client.invoke(RPC_CHANNELS.residentAssistant.GET, 'alpha')
-    const sendMain = async (text: string) => {
+    const mainTurns = () => requests.filter(request => request.main).length
+    const consumedCalls = () => consumed.filter(entry => entry.main && entry.call !== null).length
+    /**
+     * Send one scripted input and wait until its turn has both completed and
+     * consumed every call it was given.
+     *
+     * Two races made this workflow flaky. First, polling only `isProcessing`
+     * could return before the submitted input had started, so one send's turn ran
+     * during a later send. Second, a tool call issued late in a turn continues in
+     * the same run, so a queued call can still be pending when the turn looks
+     * settled. Waiting for the call consumption as well as the idle flag pairs
+     * each assertion with its own turn.
+     */
+    const sendMain = async (text: string, expectedConsumed?: number) => {
+      const before = mainTurns(), consumedBefore = consumedCalls()
       await manager.sendMessage(assistant.id, text)
       await until(async () => {
         const session = (await manager.getSession(assistant.id))!
-        return !session.isProcessing && !session.messages.some(message => message.role === 'user' && isDirectUserSource(message.inputSource) && message.isQueued)
+        if (session.isProcessing) return false
+        if (session.messages.some(message => message.role === 'user' && isDirectUserSource(message.inputSource) && message.isQueued)) return false
+        if (mainTurns() <= before) return false
+        return expectedConsumed === undefined || consumedCalls() - consumedBefore >= expectedConsumed
       })
     }
+    /** Send a turn that must consume exactly the next `count` scripted calls. */
+    const scripted = (text: string, count: number) => sendMain(text, count)
     const goal = '按要求交付任务报告，并由助手复核完成；需要修改时继续原会话。'
     await sendMain(goal)
     const dispatch = async (requestId: string, extra: Record<string, unknown> = {}) => {
@@ -116,19 +175,19 @@ await verificationWorkflow('resident-assistant-tasks', async run => {
     assert.equal(await status(work.sessionId!), 'needs-review')
     const review = { delegationId: work.id, expectedSeq: result.seq, result: result.result!, outcome: 'accepted', reason: 'Read the text result and checked the original text-report criterion.' }
     calls.push({ name: 'assistant_delivery_ack', arguments: { eventIds: [], reviews: [review] } })
-    await sendMain('按原要求核对已有结果。')
+    await scripted('按原要求核对已有结果。', 1)
     assert.equal(await status(work.sessionId!), 'needs-review', 'Result references alone do not prove the assistant read the result')
     calls.push({ name: 'assistant_memory_read', arguments: review.result },
       { name: 'assistant_delivery_ack', arguments: { eventIds: [], reviews: [{ ...review, expectedSeq: result.seq - 1 }] } })
-    await sendMain('检查已有任务的复核依据。')
+    await scripted('检查已有任务的复核依据。', 2)
     assert.equal(await status(work.sessionId!), 'needs-review', 'A stale receipt cannot close a task')
     scenes.push('TM09-unread-result-and-stale-sequence-cannot-close-work')
     const acknowledge = async (input: typeof review, includeReview = true) => {
       calls.push({ name: 'assistant_memory_read', arguments: input.result },
         { name: 'assistant_delivery_ack', arguments: { eventIds: [`${input.delegationId}:result_ready:${input.result.messageId}`],
           deliverables: [{ delegationId: input.delegationId, expectedRevision: 1, keys: [] }], ...(includeReview ? { reviews: [input] } : {}) } })
-      await sendMain('复核并交付已有报告，沿用原任务要求。')
-      assert.equal(calls.length, 0)
+      await scripted('复核并交付已有报告，沿用原任务要求。', 2)
+      assert.equal(calls.length, 0, `Scripted calls left unconsumed: ${JSON.stringify(calls.map(call => call.name))}\nconsumed=${JSON.stringify(consumed)}`)
       const session = (await manager.getSession(assistant.id))!
       evidence.push(session.messages.filter(message => message.role === 'tool').slice(-2).map(message => ({ content: message.content, toolName: message.toolName })))
     }
