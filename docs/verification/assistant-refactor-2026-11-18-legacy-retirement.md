@@ -1,16 +1,18 @@
-# 旧契约退役清单（待用户确认，尚未删除任何代码）
+# 旧契约退役清单（路径 A 已实施，2026-11-19）
 
-状态：提案，2026-11-18。依据 [最终重构方案](../architecture/assistant-refactor-final-2026-11-18.md) §7 阶段 5「按实际调用点移除旧 Assistant 的模型侧准备、逐字目标引用、手填版本和原话重放契约」。
+状态：**路径 A 已按用户确认实施**。依据 [最终重构方案](../architecture/assistant-refactor-final-2026-11-18.md) §7 阶段 5「按实际调用点移除旧 Assistant 的模型侧准备、逐字目标引用、手填版本和原话重放契约」。
 
-**本文件不构成授权。** 按 AGENTS.md，这些删除必须先展示变更摘要并取得用户确认；当前仅登记调用点、替代路径与风险，代码一行未改。
+用户于 2026-11-19 明确确认路径 A：`assistant_context` 只保留材料选择，删掉准备代次。删除前已逐契约给出摘要（见 §7）。
+
+**本轮只退役第 1 项契约（`assistant_context` 的准备代次）。** `goalQuote` 与 `runtime_continuation` 原话重放**仍未退役**，调用点保留，不得宣称已退役。
 
 ## 1. 三项待退役契约
 
 | 契约 | 现状 | 替代路径 | 是否已验收 |
 |---|---|---|---|
-| `assistant_context.prepare` / `.select` | 仍是模型侧「准备代次」入口，用于选择分支与装配材料 | `task_create` / `task_amend` 记录定义；`task_query(checkReady)` 给出就绪与缺项；执行走 Host 的派工路径 | 阶段 1–3 已验收，但**未覆盖**「删除后所有准备场景仍有替代」 |
-| `assistant_delegate.goalQuote`（逐字目标引用） | 要求模型把用户原话逐字写进派工，Host 校验包含关系 | `task_create` 记录的原始输入与要求版本，由 Host 绑定 `inputMessageId` | 阶段 2 已验收派工与回执，但**未覆盖**「去掉 goalQuote 后授权边界仍成立」 |
-| `runtime_continuation` 原话重放 | 运行续接把原始输入原文重放进上下文 | 来源激活续接（`inputSource.kind === 'runtime_continuation'` 的既有分流）与内部事件各有身份 | 阶段 3 覆盖部分续接，**未覆盖**「重放移除后长任务语义不退化」 |
+| `assistant_context.prepare` / `.preparation` / `.recover` / `.receipt` / `.reconcile` | **已于 2026-11-19 退役（路径 A）**：从 `AssistantContextSchema` 移除，并在工具边界强制拒绝 | 材料选择留在 `branches`/`create`/`select`/`associate`/`hibernate`/`checkpoint`/`get`；工作要求由 `task_create`/`task_amend` 记录；派工由 `assistant_delegate` 直接发出 | **已验收**：确定性 70/70 + 65/65；真实模型回放中旧契约拒绝 0 次 |
+| `assistant_delegate.goalQuote`（逐字目标引用） | **仍保留**，未退役 | `task_create` 记录的原始输入与要求版本，由 Host 绑定 `inputMessageId` | 阶段 2 已验收派工与回执，但**未覆盖**「去掉 goalQuote 后授权边界仍成立」 |
+| `runtime_continuation` 原话重放 | **仍保留**，未退役 | 来源激活续接（`inputSource.kind === 'runtime_continuation'` 的既有分流）与内部事件各有身份 | 阶段 3 覆盖部分续接，**未覆盖**「重放移除后长任务语义不退化」 |
 
 ## 2. 调用点（生产代码，不含测试）
 
@@ -131,4 +133,49 @@
 - 工作面板的验收决定与模型 `task_verify` 走同一个 `service.verify`，不存在第二条绑定路径。
 - 真实模型下，新工具的单独使用路径可用（委托被正确记录并派工）。
 - 真实模型下，旧契约与新工具并存会产生参数误用（D2/D3）和强制门禁冲突（D4）。
-- **旧契约仍在调用点，因此不宣称已退役。**
+- **第 1 项契约（`assistant_context` 准备代次）已退役并验收**（见 §7）。
+- **`goalQuote` 与原话重放仍在调用点，因此不宣称这两项已退役。**
+
+## 7. 路径 A 实施记录（2026-11-19）
+
+### 7.1 删除前给出的契约摘要
+
+用户已授权路径 A。按规矩，删除前先给出该契约的摘要：
+
+> **契约**：`assistant_context` 的 `prepare` / `preparation` / `recover` / `receipt` / `reconcile`（准备代次）。
+> **删除范围**：仅模型侧 `AssistantContextSchema`。Host 自用的、用户发起派工的准备路径保留（`SessionManager.dispatchAssistantWork` 内部调用），因为它不是模型契约。
+> **删除后由什么承担**：材料选择留在 `branches`/`create`/`select`/`associate`/`hibernate`/`checkpoint`/`get`；工作要求由 `task_create`/`task_amend` 记录（且引文必须出自绑定输入，见 §3 条件 2）；派工由 `assistant_delegate` 直接发出。
+> **配套改动**：`tool-defs` 描述、`resident-role` 提示词、`assistantContextFn` 中随之失效的分支，以及 3 个仍驱动模型侧 `prepare` 的 fixture。
+
+### 7.2 实际改动
+
+| 文件 | 改动 |
+|---|---|
+| `packages/session-tools-core/src/resident-context-contracts.ts` | `AssistantContextSchema` 由 12 个动作收敛为 7 个；删除 `modelPreparation` 派生 |
+| `packages/session-tools-core/src/tool-defs.ts` | `assistant_context` 描述改写为材料选择；**在 `handler` 内加 `AssistantContextSchema.parse`**——原先 `inputSchema` 只是给模型的建议，运行时并不校验，退役必须落在边界上（见 §7.3） |
+| `packages/shared/src/agent/resident-role.ts` | 移除 `prepare` 仪式与 `receipt`/`reconcile`/`preparation`/`recover` 指引；要求记录改由 `task_create`/`task_amend` 承担；保留 `create`/`select`/`associate` 语义 |
+| `packages/server-core/src/resident-assistant/service.ts` | `assistantContextFn` 删除 `receipt`/`reconcile` 分支与 `prepare` 专属的 warm/continuation/queued 检查 |
+| `packages/server-core/src/context/session-context.ts` | 门禁放行：无 preparation 绑定即授予 admission，不创建任何 preparation 记录；新增 `admittedScope` 统一解析分支/输入/准备身份，`admittedPreparation` 允许 `work` 缺失 |
+| `packages/server-core/src/sessions/SessionManager.ts` | 派工材料路径改用 `admittedScope`；`preparationId` 变为可选（无准备时写入不带该字段的 `contextBinding`） |
+| `scripts/verification/...` | 3 个 fixture 改用保留的 `select`；新增 `D09`（无准备派工）与 `RW13`（退役动作在真实边界被拒绝）两条断言 |
+
+### 7.3 一个必须记下的实现事实
+
+`SessionToolDef.inputSchema` **只用于向模型声明参数**（`toJSONSchema()`），`pi-agent.ts` 调用 `def.handler(ctx, args)` 时**不做校验**。因此只从 `AssistantContextSchema` 删除动作，模型看不到它，但伪造调用仍会被接受。退役只有落到 `handler` 的 `parse` 上才成立。已用探针逐个动作验证：`branches`/`select`/`create`/`associate` 通过，`prepare`/`preparation`/`recover`/`receipt`/`reconcile` 均抛 `invalid_union`。
+
+### 7.4 验收结果（实测）
+
+| 项 | 命令 | 结果 |
+|---|---|---|
+| 全量套件 | `bun run verify:assistant-delegation:all` | **70/70，exit 0**（原 69 + D09） |
+| 委派工具路径 | `bun run verify:assistant-delegation` | **65/65**（原 64 + RW13） |
+| 控制 / 上下文 / 授权 | `verify:assistant-control` / `verify:assistant-context` / `verify:assistant-delegation-authority` | 23/23 · exit 0 · 5/5 |
+| 管理（原为红） | `verify:assistant-tasks:management` | **14 场景通过**（修掉了陈旧的 `capacity === 4` 断言） |
+| typecheck / lint / electron:build:main | — | 全 exit 0 |
+
+**反向验证**：撤掉门禁放行改动，`D09` 立即失败（`The delegation must be accepted without a preparation pass`）；撤掉边界 `parse`，`RW13` 立即失败。
+
+### 7.5 未完成与未宣称的部分
+
+- `goalQuote` 与 `runtime_continuation` 原话重放**仍在调用点**，本次未动。
+- LM03 在退役后仍不稳定（5 轮中 1 轮通过）。旧契约拒绝已实测降为 **0 次**，失败原因转移到 Worker 执行受阻与事件优先级，见 [失败矩阵](./assistant-refactor-2026-11-18-failure-matrix.md) 的"退役后 LM03 仍失败的实测归因"。**不宣称 LM03 已稳定。**

@@ -143,8 +143,12 @@
 | ID | 缺陷 | 基线证据 | 修法 |
 |---|---|---|---|
 | X01 | `resident-assistant-tasks-workflow` 的板卡步骤永久超时：测试用 `ancestor::*[@role="button"]` 定位任务卡，但产品为修复 axe `nested-interactive` 已刻意移除该属性（`TaskTile.tsx:136-140` 注释说明），卡片改为“布局容器 + 真实 `<button>` 激活面 + 同级控件”。选择器再也匹配不到，故 30s 必超时 | 基线 stash 后同一行 `resident-assistant-tasks-board.ts:24` 超时 | 卡片根元素补稳定 `data-testid="kanban-tile"`，测试改为按该锚点定位；锚点不依赖角色语义，与无障碍修复方向一致 |
+| X02 | `verify:assistant-tasks` 间歇失败（干净基线上 8 次跑 4 次失败）。两个独立的测试竞态：(a) 夹具把 Host 自发的内部唤醒当成脚本主回合，`calls.shift()` 因此吃掉了本该属于用户回合的调用；其中 memory-maintenance 的上下文文本压根没有 `currentInputId` 字段，只按该字段判断必然漏判。(b) `sendMain` 只轮询 `isProcessing`，该布尔在提交的输入真正开始前仍可能为 false，于是一次发送的回合会跑到下一次发送里，位置化的 `calls` 队列整体错位 | 基线 stash 后 12 次采样 4 次失败，失败位置在 80/131/155 行漂移 | 夹具改为「无 `msg-` 开头的已提交输入即视为内部唤醒」，且必须在**原始 message content** 上匹配（`JSON.stringify` 之后引号被转义，正则永不命中）；`sendMain` 改为同时等待「本轮主回合计数增加」与「本轮应消费的脚本调用已消费」 |
+| X03 | `SessionPersistenceQueue` 在 Windows 上以 `rename` 原子替换时会因目标文件被短暂占用而抛 `EPERM`，整次快照写入失败。POSIX 下 rename 覆盖不会被打开的文件阻塞，Windows 不同 | `.cache/verification/.../resident-assistant-tasks-*/` 中真实 `EPERM: operation not permitted, rename ... -> session.jsonl` | 新增 `replaceFile()`：Windows 上对 `EPERM`/`EBUSY`/`EACCES` 做 10 次递增退避重试，其余平台保持单次语义；与文件内既有的 Windows 目录 fsync 豁免同一惯例 |
 
 修复后 `resident-assistant-tasks-workflow` 17/17 场景通过，含此前超时的 TM03/TM05/TM02 板卡场景，产出 `board-{light,dark}.png`（1440×1000）与 `board-trace.zip`。
+
+X02/X03 的实测：`bun run scripts/verification/resident-assistant-tasks-workflow.ts` 连续 **12 次全部通过（12/12）**；修复前同一命令 12 次中 3–4 次失败。`packages/shared` 的 `persistence-queue` / `snapshot-storage` 单测 11/11 通过。
 
 ## 6. 阶段进展（按定稿 §7 顺序，随时点更新）
 
@@ -188,34 +192,34 @@ M10/M15 的产物闭环已覆盖：场景 `B08`/`B09` 断言文件真实存在�
 **未闭环项（如实记录）**：真实日历/邮件连接器读取、真实外发、Electron 审批卡片渲染。本工作流按替身口径验证授权与审批语义，`untested` 已声明不含真实外发。
 
 ### 阶段 5 · 工作区切换与回退 —— 已通过（隔离副本，未切真实安装）
-
 | 证据 | 结果 | 复跑命令 |
 |---|---|---|
 | shadow 模式只读、绝不派发或外发；旧在途记录保持可读且不被自动转成活动任务；切换到新入口是逐条记录的决定；在途映射只绑定一次；回退先冻结新准入再排空/移交；新入口已接受的记录在回退后仍可读；二次启用必须有 shadow 期；退役按符号逐项核对而非整体宣称 | 8/8 场景 | `bun run scripts/verification/assistant-task-switchover-workflow.ts` |
 
-已覆盖的失败判据：M29 shadow 不派发不外发、M30 工作区唯一现行入口、M31 在途只读且映射一次、M32 回退先冻结再有在途处置、M33 退役逐项核对（当前仍保留 `runtime_continuation.replay`，故不宣称该契约已退役）。
+已覆盖的失败判据：M29 shadow 不派发不外发、M30 工作区唯一现行入口、M31 在途只读且映射一次、M32 回退先冻结再有在途处置、M33 退役逐项核对。**M33 的部分结论已更新**：`assistant_context` 的准备代次（`prepare`/`preparation`/`recover`/`receipt`/`reconcile`）已于 2026-11-19 退役并验收；`assistant_delegate.goalQuote` 与 `runtime_continuation` 原话重放**仍在调用点**，故仍不宣称这两项已退役。该工作流 `S08` 场景的逐项核对语义保持不变（它只对仍存在的符号）.
 
 **未闭环项（需用户授权）**：切换真实安装、真实旧委派结算、跨工作区/远端切换。本工作流使用隔离副本，不触碰真实安装。
 
 ### 仍待完成
 
-1. **真实模型桌面 E2E 的稳定性**：工作流已跑通并有独立入口（`bun run verify:assistant-delegation-live`），首轮 3/3 通过，但第二轮 LM03 失败——失败原因是旧契约阻断（见下节 D4），不是测试或环境问题。**在两个契约并存期间，这项无法稳定通过**。
-2. **旧契约退役**：调用点、替代路径、能力对照与退役路径已登记于 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md)。**等待用户在路径 A / B 之间决定**；删除需用户确认，当前未删任何代码。
+1. **真实模型桌面 E2E 的稳定性**：旧契约退役**消除了 D4**（退役后每轮实测旧契约拒绝均为 0 次），但 LM03 仍不稳定：5 轮样本中 1 轮以 `amended: true` 通过，其余 4 轮仍报"变更被丢弃"。失败原因已**不再是**旧契约，而是下一项。不在少量样本上宣称通过。
+2. **LM03 的其余失败原因（本轮新发现，未修复）**：见下节逐轮归因。四项独立原因：`askedBack` 检测与真实 `ask_user` 调用不一致（原因未查清）、模型用自然语言反问而不走工具、Worker 执行受阻（提供方 `402` 余额；Worker cwd 落在助手私有会话目录被"Assistant private state is protected"拒写）、以及 Worker 已完成时该轮被用于交付核对而延后新变更。这些都与旧契约无关。
+3. **旧契约退役（路径 A）已实施**：`assistant_context` 的 `prepare` / `preparation` / `recover` / `receipt` / `reconcile` 已从模型侧移除并在工具边界强制拒绝；材料选择（`branches`/`create`/`select`/`associate`/`hibernate`/`checkpoint`/`get`）保留。Host 自用的用户发起派工准备路径保留（它不是模型契约）。详见 [旧契约退役清单](./assistant-refactor-2026-11-18-legacy-retirement.md)。
 
 ### D2–D4 与真实模型 E2E 的相互关系
 
 三者的关系值得单独写明，因为它们不是三个独立 bug：
 
-| 现象 | 直接原因 | 根因 |
-|---|---|---|
-| D2 `assistant_context` 收到 `task_create` 的字段 | 两套契约都描述"要求"，字段名不同 | 同一概念有两个表达 |
-| D3 `assistant_delegate` 的 `fileScope` 放错层级 | 同上 | 同上 |
-| D4 `Select alone is not preparation` 等拒绝 | 旧准备/续接规则仍是强制前置 | 旧路径未退役 |
-| LM03 时通时不通 | 模型选择不同路径，旧契约按路径不同地放行或拒绝 | 同上 |
+| 现象 | 直接原因 | 根因 | 现状（2026-11-19） |
+|---|---|---|---|
+| D2 `assistant_context` 收到 `task_create` 的字段 | 两套契约都描述"要求"，字段名不同 | 同一概念有两个表达 | **已消除**：`prepare` 退役后 `assistant_context` 不再有 `requirements` 字段，混淆面随契约消失 |
+| D3 `assistant_delegate` 的 `fileScope` 放错层级 | 同上 | 同上 | 不再是必现问题；`fileScope` 仍是顶层契约字段 |
+| D4 `Select alone is not preparation` 等拒绝 | 旧准备/续接规则仍是强制前置 | 旧路径未退役 | **已消除**：门禁改为「无 preparation 绑定时直接授予 admission」，退役后 5 轮真实模型回放中旧契约拒绝出现 **0 次** |
+| LM03 时通时不通 | 模型选择不同路径，旧契约按路径不同地放行或拒绝 | 同上 | **D4 部分已消除**；仍有独立原因（见下） |
 
-因此**退役旧契约是让真实模型 E2E 稳定通过的前置条件**，而不是它的后续清理。这也解释了为什么第 3 项与第 4 项不能分开收尾。
+**结论修正**：退役旧契约是必要的，但**不是 LM03 稳定的充分条件**。实测显示 D4 消失后 LM03 仍会失败，归因已转移到 Worker 执行与事件优先级，见下节。
 
-#### 真实模型 E2E —— LM01/LM02 稳定通过，LM03 被旧契约阻断
+#### 真实模型 E2E —— 旧契约退役后的实测（5 轮样本）
 
 ```bash
 bun run verify:assistant-delegation-live
@@ -223,24 +227,32 @@ bun run verify:assistant-delegation-live
 
 前置条件：退出 Phaneris 桌面应用（单实例锁；打包版 `Phaneris.exe`、开发版 `electron.exe` 都占锁，工作流两者都检测）。工作流把安装的 `credentials.enc` / `credentials.key` 与 Chromium 的 `Local State`（safeStorage 主密钥所在）复制到隔离配置根，不修改用户配置。连接用安装配置的默认项（本轮为 Command Goat 的 `deepseek/deepseek-v4.1-flash`），工作区权限 `allow-all`。
 
-| 场景 | 稳定性 | 真实模型行为 |
-|---|---|---|
-| LM01 问候 | **稳定通过** | 普通寒暄，未调用任何 `task_*` 工具，任务数不变 |
-| LM02 一次委托 | **稳定通过** | `task_create` 记录 Goal/要求/交付形式，`assistant_delegate` 派工；引文经核实全部出自输入原文（`自包含 HTML 页面`、`文件名 pelican.html`、`要能直接用浏览器打开`、`鹈鹕骑自行车`） |
-| LM03 复合输入 | **4 次全部失败** | 见下 |
+**LM01/LM02 在所有样本中通过**：问候未调用任何 `task_*`；一次委托记录 1 个 Goal + 1 个 Task + 要求版本与 Change，并由 `assistant_delegate` 派工。
 
-**LM03 的失败原因是 D4，不是测试缺陷。** 四次运行的末尾工具回执（同类）：
+**LM03 逐轮实测**（统计各轮隔离配置根下全部 `*.jsonl`）：
 
-```
-FAIL mcp__session__assistant_worker_control: work_input_pending: A newer user instruction must be handled before new business effects
-FAIL mcp__session__assistant_context: Session tool error: work_input_pending: A newer user input superseded this pending preparation
-```
+| 轮次 | 旧契约拒绝次数 | LM03 | 该轮模型实际处置（据会话原文） |
+|---|---:|---|---|
+| 1 | 0 | **通过**（`amended: true`，Change 1→2） | `task_amend` 两次，把"深色背景"记录为新要求版本 |
+| 2 | 0 | 失败 | 用自然语言反问"你指的是哪个"，未走 `ask_user` 工具，也未 `task_amend` |
+| 3 | 0 | 失败 | **调用了 `ask_user`**（`pi-turn-6`，回执含用户选择）询问是否指 pelican.html；但 `live-mixed.json` 记为 `askedBack: false`，捕获原因未查清 |
+| 4 | 0 | 失败 | Worker 首跳 `402 Insufficient Balance`；模型说明阻塞点，未记录变更 |
+| 5 | 0 | 失败 | 该轮 Worker 已完成，模型用于交付并逐项核对 `pelican.html`，未处理新变更 |
 
-模型确实想记录变更，但被旧契约的输入优先级规则反复拒绝。各次尝试的路径不同（追加给运行中的 Worker、另开 Task、回头追问指代对象），结果取决于旧契约是否放行——因此**在旧契约仍存在时，LM03 无法稳定通过**。
+**关键事实**：5 轮的旧契约拒绝次数**全部为 0**。`work_not_prepared` / `Select alone is not preparation` / `work_input_pending` 这类 D4 拒绝在退役后不再出现，退役目标已达成。
 
-这也修正了一个判据偏差：LM03 要检查的是"变更不被静默丢弃"，而不是"必须走某一条具体路径"。断言已放宽为接受 追加 / 新版本 / 追问指代 三种正确处置，仍失败则说明变更真的被丢了。放宽后四次依然失败，所以结论不变。
+**为什么 LM03 仍失败（未修复，如实记录）**：
 
-**已核实不相关的一次干扰**：中途出现过 `Error Durable Runtime admission is closed`，是测试在模型仍在处理时关闭了应用（超时），不是产品行为；已把该场景等待时间延长，并分离了这种情况。
+- **`askedBack` 判定与真实调用不一致（原因未查清）**：第 3 轮模型确实调用了 `ask_user` 并收到用户选择（会话原文可证，时间戳在混入输入之后约 20 秒），但 `live-mixed.json` 仍记 `askedBack: false`。本轮**未放宽该判定**——判据一旦放宽就无法区分"真的丢弃"与"只是没被识别"；应先查清捕获逻辑，再用多轮样本决定。
+- **反问走自然语言（第 2 轮）**：模型用散文追问而没有走 `ask_user` 工具，判据不认这种处置。设计上"追问指代"是可接受处置之一，但它当前只以工具形式被识别。
+- **Worker 执行受阻**：提供方余额 `402`（第 4 轮）、以及 Worker 的 cwd 落在助手私有会话目录下、写入时被产品自身"Assistant private state is protected"拦截。后者是真实缺陷，与旧契约无关。
+- **事件优先级**：第 5 轮 Worker 已完成并投递结果，模型把该轮用于交付与核对，新变更被延后而非被拒绝。
+
+这四项都是**独立于旧契约**的问题，需要各自单独立项，不能靠继续删除契约解决。
+
+#### 退役动作在真实边界的拒绝（确定性证据）
+
+`resident-assistant-delegation` 场景 `RW13-retired-preparation-action-refused-at-the-tool-boundary` 用真实 Host 工具边界驱动探针，断言退役动作回执 `isError=true`；反向验证：把边界校验去掉，该场景即失败。同时 `assistant-task-desktop-entry` 场景 `D09-business-dispatch-requires-no-preparation-pass` 断言"记录委托 → 立即派工"全程无准备代次；反向验证：撤掉放行改动即报 `The delegation must be accepted without a preparation pass`。
 
 **D1 已修复并验证**（方案 A：幂等键 = 可信输入 + 语义动作）。真实模型对照：
 
@@ -250,13 +262,13 @@ FAIL mcp__session__assistant_context: Session tool error: work_input_pending: A 
 | Tasks | 2 | **1**（同一输入） |
 | changes | 2 条，同一 `inputMessageId` | 1 条 |
 
-**仍存在的缺陷**（真实模型回执证据）：
+**退役前的缺陷（真实模型回执证据，D4 已消除）**：
 
-| # | 缺陷 | 证据 | 对应判据 |
+| # | 缺陷 | 退役前证据 | 对应判据 |
 |---|---|---|---|
 | D2 | `assistant_context` 参数被误用 | `command.requirements.0.statement: unknown field` | M05、M33 |
 | D3 | `assistant_delegate` 参数被误用 | `config.fileScope: unknown field`（`fileScope` 在契约顶层） | 同上 |
-| D4 | 旧契约主动阻断新流程 | `Select alone is not preparation` / `Continuation requires a completed result` / `work_input_pending`（已 4 次复现） | M33 |
+| D4 | 旧契约主动阻断新流程 | `Select alone is not preparation` / `Continuation requires a completed result` / `work_input_pending`（退役前 4 次复现，退役后 0 次） | M33 |
 
 **本轮还补上了一条安全性质**（原为缺口，见退役清单 §3 条件 2）：`task_create`/`task_amend` 现在校验每条要求引文必须是绑定输入的原文摘录，`assistant_context.prepare` 不再是唯一做这件事的地方。已用反向验证确认断言有效（关掉校验即报 `Missing expected exception: an invented quote must be refused`）。
 
