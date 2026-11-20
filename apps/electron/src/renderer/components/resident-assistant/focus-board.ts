@@ -80,6 +80,43 @@ export function segmentsFor(items: readonly TaskProjectionView[]): Array<{
     .map(item => ({ taskId: item.task.id, title: item.task.title, group: focusGroupOf(item.stage), stage: item.stage }))
 }
 
+/** The stage's tone, i.e. which state the gauge bar has to read as. */
+export type FocusTone = 'needs' | 'active' | 'idle' | 'failed' | 'settled'
+
+/**
+ * A stage's tone, used by the gauge bars.
+ *
+ * `focusGroupOf` answers "which section does this belong to"; the tone answers
+ * "what does the bar look like". They agree on `needs` and `settled`, and the
+ * tone splits the active group by whether the work is actually moving.
+ */
+export function focusToneOf(stage: TaskStage): FocusTone {
+  if (stage === 'needs_user' || stage === 'candidate_result' || stage === 'rework') return 'needs'
+  if (stage === 'running' || stage === 'stopping') return 'active'
+  if (stage === 'failed') return 'failed'
+  if (stage === 'accepted' || stage === 'cancelled') return 'settled'
+  return 'idle'
+}
+
+/**
+ * The task's own reason for needing the user, in the Host's words.
+ *
+ * The board used to show only the stage ("needs your decision") and leave the
+ * reason in the task detail. But the first question a reader has is *why*, and
+ * a stage word never answers it. Only recorded facts are returned: a task with
+ * no recorded reason yields `undefined` and the panel falls back to its own
+ * copy rather than inventing a cause.
+ */
+export function askedReasonOf(projection: TaskProjectionView): string | undefined {
+  if (!needsDecision(projection.stage)) return undefined
+  const invalidation = projection.verification?.reason
+  if (invalidation) return invalidation
+  if (projection.ready && !projection.ready.ready && projection.ready.missing.length) {
+    return projection.ready.missing.join('；')
+  }
+  return undefined
+}
+
 /**
  * Why a task is not moving, in the Host's own words.
  *

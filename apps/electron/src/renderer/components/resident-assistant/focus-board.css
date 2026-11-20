@@ -2,295 +2,445 @@
    The assistant's work board.
 
    Shared by both surfaces that show it (the titlebar peek and the panel
-   inside the assistant view), so it is written against the app's own
-   tokens (packages/ui/src/styles/theme-tokens.css) and adds no palette
-   of its own. Separation is a 1px rule or one tone step, never a shadow;
-   the accent appears on the selected segment and a moving task's dot only.
+   inside the assistant view), so it is written against the app's own tokens
+   (packages/ui/src/styles/theme-tokens.css) and adds no palette of its own.
+   Separation is a 1px rule or one tone step, never a shadow; the accent
+   appears on the selected bar, a moving task's bar and the selected row only.
 
-   Two columns: the record on the left at 1.62fr, the rail at 1fr. The
-   rail holds work in flight and, pinned to its bottom, what was delivered.
+   Two surfaces, two compositions — same facts, same gauge, one component:
+   · peek (titlebar)  two columns: the record, then the rail beside it.
+   · dock (assistant) one column, top to bottom: record → deliverables →
+     actions, as a floating panel anchored to the right edge.
+
+   Type stays inside the contract: the record never exceeds text-reading,
+   so no panel title pretends to be a page heading. The previous version ran
+   a 16px title over 10px body text, which DESIGN.md rejects twice over
+   (panel titles are text-body; CJK below 12px reads as a grey smear).
    ───────────────────────────────────────────────────────────────────── */
+
 .focus-board {
-  display: grid; min-height: 0; flex: 1;
-  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
-  gap: 16px;
-  /* The board fills its host; both children scroll inside their own track. */
-  height: 100%;
-}
-.focus-left { display: flex; flex-direction: column; min-height: 0; gap: 8px; }
-
-@media (max-width: 900px) {
-  .focus-board { grid-template-columns: 1fr; height: auto; }
+  display: flex; flex-direction: column;
+  flex: 1; min-height: 0; min-width: 0;
+  container-type: inline-size;
 }
 
-/* ── capacity strip: spans the column and switches the task ──────────── */
-.focus-strip {
-  display: flex; align-items: center; gap: 10px;
-  padding: 0 0 7px; border-bottom: 1px solid var(--border); flex: none;
+.focus-board[data-surface="peek"] { min-height: 0; }
+.focus-board[data-surface="dock"] { min-height: 0; }
+
+/* ── the gauge: one bar per task, the bar *is* the switcher ──────────
+   The previous version stacked two separate controls that both meant
+   "task": an 18-slot capacity meter (18 × 14px + gaps = 303px, which ate
+   the whole row on a 389px panel) and a title strip. They competed for the
+   same width, so the title strip was squeezed to 0–188px.
+
+   Now there is one row. Every bar is a task, its count follows the task
+   count instead of a fixed 18, and clicking a bar focuses that task.
+   Bars are equal height (10px) — state is carried by fill and texture, not
+   by height, so the row costs 20px instead of 26px and stays a single line
+   however many tasks exist. */
+.focus-gauge {
+  display: flex; align-items: center; gap: 8px;
+  flex: none;
+  padding: 0 13px 7px;
 }
-.focus-readout { display: flex; align-items: center; gap: 7px; flex: none; }
-.focus-seats { display: flex; gap: 3px; flex: none; }
-.focus-seat {
-  width: 14px; height: 5px; border-radius: var(--shape-sm);
-  background: color-mix(in srgb, var(--foreground) 13%, transparent);
+
+.focus-bars {
+  display: flex; align-items: stretch; gap: 2px;
+  flex: 1 1 auto; min-width: 0;
+  height: 10px;
+  overflow-x: auto; overflow-y: hidden;
+  scrollbar-width: none;
+  padding: 0;
 }
-.focus-seat[data-on="true"] { background: var(--accent); }
-.focus-count {
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums; white-space: nowrap;
+.focus-bars::-webkit-scrollbar { display: none; }
+
+.focus-bar {
+  /* A button, but a tick, not a control with a box: every default inset is
+     cleared, or `padding: 1px 6px` inflates a 4px tick into a 12px block and
+     the fill stops reading as a state. */
+  position: relative;
+  flex: 1 1 4px;
+  width: auto; min-width: 4px; max-width: 14px;
+  height: 10px;
+  padding: 0; margin: 0; border: 0;
+  border-radius: var(--shape-xs);
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--motion-duration-fast) var(--motion-ease-enter);
 }
-/* Segments keep their own width and scroll sideways instead of being squeezed:
-   a truncated `PANEL...` label tells the user nothing about which task it is. */
-.focus-segments { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-.focus-segments::-webkit-scrollbar { display: none; }
-/* A segment is a label on a rule, not a pill: the rule marks the selection. */
-.focus-segment {
-  display: flex; align-items: center; gap: 5px; flex: none; max-width: 200px;
-  padding: 3px 7px; border-radius: var(--shape-sm);
-  border-bottom: 2px solid transparent;
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground); white-space: nowrap;
+.focus-bar[data-tone="needs"] { background: var(--info); }
+.focus-bar[data-tone="active"] { background: var(--accent); }
+.focus-bar[data-tone="idle"] { background: color-mix(in srgb, var(--foreground) 22%, transparent); }
+.focus-bar[data-tone="failed"] {
+  background-color: var(--destructive);
+  background-image: repeating-linear-gradient(135deg, transparent 0 2px, color-mix(in srgb, var(--destructive) 78%, transparent) 2px 3px);
 }
-.focus-segment:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); color: var(--foreground); }
-.focus-segment[aria-selected="true"] {
-  color: var(--foreground); font-weight: 600; border-bottom-color: var(--accent);
+.focus-bar[data-tone="settled"] { background: color-mix(in srgb, var(--foreground) 14%, transparent); }
+.focus-bar:hover { filter: brightness(1.14); }
+/* The selection is a ring, not a fill: it answers "which one am I reading",
+   which is independent of the task's state. */
+.focus-bar[aria-current="true"] {
+  outline: 1.5px solid var(--foreground);
+  outline-offset: 2px;
 }
-.focus-segment-dot {
-  width: 5px; height: 5px; border-radius: 50%; flex: none;
-  background: color-mix(in srgb, var(--foreground) 26%, transparent);
+
+/* The legend explains the fills; it is not decoration. It drops out before
+   the bars do, because the caption below repeats the selected task's state
+   in words. */
+.focus-gauge-legend {
+  display: flex; align-items: center; gap: 7px; flex: none;
+  font-size: var(--type-micro-size);
+  color: var(--text-secondary);
 }
-.focus-segment[data-stage="running"] .focus-segment-dot,
-.focus-segment[data-stage="stopping"] .focus-segment-dot { background: var(--accent); }
-.focus-segment[data-stage="candidate_result"] .focus-segment-dot,
-.focus-segment[data-stage="needs_user"] .focus-segment-dot,
-.focus-segment[data-stage="rework"] .focus-segment-dot { background: var(--info); }
-.focus-segment[data-stage="failed"] .focus-segment-dot { background: var(--destructive); }
-.focus-segment-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.focus-refresh { flex: none; }
+.focus-gauge-legend > span { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; line-height: 1.3; }
+.focus-gauge-legend i { display: block; width: 6px; height: 6px; border-radius: var(--shape-xs); background: color-mix(in srgb, var(--foreground) 22%, transparent); }
+.focus-gauge-legend i[data-tone="needs"] { background: var(--info); }
+.focus-gauge-legend i[data-tone="active"] { background: var(--accent); }
+@container (max-width: 700px) {
+  .focus-gauge-legend > span[data-kind="extra"] { display: none; }
+}
+
+/* The selected task's name and state: the bars only carry fills, so the
+   words have to live somewhere. This is the one line that answers "what am
+   I looking at", and it is the last row of the panel's chrome. */
+.focus-gauge-caption {
+  display: flex; align-items: baseline; gap: 7px;
+  flex: none;
+  padding: 5px 13px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.focus-gauge-state { flex: none; }
+.focus-gauge-name {
+  flex: 1; min-width: 0;
+  font-size: var(--type-label-size); font-weight: var(--font-weight-medium); line-height: 1.45;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.focus-gauge-count {
+  flex: none;
+  font-size: var(--type-micro-size);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── state word: a dot plus the word, never colour alone ─────────────── */
+.focus-state {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: var(--type-meta-size); font-weight: var(--font-weight-medium); line-height: 1.45;
+  white-space: nowrap;
+}
+.focus-state::before {
+  content: ""; flex: none;
+  display: block; width: 5px; height: 5px; aspect-ratio: 1; min-width: 5px; min-height: 5px;
+  border-radius: var(--shape-round);
+  background: currentColor;
+}
+.focus-state[data-tone="needs"] { color: var(--info-text); }
+.focus-state[data-tone="active"] { color: var(--accent-text); }
+.focus-state[data-tone="settled"] { color: var(--success-text); }
+.focus-state[data-tone="failed"] { color: var(--destructive-text); }
+.focus-state[data-tone="idle"] { color: var(--text-secondary); }
+
+/* ── layout: peek is two columns, dock is one ───────────────────────── */
+.focus-body {
+  display: flex; flex-direction: column;
+  flex: 1; min-height: 0; min-width: 0;
+  overflow: hidden;
+}
+.focus-body[data-surface="peek"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 14px;
+  padding: 10px 13px 12px;
+}
+/* The dock is a tall, narrow panel: splitting it into columns would halve
+   every line. It stacks record → deliverables → actions instead. */
+.focus-body[data-surface="dock"] {
+  display: flex; flex-direction: column;
+  min-height: 0;
+}
+.focus-body[data-surface="peek"] > .focus-left { display: flex; flex-direction: column; min-height: 0; gap: 8px; }
+
+.focus-scroll {
+  flex: 1; min-height: 0; min-width: 0;
+  overflow: auto; overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.focus-body[data-surface="peek"] .focus-scroll {
+  padding: 11px 13px 6px;
+  border-radius: var(--shape-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+.focus-body[data-surface="dock"] .focus-scroll { padding: 11px 13px 8px; }
 
 /* ── the record ─────────────────────────────────────────────────────── */
-.focus-surface {
-  display: flex; flex-direction: column; min-height: 0; flex: 1;
-  margin-top: 8px; border-radius: var(--shape-lg);
-  background: var(--card);
-  border: 1px solid var(--border);
-}
-.focus-record { flex: 1; min-height: 0; overflow: auto; padding: 11px 13px 4px; }
-
-.focus-heading { display: flex; align-items: baseline; gap: 9px; }
+.focus-heading { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .focus-title {
   margin: 0; min-width: 0;
-  font-size: calc(var(--type-title) * var(--ui-scale));
-  font-weight: 600; line-height: 1.35;
+  font-size: var(--type-reading-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
-.focus-stage {
-  flex: none; font-size: calc(var(--type-micro) * var(--ui-scale));
-  font-weight: 500; color: var(--info-text);
+.focus-heading-meta {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  min-width: 0;
 }
-.focus-stage[data-stage="running"],
-.focus-stage[data-stage="stopping"] { color: var(--accent-text); }
-.focus-stage[data-stage="accepted"] { color: var(--success-text); }
-.focus-stage[data-stage="cancelled"],
-.focus-stage[data-stage="failed"] { color: var(--destructive-text); }
+.focus-ago { font-size: var(--type-micro-size); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 
+/* Why the task is waiting for the user. The previous version had no such
+   block at all: it showed a stage word and left the reason in the detail
+   view, so a reader had to open a second surface to learn what was asked. */
+.focus-asked {
+  margin: 9px 0 0;
+  padding: 8px 10px;
+  border-radius: var(--shape-sm);
+  border: 1px solid color-mix(in srgb, var(--info) 22%, transparent);
+  background: color-mix(in srgb, var(--info) 7%, var(--card));
+  font-size: var(--type-body-size); line-height: 1.6;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+.focus-asked-label {
+  display: block; margin-bottom: 2px;
+  font-size: var(--type-micro-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.04em;
+  color: var(--info-text);
+}
+
+/* sections: more space above a heading than below it */
 .focus-label {
-  margin: 11px 0 4px;
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  font-weight: 600; color: var(--muted-foreground);
+  display: flex; align-items: baseline; gap: 8px;
+  margin: 13px 0 4px;
+  font-size: var(--type-label-size);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
 }
-.focus-none {
-  margin: 0; font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground);
-}
-.focus-error {
-  margin: 8px 0 0; color: var(--destructive-text);
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-}
-.focus-empty {
-  margin: 10px 0; color: var(--muted-foreground);
-  font-size: calc(var(--type-label) * var(--ui-scale));
-}
+.focus-label > span:last-child { margin-left: auto; font-weight: var(--font-weight-normal); font-variant-numeric: tabular-nums; }
 
 .focus-facts {
   display: grid; grid-template-columns: auto minmax(0, 1fr);
-  gap: 4px 13px; margin: 0;
+  gap: 3px 12px; margin: 0;
 }
 .focus-facts dt {
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground);
+  font-size: var(--type-label-size); line-height: 1.6;
+  color: var(--text-secondary); white-space: nowrap;
 }
 .focus-facts dd {
-  margin: 0; font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--foreground); overflow-wrap: anywhere;
+  margin: 0;
+  font-size: var(--type-body-size); line-height: 1.6;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
-/* version and assignment rows: the version figure is tabular and fixed width */
-.focus-versions, .focus-assignments, .focus-criteria, .focus-files { margin: 0; }
-.focus-version, .focus-assignment {
-  display: grid; grid-template-columns: 28px minmax(0, 1fr) auto;
-  gap: 9px; align-items: baseline; padding: 4px 0;
-}
-.focus-version + .focus-version,
-.focus-assignment + .focus-assignment { border-top: 1px solid var(--border); }
+/* Requirement versions: a correction appends, and the old one stays
+   readable. These are the sentences the user actually has to judge, so they
+   get the body tier, not the micro tier. */
+.focus-versions, .focus-assignments, .focus-criteria { margin: 0; }
+.focus-version { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 0 9px; padding: 7px 0; }
+.focus-version + .focus-version { border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent); }
 .focus-version-tag {
+  padding-top: 2px;
   font-family: var(--font-mono);
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground); font-variant-numeric: tabular-nums;
+  font-size: var(--type-micro-size);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
+.focus-version-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .focus-version-text {
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--foreground); overflow-wrap: anywhere;
+  font-size: var(--type-body-size); line-height: 1.65;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
+.focus-version-note { font-size: var(--type-micro-size); color: var(--text-secondary); }
 /* A superseded requirement stays readable and says it was replaced. */
 .focus-version[data-state="superseded"] .focus-version-text,
 .focus-version[data-state="withdrawn"] .focus-version-text {
-  color: var(--muted-foreground); text-decoration: line-through;
-  text-decoration-color: color-mix(in srgb, var(--foreground) 32%, transparent);
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--foreground) 30%, transparent);
 }
-.focus-version-state {
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground); white-space: nowrap;
+
+.focus-assignment {
+  display: grid; grid-template-columns: 26px minmax(0, 1fr) auto;
+  gap: 9px; align-items: baseline; padding: 5px 0;
 }
+.focus-assignment + .focus-assignment { border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent); }
 .focus-assignment-session {
   font-family: var(--font-mono);
-  font-size: calc(var(--type-micro) * var(--ui-scale));
+  font-size: var(--type-micro-size);
   color: var(--foreground);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  overflow-wrap: anywhere;
 }
+.focus-assignment-state { font-size: var(--type-micro-size); color: var(--text-secondary); white-space: nowrap; }
 
 /* criteria: the recorded outcome beside its own statement */
 .focus-criteria { list-style: none; padding: 0; }
 .focus-criterion {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto;
-  gap: 9px; align-items: baseline; padding: 3px 0;
+  display: grid; grid-template-columns: 14px minmax(0, 1fr) auto;
+  gap: 8px; align-items: baseline; padding: 6px 0;
 }
+.focus-criterion + .focus-criterion { border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent); }
+.focus-criterion-glyph { font-family: var(--font-mono); font-size: var(--type-meta-size); color: var(--text-secondary); }
+.focus-criterion[data-outcome="met"] .focus-criterion-glyph { color: var(--success-text); }
+.focus-criterion[data-outcome="gap"] .focus-criterion-glyph { color: var(--info-text); }
 .focus-criterion-text {
-  font-size: calc(var(--type-micro) * var(--ui-scale));
+  font-size: var(--type-body-size); line-height: 1.6;
   color: var(--foreground);
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
-.focus-criterion[data-outcome="met"] .focus-version-state { color: var(--success-text); }
-.focus-criterion[data-outcome="gap"] .focus-version-state { color: var(--info-text); }
+.focus-criterion-state { font-size: var(--type-micro-size); color: var(--text-secondary); white-space: nowrap; }
 
-/* produced files: mono name, the row is the affordance */
-.focus-file {
-  display: flex; align-items: baseline; gap: 10px;
-  width: 100%; text-align: left; padding: 5px 0;
+.focus-none {
+  margin: 0; padding: 10px 0;
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
 }
-.focus-file + .focus-file { border-top: 1px solid var(--border); }
-.focus-file:hover .focus-file-name { color: var(--accent-text); }
-.focus-file-name {
-  flex: 1; min-width: 0;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--foreground);
+.focus-error {
+  margin: 10px 0 0;
+  font-size: var(--type-label-size);
+  color: var(--destructive-text);
+  overflow-wrap: anywhere;
+}
+.focus-empty {
+  margin: 0; padding: 14px 0;
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
 }
 
 /* ── actions: one filled primary, the rest outlined ─────────────────── */
 .focus-actions {
-  display: flex; align-items: center; gap: 7px; flex: none;
-  padding: 9px 13px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  flex: none;
+  padding: 9px 13px;
+  border-top: 1px solid var(--border);
 }
+.focus-actions-spacer { flex: 1; }
 .focus-primary {
   display: inline-flex; align-items: center; gap: 6px;
-  height: calc(var(--control-height-md) * var(--ui-scale)); padding: 0 12px;
+  height: calc(var(--control-height-sm) * var(--ui-scale)); padding: 0 10px;
   border-radius: var(--shape-sm);
   background: var(--foreground); color: var(--background);
-  font-size: calc(var(--type-label) * var(--ui-scale)); font-weight: 600;
+  font-size: var(--type-label-size); font-weight: var(--font-weight-semibold);
 }
-.focus-primary:hover { opacity: .9; }
-.focus-primary:disabled, .focus-secondary:disabled { opacity: .55; cursor: default; }
+.focus-primary:hover { opacity: .88; }
+.focus-primary:active { transform: scale(.98); }
+.focus-primary:disabled, .focus-secondary:disabled { opacity: .45; cursor: default; }
 .focus-secondary {
   display: inline-flex; align-items: center; gap: 6px;
-  height: calc(var(--control-height-md) * var(--ui-scale)); padding: 0 11px;
+  height: calc(var(--control-height-sm) * var(--ui-scale)); padding: 0 10px;
   border-radius: var(--shape-sm);
   background: var(--card); color: var(--foreground);
   border: 1px solid var(--border);
-  font-size: calc(var(--type-label) * var(--ui-scale));
+  font-size: var(--type-label-size);
 }
 .focus-secondary:hover:not(:disabled) { background: var(--secondary); }
 .focus-danger { color: var(--destructive-text); }
+.focus-danger:hover:not(:disabled) { background: color-mix(in srgb, var(--destructive) 9%, transparent); }
 .focus-text-action {
   margin-left: auto; padding: 2px 0;
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground);
+  font-size: var(--type-meta-size);
+  color: var(--text-secondary);
 }
 .focus-text-action:hover { color: var(--foreground); }
 
-@media (pointer: coarse) {
-  .focus-segment, .focus-file { min-height: 44px; }
-  .focus-primary, .focus-secondary { height: 44px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .focus-segment { transition: none; }
-}
-
-/* ── the rail: in-flight work, then deliverables pinned to the bottom ───
-   Two rows: the list takes the space, the delivered block sits at the end
-   so the eye lands on output after reading work in progress. */
+/* ── the rail: work in flight, then deliverables ─────────────────────
+   In the peek this is the second column; in the dock the same content is
+   pinned under the record. One renderer, two placements. */
 .focus-rail {
-  display: grid; min-height: 0;
+  display: grid; min-width: 0; min-height: 0;
   grid-template-rows: minmax(0, 1fr) auto;
 }
-.focus-rail-block { display: flex; flex-direction: column; min-height: 0; padding-bottom: 8px; }
-.focus-rail-block + .focus-rail-block {
-  border-top: 1px solid var(--border); padding-top: 8px; padding-bottom: 0;
+.focus-body[data-surface="dock"] .focus-rail-block + .focus-rail-block,
+.focus-body[data-surface="dock"] .focus-rail-block {
+  border-top: 1px solid var(--border);
 }
+.focus-body[data-surface="dock"] .focus-rail { flex: none; padding: 8px 13px 0; }
+/* Both blocks stay visible — the in-flight list is how you switch to another
+   task without opening the gauge — but each scrolls inside its own cap so the
+   action group never leaves the panel's bottom edge. */
+.focus-body[data-surface="dock"] .focus-rail-list { max-height: 132px; overflow: auto; }
+.focus-rail-block { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.focus-rail-block + .focus-rail-block { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 8px; }
 .focus-rail-grow { min-height: 0; }
 .focus-rail-head {
-  flex: none; display: flex; align-items: baseline; gap: 7px;
-  margin: 0 0 5px; padding: 0 2px;
-  font-size: calc(var(--type-micro) * var(--ui-scale));
-  font-weight: 600; color: var(--muted-foreground);
+  flex: none; display: flex; align-items: baseline; gap: 6px;
+  margin: 0 0 3px;
+  font-size: var(--type-meta-size); font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
 }
-.focus-rail-count {
-  font-variant-numeric: tabular-nums; font-weight: 400;
-}
-.focus-rail-list { min-height: 0; overflow: auto; }
+.focus-rail-count { font-variant-numeric: tabular-nums; font-weight: var(--font-weight-normal); margin-left: auto; }
+.focus-rail-list { min-height: 0; min-width: 0; overflow: auto; scrollbar-width: thin; }
 
-/* a rail row: state dot, title, stage — one line, rules between */
+/* A rail row is an index entry, not prose: one line, truncated, full text in
+   the record. Two-line clamps would turn every row into a small card and
+   destroy the "scan" this column exists for. */
 .focus-rail-row {
-  display: grid; grid-template-columns: 6px minmax(0, 1fr) auto;
-  gap: 8px; align-items: baseline; width: 100%; text-align: left;
-  padding: 6px 2px; border-radius: var(--shape-sm);
+  display: flex; align-items: flex-start; gap: 7px;
+  width: 100%; min-width: 0; text-align: left;
+  padding: 6px;
+  border-radius: var(--shape-sm);
+  transition: background-color var(--motion-duration-fast) var(--motion-ease-enter);
 }
-.focus-rail-row + .focus-rail-row { border-top: 1px solid var(--border); }
-.focus-rail-row:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); }
-.focus-rail-row[aria-selected="true"] .focus-rail-title { color: var(--accent-text); font-weight: 600; }
+.focus-rail-row + .focus-rail-row { border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent); }
+.focus-rail-row:hover { background: color-mix(in srgb, var(--foreground) 4%, transparent); }
+.focus-rail-row[aria-current="true"] { background: color-mix(in srgb, var(--foreground) 4%, transparent); }
+.focus-rail-row[aria-current="true"] .focus-rail-title { color: var(--accent-text); font-weight: var(--font-weight-semibold); }
 .focus-rail-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex: none; margin-top: 4px;
-  background: color-mix(in srgb, var(--foreground) 26%, transparent);
+  width: 5px; height: 5px; border-radius: var(--shape-round); flex: none; margin-top: 6px;
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
 }
-.focus-rail-dot[data-stage="running"],
-.focus-rail-dot[data-stage="stopping"] { background: var(--accent); }
-.focus-rail-dot[data-stage="candidate_result"],
-.focus-rail-dot[data-stage="needs_user"],
-.focus-rail-dot[data-stage="rework"] { background: var(--info); }
-.focus-rail-dot[data-stage="failed"] { background: var(--destructive); }
+.focus-rail-dot[data-tone="needs"] { background: var(--info); }
+.focus-rail-dot[data-tone="active"] { background: var(--accent); }
+.focus-rail-dot[data-tone="failed"] { background: var(--destructive); }
+.focus-rail-dot[data-tone="settled"] { background: var(--success); }
+.focus-rail-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1 1 0%; }
 .focus-rail-title {
-  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-size: calc(var(--type-micro) * var(--ui-scale));
+  min-width: 0;
+  font-size: var(--type-label-size); line-height: 1.45;
   color: var(--foreground);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.focus-rail-state {
-  flex: none; font-size: calc(var(--type-micro) * var(--ui-scale));
-  color: var(--muted-foreground); white-space: nowrap;
-}
+.focus-rail-state { font-size: var(--type-micro-size); line-height: 1.5; color: var(--text-secondary); white-space: nowrap; }
 
 /* delivered files: mono names, one row each */
-.focus-rail-file {
-  display: flex; align-items: baseline; gap: 10px;
-  width: 100%; text-align: left; padding: 5px 2px;
+.focus-file {
+  display: flex; align-items: baseline; gap: 8px;
+  width: 100%; min-width: 0; text-align: left;
+  padding: 5px 6px;
   border-radius: var(--shape-sm);
 }
-.focus-rail-file + .focus-rail-file { border-top: 1px solid var(--border); }
-.focus-rail-file:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); }
-.focus-rail-file:hover .focus-rail-file-name { color: var(--accent-text); }
-.focus-rail-file-name {
+.focus-file + .focus-file { border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent); }
+.focus-file:hover { background: color-mix(in srgb, var(--foreground) 4%, transparent); }
+.focus-file-name {
   flex: 1; min-width: 0;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   font-family: var(--font-mono);
-  font-size: calc(var(--type-micro) * var(--ui-scale));
+  font-size: var(--type-micro-size); line-height: 1.55;
   color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+.focus-file:hover .focus-file-name { color: var(--accent-text); }
+.focus-file-tag { flex: none; font-size: var(--type-micro-size); color: var(--text-secondary); white-space: nowrap; }
+
+/* ── touch and motion ───────────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .focus-primary, .focus-secondary { height: calc(var(--control-height-lg) * var(--ui-scale)); }
+  .focus-rail-row, .focus-file { min-height: 44px; }
+  /* craft-control supplies a 44px min-height for touch; a gauge tick must keep
+     its 10px fill (the fill is the state) and widen its hit area instead. */
+  .focus-bar { min-height: 0; height: 10px; }
+  /* Widen the hit area without changing the tick: the fill is the state
+     encoding, so the device must not reshape it. */
+  .focus-bar::before { content: ""; position: absolute; inset: -8px -6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-bar, .focus-rail-row { transition: none; }
 }

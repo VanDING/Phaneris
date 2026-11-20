@@ -213,32 +213,29 @@
 [data-resident-presentation="true"] [data-focus-zone="chat"] { padding-top: max(36px, calc(var(--control-height-sm) * var(--ui-scale) + 8px)); }
 @media (pointer: coarse) { [data-resident-presentation="true"] [data-focus-zone="chat"] { padding-top: max(52px, calc(var(--control-height-sm) * var(--ui-scale) + 8px)); } }
 
-/* ── the assistant view's work board: a sheet from the top ─────────────
-   The board is the view's own content, so it drops from the top edge over
-   the conversation instead of floating at a corner control. Width is capped
-   so it read as a sheet rather than a second window. */
+/* ── the assistant view's work board: a floating panel at the right ─────
+   The board is the view's own content, so it floats over the conversation
+   rather than living in the corner. It is anchored to the RIGHT edge and
+   inset on every side: a panel, not a sheet, and not a drawer that covers
+   the full height with no margin. */
 .resident-sheet-scrim {
   position: absolute; inset: 0; z-index: var(--z-component-scrim);
   background: color-mix(in srgb, var(--foreground) 22%, transparent);
 }
 .resident-top-sheet {
   /* Absolute against .resident-surface, which is fixed and clips its children:
-     a fixed sheet here would be cut off by that overflow. Top-anchored and
-     centred, so it reads as a sheet dropping from the view's top edge. */
-  position: absolute; left: 50%; top: 8px; z-index: var(--z-component-panel);
-  transform: translateX(-50%);
+     a fixed panel here would be cut off by that overflow. Right-anchored with a
+     real margin on all four sides, so it reads as a floating panel. */
+  position: absolute; top: 12px; right: 12px; bottom: 12px; z-index: var(--z-component-panel);
   display: flex; flex-direction: column;
-  width: min(1040px, calc(100% - 24px));
-  /* A fixed share of the view rather than the content's own height: the record
-     and the rail both scroll inside it, so the sheet reads as a surface. */
-  height: min(560px, calc(100% - 24px));
+  width: min(384px, calc(100% - 24px));
   overflow: hidden;
   border-radius: var(--shape-xl);
   background: var(--popover-solid);
-  box-shadow: 0 0 0 1px var(--border), 0 8px 24px -12px var(--resident-ambient);
+  box-shadow: 0 0 0 1px var(--border), 0 12px 40px -16px var(--resident-ambient);
 }
 .resident-top-sheet .resident-work-panel { width: 100%; max-height: 100%; border-radius: 0; box-shadow: none; }
 
 .resident-board-close { position: absolute; right: 8px; top: 8px; z-index: var(--z-component-header); color: var(--muted-foreground); }
 .resident-board-close:hover { background: color-mix(in srgb, var(--foreground) 8%, transparent); color: var(--foreground); }
-.resident-top-sheet > .focus-board { padding: 12px 14px 10px; min-height: 0; }
+.resident-top-sheet > .focus-board { min-height: 0; padding: 0; }

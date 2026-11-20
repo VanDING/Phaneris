@@ -62,7 +62,7 @@ export function ResidentAssistantControls({ workspaceId, sessionId }: { workspac
         <span id="resident-work-panel-title" className="sr-only">{t('residentAssistant.panel.title')}</span>
         <PreviewHeaderIconButton data-testid="resident-board-close" tooltip={t('common.close')} aria-label={t('common.close')}
           className="resident-board-close" onClick={close}><X className="size-4" /></PreviewHeaderIconButton>
-        <FocusBoard workspaceId={workspaceId} onPreview={setPreview} />
+        <FocusBoard workspaceId={workspaceId} surface="dock" onPreview={setPreview} />
       </section>
     </>, host)}
     <Dialog open={!!preview && visible} onOpenChange={next => { if (!next) setPreview(undefined) }}>

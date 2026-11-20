@@ -166,7 +166,7 @@ export function ResidentAssistantIsland() {
           surface of one component, so the two can never drift apart. */}
       <div className="resident-peek-board" data-testid="resident-peek-board">
         {snapshot.workspaceId
-          ? <FocusBoard workspaceId={snapshot.workspaceId} onOpenTask={() => void open()} />
+          ? <FocusBoard workspaceId={snapshot.workspaceId} surface="peek" onOpenTask={() => void open()} />
           : <dl className="resident-peek-rows text-label">
             <div><dt>{t('residentAssistant.currentWork')}</dt><dd data-testid="resident-current-work">{snapshot.loading ? t('residentAssistant.loading') : snapshot.error ? t('residentAssistant.status.unavailable') : snapshot.current ?? t('residentAssistant.noCurrentWork')}</dd></div>
             <div><dt>{t('residentAssistant.recentDelivery')}</dt><dd data-testid="resident-recent-delivery">{snapshot.loading ? t('residentAssistant.loading') : snapshot.error ? t('residentAssistant.status.unavailable') : snapshot.recent ?? t('residentAssistant.noWork')}</dd></div>

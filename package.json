@@ -116,6 +116,7 @@
     "verify:assistant-relations": "bun run scripts/verification/resident-assistant-relations-workflow.ts",
     "verify:assistant-sources": "bun run scripts/verification/resident-assistant-sources-workflow.ts",
     "verify:assistant-structure": "bun run scripts/verification/resident-assistant-structure-workflow.ts",
+    "verify:assistant-focus-board": "bun run scripts/verification/resident-focus-board.ts",
     "verify:assistant-context": "bun run scripts/verification/resident-assistant-context-workflow.ts",
     "verify:assistant-ui": "bun run scripts/verification/resident-assistant-ui-workflow.ts",
     "verify:assistant-identity": "bun run scripts/verification/resident-assistant-identity-workflow.ts",
