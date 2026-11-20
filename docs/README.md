@@ -64,6 +64,8 @@ API 接入与 AI 设置：[2026-10-28 修订与验收](verification/api-connecti
 
 Run 上下文与图表：[2026-10-26 失败矩阵](verification/run-context-accounting-failure-matrix-2026-10-26.md)、[配色与少请求图表评审](prototypes/run-colors-2026-10-26/README.md) — 保留已确认方案与回归口径。
 
+助手 Focus 面板优化：[已实施](prototypes/resident-focus-panel-redesign-2026-11-20/README.md) — 档位条改为「一根条一个任务、等高、填充即状态」，去掉并存的标题切换条；记录字号收进 body 档；标题栏 peek 保持两栏，助手侧边栏改为靠右悬浮、自上而下单栏。
+
 Default 主题收敛：[2026-10-23 修复与验证](verification/default-theme-refinement-2026-10-23.md) — 仅保留 Default，统一派生算法、颜色职责与启动/运行时契约；旧配置保留模式和字体，用户主题文件不删除。
 
 Harness 审查与实施：[系统职责及审查结论](architecture/model-facing-harness.md)、[2026-10-22 实施记录](process/model-harness-implementation-2026-10-22.md) — 新分支覆盖调用契约、检索、效果排序、任务连续性和 prompt 组装；保留 skill 显式选用设计，真实模型及原生环境验证限制见记录。

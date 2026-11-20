@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Phaneris · 助手 Focus 面板优化</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="proto-bar">
+    <div class="proto-identity">
+      <strong>Phaneris</strong><span class="proto-sep"></span><span>助手 Focus 面板</span><span class="proto-sample">示例数据</span>
+    </div>
+
+    <!-- 控制全部平铺在左上角，与面板同一左边界；右侧不放任何入口。 -->
+    <div class="proto-rows">
+      <div class="proto-row">
+        <span class="proto-label">承载面</span>
+        <div class="proto-set" role="group" aria-label="承载面">
+          <button class="proto-pill" data-surface="peek" aria-pressed="true">标题栏 peek 620</button>
+          <button class="proto-pill" data-surface="dock" aria-pressed="false">助手侧边栏 380</button>
+        </div>
+        <span class="proto-label">对照</span>
+        <div class="proto-set" role="group" aria-label="版本对照">
+          <button class="proto-pill" data-version="current" aria-pressed="false">现状</button>
+          <button class="proto-pill" data-version="optimized" aria-pressed="true">优化后</button>
+        </div>
+        <span class="proto-spacer"></span>
+        <button id="theme-toggle" class="proto-icon" aria-label="切换深色模式" title="切换深色模式"></button>
+        <button id="lang-toggle" class="proto-icon proto-text" aria-label="切换语言">EN</button>
+      </div>
+      <div class="proto-row">
+        <span class="proto-label">档位</span>
+        <div class="proto-set" role="group" aria-label="数据档位">
+          <button class="proto-pill" data-scenario="ready" aria-pressed="true">5 个任务</button>
+          <button class="proto-pill" data-scenario="one" aria-pressed="false">1 个任务</button>
+          <button class="proto-pill" data-scenario="long" aria-pressed="false">长文本</button>
+          <button class="proto-pill" data-scenario="overflow" aria-pressed="false">极端标题</button>
+          <button class="proto-pill" data-scenario="many" aria-pressed="false">18 个任务</button>
+          <button class="proto-pill" data-scenario="empty" aria-pressed="false">无任务</button>
+          <button class="proto-pill" data-scenario="loading" aria-pressed="false">加载中</button>
+          <button class="proto-pill" data-scenario="error" aria-pressed="false">失败</button>
+          <button class="proto-pill" data-scenario="offline" aria-pressed="false">断线</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ground">
+    <div class="frame" id="stage">
+      <div class="frame-hint" aria-hidden="true"><span id="stage-label"></span></div>
+      <div id="host" class="host" data-surface="peek" data-version="optimized"></div>
+    </div>
+    <p id="frame-note" class="frame-note"></p>
+    <button id="notes-open" class="frame-link">这份稿子改了什么</button>
+  </div>
+
+  <dialog id="notes" class="notes" aria-labelledby="notes-title">
+    <div class="notes-head">
+      <h2 id="notes-title">从现状出发改了五处</h2>
+      <button id="notes-close" class="proto-icon" aria-label="关闭">✕</button>
+    </div>
+    <div class="notes-body">
+      <p class="notes-lead">布局不换：两栏（记录 + 产物）、容量信息、阶段→动作的派生规则全部保留。改的是下面五处，每处都能在页面上用「对照 · 现状」复现。</p>
+
+      <h3>1 · 一个档位条 = 一个任务，条本身就是切换器</h3>
+      <p>现状有两套切换：<strong>容量条</strong>（18 个固定方块）和<strong>任务标题条</strong>（`.focus-segments`，一条一任务）。两者都在说「任务」，而容量条还常常把标题条挤没：389px 面板上 18 个座位 <strong>303px</strong>，标题条可见宽度 <strong>0px</strong>。<br>
+        <strong>改为</strong>把两者合成一条：不再有标题切换条，档位条里<strong>每一根条就是一个任务</strong>，点它即切换聚焦。条数 = 任务数，不再是固定的 18。</p>
+
+      <h3>2 · 条数跟着任务走</h3>
+      <p>容量是 18 个槽，但只有 5 个任务在跑时，画 18 个方块里有 13 个永远不表达任何东西。<br>
+        <strong>改为</strong>只画在跑的任务：5 个任务就是 5 根条，18 个任务就是 18 根。容量作为文字留在副标题（<code>运行 1 / 18</code>），不再用几何去画空闲槽。</p>
+
+      <h3>3 · 条本身要读得出状态</h3>
+      <p>现状的方块只有「满/空」两态，且<strong>只靠颜色</strong>区分在跑与待验收。<br>
+        <strong>改为</strong>形状 + 颜色双重编码，任何一根条单独看都能读：</p>
+      <ul class="notes-rules">
+        <li><b>需要你决定</b>：最高的满格条（20px）+ 琥珀色 —— 它就是首屏最该被看见的东西。</li>
+        <li><b>执行中</b>：14px + 品牌紫。</li>
+        <li><b>排队 / 暂停 / 未就绪</b>：14px + 中性灰（半高以下）。</li>
+        <li><b>失败</b>：14px + 红色斜纹。</li>
+        <li><b>已验收 / 已终止</b>：6px 的短条 —— 它们在这块面板里只是脚注。</li>
+      </ul>
+      <p>选中项有一条描边环；每根条都有 <code>aria-label="任务名 · 状态"</code>，不依赖颜色传意。</p>
+
+      <h3>4 · 卡片字号收一档</h3>
+      <p>现状是<strong>16px 标题 + 一片 10px</strong>：大的太大（DESIGN.md 写明面板标题是 13px semibold，16px 已试过并回退），小的太小（中文低于 14px 糊成灰块，而要求原文正是 10px）。<br>
+        <strong>改为</strong>记录卡片内最大 14px：标题 14、要求原文 13、标签与计数 11–12、徽标 10。整块面板不再有 16px 的文字，卡片读起来是密度而不是大字报。</p>
+
+      <h3>5 · 两个承载面，两种排布</h3>
+      <p>同一个组件今天渲染在标题栏悬停 peek 和助手页的 sheet 里，但两处尺寸差一倍（620 / 1040 都能出现）。<br>
+        <strong>改为</strong>承载面自带排布：</p>
+      <ul class="notes-rules">
+        <li><strong>标题栏 peek</strong>（外部窗口悬停 / 点击）：保持当前两栏 —— 左记录、右产物。</li>
+        <li><strong>助手侧边栏</strong>（进入助手界面点「更多」）：一块<strong>靠右的悬浮面板</strong>，四周留边、圆角与阴影同 peek 一档；<strong>自上而下纵向排布</strong> —— 头部 → 档位条 → 记录 → 产物 → 动作。单栏，不再硬塞两栏。</li>
+      </ul>
+
+      <h3>没有改的</h3>
+      <p>两栏比例、阶段→动作的派生规则（<code>focus-board.ts</code> 的 <code>actionsFor</code>）、面板固定尺寸、一个填充主操作 + 其余描边的动作层级。这些都是对的。</p>
+      <p class="notes-foot">全部内容为设计 fixture，未读取真实会话或 RPC。未修改产品代码；选定后再落到 <code>FocusBoard.tsx</code> 与 <code>focus-board.css</code>。</p>
+    </div>
+  </dialog>
+</body>
+</html>
