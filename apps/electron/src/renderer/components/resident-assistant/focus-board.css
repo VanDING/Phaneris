@@ -21,6 +21,9 @@
 .focus-board {
   display: flex; flex-direction: column;
   flex: 1; min-height: 0; min-width: 0;
+  /* The panel is the boundary: no row may paint outside it. A nowrap state word
+     once rendered the empty-state sentence across the panel edge. */
+  overflow: hidden;
   container-type: inline-size;
 }
 
@@ -126,7 +129,10 @@
 .focus-state {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: var(--type-meta-size); font-weight: var(--font-weight-medium); line-height: 1.45;
-  white-space: nowrap;
+  /* A stage label is a word, but this role also carries the empty/loading
+     sentence in the peek header, so it wraps instead of being pushed out. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .focus-state::before {
   content: ""; flex: none;
@@ -311,9 +317,11 @@
   overflow-wrap: anywhere;
 }
 .focus-empty {
-  margin: 0; padding: 14px 0;
-  font-size: var(--type-body-size);
+  margin: 0; padding: 18px 13px;
+  font-size: var(--type-body-size); line-height: 1.6;
   color: var(--text-secondary);
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 /* ── actions: one filled primary, the rest outlined ─────────────────── */

@@ -249,8 +249,10 @@ export function FocusBoard({ workspaceId, surface = 'peek', onPreview, onOpenTas
 
   return <div className="focus-board" data-testid="focus-board" data-surface={surface}
     aria-label={t(`residentAssistant.board.surface.${surface}`)}>
-    {/* The gauge is the switcher: one bar per task in play, fill carries state. */}
-    <div className="focus-gauge">
+    {/* The gauge is the switcher: one bar per task in play, fill carries state.
+        With nothing in play there is nothing to switch, so the row is absent
+        rather than an empty strip that still reads as chrome. */}
+    {segments.length > 0 && <div className="focus-gauge">
       <div className="focus-bars" role="group" data-testid="focus-bars" aria-label={t('residentAssistant.board.switchTask')}>
         {segments.map(segment => <button key={segment.taskId} type="button"
           className="craft-control focus-bar" data-testid="focus-bar" data-task={segment.taskId} data-stage={segment.stage}
@@ -264,26 +266,29 @@ export function FocusBoard({ workspaceId, surface = 'peek', onPreview, onOpenTas
         <span><i data-tone="active" />{t(STAGE_KEY.running)}</span>
         <span data-kind="extra"><i data-tone="idle" />{t(STAGE_KEY.queued)}</span>
       </div>
-    </div>
+    </div>}
 
     {/* The bars only carry fills, so the selected task's own name and state
-        live here in words. This is the last chrome row before the content. */}
-    <div className="focus-gauge-caption" data-testid="focus-caption">
-      <span className="focus-state focus-gauge-state" data-state={projection?.stage ?? 'intake'}
-        data-tone={projection ? focusToneOf(projection.stage) : 'idle'}>
-        {projection ? t(STAGE_KEY[projection.stage]) : t('residentAssistant.tasks.empty')}
+        live here in words. This is the last chrome row before the content —
+        and it exists only when there is a task to name. Rendering it over an
+        empty board put the whole empty-state sentence inside a nowrap state
+        word, which escaped the panel. */}
+    {projection && <div className="focus-gauge-caption" data-testid="focus-caption">
+      <span className="focus-state focus-gauge-state" data-state={projection.stage}
+        data-tone={focusToneOf(projection.stage)}>
+        {t(STAGE_KEY[projection.stage])}
       </span>
-      <span className="focus-gauge-name">{projection?.task.title ?? ''}</span>
+      <span className="focus-gauge-name">{projection.task.title}</span>
       <span className="focus-gauge-count">{t('residentAssistant.board.taskCount', { count: segments.length })}</span>
       <span className="focus-gauge-count" data-testid="focus-capacity">
         {t('residentAssistant.board.capacity', { occupied, capacity: Math.max(capacity, occupied) })}
       </span>
       <button type="button" className="craft-control focus-text-action" aria-label={t('residentAssistant.refresh')}
         disabled={loading} onClick={() => void refresh()}>↻</button>
-    </div>
+    </div>}
 
     {error && <p role="alert" className="focus-error">{error}</p>}
-    {!error && !projection && <p className="focus-empty">
+    {!error && !projection && <p className="focus-empty" data-testid="focus-empty">
       {t(loading ? 'residentAssistant.loading' : 'residentAssistant.tasks.empty')}</p>}
 
     {!error && projection && <>

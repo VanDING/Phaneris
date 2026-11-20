@@ -19,6 +19,8 @@ declare global {
   interface Window {
     focusBoardData: { items: unknown[]; deliverables: unknown[]; scheduling: unknown }
     focusBoardSurface: (surface: 'peek' | 'dock') => void
+    /** Render the same surfaces with an empty projection (no tasks in play). */
+    focusBoardEmpty: (empty: boolean) => void
   }
 }
 
@@ -30,9 +32,13 @@ const freeze = document.createElement('style')
 freeze.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}'
 document.head.append(freeze)
 
+/* The empty board is a state, not a second fixture: the Host returns no
+   projections, which is what a workspace with no delegations reports. */
+let empty = false
+
 Object.assign(window, {
   electronAPI: {
-    getAssistantTasks: async () => ({ observedAt: Date.now(), items: data.items, counts: {}, total: data.items.length }),
+    getAssistantTasks: async () => ({ observedAt: Date.now(), items: empty ? [] : data.items, counts: {}, total: empty ? 0 : data.items.length }),
     getAssistantWork: async (_workspaceId: string, options: { view: string }) => options.view === 'current'
       ? { scheduling: data.scheduling, items: [] }
       : { scheduling: data.scheduling, deliverables: data.deliverables },
@@ -42,17 +48,25 @@ Object.assign(window, {
 })
 
 let surface: 'peek' | 'dock' = 'peek'
-const root = createRoot(document.getElementById('root')!)
+let generation = 0
+const container = document.getElementById('root')!
+let root = createRoot(container)
 function render() {
+  /* Remount on a data change: the hook reads once per mount, so re-rendering in
+     place would keep serving the first page (which is exactly how an empty board
+     would silently keep showing tasks). */
+  if (generation > 0) { root.unmount(); root = createRoot(container) }
+  generation += 1
   root.render(<I18nextProvider i18n={i18n}>
     <div className="h-screen bg-background" data-mode="light" data-surface={surface}
       style={{ display: 'flex', justifyContent: surface === 'dock' ? 'flex-end' : 'center',
         alignItems: surface === 'dock' ? 'stretch' : 'flex-start', padding: surface === 'dock' ? 12 : 24 }}>
       <div style={surface === 'dock' ? { width: 384, display: 'flex', borderRadius: 'var(--shape-xl)', overflow: 'hidden', boxShadow: '0 0 0 1px var(--border)' } : { width: 620, display: 'flex', borderRadius: 'var(--shape-xl)', overflow: 'hidden', boxShadow: '0 0 0 1px var(--border)' }}>
-        <FocusBoard workspaceId="fixture" surface={surface} />
+        <FocusBoard key={`${surface}-${generation}`} workspaceId="fixture" surface={surface} />
       </div>
     </div>
   </I18nextProvider>)
 }
 window.focusBoardSurface = next => { surface = next; render() }
+window.focusBoardEmpty = next => { empty = next; render() }
 render()

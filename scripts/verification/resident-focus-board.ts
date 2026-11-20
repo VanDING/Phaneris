@@ -174,6 +174,45 @@ await verificationWorkflow('resident-focus-board', async run => {
     await page.screenshot({ path: join(run.directory, 'focus-board-dock.png') })
     scenes.push('FB05-the-dock-stacks-as-a-right-anchored-panel')
 
+    /* ── the empty board: no chrome pretending to have content ──────
+       The board used to render its caption row over an empty record, which put
+       the whole empty-state sentence inside a nowrap state word; it painted
+       across the panel edge and repeated itself below. */
+    await page.evaluate(() => window.focusBoardSurface('peek'))
+    await page.waitForTimeout(120)
+    await page.evaluate(() => window.focusBoardEmpty(true))
+    await page.waitForTimeout(160)
+    const empty = await page.evaluate(() => {
+      const panel = document.querySelector('[data-testid="focus-board"]')!.getBoundingClientRect()
+      const empty = document.querySelector('[data-testid="focus-empty"]')
+      const escaped = [...document.querySelectorAll('[data-testid="focus-board"] *')].filter(node => {
+        const box = node.getBoundingClientRect()
+        if (box.width === 0 && box.height === 0) return false
+        return box.left < panel.left - 1 || box.right > panel.right + 1
+      }).map(node => node.className)
+      const rect = empty?.getBoundingClientRect()
+      return {
+        text: empty?.textContent?.trim() ?? null,
+        occurrences: [...document.querySelectorAll('[data-testid="focus-board"] *')]
+          .filter(node => node.children.length === 0 && (node.textContent ?? '').includes('No delegation recorded'))
+          .length,
+        caption: document.querySelectorAll('[data-testid="focus-caption"]').length,
+        gauge: document.querySelectorAll('[data-testid="focus-gauge"]').length,
+        escaped,
+        insidePanel: !!rect && rect.left >= panel.left - 1 && rect.right <= panel.right + 1,
+        fillsPanel: !!rect && rect.height > 40,
+      }
+    })
+    assert(empty.text, 'an empty board states that it is empty')
+    assert.equal(empty.occurrences, 1, `the empty sentence is stated once, saw ${empty.occurrences}`)
+    assert.equal(empty.caption, 0, 'no caption row over an empty board')
+    assert.equal(empty.gauge, 0, 'no gauge over an empty board')
+    assert.deepEqual(empty.escaped, [], 'nothing paints outside the panel')
+    assert.equal(empty.insidePanel, true, 'the empty sentence stays inside the panel')
+    assert.equal(empty.fillsPanel, true, 'the empty state is readable, not a clipped strip')
+    await page.screenshot({ path: join(run.directory, 'focus-board-empty.png') })
+    scenes.push('FB06-an-empty-board-is-empty-not-clipped-chrome')
+
     assert.deepEqual(errors, [])
     run.json('focus-board-evidence.json', { scenes, gauge, type, peek, dock, errors })
     run.complete(scenes, ['Real Host projections (this fixture renders the contracts directly)', 'Permission and acceptance flows beyond the recorded projection'])
